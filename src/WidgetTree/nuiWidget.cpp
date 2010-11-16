@@ -573,6 +573,8 @@ void nuiWidget::Init()
   mNeedInvalidateOnSetRect = true;
   mDrawingInCache = false;
   mpRenderCache = NULL;
+  mpRenderCaches[0] = NULL;
+  mpRenderCaches[1] = NULL;
 	mUseRenderCache = false;
 
   mTrashed = false;
@@ -769,7 +771,9 @@ nuiWidget::~nuiWidget()
   {
     mpSurface->Release();
   }
-  delete mpRenderCache;
+
+  delete mpRenderCaches[0];
+  delete mpRenderCaches[1];
 }
 
 bool nuiWidget::IsTrashed(bool combined) const 
@@ -1168,8 +1172,8 @@ void nuiWidget::SilentInvalidate()
   
   mNeedSelfRedraw = true;
   InvalidateSurface();
-  if (mpRenderCache)
-    mpRenderCache->Reset(NULL);
+  if (mpRenderCaches[1])
+    mpRenderCaches[1]->Reset(NULL);
   DebugRefreshInfo();
 }
 
@@ -1498,22 +1502,27 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     bool rendertest = mNeedRender;
     if (gGlobalUseRenderCache && mUseRenderCache)
     {
-      NGL_ASSERT(mpRenderCache);
+      NGL_ASSERT(mpRenderCaches[1]);
       
       if (mNeedSelfRedraw)
       {
         mpSavedPainter = pContext->GetPainter();
-        mpRenderCache->Reset(mpSavedPainter);
-        pContext->SetPainter(mpRenderCache);
+        mpRenderCaches[1]->Reset(mpSavedPainter);
+        pContext->SetPainter(mpRenderCaches[1]);
         
         mDrawingInCache = true;
         
         InternalDrawWidget(pContext, _self, _self_and_decorations, false);
         
         pContext->SetPainter(mpSavedPainter);
+        
+        mpRenderCaches[0] = mpRenderCaches[1];
+        mpRenderCaches[1] = mpRenderCache;
+        mpRenderCache = mpRenderCaches[0];
         mNeedSelfRedraw = false;
       }
-      
+
+#ifdef NUI_DIRECT_RENDERING
       if (!drawingincache && !pContext->GetPainter()->GetDummyMode())
       {
         mNeedRender = false;
@@ -1528,7 +1537,9 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
         if (!IsMatrixIdentity())
           pContext->PopMatrix();
       }
-      
+#else
+      mNeedRender = false;
+#endif
     }
     else
     {
@@ -1547,6 +1558,20 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   }
 
   return true;
+}
+
+void nuiWidget::ThreadedRendering(nuiDrawContext* pContext)
+{
+  if (!IsMatrixIdentity())
+  {
+    pContext->PushMatrix();
+    pContext->MultMatrix(GetMatrix());
+  }
+  
+  mpRenderCache->ReDraw(pContext);
+  
+  if (!IsMatrixIdentity())
+    pContext->PopMatrix();
 }
 
 void nuiWidget::DrawSurface(nuiDrawContext* pContext)
@@ -3817,7 +3842,9 @@ void nuiWidget::EnableRenderCache(bool set)
     {
       if (!mpRenderCache)
       {
-        mpRenderCache = new nuiMetaPainter(nuiRect());
+        mpRenderCaches[0] = new nuiMetaPainter(nuiRect());
+        mpRenderCaches[1] = new nuiMetaPainter(nuiRect());
+        mpRenderCache = mpRenderCaches[0];
 #ifdef _DEBUG_
         mpRenderCache->DBGSetReferenceObject(this);
 #endif
@@ -3826,8 +3853,11 @@ void nuiWidget::EnableRenderCache(bool set)
     }
     else
     {
-      delete mpRenderCache;
+      delete mpRenderCaches[0];
+      delete mpRenderCaches[1];
       mpRenderCache = NULL;
+      mpRenderCaches[0] = NULL;
+      mpRenderCaches[1] = NULL;
     }
     
     Invalidate();
