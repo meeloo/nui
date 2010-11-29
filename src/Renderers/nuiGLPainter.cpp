@@ -345,11 +345,12 @@ void nuiGLPainter::StartRendering()
   }
 #endif
 
-  glDisable(GL_STENCIL_TEST);
-  glDisable(GL_BLEND);
-  glDisable(GL_ALPHA_TEST);
-  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-  BlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+//  glDisable(GL_STENCIL_TEST);
+//  glDisable(GL_BLEND);
+//  glDisable(GL_ALPHA_TEST);
+//  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+//  BlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  SetState(nuiRenderState(), true);
   nuiCheckForGLErrors();
 }
 
@@ -359,6 +360,7 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
   NUI_RETURN_IF_RENDERING_DISABLED;
   //ForceApply = true;
   nuiCheckForGLErrors();
+  mForceApply = false;
   
   // blending
   if (ForceApply || mFinalState.mBlending != rState.mBlending)
@@ -495,9 +497,7 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
   mFinalState.mClearColor = rState.mClearColor;
   mFinalState.mStrokeColor = rState.mStrokeColor;
   mFinalState.mFillColor = rState.mFillColor;
-  
-  mForceApply = false;
-  
+
   nuiCheckForGLErrors();
 }
 
@@ -508,7 +508,7 @@ void nuiGLPainter::SetState(const nuiRenderState& rState, bool ForceApply)
 
   mState = rState;
   mForceApply |= ForceApply;
-  ApplyState(rState, ForceApply);
+  //ApplyState(rState, ForceApply);
 }
 
 void nuiGLPainter::SetSize(uint32 w, uint32 h)
@@ -528,6 +528,12 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
 //    bleh[0] = 0;
 //  }
 
+  bool TextureChanged = mFinalState.mTexturing != rState.mTexturing;
+  
+  if (!ForceApply && !TextureChanged)
+    return;
+  
+  
   // 2D Textures: 
   std::map<nuiTexture*, TextureInfo>::const_iterator it = mTextures.find(rState.mpTexture);
   bool uptodate = (it == mTextures.end()) ? false : ( !it->second.mReload && it->second.mTexture >= 0 );
@@ -579,7 +585,7 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
 
           PushSurface();
 
-          SetState(nuiRenderState());
+          SetState(nuiRenderState(), true);
           ResetClipRect();
           mClip.Set(0, 0, pSurface->GetWidth(), pSurface->GetHeight());
 
@@ -593,12 +599,7 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
           m.Scale(2.0f / pSurface->GetWidth(), -2.0f / pSurface->GetHeight(), 1.0f);
           LoadProjectionMatrix(nuiRect(pSurface->GetWidth(), pSurface->GetHeight()), m);
 
-          // clear the surface with transparent black:
-//          nuiRenderState s2(mState);// PushState();
-//          mFinalState.mClearColor = nuiColor(0.0f, 0.0f, 0.0f, 0.0f);
-          SetState(s);
-//          ClearColor();  
-//          SetState(s2);
+          SetState(s, true);
 
 //////////////////////////////          
           nuiDrawContext Ctx(nuiRect(pSurface->GetWidth(), pSurface->GetHeight()));
@@ -610,8 +611,9 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
           PopSurface();
           PopMatrix();
           PopProjectionMatrix();
+          
           //PopState();
-          SetState(s);
+          SetState(s, true);
           PopClipping();
         }
       }
@@ -661,7 +663,7 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
     }
   }
 
-  if (ForceApply || (mFinalState.mTexturing != rState.mTexturing))
+  if (ForceApply || TextureChanged)
   {
     // Texture have not changed, but texturing may have been enabled / disabled
     mFinalState.mTexturing = rState.mTexturing;
@@ -704,70 +706,6 @@ void nuiGLPainter::ClearColor()
   nuiCheckForGLErrors();
 }
 
-/*
-void nuiGLPainter::BlurRect(const nuiRect& rRect, uint Strength)
-{
-  nuiRect Rect = rRect;
-  if (mClippingRect.mEnabled)
-    Rect.Intersect(mClippingRect,rRect);
-  nuiRect size = Rect.Size();
-
-  nuiTexture* pScratchPad = GetScratchPad(ToZero(size.GetWidth()), ToZero(size.GetHeight()));
-
-  if (!pScratchPad)
-    return;
-
-  SetTexture(pScratchPad);
-
-  glPushMatrix();
-  glLoadIdentity();
-
-  EnableBlending(true);
-  EnableTexturing(true);
-  SetBlendFunc(nuiBlendTransp);
-
-  do
-  {
-    glCopyTexSubImage2D(
-      GL_TEXTURE_2D, 0, 
-      0, 0, 
-      ToZero(rRect.mLeft), ToZero(mHeight) - 1 - ToZero(rRect.mTop) - ToZero(rRect.GetHeight()), 
-      ToZero(rRect.GetWidth()), ToZero(rRect.GetHeight())
-      );
-
-    SetFillColor(nuiColor(1,1,1,.15f));
-    nuiRect rect = Rect;
-
-    rect.Move(-1,-1);
-    DrawImage(rect,size);
-    rect.Move(1,0);
-    DrawImage(rect,size);
-    rect.Move(1,0);
-    DrawImage(rect,size);
-
-    rect.Move(-2,1);
-    DrawImage(rect,size);
-    rect.Move(1,0);
-    DrawImage(rect,size);
-    rect.Move(1,0);
-    DrawImage(rect,size);
-
-    rect.Move(-2,1);
-    DrawImage(rect,size);
-    rect.Move(0,1);
-    DrawImage(rect,size);
-    rect.Move(0,1);
-    DrawImage(rect,size);
-  } while ((long)(Strength--) > 0);
-
-  EnableBlending(false);
-  EnableTexturing(false);
-
-  glPopMatrix();
-}
-*/
-
-
 #define LOGENUM(XXX) case XXX: { NGL_OUT(_T("%ls\n"), #XXX); } break;
 
 void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
@@ -775,9 +713,8 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   mRenderOperations++;
   mBatches++;
 
-  //glEnable(GL_TEXTURE_2D);
-  //glEnable(GL_TEXTURE_2D);
-
+  ApplyState(mState, mForceApply);
+  
   if (!mEnableDrawArray)
   {
     pArray->Release();
@@ -837,23 +774,6 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
       return;
     }
   }
-//  else
-//  {
-//    nglVectorf v1(bounds[0], bounds[1], 0); // topleft(x, y)
-//    nglVectorf v2(bounds[3], bounds[4], 0); // bottomright(x, y)
-//    v1 = rM * v1;
-//    v2 = rM * v2;
-//    
-//    if (
-//        (v1[0] > mClip.Right()) ||
-//        (v1[1] > mClip.Bottom()) ||
-//        (v2[0] < mClip.Left()) ||
-//        (v2[1] < mClip.Top())
-//       )
-//    {
-//      return;
-//    }
-//  }
   
   uint32 s = pArray->GetSize();
   
@@ -875,8 +795,6 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     return;
   }
 
-  ApplyState(mState, mForceApply);
-  
   mVertices += s;
   GLenum mode = pArray->GetMode();
   //NGL_OUT(_T("GL Array Mode: %d   vertice count %d\n"), mode, size);
@@ -905,7 +823,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   float hackY;
   if (NeedTranslateHack)
   {
-    const float ratio=0.5f;
+    const float ratio = 0.5f;
 #ifdef _UIKIT_
     hackX = ratio;
     hackY = ratio;
@@ -1004,8 +922,6 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   {
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
   }
-  //glDisableClientState(GL_COLOR_ARRAY);
-  //glColor4f(0.5,0.5,0.5,0.5);
   
 /*
   if (pArray->IsArrayEnabled(nuiRenderArray::eNormal))
@@ -1115,46 +1031,10 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   else
 #endif // NUI_USE_ANTIALIASING
   {
-//#TEST meeloo disabling AA texture
-//     if (pArray->UseGLAATexture())
-//     {
-//       glMatrixMode(GL_TEXTURE);
-//       glPopMatrix();
-//       glMatrixMode(GL_MODELVIEW);
-//       glPopMatrix();
-// 
-//       if (mFinalState.mpTexture && mFinalState.mTexturing)
-//       {
-//         if (mTextureTarget != GL_TEXTURE_2D)
-//         {
-//           glDisable(GL_TEXTURE_2D);
-//           glEnable(mTextureTarget);
-//         }
-// 
-//         UploadTexture(mFinalState.mpTexture);
-//       }
-//       else
-//       {
-//         glDisable(GL_TEXTURE_2D);
-//       }
-// 
-//       if (!mFinalState.mBlending)
-//         glDisable(GL_BLEND);
-//       if (mFinalState.mBlendFunc != nuiBlendTransp)
-//       {
-//         GLenum src, dst;
-//         nuiGetBlendFuncFactors(mFinalState.mBlendFunc, src, dst);
-//         glBlendFunc(src, dst);
-//       }
-//       //ApplyTexture(mState, true);
-//     }
-//     else
-
     if (NeedTranslateHack)
       glTranslatef(-hackX, -hackY, 0);
   }
 
-//  glColor3f(1.0f, 1.0f, 1.0f);
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
   pArray->Release();
