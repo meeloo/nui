@@ -22,13 +22,25 @@ nuiViewController::nuiViewController()
 
 nuiViewController::~nuiViewController()
 {
-  
 }
 
 // virtual 
 void nuiViewController::ConnectTopLevel()
 {
   ViewDidAppear();
+}
+
+
+// virtual 
+void nuiViewController::ViewWillAppear()
+{
+
+}
+
+// virtual 
+void nuiViewController::ViewWillDisappear()
+{
+
 }
 
 

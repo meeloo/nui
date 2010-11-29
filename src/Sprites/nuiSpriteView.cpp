@@ -263,12 +263,14 @@ nuiMatrix nuiSprite::mIdentityMatrix;
 nuiSprite::nuiSprite(const nglString& rSpriteDefName)
 : mpSpriteDef(nuiSpriteDef::GetSprite(rSpriteDefName)), mColor(255, 255, 255), mBlendFunc(nuiBlendTransp)
 {
+  NGL_ASSERT(mpSpriteDef);
   Init();
 }
 
 nuiSprite::nuiSprite(nuiSpriteDef* pSpriteDef)
 : mpSpriteDef(pSpriteDef), mColor(255, 255, 255), mBlendFunc(nuiBlendTransp)
 {
+  NGL_ASSERT(mpSpriteDef);
   mpSpriteDef->Acquire();
   Init();
 }
@@ -656,6 +658,31 @@ nuiBlendFunc nuiSprite::GetBlendFunc() const
   return mBlendFunc;
 }
 
+void nuiSprite::GetSpritesAtPoint(float x, float y, std::vector<nuiSprite*>& rSprites)
+{
+  nuiVector ov(x, y, 0);
+  nuiMatrix m;
+  GetMatrix(m);
+  m.Invert();
+  nuiVector v = m * ov;
+  x = v[0];
+  y = v[1];
+  
+  const nuiSpriteAnimation* pAnim = mpSpriteDef->GetAnimation(mCurrentAnimation);
+  const nuiSpriteFrame* pFrame = pAnim->GetFrame(ToBelow(mCurrentFrame));
+  nuiRect dst(pFrame->GetRect());
+  dst.Move(-pFrame->GetHandleX(), -pFrame->GetHandleY());
+  
+  if (dst.IsInside(x, y))
+    rSprites.push_back(this);
+
+  uint32 s = mpChildren.size();
+  for (size_t i = 0; i < s; i++)
+  {
+    mpChildren[i]->GetSpritesAtPoint(x, y, rSprites);
+  }
+}
+
 
 /////////////////////////////////////////////
 // class nuiSpriteView : public nuiSimpleContainer
@@ -717,5 +744,57 @@ bool nuiSpriteView::Draw(nuiDrawContext* pContext)
   return true;
 }
 
+void nuiSpriteView::GetSpritesAtPoint(float x, float y, std::vector<nuiSprite*>& rSprites)
+{
+  uint32 s = mpSprites.size();
+  for (size_t i = 0; i < s; i++)
+  {
+    mpSprites[i]->GetSpritesAtPoint(x, y, rSprites);
+  }
+}
 
+bool nuiSpriteView::MouseClicked(const nglMouseInfo& rEvent)
+{
+  std::vector<nuiSprite*> Sprites;
+  GetSpritesAtPoint(rEvent.X, rEvent.Y, Sprites);
+  for (uint32 i = 0; i < Sprites.size(); i++)
+  {
+    Sprites[i]->MouseClicked(rEvent);
+  }
+  
+  return false;
+}
 
+bool nuiSpriteView::MouseUnclicked(const nglMouseInfo& rEvent)
+{
+  std::vector<nuiSprite*> Sprites;
+  GetSpritesAtPoint(rEvent.X, rEvent.Y, Sprites);
+  for (uint32 i = 0; i < Sprites.size(); i++)
+  {
+    Sprites[i]->MouseUnclicked(rEvent);
+  }
+  
+  return false;
+}
+
+bool nuiSpriteView::MouseMoved(const nglMouseInfo& rEvent)
+{
+  std::vector<nuiSprite*> Sprites;
+  GetSpritesAtPoint(rEvent.X, rEvent.Y, Sprites);
+  for (uint32 i = 0; i < Sprites.size(); i++)
+  {
+    Sprites[i]->MouseMoved(rEvent);
+  }
+  
+  return false;
+}
+
+const std::vector<nuiSprite*>& nuiSpriteView::GetSprites() const
+{
+  return mpSprites;
+}
+
+int32 nuiSpriteView::GetSpriteCount() const
+{
+  return mpSprites.size();
+}

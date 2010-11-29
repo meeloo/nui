@@ -49,9 +49,12 @@ public:
   virtual bool MouseMoved(nuiSize X, nuiSize Y);
   virtual bool MouseUngrabbed();
 
+  void SetDefaultBorders(float pixels);
 
   bool IsPressed() const;
   virtual void SetPressed(bool Pressed = true);
+  void Activate(); ///< Simulate the action of the user pressing the button (useful for hotkey graphical feedback).
+
 
   void EnableAutoRepeat(bool set);
   bool GetAutoRepeat() const;
@@ -63,6 +66,8 @@ public:
   void SetActivationOffset(nuiSize Offset);
   nuiSize GetActivationOffset() const;
 
+  bool KeyDown(const nglKeyEvent& rEvent);
+  bool KeyUp(const nglKeyEvent& rEvent);
 protected:
   bool mClicked;
   bool mPressed;
@@ -76,6 +81,9 @@ protected:
   nuiSize mActivationOffset;
   nuiEventSink<nuiButton> mEventSink;
   void OnAutoRepeat(const nuiEvent& rEvent);
+  nuiTask* mpTask;
+  
+  static float mDefaultBorders;
 };
 
 

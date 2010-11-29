@@ -18,6 +18,7 @@ enum TransitionType
 {
   eTransitionSlide=0,
   eTransitionElastic,
+  eTransitionTransparency,
   eTransitionNone
 };
 
@@ -36,6 +37,8 @@ public:
   
   void PopToViewController(nuiViewController* pViewController, bool animated=true, TransitionType transition = eTransitionSlide); 
   void PopToRootViewControllerAnimated(bool animated=true, TransitionType transition = eTransitionSlide); 
+  
+  const std::vector<nuiViewController*>& GetViewControllers();
   
 protected:
   
@@ -70,6 +73,7 @@ private:
   
   bool mPushed;
   bool mPoped;
+  bool mAlphed;
 
   bool mPendingLayout;
   enum PendingOperationType {ePendingPush, ePendingPop, ePendingPopTo, ePendingPopToRoot};
@@ -89,7 +93,7 @@ private:
   nuiSize mAnimPosition;
   nuiEventSink<nuiNavigationController> mEventSink;
   
-  
+  std::list<nuiAnimation*> mCurrentAnims;
   
   static std::vector<nuiEasingMethod> mEasings;
   static std::vector<float> mDurations;
