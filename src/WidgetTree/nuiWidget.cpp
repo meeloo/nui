@@ -2393,26 +2393,29 @@ void nuiWidget::SetVisible(bool Visible)
       pShowAnim->Stop();
   }
 
-  if (pHideAnim && !Visible && (pHideAnim->GetPosition()==0 && pHideAnim->GetDuration()>0))
+  if (pHideAnim && !Visible // Should we animate?
+     && (pHideAnim->GetPosition() == 0 && pHideAnim->GetDuration() > 0))
   {
     StartAnimation(_T("HIDE"));
+    return;
   }
-  else
-  {
-    Invalidate();
-    mVisible = Visible;
-    if (mVisible)
-    {
-      mNeedLayout = false; // Force relayout
-      mNeedSelfLayout = false; // Force relayout
-      InvalidateLayout();
-    }
-    VisibilityChanged();
-    DebugRefreshInfo();
-    ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-    if (Visible)
-      StartAnimation(_T("SHOW"));
-  }
+
+  Invalidate();
+  mVisible = Visible;
+  mNeedLayout = false; // Force relayout
+  mNeedSelfLayout = false; // Force relayout
+  mNeedIdealRect = false;
+  mNeedRender = false;
+  mNeedSelfRedraw = false;
+  nuiContainer* pContainer = dynamic_cast<nuiContainer*> (this);
+  if (pContainer)
+    pContainer->InvalidateChildren(true);
+  InvalidateLayout();
+  VisibilityChanged();
+  DebugRefreshInfo();
+  ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+  if (Visible)
+    StartAnimation(_T("SHOW"));
 }
 
 void nuiWidget::SilentSetVisible(bool Visible)
