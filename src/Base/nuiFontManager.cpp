@@ -1294,7 +1294,16 @@ static bool greater_score(const nuiFontRequestResult& rLeft, const nuiFontReques
       score2 += pR->GetItalic() ? 2 : 0;
       score2 += pR->GetBold() ? 1 : 0;
 
-      return score1 < score2;
+      if (score1 != score2)
+        return score1 < score2;
+      
+      // sort by file name...
+      nglString l = rLeft.GetPath().GetNodeName();
+      nglString r = rRight.GetPath().GetNodeName();
+      l.ToLower();
+      r.ToLower();
+      
+      return l < r;
     }
   }
   return l > r;

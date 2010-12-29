@@ -112,6 +112,7 @@ nuiBuilder::~nuiBuilder()
 
 void nuiBuilder::Init()
 {
+#if 0
   NUI_ADD_WIDGET_CREATOR(nuiWidget, "Widget");
   NUI_ADD_WIDGET_CREATOR(nuiSimpleContainer, "Container");
   NUI_ADD_WIDGET_CREATOR(nuiWindow,"Container");
@@ -193,6 +194,8 @@ void nuiBuilder::Init()
 #ifndef _OPENGL_ES_
   NUI_ADD_WIDGET_CREATOR(nuiMesh,"Widget");
   NUI_ADD_WIDGET_CREATOR(nuiUserArea,"Widget");
+#endif
+  
 #endif
 }
 

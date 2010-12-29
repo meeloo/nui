@@ -476,7 +476,8 @@
 		C99996000DA6EE97001A7116 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -488,6 +489,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				PRODUCT_NAME = LayoutAnimationiPhone;
 				STRIPFLAGS = "-SXx";
+				STRIP_INSTALLED_PRODUCT = YES;
 			};
 			name = Default;
 		};
