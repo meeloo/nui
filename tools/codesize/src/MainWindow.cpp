@@ -37,8 +37,8 @@ public:
   }
   
 private:
-  uint64 mSize;
   nglString mName;
+  uint64 mSize;
 };
 
 /*
@@ -62,10 +62,11 @@ MainWindow::~MainWindow()
 {
 }
 
-bool cmp(const std::pair<nglString, Node*>& rLeft, const std::pair<nglString, Node*>& rRight)
+bool cmpnodes(const std::pair<nglString, Node*>& rLeft, const std::pair<nglString, Node*>& rRight)
 {
-  
-  return rLeft.second->GetSize() < rRight.second->GetSize();
+  uint64 l = rLeft.second->GetSize();
+  uint64 r = rRight.second->GetSize();
+  return l < r;
 }
 
 void MainWindow::OnCreation()
@@ -80,7 +81,7 @@ nglDropEffect MainWindow::OnCanDrop(nglDragAndDrop* pDragObject, nuiSize X, nuiS
   if (!pDragObject->IsTypeSupported(_T("ngl/Files")) && !pDragObject->IsTypeSupported(_T("ngl/PromiseFiles")))
     return eDropEffectNone;
   
-  nglDataFilesObject* pFiles;
+  nglDataFilesObject* pFiles = NULL;
   if (pDragObject->IsTypeSupported(_T("ngl/Files")))
     pFiles =  (nglDataFilesObject*)(pDragObject->GetType(_T("ngl/Files")));
   else if (pDragObject->IsTypeSupported(_T("ngl/PromiseFiles")))
@@ -95,7 +96,7 @@ nglDropEffect MainWindow::OnCanDrop(nglDragAndDrop* pDragObject, nuiSize X, nuiS
 // virtual 
 void MainWindow::OnDropped(nglDragAndDrop* pDragObject, nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 {
-  nglDataFilesObject* pFiles;
+  nglDataFilesObject* pFiles = NULL;
   if (pDragObject->IsTypeSupported(_T("ngl/Files")))
     pFiles =  (nglDataFilesObject*)(pDragObject->GetType(_T("ngl/Files")));
   else if (pDragObject->IsTypeSupported(_T("ngl/PromiseFiles")))
@@ -145,6 +146,17 @@ void MainWindow::OnDropLeave()
 {
 }
 
+bool IsMethodName(const nglString& rSymbol, nglString& rClassName)
+{
+  int32 pos = rSymbol.Find(':');
+  if (pos > 0 && rSymbol[pos+1] == ':')
+  {
+    rClassName = rSymbol.GetLeft(pos);
+    return true;
+  }
+  return false;
+}
+                  
 void MainWindow::Load(const nglPath& p)
 {    
   mpScrollView->Clear();
@@ -152,7 +164,9 @@ void MainWindow::Load(const nglPath& p)
 
   nglString cmdline;
   //cmdline.Add("/usr/bin/nm -n -U -arch i386 ").Add(p.GetPathName()).Add(" | c++filt | c++filt -n");
-  cmdline.Add("/usr/bin/nm -n -U ").Add(p.GetPathName()).Add(" | c++filt | c++filt -n");
+  nglString ppp(p.GetPathName());
+  ppp.Replace(_T(" "), _T("\\ ")); 
+  cmdline.Add("/usr/bin/nm -n -U ").Add(ppp).Add(" | c++filt | c++filt -n");
   printf("Launching\n%ls\n", cmdline.GetChars());
   FILE * file = popen(cmdline.GetStdString().c_str(), "r");
   nglOMemory omem;
@@ -161,7 +175,7 @@ void MainWindow::Load(const nglPath& p)
   {
     char buf[1025];
     memset(buf, 0, 1025);
-    uint32 res = fread(buf, 1024, 1, file);
+    res = fread(buf, 1024, 1, file);
     //printf("%s", buf);
     omem.Write(buf, 1024, 1);
   } while (!feof(file));
@@ -169,6 +183,8 @@ void MainWindow::Load(const nglPath& p)
   
   printf("redirection done\n");
   nglIStream* pStream = new nglIMemory(omem.GetBufferData(), omem.GetBufferSize());;
+  
+  nuiTreeNode* pTree = new nuiTreeNode(new nuiLabel(_T("Classes")));
   
   nglString line;
   
@@ -224,10 +240,9 @@ void MainWindow::Load(const nglPath& p)
         
         if (!skip) // The method already exist so no need to add it to its class
         {
-          int32 pos = lastsymbol.Find(':');
-          if (pos > 0 && lastsymbol[pos+1] == ':')
+          nglString classname;
+          if (IsMethodName(lastsymbol, classname))
           {
-            nglString classname = lastsymbol.GetLeft(pos);
             //NGL_OUT(_T("new class %ls\n"), classname.GetChars());
             
             std::map<nglString, Node*>::iterator it = classes.find(classname);
@@ -246,6 +261,12 @@ void MainWindow::Load(const nglPath& p)
             
             pNode->AddChild(pMethod);
           }
+          else
+          {
+            // Standalone function
+            pTree->AddChild(pMethod);
+          }
+
         }
       }
       
@@ -271,9 +292,7 @@ void MainWindow::Load(const nglPath& p)
     }
   }
   
-  sorted.sort(cmp);
-  
-  nuiTreeNode* pTree = new nuiTreeNode(new nuiLabel(_T("Classes")));
+  sorted.sort(cmpnodes);
   
   {
     std::list<std::pair<nglString, Node*> >::const_iterator it = sorted.begin();
@@ -287,6 +306,7 @@ void MainWindow::Load(const nglPath& p)
     }
   }
   
+  pTree->Open(true);
   nuiTreeView* pTreeView = new nuiTreeView(pTree);
   mpScrollView->AddChild(pTreeView);
   printf("done\n");
