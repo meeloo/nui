@@ -36,5 +36,5 @@ nuiScriptEngine* nuiApplication::GetScriptEngine() const
 
 void nuiApplication::EnableDefaultScriptEngine()
 {
-  mpScriptEngine = new nuiSpiderMonkey();
+  //mpScriptEngine = new nuiSpiderMonkey();
 }

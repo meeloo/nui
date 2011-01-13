@@ -714,8 +714,6 @@ void nuiFontBase::Blit8BitsBitmapToTexture(const GlyphBitmap &rBitmap, nuiTextur
 
 bool nuiFontBase::CopyBitmapToTexture(const GlyphBitmap &rBitmap, nuiTexture *pTexture, unsigned int OffsetX, unsigned int OffsetY)
 {
-  OffsetX;
-  OffsetY;
   int32 Width = rBitmap.Width;
   int32 Height = rBitmap.Height;
   switch (rBitmap.Depth)
