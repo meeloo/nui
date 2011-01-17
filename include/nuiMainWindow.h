@@ -15,6 +15,7 @@ class nuiLabel;
 class nuiMainWindow;
 class nuiTimer;
 class nuiMainMenu;
+class nuiMainWindowRenderThread;
 
 class NUI_API nuiContextInfo : public nglContextInfo
 {
@@ -241,6 +242,8 @@ private:
   void OnInspectorDeath(const nuiEvent& rEvent);
   double mLastInteractiveEventTime;
   double mLastEventTime;
+  
+  nuiMainWindowRenderThread* mpRenderThread;
 };
 
 #endif // __nuiMainWindow_h__
