@@ -19,6 +19,7 @@
 #include "nuiIntrospector.h"
 #include "nuiSoftwarePainter.h"
 #include "nuiStopWatch.h"
+#include "nglThread.h"
 
 //#define STUPID
 //#define STUPIDBASE
@@ -352,6 +353,7 @@ void nuiMainWindow::LazyPaint()
 
 static float Gx = 0;
 
+
 void nuiMainWindow::Paint()
 {
   if (!IsPaintEnabled())
@@ -383,18 +385,11 @@ void nuiMainWindow::Paint()
   
   pContext->GetPainter()->ResetStats();
 
-#ifdef _UIKIT_  
-  pContext->GetPainter()->SetAngle(mpNGLWindow->GetRotation());
-#endif
-
-#ifndef __NUI_NO_SOFTWARE__
-  nuiSoftwarePainter* pCTX = dynamic_cast<nuiSoftwarePainter*>(pContext->GetPainter());
-#endif
 
   mpRenderThread->BeginSession();
   mpNGLWindow->BeginSession();
 
-  pContext->StartRendering();
+  //pContext->StartRendering();
   pContext->Set2DProjectionMatrix(GetRect().Size());
   bool DrawFullFrame = !mInvalidatePosted || (mFullFrameRedraw > 0);
   bool RestorePartial = IsPartialRedrawEnabled();
@@ -404,56 +399,31 @@ void nuiMainWindow::Paint()
 
   std::vector<nuiRect> RedrawList(mDirtyRects);
     
-//  static int counter = 0;
-  //NGL_OUT(_T("%d OnPaint %d - %d\n"), counter++, DrawFullFrame, RestorePartial);
-
   if (!IsMatrixIdentity())
     pContext->MultMatrix(GetMatrix());
   mLastRendering = nglTime();
-  DrawTree(pContext);
 
-  if (mDisplayMouseOverObject)
-    DBG_DisplayMouseOverObject();
-
-  if (mDisplayMouseOverInfo)
-    DBG_DisplayMouseOverInfo();
-
+  pContext->ResetState();
+  pContext->ResetClipRect();
+  
+  pContext->SetClearColor(GetColor(eActiveWindowBg));
+  if (mClearBackground)
+  {
+    pContext->Clear();
+  }
+  else
+  {
+    // Force the initial render state anyway!
+    pContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
+  }
+  
+  DrawWidget(pContext);
+  
   if (DrawFullFrame && RestorePartial)
     EnablePartialRedraw(true);
 
-  if (0)
-  {
-    nuiRect r(32, 32);
-    r.MoveTo(Gx, 10.0f);
-    Gx += 4;
-    
-    if (Gx > GetWidth() - r.GetWidth())
-      Gx = 0;
-    
-    pContext->SetStrokeColor(nuiColor(128, 0, 0, 255));
-    pContext->SetFillColor(nuiColor(0, 0, 128, 255));
-    pContext->EnableBlending(false);
-    //pContext->SetBlendFunc(nuiBlendTranspAdd);
-    pContext->DrawRect(r, eStrokeAndFillShape);
-  }
-
   pContext->StopRendering();
   EmptyTrash();
-
-#ifndef __NUI_NO_SOFTWARE__
-  if (pCTX)
-  {
-    if (DrawFullFrame)
-    {
-      pCTX->Display(GetNGLWindow(), GetRect());      
-    }
-    else
-    {
-      for (uint i = 0; i < RedrawList.size(); i++)
-        pCTX->Display(GetNGLWindow(), RedrawList[i]);
-    }
-  }
-#endif//__NUI_NO_SOFTWARE__
 
   //watch.AddIntermediate(_T("Before EndSession()"));
   pContext->EndSession();

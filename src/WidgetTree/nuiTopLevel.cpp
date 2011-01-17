@@ -183,7 +183,7 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   mLastClickedButton = nglMouseInfo::ButtonNone;
 
   EnablePartialRedraw(PARTIAL_REDRAW_DEFAULT);
-  EnableRenderCache(false);
+  //EnableRenderCache(false);
 
   SetWantKeyboardFocus(true);
   SetFocusVisible(false);
@@ -224,7 +224,7 @@ bool nuiTopLevel::Load(const nuiXMLNode* pNode)
   mLastClickedButton = nglMouseInfo::ButtonNone;
 
   EnablePartialRedraw(PARTIAL_REDRAW_DEFAULT);
-  EnableRenderCache(false);
+  //EnableRenderCache(false);
 
   SetMouseCursor(eCursorArrow);
   
