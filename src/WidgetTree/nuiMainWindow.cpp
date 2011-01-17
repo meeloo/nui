@@ -30,6 +30,57 @@ using namespace std;
 
 #define NUI_MULTISAMPLES 0
 
+class nuiMainWindowRenderThread : public nglThread
+{
+public:
+  nuiMainWindowRenderThread(nglWindow* pWindow)
+  {
+    mpWindow = pWindow;
+    mDone = false;
+  }
+
+  void SetDone()
+  {
+    printf("nuiMainWindowRenderThread::SetDone\n");
+    mDone = true;
+    mEvent.Pulse();
+  }
+  
+  void BeginSession()
+  {
+    printf("nuiMainWindowRenderThread::BeginSession\n");
+    mCS.Lock();
+  }
+
+  void EndSession()
+  {
+    printf("nuiMainWindowRenderThread::EndSession\n");
+    mCS.Unlock();
+    mEvent.Pulse();
+  }
+
+  void OnStart()
+  {
+    while (mEvent.Wait())
+    {
+      printf("nuiMainWindowRenderThread Wait done\n");
+      nglCriticalSectionGuard g(mCS);
+      mEvent.Reset();
+      if (mDone)
+        return;
+      printf("nuiMainWindowRenderThread call EndSession\n");
+      mpWindow->EndSession();
+    }
+  }
+  
+private:
+  nglCriticalSection mCS;
+  nglSyncEvent mEvent;
+  nglWindow* mpWindow;
+  bool mDone;
+};
+
+
 nuiContextInfo::nuiContextInfo(Type type)
 {
   TargetAPI = (nglTargetAPI)nuiMainWindow::GetRenderer();
@@ -72,10 +123,11 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
     mQuitOnClose(true),
     mpDragSource(NULL),
     mPaintEnabled(true)
-
 {
   mFullFrameRedraw = 2;
   mpNGLWindow = new NGLWindow(this, Width, Height, Fullscreen);
+  mpRenderThread = (new nuiMainWindowRenderThread(mpNGLWindow));
+  mpRenderThread->Start();
 
   nuiRect rect(0.0f, 0.0f, (nuiSize)Width, (nuiSize)Height);
   //nuiSimpleContainer::SetRect(rect);
@@ -119,6 +171,8 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
 {
   mFullFrameRedraw = 2;
   mpNGLWindow = new NGLWindow(this, rContextInfo, rInfo, pShared);
+  mpRenderThread = (new nuiMainWindowRenderThread(mpNGLWindow));
+  mpRenderThread->Start();
   nuiRect rect(0.0f, 0.0f, (nuiSize)rInfo.Width, (nuiSize)rInfo.Height);
   //nuiSimpleContainer::SetRect(rect);
   if (SetObjectClass(_T("nuiMainWindow")))
@@ -163,6 +217,8 @@ bool nuiMainWindow::Load(const nuiXMLNode* pNode)
   
   mFullFrameRedraw = 2;
   mpNGLWindow = new NGLWindow(this, W, H, Fullscreen);
+  mpRenderThread = (new nuiMainWindowRenderThread(mpNGLWindow));
+  mpRenderThread->Start();
 
   nuiRect rect((nuiSize)0, (nuiSize)0, (nuiSize)W, (nuiSize)H);
   nuiSimpleContainer::SetRect(rect);
@@ -246,6 +302,9 @@ nuiMainWindow::~nuiMainWindow()
   delete mpInspectorWindow;
   nuiTopLevel::Exit();
   
+  mpRenderThread->SetDone();
+  mpRenderThread->Join();
+  delete mpRenderThread;
   delete mpNGLWindow;
   mpNGLWindow = NULL;
   //OnDestruction();
@@ -332,6 +391,7 @@ void nuiMainWindow::Paint()
   nuiSoftwarePainter* pCTX = dynamic_cast<nuiSoftwarePainter*>(pContext->GetPainter());
 #endif
 
+  mpRenderThread->BeginSession();
   mpNGLWindow->BeginSession();
 
   pContext->StartRendering();
@@ -398,7 +458,8 @@ void nuiMainWindow::Paint()
   //watch.AddIntermediate(_T("Before EndSession()"));
   pContext->EndSession();
   //watch.AddIntermediate(_T("Before End()"));
-  mpNGLWindow->EndSession();
+  //mpNGLWindow->EndSession();
+  mpRenderThread->EndSession();
 
   if (mFullFrameRedraw)
     mFullFrameRedraw--;
@@ -409,7 +470,6 @@ void nuiMainWindow::Paint()
   //printf("Frame stats | RenderOps: %d | Vertices %d | Batches %d\n", rops, verts, batches);
   
   //Invalidate();
-  
   
   if (mDebugSlowRedraw)
   {

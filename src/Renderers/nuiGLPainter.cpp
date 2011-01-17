@@ -376,6 +376,25 @@ void nuiGLPainter::StartRendering()
   glDisable(GL_ALPHA_TEST);
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
   BlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  
+  //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+  
+  glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+  glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+  
+  glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
+  glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
+  
+  glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+  glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
+  
+  glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_ALPHA);
+  glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+  
+  glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+  glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+
+  
   nuiCheckForGLErrors();
 }
 
@@ -1590,43 +1609,55 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture)
       nuiCheckForGLErrors();
       
     }
+
+    if (pTexture->GetPixelFormat() == eImagePixelAlpha)
+    {
+      if (mTexEnvMode != GL_COMBINE)
+      {
+        //printf("change1\n");
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+        
+//        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+//        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+//        
+//        glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
+//        glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
+//        
+//        glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+//        glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
+//        
+//        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_ALPHA);
+//        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+//        
+//        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+//        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+        mTexEnvMode = GL_COMBINE;
+      }
+      else
+      {
+        //printf("keep1\n");
+      }
+      
+    }
+    else
+    {
+      if (mTexEnvMode != pTexture->GetEnvMode())
+      {
+        //printf("change2\n");
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, pTexture->GetEnvMode());
+        mTexEnvMode = pTexture->GetEnvMode();
+      }
+      else
+      {
+        //printf("keep2\n");
+      }
+    }
+    
+    
+    
+    nuiCheckForGLErrors();
   }
 
-  if (pTexture->GetPixelFormat() == eImagePixelAlpha)
-  {
-    if (mTexEnvMode != GL_COMBINE)
-    {
-      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-      
-      glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-      glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-      
-      glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
-      glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-      
-      glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
-      glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-      
-      glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_ALPHA);
-      glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-      
-      glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-      glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
-      mTexEnvMode = GL_COMBINE;
-    }
-  }
-  else
-  {
-    if (mTexEnvMode != pTexture->GetEnvMode())
-    {
-      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, pTexture->GetEnvMode());
-      mTexEnvMode = pTexture->GetEnvMode();
-    }
-  }
-  
-  
-  
-  nuiCheckForGLErrors();
 
   if (changedctx)
   {
@@ -1634,7 +1665,9 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture)
     nuiCheckForGLErrors();
     glBindTexture(target, info.mTexture);
     nuiCheckForGLErrors();
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, pTexture->GetEnvMode());
+    if (mTexEnvMode != pTexture->GetEnvMode())
+      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, pTexture->GetEnvMode());
+    mTexEnvMode = pTexture->GetEnvMode();
     nuiCheckForGLErrors();
   }
   
