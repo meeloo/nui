@@ -41,20 +41,20 @@ public:
 
   void SetDone()
   {
-    printf("nuiMainWindowRenderThread::SetDone\n");
+    //printf("nuiMainWindowRenderThread::SetDone\n");
     mDone = true;
     mEvent.Pulse();
   }
   
   void BeginSession()
   {
-    printf("nuiMainWindowRenderThread::BeginSession\n");
+    //printf("nuiMainWindowRenderThread::BeginSession\n");
     mCS.Lock();
   }
 
   void EndSession()
   {
-    printf("nuiMainWindowRenderThread::EndSession\n");
+    //printf("nuiMainWindowRenderThread::EndSession\n");
     mCS.Unlock();
     mEvent.Pulse();
   }
@@ -63,12 +63,12 @@ public:
   {
     while (mEvent.Wait())
     {
-      printf("nuiMainWindowRenderThread Wait done\n");
+      //printf("nuiMainWindowRenderThread Wait done\n");
       nglCriticalSectionGuard g(mCS);
       mEvent.Reset();
       if (mDone)
         return;
-      printf("nuiMainWindowRenderThread call EndSession\n");
+      //printf("nuiMainWindowRenderThread call EndSession\n");
       mpWindow->EndSession();
     }
   }
