@@ -1,9 +1,9 @@
 /*
-  NUI3 - C++ cross-platform GUI framework for OpenGL based applications
-  Copyright (C) 2002-2003 Sebastien Metrot
-
-  licence: see nui3/LICENCE.TXT
-*/
+ NUI3 - C++ cross-platform GUI framework for OpenGL based applications
+ Copyright (C) 2002-2003 Sebastien Metrot
+ 
+ licence: see nui3/LICENCE.TXT
+ */
 
 
 
@@ -52,24 +52,24 @@ public:
     //printf("nuiMainWindowRenderThread::BeginSession\n");
     mCS.Lock();
   }
-
   void EndSession()
   {
     //printf("nuiMainWindowRenderThread::EndSession\n");
     mCS.Unlock();
     mEvent.Pulse();
   }
-
   void OnStart()
   {
     while (mEvent.Wait())
     {
+//      nuiStopWatch watch(_T("RenderThread"));
       //printf("nuiMainWindowRenderThread Wait done\n");
       nglCriticalSectionGuard g(mCS);
       mEvent.Reset();
       if (mDone)
         return;
       //printf("nuiMainWindowRenderThread call EndSession\n");
+//      watch.AddIntermediate(_T("before EndSession"));
       mpWindow->EndSession();
     }
   }
@@ -85,70 +85,69 @@ private:
 nuiContextInfo::nuiContextInfo(Type type)
 {
   TargetAPI = (nglTargetAPI)nuiMainWindow::GetRenderer();
-
+  
   StencilBits = 0;
   DepthBits = 0;
   FrameBitsA = 0;
   AABufferCnt = 0;
   AASampleCnt = 0;
-
+  
   switch (type)
   {
-  case StandardContext2D:
-  case StandardContext3D:
-    Offscreen = false;
-    RenderToTexture = false;
-    AASampleCnt = NUI_MULTISAMPLES;
-    if (AASampleCnt)
-      AABufferCnt = 1;
-    CopyOnSwap = true;
-    break;
-  case OffscreenContext2D:
-  case OffscreenContext3D:
-    Offscreen = true;
-    RenderToTexture = true;
-    AASampleCnt = NUI_MULTISAMPLES;
-    if (AASampleCnt)
-      AABufferCnt = 1;
-    CopyOnSwap = true;
-    break;
+    case StandardContext2D:
+    case StandardContext3D:
+      Offscreen = false;
+      RenderToTexture = false;
+      AASampleCnt = NUI_MULTISAMPLES;
+      if (AASampleCnt)
+        AABufferCnt = 1;
+      CopyOnSwap = true;
+      break;
+    case OffscreenContext2D:
+    case OffscreenContext3D:
+      Offscreen = true;
+      RenderToTexture = true;
+      AASampleCnt = NUI_MULTISAMPLES;
+      if (AASampleCnt)
+        AABufferCnt = 1;
+      CopyOnSwap = true;
+      break;
   }
-
+  
   if (type == StandardContext3D || type == OffscreenContext3D)
     DepthBits = 16;
 }
 
 nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const nglPath& rResPath)
-  : nuiTopLevel(rResPath),
-    mMainWinSink(this),
-    mQuitOnClose(true),
-    mpDragSource(NULL),
-    mPaintEnabled(true)
+: nuiTopLevel(rResPath),
+mMainWinSink(this),
+mQuitOnClose(true),
+mpDragSource(NULL),
+mPaintEnabled(true)
 {
   mFullFrameRedraw = 2;
   mpNGLWindow = new NGLWindow(this, Width, Height, Fullscreen);
   mpRenderThread = (new nuiMainWindowRenderThread(mpNGLWindow));
   mpRenderThread->Start();
-
   nuiRect rect(0.0f, 0.0f, (nuiSize)Width, (nuiSize)Height);
   //nuiSimpleContainer::SetRect(rect);
   if (SetObjectClass(_T("nuiMainWindow")))
     InitAttributes();
   mMaxFPS = 0.0f;
-
+  
   uint w,h;
   mpNGLWindow->GetSize(w,h);
-
+  
   SetRect(nuiRect(0.0f, 0.0f, (nuiSize)w, (nuiSize)h));
   
   mLastRendering = 0;
-
+  
   mDisplayMouseOverInfo = false;
   mDisplayMouseOverObject = false;
   mpInfoLabel = new nuiLabel(_T("No info"));
   AddChild(mpInfoLabel);
   mpInfoLabel->SetVisible(false);
-
+  
   mDebugMode = false;
   mDebugSlowRedraw = false;
   mInvalidatePosted = false;
@@ -164,11 +163,11 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
 }
 
 nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo, const nglContext* pShared, const nglPath& rResPath)
-  : nuiTopLevel(rResPath),
-    mMainWinSink(this),
-    mQuitOnClose(true),
-    mpDragSource(NULL),
-    mPaintEnabled(true)
+: nuiTopLevel(rResPath),
+mMainWinSink(this),
+mQuitOnClose(true),
+mpDragSource(NULL),
+mPaintEnabled(true)
 {
   mFullFrameRedraw = 2;
   mpNGLWindow = new NGLWindow(this, rContextInfo, rInfo, pShared);
@@ -178,22 +177,22 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   //nuiSimpleContainer::SetRect(rect);
   if (SetObjectClass(_T("nuiMainWindow")))
     InitAttributes();
-
+  
   mMaxFPS = 0.0f;
-
+  
   uint w,h;
   mpNGLWindow->GetSize(w,h);
-
+  
   SetRect(nuiRect(0.0f, 0.0f, (nuiSize)w, (nuiSize)h));
   
   mLastRendering = 0;
-
+  
   mDisplayMouseOverInfo = false;
   mDisplayMouseOverObject = false;
   mpInfoLabel = new nuiLabel(_T("No info"));
   AddChild(mpInfoLabel);
   mpInfoLabel->SetVisible(false);
-
+  
   mDebugMode = false;
   mDebugSlowRedraw = false;
   mInvalidatePosted = false;
@@ -202,9 +201,9 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = 0;
-
+  
   nuiDefaultDecoration::MainWindow(this);  
-
+  
   mMainWinSink.Connect(nuiAnimation::AcquireTimer()->Tick, &nuiMainWindow::InvalidateTimer);
 }
 
@@ -220,11 +219,10 @@ bool nuiMainWindow::Load(const nuiXMLNode* pNode)
   mpNGLWindow = new NGLWindow(this, W, H, Fullscreen);
   mpRenderThread = (new nuiMainWindowRenderThread(mpNGLWindow));
   mpRenderThread->Start();
-
   nuiRect rect((nuiSize)0, (nuiSize)0, (nuiSize)W, (nuiSize)H);
   nuiSimpleContainer::SetRect(rect);
   SetObjectClass(_T("nuiMainWindow"));
-
+  
   if (pNode->HasAttribute("Renderer"))
   {
     nglString renderer = pNode->GetAttribute("Renderer");
@@ -236,65 +234,65 @@ bool nuiMainWindow::Load(const nuiXMLNode* pNode)
     else if (renderer == _T("software"))
       nuiTopLevel::SetRenderer(eSoftware);
   }
-
+  
   uint w,h;
   mpNGLWindow->GetSize(w,h);
-
+  
   GetDrawContext();
-
+  
   SetRect(nuiRect(0.0f, 0.0f, (nuiSize)w, (nuiSize)h));
-
+  
   mMaxFPS = 0.0f;
   mLastRendering = 0;
-
+  
   // Once every thing is properly created on the root window, create the children:
   if (mpParent)
     mpParent->DelChild(this);
   SetParent(NULL);
   mHasFocus = false;
   SetVisible(true);
-
+  
   if (pNode->HasAttribute(_T("Name")))
     SetObjectName(pNode->GetAttribute(nglString(_T("Name"))));
-
+  
   if (pNode->HasAttribute(_T("Title")))
     mpNGLWindow->SetTitle(pNode->GetAttribute(nglString(_T("Title"))));
-
+  
   // Retrieve the size of the widget from the xml description (ignored if not present):
   mRect.mLeft = pNode->GetAttribute(nglString(_T("X"))).GetCFloat();
   mRect.mRight = mRect.mLeft + pNode->GetAttribute(nglString(_T("Width"))).GetCFloat();
   mRect.mTop = pNode->GetAttribute(nglString(_T("Y"))).GetCFloat();
   mRect.mBottom = mRect.mTop + pNode->GetAttribute(nglString(_T("Height"))).GetCFloat();
   mIdealRect = mRect;
-
+  
   SetVisible(nuiGetBool(pNode,nglString(_T("Visible")),true));
-
+  
   nuiWidget::SetEnabled(nuiGetBool(pNode, _T("Enabled"), true));
   nuiWidget::SetSelected(nuiGetBool(pNode, _T("Selected"), true));
-
-
-/* THIS SHOULD ALREADY BE IN nuiContainer::nuiContainer...
-  uint i, count = pNode->GetChildrenCount();
-  for (i = 0; i < count; i++)
-  {
-    nuiXMLNode* pChild = pNode->GetChild(i);
-    if (!nuiCreateWidget(this, pChild))
-    {
-      // If the child is not a creatable element then may be a text property of the object.
-      nuiXMLNode* pText = pChild->SearchForChild(nglString("##text"));
-      if (pText)
-        SetProperty(pChild->GetName(),pText->GetValue());
-    }
-  }
-*/
-
+  
+  
+  /* THIS SHOULD ALREADY BE IN nuiContainer::nuiContainer...
+   uint i, count = pNode->GetChildrenCount();
+   for (i = 0; i < count; i++)
+   {
+   nuiXMLNode* pChild = pNode->GetChild(i);
+   if (!nuiCreateWidget(this, pChild))
+   {
+   // If the child is not a creatable element then may be a text property of the object.
+   nuiXMLNode* pText = pChild->SearchForChild(nglString("##text"));
+   if (pText)
+   SetProperty(pChild->GetName(),pText->GetValue());
+   }
+   }
+   */
+  
   mDisplayMouseOverInfo = false;
   mDisplayMouseOverObject = false;
   mDebugMode = false;
   mInvalidatePosted = false;
   mpInspectorWindow = NULL;
   mpWidgetCanDrop = NULL;
-
+  
   return true;
 }
 
@@ -329,9 +327,9 @@ nuiXMLNode* nuiMainWindow::Serialize(nuiXMLNode* pParentNode, bool Recursive) co
   nuiXMLNode* pNode = nuiSimpleContainer::Serialize(pParentNode, Recursive);
   if (!pNode) 
     return NULL;
-
+  
   pNode->SetAttribute(_T("Title"), mpNGLWindow->GetTitle());
-
+  
   return pNode;
 }
 
@@ -363,7 +361,7 @@ void nuiMainWindow::Paint()
   //nuiStopWatch watch(_T("nuiMainWindow::Paint"));
   do 
   {
-
+    
     FillTrash();
     
     GetIdealRect();
@@ -371,43 +369,59 @@ void nuiMainWindow::Paint()
     
     EmptyTrash();
   } while (IsTrashFull());
-
+  
   if (!mInvalidatePosted)
   {
     return;
   }
   
   FillTrash();
-
+  
   //watch.AddIntermediate(_T("After FillTrash()"));
   
   nuiDrawContext* pContext = GetDrawContext();
   
   pContext->GetPainter()->ResetStats();
-
-
+  
+#ifdef _UIKIT_  
+  pContext->GetPainter()->SetAngle(mpNGLWindow->GetRotation());
+#endif
+  
+#ifndef __NUI_NO_SOFTWARE__
+  nuiSoftwarePainter* pCTX = dynamic_cast<nuiSoftwarePainter*>(pContext->GetPainter());
+#endif
+  
   mpRenderThread->BeginSession();
   mpNGLWindow->BeginSession();
-
-  //pContext->StartRendering();
+  
+  pContext->StartRendering();
   pContext->Set2DProjectionMatrix(GetRect().Size());
   bool DrawFullFrame = !mInvalidatePosted || (mFullFrameRedraw > 0);
   bool RestorePartial = IsPartialRedrawEnabled();
   mInvalidatePosted = false;
   if (DrawFullFrame && RestorePartial)
     EnablePartialRedraw(false);
-
+  
   std::vector<nuiRect> RedrawList(mDirtyRects);
     
+  //  static int counter = 0;
+  //NGL_OUT(_T("%d OnPaint %d - %d\n"), counter++, DrawFullFrame, RestorePartial);
+  
   if (!IsMatrixIdentity())
     pContext->MultMatrix(GetMatrix());
   mLastRendering = nglTime();
-
-  pContext->ResetState();
-  pContext->ResetClipRect();
+  DrawTree(pContext);
   
-  pContext->SetClearColor(GetColor(eActiveWindowBg));
-  if (mClearBackground)
+  if (mDisplayMouseOverObject)
+    DBG_DisplayMouseOverObject();
+  
+  if (mDisplayMouseOverInfo)
+    DBG_DisplayMouseOverInfo();
+  
+  if (DrawFullFrame && RestorePartial)
+    EnablePartialRedraw(true);
+  
+  if (0)
   {
     pContext->Clear();
   }
@@ -417,20 +431,24 @@ void nuiMainWindow::Paint()
     pContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
   }
   
-  DrawWidget(pContext);
-  
-  if (DrawFullFrame && RestorePartial)
-    EnablePartialRedraw(true);
-
   pContext->StopRendering();
   EmptyTrash();
-
-  //watch.AddIntermediate(_T("Before EndSession()"));
-  pContext->EndSession();
-  //watch.AddIntermediate(_T("Before End()"));
-  //mpNGLWindow->EndSession();
-  mpRenderThread->EndSession();
-
+  
+#ifndef __NUI_NO_SOFTWARE__
+  if (pCTX)
+  {
+    if (DrawFullFrame)
+    {
+      pCTX->Display(GetNGLWindow(), GetRect());      
+    }
+    else
+    {
+      for (uint i = 0; i < RedrawList.size(); i++)
+        pCTX->Display(GetNGLWindow(), RedrawList[i]);
+    }
+  }
+#endif//__NUI_NO_SOFTWARE__
+  
   if (mFullFrameRedraw)
     mFullFrameRedraw--;
   
@@ -454,12 +472,12 @@ void nuiMainWindow::OnResize(uint Width, uint Height)
   Rect.mRight=(nuiSize)Width;
   Rect.mBottom=(nuiSize)Height;
   //SetLayout(Rect);
-
+  
   GetDrawContext()->SetSize(Width,Height);
-
+  
   //NGL_OUT(_T("(OnResize)nglWindow::Invalidate()\n"));;
   InvalidateLayout();
-
+  
   mFullFrameRedraw++;
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
@@ -528,7 +546,7 @@ void nuiMainWindow::InvalidateLayout()
 void nuiMainWindow::BroadcastInvalidate(nuiWidgetPtr pSender)
 {
   nuiTopLevel::BroadcastInvalidate(pSender);
-
+  
   //NGL_OUT(_T("(Invalidate)InvalidatePosted(%ls)\n"), pSender->GetObjectClass().GetChars());
   mInvalidatePosted = true;
 }
@@ -536,7 +554,7 @@ void nuiMainWindow::BroadcastInvalidate(nuiWidgetPtr pSender)
 void nuiMainWindow::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect)
 {
   nuiTopLevel::BroadcastInvalidateRect(pSender, rRect);
-
+  
   //NGL_OUT(_T("(InvalidateRect)InvalidatePosted(%ls)\n"), pSender->GetObjectClass().GetChars());
   mInvalidatePosted = true;
 }
@@ -544,7 +562,7 @@ void nuiMainWindow::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect&
 void nuiMainWindow::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOnly)
 {
   nuiTopLevel::BroadcastInvalidateLayout(pSender, BroadCastOnly);
-
+  
   //NGL_OUT(_T("(Invalidate)BroadcastInvalidateLayout(%ls)\n"), pSender->GetObjectClass().GetChars());
   mInvalidatePosted = true;
 }
@@ -553,13 +571,13 @@ void nuiMainWindow::DBG_DisplayMouseOverObject()
 {
   nglMouseInfo mouse;
   mpNGLWindow->GetMouse(mouse);
-
+  
   nuiWidgetPtr pWidget = GetChild((nuiSize)mouse.X,(nuiSize)mouse.Y);
   if (pWidget)
   {
     if (!nuiGetBool(pWidget->GetInheritedProperty(_T("DebugObject")),true))
       return;
-
+    
     nuiRect rect = pWidget->GetRect().Size();
     pWidget->LocalToGlobal(rect);
     nuiDrawContext* pContext = GetDrawContext();
@@ -595,27 +613,27 @@ void nuiMainWindow::DBG_DisplayMouseOverInfo()
   {
     if (!nuiGetBool(pWidget->GetInheritedProperty(_T("DebugInfo")),true))
       return;
-
+    
     nglString text;
     text.CFormat
-      (
-        _T("Class: '%ls'\nName: '%ls'\n"),
-        pWidget->GetObjectClass().GetChars(),
-        pWidget->GetObjectName().GetChars()
-      );
+    (
+     _T("Class: '%ls'\nName: '%ls'\n"),
+     pWidget->GetObjectClass().GetChars(),
+     pWidget->GetObjectName().GetChars()
+     );
     nuiXMLNode* pNode = pWidget->Serialize(NULL,false);
     if (!pNode) // We have no information
       return;
-
+    
     nuiXMLNode* pChild;
     while ((pChild = pNode->GetChild(0)))
       pNode->DelChild(pChild);
     nglString xmltext = pNode->Dump(0);
     xmltext.Replace(' ','\n');
-
+    
     mpInfoLabel->SetText(text+xmltext);
   }
-
+  
   nuiRect rect;
   rect = mpInfoLabel->GetIdealRect();
   // Keep at reasonable distance from mouse pointer
@@ -626,7 +644,7 @@ void nuiMainWindow::DBG_DisplayMouseOverInfo()
   if (rect.mBottom > GetRect().mBottom)
     rect.Move(0,GetRect().mBottom - rect.mBottom);
   mpInfoLabel->SetLayout(rect);
-
+  
   nuiDrawContext* pContext = GetDrawContext();
   pContext->PushMatrix();
   float x = (float)mpInfoLabel->GetRect().mLeft;
@@ -635,7 +653,7 @@ void nuiMainWindow::DBG_DisplayMouseOverInfo()
   rect = mpInfoLabel->GetRect().Size();
   rect.mLeft -= 3;
   rect.mRight += 3;
-
+  
   pContext->SetFillColor(nuiColor(1.f,1.f,1.f,.8f));
   pContext->SetStrokeColor(nuiColor(0.f,0.f,0.f,.3f));
   pContext->EnableBlending(true);
@@ -726,7 +744,7 @@ bool nuiMainWindow::OnKeyDown(const nglKeyEvent& rEvent)
     if (rEvent.mKey == NK_D && 
         (IsKeyDown(NK_LCTRL) || IsKeyDown(NK_RCTRL)) && 
         (IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT))
-       )
+        )
     {
       ShowWidgetInspector();
     }
@@ -788,7 +806,7 @@ bool nuiMainWindow::ShowWidgetInspector()
 #ifndef NUI_IOS
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
-
+  
   if (mpInspectorWindow)
   {
     delete mpInspectorWindow;
@@ -797,14 +815,14 @@ bool nuiMainWindow::ShowWidgetInspector()
   else
   {
     nglWindowInfo Info;
-
+    
     nglPath ResPath = nglPath(ePathCurrent);
-
+    
     Info.Pos = nglWindowInfo::ePosAuto;
-
+    
     Info.Width  = 800;
     Info.Height = 600;
-
+    
     mpInspectorWindow = new nuiMainWindow(nuiContextInfo(nuiContextInfo::StandardContext2D), Info, GetNGLContext(), ResPath);
     mpInspectorWindow->SetQuitOnClose(false);
     mpInspectorWindow->AddChild(new nuiIntrospector(this));
@@ -944,7 +962,7 @@ nglDropEffect nuiMainWindow::OnCanDrop (nglDragAndDrop* pDragObject, int X, int 
   
   nuiSize x = (nuiSize)X;
   nuiSize y = (nuiSize)Y;
-
+  
   WidgetCanDrop Functor(pDragObject, x, y);
   nuiWidget* pWidget = GetChildIf(x,y, &Functor);
   if (!pWidget)
@@ -956,7 +974,7 @@ nglDropEffect nuiMainWindow::OnCanDrop (nglDragAndDrop* pDragObject, int X, int 
     }
     return eDropEffectNone;
   }
-
+  
   pWidget->GlobalToLocal(x, y);
   
   nglDropEffect effect = pWidget->OnCanDrop(pDragObject, x, y);
@@ -975,15 +993,15 @@ void nuiMainWindow::OnDropped (nglDragAndDrop* pDragObject, int X,int Y, nglMous
   mLastInteractiveEventTime = nglTime();
   nuiSize x = (nuiSize)X;
   nuiSize y = (nuiSize)Y;
-
+  
   WidgetCanDrop Functor(pDragObject, x, y);
   nuiWidget* pWidget = GetChildIf(x,y, &Functor);
   if (!pWidget)
     return;
   NGL_ASSERT(pWidget);
-
+  
   NGL_ASSERT(mpWidgetCanDrop == pWidget);
-
+  
   pWidget->GlobalToLocal(x,y);
   pWidget->OnDropped(pDragObject, x, y, Button);
   mpWidgetCanDrop = NULL;
@@ -1018,13 +1036,13 @@ void nuiMainWindow::OnDragStop(bool canceled)
 ///////////////////////////
 nuiMainWindow::NGLWindow::NGLWindow(nuiMainWindow* pMainWindow, uint Width, uint Height, bool FullScreen)
 : nglWindow(Width, Height, FullScreen),
-  mpMainWindow(pMainWindow)
+mpMainWindow(pMainWindow)
 {
 }
 
 nuiMainWindow::NGLWindow::NGLWindow(nuiMainWindow* pMainWindow, const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo, const nglContext* pShared)
 : nglWindow(rContextInfo, rInfo, pShared),
-  mpMainWindow(pMainWindow)
+mpMainWindow(pMainWindow)
 {
 }
 

@@ -120,6 +120,20 @@
 			remoteGlobalIDString = E52412CD11CB860B0025CA71;
 			remoteInfo = nuiPhoneD;
 		};
+		E5209F9112E3A85000028CE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCD448A211D2120F00BEF227 /* nui3.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E5DD341012E09CA800F1EF4E /* libthirdparty.a */;
+			remoteInfo = thirdparty;
+		};
+		E5209F9312E3A85000028CE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCD448A211D2120F00BEF227 /* nui3.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E5DD3FF412E0B08300F1EF4E /* libthirdparty_ios.a */;
+			remoteInfo = thirdparty_ios;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -312,6 +326,8 @@
 				BCD448B711D2120F00BEF227 /* libnuiPhone.a */,
 				BC39712812883D4D00061EFE /* libnui3CocoaD.a */,
 				BC39712A12883D4D00061EFE /* libnui3Cocoa.a */,
+				E5209F9212E3A85000028CE9 /* libthirdparty.a */,
+				E5209F9412E3A85000028CE9 /* libthirdparty_ios.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -399,7 +415,6 @@
 			isa = PBXProject;
 			buildConfigurationList = 61A9DE400B833C9200BC506C /* Build configuration list for PBXProject "Shades" */;
 			compatibilityVersion = "Xcode 3.1";
-			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
@@ -467,6 +482,20 @@
 			fileType = archive.ar;
 			path = libnuiPhone.a;
 			remoteRef = BCD448B611D2120F00BEF227 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E5209F9212E3A85000028CE9 /* libthirdparty.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libthirdparty.a;
+			remoteRef = E5209F9112E3A85000028CE9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E5209F9412E3A85000028CE9 /* libthirdparty_ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libthirdparty_ios.a;
+			remoteRef = E5209F9312E3A85000028CE9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

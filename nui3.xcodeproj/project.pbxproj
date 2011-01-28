@@ -13557,7 +13557,6 @@
 			};
 			buildConfigurationList = E58167300C3CEBF100902DFE /* Build configuration list for PBXProject "nui3" */;
 			compatibilityVersion = "Xcode 3.1";
-			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
