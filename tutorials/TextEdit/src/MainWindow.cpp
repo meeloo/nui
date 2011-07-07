@@ -25,18 +25,6 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 {
   SetDebugMode(true);
   //mClearBackground = false;
-}
-
-MainWindow::~MainWindow()
-{
-  delete mpLayout;
-  if (mpFont)
-    mpFont->Release();
-}
-
-
-void MainWindow::OnCreation()
-{
   nuiScrollView* pScrollView = new nuiScrollView;
   nuiEditText* pText = new nuiEditText(_T(""));
   
@@ -46,7 +34,7 @@ void MainWindow::OnCreation()
     pStream->SetTextEncoding(eUTF8);
     nglString text;
     pStream->ReadText(text);
-
+    
     nuiFontRequest request;
     request.MustHaveSize(25, 1);
     request.SetName("Helvetica", 2);
@@ -69,6 +57,18 @@ void MainWindow::OnCreation()
   pScrollView->AddChild(pText);
   
   pScrollView->SetBorder(10, 10, 32, 32);
+}
+
+MainWindow::~MainWindow()
+{
+  delete mpLayout;
+  if (mpFont)
+    mpFont->Release();
+}
+
+
+void MainWindow::OnCreation()
+{
 }
 
 bool MainWindow::Draw(nuiDrawContext* pContext)

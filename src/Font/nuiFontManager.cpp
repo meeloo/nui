@@ -12,9 +12,6 @@
 #include "nuiVBox.h"
 
 #ifdef _UIKIT_
-#ifdef __IPHONE_3_2
-#include <CoreText/CoreText.h>
-#endif
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
@@ -684,7 +681,7 @@ static nuiLabel* gpFontPathLabel = NULL;
 
 void nuiFontManager::ScanFolders(bool rescanAllFolders /* = false */)
 {
-#ifdef _UIKIT_
+#if 0 //def _UIKIT_
   UpdateFonts();
   return;
 #endif
