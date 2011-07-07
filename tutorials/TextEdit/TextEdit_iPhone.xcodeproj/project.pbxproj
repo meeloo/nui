@@ -29,8 +29,8 @@
 		C9F5F9300DA84CAB00E078ED /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99998F50DA7CAF2001A7116 /* QuartzCore.framework */; };
 		E545757F13C5234F004C57D9 /* libnuiPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E531652813C5230200161EDA /* libnuiPhone.a */; };
 		E545758213C5235C004C57D9 /* libnuiPhoneD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E531652613C5230200161EDA /* libnuiPhoneD.a */; };
-		E545758413C52476004C57D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = E545758313C52476004C57D9 /* resources */; };
-		E545758513C52476004C57D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = E545758313C52476004C57D9 /* resources */; };
+		E545758413C52476004C57D9 /* resource in Resources */ = {isa = PBXBuildFile; fileRef = E545758313C52476004C57D9 /* resource */; };
+		E545758513C52476004C57D9 /* resource in Resources */ = {isa = PBXBuildFile; fileRef = E545758313C52476004C57D9 /* resource */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,7 +137,7 @@
 		C9F2587A0E5861EA00687021 /* dlist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = dlist.plist; sourceTree = "<group>"; };
 		C9F5F9330DA84CAB00E078ED /* TextEdit_iPhoneD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextEdit_iPhoneD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E531651413C5230100161EDA /* nui3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = nui3.xcodeproj; path = ../../nui3.xcodeproj; sourceTree = "<group>"; };
-		E545758313C52476004C57D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
+		E545758313C52476004C57D9 /* resource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resource; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,7 +210,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				E545758313C52476004C57D9 /* resources */,
+				E545758313C52476004C57D9 /* resource */,
 				C9F2587A0E5861EA00687021 /* dlist.plist */,
 				C99996330DA6EED8001A7116 /* sources */,
 				C99996230DA6EED8001A7116 /* dependencies */,
@@ -413,7 +413,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E545758513C52476004C57D9 /* resources in Resources */,
+				E545758513C52476004C57D9 /* resource in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,7 +421,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E545758413C52476004C57D9 /* resources in Resources */,
+				E545758413C52476004C57D9 /* resource in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,7 +536,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = TextEdit_iPhoneD;
-				PROVISIONING_PROFILE = "8FF91B58-89F2-4892-A793-B0344A0710B3";
+				PROVISIONING_PROFILE = "A1E64AB2-0A31-456E-8993-D1E551A5A202";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Default;
