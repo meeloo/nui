@@ -22,11 +22,6 @@
 //#define NUI_USE_GL_VERTEX_BUFFER
 #define NUI_COMPLEX_SHAPE_THRESHOLD 6
 
-//#define NUI_USE_ANTIALIASING
-#ifdef NUI_USE_ANTIALIASING
-#define NUI_USE_MULTISAMPLE_AA
-#endif
-
 
 #ifdef _OPENGL_ES_
 
@@ -1017,38 +1012,14 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
     glTranslatef(hackX, hackY, 0);
   }
   
-  
-#ifdef NUI_USE_ANTIALIASING
-  if (mFinalState.mAntialiasing)
-  {
-#ifdef NUI_USE_MULTISAMPLE_AA
-    glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
-    glEnable(GL_MULTISAMPLE_ARB);
-    nuiCheckForGLErrors();
-#else
-    glEnable(GL_POLYGON_SMOOTH);
-    glEnable(GL_BLEND);
-    BlendFuncSeparate(GL_SRC_ALPHA_SATURATE, GL_ONE);
-    nuiCheckForGLErrors();
-#endif
-  }
-#endif // NUI_USE_ANTIALIASING
-  
-//  if (pArray->IsArrayEnabled(nuiRenderArray::eVertex))
-//  {
-//    if (!mClientVertex)
-      glEnableClientState(GL_VERTEX_ARRAY);
-    mClientVertex = true;
-    glVertexPointer(3, GL_FLOAT, sizeof(nuiRenderArray::Vertex), &pArray->GetVertices()[0].mX);
-    nuiCheckForGLErrors();
-//  }
-//  else
-//  {
-//    if (mClientVertex)
-//      glDisableClientState(GL_VERTEX_ARRAY);
-//    mClientVertex = false;
-//  }
-  
+
+  glEnableClientState(GL_VERTEX_ARRAY);
+  mClientVertex = true;
+  //extern void glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
+//  glVertexAttribPointer(gl_Vertex, 3, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), &pArray->GetVertices()[0].mX);
+//  glEnableVertexAttribArray(gl_Vertex);
+  nuiCheckForGLErrors();
+
   float r = mR, g = mG, b = mB, a = mA;
   if (pArray->IsArrayEnabled(nuiRenderArray::eColor))
   {
@@ -1209,57 +1180,7 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
     nuiCheckForGLErrors();
   }
   
-  
-#ifdef NUI_USE_ANTIALIASING
-  if (mFinalState.mAntialiasing)
   {
-#ifdef NUI_USE_MULTISAMPLE_AA
-    glDisable(GL_MULTISAMPLE_ARB);
-#else
-    glDisable(GL_POLYGON_SMOOTH);
-    glDisable(GL_BLEND);
-    BlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#endif
-    nuiCheckForGLErrors();
-  }
-  else
-#endif // NUI_USE_ANTIALIASING
-  {
-    //#TEST meeloo disabling AA texture
-    //     if (pArray->UseGLAATexture())
-    //     {
-    //       glMatrixMode(GL_TEXTURE);
-    //       glPopMatrix();
-    //       glMatrixMode(GL_MODELVIEW);
-    //       glPopMatrix();
-    // 
-    //       if (mFinalState.mpTexture && mFinalState.mTexturing)
-    //       {
-    //         if (mTextureTarget != GL_TEXTURE_2D)
-    //         {
-    //           glDisable(GL_TEXTURE_2D);
-    //           glEnable(mTextureTarget);
-    //         }
-    // 
-    //         UploadTexture(mFinalState.mpTexture);
-    //       }
-    //       else
-    //       {
-    //         glDisable(GL_TEXTURE_2D);
-    //       }
-    // 
-    //       if (!mFinalState.mBlending)
-    //         glDisable(GL_BLEND);
-    //       if (mFinalState.mBlendFunc != nuiBlendTransp)
-    //       {
-    //         GLenum src, dst;
-    //         nuiGetBlendFuncFactors(mFinalState.mBlendFunc, src, dst);
-    //         glBlendFunc(src, dst);
-    //       }
-    //       //ApplyTexture(mState, true);
-    //     }
-    //     else
-    
     if (NeedTranslateHack)
       glTranslatef(-hackX, -hackY, 0);
   }

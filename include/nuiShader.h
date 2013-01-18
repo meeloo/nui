@@ -19,32 +19,14 @@ enum nuiShaderKind
 class nuiShader : public nuiRefCount
 {
 public:
-  nuiShader(nuiShaderKind kind, const nglString& rSource);
-  nuiShader(nuiShaderKind kind, nglIStream& rSource);
+  nuiShader();
   virtual ~nuiShader();
 
-  bool Load();
-  void Delete();
-
-  GLuint GetShader() const;
-  bool IsValid() const;
-  const nglString& GetError() const;
-private:
-  nuiShaderKind mKind;
-  nglString mSource;
-  nglString mError;
-  GLuint mShader;
-};
-
-class nuiShaderProgram
-{
-public:
-  nuiShaderProgram();
-  virtual ~nuiShaderProgram();
-
-  bool AddShader(nuiShader* pShader);
+  bool AddShader(nuiShaderKind kind, const nglString& rSource);
+  bool AddShader(nuiShaderKind kind, nglIStream& rSource);
 
 
+#if 0
   // Geometry Shader: Input Type, Output and Number of Vertices out
   void       SetInputPrimitiveType(int InputPrimitiveType);   //!< Set the input primitive type for the geometry shader
   void       SetOutputPrimitiveType(int OutputPrimitiveType); //!< Set the output primitive type for the geometry shader
@@ -170,7 +152,25 @@ public:
   // Normalized Byte (for example for RGBA colors)
   void        SetVertexAttribNormalizedByte(GLuint index, GLbyte v0, GLbyte v1, GLbyte v2, GLbyte v3); //!< Specify value of attribute. Values will be normalized.
 #endif
+#endif
 
 private:
+  void Delete();
+
   GLuint mProgram;
+  class Source
+  {
+  public:
+    Source()
+    : mID(0)
+    {
+
+    }
+
+    nglString mSource;
+    GLuint mID;
+    nuiShaderKind mKind;
+    nglString mError;
+  };
+
 };

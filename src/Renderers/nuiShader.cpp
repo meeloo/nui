@@ -9,54 +9,47 @@
 #include "nui.h"
 #include "nuiShader.h"
 
-nuiShader::nuiShader(nuiShaderKind kind, const nglString& rSource)
-: mKind(kind), mShader(0), mSource(rSource)
+nuiShader::nuiShader()
 {
 
-}
-
-nuiShader::nuiShader(nuiShaderKind kind, nglIStream& rSource)
-: mKind(kind), mShader(0)
-{
-  rSource.ReadText(mSource);
 }
 
 nuiShader::~nuiShader()
 {
-  if (IsValid())
-    Delete();
+  Delete();
 }
 
-bool nuiShader::Load()
+#if 0
+bool nuiShader::LoadSource(nuiShader::Source& rSource)
 {
   NGL_ASSERT(mShader == 0);
 
   GLint compiled;
   // Create the shader object
-  mShader = glCreateShader((GLenum)mKind);
-  if (mShader == 0)
+  rSource.mID = glCreateShader((GLenum)rSource.mKind);
+  if (rSource.mID == 0)
     return false;
   // Load the shader source
-  const char* src = mSource.GetChars();
-  glShaderSource(mShader, 1, &src, NULL);
+  const char* src = rSource.mSource.GetChars();
+  glShaderSource(rSource.mID, 1, &src, NULL);
   // Compile the shader
-  glCompileShader(mShader);
+  glCompileShader(rSource.mID);
   // Check the compile status
-  glGetShaderiv(mShader, GL_COMPILE_STATUS, &compiled);
+  glGetShaderiv(rSource.mID, GL_COMPILE_STATUS, &compiled);
 
   if (!compiled)
   {
     GLint infoLen = 0;
-    glGetShaderiv(mShader, GL_INFO_LOG_LENGTH, &infoLen);
+    glGetShaderiv(rSource.mID, GL_INFO_LOG_LENGTH, &infoLen);
     if (infoLen > 1)
     {
       char* infoLog = (char*)malloc(sizeof(char) * infoLen);
-      glGetShaderInfoLog(mShader, infoLen, NULL, infoLog);
-      mError = infoLog;
+      glGetShaderInfoLog(rSource.mID, infoLen, NULL, infoLog);
+      rSource.mError = infoLog;
       free(infoLog);
     }
-    glDeleteShader(mShader);
-    mShader = 0;
+    glDeleteShader(rSource.mID);
+    rSource.mID = 0;
     return false;
   }
 
@@ -65,10 +58,11 @@ bool nuiShader::Load()
 
 void nuiShader::Delete()
 {
-  NGL_ASSERT(mShader != 0);
-  glDeleteShader(mShader);
-  mShader = 0;
+  NGL_ASSERT(rSource.mID != 0);
+  glDeleteShader(rSource.mID);
+  rSource.mID = 0;
 }
+
 
 GLuint nuiShader::GetShader() const
 {
@@ -87,6 +81,7 @@ const nglString& nuiShader::GetError() const
 
 
 ////////////////////// nuiShader Program:
+
 void nuiShaderProgram::SetInputPrimitiveType(int InputPrimitiveType)
 {
 
@@ -497,4 +492,4 @@ void nuiShaderProgram::SetVertexAttribNormalizedByte(GLuint index, GLbyte v0, GL
 }
 #endif
 
-
+#endif
