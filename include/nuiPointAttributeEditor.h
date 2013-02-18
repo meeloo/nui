@@ -8,9 +8,6 @@
 #pragma once
 
 
-#include "nui.h"
-#include "nuiAttributeEditor.h"
-
 class NUI_API nuiPointAttributeEditor : public nuiAttributeEditor
 {
 public:

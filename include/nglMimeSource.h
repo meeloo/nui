@@ -13,8 +13,6 @@
 #ifndef __nglMimeSource_h__
 #define __nglMimeSource_h__
 
-#include "nglString.h"
-
 class NGL_API nglMimeSource
 {
   friend class nglClipBoard;

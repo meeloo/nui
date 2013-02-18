@@ -8,9 +8,6 @@
 #ifndef __nuiAnimation_h__
 #define __nuiAnimation_h__
 
-//#include "nui.h"
-#include "nuiTimer.h"
-
 class nuiTask;
 
 enum nuiAnimWhence

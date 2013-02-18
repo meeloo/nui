@@ -8,14 +8,6 @@
 #pragma once
 
 
-#include "nui.h"
-#include "nuiAttribute.h"
-#include "nuiAttributeEditor.h"
-#include "nuiPane.h"
-#include "nuiButton.h"
-#include "nuiColorSelector.h"
-#include "nuiHBox.h"
-
 class NUI_API nuiColorAttributeEditor : public nuiAttributeEditor
 {
 public:

@@ -13,11 +13,6 @@
 #ifndef __nglConsole_h__
 #define __nglConsole_h__
 
-//#include "nui.h"
-#include "nglEvent.h"
-#include "nglString.h"
-#include "nglCriticalSection.h"
-
 #define NGL_DISABLE_CONSOLE 0
 
 

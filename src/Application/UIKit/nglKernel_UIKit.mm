@@ -19,8 +19,6 @@
 
 #include "nui.h"
 
-#include "nglKernel.h"
-
 #include <UIKit/UIApplication.h>
 #include <UIKit/UIWindow.h>
 

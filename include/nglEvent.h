@@ -13,8 +13,6 @@
 #ifndef __nglEvent_h__
 #define __nglEvent_h__
 
-//#include "nui.h"
-
 
 //! Base class for objects which generate events
 /*!

@@ -13,8 +13,6 @@
 #ifndef __nglEndian_h__
 #define __nglEndian_h__
 
-//#include "nui.h"
-
 
 /*
  * Host endianness

@@ -7,14 +7,6 @@
  
 #pragma once
 
-
-#include "nui.h"
-#include "nuiAttributeEditor.h"
-#include "nuiVBox.h"
-#include "nuiHBox.h"
-#include "nuiSlider.h"
-#include "nuiFormatedLabel.h"
-
 class NUI_API nuiRangeAttributeEditor : public nuiAttributeEditor
 {
 public:

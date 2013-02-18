@@ -13,10 +13,6 @@
 #ifndef __nglLog_h__
 #define __nglLog_h__
 
-//#include "nui.h"
-#include "nglString.h"
-#include "nglReaderWriterLock.h"
-#include "nglCriticalSection.h"
 class nglOStream;
 
 /* Verbosity levels

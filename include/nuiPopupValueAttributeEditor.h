@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiAttributeEditor.h"
-
 class nuiEditLine;
 
 class nuiPopupValueAttributeEditor : public nuiAttributeEditor

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nuiNonCopyable.h"
-
 class nglSyncEventPrivate;
 
 class nglSyncEvent : nuiNonCopyable

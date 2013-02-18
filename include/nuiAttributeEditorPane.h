@@ -7,9 +7,6 @@
  
 #pragma once
 
-#include "nui.h"
-#include "nuiFolderPane.h"
-
 class NUI_API nuiAttributeEditorPane : public nuiFolderPane
 {
 public:

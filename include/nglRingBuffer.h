@@ -8,11 +8,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nglAtomic.h"
-#include "nuiNonCopyable.h"
-
-
 
 //////////////////////////////// nglRingBuffer.h 
 #define NGL_MAKE_POWER_OF_TWO_RINGBUFFER(X) { uint32 Y = 1; while (X>Y) Y = Y << 1; X = Y; }

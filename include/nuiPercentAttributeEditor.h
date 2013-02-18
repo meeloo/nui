@@ -7,11 +7,6 @@
  
 #pragma once
 
-
-#include "nui.h"
-#include "nuiAttributeEditor.h"
-#include "nuiSlider.h"
-
 class NUI_API nuiPercentAttributeEditor : public nuiAttributeEditor
 {
 public:

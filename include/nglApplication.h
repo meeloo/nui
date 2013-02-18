@@ -15,10 +15,6 @@ Abstraction of the running application.
 #ifndef __nglApplication_h__
 #define __nglApplication_h__
 
-//#include "nui.h"
-#include "nglKernel.h"
-#include "nuiInit.h"
-
 #ifdef _X11_
 #include <X11/Xlib.h>
 #endif // _X11_

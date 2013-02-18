@@ -34,18 +34,29 @@ typedef double nuiSize;
 
 
 
-#include "nglLog.h"
 #include "nuiSignalsSlots.h"
-#include "nuiRefCount.h"
-#include "nuiNonCopyable.h"
-#include "nuiEvent.h"
-#include "nuiEventRegistry.h"
 #include "nuiToken.h"
 #include "nuiObject.h"
 #include "nuiTimer.h"
 #include "nuiXML.h"
 #include "nuiTree.h"
+#include "nuiRange.h"
+#include "nuiTypeTraits.h"
+#include "nuiBorder.h"
+#include "nuiObject.h"
+#include "nuiInit.h"
+
+#ifndef _MINUI3_
+#include "nuiShape.h"
+#include "nuiDecorationDefines.h"
+#include "nuiMouseCursor.h"
+#include "nuiRenderState.h"
+#endif
+
+#include "nuiAttributeType.h"
+#include "nuiVariant.h"
 #include "nuiAttribute.h"
+
 #include "nuiAnimation.h"
 #include "nuiTranslator.h"
 #include "nuiAudioDb.h"
@@ -121,12 +132,10 @@ typedef double nuiSize;
   #include "nuiPathOptimizer.h"
   #include "nuiPoint.h"
   #include "nuiPolyLine.h"
-  #include "nuiShape.h"
   #include "nuiTessellator.h"
   #include "nuiSpline.h"
 
 
-  #include "nuiRenderState.h"
   #include "nuiDrawContext.h"
   #include "nuiSurface.h"
   #include "nuiShader.h"
@@ -153,7 +162,6 @@ typedef double nuiSize;
   #include "nuiHBox.h"
   #include "nuiVBox.h"
   #include "nuiBuilder.h"
-  #include "nuiRange.h"
 
   #include "nuiSpriteView.h"
 
@@ -218,6 +226,8 @@ typedef double nuiSize;
   #include "nuiWidgetAnimation.h"
   #include "nuiApplication.h"
   #include "nuiZoomBar.h"
+  #include "nuiColorSelector.h"
+  #include "nuiFormatedLabel.h"
 
   #include "nuiNavigationBar.h"
   #include "nuiNavigationController.h"
@@ -236,8 +246,8 @@ typedef double nuiSize;
   #include "nuiRangeAttributeEditor.h"
   #include "nuiRangeKnobAttributeEditor.h"
   #include "nuiGenericAttributeEditor.h"
-  #include "nuiClampedValueAttributeEditor.h"
   #include "nuiPopupValueAttributeEditor.h"
+  #include "nuiClampedValueAttributeEditor.h"
   #include "nuiComboAttributeEditor.h"
   #include "nuiPathAttributeEditor.h"
   #include "nuiLabelRenamer.h"
@@ -246,7 +256,6 @@ typedef double nuiSize;
 
   #include "nuiCSS.h"
   #include "nuiBindingManager.h"
-  #include "nuiTypeTraits.h"
 
   #include "nuiTabBar.h"
   #include "nuiColumnTreeView.h"

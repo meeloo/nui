@@ -111,23 +111,55 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 //#include "mmgr.h"
 //#endif
 
+#include "nuiNonCopyable.h"
+#include "nglAtomic.h"
+#include "nglEndian.h"
+#include "nglError.h"
+#include "nglEvent.h"
+#include "nglTime.h"
+#include "nglStream.h"
+#include "nglString.h"
+#include "nuiFastDelegate.h"
+#include "nglMimeSource.h"
+
+#include "nglThread.h"
+#include "nglGuard.h"
+#include "nglLock.h"
+#include "nglCriticalSection.h"
+#include "nglLightLock.h"
+#include "nglThreadChecker.h"
+#include "nglCondition.h"
+#include "nglSyncEvent.h"
+#include "nglReaderWriterLock.h"
+#include "nglPath.h"
+
+#include "nglLog.h"
+#include "nglConsole.h"
+
+
+#include "nuiMessageQueue.h"
+
+#ifndef _MINUI3_
+#include "nglDataTypesRegistry.h"
+#include "nglClipBoard.h"
+#endif
+
+#include "nuiEvent.h"
+#include "nuiEventRegistry.h"
 
 #include "nglKernel.h"
-#include "nglTime.h"
-#include "nglPath.h"
+#include "nglModule.h"
+#include "nglMath.h"
+#include "nglMatrix.h"
+#include "nuiRefCount.h"
 
 #include "ngl3DSLoader.h"
 #include "nglBitmapTools.h"
 #include "nglCPUInfo.h"
 
 
-#include "nglConsole.h"
-
 #include "nglDeviceInfo.h"
 
-#include "nglEndian.h"
-#include "nglError.h"
-#include "nglEvent.h"
 #include "nglFile.h"
 #include "nglIFile.h"
 #include "nglIMemory.h"
@@ -138,18 +170,11 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 #include "nglImage.h"
 #include "nglImageCodec.h"
 
-#include "nglLog.h"
-#include "nglMath.h"
-#include "nglMatrix.h"
-#include "nglMimeSource.h"
-#include "nglModule.h"
 #include "nglOFile.h"
 #include "nglOMemory.h"
 #include "nglOStream.h"
 #include "nglPlugin.h"
 #include "nglQuaternion.h"
-#include "nglStream.h"
-#include "nglString.h"
 #include "nglTimer.h"
 #include "nglVector.h"
 #include "nglZipFS.h"
@@ -168,14 +193,6 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 
 #include "nglMath.h"
 
-#include "nglThread.h"
-#include "nglLock.h"
-#include "nglThreadChecker.h"
-#include "nglLightLock.h"
-#include "nglCondition.h"
-#include "nglCriticalSection.h"
-#include "nglSyncEvent.h"
-#include "nglReaderWriterLock.h"
 #include "nuiParser.h"
 
 
@@ -185,8 +202,6 @@ Lookup precompiled headers in the VC doc to learn how to use them.
   #include "nglVideoMode.h"
   #include "nglWindow.h"
   #include "nglApplication.h"
-  #include "nglClipBoard.h"
-  #include "nglDataTypesRegistry.h"
   #include "nglDragAndDropObjects.h"
   #include "nglInputDevice.h"
   #include "nglKeyboard.h"

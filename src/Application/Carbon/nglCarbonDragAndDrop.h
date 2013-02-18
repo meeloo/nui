@@ -14,10 +14,6 @@
 #define __nglDragCarbonDragAndDrop_h__
 
 #include "nui.h"
-#include "nglKernel.h"
-#include "nglWindow.h"
-#include "nglDragAndDropObjects.h"
-#include "nglDataObjects.h"
 
 OSErr nglDragTrackingHandler (DragTrackingMessage message, WindowRef theWindow, void * handlerRefCon, DragRef theDrag);
 OSErr nglDragReceiveHandler(WindowRef theWindow, void * handlerRefCon, DragRef theDrag);

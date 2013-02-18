@@ -13,15 +13,11 @@
 #ifndef __nglKernel_h__
 #define __nglKernel_h__
 
-#include "nglPath.h"
-#include "nglString.h"
-#include "nuiMessageQueue.h"
-#include "nuiEvent.h"
-
 class nglKernel;
 class nglPath;
 class nuiNotificationManager;
 class nuiNotificationObserver;
+class nglClipBoard;
 
 extern NGL_API nglKernel* App;
 /*!<
@@ -87,20 +83,6 @@ void nglDumpStackTrace();
 #  define NGL_DEBUG(x)
 #endif
 
-
-
-#include "nglEvent.h"
-#include "nglError.h"
-#include "nglString.h"
-#include "nglLog.h"
-#include "nglConsole.h"
-#include "nglPath.h"
-#include "nglTimer.h"
-
-#ifndef _MINUI3_
-#include "nglClipBoard.h"
-#include "nglDataTypesRegistry.h"
-#endif
 
 class nglDeviceInfo;
 

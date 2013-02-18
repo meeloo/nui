@@ -13,11 +13,6 @@
 #ifndef __nglDataObjects_h__
 #define __nglDataObjects_h__
 
-//#include "nui.h"
-#include "nglKernel.h"
-#include "nglString.h"
-#include "nglDataTypesRegistry.h"
-
 class NGL_API nglDataObject
 {
 public:

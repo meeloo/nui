@@ -7,11 +7,6 @@
 
 #pragma once
 
-#include "nglGuard.h"
-#include "nglThread.h"
-#include "nglLock.h"
-#include "nglAtomic.h"
-
 // Declaration
 class nglCriticalSectionPrivate;
 class nglCriticalSection;

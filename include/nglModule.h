@@ -13,11 +13,6 @@
 #ifndef __nglModule_h__
 #define __nglModule_h__
 
-//#include "nui.h"
-#include "nglError.h"
-#include "nglPath.h"
-
-
 // Error codes
 #define NGL_MODULE_ENONE     0
 #define NGL_MODULE_EPATH     1

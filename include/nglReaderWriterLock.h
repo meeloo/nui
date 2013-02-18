@@ -7,17 +7,12 @@
 
 #pragma once
 
-#include "nuiNonCopyable.h"
-#include "nglLock.h"
-#include "nglGuard.h"
-#include "nglCondition.h"
-
 /*! A multiple reader/one writer lock for multithreading.
 
     A multiple reader/one writer lock for multithreading.
     There can be at most one writer but any number of readers.
  */
-class nglReaderWriterLock : nuiNonCopyable
+class nglReaderWriterLock : public nuiNonCopyable
 {
 public:
 

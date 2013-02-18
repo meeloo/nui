@@ -7,17 +7,7 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiAttributeType.h"
-#include "nuiTypeTraits.h"
-#include "nuiBorder.h"
-#include "nuiObject.h"
-#include "nuiRange.h"
 #ifndef _MINUI3_
-#include "nuiShape.h"
-#include "nuiDecorationDefines.h"
-#include "nuiMouseCursor.h"
-#include "nuiRenderState.h"
 class nuiPoint;
 class nuiRange;
 class nuiWidget;
@@ -27,8 +17,6 @@ class nuiTopLevel;
 class nuiMainWindow;
 class nuiLabel;
 #endif
-
-#include "nuiEvent.h"
 
 #define GCC_VERSION (__GNUC__ * 10000 \
                                + __GNUC_MINOR__ * 100 \

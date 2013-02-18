@@ -9,11 +9,6 @@
 #pragma once
 
 
-#include "nui.h"
-#include "nuiAttributeEditor.h"
-#include "nuiComboBox.h"
-#include "nuiPopupValueAttributeEditor.h"
-
 template <class T>
 class nuiComboAttributeEditor : public nuiAttributeEditor
 {

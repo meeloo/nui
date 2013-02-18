@@ -8,10 +8,6 @@
 #ifndef __nuiWidgetAnimation_h__
 #define __nuiWidgetAnimation_h__
 
-//#include "nui.h"
-#include "nuiWidget.h"
-#include "nuiAnimation.h"
-
 class NUI_API nuiWidgetAnimation : public nuiAnimation
 {
 public:

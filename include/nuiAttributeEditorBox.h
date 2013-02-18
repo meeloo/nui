@@ -7,10 +7,6 @@
  
 #pragma once
 
-#include "nui.h"
-#include "nuiVBox.h"
-#include "nuiHBox.h"
-
 class NUI_API nuiAttributeEditorBox : public nuiSimpleContainer
 {
 public:

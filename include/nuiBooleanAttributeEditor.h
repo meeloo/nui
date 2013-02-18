@@ -8,11 +8,6 @@
 #pragma once
 
 
-#include "nui.h"
-#include "nuiAttributeEditor.h"
-#include "nuiToggleButton.h"
-
-
 class NUI_API nuiBooleanAttributeEditor : public nuiAttributeEditor
 {
 public:

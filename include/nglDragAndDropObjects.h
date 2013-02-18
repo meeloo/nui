@@ -13,10 +13,6 @@
 #ifndef __nglDragAndDropObjects_h__
 #define __nglDragAndDropObjects_h__
 
-//#include "nui.h"
-#include "nglKernel.h"
-#include "nglString.h"
-//#include "nglDataObjects.h"
 
 enum nglDropEffect
 {

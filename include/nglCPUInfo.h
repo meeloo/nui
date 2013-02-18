@@ -13,9 +13,6 @@
 #ifndef __nglCPUInfo_h__
 #define __nglCPUInfo_h__
 
-//#include "nui.h"
-#include "nglString.h"
-
 
 //! CPU identification and features detection
 /*!

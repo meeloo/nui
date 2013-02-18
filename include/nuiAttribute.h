@@ -8,12 +8,6 @@
 #pragma once
 
 
-#include "nui.h"
-#include "nuiSignalsSlots.h"
-#include "nuiFastDelegate.h"
-#include "nuiVariant.h"
-
-
 #ifndef _MINUI3_
 class nuiPoint;
 class nuiRect;

@@ -14,7 +14,6 @@
 #define __nglClipBoard_h__
 
 class nglString;
-#include "nglMimeSource.h"
 
 class NGL_API nglClipBoard
 {
