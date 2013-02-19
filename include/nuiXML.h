@@ -8,13 +8,6 @@
 #ifndef __nuiXML_h__
 #define __nuiXML_h__
 
-//#include "nui.h"
-#include "nuiFlags.h"
-#include "nglString.h"
-#include "nglIStream.h"
-#include "nglOStream.h"
-//#include "nuiApplication.h"
-
 class xmlLexer;
 
 class NUI_API nuiStringLessFunctor : public std::binary_function <std::string, std::string, bool>

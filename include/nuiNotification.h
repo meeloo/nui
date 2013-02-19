@@ -8,9 +8,6 @@
 #ifndef __nuiNotification_h__
 #define __nuiNotification_h__
 
-#include "nuiObject.h"
-#include "nuiMessageQueue.h"
-
 class nuiNotificationManager;
 
 class NUI_API nuiNotification : public nuiObject

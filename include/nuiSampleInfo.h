@@ -6,9 +6,6 @@
  */
 #pragma once
 
-#include "nui.h"
-#include "nuiSampleDefines.h"
-
 
 class SliceInfo
 {

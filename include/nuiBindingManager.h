@@ -7,9 +7,6 @@
 
 
 #pragma once
-#include "nui.h"
-#include "nuiTypeTraits.h"
-#include "nuiVariant.h"
 
 template <class Type> class nuiVariantTrait
 {

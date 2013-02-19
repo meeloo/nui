@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nuiSampleWriter.h"
-
 ///Class that writes Wave file
 class nuiWaveWriter : public virtual nuiSampleWriter
 {

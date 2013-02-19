@@ -8,9 +8,6 @@
 #ifndef __nuiTree_h__
 #define __nuiTree_h__
 
-#include "nuiObject.h"
-#include "nuiTreeEvent.h"
-
 typedef class nuiTreeBase* nuiTreePtr;
 
 

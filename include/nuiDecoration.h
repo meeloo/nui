@@ -7,13 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiDrawContext.h"
-#include "nuiDecorationDefines.h"
-#include "nuiAttribute.h"
-#include "nuiAttributeEditor.h"
-#include "nuiObject.h"
-
 class nuiDecoration : public nuiObject
 {
 public:

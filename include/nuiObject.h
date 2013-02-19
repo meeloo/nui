@@ -8,11 +8,6 @@
 #ifndef __nuiObject_h__
 #define __nuiObject_h__
 
-#include "nui.h"
-#include "nuiEvent.h"
-#include "nuiToken.h"
-#include "nuiRefCount.h"
-
 #ifdef _DEBUG_
 #define _NUI_DEBUG_OBJECTS_
 #endif

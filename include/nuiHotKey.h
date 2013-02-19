@@ -8,12 +8,6 @@
 #ifndef __nuiHotKey_h__
 #define __nuiHotKey_h__
 
-#include "nglKeyboard.h"
-#include "nglString.h"
-#include "nglKernel.h"
-#include "nuiEvent.h"
-#include "nuiEventRegistry.h"
-
 #define NUIHOTKEYS_XML_NODEID _T("HotKeys")
 
 typedef uint32 nuiKeyModifier;

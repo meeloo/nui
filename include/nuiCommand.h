@@ -7,8 +7,6 @@
 
 
 #pragma once
-#include "nui.h"
-
 
 //
 // note to create and use a nuiCommand:

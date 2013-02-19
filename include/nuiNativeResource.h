@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nglIStream.h"
-
-
-
 class nuiNativeResource : public nglIStream
 {
 public:

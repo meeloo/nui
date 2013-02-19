@@ -1,9 +1,6 @@
 #ifndef SIGNALS_SLOTS_H
 #define SIGNALS_SLOTS_H
 
-#include "nui.h"
-#include "nuiFastDelegate.h"
-
 class nuiSlotsSink;
 
 class nuiSignal

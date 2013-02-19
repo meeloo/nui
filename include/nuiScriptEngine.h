@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiRefCount.h"
-
 class nuiScriptEngine : public nuiRefCount
 {
 public:

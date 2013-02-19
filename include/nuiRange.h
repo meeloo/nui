@@ -8,11 +8,6 @@
 #ifndef __nuiRange_h__
 #define __nuiRange_h__
 
-//#include "nui.h"
-#include "nuiEvent.h"
-#include "nuiRect.h"
-#include "nuiEventRegistry.h"
-
 /// This class implements the behaviour of a range such as what is needed by a scroll bar for exemple. 
 class NUI_API nuiRange
 {

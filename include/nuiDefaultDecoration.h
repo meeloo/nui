@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiNavigationBarStyle.h"
-
 class nuiWidget;
 class nuiSimpleContainer;
 class nuiMainWindow;

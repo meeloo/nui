@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiObject.h"
-#include "nuiXML.h"
-
 enum nuiSerializeOperation
 {
   eLoad,

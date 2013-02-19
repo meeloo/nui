@@ -8,9 +8,6 @@
 #ifndef __nuiColor_h__
 #define __nuiColor_h__
 
-//#include "nui.h"
-#include "nglString.h"
-
 /// This class implements a basic RGB color management class.
 class NUI_API nuiColor
 {

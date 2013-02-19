@@ -8,15 +8,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiAudioDevice.h"
-#include "nuiAudioDecoder.h"
-#include "nglRingBuffer.h"
-
-#include "nuiSound.h"
-
-
-
 class nuiVoice;
 class nuiAudioDevice;
 

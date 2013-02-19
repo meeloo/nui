@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiChunkSampleReader.h"
-
 /// Structure that describes a extended float number (80 bits)
 typedef struct
   {

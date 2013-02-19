@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
 class nuiAudioDeviceManager;
 
 typedef nuiFastDelegate3<const std::vector<const float*>&, const std::vector<float*>&, int32> nuiAudioProcessFn; // the params are two arrays of float*: input and output

@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSampleReader.h"
-
 #define STREAM_SUFFIX _T("_stream")
 #define MEMORY_SUFFIX _T("_memory")
 #define SYNTH_SUFFIX _T("_synth")

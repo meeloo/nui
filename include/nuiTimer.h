@@ -11,10 +11,6 @@
 #ifndef __nuiTimer_h__
 #define __nuiTimer_h__
 
-//#include "nui.h"
-#include "nglTimer.h"
-#include "nuiEvent.h"
-
 /// This class is a helper class that wraps an nuiEvent interface over a nglTimer timer system which is far more useful for GUI programming.
 class NUI_API nuiTickEvent: public nuiEvent
 {

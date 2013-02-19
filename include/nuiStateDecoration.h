@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiDecoration.h"
-
 
 // list of attributes that can be used to set a nuiStateDecoration with bitmap files or decoration reference names
 // OnUp

@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSound.h"
-
 class nuiSynthSound;
 
 class nuiSoundManager

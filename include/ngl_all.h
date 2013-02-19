@@ -131,6 +131,7 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 #include "nglCondition.h"
 #include "nglSyncEvent.h"
 #include "nglReaderWriterLock.h"
+#include "nglRingBuffer.h"
 #include "nglPath.h"
 
 #include "nglLog.h"

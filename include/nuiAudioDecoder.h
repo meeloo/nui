@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSampleReader.h"
-
 class nuiAudioDecoder : public nuiSampleReader
 {
 public:

@@ -11,8 +11,6 @@
 #ifndef __nuiEventRegistry_h__
 #define __nuiEventRegistry_h__
 
-#include "nuiEvent.h"
-
 enum nuiEventId
 {
   nuiWidgetSelected,          ///< The widget have just been selected

@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nglMath.h"
-
 const double _log10 = log(10.0);
 const double log_5 = log(0.5);
 const float logf10 = logf(10.0f);

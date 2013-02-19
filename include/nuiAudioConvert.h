@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
 void nuiAudioConvert_INint16ToDEfloat(const int16* input, float* output, int32 curChannel, int32 nbChannels, int32 nbSampleFrames); // interlaced int16 to de-interlaced float
 
 void nuiAudioConvert_DEfloatToINint16(const float* input, int16* output, int32 curChannel, int32 nbChannels, int32 nbSampleFrames); // de-interlaced float to interlaced int16

@@ -7,10 +7,6 @@
 
 #pragma once
 
-//#include "nui.h"
-#include "nglString.h"
-#include "nuiContainer.h"
-
 class nuiBuilder;
 
 typedef nuiWidgetPtr (*nuiCreateWidgetFn)();

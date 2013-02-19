@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nuiAudioDevice.h"
-#include "nglThread.h"
 #import <CoreAudio/CoreAudio.h>
 
 class nuiAudioDevice_CoreAudio : public nuiAudioDevice

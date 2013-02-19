@@ -7,9 +7,6 @@
 
 #pragma once
 
- #include "nui.h"
- #include "nuiChunkSampleReader.h"
-
 class nuiWaveReader : public nuiChunkSampleReader
 {
 public:

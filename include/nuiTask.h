@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nuiFastDelegate.h"
-#include "nuiRefCount.h"
-
 class nuiTask : public nuiRefCount
 {
 public:

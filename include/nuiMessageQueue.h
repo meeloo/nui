@@ -8,10 +8,6 @@
 #ifndef __nuiMessageQueue_h__
 #define __nuiMessageQueue_h__
 
-#include "nui.h"
-#include "nglCriticalSection.h"
-#include "nglSyncEvent.h"
-
 class nuiNotification;
 
 /// implements a message queue for multi-threaded communication

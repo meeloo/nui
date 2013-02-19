@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nuiSampleWriter.h"
-
 
 class nuiAiffWriter : public virtual nuiSampleWriter
 {

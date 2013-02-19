@@ -8,11 +8,6 @@
 #ifndef __nuiTheme_h__
 #define __nuiTheme_h__
 
-//#include "nui.h"
-#include "nglPath.h"
-#include "nuiObject.h"
-#include "nuiWidgetElements.h"
-
 class nuiDrawContext;
 class nuiWindow;
 class nuiTab;

@@ -8,8 +8,6 @@
 #ifndef __nuiTreeEvent_h__
 #define __nuiTreeEvent_h__
 
-#include "nuiEvent.h"
-
 class nuiTreeBase;
 
 template <class T> class NUI_API nuiTreeEvent : public nuiEvent

@@ -8,8 +8,6 @@
 #ifndef __nuiEvent_h__
 #define __nuiEvent_h__
 
-#include "nui.h"
-
 class nuiEventSource;
 class nuiVariant;
 

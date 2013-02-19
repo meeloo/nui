@@ -6,8 +6,6 @@
  */
 
 #pragma once
-#include "nui.h"
-#include "nuiSynthSound.h"
 
 class nuiSynthVoice : public nuiVoice
 {

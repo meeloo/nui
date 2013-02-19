@@ -8,12 +8,6 @@
 #ifndef __nuiMouseEvent_h__
 #define __nuiMouseEvent_h__
 
-#include "nuiEvent.h"
-#include "nuiEventRegistry.h"
-#include "nglWindow.h"
-#include "nuiFlags.h"
-#include "nuiRect.h"
-
 //////////// EVENTS:
 /// This is a helper class to easily dispatch mouse clicked events
 template<nuiEventId eventId>  class NUI_API nuiMouseEvent: public nuiEvent

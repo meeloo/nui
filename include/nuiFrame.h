@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiDecoration.h"
-
-
 
 class nuiFrame : public nuiDecoration
 {

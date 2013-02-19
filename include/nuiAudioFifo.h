@@ -5,14 +5,8 @@
   licence: see nui3/LICENCE.TXT
 */
 
-#include "nui.h"
-#include "nuiAudioDevice.h"
-#include "nuiAudioResampler.h"
-#include "nglRingBuffer.h"
-#include "nglThread.h"
 
 #pragma once
-
 
 
 

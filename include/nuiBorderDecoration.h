@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiDecoration.h"
-
-
 enum nuiBorderType
 {
   eBorderAll=0,

@@ -5,7 +5,7 @@
  licence: see nui3/LICENCE.TXT
  */
 
-#include "nuiAudioDevice.h"
+#include "nui.h"
 #include "nuiAudioDevice_AudioUnit.h"
 
 

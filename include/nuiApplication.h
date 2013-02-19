@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nglApplication.h"
-
 class nuiScriptEngine;
 
 class nuiApplication : public nglApplication

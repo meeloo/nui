@@ -6,9 +6,6 @@
  */
 #pragma once
 
-#include "nui.h"
-#include "nuiSampleInfo.h"
-
 /// Generic Class that writes in a sound file
 class nuiSampleWriter
 {

@@ -8,11 +8,6 @@
 #ifndef __nuiRect_h__
 #define __nuiRect_h__
 
-//#include "nui.h"
-#include "nglMatrix.h"
-#include "nuiFlags.h"
-#include "nuiColor.h"
-
 typedef nglMatrix<nuiSize> nuiMatrix;
 typedef nglVector<nuiSize> nuiVector;
 typedef nglVector2<nuiSize> nuiVector2;

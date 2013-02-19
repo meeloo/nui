@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
-
 enum nuiInterpolationMethod
 {
   eInterpolNone = 0,    ///< No Interpolation, copy from a buffer to another

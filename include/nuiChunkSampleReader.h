@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSampleReader.h"
-
-
 class nuiChunkSampleReader : public nuiSampleReader
 {
 public:

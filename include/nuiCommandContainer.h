@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiCommand.h"
-
 typedef std::vector<nuiCommand*> CommandList;
 
 class nuiCommandContainer : public nuiCommand

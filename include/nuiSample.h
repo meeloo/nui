@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nuiSampleReader.h"
-#include "nuiSampleWriter.h"
-#include "nuiAudioResampler.h"
-
 ///Class that encapsulates and manipulates a sound samples buffer
 class  nuiSample
 {

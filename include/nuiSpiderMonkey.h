@@ -7,11 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiBindingManager.h"
-#include "nuiBindings.h"
-#include "nuiScriptEngine.h"
-
 typedef struct JSClass           JSClass;
 typedef struct JSExtendedClass   JSExtendedClass;
 typedef struct JSConstDoubleSpec JSConstDoubleSpec;

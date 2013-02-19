@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
 template <int> struct static_assert_NUI {};
 template <bool> struct STATIC_ASSERTION_FAILED;
 template <> struct STATIC_ASSERTION_FAILED<true> {};

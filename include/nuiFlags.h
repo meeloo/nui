@@ -8,8 +8,6 @@
 #ifndef __nuiFlags_h__
 #define __nuiFlags_h__
 
-//#include "nui.h"
-#include "nglString.h"
 class nuiXMLNode;
 
 // Generic definitions that can be very useful for widgets:

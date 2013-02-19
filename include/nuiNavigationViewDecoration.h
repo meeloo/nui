@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiDecoration.h"
-
 #define DEVICESTYLE_DEFAULT _T("Default")
 #define DEVICESTYLE_IPHONE _T("iPhone")
 #define DEVICESTYLE_IPAD _T("iPad")

@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiWidgetMatcher.h"
-
 class nuiCSSAction
 {
 public:

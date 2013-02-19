@@ -6,7 +6,6 @@
  */
 
 #pragma once
-#include "nui.h"
 
 class nuiMemorySound : public nuiSound
 {

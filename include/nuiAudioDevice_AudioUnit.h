@@ -5,8 +5,6 @@
  licence: see nui3/LICENCE.TXT
  */
 
-#include "nuiAudioDevice.h"
-#include "nglThread.h"
 #include <AudioToolbox/AudioToolbox.h>
 
 

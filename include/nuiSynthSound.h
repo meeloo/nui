@@ -6,7 +6,6 @@
  */
 
 #pragma once
-#include "nui.h"
 
 #define SYNTH_SOUND_TABLE_SIZE 2048
 
