@@ -21,15 +21,6 @@ This class is not available if the _NOGFX_ symbol is defined.
 
 #ifndef _NOGFX_
 
-#include "nglError.h"
-#include "nglKeyboard.h"
-#include "nglString.h"
-#include "nglContext.h"
-#include "nglVideoMode.h"
-#include "nuiMouseCursor.h"
-
-#include "nglDragAndDropObjects.h"
-
 typedef int32 nglTouchId;
 
 class nuiMainMenu;

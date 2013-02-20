@@ -23,12 +23,6 @@
 
 */
 
-//#include "nui.h"
-#include "nuiRect.h"
-
-#include "nuiRenderArray.h"
-#include "nuiRenderState.h"
-
 class nuiSurface;
 
 class nuiSurfaceCache

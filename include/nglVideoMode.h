@@ -17,9 +17,6 @@ This class is not available if the _NOGFX_ symbol is defined.
 #ifndef __nglVideoMode_h__
 #define __nglVideoMode_h__
 
-//#include "nui.h"
-#include "nglString.h"
-
 #ifndef _NOGFX_
 
 #ifdef _X11_

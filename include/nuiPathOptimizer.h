@@ -10,8 +10,6 @@
 #ifndef __nuiPathOptimizer_h__
 #define __nuiPathOptimizer_h__
 
-#include "nuiPathGenerator.h"
-
 class NUI_API nuiPathOptimizer : public nuiPathGenerator
 {
 public:

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
 #if (defined __APPLE__) || (defined _DARWIN_) || (defined _FREEBSD_)
 #define NGL_KQUEUE
 #elif (defined _LINUX_) || (defined _ANDROID_)

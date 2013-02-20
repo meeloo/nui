@@ -8,10 +8,6 @@
 #ifndef __nglImageTGACodec_h__
 #define __nglImageTGACodec_h__
 
-//#include "nui.h"
-#include "nglImageCodec.h"
-
-
 struct TargaHeader
 {
   uint8 IDFieldSize;

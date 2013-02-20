@@ -117,8 +117,9 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 #include "nglError.h"
 #include "nglEvent.h"
 #include "nglTime.h"
-#include "nglStream.h"
 #include "nglString.h"
+#include "nglStream.h"
+#include "nuiFlags.h"
 #include "nuiFastDelegate.h"
 #include "nglMimeSource.h"
 
@@ -151,8 +152,11 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 #include "nglKernel.h"
 #include "nglModule.h"
 #include "nglMath.h"
+#include "nglVector.h"
 #include "nglMatrix.h"
+#include "nglQuaternion.h"
 #include "nuiRefCount.h"
+#include "nuiSignalsSlots.h"
 
 #include "ngl3DSLoader.h"
 #include "nglBitmapTools.h"
@@ -162,33 +166,36 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 #include "nglDeviceInfo.h"
 
 #include "nglFile.h"
+#include "nglVolume.h"
+#include "nglNativeVolume.h"
+
+#include "nglIStream.h"
+#include "nglOStream.h"
+#include "nglIOStream.h"
+
 #include "nglIFile.h"
 #include "nglIMemory.h"
-#include "nglIOFile.h"
-#include "nglIOStream.h"
-#include "nglIStream.h"
 #include "nglIZip.h"
 #include "nglImage.h"
 #include "nglImageCodec.h"
 
 #include "nglOFile.h"
 #include "nglOMemory.h"
-#include "nglOStream.h"
-#include "nglPlugin.h"
-#include "nglQuaternion.h"
-#include "nglTimer.h"
-#include "nglVector.h"
+#include "nglIOFile.h"
 #include "nglZipFS.h"
-#include "nglVolume.h"
-#include "nglNativeVolume.h"
+#include "nuiAsyncIStream.h"
+
 #include "nuiNativeResource.h"
 #include "nuiNativeResourceVolume.h"
 
+#include "nglVector.h"
+
 #include "nglUTFStringConv.h"
 
-#include "nuiAsyncIStream.h"
 #include "nuiTranslator.h"
 #include "nuiCSV.h"
+#include "nglPlugin.h"
+#include "nglTimer.h"
 
 #include "nuiCommand.h"
 
@@ -201,15 +208,13 @@ Lookup precompiled headers in the VC doc to learn how to use them.
   #include "nglDataObjects.h"
   #include "nglContext.h"
   #include "nglVideoMode.h"
+  #include "nuiMouseCursor.h"
+  #include "nglInputDevice.h"
+  #include "nglDragAndDropObjects.h"
+  #include "nglKeyboard.h"
   #include "nglWindow.h"
   #include "nglApplication.h"
-  #include "nglDragAndDropObjects.h"
-  #include "nglInputDevice.h"
-  #include "nglKeyboard.h"
   #include "ngl3DSLoader.h"
-  #include "nglInputDevice.h"
-  #include "nglKeyboard.h"
-  #include "nuiMouseCursor.h"
 #endif
 
 #endif // __ngl_all_h__

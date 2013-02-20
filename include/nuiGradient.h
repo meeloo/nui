@@ -10,8 +10,6 @@
 #ifndef __nuiGradient_h__
 #define __nuiGradient_h__
 
-#include "nuiRect.h"
-
 typedef std::pair<nuiSize, nuiColor> nuiGradientPair;
 typedef std::list<nuiGradientPair> nuiGradientStopList;
 

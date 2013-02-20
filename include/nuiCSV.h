@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nglIStream.h"
-
-
 /// allows to load and save data in CSV format
 class NUI_API nuiCSV
 {

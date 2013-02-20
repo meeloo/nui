@@ -12,8 +12,6 @@
 
 #pragma once
 
-//#include "nui.h"
-
 #include "ft2build.h"
 #include FT_FREETYPE_H
 #include FT_CACHE_IMAGE_H

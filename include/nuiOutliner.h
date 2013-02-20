@@ -8,9 +8,6 @@
 #ifndef __nuiOutliner_h__
 #define __nuiOutliner_h__
 
-#include "nuiPathGenerator.h"
-#include "nuiFlags.h"
-
 class nuiRenderObject;
 
 class NUI_API nuiOutliner : public nuiPathGenerator

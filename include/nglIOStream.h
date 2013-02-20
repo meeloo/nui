@@ -14,11 +14,6 @@
 #ifndef __nglIOStream_h__
 #define __nglIOStream_h__
 
-//#include "nui.h"
-#include "nglIStream.h"
-#include "nglOStream.h"
-
-
 //! Base class for input streams
 /*!
 This is a pure virtual class, all object capable of providing data should

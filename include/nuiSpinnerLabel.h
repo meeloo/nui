@@ -8,12 +8,6 @@
 #ifndef __nuiSpinnerLabel_h__
 #define __nuiSpinnerLabel_h__
 
-//#include "nui.h"
-#include "nuiFormatedLabel.h"
-#include "nuiLabelRenamer.h"
-
-
-
 
 
 

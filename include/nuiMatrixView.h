@@ -12,11 +12,6 @@
 
 #pragma once
 
-#include "nuiContainer.h"
-#include "nuiGrid.h"
-#include "nuiSpinnerLabel.h"
-#include "nuiFormater.h"
-
 
 class nuiMatrixViewFormater : public nuiFormater
 {

@@ -1,9 +1,6 @@
 #ifndef __nuiSurface_h__
 #define __nuiSurface_h__
 
-#include "nuiObject.h"
-#include "nuiDrawContext.h"
-
 class nuiSurface;
 class nuiSurfaceCache;
 class nuiPainter;

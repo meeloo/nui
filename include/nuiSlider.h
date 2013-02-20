@@ -11,12 +11,6 @@
 #ifndef __nuiSlider_h__
 #define __nuiSlider_h__
 
-#include "nuiWidget.h"
-#include "nuiEvent.h"
-#include "nuiTimer.h"
-#include "nuiRange.h"
-#include "nuiContainer.h"
-
 /// Basic slider with range support.
 class NUI_API nuiSlider : public nuiSimpleContainer
 {

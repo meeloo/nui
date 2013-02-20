@@ -7,15 +7,6 @@
 #ifndef __nuiEditText_h__
 #define __nuiEditText_h__
 
-#include "nuiSimpleContainer.h"
-#include "nuiTheme.h"
-
-#include "nglDragAndDropObjects.h"
-#include "nglDataObjects.h"
-
-#include "nuiFontBase.h"
-#include "nuiTextLayout.h"
-
 class nuiFont;
 
 class NUI_API nuiEditText : public nuiSimpleContainer

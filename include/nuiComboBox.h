@@ -8,11 +8,6 @@
 #ifndef __nuiComboBox_h__
 #define __nuiComboBox_h__
 
-//#include "nui.h"
-#include "nuiWidget.h"
-
-#include "nuiPopupMenu.h"
-
 class NUI_API nuiComboBox : public nuiSimpleContainer
 {
 public:

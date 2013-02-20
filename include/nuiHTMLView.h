@@ -7,11 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiHTML.h"
-#include "nuiFontManager.h"
-
-
 class nuiHTMLItem;
 class nuiHTMLBox;
 class nuiHTMLFont;

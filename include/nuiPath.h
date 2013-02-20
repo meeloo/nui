@@ -8,9 +8,6 @@
 #ifndef __nuiPath_h__
 #define __nuiPath_h__
 
-//#include "nui.h"
-#include "nuiPoint.h"
-
 class NUI_API nuiPath
 {
 public:

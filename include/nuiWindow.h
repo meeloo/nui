@@ -8,12 +8,6 @@
 #ifndef __nuiWindow_h__
 #define __nuiWindow_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiImage.h"
-#include "nuiEvent.h"
-#include "nuiMouseEvent.h"
-
 class nuiButton;
 class nuiMainWindow;
 class nuiWindowManager;

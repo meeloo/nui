@@ -25,9 +25,6 @@
 #ifndef __nglStringConv_h__
 #define __nglStringConv_h__
 
-//#include "nui.h"
-#include "nglError.h"
-
 
 /* Conversion error codes
  */

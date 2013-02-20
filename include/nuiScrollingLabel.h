@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
-
 // TODO / Suggestions
 // add an autostart configuration option ?
 // vertically centered when scrolling an horizontal line ?

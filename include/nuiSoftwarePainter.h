@@ -8,9 +8,6 @@
 #ifndef __nuiSoftwarePainter_h__
 #define __nuiSoftwarePainter_h__
 
-#include "nuiDrawContext.h"
-#include "nglImage.h"
-
 class nuiRasterizer;
 
 class NUI_API nuiSoftwarePainter : public nuiPainter, public nuiCacheManager

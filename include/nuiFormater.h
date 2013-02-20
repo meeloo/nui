@@ -8,9 +8,6 @@
 #ifndef __nuiFormater_h__
 #define __nuiFormater_h__
 
-//#include "nui.h"
-#include "nglString.h"
-
 /// This is an abstract object that formats a text string. It can be used as a parameter of a nuiFormatedLabel, for instance...
 class NUI_API nuiFormater
 {

@@ -8,11 +8,6 @@
 #ifndef __nuiUserArea_h__
 #define __nuiUserArea_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiEvent.h"
-#include "nuiMouseEvent.h"
-
 class NUI_API nuiDrawEvent : public nuiEvent
 {
 public:

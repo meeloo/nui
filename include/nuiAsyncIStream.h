@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSignalsSlots.h"
-
 class nuiHTTPResponse;
 
 class nuiAsyncIStream : public nglIStream

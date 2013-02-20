@@ -8,10 +8,6 @@
 #ifndef __nuiRenderArray_h__
 #define __nuiRenderArray_h__
 
-//#include "nui.h"
-#include "nuiColor.h"
-#include "nglVector.h"
-
 class NUI_API nuiCacheManager
 {
 public:

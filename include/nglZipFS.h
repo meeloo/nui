@@ -13,10 +13,6 @@
 #ifndef __nglZipFS_h__
 #define __nglZipFS_h__
 
-#include "nglStream.h"
-#include "nglPath.h"
-#include "nglVolume.h"
-
 class nglIStream;
 
 

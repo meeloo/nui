@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
 class nuiAttributeAnimation;
 
 class nuiHugeImage : public nuiWidget

@@ -15,10 +15,6 @@
 #ifndef __nglOFile_h__
 #define __nglOFile_h__
 
-//#include "nui.h"
-#include "nglOStream.h"
-#include "nglFile.h"
-
 
 ///< nglOFile open modes, see nglFile for more info
 enum nglOFileMode

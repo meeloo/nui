@@ -14,9 +14,6 @@
 #ifndef __nglTimer_h__
 #define __nglTimer_h__
 
-//#include "nui.h"
-#include "nglTime.h"
-
 #ifdef _WIN32_
   #ifdef NGL_USE_WIN32_MMTIMER
     #include <mmsystem.h>

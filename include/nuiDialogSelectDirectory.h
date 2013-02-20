@@ -5,10 +5,6 @@
   licence: see nui3/LICENCE.TXT
 */
 
-#include "nui.h"
-#include "nuiDialog.h"
-#include "nuiFileSelector.h"
-
 
 #pragma once
 

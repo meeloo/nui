@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nuiTree.h"
-
-
 enum nuiMainMenuItemType
 {
   eItemString=0,

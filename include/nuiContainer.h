@@ -8,10 +8,6 @@
 #ifndef __nuiContainer_h__
 #define __nuiContainer_h__
 
-#include "nuiWidget.h"
-#include "nuiEvent.h"
-#include "nuiTreeEvent.h"
-
 typedef nuiTreeEventSource<nuiChildAdded, nuiWidget> nuiWidgetAddedEventSource;
 typedef nuiTreeEventSource<nuiChildDeleted, nuiWidget> nuiWidgetDeletedEventSource;
 

@@ -8,11 +8,6 @@
 #ifndef __nuiTabBar_h__
 #define __nuiTabBar_h__
 
-//#include "nui.h"
-#include "nglString.h"
-#include "nuiContainer.h"
-#include "nuiButton.h"
-
 class NUI_API nuiTab : public nuiButton
 {
 public:

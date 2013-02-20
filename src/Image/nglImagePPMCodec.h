@@ -8,9 +8,6 @@
 #ifndef __nglImagePPMCodec_h__
 #define __nglImagePPMCodec_h__
 
-//#include "nui.h"
-#include "nglImageCodec.h"
-
 struct ppmHeader
 {
   nglString MagicWord;

@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "nui.h"
-
 class nuiRasterizer
 {
 private:  

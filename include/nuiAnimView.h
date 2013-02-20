@@ -8,11 +8,6 @@
 #ifndef __nuiAnimView_h__
 #define __nuiAnimView_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiTimer.h"
-#include "nuiAnimation.h"
-
 /// nuiAnimView is a widget container that keep all its children at their original position and size.
 class NUI_API nuiAnimView : public nuiSimpleContainer, public nuiAnimation, virtual public nuiRefCount
 {

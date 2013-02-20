@@ -13,11 +13,6 @@
 #ifndef __nglMatrix_h__
 #define __nglMatrix_h__
 
-//#include "nui.h"
-#include "nglMath.h"
-#include "nglVector.h"
-
-
 //! Homogenous 4x4 matrixes
 /*!
 This class implements the usual operations on 4x4 homogenous matrixes used

@@ -9,9 +9,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSimpleContainer.h"
-
 class nuiColumnTreeView;
 class nuiFontDesc;
 

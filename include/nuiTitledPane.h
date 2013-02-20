@@ -8,11 +8,6 @@
 #ifndef __nuiTitledPane_h__
 #define __nuiTitledPane_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiVBox.h"
-#include "nuiLabelAttribute.h"
-
 /// This widget implements a simple box with a cell for the title and a cell for the contents
 class NUI_API nuiTitledPane : public nuiVBox
 {

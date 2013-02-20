@@ -7,13 +7,12 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiFont.h"
-#include "nuiUnicode.h"
-
-#include "nuiTextStyle.h"
-#include "nuiTextRun.h"
-#include "nuiTextLine.h"
+class nuiFontBase;
+class nuiDrawContext;
+class nuiTextRun;
+class nuiTextGlyph;
+class nuiTextLine;
+class nuiGlyphInfo;
 
 class nuiTextLayout : public nuiRefCount
 {

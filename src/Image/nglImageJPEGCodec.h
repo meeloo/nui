@@ -8,9 +8,6 @@
 #ifndef __nglImageJPEGCodec_h__
 #define __nglImageJPEGCodec_h__
 
-//#include "nui.h"
-#include "nglImageCodec.h"
-
 class nglImageJPEGCodecInfo : public nglImageCodecInfo
 {
 public:

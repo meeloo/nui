@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nuiFont.h"
-#include "nuiPanose.h"
-
 
 class nuiFontRequest : public nuiObject
 {

@@ -8,10 +8,6 @@
 #ifndef __nuiContour_h__
 #define __nuiContour_h__
 
-//#include "nui.h"
-#include "nuiPathGenerator.h"
-#include "nuiSpline.h"
-
 class NUI_API nuiContour : public nuiPathGenerator
 {
 public:

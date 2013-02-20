@@ -7,11 +7,6 @@
 
 #pragma once
 
-//#include "nui.h"
-#include "nuiFontBase.h"
-#include "nuiRect.h"
-#include "nuiObject.h"
-
 class nuiDrawContext;
 
 /// This class implements a basic Font widget.

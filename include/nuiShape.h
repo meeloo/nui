@@ -8,11 +8,6 @@
 #ifndef __nuiShape_h__
 #define __nuiShape_h__
 
-//#include "nui.h"
-#include "nuiFlags.h"
-#include "nuiPathGenerator.h"
-#include "nuiSpline.h"
-
 class nuiRenderArray;
 class nuiRenderObject;
 class nuiContour;

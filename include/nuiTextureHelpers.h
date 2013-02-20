@@ -5,9 +5,6 @@
   licence: see nui3/LICENCE.TXT
 */
 
-#include "nuiTexture.h"
-#include "nuiDrawContext.h"
-
 #ifndef __nuiTextureHelpers_h__
 #define __nuiTextureHelpers_h__
 

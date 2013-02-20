@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nuiScrollBar.h"
-
-
 class nuiZoomBar : public nuiScrollBar
 {
 public:

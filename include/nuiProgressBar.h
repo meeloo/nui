@@ -8,10 +8,6 @@
 #ifndef __nuiProgressBar_h__
 #define __nuiProgressBar_h__
 
-//#include "nui.h"
-#include "nuiWidget.h"
-#include "nuiContainer.h"
-
 class NUI_API nuiProgressBar : public nuiWidget
 {
 public:

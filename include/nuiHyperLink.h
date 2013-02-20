@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nuiLabel.h"
-
 class nuiHyperLink : public nuiLabel
 {
 public:

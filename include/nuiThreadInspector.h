@@ -7,12 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiScrollView.h"
-#include "nuiVBox.h"
-#include "nglThreadChecker.h"
-#include "nuiFormatedLabel.h"
-
 class nuiThreadInspector : public nuiSimpleContainer
 {
 public:

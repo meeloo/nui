@@ -8,9 +8,6 @@
 
 
 #pragma once
-#include "nui.h"
-#include "nuiAttributeAnimation.h"
-
 
 class nuiViewController;
 

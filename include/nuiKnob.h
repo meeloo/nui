@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiImageSequence.h"
-
 //
 // decoration classes
 //

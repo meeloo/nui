@@ -8,13 +8,6 @@
 #ifndef __nuiList_h__
 #define __nuiList_h__
 
-//#include "nui.h"
-#include "nglPath.h"
-#include "nuiApplication.h"
-#include "nuiEvent.h"
-#include "nuiMouseEvent.h"
-#include "nuiContainer.h"
-
 /// This class implements a simple list of elements. It has no multicolumn support, see nuiTable for multicolumn lists.
 class NUI_API nuiList : public nuiSimpleContainer
 {

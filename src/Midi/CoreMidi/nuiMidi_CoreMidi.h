@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nuiMidi.h"
-#include "nglThread.h"
-#include "nuiSingleton.h"
 #import <CoreMidi/CoreMidi.h>
 
 class nuiMidiInPort_CoreMidi : public nuiMidiInPort

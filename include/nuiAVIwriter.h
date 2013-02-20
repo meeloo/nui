@@ -8,10 +8,7 @@
 
 #pragma once
 
-#include "nui.h"
-
-
-class nuiAVIwriter 
+class nuiAVIwriter
 {
 public:
   

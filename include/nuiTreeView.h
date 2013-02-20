@@ -8,11 +8,6 @@
 #ifndef __nuiTreeView_h__
 #define __nuiTreeView_h__
 
-#include "nuiTree.h"
-#include "nuiContainer.h"
-
-#include "nglDragAndDropObjects.h"
-
 typedef class nuiTreeNode* nuiTreeNodePtr;
 
 class NUI_API nuiTreeNode : public nuiTree<nuiWidget>

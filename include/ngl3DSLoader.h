@@ -15,8 +15,6 @@
 #ifndef __ngl3DSLoader__
 #define __ngl3DSLoader__
 
-//#include "nui.h"
-#include "nglEndian.h"
 class nglPath;
 class nglFile;
 

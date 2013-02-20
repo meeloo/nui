@@ -7,9 +7,6 @@
 
 #pragma once
 
-
-#include "nui.h"
-
 #define DEFAULT_NUISCROLLBOX_SPACING nuiSize(5)
 
 class nuiBox;

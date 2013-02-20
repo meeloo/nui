@@ -15,9 +15,6 @@
 #ifndef __nglDeviceInfo_h__
 #define __nglDeviceInfo_h__
 
-//#include "nui.h"
-#include "nglPath.h"
-
 class nglDeviceInfo
 {
 public:

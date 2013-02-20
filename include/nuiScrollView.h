@@ -8,12 +8,8 @@
 #ifndef __nuiScrollView_h__
 #define __nuiScrollView_h__
 
-//#include "nui.h"
-#include "nuiWidget.h"
-#include "nuiSimpleContainer.h"
-#include "nuiScrollBar.h"
-#include "nuiContainer.h"
-#include "nuiWidgetAnimation.h"
+class nuiFadeInWidgetAnim;
+class nuiFadeOutWidgetAnim;
 
 class NUI_API nuiScrollView : public nuiSimpleContainer
 {

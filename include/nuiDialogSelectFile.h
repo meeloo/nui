@@ -6,11 +6,6 @@
 */
 
 
-#include "nui.h"
-#include "nuiDialog.h"
-#include "nuiFileSelector.h"
-#include "nuiEditLine.h"
-
 #pragma once
 
 class nuiDialogSelectFile : public nuiDialog

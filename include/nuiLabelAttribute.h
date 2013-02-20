@@ -7,11 +7,6 @@
 
 #pragma once
 
-//#include "nui.h"
-#include "nuiAttribute.h"
-#include "nuiFont.h"
-#include "nuiLabel.h"
-
 /// This widget implements a text label, linked to an nuiAttribute<const nglString&>. Therefore, the label updates automatically each time the attribute is changing
 class NUI_API nuiLabelAttribute : public nuiLabel
 {

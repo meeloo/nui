@@ -8,8 +8,6 @@
 #ifndef __nuiFileList_h__
 #define __nuiFileList_h__
 
-#include "nuiList.h"
-
 /// This class implements a simple list of file or directory that a user can easily browse. 
 class NUI_API nuiFileList : public nuiList
 {

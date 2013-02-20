@@ -7,11 +7,6 @@
 
 #pragma once
 
-#include "nglPath.h"
-#include "nglFile.h"
-#include "nglCriticalSection.h"
-#include "nuiRefCount.h"
-
 class nglIStream;
 class nglIOStream;
 

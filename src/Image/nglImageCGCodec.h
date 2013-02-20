@@ -20,8 +20,6 @@
 #ifndef __nglImageCGCodec_h__
 #define __nglImageCGCodec_h__
 
-#include "nglImageCodec.h"
-
 //! Functions prototypes
 size_t	CGGetBytesCallback(void* pInfo, void* pBuffer, size_t Count);
 void		CGReleaseInfoCallback(void* pInfo);

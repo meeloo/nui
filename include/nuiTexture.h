@@ -8,10 +8,6 @@
 #ifndef __nuiTexture_h__
 #define __nuiTexture_h__
 
-//#include "nui.h"
-#include "nglImageCodec.h"
-#include "nuiObject.h"
-
 class nuiTexture;
 class nuiPainter;
 class nuiTextureCache;

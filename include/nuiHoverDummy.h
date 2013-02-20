@@ -8,8 +8,6 @@
 #ifndef __nuiHoverDummy_h__
 #define __nuiHoverDummy_h__
 
-#include "nuiContainer.h"
-
 class NUI_API nuiHoverDummy : public nuiSimpleContainer
 {
 public:

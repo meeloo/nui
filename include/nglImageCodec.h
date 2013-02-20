@@ -13,9 +13,6 @@
 #ifndef __nglImageCodec__
 #define __nglImageCodec__
 
-//#include "nui.h"
-#include "nglError.h"
-#include "nglString.h"
 
 class nglIStream;
 class nglOStream;

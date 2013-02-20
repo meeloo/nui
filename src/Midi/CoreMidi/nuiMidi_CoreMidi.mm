@@ -5,6 +5,7 @@
  licence: see nui3/LICENCE.TXT
  */
 
+#include "nui.h"
 #include "nuiMidi_CoreMidi.h"
 #include <mach/mach.h>
 #include <mach/mach_time.h>

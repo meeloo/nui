@@ -8,11 +8,7 @@
 #ifndef __nuiFolderPane_h__
 #define __nuiFolderPane_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiTitledPane.h"
-#include "nuiShapeView.h"
-#include "nuiLabelAttribute.h"
+class nuiLabelAttribute;
 
 /// This widget inherits from nuiTitledPane to create a pane area with a label(or a widget) as a title and with an arrow to open/close the client area
 class NUI_API nuiFolderPane : public nuiTitledPane

@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiContainer.h"
-
 class nuiSimpleContainer : public nuiContainer
 {
 public:

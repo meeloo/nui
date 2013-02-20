@@ -8,11 +8,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiVBox.h"
-#include "nuiHBox.h"
-#include "nuiGrid.h"
-
 class nuiHotKeyEditor : public nuiSimpleContainer
 {
 public:

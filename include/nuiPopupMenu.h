@@ -8,11 +8,6 @@
 #ifndef __nuiPopupMenu_h__
 #define __nuiPopupMenu_h__
 
-#include "nuiContainer.h"
-#include "nuiTree.h"
-#include "nuiTreeView.h"
-#include "nuiScrollBar.h"
-
 class nuiTimer;
 class nuiMenuRect;
 

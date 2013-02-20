@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
-
 const int32 NUI_FP_SHIFT = 16;
 const int32 NUI_FP_ONE = (1 << NUI_FP_SHIFT);
 const int32 NUI_FP_MASK = NUI_FP_ONE - 1;

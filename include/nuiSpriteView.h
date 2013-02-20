@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nuiSignalsSlots.h"
-
-class nuiTexture;
-
 class nuiSpriteFrame
 {
 public:

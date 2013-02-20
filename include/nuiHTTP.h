@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nglThread.h"
-#include "nuiCommand.h"
-
 class nuiHTTPResponse;
 class nuiHTTPRequest_Thread;
 

@@ -13,8 +13,6 @@
 #ifndef __nglBitmapTools_h__
 #define __nglBitmapTools_h__
 
-//#include "nui.h"
-
 
 typedef void (*nglCopyLineFn)(void* pDst, void* pSrc, int32 PixelCount, bool Invert);
 

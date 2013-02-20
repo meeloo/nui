@@ -8,9 +8,6 @@
 #ifndef __nuiDialog_h__
 #define __nuiDialog_h__
 
-//#include "nui.h"
-#include "nuiModalContainer.h"
-
 class nuiGrid;
 class nuiButton;
 

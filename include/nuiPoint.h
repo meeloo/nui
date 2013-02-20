@@ -8,9 +8,6 @@
 #ifndef __nuiPoint_h__
 #define __nuiPoint_h__
 
-//#include "nui.h"
-#include "nglMath.h"
-
 enum nuiPointType 
 {
   nuiPointTypeNormal,

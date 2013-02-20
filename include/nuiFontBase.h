@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "nuiRect.h"
-#include "nuiPanose.h"
-
 class nglPath;
 class nuiTexture;
 class nuiDrawContext;
@@ -18,7 +15,6 @@ class nuiTexture;
 class nuiFont;
 class nuiTextLayout;
 class nuiTextLine;
-#include "nuiTextRun.h"
 class nuiRenderArray;
 
 //! Font units

@@ -8,10 +8,6 @@
 #ifndef __nuiColumnTreeView_h__
 #define __nuiColumnTreeView_h__
 
-#include "nuiTree.h"
-#include "nuiTreeView.h"
-#include "nuiContainer.h"
-
 class NUI_API nuiColumnTreeView : public nuiTreeView
 {
 public:

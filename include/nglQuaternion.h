@@ -13,10 +13,6 @@
 #ifndef __nglQuaternion_h__
 #define __nglQuaternion_h__
 
-//#include "nui.h"
-#include "nglVector.h"
-#include "nglMatrix.h"
-
 
 //! Quaternion
 /*!

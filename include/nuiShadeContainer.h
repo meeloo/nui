@@ -6,8 +6,6 @@
 #ifndef __nuiShadeContainer_h__
 #define __nuiShadeContainer_h__
 
-#include "nuiContainer.h"
-
 class nuiShadeContainer : public nuiSimpleContainer
 {
 public:

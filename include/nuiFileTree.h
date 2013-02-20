@@ -8,15 +8,6 @@
 
 #pragma once
 
-#include "nuiFileSelector.h"
-#include "nuiTreeView.h"
-#include "nglVolume.h"
-#include "nuiHBox.h"
-#include "nuiVBox.h"
-#include "nuiList.h"
-#include "nuiSplitter.h"
-#include "nglDragAndDropObjects.h"
-
 /*
 NOTE ABOUT DECORATIONS:
 

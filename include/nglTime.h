@@ -15,10 +15,6 @@
 #ifndef __nglTime_h__
 #define __nglTime_h__
 
-//#include "nui.h"
-#include "nglString.h"
-
-
 //! Tolerance for time comparisons (5us)
 #define NGL_TIME_EPSILON 5E-6
 

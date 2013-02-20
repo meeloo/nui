@@ -13,9 +13,6 @@
 #ifndef __nglMath_h__
 #define __nglMath_h__
 
-//#include "nui.h"
-#include "nglEndian.h"
-
 
 #if defined(_WIN32_) || defined(__MWERKS__)
   // These defines are not present in <math.h> with VC6 sp3

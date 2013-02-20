@@ -10,10 +10,6 @@
 #ifndef __nuiVBox__
 #define __nuiVBox__
 
-#include "nui.h"
-#include "nuiGrid.h"
-#include "nuiBox.h"
-
 /// this class implements a vertical grid with a single column.
 class nuiVBox : public nuiBox
 {

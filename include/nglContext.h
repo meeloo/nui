@@ -17,11 +17,7 @@ This class is not available if the _NOGFX_ symbol is defined.
 #ifndef __nglContext_h__
 #define __nglContext_h__
 
-//#include "nui.h"
-
 #ifndef _NOGFX_
-
-#include "nglError.h"
 
 #ifdef _X11_
 #include <X11/Xutil.h>

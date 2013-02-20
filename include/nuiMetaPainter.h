@@ -8,11 +8,6 @@
 #ifndef __nuiMetaPainter_h__
 #define __nuiMetaPainter_h__
 
-#include "nuiRenderState.h"
-#include "nuiRenderArray.h"
-#include "nuiRect.h"
-#include "nuiPainter.h"
-
 class nuiDrawContext;
 
 typedef std::vector<uint8> nuiRenderCache;

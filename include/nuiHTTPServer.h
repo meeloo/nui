@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nuiTCPServer.h"
-#include "nuiTCPClient.h"
-#include "nuiRegExp.h"
-
 class nuiHTTPHandler;
 
 class nuiURLHandler

@@ -13,10 +13,6 @@
 #ifndef __nglImage__
 #define __nglImage__
 
-#include "nui.h"
-#include "nglError.h"
-#include "nuiFlags.h"
-
 class nglIStream;
 class nglOStream;
 class nglPath;

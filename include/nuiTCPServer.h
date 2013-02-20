@@ -6,9 +6,6 @@
  */
 
 #pragma once
-
-#include "nuiSocket.h"
-
 class nuiTCPClient;
 
 class nuiTCPServer : public nuiSocket

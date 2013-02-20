@@ -13,9 +13,6 @@
 #ifndef __nglInputDevice_h__
 #define __nglInputDevice_h__
 
-//#include "nui.h"
-#include "nglString.h"
-
 
 //! Input devices interface
 /*!

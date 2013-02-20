@@ -5,8 +5,6 @@
  licence: see nui3/LICENCE.TXT
  */
 
-#include "nui.h"
-
 class nuiHTTPMessage;
 
 class nuiMimeMultiPart

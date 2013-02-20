@@ -13,10 +13,6 @@
 #ifndef __nglIFile_h__
 #define __nglIFile_h__
 
-//#include "nui.h"
-#include "nglIStream.h"
-#include "nglFile.h"
-
 
 //! Input file stream
 /*!

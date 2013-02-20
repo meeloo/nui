@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiWidget.h"
-#include "nuiTexture.h"
-
 class nuiCoverFlow : public nuiWidget
 {
 public:

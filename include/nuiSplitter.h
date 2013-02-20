@@ -8,10 +8,6 @@
 #ifndef __nuiSplitter_h__
 #define __nuiSplitter_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiEvent.h"
-
 /// defines the way the splitter bar position is computed
 enum nuiSplitterMode
 {

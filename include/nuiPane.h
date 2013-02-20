@@ -8,13 +8,6 @@
 #ifndef __nuiPane_h__
 #define __nuiPane_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiEvent.h"
-#include "nuiMouseEvent.h"
-#include "nuiShape.h"
-#include "nuiDrawContext.h"
-
 /// This widget implements a pane area. It draws basic shape and can intercept mouse events
 class NUI_API nuiPane : public nuiSimpleContainer
 {

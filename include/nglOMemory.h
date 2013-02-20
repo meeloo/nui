@@ -15,10 +15,6 @@
 #ifndef __nglOMemory_h__
 #define __nglOMemory_h__
 
-//#include "nui.h"
-#include "nglOStream.h"
-
-
 //! Memory buffer as input stream class
 /*!
 This simple class let you use memory as an output stream. Memory is

@@ -17,10 +17,6 @@ This file contains keyboard layout macros.
 #ifndef __nglKeyboard_h__
 #define __nglKeyboard_h__
 
-//#include "nui.h"
-
-
-
 
 #ifndef _DOXYGEN_
 

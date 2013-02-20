@@ -8,9 +8,6 @@
 #ifndef __nuiFixed_h__
 #define __nuiFixed_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-
 /// nuiFixed is a widget container that keep all its children at their original position and size.
 class NUI_API nuiFixed : public nuiSimpleContainer
 {

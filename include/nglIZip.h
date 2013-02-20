@@ -15,9 +15,6 @@
 #ifndef __nglIZip_h__
 #define __nglIZip_h__
 
-//#include "nui.h"
-#include "nglIStream.h"
-
 class nglZipFS;
 
 

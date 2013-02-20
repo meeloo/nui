@@ -9,11 +9,6 @@
 #define __nuiHBox__
 
 
-
-#include "nui.h"
-#include "nuiGrid.h"
-#include "nuiBox.h"
-
 /// this class implements an horizontal grid with a single row.
 class nuiHBox : public nuiBox
 {

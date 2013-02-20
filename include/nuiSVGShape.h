@@ -8,8 +8,6 @@
 #ifndef __nuiSVGShape_h__
 #define __nuiSVGShape_h__
 
-//#include "nui.h"
-
 class nuiXML;
 class nuiDrawContext;
 

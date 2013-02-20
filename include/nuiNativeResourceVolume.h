@@ -6,9 +6,6 @@
   licence: see nui3/LICENCE.TXT
 */
 
-#include "nui.h"
-#include "nglVolume.h"
-
 #pragma once
 
 #if (!defined _UIKIT_)

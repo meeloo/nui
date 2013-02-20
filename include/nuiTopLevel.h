@@ -8,12 +8,6 @@
 #ifndef __nuiTopLevel_h__
 #define __nuiTopLevel_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiTimer.h"
-#include "nuiDrawContext.h"
-#include "nuiNotification.h"
-
 #define DISABLE_TOOLTIP
 
 class nuiLabel;

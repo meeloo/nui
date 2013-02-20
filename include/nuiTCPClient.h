@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSocket.h"
-#include "nglCriticalSection.h"
-
 class nuiPipe
 {
 public:

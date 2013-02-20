@@ -8,10 +8,6 @@
 #pragma once
 
 
-#include "nuiModalContainer.h"
-#include "nuiHBox.h"
-
-
 /*
 NOTE ABOUT CSS DECORATION: here are the object names that can be used in a css file to decorate the message box:
 nuiMessageBox (object class)

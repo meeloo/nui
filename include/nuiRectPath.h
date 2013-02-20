@@ -8,9 +8,6 @@
 #ifndef __nuiRectPath_h__
 #define __nuiRectPath_h__
 
-#include "nuiPathGenerator.h"
-#include "nuiRect.h"
-
 // nuiRectPath:
 class NUI_API nuiRectPath : public nuiPathGenerator
 {

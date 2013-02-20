@@ -9,9 +9,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiEvent.h"
-
 class nuiMatrixNode : public nuiObject
 {
 public:

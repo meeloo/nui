@@ -8,8 +8,6 @@
 #ifndef __nuiEditLine_h__
 #define __nuiEditLine_h__
 
-#include "nuiEditText.h"
-
 /// This is a simple widget for editing one line of text. Pressing enter fires the "Selected" event.
 class NUI_API nuiEditLine : public nuiEditText
 {

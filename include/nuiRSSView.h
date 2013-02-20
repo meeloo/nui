@@ -7,11 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiHyperLink.h"
-#include "nuiSimpleContainer.h"
-#include "nuiRSS.h"
-
 class nuiVBox;
 
 class nuiRSSView : public nuiSimpleContainer

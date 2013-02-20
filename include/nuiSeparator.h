@@ -8,8 +8,6 @@
 #ifndef __nuiSeparator_h__
 #define __nuiSeparator_h__
 
-#include "nui.h"
-
 class NUI_API nuiSeparator : public nuiWidget
 {
 public:

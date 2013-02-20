@@ -13,11 +13,6 @@
 #ifndef __nglVector_h__
 #define __nglVector_h__
 
-//#include "nui.h"
-#include "nglMath.h"
-//#include "nglApplication.h"
-
-
 /// Two dimensional vectors
 template <class T> class nglVector2
 {

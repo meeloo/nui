@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiVBox.h"
-#include "nuiHBox.h"
-
 // decorations defines
 #define INTROSPECTOR_DECO_BKG _T("INTROSPECTOR_DECO_BKG")
 #define INTROSPECTOR_DECO_BUTTON _T("INTROSPECTOR_DECO_BUTTON")

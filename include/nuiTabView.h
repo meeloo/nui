@@ -8,8 +8,6 @@
 #ifndef __nuiTabView_h__
 #define __nuiTabView_h__
 
-#include "nuiContainer.h"
-
 class nuiGradient;
 class nuiFont;
 class nuiLabel;

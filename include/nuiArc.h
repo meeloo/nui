@@ -8,10 +8,6 @@
 #ifndef __nuiArc_h__
 #define __nuiArc_h__
 
-//#include "nui.h"
-#include "nuiPoint.h"
-#include "nuiPathGenerator.h"
-
 // nuiArc:
 class NUI_API nuiArc : public nuiPathGenerator
 {

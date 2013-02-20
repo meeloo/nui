@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nglVolume.h"
-
 class nglNativeVolume : public nglVolume
 {
 public:

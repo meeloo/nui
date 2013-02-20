@@ -8,9 +8,6 @@
 #ifndef __nuiRenderState_h__
 #define __nuiRenderState_h__
 
-//#include "nui.h"
-#include "nuiShape.h"
-
 class nuiTexture;
 class nuiFont;
 class nuiShader;

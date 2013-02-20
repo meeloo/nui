@@ -8,8 +8,6 @@
 #ifndef __nuiWindowManager_h__
 #define __nuiWindowManager_h__
 
-#include "nuiContainer.h"
-
 class nuiWindow;
 typedef nuiWindow* nuiWindowPtr;
 class nuiWindow;

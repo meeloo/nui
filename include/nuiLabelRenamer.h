@@ -10,11 +10,6 @@
 #define __nuiLabelRenamer_h__
 
 
-//#include "nui.h"
-#include "nuiLabel.h"
-#include "nuiModalContainer.h"
-#include "nuiShadeContainer.h"
-
 class nuiLabelRenamer : public nuiModalContainer
 {
 public:

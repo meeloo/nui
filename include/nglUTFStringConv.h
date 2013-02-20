@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "nglString.h"
 #include "ConvertUTF.h"
 
 typedef ConversionResult (*UTFConverter) (const char** sourceStart, const char* sourceEnd, char** targetStart, char* targetEnd, ConversionFlags flags);

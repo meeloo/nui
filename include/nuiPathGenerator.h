@@ -8,13 +8,6 @@
 #ifndef __nuiPathGenerator_h__
 #define __nuiPathGenerator_h__
 
-//#include "nui.h"
-#include "nglMath.h"
-#include "nglVector.h"
-#include "nuiEvent.h"
-#include "nuiPoint.h"
-#include "nuiPath.h"
-
 class NUI_API nuiPathGenerator : public nuiRefCount
 {
 public:

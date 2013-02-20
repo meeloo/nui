@@ -8,13 +8,6 @@
 #ifndef __nuiToggleButton_h__
 #define __nuiToggleButton_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiEvent.h"
-#include "nuiButton.h"
-#include "nuiStateDecoration.h"
-#include "nuiImage.h"
-
 
 /// This class implements a simple push button that acts as a container for a label, an image, or any other inactive widget element.
 class NUI_API nuiToggleButton : public nuiButton

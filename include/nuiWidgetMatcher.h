@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-
 #define NUI_WIDGET_MATCHER_PARENT 0
 #define NUI_WIDGET_MATCHER_PARENTCONDITION 0
 #define NUI_WIDGET_MATCHER_JOKER 0

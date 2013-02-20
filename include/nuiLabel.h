@@ -8,12 +8,6 @@
 #ifndef __nuiLabel_h__
 #define __nuiLabel_h__
 
-//#include "nui.h"
-#include "nglString.h"
-#include "nuiFont.h"
-#include "nuiWidget.h"
-#include "nuiTheme.h"
-
 class nuiFontRequest;
 
 /// This widget implements a text label. It can be used as a basic building block for buttons, list headers, list elements, etc...

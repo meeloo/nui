@@ -10,19 +10,6 @@
 
 #pragma once
 
-//#include "nui.h"
-#include "nuiObject.h"
-#include "nuiRect.h"
-#include "nuiMouseEvent.h"
-#include "nuiWidgetElements.h"
-#include "nuiHotKey.h"
-#include "nuiDecorationDefines.h"
-#include "nuiDefaultDecoration.h"
-#include "nuiSurface.h"
-#include "nuiRenderState.h"
-#include "nuiAnimation.h"
-#include "nuiMatrixNode.h"
-
 class nuiContainer;
 class nuiDrawContext;
 class nuiWidget;

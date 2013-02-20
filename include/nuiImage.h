@@ -8,14 +8,6 @@
 #ifndef __nuiImage_h__
 #define __nuiImage_h__
 
-//#include "nui.h"
-#include "nglImage.h"
-#include "nuiTexture.h"
-#include "nuiWidget.h"
-#include "nuiRect.h"
-#include "nuiColor.h"
-#include "nuiDrawContext.h"
-
 /// This class implements a basic image widget.
 class NUI_API nuiImage : public nuiWidget
 {

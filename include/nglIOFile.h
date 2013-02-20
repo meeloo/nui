@@ -13,10 +13,6 @@
 #ifndef __nglIOFile_h__
 #define __nglIOFile_h__
 
-//#include "nui.h"
-#include "nglIOStream.h"
-#include "nglOFile.h"
-
 class nglFile;
 class nglPath;
 

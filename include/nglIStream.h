@@ -14,9 +14,6 @@
 #ifndef __nglIStream_h__
 #define __nglIStream_h__
 
-//#include "nui.h"
-#include "nglStream.h"
-
 class nglString;
 class nglOStream;
 

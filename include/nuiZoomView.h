@@ -8,14 +8,6 @@
 #ifndef __nuiZoomView_h__
 #define __nuiZoomView_h__
 
-//#include "nui.h"
-#include "nuiWidget.h"
-#include "nuiSimpleContainer.h"
-#include "nuiScrollBar.h"
-#include "nuiSlider.h"
-#include "nuiRange.h"
-#include "nuiContainer.h"
-
 class NUI_API nuiZoomView : public nuiSimpleContainer
 {
 public:

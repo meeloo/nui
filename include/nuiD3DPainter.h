@@ -8,9 +8,6 @@
 #ifndef __nuiD3DPainter_h__
 #define __nuiD3DPainter_h__
 
-//#include "nui.h"
-#include "nuiDrawContext.h"
-
 // Disable GL support on OSX Classic...
 #ifndef _WIN32_
   #define __NUI_NO_D3D__

@@ -23,18 +23,10 @@
 
 */
 
-//#include "nui.h"
-#include "nuiFont.h"
-#include "nuiRect.h"
-#include "nuiShape.h"
-#include "nuiGradient.h"
-#include "nuiRenderArray.h"
-
-#include "nuiRenderState.h"
-
-#include "nuiPainter.h"
-
 class nuiTexture;
+class nuiTextLayout;
+class nuiPainter;
+class nuiGradient;
 
 enum nuiRenderer
 {

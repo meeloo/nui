@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "nuiTextStyle.h"
-#include "nuiUnicode.h"
+class nuiTextLayout;
 
 //! Glyph metrics
 /*!

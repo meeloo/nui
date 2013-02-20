@@ -8,14 +8,6 @@
 #ifndef __nuiFormatedLabel_h__
 #define __nuiFormatedLabel_h__
 
-//#include "nui.h"
-#include "nglString.h"
-#include "nuiFont.h"
-#include "nuiWidget.h"
-#include "nuiTheme.h"
-#include "nuiLabel.h"
-#include "nuiFormater.h"
-
 /// This widget implements a formated text label. It's simply based on a nuiLabel and takes a nuiFormater object as an additional parameter
 class NUI_API nuiFormatedLabel : public nuiLabel
 {

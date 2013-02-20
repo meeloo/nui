@@ -7,8 +7,6 @@
 
 
 #pragma once
-#include "nui.h"
-
 
 class nuiGestureRecognizer;
 class nuiSwipeGestureRecognizer;

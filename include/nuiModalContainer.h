@@ -8,9 +8,6 @@
 #ifndef __nuiModalConatiner_h__
 #define __nuiModalConatiner_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-
 class NUI_API nuiModalContainer : public nuiSimpleContainer
 {
   friend class nuiWidget;

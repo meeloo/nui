@@ -8,15 +8,6 @@
 #ifndef __nuiSpline_h__
 #define __nuiSpline_h__
 
-//#include "nui.h"
-#include "nglMath.h"
-#include "nglVector.h"
-#include "nglMatrix.h"
-#include "nuiEvent.h"
-#include "nuiRect.h"
-#include "nuiPoint.h"
-#include "nuiPathGenerator.h"
-
 class nuiSpline;
 class nuiSplineNode;
 class nuiSplinePoint;

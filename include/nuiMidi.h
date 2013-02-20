@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSingleton.h"
-
 class nuiMidiManager;
 class nuiMidiInPort;
 

@@ -13,15 +13,6 @@
 #ifndef __nuiFileSelector_h__
 #define __nuiFileSelector_h__
 
-#include "nuiSimpleContainer.h"
-#include "nuiEditLine.h"
-#include "nuiTreeView.h"
-#include "nuiColumnTreeView.h"
-#include "nglVolume.h"
-#include "nuiHBox.h"
-#include "nuiVBox.h"
-#include "nuiList.h"
-
 
 //! Simple file selector
 /*

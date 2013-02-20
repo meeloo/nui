@@ -7,10 +7,6 @@
 
 #pragma once
 
-#include "nuiContainer.h"
-#include "nuiEvent.h"
-#include "nuiMouseEvent.h"
-
 enum nuiBackgroundType
 {
   eOutterBackground = 0,

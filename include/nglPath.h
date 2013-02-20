@@ -8,9 +8,6 @@
 #ifndef __nglPath_h__
 #define __nglPath_h__
 
-#include "nglTime.h"
-#include "nglString.h"
-
 class nglIStream;
 class nglIOStream;
 

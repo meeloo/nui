@@ -8,11 +8,6 @@
 #ifndef __nuiSVGView_h__
 #define __nuiSVGView_h__
 
-//#include "nui.h"
-#include "nuiDrawContext.h"
-#include "nuiSVGShape.h"
-#include "nuiMetaPainter.h"
-
 class NUI_API nuiSVGView : public nuiWidget
 {
 public:

@@ -8,10 +8,6 @@
 #ifndef __nuiPolyLine_h__
 #define __nuiPolyLine_h__
 
-//#include "nui.h"
-#include "nuiPoint.h"
-#include "nuiPathGenerator.h"
-
 // nuiPolyLines:
 class NUI_API nuiPolyLine : public nuiPathGenerator
 {

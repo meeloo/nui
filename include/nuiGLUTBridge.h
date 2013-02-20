@@ -5,7 +5,7 @@
  licence: see nui3/LICENCE.TXT
  */
 
-#include "nui.h"
+#pragma once
 
 extern void* gmpNUI_GLUTBridge;
 

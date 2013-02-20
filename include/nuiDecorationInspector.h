@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiSimpleContainer.h"
-
 class nuiGrid;
 class nuiText;
 

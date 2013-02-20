@@ -8,9 +8,6 @@
 #ifndef __nglImageGIFCodec_h__
 #define __nglImageGIFCodec_h__
 
-//#include "nui.h"
-#include "nglImageCodec.h"
-
 
 class nglImageGIFCodec : public nglImageCodec
 {

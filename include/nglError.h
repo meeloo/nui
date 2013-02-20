@@ -15,8 +15,6 @@
 #ifndef __nglError_h__
 #define __nglError_h__
 
-//#include "nui.h"
-
 /* nglString surclases nglError, so we only use a forward declaration here
  */
 class nglString;

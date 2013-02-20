@@ -8,11 +8,6 @@
 #ifndef __nuiScrollBar_h__
 #define __nuiScrollBar_h__
 
-#include "nuiContainer.h"
-#include "nuiEvent.h"
-#include "nuiTimer.h"
-#include "nuiRange.h"
-
 #define SBSIZE 12 // Basic standard size... Should go in the theme!
 #define SBMINTHUMB 20.f // Min Thumb size
 

@@ -8,9 +8,6 @@
 #ifndef __nuiWidgetInspector_h__
 #define __nuiWidgetInspector_h__
 
-#include "nuiTreeView.h"
-#include "nuiSimpleContainer.h"
-
 class nuiVBox;
 class nuiGrid;
 class nuiWidgetProxy;

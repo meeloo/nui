@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "nui.h"
-
 enum nuiShaderKind
 {
   eVertexShader = GL_VERTEX_SHADER,

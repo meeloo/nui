@@ -15,10 +15,6 @@
 #ifndef __nglStream_h__
 #define __nglStream_h__
 
-//#include "nui.h"
-#include "nglEndian.h"
-#include "nglString.h"
-
 
 //! Stream states
 /*!

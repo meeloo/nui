@@ -11,8 +11,6 @@
 #include "nuiWidget.h"
 #include "nuiShape.h"
 
-// nuishapeView.h
-
 class nuiShape;
 
 class NUI_API nuiShapeView : public nuiWidget

@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "nui.h"
-#include "nuiFixedPoint.h"
-
 #ifdef _WIN32_
 #define NUI_RGBA_ENDIANSAFE_R 2
 #define NUI_RGBA_ENDIANSAFE_G 1

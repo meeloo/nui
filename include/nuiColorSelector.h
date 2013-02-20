@@ -8,13 +8,6 @@
 #ifndef __nuiColorSelector_h__
 #define __nuiColorSelector_h__
 
-#include "nuiContainer.h"
-#include "nuiTabView.h"
-#include "nuiGrid.h"
-#include "nuiVBox.h"
-#include "nuiPane.h"
-#include "nuiColorDecoration.h"
-
 enum ColorSelectorMode
 {
   eModeRGB = 0,

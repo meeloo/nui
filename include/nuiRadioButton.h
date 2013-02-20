@@ -8,12 +8,6 @@
 #ifndef __nuiRadioButton_h__
 #define __nuiRadioButton_h__
 
-//#include "nui.h"
-#include "nuiContainer.h"
-#include "nuiEvent.h"
-#include "nuiToggleButton.h"
-#include "nuiImage.h"
-
 class nuiRadioButtonGroup;
 
 /// This class implements a simple push button that acts as a container for a label, an image, or any other inactive widget element.

@@ -8,9 +8,6 @@
 #ifndef __nuiMainWindow_h__
 #define __nuiMainWindow_h__
 
-//#include "nui.h"
-#include "nuiTopLevel.h"
-
 class nuiLabel;
 class nuiMainWindow;
 class nuiTimer;

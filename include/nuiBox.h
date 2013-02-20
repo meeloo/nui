@@ -9,10 +9,6 @@
 #define __nuiBox__
 
 
-
-#include "nui.h"
-#include "nuiGrid.h"
-
 // this is an interface for hboxes and vboxes
 class nuiBox : public nuiGrid
 {

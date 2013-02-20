@@ -10,8 +10,6 @@
 #ifndef __ngl_default_font_h__
 #define __ngl_default_font_h__
 
-//#include "nui.h"
-
 
 extern const char* gpDefaultFontBase;
 const long         gDefaultFontSize = 49224;

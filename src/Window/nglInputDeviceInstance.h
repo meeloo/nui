@@ -10,7 +10,6 @@
 #ifndef __nglInputDeviceInstance_h__
 #define __nglInputDeviceInstance_h__
 
-//#include "nui.h"
 class nglInputDevice;
 
 class nglInputDeviceInstance

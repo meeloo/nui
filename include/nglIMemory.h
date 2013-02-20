@@ -13,10 +13,6 @@
 #ifndef __nglIMemory_h__
 #define __nglIMemory_h__
 
-//#include "nui.h"
-#include "nglIStream.h"
-
-
 //! Memory buffer as input stream
 /*!
 This simple class let you use any memory portion as an input stream.

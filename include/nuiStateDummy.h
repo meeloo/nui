@@ -8,8 +8,6 @@
 #ifndef __nuiStateDummy_h__
 #define __nuiStateDummy_h__
 
-#include "nuiContainer.h"
-
 class NUI_API nuiStateDummy : public nuiSimpleContainer
 {
 public:

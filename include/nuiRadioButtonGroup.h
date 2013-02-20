@@ -8,8 +8,6 @@
 #ifndef __nuiRadioButtonGroup_h__
 #define __nuiRadioButtonGroup_h__
 
-#include "nuiEvent.h"
-
 class nuiRadioButton;
 class nuiXMLNode;
 
