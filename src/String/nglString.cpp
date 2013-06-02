@@ -1248,7 +1248,7 @@ bool nglString::TrimLeft()
 
 bool nglString::TrimLeft(nglUChar Ch)
 {
-  nglChar tmp[2] = {Ch, 0};
+  nglChar tmp[2] = {static_cast<nglChar>(Ch), 0};
   TrimLeft(tmp);
   return true;
 }
@@ -1291,7 +1291,7 @@ bool nglString::TrimRight()
 
 bool nglString::TrimRight(nglUChar Ch)
 {
-  nglChar tmp[2] = {Ch, 0};
+  nglChar tmp[2] = {static_cast<nglChar>(Ch), 0};
   TrimRight(tmp);
   return true;
 }

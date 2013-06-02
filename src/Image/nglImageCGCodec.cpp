@@ -223,7 +223,7 @@ bool nglImageCGCodec::Feed(nglIStream* pIStream)
                           pCGColors, kCGImageAlphaPremultipliedLast);//kCGImageAlphaPremultipliedFirst);
 
   CGColorSpaceRelease(pCGColors);
-  CGRect rect = { {0,0}, {info.mWidth, info.mHeight} };
+  CGRect rect = { {0,0}, {static_cast<CGFloat>(info.mWidth), static_cast<CGFloat>(info.mHeight)} };
   CGContextClearRect(pCGContext, rect);
   CGContextDrawImage(pCGContext, rect, mpCGImage);
   CGContextRelease(pCGContext);

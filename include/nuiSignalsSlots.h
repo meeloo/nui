@@ -101,7 +101,7 @@ public:
 private:
   void Connect(nuiSlotsSink &rSink, const Slot &rSlot)
   {
-    mSlots.push_back(std::make_pair<Slot, nuiSlotsSink*>(rSlot, &rSink));
+    mSlots.push_back(std::make_pair(rSlot, &rSink));
     AddConnection(rSink, rSlot.GetMemento());
     UpdateStats(mSlots.size());
   }
@@ -191,7 +191,7 @@ public:
 private:	
   void Connect(nuiSlotsSink &sink, const Slot &slot)
   {
-    mSlots.push_back(std::make_pair<Slot, nuiSlotsSink*>(slot, &sink));
+    mSlots.push_back(std::make_pair(slot, &sink));
     AddConnection(sink, slot.GetMemento());
     UpdateStats(mSlots.size());
   }

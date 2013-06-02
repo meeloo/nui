@@ -594,7 +594,7 @@ nglWindow::nglWindow (const nglContextInfo& rContext, const nglWindowInfo& rInfo
  FullScreen : todo
  */
 
-int ngl_scode_table[0x80] = 
+nglKeyCode ngl_scode_table[0x80] = 
 {
 /*  0 */ NK_A, NK_S, NK_D, NK_F, NK_H, NK_G, NK_Z, NK_X, NK_C, NK_V,
 /* 10 */ NK_GRAVE, NK_B, NK_Q, NK_W, NK_E, NK_R, NK_Y, NK_T, NK_1, NK_2,

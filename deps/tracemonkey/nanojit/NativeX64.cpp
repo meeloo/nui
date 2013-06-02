@@ -1724,7 +1724,7 @@ namespace nanojit
          }
     }
 
-    static const AVMPLUS_ALIGN16(int64_t) negateMask[] = {0x8000000000000000LL,0};
+    static const AVMPLUS_ALIGN16(uint64_t) negateMask[] = {0x8000000000000000LL,0};
 
     void Assembler::asm_fneg(LIns *ins) {
         Register rr, ra;
