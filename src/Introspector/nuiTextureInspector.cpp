@@ -80,6 +80,7 @@ void nuiTextureInspector::UpdateTextures()
   pSplitter->AddChild(pCont);
   mpImage = new nuiImage();
   mpImage->SetPosition(nuiCenter);
+  //mpImage->SetDecoration("INTROSPECTOR_TEXTURE_BORDER");
   pCont->AddChild(mpImage);
   
   mSink.Connect(pList->SelectionChanged, &nuiTextureInspector::OnTextureSelection, (void*)pList);

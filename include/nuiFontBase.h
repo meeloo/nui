@@ -491,7 +491,7 @@ private:
   bool FindNextGlyphLocation(int Width, int Height, int &rOffsetX, int &rOffsetY);
   void Defaults();
    
-  static const int TEXTURE_SIZE = 128;
+  static const int TEXTURE_SIZE;
 
   typedef void* FaceID;                 // This will internally be a FTC_FaceID
   

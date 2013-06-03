@@ -1802,7 +1802,10 @@ void nuiFontBase::Blit8BitsBitmapToTexture(const GlyphBitmap &rBitmap, nuiTextur
   uint32 x,y;
 
   uint32 w = pTexture->GetWidth();
-  
+
+  NGL_ASSERT(rBitmap.Height > 0);
+  NGL_ASSERT(rBitmap.Width > 0);
+
   for (y = 0; y < rBitmap.Height; y++)
   {
     uint32 DstOffset = OffsetX + (y + OffsetY )* w;
@@ -1903,6 +1906,8 @@ uint32 POT(uint32 i)
   return t;
 }
 
+const int nuiFontBase::TEXTURE_SIZE = 128;
+
 void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLocation)
 {
   // Fetch rendered glyph
@@ -1913,35 +1918,28 @@ void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLoc
   int OffsetX = mCurrentX;
   int OffsetY = mCurrentY;
 
-  if (FindNextGlyphLocation(bmp.Width + 1, bmp.Height + 1, OffsetX, OffsetY)) 
-  {
-    OffsetX;
-    OffsetY;
-    nuiTexture *pCurrentTexture = mTextures[mCurrentTexture];
-
-    rGlyphLocation = GlyphLocation (OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height, mCurrentTexture);
-    mGlyphLocationLookupTable.insert(std::pair<int, nuiFontBase::GlyphLocation>(Index, rGlyphLocation));
-
-    CopyBitmapToTexture(bmp, pCurrentTexture, OffsetX + 1, OffsetY + 1);
-
-    mCurrentX = OffsetX;
-    mCurrentY = OffsetY + bmp.Height + 2;
-  }
-  else
+  if (!FindNextGlyphLocation(bmp.Width + 1, bmp.Height + 1, OffsetX, OffsetY))
   {
     mCurrentTexture++;
     nuiTexture *texture = AllocateTexture(MAX(TEXTURE_SIZE, POT(MAX(bmp.Width, bmp.Height))));
     mTextures.push_back(texture);
 
-    rGlyphLocation = GlyphLocation (1, 1, bmp.Width, bmp.Height, mCurrentTexture);
-    mGlyphLocationLookupTable.insert(std::pair<int, nuiFontBase::GlyphLocation>(Index, rGlyphLocation));
-
-    CopyBitmapToTexture(bmp, texture, 1, 1);
-
     mCurrentX = 0;
-    mCurrentY = bmp.Height + 2;
-    mRowMaxWidth = bmp.Width;
+    mCurrentY = 0;
+    mRowMaxWidth = 0;
   }
+
+  nuiTexture *pCurrentTexture = mTextures[mCurrentTexture];
+
+  rGlyphLocation = GlyphLocation (OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height, mCurrentTexture);
+  mGlyphLocationLookupTable.insert(std::make_pair(Index, rGlyphLocation));
+
+  //printf("Glyph: %d %d (%d,%d) [%d * %d]\n", Index, (int)mGlyphLocationLookupTable.size(), OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height);
+
+  CopyBitmapToTexture(bmp, pCurrentTexture, OffsetX + 1, OffsetY + 1);
+
+  mCurrentX = OffsetX;
+  mCurrentY = OffsetY + bmp.Height + 2;
 }
 
 void nuiFontBase::GetCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLocation)
@@ -1976,11 +1974,17 @@ bool nuiFontBase::PrepareGlyph(float X, float Y, nuiTextGlyph& rGlyph)
   
   // If we don't have this glyph, assert it has not been rendered
   if (!glyph)
+  {
+    NGL_OUT("Error getting glyph %d - %d", rGlyph.Index);
     return false;
-  
+  }
+
   GlyphBitmap bmp;
   if (!GetGlyphBitmap(glyph, bmp))
+  {
+    NGL_OUT("Error getting glyph bitmap %d - %d", rGlyph.Index, glyph);
     return false;
+  }
   
   nuiFontBase::GlyphLocation GlyphLocation;
   GetCacheGlyph(rGlyph.Index, GlyphLocation);
@@ -2272,7 +2276,7 @@ void nuiFontBase::Shape(nuiTextRun* pRun)
     pRun->mGlyphs[i].mY = -(hb_position->y_offset)    * factor;
     x += hb_position->x_advance;
     
-    //NGL_OUT("%d - %d (%d, %d) ##", hb_glyph->codepoint, hb_glyph->cluster,  ToNearest(pRun->mGlyphs[i].mX), ToNearest(pRun->mGlyphs[i].mY));
+    //NGL_OUT("%d - %d (%d, %d) ##\n", hb_glyph->codepoint, hb_glyph->cluster,  ToNearest(pRun->mGlyphs[i].mX), ToNearest(pRun->mGlyphs[i].mY));
 
     hb_glyph++;
     hb_position++;

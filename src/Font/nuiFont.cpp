@@ -7,8 +7,17 @@
 
 #include "nui.h"
 
+#if 0
+#define DEBUG_FORCE_DEFAULT_FONT return GetFont(11)
+#define DEBUG_FORCE_DEFAULT_FONT_SIZE 11
+#else
+#define DEBUG_FORCE_DEFAULT_FONT
+#endif
+
 nuiFont* nuiFont::GetFont(const nglPath& rPath, nuiSize size, int face, const nglString& rID)
 {
+  DEBUG_FORCE_DEFAULT_FONT;
+
   NGL_ASSERT(size);
   nuiFont* pFont= NULL;
   nglString id = rID.IsEmpty() ? GetUniqueID(rPath.GetPathName(), size, face) : rID;
@@ -46,6 +55,8 @@ nuiFont* nuiFont::GetFont(const nglPath& rPath, nuiSize size, int face, const ng
 
 nuiFont* nuiFont::GetFont(const nglString& rName, uint8* pBuffer, uint BufferSize, nuiSize Size, int Face, const nglString& rID)
 {
+  DEBUG_FORCE_DEFAULT_FONT;
+
   NGL_ASSERT(Size);
   nuiFont* pFont= NULL;
   nglString id = rID.IsEmpty() ? GetUniqueID(rName, Size, Face) : rID;
@@ -76,6 +87,8 @@ nuiFont* nuiFont::GetFont(const nglString& rName, uint8* pBuffer, uint BufferSiz
 
 nuiFont* nuiFont::GetFont(nuiXMLNode* pNode, const nglString& rID)
 {
+  DEBUG_FORCE_DEFAULT_FONT;
+
   nuiFont* pFont= NULL;
   nglString id = rID.IsEmpty() ? GetUniqueID(nuiGetString(pNode, _T("Source")), nuiGetVal(pNode, _T("Size"), 0.0f), nuiGetVal(pNode, _T("Face"), 0)) : rID;
   NGL_ASSERT(!id.IsEmpty());
@@ -118,6 +131,8 @@ nuiFont* nuiFont::GetFont(nuiXMLNode* pNode, const nglString& rID)
 
 nuiFont* nuiFont::GetFont(const nglString& rId)
 {
+  DEBUG_FORCE_DEFAULT_FONT;
+
   //NGL_OUT(_T("nuiFont::GetFont4 %s\n"), rId.GetChars());
 
   std::map<nglString,nuiFont*, nglString::LessFunctor>::iterator it = mpFonts.find(rId);
@@ -134,6 +149,10 @@ nuiFont* nuiFont::GetFont(const nglString& rId)
 
 nuiFont* nuiFont::GetFont(nuiSize size, const nglString& rID)
 {
+#ifdef DEBUG_FORCE_DEFAULT_FONT_SIZE
+  size = DEBUG_FORCE_DEFAULT_FONT_SIZE;
+#endif
+
   NGL_ASSERT(size);
   nuiFont* pFont= NULL;
   int face = 0;

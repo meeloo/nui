@@ -269,7 +269,7 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
     mpContext->BeginSession();
     const char* ext0 = (const char*)glGetString(GL_EXTENSIONS);
     nglString exts(ext0);
-    NGL_OUT(_T("Extensions: %s\n"), exts.GetChars());
+    //NGL_OUT(_T("Extensions: %s\n"), exts.GetChars());
 
 
     mpContext->CheckExtension(_T("GL_VERSION_1_2"));
@@ -704,11 +704,18 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, i
 
   // 2D Textures:
   auto it = mTextures.end();
-  if (rState.mpTexture[slot])
-    it = mTextures.find(rState.mpTexture[slot]);
+  nuiTexture* pTexture = rState.mpTexture[slot];
+  if (pTexture)
+    it = mTextures.find(pTexture);
 
   bool uptodate = (it == mTextures.end()) ? false : ( !it->second.mReload && it->second.mTexture >= 0 );
-  if (ForceApply || (mFinalState.mpTexture[slot] != rState.mpTexture[slot]) || (mFinalState.mpTexture[slot] && !uptodate))
+  if (pTexture && !pTexture->IsUptoDate())
+  {
+    uptodate = false;
+    it->second.mReload = true;
+  }
+
+  if (ForceApply || (mFinalState.mpTexture[slot] != pTexture) || (mFinalState.mpTexture[slot] && !uptodate))
   {
     GLenum intarget = 0;
     GLenum outtarget = 0;
@@ -725,8 +732,8 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, i
       nuiCheckForGLErrors();
     }
 
-    //NGL_OUT(_T("Change texture to 0x%x (%s)\n"), rState.mpTexture[slot], rState.mpTexture[slot]?rState.mpTexture[slot]->GetSource().GetChars() : nglString::Empty.GetChars());
-    mFinalState.mpTexture[slot] = rState.mpTexture[slot] ;
+    //NGL_OUT(_T("Change texture to 0x%x (%s)\n"), pTexture, pTexture?pTexture->GetSource().GetChars() : nglString::Empty.GetChars());
+    mFinalState.mpTexture[slot] = pTexture ;
 
     if (mFinalState.mpTexture[slot])
     {
@@ -1618,6 +1625,7 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 #endif
         {
           glTexImage2D(target, 0, internalPixelformat, (int)Width, (int)Height, 0, pixelformat, type, pBuffer);
+          pTexture->ResetForceReload();
         }
         nuiCheckForGLErrors();
 
