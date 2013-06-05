@@ -23,21 +23,21 @@ class nuiGLDebugGuard
 public:
   nuiGLDebugGuard(const nglString& rString)
   {
-#ifdef DEBUG
+#if defined DEBUG && defined _UIKIT_
     glPushGroupMarkerEXT(0, rString.GetChars());
 #endif
   }
 
   nuiGLDebugGuard(const char* pString)
   {
-#ifdef DEBUG
+#if defined DEBUG && defined _UIKIT_
     glPushGroupMarkerEXT(0, pString);
 #endif
   }
 
   ~nuiGLDebugGuard()
   {
-#ifdef DEBUG
+#if defined DEBUG && defined _UIKIT_
     glPopGroupMarkerEXT();
 #endif
   }

@@ -20587,6 +20587,7 @@
 					XP_UNIX,
 					AVMPLUS_PPC,
 					_COCOA_,
+					DEBUG,
 				);
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=x86_64]" = (
 					NGL_STATIC_BUILD,
@@ -20601,6 +20602,7 @@
 					HAVE_FT_FACE_GETCHARVARIANTINDEX,
 					AVMPLUS_AMD64,
 					_COCOA_,
+					DEBUG,
 				);
 				GCC_THREADSAFE_STATICS = NO;
 				INSTALL_PATH = /usr/local/lib;

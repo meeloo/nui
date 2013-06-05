@@ -1803,8 +1803,8 @@ void nuiFontBase::Blit8BitsBitmapToTexture(const GlyphBitmap &rBitmap, nuiTextur
 
   uint32 w = pTexture->GetWidth();
 
-  NGL_ASSERT(rBitmap.Height > 0);
-  NGL_ASSERT(rBitmap.Width > 0);
+//  NGL_ASSERT(rBitmap.Height > 0);
+//  NGL_ASSERT(rBitmap.Width > 0);
 
   for (y = 0; y < rBitmap.Height; y++)
   {

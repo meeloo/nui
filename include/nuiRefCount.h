@@ -10,37 +10,37 @@
 class nuiRefCount
 {
 public:
-  nuiRefCount() : mTrace(false), mCount(0), mPermanent(false)
+  nuiRefCount() : mTrace(false), mRefCount(0), mPermanent(false)
   {
   }
 
   virtual ~nuiRefCount()           
   { 
-    NGL_ASSERT(mCount == 0); 
+    NGL_ASSERT(mRefCount == 0);
   }
 
   uint32 Acquire() const   
   { 
     if (mTrace)
     {
-      NGL_OUT(_T("Acquire object %p (%d)\n"), this, mCount + 1);
+      NGL_OUT(_T("Acquire object %p (%d)\n"), this, mRefCount + 1);
     }
     
-    
-    return ++mCount; 
+    mRefCount++;
+    return mRefCount;
   }
 
   uint32 Release() const
   { 
     if (mTrace)
     {
-      NGL_OUT(_T("Release object %p (%d)\n"), this, mCount - 1);
+      NGL_OUT(_T("Release object %p (%d)\n"), this, mRefCount - 1);
     }
 
     
-    NGL_ASSERTR(mCount > 0, mCount); 
-    mCount--;
-    if (mCount == 0)
+    NGL_ASSERTR(mRefCount > 0, mRefCount);
+    mRefCount--;
+    if (mRefCount == 0)
     {
       if (mTrace)
       {
@@ -52,7 +52,7 @@ public:
       delete this;
       return 0;
     }
-    return mCount; 
+    return mRefCount;
   }
 
   void SetTrace(bool set)
@@ -67,7 +67,7 @@ public:
   
   uint32 GetRefCount() const
   {
-    return mCount;
+    return mRefCount;
   }
 
   void SetPermanent(bool Permanent = true)
@@ -100,7 +100,7 @@ public:
 protected:
   mutable bool mTrace;
 private:
-  mutable uint32 mCount;
+  mutable uint32 mRefCount;
   bool mPermanent;
 };
 

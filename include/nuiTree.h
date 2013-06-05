@@ -112,7 +112,7 @@ public:
     return mpElement;
   }
 
-  void SetElement(T* pNewElement, bool DeletePrevious = true, bool OwnNewElement = true) ///< Beware what you are doing if you decide to use this method!
+  virtual void SetElement(T* pNewElement, bool DeletePrevious = true, bool OwnNewElement = true) ///< Beware what you are doing if you decide to use this method!
   {
     if (mOwnElement && DeletePrevious)
       delete mpElement;

@@ -39,7 +39,7 @@ and in NGL user application code.
 #if defined (_WIN32) || defined (WIN32)
 #  ifndef _WIN32_
 #    define _WIN32_
-#define _WIN32_WINNT 0x0502
+#    define _WIN32_WINNT 0x0502
 #  endif
 #  ifdef _DEBUG
 //#    define _CRTDBG_MAP_ALLOC // Use the CRT debug mallocs & new

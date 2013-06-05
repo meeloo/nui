@@ -53,7 +53,7 @@ void nglDumpStackTrace();
 # else
 #   define __ASSERT_SYS(test) { assert(test); }
 # endif
-# define NGL_LOG_DEFAULT NGL_LOG_INFO
+# define NGL_LOG_DEFAULT NGL_LOG_ERROR
 #else
 #  define __ASSERT_SYS(test)
 #  define NGL_LOG_DEFAULT NGL_LOG_ERROR

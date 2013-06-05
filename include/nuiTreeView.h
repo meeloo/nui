@@ -22,6 +22,8 @@ public:
   nuiTreeNode(const nglString& rLabelName, bool Opened = false, bool Selected = false, bool DrawTreeHandle = true, bool alwaysDisplayTreeHandle=false);
   virtual ~nuiTreeNode();
 
+  virtual void SetElement(nuiWidget* pNewElement, bool DeletePrevious = true, bool OwnNewElement = true); ///< Beware what you are doing if you decide to use this method!
+
   bool IsOpened() const;
   virtual void Open(bool Opened);
 

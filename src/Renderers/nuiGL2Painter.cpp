@@ -288,54 +288,78 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
 {
   mUseShaders = true;
 
-  mpShader_TextureVertexColor = new nuiShaderProgram("TextureVertexColor");
-  mpShader_TextureVertexColor->Acquire();
-  mpShader_TextureVertexColor->AddShader(eVertexShader, TextureVertexColor_VTX);
-  mpShader_TextureVertexColor->AddShader(eFragmentShader, TextureVertexColor_FGT);
-  mpShader_TextureVertexColor->Link();
-  mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-  mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
+  mpShader_TextureVertexColor = nuiShaderProgram::GetProgram("TextureVertexColor");
+  if (!mpShader_TextureVertexColor)
+  {
+    mpShader_TextureVertexColor = new nuiShaderProgram("TextureVertexColor");
+    mpShader_TextureVertexColor->Acquire();
+    mpShader_TextureVertexColor->AddShader(eVertexShader, TextureVertexColor_VTX);
+    mpShader_TextureVertexColor->AddShader(eFragmentShader, TextureVertexColor_FGT);
+    mpShader_TextureVertexColor->Link();
+    mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+    mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
+  }
+  
+  mpShader_TextureAlphaVertexColor = nuiShaderProgram::GetProgram("TextureAlphaVertexColor");
+  if (!mpShader_TextureAlphaVertexColor)
+  {
+    mpShader_TextureAlphaVertexColor = new nuiShaderProgram("TextureAlphaVertexColor");
+    mpShader_TextureAlphaVertexColor->Acquire();
+    mpShader_TextureAlphaVertexColor->AddShader(eVertexShader, TextureAlphaVertexColor_VTX);
+    mpShader_TextureAlphaVertexColor->AddShader(eFragmentShader, TextureAlphaVertexColor_FGT);
+    mpShader_TextureAlphaVertexColor->Link();
+    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
+  }
 
-  mpShader_TextureAlphaVertexColor = new nuiShaderProgram("TextureAlphaVertexColor");
-  mpShader_TextureAlphaVertexColor->Acquire();
-  mpShader_TextureAlphaVertexColor->AddShader(eVertexShader, TextureAlphaVertexColor_VTX);
-  mpShader_TextureAlphaVertexColor->AddShader(eFragmentShader, TextureAlphaVertexColor_FGT);
-  mpShader_TextureAlphaVertexColor->Link();
-  mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-  mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
+  mpShader_TextureDifuseColor = nuiShaderProgram::GetProgram("TextureDiffuseColor");
+  if (!mpShader_TextureDifuseColor)
+  {
+    mpShader_TextureDifuseColor = new nuiShaderProgram("TextureDiffuseColor");
+    mpShader_TextureDifuseColor->Acquire();
+    mpShader_TextureDifuseColor->AddShader(eVertexShader, TextureDifuseColor_VTX);
+    mpShader_TextureDifuseColor->AddShader(eFragmentShader, TextureDifuseColor_FGT);
+    mpShader_TextureDifuseColor->Link();
+    mpShader_TextureDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+    mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+    mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
+  }
 
-  mpShader_TextureDifuseColor = new nuiShaderProgram("TextureDiffuseColor");
-  mpShader_TextureDifuseColor->Acquire();
-  mpShader_TextureDifuseColor->AddShader(eVertexShader, TextureDifuseColor_VTX);
-  mpShader_TextureDifuseColor->AddShader(eFragmentShader, TextureDifuseColor_FGT);
-  mpShader_TextureDifuseColor->Link();
-  mpShader_TextureDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-  mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-  mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
+  mpShader_TextureAlphaDifuseColor = nuiShaderProgram::GetProgram("TextureAlphaDifuseColor");
+  if (!mpShader_TextureAlphaDifuseColor)
+  {
+    mpShader_TextureAlphaDifuseColor = new nuiShaderProgram("TextureAlphaDifuseColor");
+    mpShader_TextureAlphaDifuseColor->Acquire();
+    mpShader_TextureAlphaDifuseColor->AddShader(eVertexShader, TextureAlphaDifuseColor_VTX);
+    mpShader_TextureAlphaDifuseColor->AddShader(eFragmentShader, TextureAlphaDifuseColor_FGT);
+    mpShader_TextureAlphaDifuseColor->Link();
+    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
+  }
 
-  mpShader_TextureAlphaDifuseColor = new nuiShaderProgram("TextureAlphaDifuseColor");
-  mpShader_TextureAlphaDifuseColor->Acquire();
-  mpShader_TextureAlphaDifuseColor->AddShader(eVertexShader, TextureAlphaDifuseColor_VTX);
-  mpShader_TextureAlphaDifuseColor->AddShader(eFragmentShader, TextureAlphaDifuseColor_FGT);
-  mpShader_TextureAlphaDifuseColor->Link();
-  mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-  mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-  mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
+  mpShader_VertexColor = nuiShaderProgram::GetProgram("VertexColor");
+  if (!mpShader_VertexColor)
+  {
+    mpShader_VertexColor = new nuiShaderProgram("VertexColor");
+    mpShader_VertexColor->Acquire();
+    mpShader_VertexColor->AddShader(eVertexShader, VertexColor_VTX);
+    mpShader_VertexColor->AddShader(eFragmentShader, VertexColor_FGT);
+    mpShader_VertexColor->Link();
+    mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+  }
 
-  mpShader_VertexColor = new nuiShaderProgram("VertexColor");
-  mpShader_VertexColor->Acquire();
-  mpShader_VertexColor->AddShader(eVertexShader, VertexColor_VTX);
-  mpShader_VertexColor->AddShader(eFragmentShader, VertexColor_FGT);
-  mpShader_VertexColor->Link();
-  mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-
-  mpShader_DifuseColor = new nuiShaderProgram("DifuseColor");
-  mpShader_DifuseColor->Acquire();
-  mpShader_DifuseColor->AddShader(eVertexShader, DifuseColor_VTX);
-  mpShader_DifuseColor->AddShader(eFragmentShader, DifuseColor_FGT);
-  mpShader_DifuseColor->Link();
-  mpShader_DifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-  mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+  mpShader_DifuseColor = nuiShaderProgram::GetProgram("DifuseColor");
+  if (!mpShader_DifuseColor)
+  {
+    mpShader_DifuseColor = new nuiShaderProgram("DifuseColor");
+    mpShader_DifuseColor->Acquire();
+    mpShader_DifuseColor->AddShader(eVertexShader, DifuseColor_VTX);
+    mpShader_DifuseColor->AddShader(eFragmentShader, DifuseColor_FGT);
+    mpShader_DifuseColor->Link();
+    mpShader_DifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+    mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+  }
 
   mpCurrentVertexBufferInfo = NULL;
   mpLastArray = NULL;

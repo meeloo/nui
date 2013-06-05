@@ -1822,7 +1822,7 @@ void nuiGLPainter::ResizeSurface(nuiSurface* pSurface, int32 newWidth, int32 new
   //NGL_OUT("Resize surface %s to %d x %d\n", pSurface->GetObjectName().GetChars(), newWidth, newHeight);
   nuiTexture* pTexture = pSurface->GetTexture();
 
-#ifdef DEBUG
+#if defined DEBUG && defined _UIKIT_
   glPushGroupMarkerEXT(0, pSurface->GetObjectName().GetChars());
 #endif
 
@@ -2056,7 +2056,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
   if (mpSurface)
   {
     mpSurface->Release();
-#ifdef DEBUG
+#if defined DEBUG && defined _UIKIT_
     glPopGroupMarkerEXT();
 #endif
   }
@@ -2076,7 +2076,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 
     nuiTexture* pTexture = pSurface->GetTexture();
 
-#ifdef DEBUG
+#if defined DEBUG && defined _UIKIT_
     if (pTexture)
       glPushGroupMarkerEXT(0, pTexture->GetSource().GetChars());
     else
@@ -2477,7 +2477,7 @@ bool nuiCheckForGLErrorsReal()
   if (err == GL_NO_ERROR)
     return true;
 
-  App->GetLog().SetLevel("nuiGLPainter", 1000);
+//  App->GetLog().SetLevel("nuiGLPainter", 1000);
   switch (err)
   {
     case GL_INVALID_ENUM:

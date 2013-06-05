@@ -280,7 +280,7 @@ void nuiShaderState::InitWithProgram(nuiShaderProgram* pProgram, std::map<GLuint
       GLuint location = glGetUniformLocation(pgm, name);
 
       rIndexMap[location] = i;
-      NGL_OUT("ShaderProgram %p Uniform: %d %s %s[%d]\n", pProgram, location, Type2String(type), name , num);
+      //NGL_OUT("ShaderProgram %p Uniform: %d %s %s[%d]\n", pProgram, location, Type2String(type), name , num);
       mUniforms.push_back(nuiUniformDesc(name, type, num, location, pProgram));
     }
   }
@@ -894,7 +894,7 @@ bool nuiShaderProgram::Validate() const
     GLchar messages[256];
     glGetProgramInfoLog(mProgram, sizeof(messages), 0, &messages[0]);
     CHECK_GL_ERRORS;
-    NGL_LOG("painter", NGL_LOG_ERROR, "nuiShaderProgram::Validate() failed: %s", messages);
+    //NGL_LOG("painter", NGL_LOG_ERROR, "nuiShaderProgram::Validate() failed: %s", messages);
     return false;
   }
 

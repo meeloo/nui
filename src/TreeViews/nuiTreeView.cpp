@@ -62,6 +62,18 @@ nuiTreeNode::~nuiTreeNode()
   //NGL_OUT(_T("nuiTreeNode::~nuiTreeNode() [0x%x]\n"), this);
 }
 
+void nuiTreeNode::SetElement(nuiWidget* pNewElement, bool DeletePrevious, bool OwnNewElement)
+{
+  if (pNewElement)
+    pNewElement->Acquire();
+  if (mpElement)
+    mpElement->Release();
+  mpElement = pNewElement;
+  mOwnElement = true;
+  Changed();
+  ChildAdded(this, this);
+}
+
 bool nuiTreeNode::IsTreeHandleDrawned() const
 {
   return mDrawTreeHandle;

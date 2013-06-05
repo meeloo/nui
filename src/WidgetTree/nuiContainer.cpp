@@ -546,8 +546,12 @@ nuiWidgetPtr nuiContainer::DispatchMouseMove(const nglMouseInfo& rInfo)
       {
         nuiWidgetPtr pItem = pIt->GetWidget();
         if (pItem)
+        {
           if (pItem->IsVisible())
+          {
             pHandled = pItem->DispatchMouseMove(rInfo);
+          } 
+        }
         if (pHandled)
         {
           // stop as soon as someone caught the event

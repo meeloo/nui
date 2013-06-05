@@ -525,13 +525,13 @@ float nuiGetInvScaleFactor()
 
   if (x > 0)
   {
-    info.Buttons = nglMouseInfo::ButtonWheelRight;
+    info.Buttons = nglMouseInfo::ButtonWheelLeft;
     mpNGLWindow->CallOnMouseClick(info);
     mpNGLWindow->CallOnMouseUnclick(info);
   }
   else if (x < 0)
   {
-    info.Buttons = nglMouseInfo::ButtonWheelLeft;
+    info.Buttons = nglMouseInfo::ButtonWheelRight;
     mpNGLWindow->CallOnMouseClick(info);
     mpNGLWindow->CallOnMouseUnclick(info);
   }
