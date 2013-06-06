@@ -149,6 +149,9 @@ public:
   void SetDepthInset(uint32 depth, nuiSize inset);
   nuiSize GetDepthInset(uint32 depth);
 
+  void SetDisplayRoot(bool set);
+  bool GetDisplayRoot() const;
+
   //! Selection support
   virtual nuiTreeNodePtr FindNode(nuiSize X, nuiSize Y);
   virtual void Select(const nuiRect& rRect, bool Sel, bool TempSelection = false);
@@ -200,7 +203,7 @@ protected:
 
 
     
-  bool mDisplayRoot;  
+  bool mDisplayRoot;
   bool mMultiSelectable;
   bool mInMultiSelection;
   bool mDeSelectable;

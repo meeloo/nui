@@ -279,7 +279,11 @@ nuiTreeView::nuiTreeView(nuiTreeNodePtr pTree, bool displayRoot)
   mpSelectedNode(NULL),
   mpClickedNode(NULL)
 {
-  SetObjectClass(_T("nuiTreeView"));
+  if (SetObjectClass("nuiTreeView"))
+  {
+    InitAttributes();
+  }
+
   mMultiSelectable = false;
   mInMultiSelection = false;
   mDeSelectable = true;
@@ -316,6 +320,25 @@ void nuiTreeView::InitAttributes()
                (nglString(_T("HandleColor")), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiTreeView::GetHandleColor), 
                 nuiMakeDelegate(this, &nuiTreeView::SetHandleColor)));    
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("DisplayRoot")), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiTreeView::GetDisplayRoot),
+                nuiMakeDelegate(this, &nuiTreeView::SetDisplayRoot)));
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("MultiSelectable")), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiTreeView::IsMultiSelectable),
+                nuiMakeDelegate(this, &nuiTreeView::SetMultiSelectable)));
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("DeSelectable")), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiTreeView::IsDeSelectable),
+                nuiMakeDelegate(this, &nuiTreeView::SetDeSelectable)));
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("MultiSelecting")), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiTreeView::IsMultiSelecting)));
 }
 
 const nuiColor& nuiTreeView::GetHandleColor()
@@ -1269,6 +1292,18 @@ nuiTreeView::SubElement::SubElement(nuiSize width)
   mMaxWidth = -1;
 }
 
+void nuiTreeView::SetDisplayRoot(bool set)
+{
+  if (mDisplayRoot == set)
+    return;
+  mDisplayRoot = set;
+  InvalidateLayout();
+}
+
+bool nuiTreeView::GetDisplayRoot() const
+{
+  return mDisplayRoot;
+}
 
 
 
