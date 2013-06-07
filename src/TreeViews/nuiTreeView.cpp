@@ -642,7 +642,9 @@ void nuiTreeView::ReparentTree(nuiTreeNode* pTree)
     if (pWidget)
       AddChild(pWidget);
   }
-  
+
+  if (pTree->IsSelected())
+    mpSelectedNode = pTree;
 
   uint32 count = pTree->GetChildrenCount();
   for (uint32 i = 0; i < count; i++)
@@ -972,8 +974,9 @@ void nuiTreeView::SetTree(nuiTreeNodePtr pTree, bool DeleteOldTree)
     mpTree->Release();
 
   mpTree = pTree;
-  ReparentTree(pTree);
   mpSelectedNode = NULL;
+  mpClickedNode = NULL;
+  ReparentTree(pTree);
   InvalidateLayout();
 }
 
