@@ -83,7 +83,12 @@ public:
   bool IsDragEnabled();
   
   void ActivateMobileMode();
-  
+
+  void ActivateHotRect(bool hset, bool vset);
+  void ActivateHotRect(bool set);
+  void IsVerticalHotRectActive() const;
+  void IsHorizontalHotRectActive() const;
+
 private:
   void InitAttributes();
   void Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVerticalScrollBar, bool Horizontal, bool Vertical);
@@ -91,6 +96,8 @@ private:
   void OnChildAdded(const nuiEvent& rEvent);
   void OnChildRemoved(const nuiEvent& rEvent);
   void OnHotRectChanged(const nuiEvent& rEvent);
+  bool mHorizontalHotRectActive;
+  bool mVerticalHotRectActive;
 
   nuiRect mChildrenUnionRect;
   bool SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy, nuiSize scrollv, nuiSize scrollh);

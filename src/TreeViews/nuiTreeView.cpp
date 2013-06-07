@@ -1283,6 +1283,51 @@ void nuiTreeView::EnableSubElements(uint32 count)
 
 nuiSize nuiTreeView::mDefaultSubElementWidth = 32;
 
+uint32 nuiTreeView::GetSubElementsCount() const
+{
+  return mSubElements.size();
+}
+
+void nuiTreeView::SetSubElementWidth(uint32 index, nuiSize MinWidth, nuiSize MaxWidth)
+{
+  NGL_ASSERT(index < mSubElements.size());
+  mSubElements[index].mMinWidth = MinWidth;
+  mSubElements[index].mMaxWidth = MaxWidth;
+  if (mSubElements[index].mWidth < MinWidth)
+    mSubElements[index].mWidth = MinWidth;
+  if (mSubElements[index].mWidth > MaxWidth)
+    mSubElements[index].mWidth = MaxWidth;
+  InvalidateLayout();
+}
+
+void nuiTreeView::SetSubElementWidth(uint32 index, nuiSize Width)
+{
+  SetSubElementWidth(index, Width, Width);
+}
+
+void nuiTreeView::SetSubElementMinWidth(uint32 index, nuiSize MinWidth)
+{
+  SetSubElementWidth(index, MinWidth, mMaxWidth);
+}
+
+void nuiTreeView::SetSubElementMaxWidth(uint32 index, nuiSize MaxWidth)
+{
+  SetSubElementWidth(index, mMinWidth, MaxWidth);
+}
+
+nuiSize nuiTreeView::GetSubElementMinWidth(uint32 index) const
+{
+  NGL_ASSERT(index < mSubElements.size());
+  return mSubElements[index].mMinWidth;
+}
+
+nuiSize nuiTreeView::GetSubElementMaxWidth(uint32 index) const
+{
+  NGL_ASSERT(index < mSubElements.size());
+  return mSubElements[index].mMaxWidth;
+}
+
+
 nuiTreeView::SubElement::SubElement(nuiSize width)
 {
   mWidth = width;

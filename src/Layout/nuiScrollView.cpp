@@ -16,14 +16,18 @@
 
 nuiScrollView::nuiScrollView(bool Horizontal, bool Vertical)
   : nuiSimpleContainer(),
-    mSVSink(this)
+    mSVSink(this),
+    mVerticalHotRectActive(true),
+    mHorizontalHotRectActive(true)
 {
   Init(NULL, NULL, Horizontal, Vertical);
 }
 
 nuiScrollView::nuiScrollView(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVerticalScrollBar )
 : nuiSimpleContainer(),
-  mSVSink(this)
+  mSVSink(this),
+  mVerticalHotRectActive(true),
+  mHorizontalHotRectActive(true)
 {
   Init(pHorizontalScrollBar, pVerticalScrollBar, false, false);
 }
@@ -619,23 +623,26 @@ void nuiScrollView::OnChildRemoved(const nuiEvent& rEvent)
 
 void nuiScrollView::OnHotRectChanged(const nuiEvent& rEvent)
 {
-  UpdateLayout();
-  nuiWidgetPtr pChild = (nuiWidgetPtr)rEvent.mpUser;
-
-  if (!pChild)
-    return;
-
-  nuiRect rect;
-  pChild->GetHotRect(rect);
-
-  if (!mForceNoVertical)
+  if (mHorizontalHotRectActive || mVerticalHotRectActive)
   {
-    mpVertical->GetRange().MakeInRange(rect.Top(), rect.GetHeight());
-  }
+    UpdateLayout();
+    nuiWidgetPtr pChild = (nuiWidgetPtr)rEvent.mpUser;
 
-  if (!mForceNoHorizontal)
-  {
-    mpHorizontal->GetRange().MakeInRange(rect.Left(), rect.GetWidth());
+    if (!pChild)
+      return;
+
+    nuiRect rect;
+    pChild->GetHotRect(rect);
+
+    if (!mForceNoVertical && mVerticalHotRectActive)
+    {
+      mpVertical->GetRange().MakeInRange(rect.Top(), rect.GetHeight());
+    }
+
+    if (!mForceNoHorizontal && mHorizontalHotRectActive)
+    {
+      mpHorizontal->GetRange().MakeInRange(rect.Left(), rect.GetWidth());
+    }
   }
 }
 
@@ -1170,3 +1177,25 @@ void nuiScrollView::ActivateMobileMode()
   SetBarSize(13);
   
 }
+
+void nuiScrollView::ActivateHotRect(bool hset, bool vset)
+{
+  mHorizontalHotRectActive = hset;
+  mVerticalHotRectActive = vset;
+}
+
+void nuiScrollView::ActivateHotRect(bool set)
+{
+  ActivateHotRect(set, set);
+}
+
+void nuiScrollView::IsHorizontalHotRectActive() const
+{
+  return mHorizontalHotRectActive;
+}
+
+void nuiScrollView::IsVerticalHotRectActive() const
+{
+  return mVerticalHotRectActive;
+}
+

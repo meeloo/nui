@@ -175,7 +175,15 @@ public:
   void SetHandleColor(const nuiColor& rColor);
   
   void EnableSubElements(uint32 count);
-  
+  uint32 GetSubElementsCount() const;
+  void SetSubElementWidth(uint32 index, nuiSize MinWidth, nuiSize MaxWidth);
+  void SetSubElementWidth(uint32 index, nuiSize Width);
+  void SetSubElementMinWidth(uint32 index, nuiSize Width);
+  void SetSubElementMaxWidth(uint32 index, nuiSize Width);
+  nuiSize GetSubElementMinWidth(uint32 index) const;
+  nuiSize GetSubElementMaxWidth(uint32 index) const;
+
+
   nuiMouseClicked Clicked; ///< This event is called whenever an item is clicked.
   
   nuiSimpleEventSource<nuiWidgetActivated> Activated; ///< This event is called whenever an item is chosen, that is to say, double clicked. This can only happend in a mono-selection tree.
