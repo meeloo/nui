@@ -1693,6 +1693,25 @@ void nuiEditText::SetCursorPos(uint Pos)
   //NGL_OUT(_T("Cursor pos = %d\n"), Pos);
 }
 
+void nuiEditText::SetCursorPos(uint Line, uint Column)
+{
+  if (Line > mpBlocks.size() - 1)
+    Line = mpBlocks.size() - 1;
+
+  TextBlock* pBlock = mpBlocks[Line];
+
+  NGL_ASSERT(pBlock);
+
+  uint pos = pBlock->GetPos();
+  if (Column > pBlock->GetLength() - 1)
+    Column = pBlock->GetLength() - 1;
+
+  pos += Column;
+
+  SetCursorPos(pos);
+}
+
+
 uint nuiEditText::GetCursorPos() const
 {
   return mCursorPos;

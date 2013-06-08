@@ -118,6 +118,7 @@ public:
 
   void MoveCursorTo(nuiSize X, nuiSize Y);
   void SetCursorPos(uint Pos);
+  void SetCursorPos(uint Line, uint Column);
   uint GetCursorPos() const;
   void SetAnchorPos(uint Pos);
   uint GetAnchorPos() const;
