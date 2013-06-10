@@ -2333,7 +2333,7 @@ namespace nanojit
 
     #define SF_CALLINFO(name, typesig) \
         static const CallInfo name##_ci = \
-            { (intptr_t)&name, typesig, ABI_FASTCALL, /*isPure*/1, ACC_NONE verbose_only(, #name) }
+            { (uintptr_t)&name, typesig, ABI_FASTCALL, /*isPure*/1, ACC_NONE verbose_only(, #name) }
 
     SF_CALLINFO(i2f,  SIG_F_I);
     SF_CALLINFO(u2f,  SIG_F_U);

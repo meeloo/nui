@@ -410,8 +410,8 @@ bool nuiRange::MakeInRange(double Position, double size)
     if (newend > end)
       val += newend - end;
 
-    if (val < Position)
-      val = Position;
+    if (val < mMinimum)
+      val = mMinimum;
     SetValue(val);
   }
   else
