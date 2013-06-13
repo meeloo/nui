@@ -292,6 +292,10 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
   
 
   {
+    auto styleit = mStyleChanges.begin();
+    auto styleend = mStyleChanges.end();
+    nuiTextStyle style = mStyle;
+
     nuiTextRangeList::iterator it = ranges.begin();
     nuiTextRangeList::iterator end = ranges.end();
     uint32 i = 0;
@@ -318,10 +322,44 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
         {
           pRun = new nuiTextRun(*this, pos, len, spacewidth * (float)tabs, 0.0f);
         }
+
+        if (
+            (styleit != styleend) &&
+            (pos <= styleit->first) &&
+            (pos + len > styleit->first)
+            )
+        {
+          style = styleit->second;
+          ++styleit;
+        }
       }
       else
       {
-        pRun = new nuiTextRun(*this, range.mScript, pos, len, mStyle);
+        if (
+            (styleit != styleend) &&
+            (pos <= styleit->first) &&
+            (pos + len > styleit->first)
+            )
+        {
+          // Change the style now:
+          int32 newpos = styleit->first;
+          int32 s = newpos - pos;
+
+          if (s > 0)
+          {
+            pRun = new nuiTextRun(*this, range.mScript, pos, s, style);
+            pLine->AddRun(pRun);
+            pRun = NULL;
+          }
+
+          style = styleit->second;
+          pos += s;
+          len -= s;
+          ++styleit;
+        }
+
+        if (len > 0)
+          pRun = new nuiTextRun(*this, range.mScript, pos, len, style);
       }
       
       if (pRun)
@@ -518,13 +556,16 @@ bool nuiTextLayout::PrintGlyphs(nuiDrawContext *pContext, float X, float Y, cons
     nuiRenderArray* pArray = new nuiRenderArray(GL_TRIANGLES);
     pArray->EnableArray(nuiRenderArray::eVertex);
     pArray->EnableArray(nuiRenderArray::eTexCoord);
+    pArray->EnableArray(nuiRenderArray::eColor);
     pArray->Reserve(6 * size);
-    
+
     for (i = 0; i < size; i++)
     {
       const nuiRect& rDest = it->second[i]->mDestRect;
       const nuiRect& rSource = it->second[i]->mSourceRect;
-      
+
+      pArray->SetColor(it->second[i]->mColor);
+
       nuiSize x1,y1,x2,y2;
       nuiSize tx,ty,tw,th;
       
@@ -705,6 +746,29 @@ bool nuiTextLayout::GetStrikeThrough() const
   return mStyle.GetStrikeThrough();
 }
 
+void nuiTextLayout::AddStyleChange(int32 StringPosition, const nuiTextStyle& rNewStyle)
+{
+  mStyleChanges[StringPosition] = rNewStyle;
+}
+
+void nuiTextLayout::DelStyleChanges(int32 StringPosition)
+{
+  auto it = mStyleChanges.find(StringPosition);
+  if (it == mStyleChanges.end())
+    return;
+
+  mStyleChanges.erase(it);
+}
+
+const std::map<int32, nuiTextStyle>& nuiTextLayout::GetStyleChanges() const
+{
+  return mStyleChanges;
+}
+
+void nuiTextLayout::ClearStyleChanges()
+{
+  mStyleChanges.clear();
+}
 
 
 

@@ -46,6 +46,7 @@ public:
   nuiTexture* mpTexture; ///< Texture that contains this glyph
   nuiRect mDestRect; ///< Destination rectangle of the laid ou glyph
   nuiRect mSourceRect; ///< Rectangle of the glyph in the texture
+  nuiColor mColor;
 };
 
 
@@ -84,7 +85,9 @@ public:
   nuiRect GetRect() const;
   
   bool IsDummy() const;
- 
+
+  const nuiTextStyle& GetStyle() const;
+
 private:
   friend class nuiTextLayout;
   friend class nuiFontBase;

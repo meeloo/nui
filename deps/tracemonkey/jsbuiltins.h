@@ -268,7 +268,7 @@ struct ClosureVarInfo;
 
 #else
 #define _JS_DEFINE_CALLINFO(linkage, name, crtype, cargtypes, argtypes, isPure, storeAccSet)      \
-    _JS_TN_LINKAGE(linkage, crtype) FASTCALL name cargtypes;                                      \
+    _JS_TN_LINKAGE(linkage, crtype) name cargtypes;                                      \
     _JS_CI_LINKAGE(linkage) const nanojit::CallInfo _JS_CALLINFO(name) =                          \
         { (uintptr_t) &name, argtypes, nanojit::ABI_FASTCALL, isPure, storeAccSet _JS_CI_NAME(name) }; \
     /* XXX: a temporary assertion to check all cse/fold pairs are correctly */                    \

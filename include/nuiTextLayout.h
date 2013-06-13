@@ -76,10 +76,16 @@ public:
   
   void SetWrapX(nuiSize WrapX);
   nuiSize GetWrapX() const;
+
+  void AddStyleChange(int32 StringPosition, const nuiTextStyle& rNewStyle);
+  void DelStyleChanges(int32 StringPosition);
+  const std::map<int32, nuiTextStyle>& GetStyleChanges() const;
+  void ClearStyleChanges();
   
 private:
   bool PrintGlyphs(nuiDrawContext *pContext, float X, float Y, const std::map<nuiTexture*, std::vector<nuiTextGlyph*> >& rGlyphs, bool AlignGlyphPixels) const;
   nuiTextStyle mStyle;
+  std::map<int32, nuiTextStyle> mStyleChanges;
   std::map<nuiUnicodeScript, std::set<nglUChar> > mCharsets;
   
   nuiOrientation mOrientation;

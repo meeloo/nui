@@ -181,4 +181,8 @@ bool nuiTextRun::IsDummy() const
   return mDummy;
 }
 
+const nuiTextStyle& nuiTextRun::GetStyle() const
+{
+  return mStyle;
+}
 

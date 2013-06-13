@@ -130,7 +130,7 @@ js_GetStringChars(JSContext *cx, JSString *str)
     return str->flatChars();
 }
 
-JSString * JS_FASTCALL
+JSString *
 js_ConcatStrings(JSContext *cx, JSString *left, JSString *right)
 {
     size_t rn, ln, lrdist, n;
@@ -808,7 +808,7 @@ String_p_toString(JSContext* cx, JSObject* obj)
 }
 #endif
 
-JSString* JS_FASTCALL
+JSString*
 js_toLowerCase(JSContext *cx, JSString *str)
 {
     size_t i, n;
@@ -859,7 +859,7 @@ str_toLocaleLowerCase(JSContext *cx, uintN argc, jsval *vp)
     return str_toLowerCase(cx, 0, vp);
 }
 
-JSString* JS_FASTCALL
+JSString*
 js_toUpperCase(JSContext *cx, JSString *str)
 {
     size_t i, n;
@@ -3354,7 +3354,7 @@ js_HashString(JSString *str)
 /*
  * str is not necessarily a GC thing here.
  */
-JSBool JS_FASTCALL
+JSBool
 js_EqualStrings(JSString *str1, JSString *str2)
 {
     size_t n;
@@ -3385,7 +3385,7 @@ js_EqualStrings(JSString *str1, JSString *str2)
 }
 JS_DEFINE_CALLINFO_2(extern, BOOL, js_EqualStrings, STRING, STRING, 1, nanojit::ACC_NONE)
 
-int32 JS_FASTCALL
+int32
 js_CompareStrings(JSString *str1, JSString *str2)
 {
     size_t l1, l2, n, i;
