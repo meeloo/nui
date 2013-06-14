@@ -245,12 +245,14 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
   //printf("new paragraph: %d + %d\n", start, length);
 
   float spacewidth = 0;
+  float tabwidth = 0;
   {
     nuiFontBase* pFont = mStyle.GetFont();
     nuiGlyphInfo glyphinfo;
     uint32 space = pFont->GetGlyphIndex(32);
     pFont->GetGlyphInfo(glyphinfo, space, nuiFontBase::eGlyphNative);
     spacewidth = glyphinfo.AdvanceX;
+    tabwidth = 4 * spacewidth;
   }
   
   mpParagraphs.push_back(new Paragraph());
@@ -300,6 +302,7 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
     nuiTextRangeList::iterator end = ranges.end();
     uint32 i = 0;
     uint32 pos = start;
+    int32 oldp = -1;
     while (it != end)
     {
       const nuiTextRange& range(*it);
@@ -308,65 +311,84 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
       nglUChar ch = mUnicode[pos];
       
       nuiTextRun* pRun = NULL;
-      
-      if (ch < 32)
-      {
-        int32 tabs = 0;
-        for (uint32 i = pos; i < pos + range.mLength; i++)
-        {
-          if (mUnicode[i] == 9)
-            tabs++;
-        }
-        
-        if (tabs > 0)
-        {
-          pRun = new nuiTextRun(*this, pos, len, spacewidth * (float)tabs, 0.0f);
-        }
 
-        if (
-            (styleit != styleend) &&
-            (pos <= styleit->first) &&
-            (pos + len > styleit->first)
-            )
-        {
-          style = styleit->second;
-          ++styleit;
-        }
-      }
-      else
+      while (len > 0 && styleit != styleend)
       {
-        if (
-            (styleit != styleend) &&
-            (pos <= styleit->first) &&
-            (pos + len > styleit->first)
-            )
+        if (ch < 32)
         {
-          // Change the style now:
-          int32 newpos = styleit->first;
-          int32 s = newpos - pos;
-
-          if (s > 0)
+          int32 tabs = 0;
+          int32 spaces = 0;
+          for (uint32 i = pos; i < pos + len && mUnicode[i] < 32; i++)
           {
-            pRun = new nuiTextRun(*this, range.mScript, pos, s, style);
-            pLine->AddRun(pRun);
-            pRun = NULL;
+            if (mUnicode[i] == 9)
+              tabs++;
+            else
+              spaces++;
+          }
+          
+          if (tabs > 0)
+          {
+            pRun = new nuiTextRun(*this, pos, len, spacewidth * (float)spaces + tabwidth * (float)tabs, 0.0f);
           }
 
-          style = styleit->second;
-          pos += s;
-          len -= s;
-          ++styleit;
-        }
+          if (styleit != styleend)
+          {
+            int32 p = styleit->first;
+            NGL_ASSERT(oldp <= p); oldp = p;
 
-        if (len > 0)
-          pRun = new nuiTextRun(*this, range.mScript, pos, len, style);
+            if ((p >= pos) && (p < pos + len))
+            {
+              style = styleit->second;
+              ++styleit;
+
+              pos += len;
+              len = 0;
+            }
+          }
+        }
+        else
+        {
+          if (styleit != styleend)
+          {
+            int32 p = styleit->first;
+            NGL_ASSERT(oldp <= p); oldp = p;
+
+            if ((p >= pos) && (p < pos + len))
+            {
+              // Change the style now:
+              int32 newpos = styleit->first;
+              int32 s = newpos - pos;
+
+              if (s > 0)
+              {
+                printf ("Cutting run to change style (%d - %d)\n", pos, s);
+                pRun = new nuiTextRun(*this, range.mScript, pos, s, style);
+                pLine->AddRun(pRun);
+                pRun = NULL;
+              }
+
+              style = styleit->second;
+              pos += s;
+              len -= s;
+              ++styleit;
+            }
+            else
+              break;
+          }
+
+        }
+        
       }
-      
+
+      if (len > 0)
+      {
+        pRun = new nuiTextRun(*this, range.mScript, pos, len, style);
+        pos += len;
+        len = 0;
+      }
       if (pRun)
         pLine->AddRun(pRun);
-      
-      
-      pos += len;
+
       ++i;
       ++it;
     }
