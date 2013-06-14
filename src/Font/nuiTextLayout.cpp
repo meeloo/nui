@@ -326,10 +326,7 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
               spaces++;
           }
           
-          if (tabs > 0)
-          {
-            pRun = new nuiTextRun(*this, pos, len, spacewidth * (float)spaces + tabwidth * (float)tabs, 0.0f);
-          }
+          pRun = new nuiTextRun(*this, pos, len, spacewidth * (float)spaces + tabwidth * (float)tabs, 0.0f);
 
           if (styleit != styleend)
           {
@@ -340,11 +337,11 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
             {
               style = styleit->second;
               ++styleit;
-
-              pos += len;
-              len = 0;
             }
           }
+
+          pos += len;
+          len = 0;
         }
         else
         {
