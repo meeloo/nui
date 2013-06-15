@@ -79,7 +79,7 @@ void nuiBuilder::Init()
   //NUI_ADD_WIDGET_CREATOR(nuiPopupView, "Container");
   //NUI_ADD_WIDGET_CREATOR(nuiScrollBox, "Container");
   //NUI_ADD_WIDGET_CREATOR(nuiShadeContainer, "Container");
-  //NUI_ADD_WIDGET_CREATOR(nuiTabView, "Container");
+  NUI_ADD_WIDGET_CREATOR(nuiTabView, "Container");
   NUI_ADD_WIDGET_CREATOR(nuiTitledPane, "Container");
   NUI_ADD_WIDGET_CREATOR(nuiColorSelector, "Container");
   NUI_ADD_WIDGET_CREATOR(nuiComboBox, "Widget");
@@ -292,6 +292,7 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
   if (!objectname.IsEmpty())
     pWidget->SetObjectName(objectname);
   
+  nuiTabView* pTabView = dynamic_cast<nuiTabView*> (pWidget);
   nuiSimpleContainer* pContainer = dynamic_cast<nuiSimpleContainer*> (pWidget);
   nuiBox* pBox = dynamic_cast<nuiBox*> (pWidget);
   nuiGrid* pGrid = dynamic_cast<nuiGrid*> (pWidget);
@@ -309,6 +310,8 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
         case nuiWidgetCreatorOperation::eAddChild:
           if (pBox)
             pBox->AddCell(pChild);
+          else if (pTabView)
+            pTabView->AddTab(pChild->GetObjectName(), pChild);
           else if (pContainer)
             pContainer->AddChild(pChild);
           break;

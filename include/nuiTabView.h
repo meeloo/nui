@@ -28,7 +28,7 @@ class NUI_API nuiTabView : public nuiSimpleContainer
 private:
   class Tab;
 public:
-  nuiTabView(nuiPosition tabPosition, bool decoratedBackground = true);
+  nuiTabView(nuiPosition tabPosition = nuiTop, bool decoratedBackground = true);
   virtual ~nuiTabView();
 
   virtual nuiRect CalcIdealSize();

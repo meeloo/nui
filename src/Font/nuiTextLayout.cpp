@@ -358,7 +358,7 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
 
               if (s > 0)
               {
-                printf ("Cutting run to change style (%d - %d)\n", pos, s);
+                //printf ("Cutting run to change style (%d - %d)\n", pos, s);
                 pRun = new nuiTextRun(*this, range.mScript, pos, s, style);
                 pLine->AddRun(pRun);
                 pRun = NULL;
