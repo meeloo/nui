@@ -311,7 +311,12 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
           if (pBox)
             pBox->AddCell(pChild);
           else if (pTabView)
-            pTabView->AddTab(pChild->GetObjectName(), pChild);
+          {
+            if (pChild->HasProperty("TabName"))
+              pTabView->AddTab(pChild->GetProperty("TabName"), pChild);
+            else
+              pTabView->AddTab(pChild->GetObjectName(), pChild);
+          }
           else if (pContainer)
             pContainer->AddChild(pChild);
           break;
