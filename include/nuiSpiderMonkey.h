@@ -12,6 +12,8 @@
 #include "nuiBindings.h"
 #include "nuiScriptEngine.h"
 
+extern "C" {
+
 typedef struct JSClass           JSClass;
 typedef struct JSExtendedClass   JSExtendedClass;
 typedef struct JSConstDoubleSpec JSConstDoubleSpec;
@@ -40,6 +42,7 @@ typedef intptr_t jsval;
 typedef int JSBool;
 typedef uint uintN;
 
+}
 
 class nuiSpiderMonkey : public nuiScriptEngine
 {

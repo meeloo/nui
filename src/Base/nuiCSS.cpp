@@ -299,7 +299,7 @@ public:
           return false;
         }
         
-        if (mChar == _T('u'))
+        if (mChar == _T('u') || mChar == _T('U'))
         {
           if (!GetChar())
           {
@@ -321,7 +321,10 @@ public:
           
           nglUChar hexnum = hex.GetCInt(16);
           hex.Wipe();
-          rResult.Append(hexnum);
+          hex.Append(hexnum);
+          for (int i = 0; i < hex.GetLength(); i++)
+            mAccumulator.push_back(hex[i]);
+          hex.Wipe();
           skip = true;
         }
         else if (mChar != _T('\"'))

@@ -67,6 +67,10 @@ enum {
 extern jschar *
 js_GetDependentStringChars(JSString *str);
 
+extern JSString *
+js_ConcatStrings(JSContext *cx, JSString *left, JSString *right);
+
+
 JS_STATIC_ASSERT(JS_BITS_PER_WORD >= 32);
 
 /*
@@ -302,9 +306,6 @@ struct JSString {
 
 extern const jschar *
 js_GetStringChars(JSContext *cx, JSString *str);
-
-extern JSString *
-js_ConcatStrings(JSContext *cx, JSString *left, JSString *right);
 
 extern const jschar *
 js_UndependString(JSContext *cx, JSString *str);
