@@ -13,6 +13,7 @@ nuiTextStyle::nuiTextStyle()
   mDensityY(1.0f),
   mSpacesPerTab(2),
   mColor(0, 0, 0),
+  mUseColor(false),
   mUnderline(false),
   mStrikeThrough(false),
   mBaseline(nuiTextBaselineNormal),
@@ -28,6 +29,7 @@ nuiTextStyle::nuiTextStyle(const nuiTextStyle& rStyle)
   mDensityY(rStyle.mDensityY),
   mSpacesPerTab(rStyle.mSpacesPerTab),
   mColor(rStyle.mColor),
+  mUseColor(rStyle.mUseColor),
   mUnderline(rStyle.mUnderline),
   mStrikeThrough(rStyle.mStrikeThrough),
   mBaseline(rStyle.mBaseline),
@@ -60,6 +62,7 @@ nuiTextStyle& nuiTextStyle::operator =(const nuiTextStyle& rStyle)
   mDensityY = (rStyle.mDensityY);
   mSpacesPerTab = (rStyle.mSpacesPerTab);
   mColor = (rStyle.mColor);
+  mUseColor = (rStyle.mUseColor);
   mUnderline = (rStyle.mUnderline);
   mStrikeThrough = (rStyle.mStrikeThrough);
   mBaseline = (rStyle.mBaseline);
@@ -134,11 +137,22 @@ bool nuiTextStyle::GetStrikeThrough() const
 void nuiTextStyle::SetColor(const nuiColor& rColor)
 {
   mColor = rColor;
+  mUseColor = true;
 }
 
 const nuiColor& nuiTextStyle::GetColor() const
 {
   return mColor;
+}
+
+bool nuiTextStyle::UseColor() const
+{
+  return mUseColor;
+}
+
+void nuiTextStyle::SetUseColor(bool set)
+{
+  mUseColor = set;
 }
 
 void nuiTextStyle::SetBaseline(nuiTextBaseline set)

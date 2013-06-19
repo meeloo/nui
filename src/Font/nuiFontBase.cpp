@@ -2266,7 +2266,11 @@ void nuiFontBase::Shape(nuiTextRun* pRun)
   x = 0;
 
   const float factor = nuiGetInvScaleFactor() * (1.0 / 64.0);
-  nuiColor color = pRun->GetStyle().GetColor();
+  const nuiTextStyle& style = pRun->GetStyle();
+
+  nuiColor color = style.GetColor();
+  bool usecolor = style.UseColor();
+
   //NGL_OUT("Shape %p\n", pRun);
   for (i = 0; i < num_glyphs; i++)
   {
@@ -2275,6 +2279,7 @@ void nuiFontBase::Shape(nuiTextRun* pRun)
     pRun->mGlyphs[i].mX = (hb_position->x_offset + x) * factor;
     pRun->mGlyphs[i].mY = -(hb_position->y_offset)    * factor;
     pRun->mGlyphs[i].mColor = color;
+    pRun->mGlyphs[i].mUseColor = usecolor;
     x += hb_position->x_advance;
     
     //NGL_OUT("%d - %d (%d, %d) ##\n", hb_glyph->codepoint, hb_glyph->cluster,  ToNearest(pRun->mGlyphs[i].mX), ToNearest(pRun->mGlyphs[i].mY));

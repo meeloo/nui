@@ -47,6 +47,7 @@ public:
   nuiRect mDestRect; ///< Destination rectangle of the laid ou glyph
   nuiRect mSourceRect; ///< Rectangle of the glyph in the texture
   nuiColor mColor;
+  bool mUseColor;
 };
 
 

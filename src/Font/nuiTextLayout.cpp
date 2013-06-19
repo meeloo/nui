@@ -578,12 +578,19 @@ bool nuiTextLayout::PrintGlyphs(nuiDrawContext *pContext, float X, float Y, cons
     pArray->EnableArray(nuiRenderArray::eColor);
     pArray->Reserve(6 * size);
 
+    nuiColor textcolor = pContext->GetTextColor();
+    
     for (i = 0; i < size; i++)
     {
-      const nuiRect& rDest = it->second[i]->mDestRect;
-      const nuiRect& rSource = it->second[i]->mSourceRect;
+      auto& run = *it;
+      auto& glyph = *run.second[i];
+      const nuiRect& rDest = glyph.mDestRect;
+      const nuiRect& rSource = glyph.mSourceRect;
 
-      pArray->SetColor(it->second[i]->mColor);
+      if (glyph.mUseColor)
+        pArray->SetColor(glyph.mColor);
+      else
+        pArray->SetColor(textcolor);
 
       nuiSize x1,y1,x2,y2;
       nuiSize tx,ty,tw,th;

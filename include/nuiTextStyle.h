@@ -46,6 +46,8 @@ public:
   bool GetStrikeThrough() const;
   void SetColor(const nuiColor& rColor);
   const nuiColor& GetColor() const;
+  bool UseColor() const;
+  void SetUseColor(bool set);
   void SetBaseline(nuiTextBaseline set);
   nuiTextBaseline GetBaseline() const;
   void SetDirection(nuiTextDirection set);
@@ -59,6 +61,7 @@ private:
   float mDensityY;
   int32 mSpacesPerTab;
   nuiColor mColor;
+  bool mUseColor : 1;
   bool mUnderline : 1;
   bool mStrikeThrough : 1;
   nuiTextBaseline mBaseline;
