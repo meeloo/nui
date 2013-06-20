@@ -282,7 +282,7 @@ public:
 private:	
   void Connect(nuiSlotsSink &sink, const Slot &slot)
   {
-    mSlots.push_back(std::make_pair<Slot, nuiSlotsSink*>(slot, &sink));
+    mSlots.push_back(std::make_pair(slot, &sink));
     AddConnection(sink, slot.GetMemento());
     UpdateStats(mSlots.size());
   }
@@ -372,7 +372,7 @@ public:
 private:
   void Connect(nuiSlotsSink &sink, const Slot &slot)
   {
-    mSlots.push_back(std::make_pair<Slot, nuiSlotsSink*>(slot, &sink));
+    mSlots.push_back(std::make_pair(slot, &sink));
     AddConnection(sink, slot.GetMemento());
     UpdateStats(mSlots.size());
   }
@@ -416,6 +416,97 @@ std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
 };
 
 
+// N=4
+template<class Param1, class Param2, class Param3, class Param4, class RetType=detail::DefaultVoid>
+class nuiSignal4 : public nuiSignal, nuiNonCopyable
+{
+  friend class nuiSlotsSink;
+public:
+  typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
+  typedef nuiFastDelegate4<Param1, Param2, Param3, Param4, DesiredRetType> Slot;
+
+  nuiSignal4()
+  {
+  }
+
+  ~nuiSignal4()
+  {
+    typename std::vector< std::pair<Slot, nuiSlotsSink*> >::const_iterator it = mSlots.begin();
+    typename std::vector< std::pair<Slot, nuiSlotsSink*> >::const_iterator end = mSlots.end();
+    for(; it != end; ++it)
+    {
+      RemoveConnection(*(*it).second, (*it).first.GetMemento());
+    }
+  }
+
+  void operator()(Param1 param1, Param2 param2, Param3 param3, Param4 param4) const
+  {
+    if (mDisabled)
+      return;
+
+    //#FIXME: temp hack to avoid modification of the map (connection/deconnection of slots) during iteration
+    typename std::vector< std::pair<Slot, nuiSlotsSink*> >::const_iterator it = mSlots.begin();
+    typename std::vector< std::pair<Slot, nuiSlotsSink*> >::const_iterator end = mSlots.end();
+    std::vector<Slot> tmp(mSlots.size());
+    for(uint i = 0; it != end; ++it, i++)
+      tmp[i] = (*it).first;
+
+      for(uint i = 0; i < tmp.size(); i++)
+        tmp[i](param1, param2, param3, param4);
+  }
+
+  bool IsConnected ()
+  {
+    return (!mSlots.empty());
+  }
+
+private:
+  void Connect(nuiSlotsSink &sink, const Slot &slot)
+  {
+    mSlots.push_back(std::make_pair(slot, &sink));
+    AddConnection(sink, slot.GetMemento());
+    UpdateStats(mSlots.size());
+  }
+
+  void Disconnect(nuiSlotsSink &sink, const Slot &slot)
+  {
+    RemoveConnection(sink, slot.GetMemento());
+    typename std::vector< std::pair<Slot, nuiSlotsSink*> >::iterator it = mSlots.begin();
+    typename std::vector< std::pair<Slot, nuiSlotsSink*> >::iterator end = mSlots.end();
+    while (it != end)
+    {
+      if ((*it).first == slot)
+      {
+        mSlots.erase(it);
+        break;
+      }
+      ++it;
+    }
+  }
+
+  virtual void DisconnectInternal(const nuiDelegateMemento &slot_)
+  {
+    Slot slot;
+    slot.SetMemento(slot_);
+    typename std::vector< std::pair<Slot, nuiSlotsSink*> >::iterator it = mSlots.begin();
+    typename std::vector< std::pair<Slot, nuiSlotsSink*> >::iterator end = mSlots.end();
+    while (it != end)
+    {
+      const Slot& rS(it->first);
+      if (rS == slot)
+      {
+        mSlots.erase(it);
+        break;
+      }
+      ++it;
+    }
+  }
+
+private:
+  std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
+};
+
+
 class nuiSlotsSink
 {
   friend class nuiSignal;
@@ -426,41 +517,61 @@ public:
   void DisconnectAll();
   
   // N=0
-  template<class RetType> void Connect(nuiSignal0<RetType> &signal, const typename nuiSignal0<RetType>::Slot &slot)
+  template<class RetType>
+  void Connect(nuiSignal0<RetType> &signal, const typename nuiSignal0<RetType>::Slot &slot)
   {
     signal.Connect(*this, slot);
   }
-  template<class RetType> void Disconnect(nuiSignal0<RetType> &signal, const typename nuiSignal0<RetType>::Slot &slot)
+  template<class RetType>
+  void Disconnect(nuiSignal0<RetType> &signal, const typename nuiSignal0<RetType>::Slot &slot)
   {
     signal.Disconnect(*this, slot);
   }
 
   // N=1
-  template<class Param1, class RetType> void Connect(nuiSignal1<Param1, RetType> &signal, const typename nuiSignal1<Param1, RetType>::Slot &slot)
+  template<class Param1, class RetType>
+  void Connect(nuiSignal1<Param1, RetType> &signal, const typename nuiSignal1<Param1, RetType>::Slot &slot)
   {
     signal.Connect(*this, slot);
   }
-  template<class Param1, class RetType> void Disconnect(nuiSignal1<Param1, RetType> &signal, const typename nuiSignal1<Param1, RetType>::Slot &slot)
+  template<class Param1, class RetType>
+  void Disconnect(nuiSignal1<Param1, RetType> &signal, const typename nuiSignal1<Param1, RetType>::Slot &slot)
   {
     signal.Disconnect(*this, slot);
   }
 
   // N=2
-  template<class Param1, class Param2, class RetType> void Connect(nuiSignal2<Param1, Param2, RetType> &signal, const typename nuiSignal2<Param1, Param2, RetType>::Slot &slot)
+  template<class Param1, class Param2, class RetType>
+  void Connect(nuiSignal2<Param1, Param2, RetType> &signal, const typename nuiSignal2<Param1, Param2, RetType>::Slot &slot)
   {
     signal.Connect(*this, slot);
   }
-  template<class Param1, class Param2, class RetType> void Disconnect(nuiSignal2<Param1, Param2, RetType> &signal, const typename nuiSignal2<Param1, Param2, RetType>::Slot &slot)
+  template<class Param1, class Param2, class RetType>
+  void Disconnect(nuiSignal2<Param1, Param2, RetType> &signal, const typename nuiSignal2<Param1, Param2, RetType>::Slot &slot)
   {
     signal.Disconnect(*this, slot);
   }
 
   // N=3
-  template<class Param1, class Param2, class Param3, class RetType> void Connect(nuiSignal3<Param1, Param2, Param3, RetType> &signal, const typename nuiSignal3<Param1, Param2, Param3, RetType>::Slot &slot)
+  template<class Param1, class Param2, class Param3, class RetType>
+  void Connect(nuiSignal3<Param1, Param2, Param3, RetType> &signal, const typename nuiSignal3<Param1, Param2, Param3, RetType>::Slot &slot)
   {
     signal.Connect(*this, slot);
   }
-  template<class Param1, class Param2, class Param3, class RetType> void Disconnect(nuiSignal3<Param1, Param2, Param3, RetType> &signal, const typename nuiSignal3<Param1, Param2, Param3, RetType>::Slot &slot)
+  template<class Param1, class Param2, class Param3, class RetType>
+  void Disconnect(nuiSignal3<Param1, Param2, Param3, RetType> &signal, const typename nuiSignal3<Param1, Param2, Param3, RetType>::Slot &slot)
+  {
+    signal.Disconnect(*this, slot);
+  }
+
+  // N=4
+  template<class Param1, class Param2, class Param3, class Param4, class RetType>
+  void Connect(nuiSignal4<Param1, Param2, Param3, Param4, RetType> &signal, const typename nuiSignal4<Param1, Param2, Param3, Param4, RetType>::Slot &slot)
+  {
+    signal.Connect(*this, slot);
+  }
+  template<class Param1, class Param2, class Param3, class Param4, class RetType>
+  void Disconnect(nuiSignal4<Param1, Param2, Param3, Param4, RetType> &signal, const typename nuiSignal4<Param1, Param2, Param3, Param4, RetType>::Slot &slot)
   {
     signal.Disconnect(*this, slot);
   }
