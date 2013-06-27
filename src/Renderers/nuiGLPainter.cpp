@@ -549,6 +549,7 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
       glDisable(GL_CULL_FACE);
     }
   }
+  glDisable(GL_CULL_FACE);
 
   if (ForceApply || mFinalState.mCullingMode != rState.mCullingMode)
   {
@@ -2040,12 +2041,12 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 
   if (!mpSurface && pSurface)
   {
-#ifdef _OPENGL_ES_
+//#ifdef _OPENGL_ES_
     glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &mDefaultFramebuffer);
     nuiCheckForGLErrors();
     glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
     nuiCheckForGLErrors();
-#endif
+//#endif
 
   }
   
