@@ -351,7 +351,6 @@ float nuiGetInvScaleFactor()
     NGL_ASSERT(!"initWithFrame: Could not initialize NSWindow");
   }
 
-  [self setTitle:@"Testing Simple Cocoa Application"];
   [self setAcceptsMouseMovedEvents:TRUE];
   
   NSRect glrect = {0};
@@ -829,6 +828,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   mOSInfo.mpNSWindow = pNSWindow;
   mpNSWindow = pNSWindow;
 
+  SetTitle(rInfo.Title);
 
   //[pNSWindow makeKeyAndVisible];
   
