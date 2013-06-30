@@ -856,12 +856,13 @@ void nuiDrawContext::DrawGradient(const nuiGradient& rGradient, const nuiRect& r
   PopClipping();
 }
 
-static void nuiDrawRect(const nuiRect& out, nuiRenderArray& rArray)
+static void nuiDrawRect(const nuiRect& out, nuiRenderArray& rArray, float strokesize)
 {
   rArray.SetMode(GL_TRIANGLE_STRIP);
   rArray.Reserve(8);
   nuiRect in(out);
-  in.Grow(-nuiGetInvScaleFactor(), -nuiGetInvScaleFactor());
+  float v = strokesize * nuiGetInvScaleFactor();
+  in.Grow(-nuiGetInvScaleFactor(), -v);
   
   rArray.SetVertex(out.Left(), out.Top()); rArray.PushVertex();
   rArray.SetVertex(in.Left(), in.Top()); rArray.PushVertex();
@@ -909,50 +910,18 @@ void nuiDrawContext::DrawRect(const nuiRect& rRect, nuiShapeMode Mode)
     // Draw the stroke in all cases:
     if (mode == GL_TRIANGLE_STRIP)
     {
-      nuiRenderArray* pStrokeArray = new nuiRenderArray(mode);
-      pStrokeArray->EnableArray(nuiRenderArray::eVertex, true);
-      pStrokeArray->EnableArray(nuiRenderArray::eColor, true);
-      pStrokeArray->Reserve(4);
-      
-      pStrokeArray->SetColor(mCurrentState.mStrokeColor);
-      pStrokeArray->SetVertex(rect.mLeft, rect.mTop);
-      pStrokeArray->PushVertex();
-      pStrokeArray->SetVertex(rect.mRight, rect.mTop);
-      pStrokeArray->PushVertex();
-      pStrokeArray->SetVertex(rect.mLeft, rect.mBottom);
-      pStrokeArray->PushVertex();
-
-      pStrokeArray->SetVertex(rect.mRight, rect.mBottom);
-      pStrokeArray->PushVertex();
-
-      DrawArray(pStrokeArray);
+      nuiColor back = mCurrentState.mFillColor;
+      mCurrentState.mFillColor = mCurrentState.mStrokeColor;
+      DrawRect(rRect, eFillShape);
+      mCurrentState.mFillColor = back;
+      return;
     }
     else
     {
       nuiRenderArray* pStrokeArray = new nuiRenderArray(mode);
-      if (nuiGetScaleFactor() != 1.0f)
-      {
-        nuiDrawRect(rRect, *pStrokeArray);
-      }
-      else
-      {
-        pStrokeArray->EnableArray(nuiRenderArray::eVertex, true);
-        pStrokeArray->EnableArray(nuiRenderArray::eColor, true);
-        pStrokeArray->Reserve(4);
-        
-        pStrokeArray->SetColor(mCurrentState.mStrokeColor);
-        pStrokeArray->SetVertex(rect.mLeft, rect.mTop);
-        pStrokeArray->PushVertex();
-        
-        pStrokeArray->SetVertex(rect.mRight, rect.mTop);
-        pStrokeArray->PushVertex();
-        
-        pStrokeArray->SetVertex(rect.mRight, rect.mBottom);
-        pStrokeArray->PushVertex();
-        
-        pStrokeArray->SetVertex(rect.mLeft, rect.mBottom);
-        pStrokeArray->PushVertex();
-      }
+      pStrokeArray->EnableArray(nuiRenderArray::eColor, true);
+      pStrokeArray->SetColor(mCurrentState.mStrokeColor);
+      nuiDrawRect(rRect, *pStrokeArray, mCurrentState.mLineWidth);
 
       DrawArray(pStrokeArray);
     }
@@ -988,7 +957,6 @@ void nuiDrawContext::DrawRect(const nuiRect& rRect, nuiShapeMode Mode)
   else if (Mode == eFillShape)
   {
     nuiRect rect(rRect);
-    //rect.Move(0,-.5); // Adjust to have a correct position on ATI cards, this should work on nvidia too
     // Draw the filled rectangle:
     nuiRenderArray* pFillArray = new nuiRenderArray(GL_TRIANGLE_STRIP);
     pFillArray->EnableArray(nuiRenderArray::eVertex, true);

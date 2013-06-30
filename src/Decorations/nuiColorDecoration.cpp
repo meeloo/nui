@@ -97,11 +97,12 @@ void nuiColorDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, cons
   pContext->EnableAntialiasing(false);
   pContext->EnableBlending(true);
   pContext->SetBlendFunc(mBlendFunc);
-  //pContext->EnableTexturing(false);
+  pContext->EnableTexturing(false);
   
   nuiColor fillColor = mFillColor;
   nuiColor strokeColor = mStrokeColor;
-  if (pWidget) {
+  if (pWidget && mUseWidgetAlpha)
+  {
     fillColor.Multiply(pWidget->GetMixedAlpha());
     strokeColor.Multiply(pWidget->GetMixedAlpha());
   }
@@ -112,16 +113,16 @@ void nuiColorDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, cons
   pContext->DrawRect(rDestRect, mShapeMode);
 
   // waiting for DrawRect to use the StrokeSize parameter, do this hack
-  uint32 strokeSize = 1;
-  nuiRect rect = rDestRect;
-  pContext->SetLineWidth(1);
-  while (strokeSize < mStrokeSize)
-  {
-    rect.Set(rect.Left()+1.f, rect.Top()+1.f, rect.GetWidth()-2.f, rect.GetHeight()-2.f);
-    pContext->DrawRect(rect, mShapeMode);
-    strokeSize++;
-  }
-  
+//  uint32 strokeSize = 1;
+//  nuiRect rect = rDestRect;
+//  pContext->SetLineWidth(1);
+//  while (strokeSize < mStrokeSize)
+//  {
+//    rect.Set(rect.Left()+1.f, rect.Top()+1.f, rect.GetWidth()-2.f, rect.GetHeight()-2.f);
+//    pContext->DrawRect(rect, mShapeMode);
+//    strokeSize++;
+//  }
+
   
   pContext->PopState();
 }
