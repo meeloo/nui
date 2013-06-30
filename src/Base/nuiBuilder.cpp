@@ -371,6 +371,9 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
       
     }
   }
+
+  if (pWidget)
+    pWidget->Built();
   return pWidget;
 }
 

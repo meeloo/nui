@@ -641,6 +641,11 @@ nuiWidget::~nuiWidget()
   }
 }
 
+void nuiWidget::Built()
+{
+  // ...
+}
+
 bool nuiWidget::IsTrashed(bool combined) const 
 { 
   CheckValid();

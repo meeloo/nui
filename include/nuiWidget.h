@@ -272,6 +272,7 @@ public:
   /** @name Other Incomming events */
   //@{
   virtual void OnSetFocus(nuiWidgetPtr pWidget); ///< Advise the objet of a change of focus object. pWidget can be null.
+  virtual void Built(); ///< This method is called right after a widget has been created by the CSS engine and all the CSS inits have been applied.
   //@}
 
   /** @name Misc. & incoming events management */
