@@ -597,7 +597,6 @@ protected:
   nuiRect mIdealRect; ///< The ideal bounding box of the nuiObject (in coordinates of its parent) position should be at the origin.
   nuiRect mUserRect; ///< The bounding box of the nuiObject if set by the user (in coordinates of its parent).
   nuiRect mHotRect; ///< The currently important interactive part of the widget. Containers try to keep this rect in view when possible. For exemple set it as the cursor rectangle in a text edit widget. Is you text edit is contained in a scroll view, the scroll view will try to follow the cursor.
-  nglString mDecorationName;
 
   nuiSurface* mpSurface;
   void UpdateSurface(const nuiRect& rRect);

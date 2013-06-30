@@ -299,6 +299,12 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetDecorationMode),
                 nuiMakeDelegate(this, &nuiWidget::SetDecorationMode)));
 
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("EnableDecoration")), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiWidget::IsDecorationEnabled),
+                nuiMakeDelegate(this, &nuiWidget::EnableDecoration)));
+
+
   // Focus Decoration:
   nuiAttribute<const nglString&>* pFocusDecoAttrib = new nuiAttribute<const nglString&>
   (nglString(_T("FocusDecoration")), nuiUnitName,
@@ -306,6 +312,7 @@ void nuiWidget::InitAttributes()
    nuiAttribute<const nglString&>::SetterDelegate(this, &nuiWidget::SetFocusDecoration));
   pFocusDecoAttrib->SetEditor(nuiAttribute<const nglString&>::NewEditorDelegate(&nuiDecoration::GetAttributeEditor));
   AddAttribute(pFocusDecoAttrib);
+
 
   
   AddAttribute(new nuiAttribute<nuiDecorationMode>
@@ -1211,7 +1218,7 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   
   
   ////////////////////// Draw the Underlay
-  if (mpDecoration)
+  if (mpDecoration && mDecorationEnabled)
   {      
     pContext->PushState();
     nuiRect sizerect(GetRect().Size());
@@ -1242,7 +1249,7 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
     pContext->PopClipping();
   
   ////////////////////// Draw the Overlay
-  if (mpDecoration)
+  if (mpDecoration && mDecorationEnabled)
   {
     pContext->PushState();
     nuiRect sizerect(GetRect().Size());
@@ -2175,7 +2182,7 @@ void nuiWidget::SetHover(bool Hover)
   }
   HoverChanged();
   ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-  if (mRedrawOnHover || (mpDecoration && mpDecoration->GetRedrawOnHover()))
+  if (mRedrawOnHover || (mpDecoration && mpDecoration->GetRedrawOnHover() && mDecorationEnabled))
     Invalidate();
   DebugRefreshInfo();
 }
@@ -2934,8 +2941,11 @@ nuiSize nuiWidget::GetActualBorderLeft() const
 {
   CheckValid();
   nuiSize Left = mBorderLeft;
-  if (mpDecoration && mDecorationMode == eDecorationBorder)
-    Left = MAX(Left, mpDecoration->GetBorder(nuiLeft, this));
+  if (mDecorationEnabled)
+  {
+    if (mpDecoration && mDecorationMode == eDecorationBorder)
+      Left = MAX(Left, mpDecoration->GetBorder(nuiLeft, this));
+  }
   if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
     Left = MAX(Left, mpFocusDecoration->GetBorder(nuiLeft, this));
   return Left;
@@ -2945,8 +2955,11 @@ nuiSize nuiWidget::GetActualBorderTop() const
 {
   CheckValid();
   nuiSize Top = mBorderTop;
-  if (mpDecoration && mDecorationMode == eDecorationBorder)
-    Top = MAX(Top, mpDecoration->GetBorder(nuiTop, this));
+  if (mDecorationEnabled)
+  {
+    if (mpDecoration && mDecorationMode == eDecorationBorder)
+      Top = MAX(Top, mpDecoration->GetBorder(nuiTop, this));
+  }
   if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
     Top = MAX(Top, mpFocusDecoration->GetBorder(nuiTop, this));
   return Top;
@@ -2956,8 +2969,11 @@ nuiSize nuiWidget::GetActualBorderRight() const
 {
   CheckValid();
   nuiSize Right = mBorderRight;
-  if (mpDecoration && mDecorationMode == eDecorationBorder)
-    Right = MAX(Right, mpDecoration->GetBorder(nuiRight, this));
+  if (mDecorationEnabled)
+  {
+    if (mpDecoration && mDecorationMode == eDecorationBorder)
+      Right = MAX(Right, mpDecoration->GetBorder(nuiRight, this));
+  }
   if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
     Right = MAX(Right, mpFocusDecoration->GetBorder(nuiRight, this));
   return Right;
@@ -2967,8 +2983,11 @@ nuiSize nuiWidget::GetActualBorderBottom() const
 {
   CheckValid();
   nuiSize Bottom = mBorderBottom;
-  if (mpDecoration && mDecorationMode == eDecorationBorder)
-    Bottom = MAX(Bottom, mpDecoration->GetBorder(nuiBottom, this));
+  if (mDecorationEnabled)
+  {
+    if (mpDecoration && mDecorationMode == eDecorationBorder)
+      Bottom = MAX(Bottom, mpDecoration->GetBorder(nuiBottom, this));
+  }
   if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
     Bottom = MAX(Bottom, mpFocusDecoration->GetBorder(nuiBottom, this));
   return Bottom;
@@ -4476,7 +4495,7 @@ void nuiWidget::GetOverDraw(nuiSize& Left, nuiSize& Top, nuiSize& Right, nuiSize
   
   if (IncludeDecorations)
   {
-    if (mpDecoration)
+    if (mpDecoration && mDecorationEnabled)
     {    
       if (mDecorationMode != eDecorationClientOnly)
       {
@@ -4571,6 +4590,12 @@ void nuiWidget::SetDefaultDecoration(int32 objectClassIndex, nuiDecorationDelega
 void nuiWidget::SetDecoration(const nglString& rName)
 {
   CheckValid();
+  if (rName.IsEmpty())
+  {
+    SetDecoration(NULL);
+    return;
+  }
+
   nuiDecoration* pDecoration = nuiDecoration::Get(rName);
   if (!pDecoration)
   {
@@ -4641,19 +4666,10 @@ nuiDecoration* nuiWidget::GetDecoration() const
 void nuiWidget::EnableDecoration(bool set)
 {
   CheckValid();
-  mDecorationEnabled = set;
-  
-  if (!mDecorationEnabled)
+  if (mDecorationEnabled != set)
   {
-    nuiDecoration* pDeco = GetDecoration();
-    if (pDeco)
-      mDecorationName = pDeco->GetObjectName();
-    SetDecoration(NULL);
-  }
-  else
-  {
-    nuiDecoration* pDeco = nuiDecoration::Get(mDecorationName);
-    SetDecoration(pDeco, mDecorationMode);
+    mDecorationEnabled = set;
+    InvalidateLayout();
   }
 }
 
