@@ -282,7 +282,6 @@ public:
       return false;
     }
     
-    bool skip = false;
     if (!GetChar())
     {
       rResult.Copy(&mAccumulator[0], mAccumulator.size());
@@ -291,6 +290,7 @@ public:
 
     while (mChar != _T('\"'))
     {
+      bool skip = false;
       if (mChar == _T('\\'))
       {
         if (!GetChar())
@@ -326,11 +326,17 @@ public:
             mAccumulator.push_back(hex[i]);
           hex.Wipe();
           skip = true;
+
+          if (mChar != _T('\"'))
+          {
+            rResult.Copy(&mAccumulator[0], mAccumulator.size());
+            return false;
+          }
         }
-        else if (mChar != _T('\"'))
+        else if (mChar == _T('\"'))
         {
           rResult.Copy(&mAccumulator[0], mAccumulator.size());
-          return false;
+          return true;
         }
         
       }

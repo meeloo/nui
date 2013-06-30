@@ -252,6 +252,11 @@ nuiWidgetCreator::~nuiWidgetCreator()
 
 const nglString& nuiWidgetCreator::LookUp(const std::map<nglString, nglString>& rParamDictionary, const nglString& rString) const
 {
+  if (!rString.IsEmpty() && rString[0] == '$')
+  {
+    const nglString& res = nuiObject::GetGlobalProperty(rString.Extract(1));
+    return res;
+  }
   const std::map<nglString, nglString>::const_iterator it = rParamDictionary.find(rString);
   if (it != rParamDictionary.end())
     return it->second;
@@ -312,8 +317,14 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
             pBox->AddCell(pChild);
           else if (pTabView)
           {
-            if (pChild->HasProperty("TabName"))
+            if (pChild->HasProperty("TabWidget"))
+            {
+              pTabView->AddTab(pBuilder->CreateWidget(pChild->GetProperty("TabWidget"), rParamDictionary), pChild);
+            }
+            else if (pChild->HasProperty("TabName"))
+            {
               pTabView->AddTab(pChild->GetProperty("TabName"), pChild);
+            }
             else
               pTabView->AddTab(pChild->GetObjectName(), pChild);
           }
