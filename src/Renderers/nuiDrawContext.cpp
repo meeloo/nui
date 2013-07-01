@@ -861,8 +861,7 @@ static void nuiDrawRect(const nuiRect& out, nuiRenderArray& rArray, float stroke
   rArray.SetMode(GL_TRIANGLE_STRIP);
   rArray.Reserve(8);
   nuiRect in(out);
-  float v = strokesize * nuiGetInvScaleFactor();
-  in.Grow(-nuiGetInvScaleFactor(), -v);
+  in.Grow(-strokesize, -strokesize);
   
   rArray.SetVertex(out.Left(), out.Top()); rArray.PushVertex();
   rArray.SetVertex(in.Left(), in.Top()); rArray.PushVertex();
@@ -933,6 +932,8 @@ void nuiDrawContext::DrawRect(const nuiRect& rRect, nuiShapeMode Mode)
       return;
 
     nuiRect rect(rRect);
+    float v = mCurrentState.mLineWidth;
+    rect.Grow(-v, -v);
     // Draw the filled part:
     nuiRenderArray* pFillArray = new nuiRenderArray(GL_TRIANGLE_STRIP);
     pFillArray->EnableArray(nuiRenderArray::eVertex, true);
@@ -940,16 +941,16 @@ void nuiDrawContext::DrawRect(const nuiRect& rRect, nuiShapeMode Mode)
     pFillArray->Reserve(4);
     
     pFillArray->SetColor(mCurrentState.mFillColor);
-    pFillArray->SetVertex(rect.mLeft+1, rect.mTop+1);
+    pFillArray->SetVertex(rect.mLeft, rect.mTop);
     pFillArray->PushVertex();
 
-    pFillArray->SetVertex(rect.mRight-1, rect.mTop+1);
+    pFillArray->SetVertex(rect.mRight, rect.mTop);
     pFillArray->PushVertex();
 
-    pFillArray->SetVertex(rect.mLeft+1, rect.mBottom-1);
+    pFillArray->SetVertex(rect.mLeft, rect.mBottom);
     pFillArray->PushVertex();
     
-    pFillArray->SetVertex(rect.mRight-1, rect.mBottom-1);
+    pFillArray->SetVertex(rect.mRight, rect.mBottom);
     pFillArray->PushVertex();
     
     DrawArray(pFillArray);

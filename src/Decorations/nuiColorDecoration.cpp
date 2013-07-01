@@ -22,7 +22,7 @@ nuiColorDecoration::nuiColorDecoration(const nglString& rName)
 }
 
 
-nuiColorDecoration::nuiColorDecoration(const nglString& rName, const nuiRect& rClientRect, const nuiColor& rFillColor, uint32 strokeSize, const nuiColor& rStrokeColor, nuiShapeMode ShapeMode, nuiBlendFunc BlendFunc)
+nuiColorDecoration::nuiColorDecoration(const nglString& rName, const nuiRect& rClientRect, const nuiColor& rFillColor, float strokeSize, const nuiColor& rStrokeColor, nuiShapeMode ShapeMode, nuiBlendFunc BlendFunc)
 : nuiDecoration(rName)
 {
   if (SetObjectClass(_T("nuiColorDecoration")))
@@ -37,7 +37,7 @@ nuiColorDecoration::nuiColorDecoration(const nglString& rName, const nuiRect& rC
 }
 
 
-nuiColorDecoration::nuiColorDecoration(const nglString& rName, const nuiColor& rFillColor, uint32 strokeSize, const nuiColor& rStrokeColor, nuiShapeMode ShapeMode, nuiBlendFunc BlendFunc, const nuiRect& rClientRect)
+nuiColorDecoration::nuiColorDecoration(const nglString& rName, const nuiColor& rFillColor, float strokeSize, const nuiColor& rStrokeColor, nuiShapeMode ShapeMode, nuiBlendFunc BlendFunc, const nuiRect& rClientRect)
 : nuiDecoration(rName)
 {
   if (SetObjectClass(_T("nuiColorDecoration")))
@@ -65,7 +65,7 @@ void nuiColorDecoration::InitAttributes()
     nuiAttribute<const nuiRect&>::GetterDelegate(this, &nuiColorDecoration::GetSourceClientRect),
     nuiAttribute<const nuiRect&>::SetterDelegate(this, &nuiColorDecoration::SetSourceClientRect)));
 
-  AddAttribute(new nuiAttribute<uint32>
+  AddAttribute(new nuiAttribute<float>
   (nglString(_T("StrokeSize")), nuiUnitPixels,
    nuiMakeDelegate(this, &nuiColorDecoration::GetStrokeSize),
    nuiMakeDelegate(this, &nuiColorDecoration::SetStrokeSize)));
@@ -112,18 +112,6 @@ void nuiColorDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, cons
 
   pContext->DrawRect(rDestRect, mShapeMode);
 
-  // waiting for DrawRect to use the StrokeSize parameter, do this hack
-//  uint32 strokeSize = 1;
-//  nuiRect rect = rDestRect;
-//  pContext->SetLineWidth(1);
-//  while (strokeSize < mStrokeSize)
-//  {
-//    rect.Set(rect.Left()+1.f, rect.Top()+1.f, rect.GetWidth()-2.f, rect.GetHeight()-2.f);
-//    pContext->DrawRect(rect, mShapeMode);
-//    strokeSize++;
-//  }
-
-  
   pContext->PopState();
 }
 
@@ -234,14 +222,14 @@ void nuiColorDecoration::SetStrokeColor(const nuiColor& color)
 }
 
 
-void nuiColorDecoration::SetStrokeSize(uint32 size)
+void nuiColorDecoration::SetStrokeSize(float size)
 {
   mStrokeSize = size;
   Changed();
 }
 
 
-uint32 nuiColorDecoration::GetStrokeSize() const
+float nuiColorDecoration::GetStrokeSize() const
 {
   return mStrokeSize;
 }

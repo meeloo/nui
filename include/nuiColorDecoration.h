@@ -17,8 +17,8 @@ class nuiColorDecoration : public nuiDecoration
 public:
 
   nuiColorDecoration(const nglString& rName);
-  nuiColorDecoration(const nglString& rName, const nuiRect& rClientRect, const nuiColor& rFillColor, uint32 strokeSize=0, const nuiColor& rStrokeColor = nuiColor(0,0,0,0), nuiShapeMode ShapeMode = eFillShape, nuiBlendFunc BlendFunc = nuiBlendTransp);
-  nuiColorDecoration(const nglString& rName, const nuiColor& rFillColor, uint32 strokeSize, const nuiColor& rStrokeColor, nuiShapeMode ShapeMode = eStrokeAndFillShape, nuiBlendFunc BlendFunc = nuiBlendTransp, const nuiRect& rClientRect=nuiRect(0,0,0,0));
+  nuiColorDecoration(const nglString& rName, const nuiRect& rClientRect, const nuiColor& rFillColor, float strokeSize=0, const nuiColor& rStrokeColor = nuiColor(0,0,0,0), nuiShapeMode ShapeMode = eFillShape, nuiBlendFunc BlendFunc = nuiBlendTransp);
+  nuiColorDecoration(const nglString& rName, const nuiColor& rFillColor, float strokeSize, const nuiColor& rStrokeColor, nuiShapeMode ShapeMode = eStrokeAndFillShape, nuiBlendFunc BlendFunc = nuiBlendTransp, const nuiRect& rClientRect=nuiRect(0,0,0,0));
   virtual ~nuiColorDecoration();
   
   virtual nuiSize GetBorder(nuiPosition position, const nuiWidget* pWidget) const;
@@ -33,8 +33,8 @@ public:
 	void SetFillColor(const nuiColor& color);
   const nuiColor& GetStrokeColor() const;
 	void SetStrokeColor(const nuiColor& color);
-  void SetStrokeSize(uint32 size);
-  uint32 GetStrokeSize() const;
+  void SetStrokeSize(float size);
+  float GetStrokeSize() const;
   void SetShapeMode(nuiShapeMode mode);
   nuiShapeMode GetShapeMode() const;
 
@@ -46,7 +46,7 @@ private:
 
   void InitAttributes();
 
-  uint32 mStrokeSize;
+  float mStrokeSize;
   nuiColor mFillColor, mStrokeColor;
   nuiShapeMode mShapeMode;
   nuiBlendFunc mBlendFunc;
