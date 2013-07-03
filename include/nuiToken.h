@@ -62,6 +62,19 @@ public:
   const T Token; 
 };
 
+template <class T> class nuiFreeToken : public nuiTokenBase
+{
+public:
+  nuiFreeToken(const T& rToken)
+  : Token(rToken)
+  {
+    mType = nuiTokenTrait<T>::GetType();
+  }
+
+  const T Token;
+};
+
+
 template <typename T> class nuiToken<T*> : public nuiTokenBase
 {
 public:
@@ -115,14 +128,26 @@ private:
 template <class T>
 bool nuiGetTokenValue (nuiTokenBase* pTokenBase, T& rValue)
 {
-  nuiToken<T>* pToken = dynamic_cast<nuiToken<T>*>(pTokenBase);
-  
-  if (pToken)
   {
-    rValue = pToken->Token;
-    return true;
+    nuiToken<T>* pToken = dynamic_cast<nuiToken<T>*>(pTokenBase);
+    
+    if (pToken)
+    {
+      rValue = pToken->Token;
+      return true;
+    }
   }
   
+  {
+    nuiFreeToken<T>* pToken = dynamic_cast<nuiFreeToken<T>*>(pTokenBase);
+
+    if (pToken)
+    {
+      rValue = pToken->Token;
+      return true;
+    }
+  }
+
   return false;
 }
 
