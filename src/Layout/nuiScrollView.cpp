@@ -151,9 +151,9 @@ void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVert
   mpShowAnimV = mpShowAnimH = NULL;
   mpHideAnimV = mpHideAnimH = NULL;
   
-#ifdef _UIKIT_
+//#ifdef _UIKIT_
   ActivateMobileMode();
-#endif
+//#endif
 }
 
 bool nuiScrollView::GetEnableHorizontalScroll() const
