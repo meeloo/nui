@@ -45,6 +45,9 @@ void nuiDecorationInspector::UpdateDecos()
   AddChild(pSplitter);
   nuiSplitter* pSplit = new nuiSplitter(nuiHorizontal);
   pSplitter->AddChild(pSplit);
+  pSplitter->SetMasterChild(false);
+  pSplitter->SetHandlePos(40);
+
   pSplit->SetMasterChild(false);
   
   nuiScrollView* pScrollView1 = new nuiScrollView(false, true);

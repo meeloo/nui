@@ -281,6 +281,7 @@ bool nuiNavigationController::SetRect(const nuiRect& rRect)
   }
   else if (!mPushed && !mPoped)
   {
+    nuiWidget::SetRect(rRect);
     // Normal layout:
     IteratorPtr pIt;
     for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))

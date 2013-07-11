@@ -218,10 +218,20 @@ nuiSplitter::nuiSplitter ( nuiOrientation orientation, nuiSplitterMode mode)
 
 void nuiSplitter::InitAttributes()
 {
+  AddAttribute(new nuiAttribute<bool>
+               ("MasterChild", nuiUnitNone,
+                nuiMakeDelegate(this, &nuiSplitter::GetMasterChild),
+                nuiMakeDelegate(this, &nuiSplitter::SetMasterChild)));
+
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("HandlePos")), nuiUnitSize,
+               ("HandlePos", nuiUnitSize,
                 nuiMakeDelegate(this, &nuiSplitter::GetHandlePos),
                 nuiMakeDelegate(this, &nuiSplitter::SetHandlePos)));
+
+  AddAttribute(new nuiAttribute<nuiOrientation>
+               ("Orientation", nuiUnitSize,
+                nuiMakeDelegate(this, &nuiSplitter::GetOrientation),
+                nuiMakeDelegate(this, &nuiSplitter::SetOrientation)));
 }
 
 
@@ -627,7 +637,6 @@ bool nuiSplitter::SetRectVertical(const nuiRect& rRect)
     pItem = (*it);
     if (mMasterChild)
     {
-
       if (w < 0)
         w = 0;
 
