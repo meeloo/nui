@@ -37,6 +37,7 @@ public:
   void PageIncrement();
   void PageDecrement();
   bool MakeInRange(double Position, double Size = 0.0);
+  bool MakeInRangeVisual(double Position, double size = 0.0);
 
   double GetValue() const;
   double GetUnitValue() const;

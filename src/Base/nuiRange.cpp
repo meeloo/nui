@@ -416,17 +416,75 @@ bool nuiRange::MakeInRange(double Position, double size)
   }
   else
   {
-    if (Position + size < mValue + mPageSize)
-      SetValue(Position - size + mPageSize);
+    nuiRange bis;
+    bis.mMaximum = -mMaximum;
+    bis.mMinimum = -mMinimum;
+    bis.mPageSize = mPageSize;
+    bis.mValue = -mValue;
+    bis.mIncrement = -mIncrement;
+    bis.mPageIncrement = -mPageIncrement;
+    bis.mOrigin = -mOrigin;
+    bis.mUnitCurve = mUnitCurve;
+    bis.mDiscreetStepSize = mDiscreetStepSize;
+    bis.mEvents = mEvents;
 
-    if (Position > mValue)
-      SetValue(Position);
-
-    if (Position + size < mValue + mPageSize)
-      SetValue(Position - size + mPageSize);
+    bis.MakeInRange(-Position, size);
+    SetValue(-bis.GetValue());
   }
   return tmp != mValue;
 }
+
+bool nuiRange::MakeInRangeVisual(double Position, double size)
+{
+  double tmp = mValue;
+  double val = mValue;
+
+  if (Position >= mValue && ((Position+size) <= (mValue+mPageSize)))
+    return tmp != mValue;
+
+  if (mMinimum < mMaximum)
+  {
+    if (Position < mMinimum)
+    {
+      Position = mMinimum;
+      return tmp != mValue;
+    }
+    if (Position + size >= mMaximum)
+    {
+      size = MAX(0, mMaximum - Position);
+      return tmp != mValue;
+    }
+
+    if (size > mPageSize)
+    {
+      // Focus on start shifted down to give some context
+      SetValue(Position + mPageSize * 0.1);
+      return tmp != mValue;
+    }
+
+    // Center
+    SetValue(Position + (size * 0.5) - mPageSize * 0.5);
+  }
+  else
+  {
+    nuiRange bis;
+    bis.mMaximum = -mMaximum;
+    bis.mMinimum = -mMinimum;
+    bis.mPageSize = mPageSize;
+    bis.mValue = -mValue;
+    bis.mIncrement = -mIncrement;
+    bis.mPageIncrement = -mPageIncrement;
+    bis.mOrigin = -mOrigin;
+    bis.mUnitCurve = mUnitCurve;
+    bis.mDiscreetStepSize = mDiscreetStepSize;
+    bis.mEvents = mEvents;
+
+    bis.MakeInRangeVisual(-Position, size);
+    SetValue(-bis.GetValue());
+  }
+  return tmp != mValue;
+}
+
 
 double nuiRange::ConvertToUnit(double RangeValue) const
 {
