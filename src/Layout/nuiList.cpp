@@ -64,13 +64,21 @@ bool nuiList::Draw(nuiDrawContext* pContext)
     nuiWidgetPtr pItem = pIt->GetWidget();
     if (pItem)
     {
+      nuiRect irect = pItem->GetIdealRect();
+      nuiRect rect = pItem->GetRect();
+      irect.MoveTo(rect.Left(), rect.Top());
+      if (mOrientation == nuiHorizontal)
+        irect.SetWidth(GetRect().GetWidth());
+      else
+        irect.SetWidth(GetRect().GetHeight());
+
       if (pItem->IsSelected())
-        pTheme->DrawSelectionBackground(pContext, pItem->GetRect(), pItem);
+        pTheme->DrawSelectionBackground(pContext, irect, pItem);
 
       DrawChild(pContext, pItem);
 
       if (pItem->IsSelected())
-        pTheme->DrawSelectionForeground(pContext, pItem->GetRect(), pItem);
+        pTheme->DrawSelectionForeground(pContext, irect, pItem);
     }
   }
   delete pIt;
@@ -81,7 +89,6 @@ bool nuiList::Draw(nuiDrawContext* pContext)
 
 nuiRect nuiList::CalcIdealSize()
 {
-  nuiRect rect;
   nuiSize Height=0,Width=0;
 
   if (mOrientation == nuiVertical)
@@ -96,7 +103,7 @@ nuiRect nuiList::CalcIdealSize()
 
       nuiSize w = Rect.GetWidth();
       nuiSize h = Rect.GetHeight();
-      //Width = MAX(Width, w+2);
+      Width = MAX(Width, w+2);
       Height += h + mBorderSize;
       Height = (nuiSize)ToAbove(Height);
     }
@@ -115,16 +122,15 @@ nuiRect nuiList::CalcIdealSize()
       nuiSize w=Rect.GetWidth();
       nuiSize h=Rect.GetHeight();
 
-      //Height = MAX(Height, h+2);
+      Height = MAX(Height, h+2);
       Width += w + mBorderSize;
       Width = (nuiSize)ToAbove(Width);
     }
     delete pIt;
   }
 
-  rect.Set(mRect.mLeft, mRect.mTop, Width, Height);
 //  OUT("Ideal Size: %d x %d\n",Width,Height);
-  mIdealRect = rect.Size();
+  mIdealRect = nuiRect(Width, Height);
 
   return mIdealRect;
 }
@@ -827,10 +833,10 @@ void nuiList::SelectItem(nuiWidgetPtr pItem)
     }
 
 		SelectionChanged();
-    Invalidate();
   }
 
   mCursorLine = GetItemNumber(pItem);
+  Invalidate();
 }
 
 
