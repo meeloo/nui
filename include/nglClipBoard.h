@@ -16,7 +16,7 @@
 class nglString;
 #include "nglMimeSource.h"
 
-class NGL_API nglClipBoard
+class nglClipBoard
 {
   friend class nglKernel;
 

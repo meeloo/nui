@@ -18,7 +18,7 @@
 #include "nglString.h"
 #include "nglDataTypesRegistry.h"
 
-class NGL_API nglDataObject
+class nglDataObject
 {
 public:
   /** @name Life cycle */
@@ -66,7 +66,7 @@ protected:
   nglNativeObjectType mNativeType;
 };
 
-class NGL_API nglDataFilesObject : public nglDataObject
+class nglDataFilesObject : public nglDataObject
 {
 public:
   /** @name Life cycle */
@@ -109,7 +109,7 @@ protected:
   size_t mNumberOfFiles;
 };
 
-class NGL_API nglDataTextObject : public nglDataObject
+class nglDataTextObject : public nglDataObject
 {
 public:
   /** @name Life cycle */
@@ -152,7 +152,7 @@ protected:
 };
 
 template <class C>
-class NGL_API nglInternalDataObject : public nglDataObject
+class nglInternalDataObject : public nglDataObject
 {
 
 public:

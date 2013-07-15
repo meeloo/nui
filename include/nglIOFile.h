@@ -25,7 +25,7 @@ class nglPath;
 This input stream is based on the nglFile API, and can be used by all objects
 based on generic input streams.
 */
-class NGL_API nglIOFile : public nglIOStream
+class nglIOFile : public nglIOStream
 {
 public:
   /** @name Life cycle */

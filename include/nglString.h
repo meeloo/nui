@@ -140,7 +140,7 @@ typedef std::map<nglEncodingPair, nglStringConv*> nglStringConvMap;
 //		Class nglString
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class NGL_API nglString
+class nglString
 {
 public:
 	static const nglChar Zero;     ///< The usual 'terminal' zero, cannot be embedded \e in a string
@@ -850,7 +850,7 @@ enum nglStringConvState
   eStringConv_NeedOutput ///< Conversion incomplete (insufficient output buffer)
 };
 
-class NGL_API nglStringConv
+class nglStringConv
 {
 public:
   static nglChar mUnknown;  ///< Default char used to mark in place a conversion error. Unused if set to '\\0'

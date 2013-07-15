@@ -129,26 +129,13 @@ and in NGL user application code.
    * - AND we are not currently building NGL itself as a DLL
    */
 
-  #if !(defined NGL_STATIC_BUILD) && !(defined NGL_DLL_EXPORTS)
-  #define NGL_DLL_IMPORTS
-  #endif
-
-  #ifdef NGL_DLL_EXPORTS
-  #  define NGL_API __declspec(dllexport)
-  #endif // NGL_DLL_EXPORTS
 #pragma warning(disable : 4355) // Disable 'this' : used in base member initializer list warning
   #if (_MSC_VER >= 1400) && (_MSC_VER < 1500)  // Is this VC8.0?
   # define _CRT_SECURE_NO_DEPRECATE
   # pragma warning( disable : 4996 )
   # define STDEXT stdext // Need special namespace for hash_maps...
-  # ifdef NGL_DLL_IMPORTS
-  #    define NGL_API __declspec(dllimport)
-  # endif // NGL_STATIC_BUILD
   #elif (_MSC_VER >= 1300) && (_MSC_VER < 1400)  // Is this VC7.1?
   # define STDEXT stdext // Need special namespace for hash_maps...
-  # ifdef NGL_DLL_IMPORTS
-  #    define NGL_API __declspec(dllimport)
-  # endif // NGL_DLL_IMPORTS
 
   #elif (_MSC_VER >= 1400) && (_MSC_VER < 1500)  // Is this VC8?
     // Some missing math.h functions in VC7 2002
@@ -165,17 +152,6 @@ and in NGL user application code.
         return -a;
       return a;
     }
-
-    # ifdef NGL_DLL_IMPORTS
-    #    define NGL_API __declspec(dllimport)
-    # endif // NGL_DLL_IMPORTS
-
-    # ifdef NGL_STATIC_BUILD
-    # endif // NGL_STATIC_BUILD
-  #else
-    # ifdef NGL_DLL_IMPORTS
-    #    define NGL_API __declspec(dllimport)
-    # endif // NGL_DLL_IMPORTS
 
     # ifdef NGL_STATIC_BUILD
     # endif // NGL_STATIC_BUILD
@@ -295,8 +271,6 @@ and in NGL user application code.
   typedef u_int32_t uint32;
   typedef u_int64_t uint64;
 
-	#define NGL_API
-
 #endif//_UIKIT_
 
 /*
@@ -329,8 +303,6 @@ and in NGL user application code.
   typedef u_int64_t uint64;
 
 
-  #define NGL_API __attribute__((visibility("hidden")))
-
 #endif //_COCOA_
 
 
@@ -362,19 +334,12 @@ and in NGL user application code.
     typedef u_int64_t uint64;
   #endif
 
-//  #define NGL_API __attribute__((visibility("hidden")))
-  #define NGL_API
 #endif // _CARBON_
 
 
 /*
  * Common stuff for all platforms
  */
-
-//! Symbol linkage info, necessary for some compilers like MSVC (empty for the others)
-#ifndef NGL_API
-#define NGL_API
-#endif
 
 //! Shortcut and uniformisation with fixed-size NGL integers
 typedef unsigned int uint;

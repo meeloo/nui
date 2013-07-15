@@ -30,7 +30,7 @@ enum nglDropEffect
 class nglDataObject;
 class nglImage;
 
-class NGL_API nglDragAndDrop
+class nglDragAndDrop
 {
 public:
   /** @name Life cycle */

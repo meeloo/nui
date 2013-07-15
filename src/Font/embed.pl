@@ -137,7 +137,7 @@ $stamp
 #include "ngl.h"
 
 EOF
-printf DOT_CPP "NGL_API const char* gp${sym_base}Base =\n  \"";
+printf DOT_CPP "const char* gp${sym_base}Base =\n  \"";
 
 my $data;
 my $size = 0;

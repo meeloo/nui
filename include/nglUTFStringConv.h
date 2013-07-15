@@ -14,7 +14,7 @@ typedef ConversionResult (*UTFConverter) (const char** sourceStart, const char* 
 
 ConversionResult NoConversion(const char** sourceStart, const char* sourceEnd, char** targetStart, char* targetEnd, ConversionFlags flags);
 
-class NGL_API nglUTFStringConv : public nglStringConv
+class nglUTFStringConv : public nglStringConv
 {
 public:
   nglUTFStringConv(nglTextEncoding From, nglTextEncoding To, nglChar Default = nglStringConv::mUnknown);

@@ -28,7 +28,7 @@ class nglOStream;
 This is a pure virtual class, all object capable of providing data should
 inherit from nglIStream (see nglIFile for instance).
 */
-class NGL_API nglIStream : public virtual nglStream
+class nglIStream : public virtual nglStream
 {
 public:
   /** @name Stream navigation */

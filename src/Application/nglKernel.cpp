@@ -20,7 +20,7 @@ extern const nglChar* gpKernelErrorTable[];
 
 /* The kernel global instance is referenced here (and only here)
  */
-NGL_API nglKernel * App = NULL;
+nglKernel * App = NULL;
 
 
 

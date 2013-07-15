@@ -74,7 +74,7 @@ Usage example :
 Windows and Linux (glibc 2.2) rely on the processor clock itself (via the RDTSC
 instruction), thus you can expect 0.01µs precision on a several-hundred-MHz processor.
 */
-class NGL_API nglTime
+class nglTime
 {
 public:
   /** @name Useful constants */
@@ -153,10 +153,10 @@ public:
   const nglTime& operator-=(double Value);         ///< Decrement operation
   operator double() const;      ///< Cast to \e double floating point value
 
-  friend NGL_API nglTime  operator+(const nglTime& rLeft, const nglTime& rRight);
-  friend NGL_API nglTime  operator+(const nglTime& rLeft, double Right);
-  friend NGL_API nglTime  operator-(const nglTime& rLeft, const nglTime& rRight);
-  friend NGL_API nglTime  operator-(const nglTime& rLeft, double Right);
+  friend nglTime  operator+(const nglTime& rLeft, const nglTime& rRight);
+  friend nglTime  operator+(const nglTime& rLeft, double Right);
+  friend nglTime  operator-(const nglTime& rLeft, const nglTime& rRight);
+  friend nglTime  operator-(const nglTime& rLeft, double Right);
 
 private:
   double mValue;

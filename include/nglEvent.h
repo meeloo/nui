@@ -20,7 +20,7 @@
 /*!
 This class is for NGL internal use only. It provides no service to the user.
 */
-class NGL_API nglEvent
+class nglEvent
 {
 #ifdef _UNIX_
 public:

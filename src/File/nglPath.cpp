@@ -1025,7 +1025,7 @@ const nglPath& nglPath::operator+=(const nglChar* pAppend)
 	return *this;
 }
 
-NGL_API nglPath operator+ (const nglPath& rPath, const nglPath& rAppend)
+nglPath operator+ (const nglPath& rPath, const nglPath& rAppend)
 {
 	nglPath result(rPath);
 
@@ -1033,7 +1033,7 @@ NGL_API nglPath operator+ (const nglPath& rPath, const nglPath& rAppend)
 	return result;
 }
 
-NGL_API nglPath operator+ (const nglPath& rPath, const nglString& rAppend)
+nglPath operator+ (const nglPath& rPath, const nglString& rAppend)
 {
 	nglPath result(rPath);
 
@@ -1041,7 +1041,7 @@ NGL_API nglPath operator+ (const nglPath& rPath, const nglString& rAppend)
 	return result;
 }
 
-NGL_API bool operator==(const nglPath& rLeft, const nglPath& rRight)
+bool operator==(const nglPath& rLeft, const nglPath& rRight)
 {
 #if defined(_UNIX_) || defined(_BEOS_)
 	return rLeft.GetPathName() == rRight.GetPathName();
@@ -1052,7 +1052,7 @@ NGL_API bool operator==(const nglPath& rLeft, const nglPath& rRight)
 #endif
 }
 
-NGL_API bool operator==(const nglPath& rLeft, const nglString& rRight)
+bool operator==(const nglPath& rLeft, const nglString& rRight)
 {
 #if defined(_UNIX_) || defined(_BEOS_)
 	return rLeft.GetPathName() == rRight;
@@ -1061,7 +1061,7 @@ NGL_API bool operator==(const nglPath& rLeft, const nglString& rRight)
 #endif
 }
 
-NGL_API bool operator==(const nglString& rLeft, const nglPath& rRight)
+bool operator==(const nglString& rLeft, const nglPath& rRight)
 {
 #ifdef _WIN32_
 	return !rLeft.Compare(rRight.GetPathName(), false);
@@ -1071,17 +1071,17 @@ NGL_API bool operator==(const nglString& rLeft, const nglPath& rRight)
 }
 
 
-NGL_API bool operator!=(const nglPath& rLeft, const nglPath& rRight)
+bool operator!=(const nglPath& rLeft, const nglPath& rRight)
 {
 	return !(rLeft == rRight);
 }
 
-NGL_API bool operator!=(const nglPath& rLeft, const nglString& rRight)
+bool operator!=(const nglPath& rLeft, const nglString& rRight)
 {
 	return !(rLeft == rRight);
 }
 
-NGL_API bool operator!=(const nglString& rLeft, const nglPath& rRight)
+bool operator!=(const nglString& rLeft, const nglPath& rRight)
 {
 	return !(rLeft == rRight);
 }

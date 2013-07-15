@@ -60,7 +60,7 @@ on read-only files). You can also unbuffer the file with the AutoFlush() method 
 setting auto-flush to true will make all write access immediate (ie. Write* methods
 will only return when the data has been written on the medium).
 */
-class NGL_API nglFile
+class nglFile
 {
 public:
 	/** @name Life cycle */

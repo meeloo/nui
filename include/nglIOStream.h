@@ -24,7 +24,7 @@
 This is a pure virtual class, all object capable of providing data should
 inherit from nglIStream (see nglIFile for instance).
 */
-class NGL_API nglIOStream : public nglOStream, public nglIStream
+class nglIOStream : public nglOStream, public nglIStream
 {
 public:
   // This is just a simple new base class.

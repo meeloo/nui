@@ -1642,7 +1642,7 @@ const nglWindow::OSInfo* nglWindow::GetOSInfo() const
   return &mOSInfo;
 }
 
-void NGL_API nglCheckForGLErrors()
+void nglCheckForGLErrors()
 {
 #if 0 // Globally enable/disable OpenGL error checking
 #ifdef _DEBUG_

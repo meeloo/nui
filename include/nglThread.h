@@ -17,7 +17,7 @@ class nglThreadPrivate;
 //	nglThread class.
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class NGL_API nglThread : nuiNonCopyable
+class nglThread : nuiNonCopyable
 {
   friend class nglThreadPrivate;
 public:
@@ -98,7 +98,7 @@ private:
 };
 
 
-class NGL_API nglThreadDelegate : public nglThread
+class nglThreadDelegate : public nglThread
 {
 public:
   typedef nuiFastDelegate0<> ThreadDelegate;

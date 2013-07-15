@@ -29,7 +29,7 @@
 This class can load a relocatable object file (DLL) at runtime and query
 its symbol's addresses.
 */
-class NGL_API nglModule : public nglError
+class nglModule : public nglError
 {
 public:
   /** @name Life cycle */

@@ -34,7 +34,7 @@ enum nglOFileMode
 This output stream is based on the nglFile API, and can be used by all objects
 based on generic output streams.
 */
-class NGL_API nglOFile : public nglOStream
+class nglOFile : public nglOStream
 {
 public:
   /** @name Life cycle */

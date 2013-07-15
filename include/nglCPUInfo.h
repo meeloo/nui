@@ -23,7 +23,7 @@ This class is a holder for static methods which identifies the hosting
 architecture (see GetType()), the number of CPUs (see GetCount()) and
 the different proprietary extensions.
 */
-class NGL_API nglCPUInfo
+class nglCPUInfo
 {
 public:
   /// CPU family

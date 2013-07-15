@@ -47,7 +47,7 @@ startup and used internally by NGL to report errors and other useful
 informations. Have a look at nglApplication::GetLog() and
 nglApplication::ParseDefaultArgs() to see how this facility can help you.
 */
-class NGL_API nglLog
+class nglLog
 {
 public:
   typedef uint StampFlags;

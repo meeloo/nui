@@ -29,7 +29,7 @@ class nglImageCodec;
 Every image codec (loader and/or writer) registers itself to nglImage
 passing its description via this class.
 */
-class NGL_API nglImageCodecInfo
+class nglImageCodecInfo
 {
 public:
   nglImageCodecInfo();
@@ -49,7 +49,7 @@ public:
 /*!
 FIXME
 */
-class NGL_API nglImageCodec 
+class nglImageCodec 
 {
 public:
   virtual ~nglImageCodec();

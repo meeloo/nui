@@ -23,7 +23,7 @@ This simple class let you use any memory portion as an input stream.
 See also nglOMemory.
 
 */
-class NGL_API nglIMemory : public nglIStream
+class nglIMemory : public nglIStream
 {
 public:
   /** @name Life cycle */

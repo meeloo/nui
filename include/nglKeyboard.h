@@ -34,7 +34,7 @@ This file contains keyboard layout macros.
 #endif
 
 #ifndef __NGL_KEY_DECL
-#define __NGL_KEY_DECL(symbol,value) EXTERN_KEYBOARD_DEF NGL_API const nglKeyCode symbol __EQU(value)
+#define __NGL_KEY_DECL(symbol,value) EXTERN_KEYBOARD_DEF const nglKeyCode symbol __EQU(value)
 #endif
 
 /* PC-102 keys
@@ -180,7 +180,7 @@ __NGL_KEY_DECL (NK_MOD,  NK_META); ///< This combo is only available when used w
 
 #ifndef __nglKeyboard_cpp__
 
-class NGL_API nglKeyEvent
+class nglKeyEvent
 {
 public:
   nglKeyEvent(nglKeyCode Key, uint32 Char, uint32 RawChar)

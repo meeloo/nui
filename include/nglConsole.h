@@ -164,7 +164,7 @@ request on the first word (beginning of the line) \e and with a heading '!'
 is automatically completed against history. The OnCompletion() callback
 is not triggered in this case, since it is internally handled by NGL.
 */
-class NGL_API nglConsole : public nglEvent
+class nglConsole : public nglEvent
 {
 public:
   /** @name Life cycle */

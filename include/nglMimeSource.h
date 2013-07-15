@@ -15,7 +15,7 @@
 
 #include "nglString.h"
 
-class NGL_API nglMimeSource
+class nglMimeSource
 {
   friend class nglClipBoard;
 
@@ -51,7 +51,7 @@ private:
 };
 
 
-class NGL_API nglMimeTextSource : public nglMimeSource
+class nglMimeTextSource : public nglMimeSource
 {
 public:
   nglMimeTextSource(const nglString & str = nglString::Empty);

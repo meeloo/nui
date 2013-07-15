@@ -67,7 +67,7 @@ inline float log2f(float x)
 #endif
 
 
-uint NGL_API Log2Ceil(uint Value);
+uint Log2Ceil(uint Value);
 /*!< Retrieve the binary logarithm of \a Value (by excess)
   \return the smallest x such as \a Value <= 2^x
 
@@ -79,7 +79,7 @@ Log2Ceil(65) : 7
 \endcode
 */
 
-uint NGL_API Log2Floor(uint Value);
+uint Log2Floor(uint Value);
 /*!< Retrieve the binary logarithm of \a Value (by default)
   \return the smallest x such as \a 2^x <= Value < 2^(x+1)
 

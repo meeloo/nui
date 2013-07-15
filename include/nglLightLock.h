@@ -18,7 +18,7 @@
 //	LightLock class.
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class NGL_API nglLightLock : public nglLock
+class nglLightLock : public nglLock
 {
 public:
   
@@ -45,8 +45,8 @@ private:
 
 
 // Typedef
-typedef NGL_API nglGuard<nglLightLock> nglLightLockGuard;
-typedef NGL_API nglUnGuard<nglLightLock> nglLightLockUnGuard;
+typedef nglGuard<nglLightLock> nglLightLockGuard;
+typedef nglUnGuard<nglLightLock> nglLightLockUnGuard;
 
 
 

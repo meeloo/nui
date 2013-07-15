@@ -27,7 +27,7 @@ class nglZipPrivate;
 
 struct zlib_filefunc_def_s;
 
-class NGL_API nglZipPath : public nglPath
+class nglZipPath : public nglPath
 {
 public:
   nglZipPath(const nglZipFS* pZipFS, const nglString& rPathInZip = _T("")); 
@@ -53,7 +53,7 @@ private:
   const nglZipFS* mpZipFS;
 };
 
-class NGL_API nglZipFS : public nglVolume
+class nglZipFS : public nglVolume
 {
 public:
   nglZipFS(const nglString& rVolumeName, nglIStream* pStream, bool Own = true); ///< Create a Zip FS from a stream.

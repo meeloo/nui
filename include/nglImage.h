@@ -81,7 +81,7 @@ In unmanaged mode, nglImageInfo simply holds a reference to a buffer you manage
 (in mpBuffer too), but will never attempt to release or re-allocate it.
 */
 
-class NGL_API nglImageInfo
+class nglImageInfo
 {
 public:
   nglImageBufferFormat mBufferFormat;   ///< Buffer data format can be raw (user accessible) or proprietary (opaque to user, such as S3TC/DXTC)
@@ -182,7 +182,7 @@ export to various file formats. Codecs can load data from a stream, making progr
 image loading possible. NGL is compiled with classic codecs (PNG, JPEG, TGA) as a
 default, but you can choose to load them at run time, add your own codec, and so on.
 */
-class NGL_API nglImage : public nglError
+class nglImage : public nglError
 {
 public:
   /** @name Life cycle */

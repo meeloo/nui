@@ -29,7 +29,7 @@ class nglFile;
 /*!
 There is no generic alpha support in 3DSr4.
 */
-class NGL_API ngl3DSColor
+class ngl3DSColor
 {
 public:
   float mR;  ///< Red component (0..1)
@@ -41,7 +41,7 @@ public:
 /*!
 These coordinates are subject to the global 'master scale', see ngl3DSScene.
 */
-class NGL_API ngl3DSVertex
+class ngl3DSVertex
 {
 public:
   float mX;
@@ -57,7 +57,7 @@ The texture image has the following UV coordinates :
 Expect values not in the [0..1] range, since scaling and offseting is current
 (you must wrap texture coordinates).
 */
-class NGL_API ngl3DSMapping
+class ngl3DSMapping
 {
 public:
   float mU;
@@ -111,7 +111,7 @@ enum ngl3DSLayerType
 #define TDS_LONG_STR       16
 
 //! 3DS texture definition
-class NGL_API ngl3DSTexture
+class ngl3DSTexture
 {
 public:
   bool   mUsed;
@@ -123,7 +123,7 @@ public:
 };
 
 //! 3DS material definition
-class NGL_API ngl3DSMaterial
+class ngl3DSMaterial
 {
 public:
   char          mpName[TDS_LONG_STR+1];
@@ -139,7 +139,7 @@ public:
 };
 
 //! 3DS face description
-class NGL_API ngl3DSFace
+class ngl3DSFace
 {
 public:
   uint16 mpVertex[3];  ///< Face vertices, in trigonometric order. Values are vertices index in the current mesh vertex list.
@@ -150,7 +150,7 @@ public:
 All materials applied to a mesh are listed together with a subset of faces mapped with
 the given material. The \a mpFace array holds face indexes in the current mesh face list.
 */
-class NGL_API ngl3DSFaceMaterial
+class ngl3DSFaceMaterial
 {
 public:
   char    mpMaterialName[TDS_LONG_STR+1];  ///< Material to apply (by name)
@@ -164,7 +164,7 @@ A mesh is a simple collection of triangular faces, with some local properties.
 A mesh can be composed of many non-connected set of faces. The sub-mesh
 notion of 'element' introduced by 3DStudio is not given here.
 */
-class NGL_API ngl3DSMesh
+class ngl3DSMesh
 {
 public:
   char                mpName[TDS_SHORT_STR+1];
@@ -186,7 +186,7 @@ public:
 };
 
 //! 3DS light object
-class NGL_API ngl3DSLight
+class ngl3DSLight
 {
 public:
   char            mpName[TDS_SHORT_STR+1];
@@ -205,7 +205,7 @@ public:
 
 
 //! 3DS camera object
-class NGL_API ngl3DSCamera
+class ngl3DSCamera
 {
 public:
   char         mpName[TDS_SHORT_STR+1];
@@ -217,7 +217,7 @@ public:
 
 
 //! 3DS ambient fog settings
-class NGL_API ngl3DSFog
+class ngl3DSFog
 {
 public:
   bool            mUsed;
@@ -230,7 +230,7 @@ public:
 };
 
 //! 3DS layered fog settings
-class NGL_API ngl3DSLayerFog
+class ngl3DSLayerFog
 {
 public:
   bool            mUsed;
@@ -247,7 +247,7 @@ public:
 Note than only fog type can be defined (ambient or layered). See \a mFog.mUsed and
 \a mLayerFog.mUsed.
 */
-class NGL_API ngl3DSScene
+class ngl3DSScene
 {
 public:
   uint32         mVersion;     ///< 3DS version ('revision', mostly 3 or 4, might be 2)
@@ -278,7 +278,7 @@ This code does not make any use of the (copyrighted) Autodesk SDK content. It is
 based on reverse engineering and consultation of the Wotsit.org documents.
 Autodesk and 3D Studio are trade marks registered by their respective owners.
 */
-class NGL_API ngl3DSLoader /*: public nglError*/
+class ngl3DSLoader /*: public nglError*/
 {
 public:
   /** @name Life cycle */

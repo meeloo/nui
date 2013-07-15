@@ -203,28 +203,28 @@ nglTime::operator double() const
   return mValue;
 }
 
-NGL_API nglTime operator+(const nglTime& rLeft, const nglTime& rRight)
+nglTime operator+(const nglTime& rLeft, const nglTime& rRight)
 {
   nglTime result = rLeft;
   result += rRight;
   return result;
 }
 
-NGL_API nglTime operator+(const nglTime& rLeft, double Right)
+nglTime operator+(const nglTime& rLeft, double Right)
 {
   nglTime result = rLeft;
   result += Right;
   return result;
 }
 
-NGL_API nglTime operator-(const nglTime& rLeft, const nglTime& rRight)
+nglTime operator-(const nglTime& rLeft, const nglTime& rRight)
 {
   nglTime result = rLeft;
   result -= rRight;
   return result;
 }
 
-NGL_API nglTime operator-(const nglTime& rLeft, double Right)
+nglTime operator-(const nglTime& rLeft, double Right)
 {
   nglTime result = rLeft;
   result -= Right;

@@ -25,7 +25,7 @@ This simple class let you use memory as an output stream. Memory is
 automatically allocated and grown along stream usage.
 See also nglIMemory.
 */
-class NGL_API nglOMemory : public nglOStream
+class nglOMemory : public nglOStream
 {
 public:
   /** @name Life cycle */

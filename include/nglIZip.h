@@ -26,7 +26,7 @@ class nglZipFS;
 This input stream is based on the nglZip API, and can be used by all objects
 based on generic input streams.
 */
-class NGL_API nglIZip : public nglIStream
+class nglIZip : public nglIStream
 {
 public:
   /** @name Destructor */

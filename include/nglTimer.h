@@ -62,7 +62,7 @@ a precision of 50 milliseconds at best. If you want high precision timing,
 consider using nglTime time stamps differences, or the nglApplication::OnIdle()
 event (please consult its documentation carefully).
 */
-class NGL_API nglTimer
+class nglTimer
 {
 public:
   /** @name Life cycle */

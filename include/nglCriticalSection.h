@@ -22,7 +22,7 @@ class nglCriticalSection;
 //	CriticalSection class.
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class NGL_API nglCriticalSection : public nglLock
+class nglCriticalSection : public nglLock
 {
 public:
   
@@ -51,8 +51,8 @@ private:
 
 
 // Typedef
-typedef NGL_API nglGuard<nglCriticalSection> nglCriticalSectionGuard;
-typedef NGL_API nglUnGuard<nglCriticalSection> nglCriticalSectionUnGuard;
+typedef nglGuard<nglCriticalSection> nglCriticalSectionGuard;
+typedef nglUnGuard<nglCriticalSection> nglCriticalSectionUnGuard;
 
 
 

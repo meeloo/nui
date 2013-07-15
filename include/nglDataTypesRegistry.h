@@ -39,7 +39,7 @@ class nglDataObject;
 
 typedef nglDataObject* (*nglDataObjectCreatorFunc)(const nglString& rMime);
 
-class NGL_API nglDataTypesRegistry
+class nglDataTypesRegistry
 {
 public:
   nglDataTypesRegistry();

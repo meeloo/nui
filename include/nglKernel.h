@@ -23,7 +23,7 @@ class nglPath;
 class nuiNotificationManager;
 class nuiNotificationObserver;
 
-extern NGL_API nglKernel* App;
+extern nglKernel* App;
 /*!<
 A well designed program should have only one global. This is the unique NGL global,
 pointing to the unique instance of the kernel. Since nglKernel is an abstract class,
@@ -137,7 +137,7 @@ create an instance. See the ubiquitous nglApplication for instance.
 
 The unique nglKernel object is always available via the \a App pointer.
 */
-class NGL_API nglKernel : public nglError, public nglEvent, public nuiMessageQueue
+class nglKernel : public nglError, public nglEvent, public nuiMessageQueue
 {
 public:
   typedef void (*ExitFunc) (void); ///< Cleanup callback type. See AddExit()

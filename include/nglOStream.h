@@ -24,7 +24,7 @@ class nglString;
 /*!
 This is a pure virtual base class for writable streams (see nglOFile for instance).
 */
-class NGL_API nglOStream : public virtual nglStream
+class nglOStream : public virtual nglStream
 {
 public:
   /** @name Output methods */

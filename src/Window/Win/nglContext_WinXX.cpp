@@ -775,7 +775,7 @@ bool nglContext::BuildOpenGLFromExisting(HWND hWnd, HGLRC rc)
   return true;
 }
 
-void NGL_API nglCheckForGLErrors();
+void nglCheckForGLErrors();
 
 bool nglContext::MakeCurrent() const
 {

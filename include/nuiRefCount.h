@@ -104,7 +104,7 @@ private:
   bool mPermanent;
 };
 
-class NGL_API nuiRefGuard : nuiNonCopyable
+class nuiRefGuard : nuiNonCopyable
 {
 public:
   nuiRefGuard(const nuiRefCount* pRef)

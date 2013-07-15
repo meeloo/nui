@@ -52,7 +52,7 @@ cppfile.write("""/*
 
 #include "nui.h"
 
-NGL_API const char* gp%s = \"%s\";""" % (defname, datastr))
+const char* gp%s = \"%s\";""" % (defname, datastr))
 
 hfile.close()
 cppfile.close()

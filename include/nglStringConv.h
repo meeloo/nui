@@ -134,7 +134,7 @@ nglString object, or the opposite, export into a foreign locale from a nglString
 object. The nglString::Import() and nglString::Export() methods will provide you an easy
 and convenient way to do this.
 */
-class NGL_API nglStringConv : public nglError
+class nglStringConv : public nglError
 {
 public:
   static nglChar mUnknown;  ///< Default char used to mark in place a conversion error. Unused if set to '\\0'

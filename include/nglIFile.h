@@ -23,7 +23,7 @@
 This input stream is based on the nglFile API, and can be used by all objects
 based on generic input streams.
 */
-class NGL_API nglIFile : public nglIStream
+class nglIFile : public nglIStream
 {
 public:
   /** @name Life cycle */

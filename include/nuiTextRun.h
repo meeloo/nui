@@ -22,7 +22,7 @@ class nuiTextLayout;
  http://www.freetype.org/freetype2/docs/glyphs/
  - the font/metrics example bundled with the regular NGL distribution
  */
-class NGL_API nuiGlyphInfo
+class nuiGlyphInfo
 {
 public:
   int   Index;     ///< Glyph index in font face

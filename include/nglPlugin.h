@@ -34,7 +34,7 @@ You will find a specific nglPlugin based class for every hosting application. De
 also have to provide a nglKernel based class for every hosting application (this is transparent
 to the user).
 */
-class NGL_API nglPlugin
+class nglPlugin
 {
 public:
 

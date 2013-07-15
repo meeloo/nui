@@ -32,7 +32,7 @@ This class is not available if the _NOGFX_ symbol is defined.
 This class let you find suitable resolutions for fullscreen rendering windows
 (see nglWindowInfo for more details).
 */
-class NGL_API nglVideoMode
+class nglVideoMode
 {
 public:
   /** @name Life cycle */

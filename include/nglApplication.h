@@ -57,7 +57,7 @@ provided you include <nglKernel.h>. For instance to exit the application you jus
 App->Quit(); // Does not return immediatly, read the manual !
 \endcode
 */
-class NGL_API nglApplication : public nglKernel
+class nglApplication : public nglKernel
 {
 public:
 
@@ -339,7 +339,7 @@ If you want to keep a global reference to your application whith its proper
 type, you will have to use the NGL_APP_CREATE_EX() macro in place of
 NGL_APP_CREATE() \e and manage this global yourself.
 */
-extern NGL_API class nglKernel* App;
+extern class nglKernel* App;
 
 
 /*

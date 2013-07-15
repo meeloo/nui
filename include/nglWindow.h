@@ -35,7 +35,7 @@ typedef int32 nglTouchId;
 class nuiMainMenu;
 
 
-class NGL_API nglMouseInfo  ///< Mouse status description
+class nglMouseInfo  ///< Mouse status description
 {
 public:
   nglMouseInfo()
@@ -160,7 +160,7 @@ To effectively destroy the window and release the OpenGL context, simply
 delete the object.
 */
 
-class NGL_API nglWindow : public nglContext
+class nglWindow : public nglContext
 {
 public:
   enum StateChange  ///< See SetState()
@@ -989,7 +989,7 @@ If the the \a nglWindow::FullScreen flag is set in \a Flags, the window dimensio
 should match a valid video mode (see nglVideoMode::Enum()), otherwise regular
 window mode will be used as a fallback.
 */
-class NGL_API nglWindowInfo
+class nglWindowInfo
 {
 public:
   enum Position  ///<  Window initial position hint

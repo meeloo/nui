@@ -47,7 +47,7 @@ Note that the core keyboard and mouse are not handled by thic class, they
 are implicitly managed by nglWindow due to their interaction with the windowing
 system.
  */
-class NGL_API nglInputDevice
+class nglInputDevice
 {
 public:
   /** @name Enumeration */

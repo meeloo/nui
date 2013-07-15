@@ -61,7 +61,7 @@ share the same services :
 - high level text read and write, any encoding (conversions done on the fly
   and transparently), efficient line by line extraction
 */
-class NGL_API nglStream
+class nglStream
 {
 public:
   /** @name Life cycle */

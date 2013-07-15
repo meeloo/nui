@@ -67,7 +67,7 @@ The \e node can be either :
 - a \e non-leaf (folder)
 - invalid (an incomplete path name)
 */
-class NGL_API nglPath
+class nglPath
 {
 public:
 	//! Portable char set
@@ -238,7 +238,7 @@ public:
    the right operand will be nglPath(pAppend).
    */
 
-  friend NGL_API nglPath operator+ (const nglPath& rPath, const nglPath& rAppend);
+  friend nglPath operator+ (const nglPath& rPath, const nglPath& rAppend);
 	/*!< nglPath concatenation
 	\param rPath current object
 	\param rAppend path to append
@@ -257,7 +257,7 @@ public:
 	nglPath("/usr/bin/") + nglPath("/perl") //              '/usr/bin/perl'
 	\endcode
 	*/
-	friend NGL_API nglPath operator+ (const nglPath& rPath, const nglString& rAppend);
+	friend nglPath operator+ (const nglPath& rPath, const nglString& rAppend);
 	/*!< nglPath concatenation
 	\param rPath current object
 	\param rAppend path to append
@@ -265,27 +265,27 @@ public:
 	Variant of the operator+(const nglPath&, const nglString&),
 	the right operand will be nglPath(rAppend).
 	*/
-	friend NGL_API bool operator==(const nglPath& rLeft, const nglPath& rRight);
+	friend bool operator==(const nglPath& rLeft, const nglPath& rRight);
 	/*!< nglPath comparison
 	The comparison is case sensitive, depending on the underlying file system and OS
 	*/
-	friend NGL_API bool operator==(const nglPath& rLeft, const nglString& rRight);
+	friend bool operator==(const nglPath& rLeft, const nglString& rRight);
 	/*!< nglPath comparison
 	The comparison is case sensitive, depending on the underlying file system and OS
 	*/
-	friend NGL_API bool operator==(const nglString& rLeft, const nglPath& rRight);
+	friend bool operator==(const nglString& rLeft, const nglPath& rRight);
 	/*!< nglPath comparison
 	The comparison is case sensitive, depending on the underlying file system and OS
 	*/
-	friend NGL_API bool operator!=(const nglPath& rLeft, const nglPath& rRight);
+	friend bool operator!=(const nglPath& rLeft, const nglPath& rRight);
 	/*!< nglPath comparison
 	The comparison is case sensitive, depending on the underlying file system and OS
 	*/
-	friend NGL_API bool operator!=(const nglPath& rLeft, const nglString& rRight);
+	friend bool operator!=(const nglPath& rLeft, const nglString& rRight);
 	/*!< nglPath comparison
 	The comparison is case sensitive, depending on the underlying file system and OS
 	*/
-	friend NGL_API bool operator!=(const nglString& rLeft, const nglPath& rRight);
+	friend bool operator!=(const nglString& rLeft, const nglPath& rRight);
 	/*!< nglPath comparison
 	The comparison is case sensitive, depending on the underlying file system and OS
 	*/
@@ -321,7 +321,7 @@ bool operator<(const nglPath& rLeft, const nglPath& rRight);
 /*!
 Volume description, as returned by nglPath::GetVolumes().
 */
-class NGL_API nglPathVolume
+class nglPathVolume
 {
 public:
 	typedef uint64 VolumeFlags;

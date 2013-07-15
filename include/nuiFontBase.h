@@ -104,7 +104,7 @@ private:
  See nuiFontBase::GetInfo() for more informations. See also the insightfull introduction
  to digital typography on FreeType's site : http://www.freetype.org/freetype2/docs/glyphs/ .
  */
-class NGL_API nuiFontInfo
+class nuiFontInfo
 {
 public:
   const class nuiFontBase* pFont;  ///< Back reference to the described font object

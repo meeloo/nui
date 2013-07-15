@@ -140,7 +140,7 @@ Handle* MyClasschild::OpenMoreRessource()
 }
 \endcode
 */
-class NGL_API nglError
+class nglError
 {
 public:
   /** @name Life cycle */
