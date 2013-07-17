@@ -114,12 +114,17 @@ public:
   virtual void SetProperty(const nglString& rName, const nglString& rValue); ///< Add or change a property of the object.
   virtual bool AddChild(nuiWidgetPtr pChild);
 
+  virtual bool MouseClicked(const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
+  virtual bool MouseMoved(const nglMouseInfo& rInfo);
+
 private:
   void ComputeConstraint(const nuiLayoutConstraint& rC, float& ActualStart, float& ActualStop, float Start, float Stop, float IdealSize, int32 AnchorIndex);
   float ComputeAnchorPosition(const nglString& rName, int32 AnchorIndex, float Start, float Stop) const;
   std::map<nuiWidget*, std::pair<nuiLayoutConstraint, nuiLayoutConstraint> > mConstraints;
   std::map<nglString, std::pair<float, nuiAnchorType> > mAnchors[2];
 
+  nglString mMovingAnchor[2];
   void DoLayout(const nuiRect& rRect);
 };
 

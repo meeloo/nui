@@ -757,4 +757,65 @@ bool nuiLayout::SetRect(const nuiRect& rRect)
   return true;
 }
 
+bool nuiLayout::MouseClicked(const nglMouseInfo& rInfo)
+{
+  Grab();
+
+  return false;
+}
+
+bool nuiLayout::MouseUnclicked(const nglMouseInfo& rInfo)
+{
+  Ungrab();
+  return false;
+}
+
+bool nuiLayout::MouseMoved(const nglMouseInfo& rInfo)
+{
+  if (HasGrab())
+  {
+  }
+  else
+  {
+    const float LA_QUEUE_DU_MICKEY = 2;
+    // Look for anchors:
+    for (int i = 0; i < 2; i++)
+    {
+      mMovingAnchor[i].Nullify();
+
+      auto it = mAnchors[i].begin();
+      auto end = mAnchors[i].end();
+
+      while (it != end)
+      {
+        nglString anchor = it->first;
+        if (i == 0)
+        {
+          float pos = ComputeAnchorPosition(anchor, i, 0, mRect.GetWidth());
+          if (rInfo.X >= (pos - LA_QUEUE_DU_MICKEY) && rInfo.X <= (pos + LA_QUEUE_DU_MICKEY))
+            mMovingAnchor[i] = anchor;
+        }
+        if (i == 1)
+        {
+          float pos = ComputeAnchorPosition(anchor, i, 0, mRect.GetHeight());
+          if (rInfo.Y >= (pos - LA_QUEUE_DU_MICKEY) && rInfo.Y <= (pos + LA_QUEUE_DU_MICKEY))
+            mMovingAnchor[i] = anchor;
+        }
+        ++it;
+      }
+    }
+
+    if (mMovingAnchor[0].IsNull() && mMovingAnchor[1].IsNull())
+      SetMouseCursor(eCursorDoNotSet);
+    else if (mMovingAnchor[0].IsNull() && !mMovingAnchor[1].IsNull())
+      SetMouseCursor(eCursorResizeWE);
+    else if (!mMovingAnchor[0].IsNull() && mMovingAnchor[1].IsNull())
+      SetMouseCursor(eCursorResizeNS);
+    else
+      SetMouseCursor(eCursorMove);
+
+    NGL_OUT("Mouse anchors: %s - %s\n", mMovingAnchor[0].GetChars(), mMovingAnchor[1].GetChars());
+  }
+  return false;
+}
 
