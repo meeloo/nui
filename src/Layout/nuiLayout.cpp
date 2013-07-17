@@ -788,18 +788,22 @@ bool nuiLayout::MouseMoved(const nglMouseInfo& rInfo)
 
       while (it != end)
       {
-        nglString anchor = it->first;
-        if (i == 0)
+        if (it->second.second == eAnchorAbsolute)
         {
-          float pos = ComputeAnchorPosition(anchor, i, 0, mRect.GetWidth());
-          if (rInfo.X >= (pos - LA_QUEUE_DU_MICKEY) && rInfo.X <= (pos + LA_QUEUE_DU_MICKEY))
-            mMovingAnchor[i] = anchor;
-        }
-        if (i == 1)
-        {
-          float pos = ComputeAnchorPosition(anchor, i, 0, mRect.GetHeight());
-          if (rInfo.Y >= (pos - LA_QUEUE_DU_MICKEY) && rInfo.Y <= (pos + LA_QUEUE_DU_MICKEY))
-            mMovingAnchor[i] = anchor;
+          nglString anchor = it->first;
+
+          if (i == 0)
+          {
+            float pos = ComputeAnchorPosition(anchor, i, 0, mRect.GetWidth());
+            if (rInfo.X >= (pos - LA_QUEUE_DU_MICKEY) && rInfo.X <= (pos + LA_QUEUE_DU_MICKEY))
+              mMovingAnchor[i] = anchor;
+          }
+          if (i == 1)
+          {
+            float pos = ComputeAnchorPosition(anchor, i, 0, mRect.GetHeight());
+            if (rInfo.Y >= (pos - LA_QUEUE_DU_MICKEY) && rInfo.Y <= (pos + LA_QUEUE_DU_MICKEY))
+              mMovingAnchor[i] = anchor;
+          }
         }
         ++it;
       }

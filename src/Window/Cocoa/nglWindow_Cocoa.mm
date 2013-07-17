@@ -1048,14 +1048,66 @@ void nglWindow::Invalidate()
 
 bool nglWindow::SetCursor(nuiMouseCursor Cursor)
 {
-///< No Cursor relevance here
+  mCursor = Cursor;
+  switch (Cursor)
+  {
+    case eCursorNone:
+      [NSCursor hide]; break;
+
+    case eCursorArrow:
+      [[NSCursor arrowCursor] set]; break;
+    case eCursorCross:
+      [[NSCursor crosshairCursor] set]; break;
+    case eCursorIBeam:
+      [[NSCursor IBeamCursor] set]; break;
+    case eCursorHand:
+      [[NSCursor openHandCursor] set]; break;
+    case eCursorClosedHand:
+      [[NSCursor closedHandCursor] set]; break;
+    case eCursorPointingHand:
+      [[NSCursor pointingHandCursor] set]; break;
+    case eCursorHelp:
+      [[NSCursor contextualMenuCursor] set]; break;
+    case eCursorWait:
+      [[NSCursor arrowCursor] set]; break;
+    case eCursorCaret:
+      [[NSCursor IBeamCursor] set]; break;
+    case eCursorDnD:
+      [[NSCursor dragLinkCursor] set]; break;
+    case eCursorForbid:
+      [[NSCursor operationNotAllowedCursor] set]; break;
+    case eCursorMove:
+      [[NSCursor openHandCursor] set]; break;
+    case eCursorResize:
+      [[NSCursor openHandCursor] set]; break;
+    case eCursorResizeNS:
+      [[NSCursor resizeUpDownCursor] set]; break;
+    case eCursorResizeWE:
+      [[NSCursor resizeLeftRightCursor] set]; break;
+    case eCursorResizeN:
+      [[NSCursor resizeUpCursor] set]; break;
+    case eCursorResizeS:
+      [[NSCursor resizeDownCursor] set]; break;
+    case eCursorResizeW:
+      [[NSCursor resizeLeftCursor] set]; break;
+    case eCursorResizeE:
+      [[NSCursor resizeRightCursor] set]; break;
+    case eCursorResizeNW:
+      [[NSCursor pointingHandCursor] set]; break;
+    case eCursorResizeNE:
+      [[NSCursor pointingHandCursor] set]; break;
+    case eCursorResizeSW:
+      [[NSCursor pointingHandCursor] set]; break;
+    case eCursorResizeSE:
+      [[NSCursor pointingHandCursor] set]; break;
+  }
   return true;
 }
 
 nuiMouseCursor nglWindow::GetCursor() const
 {
 ///< No Cursor relevance here
-  return eCursorNone;
+  return mCursor;
 }
 
 nglWindow::EventMask nglWindow::GetEventMask() const
