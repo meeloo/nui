@@ -95,6 +95,20 @@ public:
   void SetVerticalAnchorPosition(const nglString& rName, float position);
   void SetHorizontalAnchorPosition(const nglString& rName, float position);
 
+  void SetVerticalAnchorMovable(const nglString& rName, bool movable);
+  void SetHorizontalAnchorMovable(const nglString& rName, bool movable);
+  void SetVerticalAnchorMinimum(const nglString& rName, float position);
+  void SetVerticalAnchorMaximum(const nglString& rName, float position);
+  void SetHorizontalAnchorMinimum(const nglString& rName, float position);
+  void SetHorizontalAnchorMaximum(const nglString& rName, float position);
+
+  bool GetVerticalAnchorMovable(const nglString& rName) const;
+  bool GetHorizontalAnchorMovable(const nglString& rName) const;
+  float GetVerticalAnchorMinimum(const nglString& rName) const;
+  float GetHorizontalAnchorMinimum(const nglString& rName) const;
+  float GetVerticalAnchorMaximum(const nglString& rName) const;
+  float GetHorizontalAnchorMaximum(const nglString& rName) const;
+
   void SetVerticalAnchorType(const nglString& rName, nuiAnchorType Type);
   void SetHorizontalAnchorType(const nglString& rName, nuiAnchorType Type);
 
@@ -122,9 +136,21 @@ private:
   void ComputeConstraint(const nuiLayoutConstraint& rC, float& ActualStart, float& ActualStop, float Start, float Stop, float IdealSize, int32 AnchorIndex);
   float ComputeAnchorPosition(const nglString& rName, int32 AnchorIndex, float Start, float Stop) const;
   std::map<nuiWidget*, std::pair<nuiLayoutConstraint, nuiLayoutConstraint> > mConstraints;
-  std::map<nglString, std::pair<float, nuiAnchorType> > mAnchors[2];
+  class Anchor
+  {
+  public:
+    Anchor(float pos = 0, nuiAnchorType type = eAnchorAbsolute, bool movable = false, float min = 0, float max = 0);
+    float mPosition;
+    nuiAnchorType mType;
+    float mMinimum;
+    float mMaximum;
+    bool mMovable;
+  };
+  std::map<nglString, Anchor > mAnchors[2];
 
   nglString mMovingAnchor[2];
+  float mMovingAnchorPos[2];
   void DoLayout(const nuiRect& rRect);
+  float mClickX, mClickY;
 };
 

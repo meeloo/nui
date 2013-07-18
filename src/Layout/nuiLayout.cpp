@@ -293,49 +293,49 @@ nuiLayout::~nuiLayout()
 
 void nuiLayout::SetHorizontalAnchor(const nglString& rName, float position, nuiAnchorType Type)
 {
-  mAnchors[0][rName] = std::make_pair(position, Type);
+  mAnchors[0][rName] = Anchor(position, Type);
 }
 
 
 void nuiLayout::SetVerticalAnchor(const nglString& rName, float position, nuiAnchorType Type)
 {
-  mAnchors[1][rName] = std::make_pair(position, Type);
+  mAnchors[1][rName] = Anchor(position, Type);
 }
 
 void nuiLayout::SetVerticalAnchorPosition(const nglString& rName, float position)
 {
   auto it = mAnchors[1].find(rName);
   if (it != mAnchors[1].end())
-    it->second.first = position;
+    it->second.mPosition = position;
   else
-    mAnchors[1][rName] = std::make_pair(position, eAnchorAbsolute);
+    mAnchors[1][rName] = Anchor(position, eAnchorAbsolute);
 }
 
 void nuiLayout::SetHorizontalAnchorPosition(const nglString& rName, float position)
 {
   auto it = mAnchors[0].find(rName);
   if (it != mAnchors[0].end())
-    it->second.first = position;
+    it->second.mPosition = position;
   else
-    mAnchors[0][rName] = std::make_pair(position, eAnchorAbsolute);
+    mAnchors[0][rName] = Anchor(position, eAnchorAbsolute);
 }
 
 void nuiLayout::SetVerticalAnchorType(const nglString& rName, nuiAnchorType Type)
 {
   auto it = mAnchors[1].find(rName);
   if (it != mAnchors[1].end())
-    it->second.second = Type;
+    it->second.mType = Type;
   else
-    mAnchors[1][rName] = std::make_pair(0, Type);
+    mAnchors[1][rName] = Anchor(0, Type);
 }
 
 void nuiLayout::SetHorizontalAnchorType(const nglString& rName, nuiAnchorType Type)
 {
   auto it = mAnchors[0].find(rName);
   if (it != mAnchors[0].end())
-    it->second.second = Type;
+    it->second.mType = Type;
   else
-    mAnchors[0][rName] = std::make_pair(0, Type);
+    mAnchors[0][rName] = Anchor(0, Type);
 }
 
 
@@ -346,7 +346,7 @@ float nuiLayout::GetHorizontalAnchorPosition(const nglString& rName) const
   if (it == mAnchors[0].end())
     return 0;
 
-  return it->second.first;
+  return it->second.mPosition;
 }
 
 float nuiLayout::GetVerticalAnchorPosition(const nglString& rName) const
@@ -355,7 +355,7 @@ float nuiLayout::GetVerticalAnchorPosition(const nglString& rName) const
   if (it == mAnchors[1].end())
     return 0;
 
-  return it->second.first;
+  return it->second.mPosition;
 }
 
 nuiAnchorType nuiLayout::GetHorizontalAnchorType(const nglString& rName) const
@@ -364,7 +364,7 @@ nuiAnchorType nuiLayout::GetHorizontalAnchorType(const nglString& rName) const
   if (it == mAnchors[0].end())
     return eAnchorAbsolute;
 
-  return it->second.second;
+  return it->second.mType;
 }
 
 nuiAnchorType nuiLayout::GetVerticalAnchorType(const nglString& rName) const
@@ -373,7 +373,7 @@ nuiAnchorType nuiLayout::GetVerticalAnchorType(const nglString& rName) const
   if (it == mAnchors[1].end())
     return eAnchorAbsolute;
 
-  return it->second.second;
+  return it->second.mType;
 }
 
 bool nuiLayout::AddChild(nuiWidgetPtr pChild)
@@ -386,6 +386,105 @@ bool nuiLayout::AddChild(nuiWidgetPtr pChild)
 
   return false;
 }
+
+void nuiLayout::SetVerticalAnchorMovable(const nglString& rName, bool movable)
+{
+  auto it = mAnchors[1].find(rName);
+  if (it != mAnchors[1].end())
+    it->second.mMovable = movable;
+}
+
+void nuiLayout::SetHorizontalAnchorMovable(const nglString& rName, bool movable)
+{
+  auto it = mAnchors[0].find(rName);
+  if (it != mAnchors[0].end())
+    it->second.mMovable = movable;
+}
+
+void nuiLayout::SetVerticalAnchorMinimum(const nglString& rName, float position)
+{
+  auto it = mAnchors[1].find(rName);
+  if (it != mAnchors[1].end())
+    it->second.mMinimum = position;
+}
+
+void nuiLayout::SetVerticalAnchorMaximum(const nglString& rName, float position)
+{
+  auto it = mAnchors[1].find(rName);
+  if (it != mAnchors[1].end())
+    it->second.mMaximum = position;
+}
+
+void nuiLayout::SetHorizontalAnchorMinimum(const nglString& rName, float position)
+{
+  auto it = mAnchors[0].find(rName);
+  if (it != mAnchors[0].end())
+    it->second.mMinimum = position;
+}
+
+void nuiLayout::SetHorizontalAnchorMaximum(const nglString& rName, float position)
+{
+  auto it = mAnchors[0].find(rName);
+  if (it != mAnchors[0].end())
+    it->second.mMaximum = position;
+}
+
+
+bool nuiLayout::GetVerticalAnchorMovable(const nglString& rName) const
+{
+  auto it = mAnchors[1].find(rName);
+  if (it != mAnchors[1].end())
+    return it->second.mMovable;
+
+  return false;
+}
+
+bool nuiLayout::GetHorizontalAnchorMovable(const nglString& rName) const
+{
+  auto it = mAnchors[0].find(rName);
+  if (it != mAnchors[0].end())
+    return it->second.mMovable;
+
+  return false;
+}
+
+float nuiLayout::GetVerticalAnchorMinimum(const nglString& rName) const
+{
+  auto it = mAnchors[1].find(rName);
+  if (it != mAnchors[1].end())
+    return it->second.mMinimum;
+
+  return 0;
+}
+
+float nuiLayout::GetHorizontalAnchorMinimum(const nglString& rName) const
+{
+  auto it = mAnchors[0].find(rName);
+  if (it != mAnchors[0].end())
+    return it->second.mMinimum;
+
+  return false;
+}
+
+float nuiLayout::GetVerticalAnchorMaximum(const nglString& rName) const
+{
+  auto it = mAnchors[1].find(rName);
+  if (it != mAnchors[1].end())
+    return it->second.mMaximum;
+
+  return false;
+}
+
+float nuiLayout::GetHorizontalAnchorMaximum(const nglString& rName) const
+{
+  auto it = mAnchors[1].find(rName);
+  if (it != mAnchors[1].end())
+    return it->second.mMaximum;
+
+  return false;
+}
+
+
 
 
 void nuiLayout::SetConstraint(nuiWidget* pWidget, const nglString& rDescription)
@@ -460,6 +559,80 @@ public:
     {
       mGetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::GetVerticalAnchorPosition);
       mSetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::SetVerticalAnchorPosition);
+    }
+  }
+
+protected:
+  float _Get() const
+  {
+    return mGetAnchorDelegate(mAnchor);
+  }
+
+  void _Set(float value)
+  {
+    mSetAnchorDelegate(mAnchor, value);
+  }
+
+  nuiFastDelegate1<const nglString&, float> mGetAnchorDelegate;
+  nuiFastDelegate2<const nglString&, float> mSetAnchorDelegate;
+  nglString mAnchor;
+};
+
+class LayoutAnchorMinValue : public nuiAttribute<float>
+{
+public:
+  LayoutAnchorMinValue(const nglString& rName, nuiLayout* pLayout)
+  : nuiAttribute<float>(rName, nuiUnitNone, nuiMakeDelegate(this, &LayoutAnchorMinValue::_Get), nuiMakeDelegate(this, &LayoutAnchorMinValue::_Set), NUI_INVALID_RANGE),
+  mAnchor(rName.Extract(16))
+  {
+    nuiAttributeBase::SetAsInstanceAttribute(true);
+
+    if (rName.CompareLeft("HAnchorsMinimum_", true) == 0)
+    {
+      mGetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::GetHorizontalAnchorMinimum);
+      mSetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::SetHorizontalAnchorMinimum);
+    }
+    else if (rName.CompareLeft("VAnchorsMinimum_", true) == 0)
+    {
+      mGetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::GetVerticalAnchorMinimum);
+      mSetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::SetVerticalAnchorMinimum);
+    }
+  }
+
+protected:
+  float _Get() const
+  {
+    return mGetAnchorDelegate(mAnchor);
+  }
+
+  void _Set(float value)
+  {
+    mSetAnchorDelegate(mAnchor, value);
+  }
+
+  nuiFastDelegate1<const nglString&, float> mGetAnchorDelegate;
+  nuiFastDelegate2<const nglString&, float> mSetAnchorDelegate;
+  nglString mAnchor;
+};
+
+class LayoutAnchorMaxValue : public nuiAttribute<float>
+{
+public:
+  LayoutAnchorMaxValue(const nglString& rName, nuiLayout* pLayout)
+  : nuiAttribute<float>(rName, nuiUnitNone, nuiMakeDelegate(this, &LayoutAnchorMaxValue::_Get), nuiMakeDelegate(this, &LayoutAnchorMaxValue::_Set), NUI_INVALID_RANGE),
+  mAnchor(rName.Extract(16))
+  {
+    nuiAttributeBase::SetAsInstanceAttribute(true);
+
+    if (rName.CompareLeft("HAnchorsMaximum_", true) == 0)
+    {
+      mGetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::GetHorizontalAnchorMaximum);
+      mSetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::SetHorizontalAnchorMaximum);
+    }
+    else if (rName.CompareLeft("VAnchorsMaximum_", true) == 0)
+    {
+      mGetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::GetVerticalAnchorMaximum);
+      mSetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::SetVerticalAnchorMaximum);
     }
   }
 
@@ -567,6 +740,94 @@ protected:
   nglString mAnchor;
 };
 
+
+class LayoutAnchorMovable : public nuiAttribute<bool>
+{
+public:
+  LayoutAnchorMovable(const nglString& rName, nuiLayout* pLayout)
+  : nuiAttribute<bool>(rName, nuiUnitNone, nuiMakeDelegate(this, &LayoutAnchorMovable::_Get), nuiMakeDelegate(this, &LayoutAnchorMovable::_Set), NUI_INVALID_RANGE),
+  mAnchor(rName.Extract(16))
+  {
+    nuiAttributeBase::SetAsInstanceAttribute(true);
+
+    if (rName.CompareLeft("HAnchorsMovable_", true) == 0)
+    {
+      mGetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::GetHorizontalAnchorMovable);
+      mSetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::SetHorizontalAnchorMovable);
+    }
+    else if (rName.CompareLeft("VAnchorsMovable_", true) == 0)
+    {
+      mGetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::GetVerticalAnchorMovable);
+      mSetAnchorDelegate = nuiMakeDelegate(pLayout, &nuiLayout::SetVerticalAnchorMovable);
+    }
+  }
+
+  void FormatDefault(bool value, nglString& string) const
+  {
+    if (value == true)
+    {
+      string = "true";
+    }
+    else if (value == false)
+    {
+      string = "false";
+    }
+
+    return true;
+  }
+
+  bool ToString(void* pTarget, int32 index0, int32 index1, nglString& rString) const
+  //bool ToString(bool Value, nglString& rString) const
+  {
+    bool Value = mGetAnchorDelegate(mAnchor);
+    if (Value == eAnchorAbsolute)
+    {
+      rString = "true";
+      return true;
+    }
+    else if (Value == eAnchorRelative)
+    {
+      rString = "false";
+      return true;
+    }
+    return false;
+  }
+
+  bool FromString(void* pTarget, int32 index0, int32 index1, const nglString& rString) const
+  //bool FromString(bool& Value, const nglString& rString) const
+  {
+    if (rString.Compare("true", false) == 0)
+    {
+      mSetAnchorDelegate(mAnchor, true);
+      return true;
+    }
+    else if (rString.Compare("false", false) == 0)
+    {
+      mSetAnchorDelegate(mAnchor, false);
+      return true;
+    }
+    return false;
+  }
+
+
+
+protected:
+  bool _Get() const
+  {
+    return mGetAnchorDelegate(mAnchor);
+  }
+
+  void _Set(bool value)
+  {
+    mSetAnchorDelegate(mAnchor, value);
+  }
+
+  nuiFastDelegate1<const nglString&, bool> mGetAnchorDelegate;
+  nuiFastDelegate2<const nglString&, bool> mSetAnchorDelegate;
+  nglString mAnchor;
+};
+
+
 void nuiLayout::SetProperty(const nglString& rName, const nglString& rValue)
 {
   nuiAttribBase attr(GetAttribute(rName));
@@ -579,22 +840,60 @@ void nuiLayout::SetProperty(const nglString& rName, const nglString& rValue)
   if (rName.CompareLeft("VAnchors_", true) == 0 || rName.CompareLeft("HAnchors_", true) == 0)
   {
     // Create an attribute for this anchor, unless it exists already
-    AddAttribute(new LayoutAnchorValue(rName, this));
+    nuiAttribBase attr(GetAttribute(rName));
+    if (!attr.IsValid())
     {
-      nuiAttribBase attr(GetAttribute(rName));
-      NGL_ASSERT(attr.IsValid());
-      attr.FromString(rValue);
+      AddAttribute(new LayoutAnchorValue(rName, this));
+      attr = GetAttribute(rName);
     }
+    attr.FromString(rValue);
   }
   else if (rName.CompareLeft("VAnchorsType_", true) == 0 || rName.CompareLeft("HAnchorsType_", true) == 0)
   {
     // Create an attribute for this anchor, unless it exists already
-    AddAttribute(new nuiAttribute<nuiAnchorType>(rName, this));
+    nuiAttribBase attr(GetAttribute(rName));
+    if (!attr.IsValid())
     {
-      nuiAttribBase attr(GetAttribute(rName));
-      NGL_ASSERT(attr.IsValid());
-      attr.FromString(rValue);
+      AddAttribute(new nuiAttribute<nuiAnchorType>(rName, this));
+      attr = GetAttribute(rName);
     }
+    attr.FromString(rValue);
+  }
+  else if (rName.CompareLeft("VAnchorsMovable_", true) == 0 || rName.CompareLeft("HAnchorsMovable_", true) == 0)
+  {
+    // Create an attribute for this anchor, unless it exists already
+    nuiAttribBase attr(GetAttribute(rName));
+    if (!attr.IsValid())
+    {
+      AddAttribute(new LayoutAnchorMovable(rName, this));
+      attr = GetAttribute(rName);
+    }
+
+    attr.FromString(rValue);
+  }
+  else if (rName.CompareLeft("VAnchorsMinimum_", true) == 0 || rName.CompareLeft("HAnchorsMinimum_", true) == 0)
+  {
+    // Create an attribute for this anchor, unless it exists already
+    nuiAttribBase attr(GetAttribute(rName));
+    if (!attr.IsValid())
+    {
+      AddAttribute(new LayoutAnchorMinValue(rName, this));
+      attr = GetAttribute(rName);
+    }
+
+    attr.FromString(rValue);
+  }
+  else if (rName.CompareLeft("VAnchorsMaximum_", true) == 0 || rName.CompareLeft("HAnchorsMaximum_", true) == 0)
+  {
+    // Create an attribute for this anchor, unless it exists already
+    nuiAttribBase attr(GetAttribute(rName));
+    if (!attr.IsValid())
+    {
+      AddAttribute(new LayoutAnchorMaxValue(rName, this));
+      attr = GetAttribute(rName);
+    }
+
+    attr.FromString(rValue);
   }
   else
   {
@@ -759,14 +1058,29 @@ bool nuiLayout::SetRect(const nuiRect& rRect)
 
 bool nuiLayout::MouseClicked(const nglMouseInfo& rInfo)
 {
-  Grab();
-
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+  {
+    mClickX = rInfo.X;
+    mClickY = rInfo.Y;
+    if (!mMovingAnchor[0].IsNull())
+      mMovingAnchorPos[0] = ComputeAnchorPosition(mMovingAnchor[0], 0, 0, mRect.GetWidth());
+    if (!mMovingAnchor[1].IsNull())
+      mMovingAnchorPos[1] = ComputeAnchorPosition(mMovingAnchor[1], 1, 0, mRect.GetHeight());
+    Grab();
+    return true;
+  }
   return false;
 }
 
 bool nuiLayout::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  Ungrab();
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+  {
+    Ungrab();
+
+    UpdateLayout();
+    return true;
+  }
   return false;
 }
 
@@ -774,6 +1088,42 @@ bool nuiLayout::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (HasGrab())
   {
+    float diffX = rInfo.X - mClickX;
+    float diffY = rInfo.Y - mClickY;
+    bool update = false;
+
+    if (!mMovingAnchor[0].IsNull())
+    {
+      auto it = mAnchors[0].find(mMovingAnchor[0]);
+      if (it != mAnchors[0].end())
+      {
+        it->second.mPosition = mMovingAnchorPos[0] + diffX;
+        if (it->second.mPosition > it->second.mMaximum)
+          it->second.mPosition = it->second.mMaximum;
+        else if (it->second.mPosition < it->second.mMinimum)
+          it->second.mPosition = it->second.mMinimum;
+      }
+      update = true;
+    }
+
+    if (!mMovingAnchor[1].IsNull())
+    {
+      auto it = mAnchors[1].find(mMovingAnchor[1]);
+      if (it != mAnchors[1].end())
+      {
+        it->second.mPosition = mMovingAnchorPos[1] + diffY;
+        if (it->second.mPosition > it->second.mMaximum)
+          it->second.mPosition = it->second.mMaximum;
+        else if (it->second.mPosition < it->second.mMinimum)
+          it->second.mPosition = it->second.mMinimum;
+      }
+      update = true;
+    }
+
+    if (update)
+      UpdateLayout();
+
+    return true;
   }
   else
   {
@@ -788,7 +1138,7 @@ bool nuiLayout::MouseMoved(const nglMouseInfo& rInfo)
 
       while (it != end)
       {
-        if (it->second.second == eAnchorAbsolute)
+        if (it->second.mMovable && it->second.mType == eAnchorAbsolute)
         {
           nglString anchor = it->first;
 
@@ -812,9 +1162,9 @@ bool nuiLayout::MouseMoved(const nglMouseInfo& rInfo)
     if (mMovingAnchor[0].IsNull() && mMovingAnchor[1].IsNull())
       SetMouseCursor(eCursorDoNotSet);
     else if (mMovingAnchor[0].IsNull() && !mMovingAnchor[1].IsNull())
-      SetMouseCursor(eCursorResizeWE);
-    else if (!mMovingAnchor[0].IsNull() && mMovingAnchor[1].IsNull())
       SetMouseCursor(eCursorResizeNS);
+    else if (!mMovingAnchor[0].IsNull() && mMovingAnchor[1].IsNull())
+      SetMouseCursor(eCursorResizeWE);
     else
       SetMouseCursor(eCursorMove);
 
@@ -823,3 +1173,8 @@ bool nuiLayout::MouseMoved(const nglMouseInfo& rInfo)
   return false;
 }
 
+nuiLayout::Anchor::Anchor(float pos, nuiAnchorType type, bool movable, float min, float max)
+: mPosition(pos), mType(type), mMovable(movable), mMinimum(min), mMaximum(max)
+{
+
+}
