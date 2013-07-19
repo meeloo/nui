@@ -21,7 +21,7 @@ typedef std::map<nglString, nuiTexture*, nglString::LessFunctor> nuiTextureMap;
 typedef std::set<nuiTextureCache*> nuiTextureCacheSet;
 
 /// This class implements a basic image widget.
-class NUI_API nuiTexture : public nuiObject
+class nuiTexture : public nuiObject
 {
 public:
   // Constructors and destructors are protected!

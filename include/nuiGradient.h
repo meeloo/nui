@@ -19,7 +19,7 @@ class nuiDrawContext;
 class nuiShape;
 
 
-class NUI_API nuiGradient
+class nuiGradient
 {
 public:
   nuiGradient();
@@ -36,7 +36,7 @@ protected:
 
 };
 
-class NUI_API nuiReflection
+class nuiReflection
 {
 public:
   nuiReflection(float Intensity, float Center);

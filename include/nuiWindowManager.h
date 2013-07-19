@@ -14,7 +14,7 @@ class nuiWindow;
 typedef nuiWindow* nuiWindowPtr;
 class nuiWindow;
 
-class NUI_API nuiWindowManager : public nuiSimpleContainer
+class nuiWindowManager : public nuiSimpleContainer
 {
 public:
   nuiWindowManager();
@@ -66,7 +66,7 @@ private:
 };
 
 /*
-class NUI_API nuiWindow : public nuiSimpleContainer
+class nuiWindow : public nuiSimpleContainer
 {
 public:
 nuiWindow(nuiWindowManager* pParent, nuiWindow* pWindow);

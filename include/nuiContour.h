@@ -12,7 +12,7 @@
 #include "nuiPathGenerator.h"
 #include "nuiSpline.h"
 
-class NUI_API nuiContour : public nuiPathGenerator
+class nuiContour : public nuiPathGenerator
 {
 public:
   nuiContour();

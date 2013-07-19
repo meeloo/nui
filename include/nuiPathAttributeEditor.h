@@ -11,7 +11,7 @@
 #include "nui.h"
 #include "nuiAttributeEditor.h"
 
-class NUI_API nuiPathAttributeEditor : public nuiAttributeEditor
+class nuiPathAttributeEditor : public nuiAttributeEditor
 {
 public:
 

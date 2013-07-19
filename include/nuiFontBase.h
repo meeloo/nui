@@ -140,7 +140,7 @@ public:
 };
 
 
-class NUI_API nuiFontBase: public nuiObject
+class nuiFontBase: public nuiObject
 {
 
 public:
@@ -458,7 +458,7 @@ protected:
   
 
 private:
-  class NUI_API GlyphLocation
+  class GlyphLocation
   {
   public:
     GlyphLocation();

@@ -15,7 +15,7 @@
 
 typedef class nuiTreeNode* nuiTreeNodePtr;
 
-class NUI_API nuiTreeNode : public nuiTree<nuiWidget>
+class nuiTreeNode : public nuiTree<nuiWidget>
 {
 public:
   nuiTreeNode(nuiWidgetPtr pElement, bool Opened = false, bool Selected = false, bool DrawTreeHandle = true, bool alwaysDisplayTreeHandle=false);
@@ -83,7 +83,7 @@ protected:
 
 
 /// implements a nuiTreeNode with an additional user value, that can be retrieved when the treenode is selected
-template <class T> class NUI_API nuiTreeNodeValue : public nuiTreeNode
+template <class T> class nuiTreeNodeValue : public nuiTreeNode
 {
 public:
 
@@ -124,7 +124,7 @@ typedef nuiFastDelegate1<nuiTreeNode*,nglDragAndDrop*>  DragStartDelegate;
 typedef nuiFastDelegate3<nuiTreeNode*,nglDragAndDrop*,const nglString&>  DragRequestDataDelegate;
 typedef nuiFastDelegate2<nuiTreeNode*,bool>  DragStopDelegate;
 
-class NUI_API nuiTreeView : public nuiSimpleContainer
+class nuiTreeView : public nuiSimpleContainer
 {
 public:
   nuiTreeView(nuiTreeNode* pTree = NULL, bool displayRoot=true);

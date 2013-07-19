@@ -1168,7 +1168,7 @@ bool nuiLayout::MouseMoved(const nglMouseInfo& rInfo)
     else
       SetMouseCursor(eCursorMove);
 
-    NGL_OUT("Mouse anchors: %s - %s\n", mMovingAnchor[0].GetChars(), mMovingAnchor[1].GetChars());
+    //NGL_OUT("Mouse anchors: %s - %s\n", mMovingAnchor[0].GetChars(), mMovingAnchor[1].GetChars());
   }
   return false;
 }

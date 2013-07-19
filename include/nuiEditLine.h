@@ -11,7 +11,7 @@
 #include "nuiEditText.h"
 
 /// This is a simple widget for editing one line of text. Pressing enter fires the "Selected" event.
-class NUI_API nuiEditLine : public nuiEditText
+class nuiEditLine : public nuiEditText
 {
 public:
   nuiEditLine(const nglString& rText = _T(""));

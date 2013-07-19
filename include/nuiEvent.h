@@ -14,7 +14,7 @@ class nuiEventSource;
 class nuiVariant;
 
 /// This is the basic event object used in the user level event management system. 
-class NUI_API nuiEvent
+class nuiEvent
 {
 public:
   nuiEvent(int Type = -1);  
@@ -41,7 +41,7 @@ private:
 };
 
 /// You are never supposed to use this class directly!!! NEVER EVER :). 
-class NUI_API nuiEventTargetBase
+class nuiEventTargetBase
 {
 public:
   typedef nuiFastDelegate1<const nuiEvent&> Delegate;
@@ -58,7 +58,7 @@ public:
   void Disconnect(nuiEventSource& rSource, const nuiDelegateMemento& rTFunc);
   
 protected:
-  class NUI_API Link
+  class Link
   {
   public:
     nuiDelegateMemento  mTargetFunc;
@@ -78,7 +78,7 @@ protected:
 };
 
 /// Do not touch this either!
-class NUI_API nuiEventSource
+class nuiEventSource
 {
 public:  
   nuiEventSource();
@@ -123,7 +123,7 @@ private:
 
 
 /// This template is the basis of the event reception system of nui.
-template <class T> class NUI_API nuiEventSink : public nuiEventTargetBase
+template <class T> class nuiEventSink : public nuiEventTargetBase
 {
 private:
   typedef void (T::*TargetFunc)(const nuiEvent&);
@@ -173,7 +173,7 @@ private:
 };
 
 /// This is a helper class that implements a simple event source with a fixed type.
-template <int eventtype> class NUI_API nuiSimpleEventSource : public nuiEventSource
+template <int eventtype> class nuiSimpleEventSource : public nuiEventSource
 {
 public:
   nuiSimpleEventSource()

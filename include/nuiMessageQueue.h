@@ -16,7 +16,7 @@ class nuiNotification;
 
 /// implements a message queue for multi-threaded communication
 /// see nuiTest, MessageQueueWindow, for an application example
-class NUI_API nuiMessageQueue
+class nuiMessageQueue
 {
 public : 
 

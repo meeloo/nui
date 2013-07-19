@@ -14,7 +14,7 @@
 #include "nuiLabelAttribute.h"
 
 /// This widget implements a simple box with a cell for the title and a cell for the contents
-class NUI_API nuiTitledPane : public nuiVBox
+class nuiTitledPane : public nuiVBox
 {
 public:
   nuiTitledPane(nuiWidget* pTitleWidget = NULL);

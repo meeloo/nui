@@ -15,7 +15,7 @@
 #include "nuiPoint.h"
 #include "nuiPath.h"
 
-class NUI_API nuiPathGenerator : public nuiRefCount
+class nuiPathGenerator : public nuiRefCount
 {
 public:
   nuiPathGenerator();

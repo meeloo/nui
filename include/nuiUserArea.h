@@ -13,7 +13,7 @@
 #include "nuiEvent.h"
 #include "nuiMouseEvent.h"
 
-class NUI_API nuiDrawEvent : public nuiEvent
+class nuiDrawEvent : public nuiEvent
 {
 public:
   nuiDrawEvent(nuiDrawContext* pContext)
@@ -34,7 +34,7 @@ public:
 
 //////// EVENT SOURCES:
 /// This is a helper class to easily dispatch draw events
-class NUI_API nuiDrawEventSource : public nuiEventSource
+class nuiDrawEventSource : public nuiEventSource
 {
 public:
   nuiDrawEventSource()
@@ -50,7 +50,7 @@ public:
 
 
 /// This widget implements a user area. It draws basicaly nothing by itself and fires a UserDraw event instead. It up to the programmer to catch this event and fill the area with whatever opengl code he wants. 
-class NUI_API nuiUserArea : public nuiWidget
+class nuiUserArea : public nuiWidget
 {
 public:
   nuiUserArea();

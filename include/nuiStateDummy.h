@@ -10,7 +10,7 @@
 
 #include "nuiContainer.h"
 
-class NUI_API nuiStateDummy : public nuiSimpleContainer
+class nuiStateDummy : public nuiSimpleContainer
 {
 public:
   nuiStateDummy(nuiWidgetPtr pNormal = NULL, nuiWidgetPtr pSelected = NULL, nuiWidgetPtr pDisabled = NULL);

@@ -15,7 +15,7 @@
 
 class nuiShape;
 
-class NUI_API nuiShapeView : public nuiWidget
+class nuiShapeView : public nuiWidget
 {
 public:
   nuiShapeView(nuiShape* pShape);

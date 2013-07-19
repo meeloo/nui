@@ -16,7 +16,7 @@
 #include "nuiContainer.h"
 
 /// This class implements a simple list of elements. It has no multicolumn support, see nuiTable for multicolumn lists.
-class NUI_API nuiList : public nuiSimpleContainer
+class nuiList : public nuiSimpleContainer
 {
 public:
   nuiList(nuiOrientation orientation = nuiVertical);

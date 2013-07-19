@@ -16,7 +16,7 @@
 #include "nuiDrawContext.h"
 
 /// This widget implements a pane area. It draws basic shape and can intercept mouse events
-class NUI_API nuiPane : public nuiSimpleContainer
+class nuiPane : public nuiSimpleContainer
 {
 public:
   nuiPane(const nuiColor& rFillColor = nuiColor(.75f,.75f,.75f,.75f), const nuiColor& rStrokeColor = nuiColor(.5f,.5f,.5f,.75f), nuiShapeMode ShapeMode = eStrokeAndFillShape, nuiBlendFunc BlendFunc = nuiBlendTransp);

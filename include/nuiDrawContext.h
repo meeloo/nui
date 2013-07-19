@@ -52,7 +52,7 @@ enum nuiRenderer
 #undef DrawRect
 #endif
 
-class NUI_API nuiDrawContext
+class nuiDrawContext
 {
 
 public:

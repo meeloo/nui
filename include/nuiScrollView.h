@@ -15,7 +15,7 @@
 #include "nuiContainer.h"
 #include "nuiWidgetAnimation.h"
 
-class NUI_API nuiScrollView : public nuiSimpleContainer
+class nuiScrollView : public nuiSimpleContainer
 {
 public:
   nuiScrollView(bool Horizontal = true, bool Vertical = true);

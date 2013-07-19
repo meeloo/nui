@@ -13,7 +13,7 @@
 #include "nuiEditText.h"
 
 /// This is a non editable text display widget based on nuiEditText.
-class NUI_API nuiText : public nuiEditText
+class nuiText : public nuiEditText
 {
 public:
   nuiText(const nglString& rText = nglString::Empty);

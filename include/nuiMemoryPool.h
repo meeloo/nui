@@ -9,7 +9,7 @@
 
 /* The nuiMemoryPool should not be used directly. See nuiMemoryPoolGuard and new (nuiMemoryPool) below.
  */
-class NUI_API nuiMemoryPool
+class nuiMemoryPool
 {
   friend class nuiMemoryPoolGuard;
 public:
@@ -39,7 +39,7 @@ protected:
  When the guard is destroyed, it will roll back all allocations since the guard was created.
  This can be used to stack guards by scope.
  */
-class NUI_API nuiMemoryPoolGuard
+class nuiMemoryPoolGuard
 {
 public:
   nuiMemoryPoolGuard(nuiMemoryPool& rPool);

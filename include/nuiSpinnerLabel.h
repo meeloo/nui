@@ -18,7 +18,7 @@
 
 
 /// This widget implements a text label with mouse controls. It can be used as a basic building block for buttons, list headers, list elements, etc...
-class NUI_API nuiSpinnerLabel : public nuiFormatedLabel
+class nuiSpinnerLabel : public nuiFormatedLabel
 {
 public:
 

@@ -15,7 +15,7 @@
 #include "nuiLabelAttribute.h"
 
 /// This widget inherits from nuiTitledPane to create a pane area with a label(or a widget) as a title and with an arrow to open/close the client area
-class NUI_API nuiFolderPane : public nuiTitledPane
+class nuiFolderPane : public nuiTitledPane
 {
 public:
   nuiFolderPane(nuiWidget* pTitleWidget = NULL, bool opened=true);

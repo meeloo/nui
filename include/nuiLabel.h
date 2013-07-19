@@ -17,7 +17,7 @@
 class nuiFontRequest;
 
 /// This widget implements a text label. It can be used as a basic building block for buttons, list headers, list elements, etc...
-class NUI_API nuiLabel : public nuiWidget
+class nuiLabel : public nuiWidget
 {
 public:
   nuiLabel(const nglString& Text = nglString::Empty, nuiTheme::FontStyle FontStyle=nuiTheme::Default);

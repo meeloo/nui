@@ -15,7 +15,7 @@ class nuiDrawContext;
 
 class nuiSVGElement;
 
-class NUI_API nuiSVGShape
+class nuiSVGShape
 {
 public:
   nuiSVGShape();

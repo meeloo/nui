@@ -12,7 +12,7 @@
 
 #include "nuiPathGenerator.h"
 
-class NUI_API nuiPathOptimizer : public nuiPathGenerator
+class nuiPathOptimizer : public nuiPathGenerator
 {
 public:
   nuiPathOptimizer(nuiPathGenerator* pPath, float AngleThreshold = .007f, float DistThreshold = 4.0f);

@@ -16,7 +16,7 @@
 
 //////////// EVENTS:
 /// This is a helper class to easily dispatch mouse clicked events
-template<nuiEventId eventId>  class NUI_API nuiMouseEvent: public nuiEvent
+template<nuiEventId eventId>  class nuiMouseEvent: public nuiEvent
 {
 public:
   nuiMouseEvent(const nglMouseInfo& rInfo)
@@ -37,7 +37,7 @@ typedef nuiMouseEvent<nuiMoved> nuiMouseMovedEvent;
 
 //////// EVENT SOURCES:
 /// This is a helper class to easily dispatch mouse clicked events
-template<nuiEventId eventId> class NUI_API nuiMouseEventSource : public nuiEventSource
+template<nuiEventId eventId> class nuiMouseEventSource : public nuiEventSource
 {
 public:
   nuiMouseEventSource()

@@ -14,7 +14,7 @@ class nuiRenderObject;
 class nuiShape;
 class nuiPathGenerator;
 
-class NUI_API nuiTessellator
+class nuiTessellator
 {
 public:
   explicit nuiTessellator(nuiPathGenerator* pPathGenerator);

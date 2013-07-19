@@ -10,7 +10,7 @@
 #include "nui.h"
 #include "nuiFolderPane.h"
 
-class NUI_API nuiAttributeEditorPane : public nuiFolderPane
+class nuiAttributeEditorPane : public nuiFolderPane
 {
 public:
 

@@ -17,7 +17,7 @@
 #include "nuiFormater.h"
 
 /// This widget implements a formated text label. It's simply based on a nuiLabel and takes a nuiFormater object as an additional parameter
-class NUI_API nuiFormatedLabel : public nuiLabel
+class nuiFormatedLabel : public nuiLabel
 {
 public:
   nuiFormatedLabel(const nuiFormater& rFormater = nuiFormatedLabel::DefaultFormater, double value=0.0F, nuiTheme::FontStyle FontStyle=nuiTheme::Default);

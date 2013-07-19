@@ -13,7 +13,7 @@
 
 class nuiKnob;
 
-class NUI_API nuiRangeKnobAttributeEditor : public nuiAttributeEditor
+class nuiRangeKnobAttributeEditor : public nuiAttributeEditor
 {
 public:
 

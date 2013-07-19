@@ -14,10 +14,10 @@
 typedef class nuiTreeBase* nuiTreePtr;
 
 
-class NUI_API nuiTreeBase : public nuiObject
+class nuiTreeBase : public nuiObject
 {
 public:
-  class NUI_API SortFunction
+  class SortFunction
   {
   public:
     SortFunction();
@@ -90,7 +90,7 @@ private:
   nuiTreeBase* mpParent;
 };
 
-template <class T> class NUI_API nuiTree : public nuiTreeBase
+template <class T> class nuiTree : public nuiTreeBase
 {
 public:
   nuiTree(T* pElement, bool OwnElement = true)
@@ -141,7 +141,7 @@ protected:
 };
 
 
-template <class T> class NUI_API nuiValueTree : public nuiTreeBase
+template <class T> class nuiValueTree : public nuiTreeBase
 {
 public:
   nuiValueTree(const T& rElement)

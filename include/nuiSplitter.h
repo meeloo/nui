@@ -46,7 +46,7 @@ private:
 
 
 /// This is a split view widget. It divides its client area in two views (horizontaly or verticaly) which acts as two subcontainers. The user can change the proportional size of the area, but it is also possible to lock the split to prevent modification.
-class NUI_API nuiSplitter : public nuiSimpleContainer
+class nuiSplitter : public nuiSimpleContainer
 {
   friend class nuiSplitterHandle;
 

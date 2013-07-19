@@ -12,7 +12,7 @@
 #include "nuiWidget.h"
 #include "nuiContainer.h"
 
-class NUI_API nuiProgressBar : public nuiWidget
+class nuiProgressBar : public nuiWidget
 {
 public:
   nuiProgressBar(float Progress);

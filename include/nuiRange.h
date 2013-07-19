@@ -14,7 +14,7 @@
 #include "nuiEventRegistry.h"
 
 /// This class implements the behaviour of a range such as what is needed by a scroll bar for exemple. 
-class NUI_API nuiRange
+class nuiRange
 {
 public:
   nuiRange(double Value=0, double Min=0, double Max=50, double Increment=1, double PageIncrement=10, double PageSize=0, double Origin = std::numeric_limits<double>::quiet_NaN(), float UnitCurve = 1.0f);

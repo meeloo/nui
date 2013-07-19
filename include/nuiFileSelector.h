@@ -96,7 +96,7 @@ private:
   nuiWidgetList mSubElements;
 };
 
-class NUI_API nuiFileSelector : public nuiFileSelectorBase
+class nuiFileSelector : public nuiFileSelectorBase
 {
 public:
   enum DisplayMode

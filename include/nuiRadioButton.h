@@ -17,7 +17,7 @@
 class nuiRadioButtonGroup;
 
 /// This class implements a simple push button that acts as a container for a label, an image, or any other inactive widget element.
-class NUI_API nuiRadioButton : public nuiToggleButton
+class nuiRadioButton : public nuiToggleButton
 { 
 public:
   nuiRadioButton(); ///< Create a simple button (empty).

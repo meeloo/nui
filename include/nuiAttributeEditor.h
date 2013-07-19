@@ -10,7 +10,7 @@
 #include "nui.h"
 #include "nuiSimpleContainer.h"
 
-class NUI_API nuiAttributeEditor : public nuiSimpleContainer
+class nuiAttributeEditor : public nuiSimpleContainer
 {
 public:
 

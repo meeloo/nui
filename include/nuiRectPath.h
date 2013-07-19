@@ -12,7 +12,7 @@
 #include "nuiRect.h"
 
 // nuiRectPath:
-class NUI_API nuiRectPath : public nuiPathGenerator
+class nuiRectPath : public nuiPathGenerator
 {
 public:
   nuiRectPath(const nuiRect& rRect, bool CCW = false);

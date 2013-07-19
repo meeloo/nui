@@ -16,7 +16,7 @@ class nuiMainWindow;
 class nuiTimer;
 class nuiMainMenu;
 
-class NUI_API nuiContextInfo : public nglContextInfo
+class nuiContextInfo : public nglContextInfo
 {
 public:
   enum Type
@@ -33,7 +33,7 @@ public:
 typedef nuiFastDelegate1<nglDragAndDrop*,nuiWidget*>  CreateDragFeedbackDelegate;
 
 /// This class implements the root nui object: the main window of any application.
-class NUI_API nuiMainWindow :  public nuiTopLevel
+class nuiMainWindow :  public nuiTopLevel
 {
 public:
   nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo, const nglContext* pShared = NULL, const nglPath& mResPath = nglPath(ePathCurrent));
@@ -100,7 +100,7 @@ public:
 
   virtual void OnDropped (nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo::Flags Button);
   
-  class NUI_API WidgetCanDrop : public TestWidgetFunctor
+  class WidgetCanDrop : public TestWidgetFunctor
   {
   public:
     WidgetCanDrop(nglDragAndDrop* pDragObject, nuiSize X, nuiSize Y) 
@@ -214,7 +214,7 @@ private:
   
   friend class NGLWindow;
 
-  class NUI_API NGLWindow : public nglWindow
+  class NGLWindow : public nglWindow
   {
   public:
     NGLWindow(nuiMainWindow* pMainWindow, uint Width, uint Height, bool FullScreen);

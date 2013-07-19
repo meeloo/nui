@@ -25,7 +25,7 @@ enum nuiShapeMode
   eDefault
 };
 
-class NUI_API nuiShape : public nuiPathGenerator
+class nuiShape : public nuiPathGenerator
 {
 public:
   nuiShape();

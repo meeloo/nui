@@ -16,7 +16,7 @@
 #include "nuiColorSelector.h"
 #include "nuiHBox.h"
 
-class NUI_API nuiColorAttributeEditor : public nuiAttributeEditor
+class nuiColorAttributeEditor : public nuiAttributeEditor
 {
 public:
 

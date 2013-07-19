@@ -14,7 +14,7 @@ class nuiRadioButton;
 class nuiXMLNode;
 
 // nuiRadioButtonGroup:
-class NUI_API nuiRadioButtonGroup
+class nuiRadioButtonGroup
 {
 public:
   nuiRadioButtonGroup();

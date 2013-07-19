@@ -13,7 +13,7 @@
 
 class nuiNotificationManager;
 
-class NUI_API nuiNotification : public nuiObject
+class nuiNotification : public nuiObject
 {
 public:
   nuiNotification(const nglString& rName);
@@ -22,7 +22,7 @@ public:
 
 };
 
-class NUI_API nuiNotificationObserver
+class nuiNotificationObserver
 {
 public:
   nuiNotificationObserver();
@@ -38,7 +38,7 @@ private:
   
 };
 
-class NUI_API nuiNotificationManager : public nuiRefCount
+class nuiNotificationManager : public nuiRefCount
 {
 public:
   nuiNotificationManager();

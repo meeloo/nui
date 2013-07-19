@@ -18,7 +18,7 @@ class nuiButton;
 
 
 /// This class implements a simple push button that acts as a container for a label, an image, or any other inactive widget element.
-class NUI_API nuiButton : public nuiSimpleContainer
+class nuiButton : public nuiSimpleContainer
 { 
 public:
   nuiButton(); ///< Create a simple button (empty).

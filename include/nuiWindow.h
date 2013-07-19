@@ -19,7 +19,7 @@ class nuiMainWindow;
 class nuiWindowManager;
 
 /// A nui window is an overlapped popup window. It can only be owned by a MainWindow.
-class NUI_API nuiWindow : public nuiSimpleContainer
+class nuiWindow : public nuiSimpleContainer
 {
 public:
   // nuiWindow flags:

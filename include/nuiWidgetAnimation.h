@@ -12,7 +12,7 @@
 #include "nuiWidget.h"
 #include "nuiAnimation.h"
 
-class NUI_API nuiWidgetAnimation : public nuiAnimation
+class nuiWidgetAnimation : public nuiAnimation
 {
 public:
   nuiWidgetAnimation(nuiWidgetPtr pTarget, double DurationInSeconds);
@@ -21,7 +21,7 @@ protected:
   nuiWidgetPtr mpTarget;
 };
 
-class NUI_API nuiMoveRectAnim : public nuiWidgetAnimation
+class nuiMoveRectAnim : public nuiWidgetAnimation
 {
 public:
   nuiMoveRectAnim (nuiWidgetPtr pTarget, double DurationInSeconds, const nuiRect& rSource, const nuiRect& rDestination);
@@ -31,14 +31,14 @@ protected:
   nuiRect mDestination;
 };
 
-class NUI_API nuiMoveToRectAnim : public nuiMoveRectAnim
+class nuiMoveToRectAnim : public nuiMoveRectAnim
 {
 public:
   nuiMoveToRectAnim (nuiWidgetPtr pTarget, double DurationInSeconds, const nuiRect& rDestination);
   void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
 };
 
-class NUI_API nuiMoveAnim : public nuiMoveRectAnim
+class nuiMoveAnim : public nuiMoveRectAnim
 {
 public:
   nuiMoveAnim (nuiWidgetPtr pTarget, double DurationInSeconds, nuiSize X1, nuiSize Y1, nuiSize X2, nuiSize Y2);
@@ -49,14 +49,14 @@ protected:
   nuiSize mX2,mY2;
 };
 
-class NUI_API nuiMoveToAnim : public nuiMoveAnim
+class nuiMoveToAnim : public nuiMoveAnim
 {
 public:
   nuiMoveToAnim (nuiWidgetPtr pTarget, double DurationInSeconds, nuiSize X, nuiSize Y);
   void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
 };
 
-class NUI_API nuiScaleToWidgetAnim : public nuiMoveRectAnim
+class nuiScaleToWidgetAnim : public nuiMoveRectAnim
 {
 public:
   nuiScaleToWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, float Ratio, nuiPosition ScaleBarycenterPosition = nuiCenter);
@@ -66,7 +66,7 @@ protected:
   nuiPosition mPosition;
 };
 
-class NUI_API nuiScaleFromWidgetAnim : public nuiMoveRectAnim
+class nuiScaleFromWidgetAnim : public nuiMoveRectAnim
 {
 public:
   nuiScaleFromWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, float Ratio, nuiPosition ScaleBarycenterPosition = nuiCenter);
@@ -77,7 +77,7 @@ protected:
 };
 
 /////// WIDGET MATRIX ANIMATIONS:
-class NUI_API nuiScaleMatrixWidgetAnim : public nuiWidgetAnimation
+class nuiScaleMatrixWidgetAnim : public nuiWidgetAnimation
 {
 public:
   nuiScaleMatrixWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, float SourceRatio, float DestinationRatio, nuiPosition ScaleBarycenterPosition = nuiCenter);
@@ -91,14 +91,14 @@ protected:
   float mY;
 };
 
-class NUI_API nuiScaleToMatrixWidgetAnim : public nuiScaleMatrixWidgetAnim
+class nuiScaleToMatrixWidgetAnim : public nuiScaleMatrixWidgetAnim
 {
 public:
   nuiScaleToMatrixWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, float DestinationRatio, nuiPosition ScaleBarycenterPosition = nuiCenter);
   virtual void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
 };
 
-class NUI_API nuiScaleFromMatrixWidgetAnim : public nuiScaleMatrixWidgetAnim
+class nuiScaleFromMatrixWidgetAnim : public nuiScaleMatrixWidgetAnim
 {
 public:
   nuiScaleFromMatrixWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, float DestinationRatio, nuiPosition ScaleBarycenterPosition = nuiCenter);
@@ -106,7 +106,7 @@ public:
 };
 
 /////// WIDGET ALPHA ANIMATIONS:
-class NUI_API nuiFadeWidgetAnim : public nuiWidgetAnimation
+class nuiFadeWidgetAnim : public nuiWidgetAnimation
 {
 public:
   nuiFadeWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, float SourceAlpha, float DestinationAlpha);
@@ -118,7 +118,7 @@ protected:
   nuiPosition mPosition;
 };
 
-class NUI_API nuiFadeInWidgetAnim : public nuiFadeWidgetAnim
+class nuiFadeInWidgetAnim : public nuiFadeWidgetAnim
 {
 public:
   nuiFadeInWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, bool StartFromCurrentAlpha);
@@ -128,7 +128,7 @@ private:
   bool mStartFromCurrentAlpha;
 };
 
-class NUI_API nuiFadeOutWidgetAnim : public nuiFadeWidgetAnim
+class nuiFadeOutWidgetAnim : public nuiFadeWidgetAnim
 {
 public:
   nuiFadeOutWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, bool StartFromCurrentAlpha);

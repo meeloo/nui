@@ -13,7 +13,7 @@
 
 class nuiRenderObject;
 
-class NUI_API nuiOutliner : public nuiPathGenerator
+class nuiOutliner : public nuiPathGenerator
 {
 public:
   nuiOutliner(nuiPathGenerator* pPath, float linewidth = 1.0f);

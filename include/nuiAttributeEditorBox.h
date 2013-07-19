@@ -11,7 +11,7 @@
 #include "nuiVBox.h"
 #include "nuiHBox.h"
 
-class NUI_API nuiAttributeEditorBox : public nuiSimpleContainer
+class nuiAttributeEditorBox : public nuiSimpleContainer
 {
 public:
 

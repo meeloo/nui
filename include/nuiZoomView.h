@@ -16,7 +16,7 @@
 #include "nuiRange.h"
 #include "nuiContainer.h"
 
-class NUI_API nuiZoomView : public nuiSimpleContainer
+class nuiZoomView : public nuiSimpleContainer
 {
 public:
   nuiZoomView(nuiScrollBar *pHorizontalScrollbar = NULL, nuiScrollBar *pVerticalScrollbar = NULL, nuiSlider * pHorizontalSlider = NULL, nuiSlider * pVerticalSlider = NULL, bool calcWidthFromIdealSize = true, bool calcHeightFromIdealSize = true);

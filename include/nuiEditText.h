@@ -18,10 +18,10 @@
 
 class nuiFont;
 
-class NUI_API nuiEditText : public nuiSimpleContainer
+class nuiEditText : public nuiSimpleContainer
 {
 protected:
-  class NUI_API TextBlock;
+  class TextBlock;
 
 public:
   nuiEditText(const nglString& rText = nglString::Empty);
@@ -205,7 +205,7 @@ protected:
   bool InsertText(nuiObject* pParams);
   bool NewLine(nuiObject* pParams);
 
-  class NUI_API TextBlock
+  class TextBlock
   {
   public:
     TextBlock(nuiFont* pFont, const nglString& rString, uint begin, uint end);

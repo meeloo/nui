@@ -13,7 +13,7 @@
 #include "nuiSVGShape.h"
 #include "nuiMetaPainter.h"
 
-class NUI_API nuiSVGView : public nuiWidget
+class nuiSVGView : public nuiWidget
 {
 public:
   nuiSVGView(nuiSVGShape* pShape = NULL); ///< Load a svg view from an existing svg shape.

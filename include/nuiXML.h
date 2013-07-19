@@ -17,7 +17,7 @@
 
 class xmlLexer;
 
-class NUI_API nuiStringLessFunctor : public std::binary_function <std::string, std::string, bool>
+class nuiStringLessFunctor : public std::binary_function <std::string, std::string, bool>
 {
 public:
   bool operator()(const std::string& rLeft, const std::string& rRight) const
@@ -37,7 +37,7 @@ class nuiXMLNode;
 typedef std::list<nuiXMLNode*> nuiXMLNodeList;
 
 /// This class implements a very basic (but useful) XML node based on nglString. You will probaly use it in conjonction with the nuiXML class.
-class NUI_API nuiXMLNode
+class nuiXMLNode
 {
 public:
   nuiXMLNode(const char* pName, nuiXMLNode* pParent);
@@ -158,7 +158,7 @@ private:
 };
 
 /// This class implements a very basic (but useful) XML parser/saver based on nglString. Is the basis of the xml widget tree loading/saving scheme.
-class NUI_API nuiXML : public nuiXMLNode
+class nuiXML : public nuiXMLNode
 {
 public:
   nuiXML(const nglString& rName = nglString::Null);

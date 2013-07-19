@@ -116,7 +116,7 @@ private:
 
 
 /// nuiAnimation is a base class that implements a basic animation framework.
-class NUI_API nuiAnimation : public nuiObject
+class nuiAnimation : public nuiObject
 {
 public:
   nuiAnimation();
@@ -205,7 +205,7 @@ protected:
 
 };
 
-class NUI_API nuiWaitAnimation : public nuiAnimation
+class nuiWaitAnimation : public nuiAnimation
 {
 public:
   nuiWaitAnimation(double duration)
@@ -226,7 +226,7 @@ protected:
   double mUserDuration;
 };
 
-class NUI_API nuiMetaAnimation : public nuiAnimation
+class nuiMetaAnimation : public nuiAnimation
 {
 public:
   nuiMetaAnimation ();
@@ -244,7 +244,7 @@ protected:
   std::list<nuiAnimation*> mpAnimations;
 };
 
-class NUI_API nuiAnimationSequence : public nuiAnimation
+class nuiAnimationSequence : public nuiAnimation
 {
 public:
   nuiAnimationSequence ();

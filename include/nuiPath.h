@@ -11,7 +11,7 @@
 //#include "nui.h"
 #include "nuiPoint.h"
 
-class NUI_API nuiPath
+class nuiPath
 {
 public:
   nuiPath();

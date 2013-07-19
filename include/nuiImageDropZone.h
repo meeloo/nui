@@ -11,7 +11,7 @@
 #include "nui.h"
 
 /// This class implements a drag'n drop zone for an image
-class NUI_API nuiImageDropZone : public nuiSimpleContainer
+class nuiImageDropZone : public nuiSimpleContainer
 {
 public:
 	nuiImageDropZone(const nglPath& rImagePath);

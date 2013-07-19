@@ -19,7 +19,7 @@ typedef nglVector2<nuiSize> nuiVector2;
 typedef nglVector3<nuiSize> nuiVector3;
 
 /// This class implements a 2D rectangle with many very useful methods to manage them.
-class NUI_API nuiRect
+class nuiRect
 {
 public:
   nuiRect()

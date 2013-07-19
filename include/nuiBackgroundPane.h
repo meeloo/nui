@@ -18,7 +18,7 @@ enum nuiBackgroundType
 };
 
 /// This widget implements a pane area. It draws a decorated background and can intercept mouse events
-class NUI_API nuiBackgroundPane : public nuiSimpleContainer
+class nuiBackgroundPane : public nuiSimpleContainer
 {
 public:
   nuiBackgroundPane(nuiBackgroundType type = eOutterBackground);

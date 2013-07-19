@@ -13,7 +13,7 @@ class nuiTexture;
 typedef std::map<nglString, nuiSurface*, nglString::LessFunctor> nuiSurfaceMap;
 typedef std::set<nuiSurfaceCache*> nuiSurfaceCacheSet;
 
-class NUI_API nuiSurface : public nuiObject
+class nuiSurface : public nuiObject
 {
 public:
   static nuiSurface* GetSurface (const nglString& rName, bool Acquired); ///< Get a surface from its ID

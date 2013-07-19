@@ -15,12 +15,12 @@
 typedef nuiTreeEventSource<nuiChildAdded, nuiWidget> nuiWidgetAddedEventSource;
 typedef nuiTreeEventSource<nuiChildDeleted, nuiWidget> nuiWidgetDeletedEventSource;
 
-class NUI_API nuiContainer : public nuiWidget
+class nuiContainer : public nuiWidget
 {
   friend class nuiWidget;
   friend class nuiTopLevel;
 public:
-  class NUI_API Iterator
+  class Iterator
   {
   public:
     Iterator(nuiContainer* pContainer, bool DoRefCounting = false);
@@ -41,7 +41,7 @@ public:
     bool mRefCounting;
   };
 
-  class NUI_API ConstIterator
+  class ConstIterator
   {
   public:
     ConstIterator(const nuiContainer* pContainer, bool DoRefCounting = false);

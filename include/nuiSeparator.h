@@ -10,7 +10,7 @@
 
 #include "nui.h"
 
-class NUI_API nuiSeparator : public nuiWidget
+class nuiSeparator : public nuiWidget
 {
 public:
   nuiSeparator(nuiOrientation orientation);

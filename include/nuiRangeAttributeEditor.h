@@ -15,7 +15,7 @@
 #include "nuiSlider.h"
 #include "nuiFormatedLabel.h"
 
-class NUI_API nuiRangeAttributeEditor : public nuiAttributeEditor
+class nuiRangeAttributeEditor : public nuiAttributeEditor
 {
 public:
 

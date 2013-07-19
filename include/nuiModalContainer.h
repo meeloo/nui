@@ -11,7 +11,7 @@
 //#include "nui.h"
 #include "nuiContainer.h"
 
-class NUI_API nuiModalContainer : public nuiSimpleContainer
+class nuiModalContainer : public nuiSimpleContainer
 {
   friend class nuiWidget;
 public:

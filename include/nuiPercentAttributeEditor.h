@@ -12,7 +12,7 @@
 #include "nuiAttributeEditor.h"
 #include "nuiSlider.h"
 
-class NUI_API nuiPercentAttributeEditor : public nuiAttributeEditor
+class nuiPercentAttributeEditor : public nuiAttributeEditor
 {
 public:
 

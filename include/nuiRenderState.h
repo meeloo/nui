@@ -52,7 +52,7 @@ void nuiGetBlendFuncFactors(nuiBlendFunc Func, GLenum& src, GLenum& dst);
 
 #define NUI_MAX_TEXTURE_UNITS 8
 
-class NUI_API nuiRenderState
+class nuiRenderState
 {
 public:
   nuiRenderState();

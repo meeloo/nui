@@ -16,7 +16,7 @@
 #include "nuiContainer.h"
 
 /// This class is a simple placement grid that adjusts its columns and rows sizes according to contained nuiWidget objects
-class NUI_API nuiGrid : public nuiSimpleContainer
+class nuiGrid : public nuiSimpleContainer
 {
 public:
   nuiGrid(uint32 nbcolumns = 0, uint32 nbrows = 0);

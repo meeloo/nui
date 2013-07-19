@@ -13,7 +13,7 @@
 
 class nuiRasterizer;
 
-class NUI_API nuiSoftwarePainter : public nuiPainter, public nuiCacheManager
+class nuiSoftwarePainter : public nuiPainter, public nuiCacheManager
 {
 public:
   nuiSoftwarePainter(nglContext* pContext = NULL);

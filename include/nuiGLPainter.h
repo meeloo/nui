@@ -43,7 +43,7 @@ public:
   }
 };
 
-class NUI_API nuiGLPainter : public nuiPainter, public nuiCacheManager
+class nuiGLPainter : public nuiPainter, public nuiCacheManager
 {
 public:
   nuiGLPainter(nglContext* pContext);

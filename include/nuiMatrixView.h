@@ -170,7 +170,7 @@ private:
 
 
 /// This class is widget built on nuiGrid, containing spinerLabels
-class NUI_API nuiMatrixView : public nuiGrid, public nglTimer  // timer to handle the wheel up/down action
+class nuiMatrixView : public nuiGrid, public nglTimer  // timer to handle the wheel up/down action
 
 {
 public:

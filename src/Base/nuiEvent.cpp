@@ -218,7 +218,7 @@ nuiEventSource::nuiEventSource(const nuiEventSource& rSource)
 }
 
 ////////////////////////////////////////////////////
-//class NUI_API nuiEventTargetBase
+//class nuiEventTargetBase
 nuiEventTargetBase::nuiEventTargetBase(void* pTarget)
 {
   mpTarget = pTarget;

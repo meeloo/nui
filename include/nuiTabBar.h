@@ -13,7 +13,7 @@
 #include "nuiContainer.h"
 #include "nuiButton.h"
 
-class NUI_API nuiTab : public nuiButton
+class nuiTab : public nuiButton
 {
 public:
   nuiTab(); 
@@ -32,7 +32,7 @@ protected:
 };
 
 
-class NUI_API nuiTabsSelectedEvent : public nuiEvent
+class nuiTabsSelectedEvent : public nuiEvent
 {
 public:
   nuiTabsSelectedEvent(const std::list<nuiTab *> &selectedTabs)
@@ -42,7 +42,7 @@ public:
   std::list<nuiTab*> mSelectedTabs;
 };
 
-class NUI_API nuiTabsSelected : public nuiEventSource
+class nuiTabsSelected : public nuiEventSource
 {
 public:
   nuiTabsSelected()
@@ -55,7 +55,7 @@ public:
   }
 };
 
-class NUI_API nuiTabBar : public nuiSimpleContainer
+class nuiTabBar : public nuiSimpleContainer
 {
 public:
   nuiTabBar(); ///< Create a tab bar

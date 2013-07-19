@@ -18,7 +18,7 @@
 #include "nuiContainer.h"
 
 /// Basic slider with range support.
-class NUI_API nuiSlider : public nuiSimpleContainer
+class nuiSlider : public nuiSimpleContainer
 {
 public:
   nuiSlider(nuiOrientation orientation = nuiHorizontal, const nuiRange& rRange = nuiRange());

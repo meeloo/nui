@@ -10,7 +10,7 @@
 
 class nglDeviceInfo;
 
-class NUI_API nuiKernel // See nglKernel to see what the methods do...
+class nuiKernel // See nglKernel to see what the methods do...
 {
 public:
   nuiKernel();

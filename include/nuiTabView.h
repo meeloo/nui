@@ -14,7 +14,7 @@ class nuiGradient;
 class nuiFont;
 class nuiLabel;
 
-class NUI_API TabEvent : public nuiEvent
+class TabEvent : public nuiEvent
 {
 public:
   TabEvent(const uint& index);
@@ -23,7 +23,7 @@ public:
 
 
 
-class NUI_API nuiTabView : public nuiSimpleContainer
+class nuiTabView : public nuiSimpleContainer
 {
 private:
   class Tab;

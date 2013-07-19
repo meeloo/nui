@@ -13,7 +13,7 @@
 #include "nuiPathGenerator.h"
 
 // nuiArc:
-class NUI_API nuiArc : public nuiPathGenerator
+class nuiArc : public nuiPathGenerator
 {
 public:
   nuiArc(const nuiPoint& rStartVertex, const nuiPoint& rStopVertex, float XRadius, float YRadius, float Angle, bool LargeArc, bool Sweep); ///< Create an arc from a start point/end point description. (See SVG documentations).

@@ -12,7 +12,7 @@
 #include "nglString.h"
 
 /// This class implements a basic RGB color management class.
-class NUI_API nuiColor
+class nuiColor
 {
 public:
   explicit nuiColor(float r=0.0f,float g=0.0f, float b=0.0f, float a=1.0f, bool Premultiplied = false)

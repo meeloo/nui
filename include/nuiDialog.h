@@ -14,7 +14,7 @@
 class nuiGrid;
 class nuiButton;
 
-class NUI_API nuiDialog : public nuiModalContainer
+class nuiDialog : public nuiModalContainer
 {
 public: 
   enum DialogResult

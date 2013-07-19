@@ -61,7 +61,7 @@ typedef std::map<nglString, nuiWidgetCreator*, nglString::LessFunctor> nuiWidget
 
 ///////////////////////////////////////////////////////////////////
 
-class NUI_API nuiBuilder
+class nuiBuilder
 {
 public:
   void SetHandler(const nglString& ClassName, const nglString& ClassGroup, nuiCreateWidgetFn pHandler); ///< This method permits to add or override a widget creation function.

@@ -12,7 +12,7 @@
 #include "nuiTreeView.h"
 #include "nuiContainer.h"
 
-class NUI_API nuiColumnTreeView : public nuiTreeView
+class nuiColumnTreeView : public nuiTreeView
 {
 public:
   nuiColumnTreeView(nuiTreeNode* pTree = NULL);
@@ -102,7 +102,7 @@ protected:
   nglString mKey;
 };
 
-class NUI_API nuiColumnTreeViewPreview : public nuiSimpleContainer
+class nuiColumnTreeViewPreview : public nuiSimpleContainer
 {
 public:
   nuiColumnTreeViewPreview(nuiColumnTreeView* pParent);

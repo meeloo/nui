@@ -31,7 +31,7 @@ enum nuiSplineMode
   nuiSplineModeBezierQuadratic
 };
 
-class NUI_API nuiSplineNode
+class nuiSplineNode
 {
 public:
   /** @name Life */
@@ -96,7 +96,7 @@ protected:
 };
 
 
-class NUI_API nuiSpline : public nuiPathGenerator
+class nuiSpline : public nuiPathGenerator
 {
 public:
   nuiSpline();
@@ -173,7 +173,7 @@ private:
 };
 
 
-class NUI_API nuiSplinePoint: public nuiPoint
+class nuiSplinePoint: public nuiPoint
 {
 public:
   nuiSplinePoint() : nuiPoint()

@@ -12,7 +12,7 @@
 #include "nuiColor.h"
 #include "nglVector.h"
 
-class NUI_API nuiCacheManager
+class nuiCacheManager
 {
 public:
   nuiCacheManager() {}
@@ -20,7 +20,7 @@ public:
   virtual void ReleaseCacheObject(void* pHandle) = 0;
 };
 
-class NUI_API nuiRenderArray : public nuiRefCount
+class nuiRenderArray : public nuiRefCount
 {
 public:
   nuiRenderArray(uint32 mode, bool Static = false, bool _3dmesh = false, bool _shape = false);
@@ -226,7 +226,7 @@ private:
   float mMaxZ;
 };
 
-class NUI_API nuiRenderObject
+class nuiRenderObject
 {
 public:
   nuiRenderObject()

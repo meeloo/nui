@@ -24,9 +24,9 @@ This file includes all nui needed headers to ease the creation of precompiled he
 #define NUI_API
 #else
 #ifdef NUI_EXPORTS
-#define NUI_API __declspec(dllexport)
+#define __declspec(dllexport)
 #else
-#define NUI_API __declspec(dllimport)
+#define __declspec(dllimport)
 #endif
 #endif
 #else

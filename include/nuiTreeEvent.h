@@ -12,7 +12,7 @@
 
 class nuiTreeBase;
 
-template <class T> class NUI_API nuiTreeEvent : public nuiEvent
+template <class T> class nuiTreeEvent : public nuiEvent
 {
 public:
   nuiTreeEvent(nuiEventId Id, T* pParent, T* pChild)
@@ -26,7 +26,7 @@ public:
   T* mpChild;
 };
 
-template <nuiEventId Id, class T> class NUI_API nuiTreeEventSource : public nuiEventSource
+template <nuiEventId Id, class T> class nuiTreeEventSource : public nuiEventSource
 {
 public:
   nuiTreeEventSource()

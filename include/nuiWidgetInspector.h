@@ -17,7 +17,7 @@ class nuiWidgetProxy;
 class nuiFolderPane;
 class nuiMetaPainterInspector;
 
-class NUI_API nuiWidgetInspectorNode : public nuiTreeNode
+class nuiWidgetInspectorNode : public nuiTreeNode
 {
 public:
   nuiWidgetInspectorNode(nuiWidget* pTarget);
@@ -34,7 +34,7 @@ private:
 };
 
 
-class NUI_API nuiWidgetInfo : public nuiSimpleContainer
+class nuiWidgetInfo : public nuiSimpleContainer
 {
 public:
   nuiWidgetInfo(nuiWidget* pTarget);
@@ -77,7 +77,7 @@ protected:
   void BuildInfo();
 };
 
-class NUI_API nuiWidgetInspector : public nuiSimpleContainer
+class nuiWidgetInspector : public nuiSimpleContainer
 {
 public:
   nuiWidgetInspector(nuiWidget* pTarget);

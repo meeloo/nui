@@ -17,7 +17,7 @@
 #include "nuiDrawContext.h"
 
 /// This class implements a basic image widget.
-class NUI_API nuiImage : public nuiWidget
+class nuiImage : public nuiWidget
 {
 public:
   explicit nuiImage (nuiTexture* pTexture = NULL, bool TextureAlreadyAcquired = false); ///< Create an image from an allready existing texture object.

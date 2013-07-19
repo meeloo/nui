@@ -13,7 +13,7 @@
 #include "nuiPathGenerator.h"
 
 // nuiPolyLines:
-class NUI_API nuiPolyLine : public nuiPathGenerator
+class nuiPolyLine : public nuiPathGenerator
 {
 public:
   nuiPolyLine(const nuiPath& rVertices);

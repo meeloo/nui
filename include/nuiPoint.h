@@ -17,7 +17,7 @@ enum nuiPointType
   nuiPointTypeStop
 };
 
-class NUI_API nuiPoint: public nuiVector
+class nuiPoint: public nuiVector
 {
 public:
   nuiPoint() : nuiVector(), mType(nuiPointTypeNormal)

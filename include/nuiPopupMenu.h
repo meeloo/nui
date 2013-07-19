@@ -16,7 +16,7 @@
 class nuiTimer;
 class nuiMenuRect;
 
-class NUI_API nuiPopupMenu : public nuiSimpleContainer
+class nuiPopupMenu : public nuiSimpleContainer
 {
 public:
   nuiPopupMenu(nuiWidget* pParent = NULL, nuiTreeNode* pTree = NULL, const nuiRect& rRect = nuiRect(), bool OwnTree = true);
@@ -115,7 +115,7 @@ private:
 };
 
 
-class NUI_API nuiMenuRect
+class nuiMenuRect
 {
 public:
   nuiMenuRect(nuiPopupMenu* pParent, uint32 depth)

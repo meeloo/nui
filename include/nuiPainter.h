@@ -31,7 +31,7 @@
 
 class nuiSurface;
 
-class NUI_API nuiClipper : public nuiRect
+class nuiClipper : public nuiRect
 {
 public:
   nuiClipper(const nuiRect& rRect, bool enable = true)
@@ -64,7 +64,7 @@ public:
   bool mEnabled;
 };
 
-class NUI_API nuiPainter
+class nuiPainter
 {
 public:
   nuiPainter(nglContext* pContext = NULL);

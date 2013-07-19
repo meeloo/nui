@@ -13,7 +13,7 @@
 #include "nuiToggleButton.h"
 
 
-class NUI_API nuiBooleanAttributeEditor : public nuiAttributeEditor
+class nuiBooleanAttributeEditor : public nuiAttributeEditor
 {
 public:
 

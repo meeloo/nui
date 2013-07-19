@@ -27,7 +27,7 @@ class nuiSplitter;
 class nuiLabel;
 
 /// This class implements the nui theme system.
-class NUI_API nuiTheme: public nuiObject
+class nuiTheme: public nuiObject
 {
 public:
   static nuiTheme* GetTheme(); ///< Return the default theme. If no theme exist one is created with the resource path set as the current working directory.

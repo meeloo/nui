@@ -11,7 +11,7 @@
 #include "nuiList.h"
 
 /// This class implements a simple list of file or directory that a user can easily browse. 
-class NUI_API nuiFileList : public nuiList
+class nuiFileList : public nuiList
 {
 public:
   nuiFileList(const nglPath& rPath = ePathCurrent);

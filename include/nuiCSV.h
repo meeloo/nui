@@ -12,7 +12,7 @@
 
 
 /// allows to load and save data in CSV format
-class NUI_API nuiCSV
+class nuiCSV
 {
 public:
   nuiCSV(nglChar separationChar);

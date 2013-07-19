@@ -18,7 +18,7 @@
 
 #ifndef __NUI_NO_GL__
 
-class NUI_API nuiGL2Painter : public nuiGLPainter
+class nuiGL2Painter : public nuiGLPainter
 {
 public:
   nuiGL2Painter(nglContext* pContext);

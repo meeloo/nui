@@ -10,7 +10,7 @@
 
 #include "nuiContainer.h"
 
-class NUI_API nuiHoverDummy : public nuiSimpleContainer
+class nuiHoverDummy : public nuiSimpleContainer
 {
 public:
   nuiHoverDummy(nuiWidgetPtr pHoverOn = NULL, nuiWidgetPtr pHoverOff = NULL);
