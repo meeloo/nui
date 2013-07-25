@@ -119,9 +119,7 @@ nuiSimpleContainer::~nuiSimpleContainer()
     nuiWidgetPtr pItem = pIt->GetWidget();
     if (pItem)
     {
-      if (!pItem->IsTrashed(false))
-        pItem->SetParent(NULL);
-      if (pItem->Release())
+      if (!pItem->IsTrashed(false) && pItem->Release())
         pItem->SetParent(NULL);
     }
   }
