@@ -36,7 +36,7 @@ nuiRect nuiTabView::CalcIdealSize()
   nuiSize w = 0.f, h = 0.f;
   nuiSize W = 0.f, H = 0.f;
 
-  for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); it++)
+  for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); ++it)
   {
     W += (*it)->GetIdealRect().GetWidth();
     H += (*it)->GetIdealRect().GetHeight();
@@ -47,7 +47,7 @@ nuiRect nuiTabView::CalcIdealSize()
   mIdealIconsRect = IdealRect;
   
   w = h = 0.f;
-  for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++)
+  for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it)
   {
     w = MAX(w, (*it)->GetIdealRect().GetWidth());
     h = MAX(h, (*it)->GetIdealRect().GetHeight());
@@ -112,7 +112,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
   nuiSize X = 0;
   nuiSize R = 1.f;
   nuiSize Tmp;
-  uint i = 0;
+  int32 i = 0;
 
   if (mTabPosition == nuiRight || mTabPosition == nuiLeft)
   {
@@ -134,7 +134,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
       float XOff = TabRect.GetWidth() * mFoldRatio;
       TabRect.Move(XOff, 0.0f);
       X += XOff;
-      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
       {
         (*it)->SetLayout(TabRect);
         Tmp = (nuiSize)ToNearest(R * mIcons[i]->GetIdealRect().GetHeight());
@@ -148,7 +148,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
       float YOff = -TabRect.GetHeight() * mFoldRatio;
       TabRect.Move(0.0f, YOff);
       Y += YOff;
-      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
       {
         (*it)->SetLayout(TabRect);
         Tmp = (nuiSize)ToNearest(R * mIcons[i]->GetIdealRect().GetWidth());
@@ -162,7 +162,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
       float XOff = -TabRect.GetWidth() * mFoldRatio;
       TabRect.Move(XOff, 0.0f);
       X += XOff;
-      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
       {
         (*it)->SetLayout(TabRect);
         Tmp = (nuiSize)ToNearest(R * mIcons[i]->GetIdealRect().GetHeight());
@@ -177,7 +177,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
       Y = TabRect.Bottom();
       TabRect.Move(0.0f, YOff);
       Y += YOff;
-      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
       {
         (*it)->SetLayout(TabRect);
         Tmp = (nuiSize)ToNearest(R * mIcons[i]->GetIdealRect().GetWidth());
@@ -197,7 +197,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
       X = TabRect.GetWidth();
       TabRect.Move(XOff, 0.0f);
       X += XOff;
-      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
       {
         (*it)->SetLayout(TabRect);
         Tmp = (nuiSize)ToNearest(R * mIcons[i]->GetIdealRect().GetHeight());
@@ -212,7 +212,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
       float YOff = -TabRect.GetHeight() * mFoldRatio;
       TabRect.Move(0.0f, YOff);
       Y += YOff;
-      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
       {
         (*it)->SetLayout(TabRect);
         Tmp = (nuiSize)ToNearest(R * mIcons[i]->GetIdealRect().GetWidth());
@@ -227,7 +227,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
       float XOff = -TabRect.GetWidth() * mFoldRatio;
       TabRect.Move(XOff, 0.0f);
       X += XOff;
-      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
       {
         (*it)->SetLayout(TabRect);
         Tmp = (nuiSize)ToNearest(R * mIcons[i]->GetIdealRect().GetHeight());
@@ -243,7 +243,7 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
       Y = TabRect.Bottom();
       TabRect.Move(0.0f, YOff);
       Y += YOff;
-      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+      for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
       {
         (*it)->SetLayout(TabRect);
         Tmp = (nuiSize)ToNearest(R * mIcons[i]->GetIdealRect().GetWidth());
@@ -259,18 +259,18 @@ bool nuiTabView::SetRect(const nuiRect& rRect)
 bool nuiTabView::Draw(nuiDrawContext* pContext)
 {
   pContext->SetStrokeColor(nuiColor(1.f,1.f,0.f));
-  for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); it++)
+  for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); ++it)
   {
     DrawChild(pContext, (*it));
   }
-  if (mFoldRatio > -1.0f)
+  if (mFoldRatio > -1.0f && !mTabs.empty())
     DrawChild(pContext, mTabs[mCurrentTabIndex]);
   return true;
 }
 
 bool nuiTabView::MouseClicked   (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 {
-  for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); it++)
+  for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); ++it)
     if ((*it)->GetRect().IsInside(X,Y))
       return true;
   return false;
@@ -278,26 +278,28 @@ bool nuiTabView::MouseClicked   (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
 
 bool nuiTabView::MouseUnclicked (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 {
-  for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); it++)
+  for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); ++it)
     if ((*it)->GetRect().IsInside(X,Y))
       return true;
   return false;
 }
  
 
-void nuiTabView::AddTab(const nglString& rTitle, nuiWidget* pContents)
+int32 nuiTabView::AddTab(const nglString& rTitle, nuiWidget* pContents)
 {
   nuiLabel* pLabel = new nuiLabel(rTitle);
   pLabel->SetBorder(4,2);
   AddTab(pLabel, pContents);
+  return mTabs.size() - 1;
 }
 
-void nuiTabView::AddTab(nuiWidget* pTitle, nuiWidget* pContents)
+int32 nuiTabView::AddTab(nuiWidget* pTitle, nuiWidget* pContents)
 {
   InsertTab(pTitle, pContents, mIcons.size());
+  return mIcons.size() - 1;
 }
 
-void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, uint pos)
+void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, int32 pos)
 {
   nuiSimpleContainer* pDecoContents;
   
@@ -341,9 +343,9 @@ void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, uint pos)
   }
   else
   {
-    uint t = 0;
+    int32 t = 0;
     std::vector<Tab*>::iterator i = mIcons.begin();
-    for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++, t++)
+    for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i, ++t)
     {
       if (t == pos)
       {
@@ -365,7 +367,7 @@ void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, uint pos)
 void nuiTabView::RemoveTab(nuiWidget* pTab)
 {
   std::vector<Tab*>::iterator i = mIcons.begin();
-  for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++)
+  for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
   {
     if (*it == pTab)
     {
@@ -380,13 +382,13 @@ void nuiTabView::RemoveTab(nuiWidget* pTab)
   }
 }
 
-void nuiTabView::RemoveTab(const uint& tab_index)
+void nuiTabView::RemoveTab(int32 tab_index)
 {
   NGL_ASSERT(tab_index < mIcons.size());
 
-  uint t = 0;
+  int32 t = 0;
   std::vector<Tab*>::iterator i = mIcons.begin();
-  for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); it++, i++, t++)
+  for (std::vector<nuiWidget*>::iterator it = mTabs.begin(); it != mTabs.end(); ++it, ++i, ++t)
   {
     if (t == tab_index)
     {
@@ -404,7 +406,7 @@ void nuiTabView::RemoveTab(const uint& tab_index)
 void nuiTabView::OnIconClicked(const nuiEvent& rEvent)
 {
   Tab* pIcon = (Tab*)(rEvent.mpUser);
-  for (uint i = 0; i < mIcons.size(); i++)
+  for (int32 i = 0; i < mIcons.size(); ++i)
   {
     if (mIcons[i] == pIcon)
     {
@@ -436,15 +438,15 @@ void nuiTabView::OnTabEnterDrag(const nuiEvent& rEvent)
     OnIconClicked(rEvent);
 }
 
-void nuiTabView::SelectTab(const uint& rIndex)
+void nuiTabView::SelectTab(int32 index)
 {
-  NGL_ASSERT(rIndex < mIcons.size());
+  NGL_ASSERT(index < mIcons.size());
 //  if (mCurrentTabIndex == rIndex)
 //    return;
 
   ((Tab*)(mIcons[mCurrentTabIndex]))->SetSelected(false);
   mTabs[mCurrentTabIndex]->SetEnabled(false);
-  mCurrentTabIndex = rIndex;
+  mCurrentTabIndex = index;
   mTabs[mCurrentTabIndex]->SetEnabled(true);
 
   ((Tab*)(mIcons[mCurrentTabIndex]))->SetSelected(true);
@@ -453,6 +455,53 @@ void nuiTabView::SelectTab(const uint& rIndex)
   else
     InvalidateLayout();
 }
+
+void nuiTabView::SelectTabByContents(nuiWidget* pContents)
+{
+  int32 tab = GetTabIndexByContents(pContents);
+  SelectTab(tab);
+}
+
+void nuiTabView::SelectTabByHeader(nuiWidget* pHeader)
+{
+  int32 tab = GetTabIndexByHeader(pHeader);
+  SelectTab(tab);
+}
+
+int32 nuiTabView::GetTabIndexByContents(nuiWidget* pContents) const
+{
+  int32 index = 0;
+  auto i = mIcons.begin();
+  for (auto it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
+  {
+    if (((nuiSimpleContainer*)*it)->GetChild(0) == pContents)
+    {
+      return index;
+    }
+
+    index++;
+  }
+
+  return -1;
+}
+
+int32 nuiTabView::GetTabIndexByHeader(nuiWidget* pHeader) const
+{
+  int32 index = 0;
+  auto i = mIcons.begin();
+  for (auto it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
+  {
+    if ((*i)->GetChild(0) == pHeader)
+    {
+      return index;
+    }
+
+    index++;
+  }
+
+  return -1;
+}
+
 
 void nuiTabView::SetTabPosition(nuiPosition tabPosition)
 {
@@ -486,9 +535,9 @@ nuiPosition nuiTabView::GetTabPosition()
   return mTabPosition;
 }
 
-uint nuiTabView::GetTabCount()
+int32 nuiTabView::GetTabCount()
 {
-  return (uint)mIcons.size();
+  return (int32)mIcons.size();
 }
 
 void nuiTabView::SetFoldable( bool Foldable )
@@ -536,7 +585,7 @@ bool nuiTabView::GetChangeOnDrag() const
   return mChangeOnDrag;
 }
 
-TabEvent::TabEvent(const uint& index) : nuiEvent(), mTabIndex(index)
+TabEvent::TabEvent(int32 index) : nuiEvent(), mTabIndex(index)
 {
 
 }

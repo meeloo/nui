@@ -17,8 +17,8 @@ class nuiLabel;
 class TabEvent : public nuiEvent
 {
 public:
-  TabEvent(const uint& index);
-  uint mTabIndex;
+  TabEvent(int32 index);
+  int32 mTabIndex;
 };
 
 
@@ -41,21 +41,25 @@ public:
   void OnIconClicked(const nuiEvent& rEvent);
   void OnTabEnterDrag(const nuiEvent& rEvent);
 
-  virtual void AddTab(const nglString& rTitle, nuiWidget* pContents);
-  virtual void AddTab(nuiWidget* pTitle, nuiWidget* pContents);
-  virtual void InsertTab(nuiWidget* pTitle, nuiWidget* pContents, uint position);
+  virtual int32 AddTab(const nglString& rTitle, nuiWidget* pContents);
+  virtual int32 AddTab(nuiWidget* pTitle, nuiWidget* pContents);
+  virtual void InsertTab(nuiWidget* pTitle, nuiWidget* pContents, int32 position);
   virtual void RemoveTab(nuiWidget* pTab);
-  virtual void RemoveTab(const uint& tab_index);
+  virtual void RemoveTab(int32 tab_index);
    
-  uint GetTabCount();
+  int32 GetTabCount();
 
   nuiPosition GetTabPosition();
   
   nuiOrientation GetOrientation();
   void SetTabPosition(nuiPosition tabPosition);
 
-  void SelectTab(const uint& index);
-  uint GetSelectedTab() const { return mCurrentTabIndex; }
+  void SelectTab(int32 index);
+  void SelectTabByContents(nuiWidget* pContents);
+  void SelectTabByHeader(nuiWidget* pHeader);
+  int32 GetTabIndexByContents(nuiWidget* pContents) const;
+  int32 GetTabIndexByHeader(nuiWidget* pHeader) const;
+  int32 GetSelectedTab() const { return mCurrentTabIndex; }
   void EnableChildrenRectUnion(bool set);
   bool GetChildrenRectUnion() const;
 
@@ -71,7 +75,7 @@ public:
   nuiEventSink<nuiTabView> mTabViewEvents;
   nuiSimpleEventSource<0> TabSelect;
 protected:
-  uint mCurrentTabIndex;
+  int32 mCurrentTabIndex;
   nuiPosition mTabPosition;
 
   std::vector<nuiWidget*> mTabs;
