@@ -68,9 +68,9 @@ bool nuiList::Draw(nuiDrawContext* pContext)
       nuiRect rect = pItem->GetRect();
       irect.MoveTo(rect.Left(), rect.Top());
       if (mOrientation == nuiHorizontal)
-        irect.SetWidth(GetRect().GetWidth());
+        irect.SetHeight(GetRect().GetHeight());
       else
-        irect.SetWidth(GetRect().GetHeight());
+        irect.SetWidth(GetRect().GetWidth());
 
       if (pItem->IsSelected())
         pTheme->DrawSelectionBackground(pContext, irect, pItem);
