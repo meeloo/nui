@@ -467,20 +467,25 @@ bool nuiRange::MakeInRangeVisual(double Position, double size)
   }
   else
   {
-    nuiRange bis;
-    bis.mMaximum = -mMaximum;
-    bis.mMinimum = -mMinimum;
-    bis.mPageSize = mPageSize;
-    bis.mValue = -mValue;
-    bis.mIncrement = -mIncrement;
-    bis.mPageIncrement = -mPageIncrement;
-    bis.mOrigin = -mOrigin;
-    bis.mUnitCurve = mUnitCurve;
-    bis.mDiscreetStepSize = mDiscreetStepSize;
-    bis.mEvents = mEvents;
+    if (mMaximum != mMinimum)
+    {
+      nuiRange bis;
+      bis.mMaximum = -mMaximum;
+      bis.mMinimum = -mMinimum;
+      bis.mPageSize = mPageSize;
+      bis.mValue = -mValue;
+      bis.mIncrement = -mIncrement;
+      bis.mPageIncrement = -mPageIncrement;
+      bis.mOrigin = -mOrigin;
+      bis.mUnitCurve = mUnitCurve;
+      bis.mDiscreetStepSize = mDiscreetStepSize;
+      bis.mEvents = mEvents;
 
-    bis.MakeInRangeVisual(-Position, size);
-    SetValue(-bis.GetValue());
+      bis.MakeInRangeVisual(-Position, size);
+      SetValue(-bis.GetValue());
+    }
+    else
+      SetValue(mMinimum);
   }
   return tmp != mValue;
 }
