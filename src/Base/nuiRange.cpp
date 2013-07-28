@@ -447,12 +447,10 @@ bool nuiRange::MakeInRangeVisual(double Position, double size)
     if (Position < mMinimum)
     {
       Position = mMinimum;
-      return tmp != mValue;
     }
     if (Position + size >= mMaximum)
     {
-      size = MAX(0, mMaximum - Position);
-      return tmp != mValue;
+      Position = MAX(0, mMaximum - mPageSize);
     }
 
     if (size > mPageSize)

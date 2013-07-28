@@ -644,6 +644,9 @@ void nuiScrollView::OnHotRectChanged(const nuiEvent& rEvent)
     {
       mpHorizontal->GetRange().MakeInRangeVisual(rect.Left(), rect.GetWidth());
     }
+    nglString str;
+    mpVertical->GetRange().ToString(str);
+    NGL_OUT("New HotRect: %s (range = %s)\n", rect.GetValue().GetChars(), str.GetChars());
   }
 }
 

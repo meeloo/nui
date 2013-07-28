@@ -142,6 +142,7 @@ public:
   void AddText(const nglString& rText); ///< Adds the given string to the currently held text
   void Print(const nglChar* pFormat, ...); ///< Adds the given string to the currently held text
   void SetFollowModifications(bool Set);
+  bool GetFollowModifications() const;
 
   void SetTextColor(const nuiColor& Color);
   const nuiColor& GetTextColor() const;

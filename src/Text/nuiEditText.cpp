@@ -55,6 +55,13 @@ void nuiEditText::InitAttributes()
                (nglString(_T("Font")), nuiUnitName,
                 nuiMakeDelegate(this, &nuiEditText::_GetFont), 
                 nuiMakeDelegate(this, &nuiEditText::_SetFont)));
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("FollowModifications")), nuiUnitYesNo,
+                nuiMakeDelegate(this, &nuiEditText::GetFollowModifications),
+                nuiMakeDelegate(this, &nuiEditText::SetFollowModifications)));
+
+
 }
 
 
@@ -1896,6 +1903,11 @@ void nuiEditText::Print(const nglChar* pFormat, ...)
 void nuiEditText::SetFollowModifications(bool Set)
 {
   mFollowModifications = Set;
+}
+
+bool nuiEditText::GetFollowModifications() const
+{
+  return mFollowModifications;
 }
 
 
