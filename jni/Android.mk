@@ -18,6 +18,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := libnui3
 
+NDK_MODULE_PATH := ./ 
+
 LOCAL_ARM_MODE := arm
 
 MY_INCLUDE_FILES :=   \
@@ -36,7 +38,7 @@ MY_LDLIBS := -llog -lGLESv1_CM -lz -lGLESv2
 LOCAL_C_INCLUDES := $(MY_INCLUDE_FILES)
 LOCAL_EXPORT_C_INCLUDES := $(MY_INCLUDE_FILES)
 
-LOCAL_CFLAGS    :=  $(MY_C_FLAGS)
+LOCAL_CFLAGS    :=  $(MY_C_FLAGS) -std=c++11
 LOCAL_EXPORT_CFLAGS    :=  $(MY_C_FLAGS)
 
 LOCAL_LDLIBS := $(MY_LDLIBS)
@@ -224,6 +226,7 @@ NUI_LOCAL_SRC_FILES_LAYOUT := ../src/Layout/nuiAnimView.cpp \
                               ../src/Layout/nuiHBox.cpp \
                               ../src/Layout/nuiImageSequence.cpp \
                               ../src/Layout/nuiList.cpp \
+                              ../src/Layout/nuiLayout.cpp \
                               ../src/Layout/nuiMatrixView.cpp \
                               ../src/Layout/nuiModalContainer.cpp \
                               ../src/Layout/nuiPane.cpp \
@@ -486,6 +489,7 @@ LOCAL_MODULE := libnui3Shared
 LOCAL_STATIC_LIBRARIES := libnui3
 
 include $(BUILD_SHARED_LIBRARY)
+
 
 $(call import-module,android/native_app_glue)
 $(call import-module,deps/mpg123/jni)

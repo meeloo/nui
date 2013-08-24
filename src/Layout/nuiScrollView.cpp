@@ -1190,12 +1190,12 @@ void nuiScrollView::ActivateHotRect(bool set)
   ActivateHotRect(set, set);
 }
 
-void nuiScrollView::IsHorizontalHotRectActive() const
+bool nuiScrollView::IsHorizontalHotRectActive() const
 {
   return mHorizontalHotRectActive;
 }
 
-void nuiScrollView::IsVerticalHotRectActive() const
+bool nuiScrollView::IsVerticalHotRectActive() const
 {
   return mVerticalHotRectActive;
 }

@@ -86,8 +86,8 @@ public:
 
   void ActivateHotRect(bool hset, bool vset);
   void ActivateHotRect(bool set);
-  void IsVerticalHotRectActive() const;
-  void IsHorizontalHotRectActive() const;
+  bool IsVerticalHotRectActive() const;
+  bool IsHorizontalHotRectActive() const;
 
 private:
   void InitAttributes();

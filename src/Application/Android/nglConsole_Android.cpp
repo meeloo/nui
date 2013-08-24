@@ -74,7 +74,7 @@ void nglConsole::Show (bool IsVisible)
 void nglConsole::OnOutput (const nglString& rText)
 {
   // 'char' mode : string buffer is considered to use the locale's encoding
-  __android_log_print(ANDROID_LOG_INFO, "nui", rText.GetChars());
+  __android_log_print(ANDROID_LOG_INFO, "nui", "%s", rText.GetChars());
 }
 
 #define IN_BUFFER_SIZE 1024

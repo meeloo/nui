@@ -685,8 +685,6 @@ public:
     {
       string = "Relative";
     }
-    
-    return true;
   }
 
   bool ToString(void* pTarget, int32 index0, int32 index1, nglString& rString) const
@@ -772,8 +770,6 @@ public:
     {
       string = "false";
     }
-
-    return true;
   }
 
   bool ToString(void* pTarget, int32 index0, int32 index1, nglString& rString) const

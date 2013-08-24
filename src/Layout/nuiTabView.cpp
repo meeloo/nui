@@ -329,10 +329,11 @@ void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, int32 pos)
   
   AddChild(pContentsWidget);
   AddChild(pTitleWidget);
-  
-  if (!mTabs.empty())
-    pContentsWidget->SetEnabled(false);
-  pTitleWidget->SetSelected(false);
+
+  bool select = mTabs.empty();
+  pContentsWidget->SetEnabled(select);
+  pTitleWidget->SetSelected(select);
+
   mTabViewEvents.Connect(pTitleWidget->Clicked, &nuiTabView::OnIconClicked, pTitleWidget);
   mTabViewEvents.Connect(pTitleWidget->EnterDrag, &nuiTabView::OnTabEnterDrag, pTitleWidget);
   
@@ -360,8 +361,9 @@ void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, int32 pos)
     nuiDefaultDecoration::TabView_Tab(this, pTitleWidget);
     nuiDefaultDecoration::TabView_Contents(this, pContentsWidget);
   }
-  
-  SelectTab(0);
+
+  if (select)
+    SelectTab(0);
 }
 
 void nuiTabView::RemoveTab(nuiWidget* pTab)

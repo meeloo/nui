@@ -10,7 +10,7 @@ LOCAL_MODULE    := tidy
 LOCAL_C_INCLUDES := $(MY_INCLUDE_FILES)
 LOCAL_ARM_MODE := arm
 
-LOCAL_CFLAGS    := \
+LOCAL_CFLAGS    := -w \
 -D_ANDROID_\ # added "|| defined(_ANDROID_)" in platform.h at the end of the line 523 to have the "ulong" type defined
 
 LOCAL_SRC_FILES := \
