@@ -11,7 +11,7 @@ LOCAL_MODULE    := libpng
 LOCAL_C_INCLUDES := $(MY_INCLUDE_FILES)
 LOCAL_ARM_MODE := arm
 
-LOCAL_LDLIBS := -lz
+#LOCAL_LDLIBS := -lz
 
 LOCAL_SRC_FILES := \
 png.c \

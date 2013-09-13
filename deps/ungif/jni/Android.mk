@@ -5,7 +5,7 @@ LOCAL_PATH := $(call my-dir)/..
 
 include $(CLEAR_VARS)
 
-MY_INCLUDE_FILES := $(LOCAL_PATH)
+MY_INCLUDE_FILES = $(LOCAL_PATH)
 
 LOCAL_MODULE    := ungif
 LOCAL_C_INCLUDES := $(MY_INCLUDE_FILES)
@@ -29,7 +29,7 @@ include $(BUILD_STATIC_LIBRARY)
 # If you try to build (with ndk-build) a Android.mk file wich contains only a static library, it won't compile anything since there are no dependencies
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := ungif-shared
 LOCAL_STATIC_LIBRARIES := ungif
+LOCAL_MODULE := ungif-shared
 
 include $(BUILD_SHARED_LIBRARY)

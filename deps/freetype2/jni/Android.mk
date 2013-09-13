@@ -8,7 +8,7 @@ include $(CLEAR_VARS)
 MY_INCLUDE_FILES := $(LOCAL_PATH)/../freetype-overlay/include $(LOCAL_PATH)/include
 LOCAL_MODULE := freetype
 LOCAL_C_INCLUDES := $(MY_INCLUDE_FILES)
-LOCAL_LDLIBS := -lz
+#LOCAL_LDLIBS := -lz
 LOCAL_CFLAGS := -DFT2_BUILD_LIBRARY
 LOCAL_ARM_MODE := arm
 

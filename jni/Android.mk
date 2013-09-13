@@ -41,7 +41,7 @@ LOCAL_EXPORT_C_INCLUDES := $(MY_INCLUDE_FILES)
 LOCAL_CFLAGS    :=  $(MY_C_FLAGS) -std=c++11
 LOCAL_EXPORT_CFLAGS    :=  $(MY_C_FLAGS)
 
-LOCAL_LDLIBS := $(MY_LDLIBS)
+#LOCAL_LDLIBS := $(MY_LDLIBS)
 LOCAL_EXPORT_LDLIBS := $(MY_LDLIBS)
 
 LOCAL_STATIC_LIBRARIES := android_native_app_glue freetype expat tess harfbuzz libcss libpng libjpeg tidy ucdata ungif mpg123
@@ -483,15 +483,6 @@ LOCAL_SRC_FILES := ../src/Application/Win/ngl.cpp \
 
 include $(BUILD_STATIC_LIBRARY)
 
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := libnui3Shared
-LOCAL_STATIC_LIBRARIES := libnui3
-
-include $(BUILD_SHARED_LIBRARY)
-
-
-$(call import-module,android/native_app_glue)
 $(call import-module,deps/mpg123/jni)
 $(call import-module,deps/freetype2/jni)
 $(call import-module,deps/expat/jni)
@@ -501,5 +492,15 @@ $(call import-module,deps/libcss/jni)
 $(call import-module,deps/libpng/jni)
 $(call import-module,deps/libjpeg/jni)
 $(call import-module,deps/tidy/jni)
-$(call import-module,deps/ucdata/jni)
 $(call import-module,deps/ungif/jni)
+$(call import-module,deps/ucdata/jni)
+
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := libnui3Shared
+LOCAL_STATIC_LIBRARIES := libnui3
+
+include $(BUILD_SHARED_LIBRARY)
+
+
+$(call import-module,android/native_app_glue)
