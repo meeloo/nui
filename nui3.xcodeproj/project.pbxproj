@@ -1183,95 +1183,6 @@
 		73F098EB12E9D09E00656E84 /* ucpgba.h in Headers */ = {isa = PBXBuildFile; fileRef = E5D13BDC1100AFB5000F46C4 /* ucpgba.h */; };
 		73F098EC12E9D09E00656E84 /* ucdata.h in Headers */ = {isa = PBXBuildFile; fileRef = E5D13BDE1100AFB5000F46C4 /* ucdata.h */; };
 		73F098ED12E9D09E00656E84 /* ucdata_static.h in Headers */ = {isa = PBXBuildFile; fileRef = E5D13BE01100AFB5000F46C4 /* ucdata_static.h */; };
-		73F098EE12E9D09E00656E84 /* js-confdefs.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8311750ADF0031DFA8 /* js-confdefs.h */; };
-		73F098EF12E9D09E00656E84 /* js-config.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8411750ADF0031DFA8 /* js-config.h */; };
-		73F098F012E9D09E00656E84 /* jsapi.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8711750ADF0031DFA8 /* jsapi.h */; };
-		73F098F112E9D09E00656E84 /* jsarena.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8911750ADF0031DFA8 /* jsarena.h */; };
-		73F098F212E9D09E00656E84 /* jsarray.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8B11750ADF0031DFA8 /* jsarray.h */; };
-		73F098F312E9D09E00656E84 /* jsatom.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8D11750ADF0031DFA8 /* jsatom.h */; };
-		73F098F412E9D09E00656E84 /* jsatominlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8E11750ADF0031DFA8 /* jsatominlines.h */; };
-		73F098F512E9D09E00656E84 /* jsautocfg.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8F11750ADF0031DFA8 /* jsautocfg.h */; };
-		73F098F612E9D09E00656E84 /* jsautooplen.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9111750ADF0031DFA8 /* jsautooplen.h */; };
-		73F098F712E9D09E00656E84 /* jsbit.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9211750ADF0031DFA8 /* jsbit.h */; };
-		73F098F812E9D09E00656E84 /* jsbool.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9411750ADF0031DFA8 /* jsbool.h */; };
-		73F098F912E9D09E00656E84 /* jsbuiltins.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9611750ADF0031DFA8 /* jsbuiltins.h */; };
-		73F098FA12E9D09E00656E84 /* jsclist.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9711750ADF0031DFA8 /* jsclist.h */; };
-		73F098FB12E9D09E00656E84 /* jscntxt.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9911750ADF0031DFA8 /* jscntxt.h */; };
-		73F098FC12E9D09E00656E84 /* jscntxtinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9A11750ADF0031DFA8 /* jscntxtinlines.h */; };
-		73F098FD12E9D09E00656E84 /* jscompat.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9B11750ADF0031DFA8 /* jscompat.h */; };
-		73F098FE12E9D09E00656E84 /* jscpucfg.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9D11750ADF0031DFA8 /* jscpucfg.h */; };
-		73F098FF12E9D09E00656E84 /* jsdate.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9F11750ADF0031DFA8 /* jsdate.h */; };
-		73F0990012E9D09E00656E84 /* jsdbgapi.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA111750ADF0031DFA8 /* jsdbgapi.h */; };
-		73F0990112E9D09E00656E84 /* jsdhash.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA311750ADF0031DFA8 /* jsdhash.h */; };
-		73F0990212E9D09E00656E84 /* jsdtoa.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA511750ADF0031DFA8 /* jsdtoa.h */; };
-		73F0990312E9D09E00656E84 /* jsdtracef.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA711750ADF0031DFA8 /* jsdtracef.h */; };
-		73F0990412E9D09E00656E84 /* jsemit.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA911750ADF0031DFA8 /* jsemit.h */; };
-		73F0990512E9D09E00656E84 /* jsexn.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDAB11750ADF0031DFA8 /* jsexn.h */; };
-		73F0990612E9D09E00656E84 /* jsfun.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDAD11750ADF0031DFA8 /* jsfun.h */; };
-		73F0990712E9D09E00656E84 /* jsgc.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDAF11750ADF0031DFA8 /* jsgc.h */; };
-		73F0990812E9D09E00656E84 /* jshash.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB111750ADF0031DFA8 /* jshash.h */; };
-		73F0990912E9D09E00656E84 /* jshashtable.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB211750ADF0031DFA8 /* jshashtable.h */; };
-		73F0990A12E9D09E00656E84 /* jsinterp.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB411750ADF0031DFA8 /* jsinterp.h */; };
-		73F0990B12E9D09E00656E84 /* jsinterpinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB511750ADF0031DFA8 /* jsinterpinlines.h */; };
-		73F0990C12E9D09E00656E84 /* jsinttypes.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB611750ADF0031DFA8 /* jsinttypes.h */; };
-		73F0990D12E9D09E00656E84 /* jsiter.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB911750ADF0031DFA8 /* jsiter.h */; };
-		73F0990E12E9D09E00656E84 /* jslibmath.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDBC11750ADF0031DFA8 /* jslibmath.h */; };
-		73F0990F12E9D09E00656E84 /* jslock.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDBE11750ADF0031DFA8 /* jslock.h */; };
-		73F0991012E9D09E00656E84 /* jslong.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC111750ADF0031DFA8 /* jslong.h */; };
-		73F0991112E9D09E00656E84 /* jsmath.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC311750ADF0031DFA8 /* jsmath.h */; };
-		73F0991212E9D09E00656E84 /* jsnum.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC511750ADF0031DFA8 /* jsnum.h */; };
-		73F0991312E9D09E00656E84 /* jsobj.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC711750ADF0031DFA8 /* jsobj.h */; };
-		73F0991412E9D09E00656E84 /* jsobjinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC811750ADF0031DFA8 /* jsobjinlines.h */; };
-		73F0991512E9D09E00656E84 /* json.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDCA11750ADF0031DFA8 /* json.h */; };
-		73F0991612E9D09E00656E84 /* jsopcode.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDCC11750ADF0031DFA8 /* jsopcode.h */; };
-		73F0991712E9D09E00656E84 /* jsotypes.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD011750ADF0031DFA8 /* jsotypes.h */; };
-		73F0991812E9D09E00656E84 /* jsparse.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD211750ADF0031DFA8 /* jsparse.h */; };
-		73F0991912E9D09E00656E84 /* jsprf.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD411750ADF0031DFA8 /* jsprf.h */; };
-		73F0991A12E9D09E00656E84 /* jsprvtd.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD611750ADF0031DFA8 /* jsprvtd.h */; };
-		73F0991B12E9D09E00656E84 /* jspubtd.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD711750ADF0031DFA8 /* jspubtd.h */; };
-		73F0991C12E9D09E00656E84 /* jsregexp.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDDA11750ADF0031DFA8 /* jsregexp.h */; };
-		73F0991D12E9D09E00656E84 /* jsscan.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDDD11750ADF0031DFA8 /* jsscan.h */; };
-		73F0991E12E9D09E00656E84 /* jsscope.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDDF11750ADF0031DFA8 /* jsscope.h */; };
-		73F0991F12E9D09E00656E84 /* jsscopeinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE011750ADF0031DFA8 /* jsscopeinlines.h */; };
-		73F0992012E9D09E00656E84 /* jsscript.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE211750ADF0031DFA8 /* jsscript.h */; };
-		73F0992112E9D09E00656E84 /* jsscriptinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE311750ADF0031DFA8 /* jsscriptinlines.h */; };
-		73F0992212E9D09E00656E84 /* jsstaticcheck.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE511750ADF0031DFA8 /* jsstaticcheck.h */; };
-		73F0992312E9D09E00656E84 /* jsstdint.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE611750ADF0031DFA8 /* jsstdint.h */; };
-		73F0992412E9D09E00656E84 /* jsstr.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE811750ADF0031DFA8 /* jsstr.h */; };
-		73F0992512E9D09E00656E84 /* jsstrinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE911750ADF0031DFA8 /* jsstrinlines.h */; };
-		73F0992612E9D09E00656E84 /* jstask.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDEB11750ADF0031DFA8 /* jstask.h */; };
-		73F0992712E9D09E00656E84 /* jstl.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDEC11750ADF0031DFA8 /* jstl.h */; };
-		73F0992812E9D09E00656E84 /* jstracer.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDEE11750ADF0031DFA8 /* jstracer.h */; };
-		73F0992912E9D09E00656E84 /* jstypedarray.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF011750ADF0031DFA8 /* jstypedarray.h */; };
-		73F0992A12E9D09E00656E84 /* jstypes.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF111750ADF0031DFA8 /* jstypes.h */; };
-		73F0992B12E9D09E00656E84 /* jsutil.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF311750ADF0031DFA8 /* jsutil.h */; };
-		73F0992C12E9D09E00656E84 /* jsvector.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF411750ADF0031DFA8 /* jsvector.h */; };
-		73F0992D12E9D09E00656E84 /* jsversion.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF511750ADF0031DFA8 /* jsversion.h */; };
-		73F0992E12E9D09E00656E84 /* jsxdrapi.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF811750ADF0031DFA8 /* jsxdrapi.h */; };
-		73F0992F12E9D09E00656E84 /* jsxml.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDFA11750ADF0031DFA8 /* jsxml.h */; };
-		73F0993012E9D09E00656E84 /* Allocator.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDFF11750ADF0031DFA8 /* Allocator.h */; };
-		73F0993112E9D09E00656E84 /* Assembler.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0111750ADF0031DFA8 /* Assembler.h */; };
-		73F0993212E9D09E00656E84 /* avmplus.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0311750ADF0031DFA8 /* avmplus.h */; };
-		73F0993312E9D09E00656E84 /* CodeAlloc.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0511750ADF0031DFA8 /* CodeAlloc.h */; };
-		73F0993412E9D09E00656E84 /* Containers.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0711750ADF0031DFA8 /* Containers.h */; };
-		73F0993512E9D09E00656E84 /* Fragmento.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0911750ADF0031DFA8 /* Fragmento.h */; };
-		73F0993612E9D09E00656E84 /* LIR.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0B11750ADF0031DFA8 /* LIR.h */; };
-		73F0993712E9D09E00656E84 /* nanojit.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0D11750ADF0031DFA8 /* nanojit.h */; };
-		73F0993812E9D09E00656E84 /* Native.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0E11750ADF0031DFA8 /* Native.h */; };
-		73F0993912E9D09E00656E84 /* NativeARM.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1011750ADF0031DFA8 /* NativeARM.h */; };
-		73F0993A12E9D09E00656E84 /* Nativei386.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1211750ADF0031DFA8 /* Nativei386.h */; };
-		73F0993B12E9D09E00656E84 /* NativeMIPS.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1411750ADF0031DFA8 /* NativeMIPS.h */; };
-		73F0993C12E9D09E00656E84 /* NativePPC.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1611750ADF0031DFA8 /* NativePPC.h */; };
-		73F0993D12E9D09E00656E84 /* NativeSparc.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1811750ADF0031DFA8 /* NativeSparc.h */; };
-		73F0993E12E9D09E00656E84 /* NativeX64.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1A11750ADF0031DFA8 /* NativeX64.h */; };
-		73F0993F12E9D09E00656E84 /* njconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1C11750ADF0031DFA8 /* njconfig.h */; };
-		73F0994012E9D09E00656E84 /* njcpudetect.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1D11750ADF0031DFA8 /* njcpudetect.h */; };
-		73F0994112E9D09E00656E84 /* RegAlloc.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1F11750ADF0031DFA8 /* RegAlloc.h */; };
-		73F0994212E9D09E00656E84 /* VMPI.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE2111750ADF0031DFA8 /* VMPI.h */; };
-		73F0994312E9D09E00656E84 /* prmjtime.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE2311750ADF0031DFA8 /* prmjtime.h */; };
-		73F0994412E9D09E00656E84 /* resource.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE2411750ADF0031DFA8 /* resource.h */; };
-		73F0994512E9D09E00656E84 /* vprof.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE2711750ADF0031DFA8 /* vprof.h */; };
-		73F0994612E9D09E00656E84 /* jsautokw.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9011750ADF0031DFA8 /* jsautokw.h */; };
 		73F0994712E9D09E00656E84 /* computed.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C1E22311B7172A000B9C56 /* computed.h */; };
 		73F0994812E9D09E00656E84 /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C1E22411B7172A000B9C56 /* errors.h */; };
 		73F0994912E9D09E00656E84 /* fpmath.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C1E22511B7172A000B9C56 /* fpmath.h */; };
@@ -5044,132 +4955,9 @@
 		E5C3FA4014BDC60F00F4FB96 /* nuiHTTPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5C3FA3A14BDC60F00F4FB96 /* nuiHTTPServer.cpp */; };
 		E5C3FA4114BDC60F00F4FB96 /* nuiHTTPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5C3FA3A14BDC60F00F4FB96 /* nuiHTTPServer.cpp */; };
 		E5C3FA4214BDC60F00F4FB96 /* nuiHTTPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5C3FA3A14BDC60F00F4FB96 /* nuiHTTPServer.cpp */; };
-		E5C4EB7116AF43570029047C /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
-		E5C4EB7316AF43580029047C /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
-		E5C4EB7416AF43590029047C /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
 		E5C4EB7616AF43A10029047C /* jscpucfg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9C11750ADF0031DFA8 /* jscpucfg.cpp */; };
 		E5C4EB7816AF43A10029047C /* jskwgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDBB11750ADF0031DFA8 /* jskwgen.cpp */; };
 		E5C4EB7916AF43A10029047C /* jsoplengen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDCE11750ADF0031DFA8 /* jsoplengen.cpp */; };
-		E5C4EB7D16AF43A20029047C /* jsapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD8611750ADF0031DFA8 /* jsapi.cpp */; };
-		E5C4EB7E16AF43A20029047C /* jsarena.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD8811750ADF0031DFA8 /* jsarena.cpp */; };
-		E5C4EB7F16AF43A20029047C /* jsarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD8A11750ADF0031DFA8 /* jsarray.cpp */; };
-		E5C4EB8016AF43A20029047C /* jsatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD8C11750ADF0031DFA8 /* jsatom.cpp */; };
-		E5C4EB8116AF43A20029047C /* jsbool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9311750ADF0031DFA8 /* jsbool.cpp */; };
-		E5C4EB8216AF43A20029047C /* jsbuiltins.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9511750ADF0031DFA8 /* jsbuiltins.cpp */; };
-		E5C4EB8316AF43A20029047C /* jscntxt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9811750ADF0031DFA8 /* jscntxt.cpp */; };
-		E5C4EB8416AF43A20029047C /* jscpucfg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9C11750ADF0031DFA8 /* jscpucfg.cpp */; };
-		E5C4EB8516AF43A20029047C /* jsdate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9E11750ADF0031DFA8 /* jsdate.cpp */; };
-		E5C4EB8616AF43A20029047C /* jsdbgapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDA011750ADF0031DFA8 /* jsdbgapi.cpp */; };
-		E5C4EB8716AF43A20029047C /* jsdhash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDA211750ADF0031DFA8 /* jsdhash.cpp */; };
-		E5C4EB8816AF43A20029047C /* jsdtoa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDA411750ADF0031DFA8 /* jsdtoa.cpp */; };
-		E5C4EB8A16AF43A20029047C /* jsemit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDA811750ADF0031DFA8 /* jsemit.cpp */; };
-		E5C4EB8B16AF43A20029047C /* jsexn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDAA11750ADF0031DFA8 /* jsexn.cpp */; };
-		E5C4EB8C16AF43A20029047C /* jsfun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDAC11750ADF0031DFA8 /* jsfun.cpp */; };
-		E5C4EB8D16AF43A20029047C /* jsgc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDAE11750ADF0031DFA8 /* jsgc.cpp */; };
-		E5C4EB8E16AF43A20029047C /* jshash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDB011750ADF0031DFA8 /* jshash.cpp */; };
-		E5C4EB8F16AF43A20029047C /* jsinterp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDB311750ADF0031DFA8 /* jsinterp.cpp */; };
-		E5C4EB9016AF43A20029047C /* jsinvoke.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDB711750ADF0031DFA8 /* jsinvoke.cpp */; };
-		E5C4EB9116AF43A20029047C /* jsiter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDB811750ADF0031DFA8 /* jsiter.cpp */; };
-		E5C4EB9216AF43A20029047C /* jskwgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDBB11750ADF0031DFA8 /* jskwgen.cpp */; };
-		E5C4EB9316AF43A20029047C /* jslock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDBD11750ADF0031DFA8 /* jslock.cpp */; };
-		E5C4EB9416AF43A20029047C /* jslog2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC011750ADF0031DFA8 /* jslog2.cpp */; };
-		E5C4EB9516AF43A20029047C /* jsmath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC211750ADF0031DFA8 /* jsmath.cpp */; };
-		E5C4EB9616AF43A20029047C /* jsnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC411750ADF0031DFA8 /* jsnum.cpp */; };
-		E5C4EB9716AF43A20029047C /* jsobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC611750ADF0031DFA8 /* jsobj.cpp */; };
-		E5C4EB9816AF43A20029047C /* json.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC911750ADF0031DFA8 /* json.cpp */; };
-		E5C4EB9916AF43A20029047C /* jsopcode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDCB11750ADF0031DFA8 /* jsopcode.cpp */; };
-		E5C4EB9A16AF43A20029047C /* jsoplengen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDCE11750ADF0031DFA8 /* jsoplengen.cpp */; };
-		E5C4EB9C16AF43A20029047C /* jsparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDD111750ADF0031DFA8 /* jsparse.cpp */; };
-		E5C4EB9D16AF43A20029047C /* jsprf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDD311750ADF0031DFA8 /* jsprf.cpp */; };
-		E5C4EB9F16AF43A20029047C /* jsregexp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDD911750ADF0031DFA8 /* jsregexp.cpp */; };
-		E5C4EBA016AF43A20029047C /* jsscan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDDC11750ADF0031DFA8 /* jsscan.cpp */; };
-		E5C4EBA116AF43A20029047C /* jsscope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDDE11750ADF0031DFA8 /* jsscope.cpp */; };
-		E5C4EBA216AF43A20029047C /* jsscript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDE111750ADF0031DFA8 /* jsscript.cpp */; };
-		E5C4EBA316AF43A20029047C /* jsstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDE711750ADF0031DFA8 /* jsstr.cpp */; };
-		E5C4EBA416AF43A20029047C /* jstask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDEA11750ADF0031DFA8 /* jstask.cpp */; };
-		E5C4EBA516AF43A20029047C /* jstracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDED11750ADF0031DFA8 /* jstracer.cpp */; };
-		E5C4EBA616AF43A20029047C /* jstypedarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDEF11750ADF0031DFA8 /* jstypedarray.cpp */; };
-		E5C4EBA716AF43A20029047C /* jsutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDF211750ADF0031DFA8 /* jsutil.cpp */; };
-		E5C4EBA816AF43A20029047C /* jsxdrapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDF711750ADF0031DFA8 /* jsxdrapi.cpp */; };
-		E5C4EBA916AF43A20029047C /* jsxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDF911750ADF0031DFA8 /* jsxml.cpp */; };
-		E5C4EBAA16AF43A20029047C /* prmjtime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE2211750ADF0031DFA8 /* prmjtime.cpp */; };
-		E5C4EBAC16AF43A30029047C /* jsapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD8611750ADF0031DFA8 /* jsapi.cpp */; };
-		E5C4EBAD16AF43A30029047C /* jsarena.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD8811750ADF0031DFA8 /* jsarena.cpp */; };
-		E5C4EBAE16AF43A30029047C /* jsarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD8A11750ADF0031DFA8 /* jsarray.cpp */; };
-		E5C4EBAF16AF43A30029047C /* jsatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD8C11750ADF0031DFA8 /* jsatom.cpp */; };
-		E5C4EBB016AF43A30029047C /* jsbool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9311750ADF0031DFA8 /* jsbool.cpp */; };
-		E5C4EBB116AF43A30029047C /* jsbuiltins.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9511750ADF0031DFA8 /* jsbuiltins.cpp */; };
-		E5C4EBB216AF43A30029047C /* jscntxt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9811750ADF0031DFA8 /* jscntxt.cpp */; };
-		E5C4EBB316AF43A30029047C /* jscpucfg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9C11750ADF0031DFA8 /* jscpucfg.cpp */; };
-		E5C4EBB416AF43A30029047C /* jsdate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD9E11750ADF0031DFA8 /* jsdate.cpp */; };
-		E5C4EBB516AF43A30029047C /* jsdbgapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDA011750ADF0031DFA8 /* jsdbgapi.cpp */; };
-		E5C4EBB616AF43A30029047C /* jsdhash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDA211750ADF0031DFA8 /* jsdhash.cpp */; };
-		E5C4EBB716AF43A30029047C /* jsdtoa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDA411750ADF0031DFA8 /* jsdtoa.cpp */; };
-		E5C4EBB916AF43A30029047C /* jsemit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDA811750ADF0031DFA8 /* jsemit.cpp */; };
-		E5C4EBBA16AF43A30029047C /* jsexn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDAA11750ADF0031DFA8 /* jsexn.cpp */; };
-		E5C4EBBB16AF43A30029047C /* jsfun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDAC11750ADF0031DFA8 /* jsfun.cpp */; };
-		E5C4EBBC16AF43A30029047C /* jsgc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDAE11750ADF0031DFA8 /* jsgc.cpp */; };
-		E5C4EBBD16AF43A30029047C /* jshash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDB011750ADF0031DFA8 /* jshash.cpp */; };
-		E5C4EBBE16AF43A30029047C /* jsinterp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDB311750ADF0031DFA8 /* jsinterp.cpp */; };
-		E5C4EBBF16AF43A30029047C /* jsinvoke.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDB711750ADF0031DFA8 /* jsinvoke.cpp */; };
-		E5C4EBC016AF43A30029047C /* jsiter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDB811750ADF0031DFA8 /* jsiter.cpp */; };
-		E5C4EBC116AF43A30029047C /* jskwgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDBB11750ADF0031DFA8 /* jskwgen.cpp */; };
-		E5C4EBC216AF43A30029047C /* jslock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDBD11750ADF0031DFA8 /* jslock.cpp */; };
-		E5C4EBC316AF43A30029047C /* jslog2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC011750ADF0031DFA8 /* jslog2.cpp */; };
-		E5C4EBC416AF43A30029047C /* jsmath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC211750ADF0031DFA8 /* jsmath.cpp */; };
-		E5C4EBC516AF43A30029047C /* jsnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC411750ADF0031DFA8 /* jsnum.cpp */; };
-		E5C4EBC616AF43A30029047C /* jsobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC611750ADF0031DFA8 /* jsobj.cpp */; };
-		E5C4EBC716AF43A30029047C /* json.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDC911750ADF0031DFA8 /* json.cpp */; };
-		E5C4EBC816AF43A30029047C /* jsopcode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDCB11750ADF0031DFA8 /* jsopcode.cpp */; };
-		E5C4EBC916AF43A30029047C /* jsoplengen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDCE11750ADF0031DFA8 /* jsoplengen.cpp */; };
-		E5C4EBCB16AF43A30029047C /* jsparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDD111750ADF0031DFA8 /* jsparse.cpp */; };
-		E5C4EBCC16AF43A30029047C /* jsprf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDD311750ADF0031DFA8 /* jsprf.cpp */; };
-		E5C4EBCE16AF43A30029047C /* jsregexp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDD911750ADF0031DFA8 /* jsregexp.cpp */; };
-		E5C4EBCF16AF43A30029047C /* jsscan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDDC11750ADF0031DFA8 /* jsscan.cpp */; };
-		E5C4EBD016AF43A30029047C /* jsscope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDDE11750ADF0031DFA8 /* jsscope.cpp */; };
-		E5C4EBD116AF43A30029047C /* jsscript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDE111750ADF0031DFA8 /* jsscript.cpp */; };
-		E5C4EBD216AF43A30029047C /* jsstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDE711750ADF0031DFA8 /* jsstr.cpp */; };
-		E5C4EBD316AF43A30029047C /* jstask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDEA11750ADF0031DFA8 /* jstask.cpp */; };
-		E5C4EBD416AF43A30029047C /* jstracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDED11750ADF0031DFA8 /* jstracer.cpp */; };
-		E5C4EBD516AF43A30029047C /* jstypedarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDEF11750ADF0031DFA8 /* jstypedarray.cpp */; };
-		E5C4EBD616AF43A30029047C /* jsutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDF211750ADF0031DFA8 /* jsutil.cpp */; };
-		E5C4EBD716AF43A30029047C /* jsxdrapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDF711750ADF0031DFA8 /* jsxdrapi.cpp */; };
-		E5C4EBD816AF43A30029047C /* jsxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDF911750ADF0031DFA8 /* jsxml.cpp */; };
-		E5C4EBD916AF43A30029047C /* prmjtime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE2211750ADF0031DFA8 /* prmjtime.cpp */; };
-		E5C4EBDA16AF43B20029047C /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDFE11750ADF0031DFA8 /* Allocator.cpp */; };
-		E5C4EBDB16AF43B20029047C /* Assembler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0011750ADF0031DFA8 /* Assembler.cpp */; };
-		E5C4EBDC16AF43B20029047C /* avmplus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0211750ADF0031DFA8 /* avmplus.cpp */; };
-		E5C4EBDD16AF43B20029047C /* CodeAlloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0411750ADF0031DFA8 /* CodeAlloc.cpp */; };
-		E5C4EBDE16AF43B20029047C /* Containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0611750ADF0031DFA8 /* Containers.cpp */; };
-		E5C4EBDF16AF43B20029047C /* Fragmento.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0811750ADF0031DFA8 /* Fragmento.cpp */; };
-		E5C4EBE016AF43B20029047C /* LIR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0A11750ADF0031DFA8 /* LIR.cpp */; };
-		E5C4EBE116AF43B20029047C /* NativeARM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0F11750ADF0031DFA8 /* NativeARM.cpp */; };
-		E5C4EBE216AF43B20029047C /* Nativei386.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1111750ADF0031DFA8 /* Nativei386.cpp */; };
-		E5C4EBE316AF43B20029047C /* NativeMIPS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1311750ADF0031DFA8 /* NativeMIPS.cpp */; };
-		E5C4EBE416AF43B20029047C /* NativePPC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1511750ADF0031DFA8 /* NativePPC.cpp */; };
-		E5C4EBE516AF43B20029047C /* NativeSparc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1711750ADF0031DFA8 /* NativeSparc.cpp */; };
-		E5C4EBE616AF43B20029047C /* NativeX64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1911750ADF0031DFA8 /* NativeX64.cpp */; };
-		E5C4EBE716AF43B20029047C /* njconfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1B11750ADF0031DFA8 /* njconfig.cpp */; };
-		E5C4EBE816AF43B20029047C /* RegAlloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1E11750ADF0031DFA8 /* RegAlloc.cpp */; };
-		E5C4EBE916AF43B20029047C /* VMPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE2011750ADF0031DFA8 /* VMPI.cpp */; };
-		E5C4EBEA16AF43B30029047C /* Allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBDFE11750ADF0031DFA8 /* Allocator.cpp */; };
-		E5C4EBEB16AF43B30029047C /* Assembler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0011750ADF0031DFA8 /* Assembler.cpp */; };
-		E5C4EBEC16AF43B30029047C /* avmplus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0211750ADF0031DFA8 /* avmplus.cpp */; };
-		E5C4EBED16AF43B30029047C /* CodeAlloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0411750ADF0031DFA8 /* CodeAlloc.cpp */; };
-		E5C4EBEE16AF43B30029047C /* Containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0611750ADF0031DFA8 /* Containers.cpp */; };
-		E5C4EBEF16AF43B30029047C /* Fragmento.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0811750ADF0031DFA8 /* Fragmento.cpp */; };
-		E5C4EBF016AF43B30029047C /* LIR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0A11750ADF0031DFA8 /* LIR.cpp */; };
-		E5C4EBF116AF43B30029047C /* NativeARM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE0F11750ADF0031DFA8 /* NativeARM.cpp */; };
-		E5C4EBF216AF43B30029047C /* Nativei386.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1111750ADF0031DFA8 /* Nativei386.cpp */; };
-		E5C4EBF316AF43B30029047C /* NativeMIPS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1311750ADF0031DFA8 /* NativeMIPS.cpp */; };
-		E5C4EBF416AF43B30029047C /* NativePPC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1511750ADF0031DFA8 /* NativePPC.cpp */; };
-		E5C4EBF516AF43B30029047C /* NativeSparc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1711750ADF0031DFA8 /* NativeSparc.cpp */; };
-		E5C4EBF616AF43B30029047C /* NativeX64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1911750ADF0031DFA8 /* NativeX64.cpp */; };
-		E5C4EBF716AF43B30029047C /* njconfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1B11750ADF0031DFA8 /* njconfig.cpp */; };
-		E5C4EBF816AF43B30029047C /* RegAlloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE1E11750ADF0031DFA8 /* RegAlloc.cpp */; };
-		E5C4EBF916AF43B30029047C /* VMPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE2011750ADF0031DFA8 /* VMPI.cpp */; };
-		E5C4EBFA16AF43D00029047C /* vprof.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE2611750ADF0031DFA8 /* vprof.cpp */; };
-		E5C4EBFB16AF43D00029047C /* vprof.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBE2611750ADF0031DFA8 /* vprof.cpp */; };
 		E5C6CE1B0FF6DC38003E6002 /* nuiHTMLStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C6CE190FF6DC38003E6002 /* nuiHTMLStyle.h */; };
 		E5C6CE1C0FF6DC38003E6002 /* nuiHTMLStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5C6CE1A0FF6DC38003E6002 /* nuiHTMLStyle.cpp */; };
 		E5C6CE1F0FF6DC38003E6002 /* nuiHTMLStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C6CE190FF6DC38003E6002 /* nuiHTMLStyle.h */; };
@@ -6748,95 +6536,6 @@
 		E5DD3C9B12E0B08300F1EF4E /* ucpgba.h in Headers */ = {isa = PBXBuildFile; fileRef = E5D13BDC1100AFB5000F46C4 /* ucpgba.h */; };
 		E5DD3C9C12E0B08300F1EF4E /* ucdata.h in Headers */ = {isa = PBXBuildFile; fileRef = E5D13BDE1100AFB5000F46C4 /* ucdata.h */; };
 		E5DD3C9D12E0B08300F1EF4E /* ucdata_static.h in Headers */ = {isa = PBXBuildFile; fileRef = E5D13BE01100AFB5000F46C4 /* ucdata_static.h */; };
-		E5DD3CA612E0B08300F1EF4E /* js-confdefs.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8311750ADF0031DFA8 /* js-confdefs.h */; };
-		E5DD3CA712E0B08300F1EF4E /* js-config.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8411750ADF0031DFA8 /* js-config.h */; };
-		E5DD3CA812E0B08300F1EF4E /* jsapi.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8711750ADF0031DFA8 /* jsapi.h */; };
-		E5DD3CA912E0B08300F1EF4E /* jsarena.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8911750ADF0031DFA8 /* jsarena.h */; };
-		E5DD3CAA12E0B08300F1EF4E /* jsarray.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8B11750ADF0031DFA8 /* jsarray.h */; };
-		E5DD3CAB12E0B08300F1EF4E /* jsatom.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8D11750ADF0031DFA8 /* jsatom.h */; };
-		E5DD3CAC12E0B08300F1EF4E /* jsatominlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8E11750ADF0031DFA8 /* jsatominlines.h */; };
-		E5DD3CAD12E0B08300F1EF4E /* jsautocfg.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD8F11750ADF0031DFA8 /* jsautocfg.h */; };
-		E5DD3CAE12E0B08300F1EF4E /* jsautooplen.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9111750ADF0031DFA8 /* jsautooplen.h */; };
-		E5DD3CAF12E0B08300F1EF4E /* jsbit.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9211750ADF0031DFA8 /* jsbit.h */; };
-		E5DD3CB012E0B08300F1EF4E /* jsbool.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9411750ADF0031DFA8 /* jsbool.h */; };
-		E5DD3CB112E0B08300F1EF4E /* jsbuiltins.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9611750ADF0031DFA8 /* jsbuiltins.h */; };
-		E5DD3CB212E0B08300F1EF4E /* jsclist.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9711750ADF0031DFA8 /* jsclist.h */; };
-		E5DD3CB312E0B08300F1EF4E /* jscntxt.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9911750ADF0031DFA8 /* jscntxt.h */; };
-		E5DD3CB412E0B08300F1EF4E /* jscntxtinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9A11750ADF0031DFA8 /* jscntxtinlines.h */; };
-		E5DD3CB512E0B08300F1EF4E /* jscompat.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9B11750ADF0031DFA8 /* jscompat.h */; };
-		E5DD3CB612E0B08300F1EF4E /* jscpucfg.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9D11750ADF0031DFA8 /* jscpucfg.h */; };
-		E5DD3CB712E0B08300F1EF4E /* jsdate.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9F11750ADF0031DFA8 /* jsdate.h */; };
-		E5DD3CB812E0B08300F1EF4E /* jsdbgapi.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA111750ADF0031DFA8 /* jsdbgapi.h */; };
-		E5DD3CB912E0B08300F1EF4E /* jsdhash.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA311750ADF0031DFA8 /* jsdhash.h */; };
-		E5DD3CBA12E0B08300F1EF4E /* jsdtoa.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA511750ADF0031DFA8 /* jsdtoa.h */; };
-		E5DD3CBB12E0B08300F1EF4E /* jsdtracef.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA711750ADF0031DFA8 /* jsdtracef.h */; };
-		E5DD3CBC12E0B08300F1EF4E /* jsemit.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDA911750ADF0031DFA8 /* jsemit.h */; };
-		E5DD3CBD12E0B08300F1EF4E /* jsexn.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDAB11750ADF0031DFA8 /* jsexn.h */; };
-		E5DD3CBE12E0B08300F1EF4E /* jsfun.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDAD11750ADF0031DFA8 /* jsfun.h */; };
-		E5DD3CBF12E0B08300F1EF4E /* jsgc.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDAF11750ADF0031DFA8 /* jsgc.h */; };
-		E5DD3CC012E0B08300F1EF4E /* jshash.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB111750ADF0031DFA8 /* jshash.h */; };
-		E5DD3CC112E0B08300F1EF4E /* jshashtable.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB211750ADF0031DFA8 /* jshashtable.h */; };
-		E5DD3CC212E0B08300F1EF4E /* jsinterp.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB411750ADF0031DFA8 /* jsinterp.h */; };
-		E5DD3CC312E0B08300F1EF4E /* jsinterpinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB511750ADF0031DFA8 /* jsinterpinlines.h */; };
-		E5DD3CC412E0B08300F1EF4E /* jsinttypes.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB611750ADF0031DFA8 /* jsinttypes.h */; };
-		E5DD3CC512E0B08300F1EF4E /* jsiter.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDB911750ADF0031DFA8 /* jsiter.h */; };
-		E5DD3CC612E0B08300F1EF4E /* jslibmath.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDBC11750ADF0031DFA8 /* jslibmath.h */; };
-		E5DD3CC712E0B08300F1EF4E /* jslock.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDBE11750ADF0031DFA8 /* jslock.h */; };
-		E5DD3CC812E0B08300F1EF4E /* jslong.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC111750ADF0031DFA8 /* jslong.h */; };
-		E5DD3CC912E0B08300F1EF4E /* jsmath.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC311750ADF0031DFA8 /* jsmath.h */; };
-		E5DD3CCA12E0B08300F1EF4E /* jsnum.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC511750ADF0031DFA8 /* jsnum.h */; };
-		E5DD3CCB12E0B08300F1EF4E /* jsobj.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC711750ADF0031DFA8 /* jsobj.h */; };
-		E5DD3CCC12E0B08300F1EF4E /* jsobjinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDC811750ADF0031DFA8 /* jsobjinlines.h */; };
-		E5DD3CCD12E0B08300F1EF4E /* json.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDCA11750ADF0031DFA8 /* json.h */; };
-		E5DD3CCE12E0B08300F1EF4E /* jsopcode.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDCC11750ADF0031DFA8 /* jsopcode.h */; };
-		E5DD3CCF12E0B08300F1EF4E /* jsotypes.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD011750ADF0031DFA8 /* jsotypes.h */; };
-		E5DD3CD012E0B08300F1EF4E /* jsparse.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD211750ADF0031DFA8 /* jsparse.h */; };
-		E5DD3CD112E0B08300F1EF4E /* jsprf.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD411750ADF0031DFA8 /* jsprf.h */; };
-		E5DD3CD212E0B08300F1EF4E /* jsprvtd.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD611750ADF0031DFA8 /* jsprvtd.h */; };
-		E5DD3CD312E0B08300F1EF4E /* jspubtd.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDD711750ADF0031DFA8 /* jspubtd.h */; };
-		E5DD3CD412E0B08300F1EF4E /* jsregexp.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDDA11750ADF0031DFA8 /* jsregexp.h */; };
-		E5DD3CD512E0B08300F1EF4E /* jsscan.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDDD11750ADF0031DFA8 /* jsscan.h */; };
-		E5DD3CD612E0B08300F1EF4E /* jsscope.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDDF11750ADF0031DFA8 /* jsscope.h */; };
-		E5DD3CD712E0B08300F1EF4E /* jsscopeinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE011750ADF0031DFA8 /* jsscopeinlines.h */; };
-		E5DD3CD812E0B08300F1EF4E /* jsscript.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE211750ADF0031DFA8 /* jsscript.h */; };
-		E5DD3CD912E0B08300F1EF4E /* jsscriptinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE311750ADF0031DFA8 /* jsscriptinlines.h */; };
-		E5DD3CDA12E0B08300F1EF4E /* jsstaticcheck.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE511750ADF0031DFA8 /* jsstaticcheck.h */; };
-		E5DD3CDB12E0B08300F1EF4E /* jsstdint.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE611750ADF0031DFA8 /* jsstdint.h */; };
-		E5DD3CDC12E0B08300F1EF4E /* jsstr.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE811750ADF0031DFA8 /* jsstr.h */; };
-		E5DD3CDD12E0B08300F1EF4E /* jsstrinlines.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDE911750ADF0031DFA8 /* jsstrinlines.h */; };
-		E5DD3CDE12E0B08300F1EF4E /* jstask.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDEB11750ADF0031DFA8 /* jstask.h */; };
-		E5DD3CDF12E0B08300F1EF4E /* jstl.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDEC11750ADF0031DFA8 /* jstl.h */; };
-		E5DD3CE012E0B08300F1EF4E /* jstracer.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDEE11750ADF0031DFA8 /* jstracer.h */; };
-		E5DD3CE112E0B08300F1EF4E /* jstypedarray.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF011750ADF0031DFA8 /* jstypedarray.h */; };
-		E5DD3CE212E0B08300F1EF4E /* jstypes.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF111750ADF0031DFA8 /* jstypes.h */; };
-		E5DD3CE312E0B08300F1EF4E /* jsutil.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF311750ADF0031DFA8 /* jsutil.h */; };
-		E5DD3CE412E0B08300F1EF4E /* jsvector.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF411750ADF0031DFA8 /* jsvector.h */; };
-		E5DD3CE512E0B08300F1EF4E /* jsversion.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF511750ADF0031DFA8 /* jsversion.h */; };
-		E5DD3CE612E0B08300F1EF4E /* jsxdrapi.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDF811750ADF0031DFA8 /* jsxdrapi.h */; };
-		E5DD3CE712E0B08300F1EF4E /* jsxml.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDFA11750ADF0031DFA8 /* jsxml.h */; };
-		E5DD3CE812E0B08300F1EF4E /* Allocator.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBDFF11750ADF0031DFA8 /* Allocator.h */; };
-		E5DD3CE912E0B08300F1EF4E /* Assembler.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0111750ADF0031DFA8 /* Assembler.h */; };
-		E5DD3CEA12E0B08300F1EF4E /* avmplus.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0311750ADF0031DFA8 /* avmplus.h */; };
-		E5DD3CEB12E0B08300F1EF4E /* CodeAlloc.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0511750ADF0031DFA8 /* CodeAlloc.h */; };
-		E5DD3CEC12E0B08300F1EF4E /* Containers.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0711750ADF0031DFA8 /* Containers.h */; };
-		E5DD3CED12E0B08300F1EF4E /* Fragmento.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0911750ADF0031DFA8 /* Fragmento.h */; };
-		E5DD3CEE12E0B08300F1EF4E /* LIR.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0B11750ADF0031DFA8 /* LIR.h */; };
-		E5DD3CEF12E0B08300F1EF4E /* nanojit.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0D11750ADF0031DFA8 /* nanojit.h */; };
-		E5DD3CF012E0B08300F1EF4E /* Native.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE0E11750ADF0031DFA8 /* Native.h */; };
-		E5DD3CF112E0B08300F1EF4E /* NativeARM.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1011750ADF0031DFA8 /* NativeARM.h */; };
-		E5DD3CF212E0B08300F1EF4E /* Nativei386.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1211750ADF0031DFA8 /* Nativei386.h */; };
-		E5DD3CF312E0B08300F1EF4E /* NativeMIPS.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1411750ADF0031DFA8 /* NativeMIPS.h */; };
-		E5DD3CF412E0B08300F1EF4E /* NativePPC.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1611750ADF0031DFA8 /* NativePPC.h */; };
-		E5DD3CF512E0B08300F1EF4E /* NativeSparc.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1811750ADF0031DFA8 /* NativeSparc.h */; };
-		E5DD3CF612E0B08300F1EF4E /* NativeX64.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1A11750ADF0031DFA8 /* NativeX64.h */; };
-		E5DD3CF712E0B08300F1EF4E /* njconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1C11750ADF0031DFA8 /* njconfig.h */; };
-		E5DD3CF812E0B08300F1EF4E /* njcpudetect.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1D11750ADF0031DFA8 /* njcpudetect.h */; };
-		E5DD3CF912E0B08300F1EF4E /* RegAlloc.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE1F11750ADF0031DFA8 /* RegAlloc.h */; };
-		E5DD3CFA12E0B08300F1EF4E /* VMPI.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE2111750ADF0031DFA8 /* VMPI.h */; };
-		E5DD3CFB12E0B08300F1EF4E /* prmjtime.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE2311750ADF0031DFA8 /* prmjtime.h */; };
-		E5DD3CFC12E0B08300F1EF4E /* resource.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE2411750ADF0031DFA8 /* resource.h */; };
-		E5DD3CFD12E0B08300F1EF4E /* vprof.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBE2711750ADF0031DFA8 /* vprof.h */; };
-		E5DD3CFE12E0B08300F1EF4E /* jsautokw.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD9011750ADF0031DFA8 /* jsautokw.h */; };
 		E5DD3D0812E0B08300F1EF4E /* computed.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C1E22311B7172A000B9C56 /* computed.h */; };
 		E5DD3D0912E0B08300F1EF4E /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C1E22411B7172A000B9C56 /* errors.h */; };
 		E5DD3D0A12E0B08300F1EF4E /* fpmath.h in Headers */ = {isa = PBXBuildFile; fileRef = E5C1E22511B7172A000B9C56 /* fpmath.h */; };
@@ -12913,95 +12612,6 @@
 				73F098EB12E9D09E00656E84 /* ucpgba.h in Headers */,
 				73F098EC12E9D09E00656E84 /* ucdata.h in Headers */,
 				73F098ED12E9D09E00656E84 /* ucdata_static.h in Headers */,
-				73F098EE12E9D09E00656E84 /* js-confdefs.h in Headers */,
-				73F098EF12E9D09E00656E84 /* js-config.h in Headers */,
-				73F098F012E9D09E00656E84 /* jsapi.h in Headers */,
-				73F098F112E9D09E00656E84 /* jsarena.h in Headers */,
-				73F098F212E9D09E00656E84 /* jsarray.h in Headers */,
-				73F098F312E9D09E00656E84 /* jsatom.h in Headers */,
-				73F098F412E9D09E00656E84 /* jsatominlines.h in Headers */,
-				73F098F512E9D09E00656E84 /* jsautocfg.h in Headers */,
-				73F098F612E9D09E00656E84 /* jsautooplen.h in Headers */,
-				73F098F712E9D09E00656E84 /* jsbit.h in Headers */,
-				73F098F812E9D09E00656E84 /* jsbool.h in Headers */,
-				73F098F912E9D09E00656E84 /* jsbuiltins.h in Headers */,
-				73F098FA12E9D09E00656E84 /* jsclist.h in Headers */,
-				73F098FB12E9D09E00656E84 /* jscntxt.h in Headers */,
-				73F098FC12E9D09E00656E84 /* jscntxtinlines.h in Headers */,
-				73F098FD12E9D09E00656E84 /* jscompat.h in Headers */,
-				73F098FE12E9D09E00656E84 /* jscpucfg.h in Headers */,
-				73F098FF12E9D09E00656E84 /* jsdate.h in Headers */,
-				73F0990012E9D09E00656E84 /* jsdbgapi.h in Headers */,
-				73F0990112E9D09E00656E84 /* jsdhash.h in Headers */,
-				73F0990212E9D09E00656E84 /* jsdtoa.h in Headers */,
-				73F0990312E9D09E00656E84 /* jsdtracef.h in Headers */,
-				73F0990412E9D09E00656E84 /* jsemit.h in Headers */,
-				73F0990512E9D09E00656E84 /* jsexn.h in Headers */,
-				73F0990612E9D09E00656E84 /* jsfun.h in Headers */,
-				73F0990712E9D09E00656E84 /* jsgc.h in Headers */,
-				73F0990812E9D09E00656E84 /* jshash.h in Headers */,
-				73F0990912E9D09E00656E84 /* jshashtable.h in Headers */,
-				73F0990A12E9D09E00656E84 /* jsinterp.h in Headers */,
-				73F0990B12E9D09E00656E84 /* jsinterpinlines.h in Headers */,
-				73F0990C12E9D09E00656E84 /* jsinttypes.h in Headers */,
-				73F0990D12E9D09E00656E84 /* jsiter.h in Headers */,
-				73F0990E12E9D09E00656E84 /* jslibmath.h in Headers */,
-				73F0990F12E9D09E00656E84 /* jslock.h in Headers */,
-				73F0991012E9D09E00656E84 /* jslong.h in Headers */,
-				73F0991112E9D09E00656E84 /* jsmath.h in Headers */,
-				73F0991212E9D09E00656E84 /* jsnum.h in Headers */,
-				73F0991312E9D09E00656E84 /* jsobj.h in Headers */,
-				73F0991412E9D09E00656E84 /* jsobjinlines.h in Headers */,
-				73F0991512E9D09E00656E84 /* json.h in Headers */,
-				73F0991612E9D09E00656E84 /* jsopcode.h in Headers */,
-				73F0991712E9D09E00656E84 /* jsotypes.h in Headers */,
-				73F0991812E9D09E00656E84 /* jsparse.h in Headers */,
-				73F0991912E9D09E00656E84 /* jsprf.h in Headers */,
-				73F0991A12E9D09E00656E84 /* jsprvtd.h in Headers */,
-				73F0991B12E9D09E00656E84 /* jspubtd.h in Headers */,
-				73F0991C12E9D09E00656E84 /* jsregexp.h in Headers */,
-				73F0991D12E9D09E00656E84 /* jsscan.h in Headers */,
-				73F0991E12E9D09E00656E84 /* jsscope.h in Headers */,
-				73F0991F12E9D09E00656E84 /* jsscopeinlines.h in Headers */,
-				73F0992012E9D09E00656E84 /* jsscript.h in Headers */,
-				73F0992112E9D09E00656E84 /* jsscriptinlines.h in Headers */,
-				73F0992212E9D09E00656E84 /* jsstaticcheck.h in Headers */,
-				73F0992312E9D09E00656E84 /* jsstdint.h in Headers */,
-				73F0992412E9D09E00656E84 /* jsstr.h in Headers */,
-				73F0992512E9D09E00656E84 /* jsstrinlines.h in Headers */,
-				73F0992612E9D09E00656E84 /* jstask.h in Headers */,
-				73F0992712E9D09E00656E84 /* jstl.h in Headers */,
-				73F0992812E9D09E00656E84 /* jstracer.h in Headers */,
-				73F0992912E9D09E00656E84 /* jstypedarray.h in Headers */,
-				73F0992A12E9D09E00656E84 /* jstypes.h in Headers */,
-				73F0992B12E9D09E00656E84 /* jsutil.h in Headers */,
-				73F0992C12E9D09E00656E84 /* jsvector.h in Headers */,
-				73F0992D12E9D09E00656E84 /* jsversion.h in Headers */,
-				73F0992E12E9D09E00656E84 /* jsxdrapi.h in Headers */,
-				73F0992F12E9D09E00656E84 /* jsxml.h in Headers */,
-				73F0993012E9D09E00656E84 /* Allocator.h in Headers */,
-				73F0993112E9D09E00656E84 /* Assembler.h in Headers */,
-				73F0993212E9D09E00656E84 /* avmplus.h in Headers */,
-				73F0993312E9D09E00656E84 /* CodeAlloc.h in Headers */,
-				73F0993412E9D09E00656E84 /* Containers.h in Headers */,
-				73F0993512E9D09E00656E84 /* Fragmento.h in Headers */,
-				73F0993612E9D09E00656E84 /* LIR.h in Headers */,
-				73F0993712E9D09E00656E84 /* nanojit.h in Headers */,
-				73F0993812E9D09E00656E84 /* Native.h in Headers */,
-				73F0993912E9D09E00656E84 /* NativeARM.h in Headers */,
-				73F0993A12E9D09E00656E84 /* Nativei386.h in Headers */,
-				73F0993B12E9D09E00656E84 /* NativeMIPS.h in Headers */,
-				73F0993C12E9D09E00656E84 /* NativePPC.h in Headers */,
-				73F0993D12E9D09E00656E84 /* NativeSparc.h in Headers */,
-				73F0993E12E9D09E00656E84 /* NativeX64.h in Headers */,
-				73F0993F12E9D09E00656E84 /* njconfig.h in Headers */,
-				73F0994012E9D09E00656E84 /* njcpudetect.h in Headers */,
-				73F0994112E9D09E00656E84 /* RegAlloc.h in Headers */,
-				73F0994212E9D09E00656E84 /* VMPI.h in Headers */,
-				73F0994312E9D09E00656E84 /* prmjtime.h in Headers */,
-				73F0994412E9D09E00656E84 /* resource.h in Headers */,
-				73F0994512E9D09E00656E84 /* vprof.h in Headers */,
-				73F0994612E9D09E00656E84 /* jsautokw.h in Headers */,
 				73F0994712E9D09E00656E84 /* computed.h in Headers */,
 				73F0994812E9D09E00656E84 /* errors.h in Headers */,
 				73F0994912E9D09E00656E84 /* fpmath.h in Headers */,
@@ -16139,95 +15749,6 @@
 				E5DD3C9B12E0B08300F1EF4E /* ucpgba.h in Headers */,
 				E5DD3C9C12E0B08300F1EF4E /* ucdata.h in Headers */,
 				E5DD3C9D12E0B08300F1EF4E /* ucdata_static.h in Headers */,
-				E5DD3CA612E0B08300F1EF4E /* js-confdefs.h in Headers */,
-				E5DD3CA712E0B08300F1EF4E /* js-config.h in Headers */,
-				E5DD3CA812E0B08300F1EF4E /* jsapi.h in Headers */,
-				E5DD3CA912E0B08300F1EF4E /* jsarena.h in Headers */,
-				E5DD3CAA12E0B08300F1EF4E /* jsarray.h in Headers */,
-				E5DD3CAB12E0B08300F1EF4E /* jsatom.h in Headers */,
-				E5DD3CAC12E0B08300F1EF4E /* jsatominlines.h in Headers */,
-				E5DD3CAD12E0B08300F1EF4E /* jsautocfg.h in Headers */,
-				E5DD3CAE12E0B08300F1EF4E /* jsautooplen.h in Headers */,
-				E5DD3CAF12E0B08300F1EF4E /* jsbit.h in Headers */,
-				E5DD3CB012E0B08300F1EF4E /* jsbool.h in Headers */,
-				E5DD3CB112E0B08300F1EF4E /* jsbuiltins.h in Headers */,
-				E5DD3CB212E0B08300F1EF4E /* jsclist.h in Headers */,
-				E5DD3CB312E0B08300F1EF4E /* jscntxt.h in Headers */,
-				E5DD3CB412E0B08300F1EF4E /* jscntxtinlines.h in Headers */,
-				E5DD3CB512E0B08300F1EF4E /* jscompat.h in Headers */,
-				E5DD3CB612E0B08300F1EF4E /* jscpucfg.h in Headers */,
-				E5DD3CB712E0B08300F1EF4E /* jsdate.h in Headers */,
-				E5DD3CB812E0B08300F1EF4E /* jsdbgapi.h in Headers */,
-				E5DD3CB912E0B08300F1EF4E /* jsdhash.h in Headers */,
-				E5DD3CBA12E0B08300F1EF4E /* jsdtoa.h in Headers */,
-				E5DD3CBB12E0B08300F1EF4E /* jsdtracef.h in Headers */,
-				E5DD3CBC12E0B08300F1EF4E /* jsemit.h in Headers */,
-				E5DD3CBD12E0B08300F1EF4E /* jsexn.h in Headers */,
-				E5DD3CBE12E0B08300F1EF4E /* jsfun.h in Headers */,
-				E5DD3CBF12E0B08300F1EF4E /* jsgc.h in Headers */,
-				E5DD3CC012E0B08300F1EF4E /* jshash.h in Headers */,
-				E5DD3CC112E0B08300F1EF4E /* jshashtable.h in Headers */,
-				E5DD3CC212E0B08300F1EF4E /* jsinterp.h in Headers */,
-				E5DD3CC312E0B08300F1EF4E /* jsinterpinlines.h in Headers */,
-				E5DD3CC412E0B08300F1EF4E /* jsinttypes.h in Headers */,
-				E5DD3CC512E0B08300F1EF4E /* jsiter.h in Headers */,
-				E5DD3CC612E0B08300F1EF4E /* jslibmath.h in Headers */,
-				E5DD3CC712E0B08300F1EF4E /* jslock.h in Headers */,
-				E5DD3CC812E0B08300F1EF4E /* jslong.h in Headers */,
-				E5DD3CC912E0B08300F1EF4E /* jsmath.h in Headers */,
-				E5DD3CCA12E0B08300F1EF4E /* jsnum.h in Headers */,
-				E5DD3CCB12E0B08300F1EF4E /* jsobj.h in Headers */,
-				E5DD3CCC12E0B08300F1EF4E /* jsobjinlines.h in Headers */,
-				E5DD3CCD12E0B08300F1EF4E /* json.h in Headers */,
-				E5DD3CCE12E0B08300F1EF4E /* jsopcode.h in Headers */,
-				E5DD3CCF12E0B08300F1EF4E /* jsotypes.h in Headers */,
-				E5DD3CD012E0B08300F1EF4E /* jsparse.h in Headers */,
-				E5DD3CD112E0B08300F1EF4E /* jsprf.h in Headers */,
-				E5DD3CD212E0B08300F1EF4E /* jsprvtd.h in Headers */,
-				E5DD3CD312E0B08300F1EF4E /* jspubtd.h in Headers */,
-				E5DD3CD412E0B08300F1EF4E /* jsregexp.h in Headers */,
-				E5DD3CD512E0B08300F1EF4E /* jsscan.h in Headers */,
-				E5DD3CD612E0B08300F1EF4E /* jsscope.h in Headers */,
-				E5DD3CD712E0B08300F1EF4E /* jsscopeinlines.h in Headers */,
-				E5DD3CD812E0B08300F1EF4E /* jsscript.h in Headers */,
-				E5DD3CD912E0B08300F1EF4E /* jsscriptinlines.h in Headers */,
-				E5DD3CDA12E0B08300F1EF4E /* jsstaticcheck.h in Headers */,
-				E5DD3CDB12E0B08300F1EF4E /* jsstdint.h in Headers */,
-				E5DD3CDC12E0B08300F1EF4E /* jsstr.h in Headers */,
-				E5DD3CDD12E0B08300F1EF4E /* jsstrinlines.h in Headers */,
-				E5DD3CDE12E0B08300F1EF4E /* jstask.h in Headers */,
-				E5DD3CDF12E0B08300F1EF4E /* jstl.h in Headers */,
-				E5DD3CE012E0B08300F1EF4E /* jstracer.h in Headers */,
-				E5DD3CE112E0B08300F1EF4E /* jstypedarray.h in Headers */,
-				E5DD3CE212E0B08300F1EF4E /* jstypes.h in Headers */,
-				E5DD3CE312E0B08300F1EF4E /* jsutil.h in Headers */,
-				E5DD3CE412E0B08300F1EF4E /* jsvector.h in Headers */,
-				E5DD3CE512E0B08300F1EF4E /* jsversion.h in Headers */,
-				E5DD3CE612E0B08300F1EF4E /* jsxdrapi.h in Headers */,
-				E5DD3CE712E0B08300F1EF4E /* jsxml.h in Headers */,
-				E5DD3CE812E0B08300F1EF4E /* Allocator.h in Headers */,
-				E5DD3CE912E0B08300F1EF4E /* Assembler.h in Headers */,
-				E5DD3CEA12E0B08300F1EF4E /* avmplus.h in Headers */,
-				E5DD3CEB12E0B08300F1EF4E /* CodeAlloc.h in Headers */,
-				E5DD3CEC12E0B08300F1EF4E /* Containers.h in Headers */,
-				E5DD3CED12E0B08300F1EF4E /* Fragmento.h in Headers */,
-				E5DD3CEE12E0B08300F1EF4E /* LIR.h in Headers */,
-				E5DD3CEF12E0B08300F1EF4E /* nanojit.h in Headers */,
-				E5DD3CF012E0B08300F1EF4E /* Native.h in Headers */,
-				E5DD3CF112E0B08300F1EF4E /* NativeARM.h in Headers */,
-				E5DD3CF212E0B08300F1EF4E /* Nativei386.h in Headers */,
-				E5DD3CF312E0B08300F1EF4E /* NativeMIPS.h in Headers */,
-				E5DD3CF412E0B08300F1EF4E /* NativePPC.h in Headers */,
-				E5DD3CF512E0B08300F1EF4E /* NativeSparc.h in Headers */,
-				E5DD3CF612E0B08300F1EF4E /* NativeX64.h in Headers */,
-				E5DD3CF712E0B08300F1EF4E /* njconfig.h in Headers */,
-				E5DD3CF812E0B08300F1EF4E /* njcpudetect.h in Headers */,
-				E5DD3CF912E0B08300F1EF4E /* RegAlloc.h in Headers */,
-				E5DD3CFA12E0B08300F1EF4E /* VMPI.h in Headers */,
-				E5DD3CFB12E0B08300F1EF4E /* prmjtime.h in Headers */,
-				E5DD3CFC12E0B08300F1EF4E /* resource.h in Headers */,
-				E5DD3CFD12E0B08300F1EF4E /* vprof.h in Headers */,
-				E5DD3CFE12E0B08300F1EF4E /* jsautokw.h in Headers */,
 				E5DD3D0812E0B08300F1EF4E /* computed.h in Headers */,
 				E5DD3D0912E0B08300F1EF4E /* errors.h in Headers */,
 				E5DD3D0A12E0B08300F1EF4E /* fpmath.h in Headers */,
@@ -17086,7 +16607,6 @@
 				E52FA67914F686AA00992064 /* nuiStringTemplate.cpp in Sources */,
 				E50FE78F1691089600A9461A /* nuiGL2Painter.cpp in Sources */,
 				E5AD0A5E169F235B00836BAA /* nuiShader.cpp in Sources */,
-				E5C4EB7416AF43590029047C /* nuiSpiderMonkey.cpp in Sources */,
 				E54D8FBE16C1D7FD00102723 /* nuiAudioDevice_AudioUnit.mm in Sources */,
 				E548CEFC16E4EABF00F98E45 /* nuiUniformDesc.cpp in Sources */,
 				E50F41EB16E7744000519AF0 /* nuiVertexAttribDesc.cpp in Sources */,
@@ -17314,66 +16834,6 @@
 				E57E571313CC8ED50021055F /* hb-ot-shape-complex-indic.cc in Sources */,
 				E5CB6A8913D9D375005C7B6F /* hb-ot-shape-normalize.cc in Sources */,
 				E501C11E13FD4561009FB677 /* hb-fallback-shape.cc in Sources */,
-				E5C4EBAC16AF43A30029047C /* jsapi.cpp in Sources */,
-				E5C4EBAD16AF43A30029047C /* jsarena.cpp in Sources */,
-				E5C4EBAE16AF43A30029047C /* jsarray.cpp in Sources */,
-				E5C4EBAF16AF43A30029047C /* jsatom.cpp in Sources */,
-				E5C4EBB016AF43A30029047C /* jsbool.cpp in Sources */,
-				E5C4EBB116AF43A30029047C /* jsbuiltins.cpp in Sources */,
-				E5C4EBB216AF43A30029047C /* jscntxt.cpp in Sources */,
-				E5C4EBB316AF43A30029047C /* jscpucfg.cpp in Sources */,
-				E5C4EBB416AF43A30029047C /* jsdate.cpp in Sources */,
-				E5C4EBB516AF43A30029047C /* jsdbgapi.cpp in Sources */,
-				E5C4EBB616AF43A30029047C /* jsdhash.cpp in Sources */,
-				E5C4EBB716AF43A30029047C /* jsdtoa.cpp in Sources */,
-				E5C4EBB916AF43A30029047C /* jsemit.cpp in Sources */,
-				E5C4EBBA16AF43A30029047C /* jsexn.cpp in Sources */,
-				E5C4EBBB16AF43A30029047C /* jsfun.cpp in Sources */,
-				E5C4EBBC16AF43A30029047C /* jsgc.cpp in Sources */,
-				E5C4EBBD16AF43A30029047C /* jshash.cpp in Sources */,
-				E5C4EBBE16AF43A30029047C /* jsinterp.cpp in Sources */,
-				E5C4EBBF16AF43A30029047C /* jsinvoke.cpp in Sources */,
-				E5C4EBC016AF43A30029047C /* jsiter.cpp in Sources */,
-				E5C4EBC116AF43A30029047C /* jskwgen.cpp in Sources */,
-				E5C4EBC216AF43A30029047C /* jslock.cpp in Sources */,
-				E5C4EBC316AF43A30029047C /* jslog2.cpp in Sources */,
-				E5C4EBC416AF43A30029047C /* jsmath.cpp in Sources */,
-				E5C4EBC516AF43A30029047C /* jsnum.cpp in Sources */,
-				E5C4EBC616AF43A30029047C /* jsobj.cpp in Sources */,
-				E5C4EBC716AF43A30029047C /* json.cpp in Sources */,
-				E5C4EBC816AF43A30029047C /* jsopcode.cpp in Sources */,
-				E5C4EBC916AF43A30029047C /* jsoplengen.cpp in Sources */,
-				E5C4EBCB16AF43A30029047C /* jsparse.cpp in Sources */,
-				E5C4EBCC16AF43A30029047C /* jsprf.cpp in Sources */,
-				E5C4EBCE16AF43A30029047C /* jsregexp.cpp in Sources */,
-				E5C4EBCF16AF43A30029047C /* jsscan.cpp in Sources */,
-				E5C4EBD016AF43A30029047C /* jsscope.cpp in Sources */,
-				E5C4EBD116AF43A30029047C /* jsscript.cpp in Sources */,
-				E5C4EBD216AF43A30029047C /* jsstr.cpp in Sources */,
-				E5C4EBD316AF43A30029047C /* jstask.cpp in Sources */,
-				E5C4EBD416AF43A30029047C /* jstracer.cpp in Sources */,
-				E5C4EBD516AF43A30029047C /* jstypedarray.cpp in Sources */,
-				E5C4EBD616AF43A30029047C /* jsutil.cpp in Sources */,
-				E5C4EBD716AF43A30029047C /* jsxdrapi.cpp in Sources */,
-				E5C4EBD816AF43A30029047C /* jsxml.cpp in Sources */,
-				E5C4EBD916AF43A30029047C /* prmjtime.cpp in Sources */,
-				E5C4EBEA16AF43B30029047C /* Allocator.cpp in Sources */,
-				E5C4EBEB16AF43B30029047C /* Assembler.cpp in Sources */,
-				E5C4EBEC16AF43B30029047C /* avmplus.cpp in Sources */,
-				E5C4EBED16AF43B30029047C /* CodeAlloc.cpp in Sources */,
-				E5C4EBEE16AF43B30029047C /* Containers.cpp in Sources */,
-				E5C4EBEF16AF43B30029047C /* Fragmento.cpp in Sources */,
-				E5C4EBF016AF43B30029047C /* LIR.cpp in Sources */,
-				E5C4EBF116AF43B30029047C /* NativeARM.cpp in Sources */,
-				E5C4EBF216AF43B30029047C /* Nativei386.cpp in Sources */,
-				E5C4EBF316AF43B30029047C /* NativeMIPS.cpp in Sources */,
-				E5C4EBF416AF43B30029047C /* NativePPC.cpp in Sources */,
-				E5C4EBF516AF43B30029047C /* NativeSparc.cpp in Sources */,
-				E5C4EBF616AF43B30029047C /* NativeX64.cpp in Sources */,
-				E5C4EBF716AF43B30029047C /* njconfig.cpp in Sources */,
-				E5C4EBF816AF43B30029047C /* RegAlloc.cpp in Sources */,
-				E5C4EBF916AF43B30029047C /* VMPI.cpp in Sources */,
-				E5C4EBFB16AF43D00029047C /* vprof.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -17712,7 +17172,6 @@
 				E52FA67714F686AA00992064 /* nuiStringTemplate.cpp in Sources */,
 				E50FE78D1691089600A9461A /* nuiGL2Painter.cpp in Sources */,
 				E5AD0A5C169F235B00836BAA /* nuiShader.cpp in Sources */,
-				E5C4EB7116AF43570029047C /* nuiSpiderMonkey.cpp in Sources */,
 				E54D8FBC16C1D7FD00102723 /* nuiAudioDevice_AudioUnit.mm in Sources */,
 				E548CEFA16E4EABF00F98E45 /* nuiUniformDesc.cpp in Sources */,
 				E50F41E916E7744000519AF0 /* nuiVertexAttribDesc.cpp in Sources */,
@@ -18054,7 +17513,6 @@
 				E52FA67814F686AA00992064 /* nuiStringTemplate.cpp in Sources */,
 				E50FE78E1691089600A9461A /* nuiGL2Painter.cpp in Sources */,
 				E5AD0A5D169F235B00836BAA /* nuiShader.cpp in Sources */,
-				E5C4EB7316AF43580029047C /* nuiSpiderMonkey.cpp in Sources */,
 				E54D8FBD16C1D7FD00102723 /* nuiAudioDevice_AudioUnit.mm in Sources */,
 				E548CEFB16E4EABF00F98E45 /* nuiUniformDesc.cpp in Sources */,
 				E50F41EA16E7744000519AF0 /* nuiVertexAttribDesc.cpp in Sources */,
@@ -19959,66 +19417,6 @@
 				E57E571413CC8ED60021055F /* hb-ot-shape-complex-indic.cc in Sources */,
 				E5CB6A8813D9D375005C7B6F /* hb-ot-shape-normalize.cc in Sources */,
 				E501C11D13FD4561009FB677 /* hb-fallback-shape.cc in Sources */,
-				E5C4EB7D16AF43A20029047C /* jsapi.cpp in Sources */,
-				E5C4EB7E16AF43A20029047C /* jsarena.cpp in Sources */,
-				E5C4EB7F16AF43A20029047C /* jsarray.cpp in Sources */,
-				E5C4EB8016AF43A20029047C /* jsatom.cpp in Sources */,
-				E5C4EB8116AF43A20029047C /* jsbool.cpp in Sources */,
-				E5C4EB8216AF43A20029047C /* jsbuiltins.cpp in Sources */,
-				E5C4EB8316AF43A20029047C /* jscntxt.cpp in Sources */,
-				E5C4EB8416AF43A20029047C /* jscpucfg.cpp in Sources */,
-				E5C4EB8516AF43A20029047C /* jsdate.cpp in Sources */,
-				E5C4EB8616AF43A20029047C /* jsdbgapi.cpp in Sources */,
-				E5C4EB8716AF43A20029047C /* jsdhash.cpp in Sources */,
-				E5C4EB8816AF43A20029047C /* jsdtoa.cpp in Sources */,
-				E5C4EB8A16AF43A20029047C /* jsemit.cpp in Sources */,
-				E5C4EB8B16AF43A20029047C /* jsexn.cpp in Sources */,
-				E5C4EB8C16AF43A20029047C /* jsfun.cpp in Sources */,
-				E5C4EB8D16AF43A20029047C /* jsgc.cpp in Sources */,
-				E5C4EB8E16AF43A20029047C /* jshash.cpp in Sources */,
-				E5C4EB8F16AF43A20029047C /* jsinterp.cpp in Sources */,
-				E5C4EB9016AF43A20029047C /* jsinvoke.cpp in Sources */,
-				E5C4EB9116AF43A20029047C /* jsiter.cpp in Sources */,
-				E5C4EB9216AF43A20029047C /* jskwgen.cpp in Sources */,
-				E5C4EB9316AF43A20029047C /* jslock.cpp in Sources */,
-				E5C4EB9416AF43A20029047C /* jslog2.cpp in Sources */,
-				E5C4EB9516AF43A20029047C /* jsmath.cpp in Sources */,
-				E5C4EB9616AF43A20029047C /* jsnum.cpp in Sources */,
-				E5C4EB9716AF43A20029047C /* jsobj.cpp in Sources */,
-				E5C4EB9816AF43A20029047C /* json.cpp in Sources */,
-				E5C4EB9916AF43A20029047C /* jsopcode.cpp in Sources */,
-				E5C4EB9A16AF43A20029047C /* jsoplengen.cpp in Sources */,
-				E5C4EB9C16AF43A20029047C /* jsparse.cpp in Sources */,
-				E5C4EB9D16AF43A20029047C /* jsprf.cpp in Sources */,
-				E5C4EB9F16AF43A20029047C /* jsregexp.cpp in Sources */,
-				E5C4EBA016AF43A20029047C /* jsscan.cpp in Sources */,
-				E5C4EBA116AF43A20029047C /* jsscope.cpp in Sources */,
-				E5C4EBA216AF43A20029047C /* jsscript.cpp in Sources */,
-				E5C4EBA316AF43A20029047C /* jsstr.cpp in Sources */,
-				E5C4EBA416AF43A20029047C /* jstask.cpp in Sources */,
-				E5C4EBA516AF43A20029047C /* jstracer.cpp in Sources */,
-				E5C4EBA616AF43A20029047C /* jstypedarray.cpp in Sources */,
-				E5C4EBA716AF43A20029047C /* jsutil.cpp in Sources */,
-				E5C4EBA816AF43A20029047C /* jsxdrapi.cpp in Sources */,
-				E5C4EBA916AF43A20029047C /* jsxml.cpp in Sources */,
-				E5C4EBAA16AF43A20029047C /* prmjtime.cpp in Sources */,
-				E5C4EBDA16AF43B20029047C /* Allocator.cpp in Sources */,
-				E5C4EBDB16AF43B20029047C /* Assembler.cpp in Sources */,
-				E5C4EBDC16AF43B20029047C /* avmplus.cpp in Sources */,
-				E5C4EBDD16AF43B20029047C /* CodeAlloc.cpp in Sources */,
-				E5C4EBDE16AF43B20029047C /* Containers.cpp in Sources */,
-				E5C4EBDF16AF43B20029047C /* Fragmento.cpp in Sources */,
-				E5C4EBE016AF43B20029047C /* LIR.cpp in Sources */,
-				E5C4EBE116AF43B20029047C /* NativeARM.cpp in Sources */,
-				E5C4EBE216AF43B20029047C /* Nativei386.cpp in Sources */,
-				E5C4EBE316AF43B20029047C /* NativeMIPS.cpp in Sources */,
-				E5C4EBE416AF43B20029047C /* NativePPC.cpp in Sources */,
-				E5C4EBE516AF43B20029047C /* NativeSparc.cpp in Sources */,
-				E5C4EBE616AF43B20029047C /* NativeX64.cpp in Sources */,
-				E5C4EBE716AF43B20029047C /* njconfig.cpp in Sources */,
-				E5C4EBE816AF43B20029047C /* RegAlloc.cpp in Sources */,
-				E5C4EBE916AF43B20029047C /* VMPI.cpp in Sources */,
-				E5C4EBFA16AF43D00029047C /* vprof.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -20219,7 +19617,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(GCC_PREPROCESSOR_DEFINITIONS)";
@@ -20264,12 +19662,11 @@
 					deps/libcss/src/libparserutils,
 					deps/libcss/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = nuiPhone_arm7;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Default;
 		};
@@ -20277,7 +19674,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREFIX_HEADER = "";
@@ -20323,12 +19720,11 @@
 					deps/libcss/src/libparserutils,
 					deps/libcss/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = thirdparty_ios_arm7;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Default;
 		};
@@ -20336,6 +19732,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -20382,7 +19779,7 @@
 					deps/libcss/src/libparserutils,
 					deps/libcss/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "";
 				PRODUCT_NAME = nuiPhoneD;
 				SDKROOT = iphoneos;
@@ -20553,7 +19950,7 @@
 		E5A8D1D211E33A54004E14CE /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_FAST_OBJC_DISPATCH = NO;
 				GCC_MODEL_TUNING = "";
@@ -20615,7 +20012,7 @@
 		E5D643E41209AB9C009C26A9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_FAST_OBJC_DISPATCH = NO;

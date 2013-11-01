@@ -111,8 +111,12 @@ typedef unsigned __int64  JSUint64;
 #define JS_BYTES_PER_WORD 8
 #elif (defined __powerpc) || (defined __powerpc__) || (defined __POWERPC__) || (defined __ppc__) || (defined _M_PPC) || (defined __PPC) || (defined __PPC__)
 #define JS_BYTES_PER_WORD 4
-#elif (defined __arm) || (defined __arm__) || (defined __ARM__) || (defined _M_ARM) || (defined __ARM__)
-#define JS_BYTES_PER_WORD 4
+#elif ((defined __arm) || (defined __arm__) || (defined __ARM__) || (defined _M_ARM) || (defined __ARM__))
+  #if (defined __LP64__)
+    #define JS_BYTES_PER_WORD 8
+  #else
+    #define JS_BYTES_PER_WORD 4
+  #endif
 #endif
 
 /* Some mozilla code uses JS-friend APIs that depend on JS_TRACER being

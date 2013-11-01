@@ -18,18 +18,10 @@
 #include "nglDragAndDropObjects.h"
 #include "nglDataObjects.h"
 
-OSErr nglDragTrackingHandler (DragTrackingMessage message, WindowRef theWindow, void * handlerRefCon, DragRef theDrag);
-OSErr nglDragReceiveHandler(WindowRef theWindow, void * handlerRefCon, DragRef theDrag);
-OSErr nglDragSendData(FlavorType theType, void * dragSendRefCon, DragItemRef theItemRef, DragRef theDrag);
-
-void PrintErr(OSErr err);
-DragActions GetDragActions(nglDropEffect effect);
-void SetAllowedDropEffects(nglDragAndDrop* pObject, DragActions actions);
-
 class nglCocoaDragAndDrop
 {
 public:
-  nglCocoaDragAndDrop(nglWindow* pWin, WindowRef winRef);
+  nglCocoaDragAndDrop(nglWindow* pWin);
   ~nglCocoaDragAndDrop();
 
   bool Drag(nglDragAndDrop* pDragObject);
@@ -48,20 +40,14 @@ public:
   
 public:
   nglWindow*  mpWin;
-  WindowRef   mWinRef;
+  void*   mWindow;
 
   bool        mCanDrop;
   
   nglDragAndDrop* mpDragObject;
   nglDragAndDrop* mpDropObject;
-  
-  
-  EventRecord mEventRecord; // stupid but needed...
-  DragRef     mDragRef;
-  RgnHandle   mDragRgn;
-  DragTrackingHandlerUPP  mDragTrackingHandler;
-  DragReceiveHandlerUPP   mDragReceiveHandler;
-  DragSendDataUPP         mSendProc;
+
+  void* mNSPasteboard;
 };
 
-#endif//__nglDragCocoaDragAndDrop_h__
+

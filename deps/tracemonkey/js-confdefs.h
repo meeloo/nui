@@ -21,6 +21,11 @@
   #   define AVMPLUS_ARM 1
   #endif
 
+  #if (defined __LP64__)
+  #  define NANOJIT_64BIT
+  #  define AVMPLUS_64BIT 1
+  #endif
+
   #define CPP_THROW_NEW throw()
   #define D_INO d_ino
   #define EDITLINE 1
@@ -78,7 +83,7 @@
   #define HAVE__UNWIND_BACKTRACE 1
   #define HAVE___CXA_DEMANGLE 1
 
-  #ifdef AVMPLUS_64BIT
+  #ifdef __LP64__
     #define JS_ALIGN_OF_POINTER 8
     #define JS_BITS_PER_WORD_LOG2 6
     #define JS_BYTES_PER_DOUBLE 8

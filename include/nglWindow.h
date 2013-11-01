@@ -894,6 +894,7 @@ private:
   nglContextInfo mContextInfo;
   StateChange mState;
   nglDragAndDrop* mpDragged;
+  class nglCocoaDragAndDrop* mpCocoaDragAndDrop;
 public:
   void SetDraggedObject(nglDragAndDrop* pDragged) { mpDragged = pDragged; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }

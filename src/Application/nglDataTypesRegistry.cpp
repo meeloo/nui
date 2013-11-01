@@ -17,7 +17,7 @@ nglDataTypesRegistry::~nglDataTypesRegistry()
 
 }
 
-bool nglDataTypesRegistry::IsTypeRegistered(nglNativeObjectType Type)
+bool nglDataTypesRegistry::IsNativeTypeRegistered(nglNativeObjectType Type)
 {
   for (std::map<nglString, nglNativeObjectType>::iterator it = mRegisteredNativeTypes.begin(); it != mRegisteredNativeTypes.end(); it++)
     if (it->second == Type)

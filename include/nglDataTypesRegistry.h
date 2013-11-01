@@ -22,10 +22,10 @@ typedef UINT        nglNativeObjectType;
 typedef uint        nglNativeObjectType;
 #endif
 #ifdef _COCOA_
-typedef uint        nglNativeObjectType;
+typedef nglString   nglNativeObjectType;
 #endif
 #ifdef _UIKIT_
-typedef uint        nglNativeObjectType;
+typedef nglString   nglNativeObjectType;
 #endif
 #ifdef _ANDROID_
 typedef uint        nglNativeObjectType;
@@ -45,7 +45,7 @@ public:
   nglDataTypesRegistry();
   ~nglDataTypesRegistry();
 
-  bool IsTypeRegistered(nglNativeObjectType Type);
+  bool IsNativeTypeRegistered(nglNativeObjectType Type);
   bool IsTypeRegistered(const nglString& rMimeType);
   
   nglNativeObjectType RegisterDataType(const nglString& rMimeType, nglNativeObjectType Type, nglDataObjectCreatorFunc pCreator);

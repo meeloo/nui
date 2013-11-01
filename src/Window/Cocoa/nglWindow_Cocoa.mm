@@ -6,10 +6,13 @@
 #include <string.h>
 
 #include "nglWindow_Cocoa.h"
+#include "nglDragAndDrop_Cocoa.h"
 
-#include <Cocoa/Cocoa.h>
-#include <OpenGL/OpenGL.h>
-#include <AppKit/AppKit.h>
+#import <Cocoa/Cocoa.h>
+#import <OpenGL/OpenGL.h>
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+#import <CoreServices/CoreServices.h>
 
 #define NGL_WINDOW_FPS 60.0f
 
@@ -244,7 +247,9 @@ float nuiGetInvScaleFactor()
   [oglContext setValues:&v forParameter:NSOpenGLCPSwapInterval];
   [oglContext setView:self];
   [oglContext makeCurrentContext];
-  
+
+  [self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
+
   return self;
 }
 
@@ -311,6 +316,130 @@ float nuiGetInvScaleFactor()
   [wnd getNGLWindow]->CallOnRescale([wnd backingScaleFactor]);
 }
 
+NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
+
+
+// Drag and drop:
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+  NSLog(@"Dragging entered at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
+  /*------------------------------------------------------
+   method called whenever a drag enters our drop zone
+   --------------------------------------------------------*/
+
+  /* When an image from one window is dragged over another, we want to resize the dragging item to
+   * preview the size of the image as it would appear if the user dropped it in. */
+  [sender enumerateDraggingItemsWithOptions:NSDraggingItemEnumerationConcurrent
+                                    forView:self
+                                    classes:[NSArray arrayWithObject:[NSPasteboardItem class]]
+                              searchOptions:nil
+                                 usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop)
+   {
+     /* Only resize a fragging item if it originated from one of our windows.  To do this,
+      * we declare a custom UTI that will only be assigned to dragging items we created.  Here
+      * we check if the dragging item can represent our custom UTI.  If it can't we stop. */
+     if ( ![[[draggingItem item] types] containsObject:kPrivateDragUTI] ) {
+       //*stop = YES;
+
+     } else {
+       /* In order for the dragging item to actually resize, we have to reset its contents.
+        * The frame is going to be the destination view's bounds.  (Coordinates are local
+        * to the destination view here).
+        * For the contents, we'll grab the old contents and use those again.  If you wanted
+        * to perform other modifications in addition to the resize you could do that here. */
+     }
+
+     NSArray* array = [[draggingItem item] types];
+     for (int i = 0; i < [array count]; i++)
+     {
+       NSString* str = (NSString*)[array objectAtIndex:i];
+       NSLog(@"  Dragging type: %d:%d %@\n", (int)idx, i, str);
+     }
+   }];
+
+    //accept data as a copy operation
+  return NSDragOperationCopy;
+  //return NSDragOperationNone;
+}
+
+- (NSDragOperation)draggingUpdated:(id < NSDraggingInfo >)sender
+{
+  NSLog(@"Dragging updated at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
+  return NSDragOperationCopy; //[self draggingEntered:sender];
+}
+
+
+- (void)draggingExited:(id <NSDraggingInfo>)sender
+{
+  /*------------------------------------------------------
+   method called whenever a drag exits our drop zone
+   --------------------------------------------------------*/
+  //remove highlight of the drop zone
+  NSLog(@"Dragging exited at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
+  [self setNeedsDisplay: YES];
+}
+
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+{
+  NSLog(@"Prepare for drag operation at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
+  /*------------------------------------------------------
+   method to determine if we can accept the drop
+   --------------------------------------------------------*/
+  //finished with the drag so remove any highlighting
+  [self setNeedsDisplay: YES];
+
+  //// NSStringPboardType, NSURLPboardType, NSFilesPromisePboardType
+  NSPasteboard* pboard = [sender draggingPasteboard];
+  NSArray* types = [pboard types];
+  if ( [types containsObject:NSFilenamesPboardType] )
+  {
+    NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
+    for (int i = 0; i < [filenames count]; i++)
+    {
+      NSString* fname = [filenames objectAtIndex:i];
+      NSLog(@"File %d: %@\n", i, fname);
+    }
+  }
+  else if ( [types containsObject:NSURLPboardType] )
+  {
+    NSArray* filenames = [pboard propertyListForType:NSURLPboardType];
+    for (int i = 0; i < [filenames count]; i++)
+    {
+      NSString* fname = [filenames objectAtIndex:i];
+      NSLog(@"URL %d: %@\n", i, fname);
+    }
+  }
+  else if ( [types containsObject:(NSString*)kUTTypeUTF8PlainText] )
+  {
+    NSData* data = [pboard dataForType:(NSString*)kUTTypeUTF8PlainText];
+    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSLog(@"UTF8 String: %@\n", string);
+  }
+  else if ( [types containsObject:(NSString*)kUTTypePlainText] )
+  {
+    NSData* data = [pboard dataForType:(NSString*)kUTTypePlainText];
+    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSLog(@"UTF8 String: %@\n", string);
+  }
+  else if ( [types containsObject:(NSString*)kUTTypeText] )
+  {
+    NSData* data = [pboard dataForType:(NSString*)kUTTypeText];
+    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSLog(@"UTF8 String: %@\n", string);
+  }
+  else if ( [types containsObject:NSFilesPromisePboardType] )
+  {
+    NSArray* filenames = [pboard propertyListForType:NSFilesPromisePboardType];
+    for (int i = 0; i < [filenames count]; i++)
+    {
+      NSString* fname = [filenames objectAtIndex:i];
+      NSLog(@"File %d: %@\n", i, fname);
+    }
+  }
+}
+
+
+
 
 @end
 
@@ -334,10 +463,10 @@ float nuiGetInvScaleFactor()
 
 	mInited = false;
 	mInvalidated = true;
-	
+
 	mInvalidationTimer = nil;
 	mDisplayLink = nil;
-	
+
   BOOL deffering = NO;
   uint32 styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
   NSBackingStoreType buffering = NSBackingStoreBuffered;
@@ -744,7 +873,6 @@ float nuiGetInvScaleFactor()
   //[[[self contentView] getContext] flushBuffer];
 }
 
-
 @end///< nglNSWindow
 
 
@@ -752,6 +880,20 @@ float nuiGetInvScaleFactor()
 
 /////////////////////////////////////////////////////////////////////////////////////////////////// NGL WINDOW:
 
+nglCocoaDragAndDrop::nglCocoaDragAndDrop(nglWindow* pWin)
+{
+  mpWin = pWin;
+}
+
+nglCocoaDragAndDrop::~nglCocoaDragAndDrop()
+{
+  mpWin = NULL;
+}
+
+bool nglCocoaDragAndDrop::Drag(nglDragAndDrop* pDragObject)
+{
+  return false;
+}
 
 
 /*
@@ -783,8 +925,18 @@ nglWindow::nglWindow (const nglContextInfo& rContext, const nglWindowInfo& rInfo
   InternalInit (rContext, rInfo, pShared);
 }
 
+
+
 void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
 {
+  //[self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
+  App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypeText, nglDataTextObject::Create);
+  App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypePlainText, nglDataTextObject::Create);
+  App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypeUTF8PlainText, nglDataTextObject::Create);
+  App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Files"), "public.file-url", nglDataFilesObject::Create);
+  //App->GetDataTypesRegistry().RegisterDataType(_T("ngl/PromiseFiles"), kDragFlavorTypePromiseHFS, nglDataFilesObject::Create);
+  mpCocoaDragAndDrop = new nglCocoaDragAndDrop(this);
+
   mState = eHide;
   mAngle = 0;
 

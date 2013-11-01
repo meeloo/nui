@@ -494,6 +494,9 @@ typedef wchar_t nglUChar;
 
 
 #  elif defined _CARBON_
+#    undef __NUI_NO_GLES__
+#    define __NUI_NO_D3D__
+#    undef __NUI_NO_GL__
 #    if defined(__MWERKS__)
 #      if macintosh == 0
 #        include <AGL/agl.h>

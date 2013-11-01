@@ -198,11 +198,11 @@ public:
 #endif
 
 #ifdef _COCOA_
-      App->GetDataTypesRegistry().RegisterDataType(rMimeType, 'nui3', &nglInternalDataObject<C>::Create);
+      App->GetDataTypesRegistry().RegisterDataType(rMimeType, "private.nui3.internaltype", &nglInternalDataObject<C>::Create);
 #endif
 
 #ifdef _UIKIT_
-      App->GetDataTypesRegistry().RegisterDataType(rMimeType, 'nui3', &nglInternalDataObject<C>::Create);
+      App->GetDataTypesRegistry().RegisterDataType(rMimeType, "private.nui3.internaltype", &nglInternalDataObject<C>::Create);
 #endif
     }
     

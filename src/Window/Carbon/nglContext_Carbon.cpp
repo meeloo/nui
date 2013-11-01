@@ -109,8 +109,6 @@ static void DumpFormat(AGLPixelFormat Format)
 bool nglContext::Build(WindowRef Win, const nglContextInfo& rInfo, const nglContext* pShared, bool Fullscreen)
 {
   mTargetAPI = rInfo.TargetAPI;
-  if (mTargetAPI != eTargetAPI_OpenGL || mTargetAPI != eTargetAPI_OpenGL2)
-    return false;
   
 #ifndef __NOGLCONTEXT__
   mFullscreen = Fullscreen;

@@ -37,10 +37,6 @@ nglVideoMode::nglVideoMode()
   mBPP = 32;
   mRate = 60;
 #endif
-  
-  mScaleFactor = 1.0f;
-  mInvScaleFactor = 1.0f / mScaleFactor;
-
 }
 
 nglVideoMode::nglVideoMode (const nglVideoMode& rMode)
