@@ -20,6 +20,8 @@
 
   nuiTimer*     mpTimer;
   uint32        mModifiers;
+
+  class nglDragAndDrop* mpDropObject;
 }
 
 + (Class) layerClass;
@@ -33,6 +35,11 @@
 - (BOOL)keyDown:(NSEvent *)theEvent;
 - (BOOL)keyUp:(NSEvent *)theEvent;
 - (BOOL)flagsChanged:(NSEvent *)theEvent;
+
+- (NSDragOperation)draggingEntered: (id <NSDraggingInfo>)sender;
+- (NSDragOperation)draggingUpdated: (id <NSDraggingInfo>)sender;
+- (void)draggingExited: (id <NSDraggingInfo>)sender;
+- (BOOL)prepareForDragOperation: (id <NSDraggingInfo>)sender;
 
 @end///< nglNSWindow
 

@@ -6,12 +6,12 @@
 */
 
 /*!
-\file  nglCarbonDragAndDrop.h
-\brief Carbon specific Handlers and Procedures for Drag and drop operations
+\file  nglUIKitDragAndDrop.h
+\brief UIKit specific Handlers and Procedures for Drag and drop operations
 */
 
-#ifndef __nglDragCarbonDragAndDrop_h__
-#define __nglDragCarbonDragAndDrop_h__
+#ifndef __nglDragUIKitDragAndDrop_h__
+#define __nglDragUIKitDragAndDrop_h__
 
 #include "nui.h"
 #include "nglKernel.h"
@@ -27,11 +27,11 @@ void PrintErr(OSErr err);
 DragActions GetDragActions(nglDropEffect effect);
 void SetAllowedDropEffects(nglDragAndDrop* pObject, DragActions actions);
 
-class nglCarbonDragAndDrop
+class nglUIKitDragAndDrop
 {
 public:
-  nglCarbonDragAndDrop(nglWindow* pWin, WindowRef winRef);
-  ~nglCarbonDragAndDrop();
+  nglUIKitDragAndDrop(nglWindow* pWin, WindowRef winRef);
+  ~nglUIKitDragAndDrop();
 
   bool Drag(nglDragAndDrop* pDragObject);
 
@@ -65,4 +65,4 @@ public:
   DragSendDataUPP         mSendProc;
 };
 
-#endif//__nglDragCarbonDragAndDrop_h__
+#endif//__nglDragUIKitDragAndDrop_h__

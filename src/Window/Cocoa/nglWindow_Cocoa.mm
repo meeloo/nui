@@ -322,120 +322,23 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 // Drag and drop:
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-  NSLog(@"Dragging entered at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
-  /*------------------------------------------------------
-   method called whenever a drag enters our drop zone
-   --------------------------------------------------------*/
-
-  /* When an image from one window is dragged over another, we want to resize the dragging item to
-   * preview the size of the image as it would appear if the user dropped it in. */
-  [sender enumerateDraggingItemsWithOptions:NSDraggingItemEnumerationConcurrent
-                                    forView:self
-                                    classes:[NSArray arrayWithObject:[NSPasteboardItem class]]
-                              searchOptions:nil
-                                 usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop)
-   {
-     /* Only resize a fragging item if it originated from one of our windows.  To do this,
-      * we declare a custom UTI that will only be assigned to dragging items we created.  Here
-      * we check if the dragging item can represent our custom UTI.  If it can't we stop. */
-     if ( ![[[draggingItem item] types] containsObject:kPrivateDragUTI] ) {
-       //*stop = YES;
-
-     } else {
-       /* In order for the dragging item to actually resize, we have to reset its contents.
-        * The frame is going to be the destination view's bounds.  (Coordinates are local
-        * to the destination view here).
-        * For the contents, we'll grab the old contents and use those again.  If you wanted
-        * to perform other modifications in addition to the resize you could do that here. */
-     }
-
-     NSArray* array = [[draggingItem item] types];
-     for (int i = 0; i < [array count]; i++)
-     {
-       NSString* str = (NSString*)[array objectAtIndex:i];
-       NSLog(@"  Dragging type: %d:%d %@\n", (int)idx, i, str);
-     }
-   }];
-
-    //accept data as a copy operation
-  return NSDragOperationCopy;
-  //return NSDragOperationNone;
+  return [(nglNSWindow*)[self window] draggingEntered:sender];
 }
 
 - (NSDragOperation)draggingUpdated:(id < NSDraggingInfo >)sender
 {
-  NSLog(@"Dragging updated at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
-  return NSDragOperationCopy; //[self draggingEntered:sender];
+  return [(nglNSWindow*)[self window] draggingUpdated:sender];
 }
 
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-  /*------------------------------------------------------
-   method called whenever a drag exits our drop zone
-   --------------------------------------------------------*/
-  //remove highlight of the drop zone
-  NSLog(@"Dragging exited at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
-  [self setNeedsDisplay: YES];
+  return [(nglNSWindow*)[self window] draggingExited:sender];
 }
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-  NSLog(@"Prepare for drag operation at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
-  /*------------------------------------------------------
-   method to determine if we can accept the drop
-   --------------------------------------------------------*/
-  //finished with the drag so remove any highlighting
-  [self setNeedsDisplay: YES];
-
-  //// NSStringPboardType, NSURLPboardType, NSFilesPromisePboardType
-  NSPasteboard* pboard = [sender draggingPasteboard];
-  NSArray* types = [pboard types];
-  if ( [types containsObject:NSFilenamesPboardType] )
-  {
-    NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
-    for (int i = 0; i < [filenames count]; i++)
-    {
-      NSString* fname = [filenames objectAtIndex:i];
-      NSLog(@"File %d: %@\n", i, fname);
-    }
-  }
-  else if ( [types containsObject:NSURLPboardType] )
-  {
-    NSArray* filenames = [pboard propertyListForType:NSURLPboardType];
-    for (int i = 0; i < [filenames count]; i++)
-    {
-      NSString* fname = [filenames objectAtIndex:i];
-      NSLog(@"URL %d: %@\n", i, fname);
-    }
-  }
-  else if ( [types containsObject:(NSString*)kUTTypeUTF8PlainText] )
-  {
-    NSData* data = [pboard dataForType:(NSString*)kUTTypeUTF8PlainText];
-    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-    NSLog(@"UTF8 String: %@\n", string);
-  }
-  else if ( [types containsObject:(NSString*)kUTTypePlainText] )
-  {
-    NSData* data = [pboard dataForType:(NSString*)kUTTypePlainText];
-    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-    NSLog(@"UTF8 String: %@\n", string);
-  }
-  else if ( [types containsObject:(NSString*)kUTTypeText] )
-  {
-    NSData* data = [pboard dataForType:(NSString*)kUTTypeText];
-    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-    NSLog(@"UTF8 String: %@\n", string);
-  }
-  else if ( [types containsObject:NSFilesPromisePboardType] )
-  {
-    NSArray* filenames = [pboard propertyListForType:NSFilesPromisePboardType];
-    for (int i = 0; i < [filenames count]; i++)
-    {
-      NSString* fname = [filenames objectAtIndex:i];
-      NSLog(@"File %d: %@\n", i, fname);
-    }
-  }
+  return [(nglNSWindow*)[self window] prepareForDragOperation:sender];
 }
 
 
@@ -460,6 +363,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 - (id) initWithFrame: (NSRect) rect andNGLWindow: (nglWindow*) pNGLWindow andSharedContext:(NSOpenGLContext*)sharedContext
 {
   mModifiers = 0;
+  mpDropObject = NULL;
 
 	mInited = false;
 	mInvalidated = true;
@@ -873,6 +777,177 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   //[[[self contentView] getContext] flushBuffer];
 }
 
+// Drag and drop:
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+  NSLog(@"Dragging entered at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
+  /*------------------------------------------------------
+   method called whenever a drag enters our drop zone
+   --------------------------------------------------------*/
+  customGLView* pView = [self contentView];
+
+  mpDropObject = new nglDragAndDrop(eDropEffectCopy, NULL, 0, 0);
+
+  /* When an image from one window is dragged over another, we want to resize the dragging item to
+   * preview the size of the image as it would appear if the user dropped it in. */
+  [sender enumerateDraggingItemsWithOptions:NSDraggingItemEnumerationConcurrent
+                                    forView:pView
+                                    classes:[NSArray arrayWithObject:[NSPasteboardItem class]]
+                              searchOptions:nil
+                                 usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop)
+   {
+     NSArray* array = [[draggingItem item] types];
+     for (int i = 0; i < [array count]; i++)
+     {
+       NSString* str = (NSString*)[array objectAtIndex:i];
+       NSLog(@"  Dragging item %d - type %d %@\n", (int)idx, i, str);
+     }
+   }];
+
+  NSPasteboard* pboard = [sender draggingPasteboard];
+  NSArray* types = [pboard types];
+  if ( [types containsObject:NSFilenamesPboardType] )
+  {
+    nglDataFilesObject* pObj = new nglDataFilesObject("ngl/Files");
+    NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
+    for (int i = 0; i < [filenames count]; i++)
+    {
+      NSString* fname = [filenames objectAtIndex:i];
+      nglString str((CFStringRef)fname);
+      pObj->AddFile(str);
+      NSLog(@"File %d: %@\n", i, fname);
+    }
+
+    mpDropObject->AddType(pObj);
+  }
+  else if ( [types containsObject:NSURLPboardType] )
+  {
+    nglDataFilesObject* pObj = new nglDataFilesObject("ngl/Files");
+    NSArray* filenames = [pboard propertyListForType:NSURLPboardType];
+    for (int i = 0; i < [filenames count]; i++)
+    {
+      NSString* fname = [filenames objectAtIndex:i];
+      nglString str((CFStringRef)fname);
+      pObj->AddFile(str);
+      NSLog(@"URL %d: %@\n", i, fname);
+    }
+
+    mpDropObject->AddType(pObj);
+  }
+
+  if ( [types containsObject:(NSString*)kUTTypeUTF8PlainText] )
+  {
+    NSData* data = [pboard dataForType:(NSString*)kUTTypeUTF8PlainText];
+    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    nglDataTextObject* pObj = new nglDataTextObject("ngl/Text");
+    pObj->SetData(nglString((CFStringRef)string));
+    mpDropObject->AddType(pObj);
+    NSLog(@"UTF8 text String: %@\n", string);
+  }
+  else if ( [types containsObject:(NSString*)kUTTypePlainText] )
+  {
+    NSData* data = [pboard dataForType:(NSString*)kUTTypePlainText];
+    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    nglDataTextObject* pObj = new nglDataTextObject("ngl/Text");
+    pObj->SetData(nglString((CFStringRef)string));
+                  mpDropObject->AddType(pObj);
+    NSLog(@"Plain text String: %@\n", string);
+  }
+
+  if ( [types containsObject:(NSString*)kUTTypeText] )
+  {
+    NSData* data = [pboard dataForType:(NSString*)kUTTypeText];
+    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    nglDataTextObject* pObj = new nglDataTextObject("ngl/Text");
+    pObj->SetData(nglString((CFStringRef)string));
+                  mpDropObject->AddType(pObj);
+    NSLog(@"Text String: %@\n", string);
+  }
+
+  if ( [types containsObject:NSFilesPromisePboardType] )
+  {
+    NSArray* filenames = [pboard propertyListForType:NSFilesPromisePboardType];
+    for (int i = 0; i < [filenames count]; i++)
+    {
+      NSString* fname = [filenames objectAtIndex:i];
+      NSLog(@"File %d: %@\n", i, fname);
+    }
+  }
+
+  mpNGLWindow->OnDragEnter();
+  nglDropEffect effect = mpNGLWindow->OnCanDrop(mpDropObject, [sender draggingLocation].x, [sender draggingLocation].y, [NSEvent pressedMouseButtons]);
+  switch (effect)
+  {
+    case eDropEffectNone:
+    default:
+      return NSDragOperationNone;
+
+    case eDropEffectCopy:
+      return NSDragOperationCopy;
+
+    case eDropEffectMove:
+      return NSDragOperationMove;
+
+    case eDropEffectLink:
+      return NSDragOperationLink;
+
+    case eDropEffectScroll:
+      return NSDragOperationGeneric;
+  }
+}
+
+- (NSDragOperation)draggingUpdated:(id < NSDraggingInfo >)sender
+{
+  //NSLog(@"Dragging updated at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
+  nglDropEffect effect = mpNGLWindow->OnCanDrop(mpDropObject, [sender draggingLocation].x, [sender draggingLocation].y, [NSEvent pressedMouseButtons]);
+  switch (effect)
+  {
+    case eDropEffectNone:
+    default:
+      return NSDragOperationNone;
+
+    case eDropEffectCopy:
+      return NSDragOperationCopy;
+
+    case eDropEffectMove:
+      return NSDragOperationMove;
+
+    case eDropEffectLink:
+      return NSDragOperationLink;
+
+    case eDropEffectScroll:
+      return NSDragOperationGeneric;
+  }
+}
+
+
+- (void)draggingExited:(id <NSDraggingInfo>)sender
+{
+  /*------------------------------------------------------
+   method called whenever a drag exits our drop zone
+   --------------------------------------------------------*/
+  //remove highlight of the drop zone
+  NSLog(@"Dragging exited at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
+  delete mpDropObject;
+  mpDropObject = NULL;
+  mpNGLWindow->OnDragLeave();
+}
+
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+{
+  NSLog(@"Prepare for drag operation at %f,%f\n", [sender draggingLocation].x, [sender draggingLocation].y);
+  /*------------------------------------------------------
+   method to determine if we can accept the drop
+   --------------------------------------------------------*/
+  //finished with the drag so remove any highlighting
+  mpNGLWindow->OnDropped(mpDropObject, [sender draggingLocation].x, [sender draggingLocation].y, [NSEvent pressedMouseButtons]);
+  delete mpDropObject;
+  mpDropObject = NULL;
+  return true;
+}
+
+
+
 @end///< nglNSWindow
 
 
@@ -935,7 +1010,6 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypeUTF8PlainText, nglDataTextObject::Create);
   App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Files"), "public.file-url", nglDataFilesObject::Create);
   //App->GetDataTypesRegistry().RegisterDataType(_T("ngl/PromiseFiles"), kDragFlavorTypePromiseHFS, nglDataFilesObject::Create);
-  mpCocoaDragAndDrop = new nglCocoaDragAndDrop(this);
 
   mState = eHide;
   mAngle = 0;

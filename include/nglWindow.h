@@ -859,10 +859,8 @@ private:
   friend pascal OSStatus nglWindowEventHandler (EventHandlerCallRef eventHandlerCallRef, EventRef eventRef, void* userData);
   friend pascal OSStatus nglWindowKeyboardEventHandler (EventHandlerCallRef eventHandlerCallRef, EventRef eventRef, void* userData);
   friend class nglApplication;
-#endif //_CARBON_
 
-#ifdef _CARBON_
-class nglCarbonDragAndDrop* mpCarbonDragAndDrop;
+  class nglCarbonDragAndDrop* mpCarbonDragAndDrop;
 #endif //_CARBON_
 
 #ifdef _UIKIT_
@@ -894,7 +892,6 @@ private:
   nglContextInfo mContextInfo;
   StateChange mState;
   nglDragAndDrop* mpDragged;
-  class nglCocoaDragAndDrop* mpCocoaDragAndDrop;
 public:
   void SetDraggedObject(nglDragAndDrop* pDragged) { mpDragged = pDragged; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
