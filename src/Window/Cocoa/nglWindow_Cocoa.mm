@@ -341,6 +341,11 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   return [(nglNSWindow*)[self window] prepareForDragOperation:sender];
 }
 
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+  return [(nglNSWindow*)[self window] performDragOperation:sender];
+}
+
 
 
 
@@ -939,13 +944,30 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   /*------------------------------------------------------
    method to determine if we can accept the drop
    --------------------------------------------------------*/
+  nglDropEffect effect = mpNGLWindow->OnCanDrop(mpDropObject, [sender draggingLocation].x, [sender draggingLocation].y, [NSEvent pressedMouseButtons]);
+  switch (effect)
+  {
+    case eDropEffectNone:
+    default:
+      return NO;
+
+    case eDropEffectCopy:
+    case eDropEffectMove:
+    case eDropEffectLink:
+    case eDropEffectScroll:
+      return YES;
+  }
+  return YES;
+}
+
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
   //finished with the drag so remove any highlighting
   mpNGLWindow->OnDropped(mpDropObject, [sender draggingLocation].x, [sender draggingLocation].y, [NSEvent pressedMouseButtons]);
   delete mpDropObject;
   mpDropObject = NULL;
-  return true;
+  return YES;
 }
-
 
 
 @end///< nglNSWindow

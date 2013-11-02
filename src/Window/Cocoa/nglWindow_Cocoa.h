@@ -40,6 +40,7 @@
 - (NSDragOperation)draggingUpdated: (id <NSDraggingInfo>)sender;
 - (void)draggingExited: (id <NSDraggingInfo>)sender;
 - (BOOL)prepareForDragOperation: (id <NSDraggingInfo>)sender;
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender;
 
 @end///< nglNSWindow
 
