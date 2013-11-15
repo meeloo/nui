@@ -63,7 +63,14 @@ inline float log2f(float x)
 #endif
 
 #ifdef _UIKIT_ /// TMP FIX: not sure needed ...
-#define finite(x) __inline_isfinited((double)(x))
+__header_always_inline int finite(float __x)
+{
+  return __inline_isfinitef(__x);
+}
+__header_always_inline int finite(double __x)
+{
+  return __inline_isfinited(__x);
+}
 #endif
 
 

@@ -77,34 +77,27 @@ and in NGL user application code.
 
 // Include conditionals
 	#include <TargetConditionals.h>
+  #define _CORE_FOUNDATION_
+#include <CoreFoundation/CoreFoundation.h>
 
 	// Using UIKit for iPhone and iPhone simulator
 	#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
-//#error "Shouldn't go there (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)"
     #define NUI_IOS
     #define _UIKIT_
-    #define _CORE_FOUNDATION_
 
-    #include <CoreFoundation/CoreFoundation.h>
 
   #elif (defined _COCOA_)
-//#error "Should go there!!! (defined _COCOA_)"
-    #define _CORE_FOUNDATION_
     #define __MACHO__
     #define __NGL_MACHO__
-    #include <CoreFoundation/CoreFoundation.h>
     #if !__LP64__
       #include <CoreServices/CoreServices.h>
     #endif
 
 // Make Carbon the default choice when compiling on a Mac, even when using gcc
-//#elif (!defined(_CARBON_) && !defined(_DARWIN_) && !defined(_COCOA_))
   #else
     #ifndef _CARBON_
       #define _CARBON_
     #endif
-    #define _CORE_FOUNDATION_
-    #include <CoreFoundation/CoreFoundation.h>
   #endif
 
   #ifdef __GNUC__

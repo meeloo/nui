@@ -125,8 +125,8 @@ bool nuiAudioDecoder::ReadInfo()
   if (!mpPrivate)
     return false;
   
-  AudioStreamBasicDescription FileDesc;
-  AudioStreamBasicDescription ClientDesc;
+  AudioStreamBasicDescription FileDesc = { 0 };
+  AudioStreamBasicDescription ClientDesc = { 0 };
   UInt32 PropDataSize;
   OSStatus res;
   

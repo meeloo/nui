@@ -19662,7 +19662,6 @@
 					deps/libcss/src/libparserutils,
 					deps/libcss/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = nuiPhone_arm7;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -19720,7 +19719,6 @@
 					deps/libcss/src/libparserutils,
 					deps/libcss/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = thirdparty_ios_arm7;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -19779,7 +19777,6 @@
 					deps/libcss/src/libparserutils,
 					deps/libcss/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "";
 				PRODUCT_NAME = nuiPhoneD;
 				SDKROOT = iphoneos;
@@ -19837,7 +19834,6 @@
 					deps/libcss/src/libparserutils,
 					deps/libcss/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = nuiPhone;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -19852,7 +19848,6 @@
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = nui3;
-				SDKROOT = macosx;
 			};
 			name = Default;
 		};
@@ -19920,9 +19915,8 @@
 					AVMPLUS_ARM,
 				);
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.8;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = ". include deps/libpng deps/gameswf deps/zlib deps/ungif deps/ucdata deps/libjpeg src/Application/Carbon src/Stream/Zip deps/freetype2/include deps/expat/include deps/harfbuzz deps/expat/lib deps/tracemonkey deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include";
@@ -20005,7 +19999,6 @@
 				INSTALL_PATH = /usr/local/lib;
 				PRELINK_LIBS = "-liconv -lz";
 				PRODUCT_NAME = nui3CocoaD;
-				SDKROOT = macosx;
 			};
 			name = Default;
 		};
@@ -20050,7 +20043,6 @@
 				INSTALL_PATH = /usr/local/lib;
 				PRELINK_LIBS = "-liconv -lz";
 				PRODUCT_NAME = nui3Cocoa;
-				SDKROOT = macosx;
 			};
 			name = Default;
 		};
@@ -20156,7 +20148,6 @@
 					deps/libcss/include,
 				);
 				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = thirdparty_ios;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -20178,7 +20169,6 @@
 				INSTALL_PATH = /usr/local/lib;
 				PRELINK_LIBS = "-liconv -lz";
 				PRODUCT_NAME = minui3D;
-				SDKROOT = macosx;
 			};
 			name = Default;
 		};

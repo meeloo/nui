@@ -90,8 +90,8 @@ public:
   virtual void ToolTipOn(const nuiEvent& rEvent);
   virtual void ToolTipOff(const nuiEvent& rEvent);
 #else
-  virtual bool ActivateToolTip(nuiWidgetPtr pWidget, bool Now = false) {} ///< nuiMainWindow override the default tool-tip mechanism to actually display them.
-  virtual bool ReleaseToolTip(nuiWidgetPtr pWidget) {} ///< Remove the current tool-tip for the given widget. 
+  virtual bool ActivateToolTip(nuiWidgetPtr pWidget, bool Now = false) { return false; } ///< nuiMainWindow override the default tool-tip mechanism to actually display them.
+  virtual bool ReleaseToolTip(nuiWidgetPtr pWidget) { return false; } ///< Remove the current tool-tip for the given widget.
 #endif
   //@}
 
