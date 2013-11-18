@@ -16,24 +16,46 @@
 #endif
 
 
+class nuiAudioDecoderPrivate
+{
+public:
+  nuiAudioDecoderPrivate(nglIStream& rStream);
+  virtual ~nuiAudioDecoderPrivate();
+
+  bool Init();
+  void Clear();
+
+  nglIStream& mrStream;
+
+  AudioFileID mAudioFileID;
+  ExtAudioFileRef mExtAudioFileRef;
+  SInt64 mPos;
+	nglFileSize mSize;
+};
+
+
 OSStatus MyAudioFile_ReadProc(void* pInClientData, SInt64 inPosition, UInt32 requestCount, void* pBuffer, UInt32* pActualCount)
-{	
-	nglIStream* pStream = (nglIStream*)pInClientData;
-	pStream->SetPos(inPosition);
+{
+  nuiAudioDecoderPrivate* pAudioFile = (nuiAudioDecoderPrivate*)pInClientData;
+	nglIStream* pStream = &(pAudioFile->mrStream);
+  if (pAudioFile->mPos != inPosition)
+  {
+    //printf("current: %lld  (asked %d at pos %lld)\n", pAudioFile->mPos, (uint32)requestCount, inPosition);
+    pStream->SetPos(inPosition);
+    pAudioFile->mPos = inPosition;
+  }
   
 	uint8* pOut = (uint8*)pBuffer;
-	*pActualCount = pStream->ReadUInt8(pOut, requestCount);
-	
+	*pActualCount = (UInt32)pStream->ReadUInt8(pOut, requestCount);
+	pAudioFile->mPos += *pActualCount;
+  //printf("\t actual read: %d (new pos: %lld)\n", (uint32)*pActualCount, pAudioFile->mPos);
 	return noErr;
 }
 
 SInt64 MyAudioFile_GetSizeProc(void* pInClientData)
 {
-	nglIStream* pStream = (nglIStream*)pInClientData;
-	
-	pStream->SetPos(0);
-	nglFileSize size = pStream->Available();
-	return size;
+  nuiAudioDecoderPrivate* pAudioFile = (nuiAudioDecoderPrivate*)pInClientData;
+	return pAudioFile->mSize;
 }
 
 
@@ -42,26 +64,11 @@ SInt64 MyAudioFile_GetSizeProc(void* pInClientData)
 // nuiAudioDecoderPrivate
 //
 //
-
-class nuiAudioDecoderPrivate
-  {
-  public:
-    nuiAudioDecoderPrivate(nglIStream& rStream);
-    virtual ~nuiAudioDecoderPrivate();
-		
-		bool Init();
-		void Clear();
-    
-    nglIStream& mrStream;
-		
-		AudioFileID mAudioFileID;
-		ExtAudioFileRef mExtAudioFileRef;
-  };
-
 nuiAudioDecoderPrivate::nuiAudioDecoderPrivate(nglIStream& rStream)
 : mrStream(rStream),
 	mAudioFileID(NULL),
-	mExtAudioFileRef(NULL)
+	mExtAudioFileRef(NULL),
+  mPos(-1)
 {
 }
 
@@ -76,8 +83,10 @@ bool nuiAudioDecoderPrivate::Init()
 	AudioFileTypeID typeID = 0;
 
   // we only want to read (not write) so give NULL for write callbacks (seems to work...)
-  OSStatus err =  AudioFileOpenWithCallbacks(&mrStream, &MyAudioFile_ReadProc, NULL, &MyAudioFile_GetSizeProc, NULL, typeID, &mAudioFileID);
-	
+  mrStream.SetPos(0);
+	mSize = mrStream.Available();
+  OSStatus err =  AudioFileOpenWithCallbacks(this, &MyAudioFile_ReadProc, NULL, &MyAudioFile_GetSizeProc, NULL, typeID, &mAudioFileID);
+
 	if (err != noErr)
 		return false;
 	
