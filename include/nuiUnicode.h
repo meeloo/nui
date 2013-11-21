@@ -281,7 +281,7 @@ public:
   }
   virtual int32 GetLength() const
   {
-    return mString.size();
+    return (int32)mString.size();
   }
   
 private:

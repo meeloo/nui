@@ -2023,7 +2023,7 @@
 		E57BC75D0C63EA1A0026DE07 /* nuiSignalsSlots.h in Headers */ = {isa = PBXBuildFile; fileRef = E57BC75B0C63EA1A0026DE07 /* nuiSignalsSlots.h */; };
 		E57D214D1318B35E007B3B7A /* nuiNavigationViewDecoration.h in Headers */ = {isa = PBXBuildFile; fileRef = BC19B5D312AFC0FE002DA665 /* nuiNavigationViewDecoration.h */; };
 		E57D214E1318B35F007B3B7A /* nuiNavigationViewDecoration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC19B5CE12AFC0F1002DA665 /* nuiNavigationViewDecoration.cpp */; };
-		E57D215F1318B45F007B3B7A /* libthirdparty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD341012E09CA800F1EF4E /* libthirdparty.a */; };
+		E57D215F1318B45F007B3B7A /* libthirdparty_OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD341012E09CA800F1EF4E /* libthirdparty_OSX.a */; };
 		E57D818313B386F200348211 /* nuiNavigationBarStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = BC2475021377D7EA000F1ABB /* nuiNavigationBarStyle.h */; };
 		E57D818513B386F400348211 /* nuiNavigationBarStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = BC2475021377D7EA000F1ABB /* nuiNavigationBarStyle.h */; };
 		E57D818613B386FD00348211 /* nuiImageAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BCF87564137D27630092DAAD /* nuiImageAnimation.cpp */; };
@@ -2056,7 +2056,7 @@
 		E58DF2771268842E007E63DE /* nuiMatrixNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E58DF2711268842E007E63DE /* nuiMatrixNode.cpp */; };
 		E58DF27D1268844C007E63DE /* nuiMatrixNode.h in Headers */ = {isa = PBXBuildFile; fileRef = E58DF2781268844C007E63DE /* nuiMatrixNode.h */; };
 		E58DF27E1268844C007E63DE /* nuiMatrixNode.h in Headers */ = {isa = PBXBuildFile; fileRef = E58DF2781268844C007E63DE /* nuiMatrixNode.h */; };
-		E58E1B9112EDDF2E00D92EEB /* libthirdparty_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73F09AC312E9D09E00656E84 /* libthirdparty_ios.a */; };
+		E58E1B9112EDDF2E00D92EEB /* libthirdparty_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73F09AC312E9D09E00656E84 /* libthirdparty_iOS.a */; };
 		E58E8A98115057B000C2D204 /* nuiTypeTraits.h in Headers */ = {isa = PBXBuildFile; fileRef = E58E8A96115057B000C2D204 /* nuiTypeTraits.h */; };
 		E5901BED1043F2C200D3FD5F /* nuiToggleButton.h in Headers */ = {isa = PBXBuildFile; fileRef = E5901BEA1043F2C200D3FD5F /* nuiToggleButton.h */; };
 		E591C01D0FF17984005E5E3D /* nuiHTMLContext.h in Headers */ = {isa = PBXBuildFile; fileRef = E591C0190FF17984005E5E3D /* nuiHTMLContext.h */; };
@@ -3428,7 +3428,7 @@
 		E5DD340B12E09CA800F1EF4E /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7FA0CDAAAE100B1C729 /* CoreAudioKit.framework */; };
 		E5DD340C12E09CA800F1EF4E /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D435961004DC5300388BF5 /* ApplicationServices.framework */; };
 		E5DD340D12E09CA800F1EF4E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59DF6CC1196396000E46CF8 /* AudioToolbox.framework */; };
-		E5DD343F12E09FC400F1EF4E /* libthirdparty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD341012E09CA800F1EF4E /* libthirdparty.a */; };
+		E5DD343F12E09FC400F1EF4E /* libthirdparty_OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD341012E09CA800F1EF4E /* libthirdparty_OSX.a */; };
 		E5DE7A1E13C3EAB80018CD6C /* ImageDraggedFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5DE7A1B13C3EAB70018CD6C /* ImageDraggedFile.cpp */; };
 		E5DE7A2113C3EAB80018CD6C /* ImageDraggedFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5DE7A1B13C3EAB70018CD6C /* ImageDraggedFile.cpp */; };
 		E5DE7A2313C3EAB80018CD6C /* ImageDraggedFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5DE7A1B13C3EAB70018CD6C /* ImageDraggedFile.cpp */; };
@@ -3782,7 +3782,7 @@
 		E5FB9CE1147D5CEE001A1829 /* nglStringConv_CoreFoundation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E592C5AB0EFEC90600340B35 /* nglStringConv_CoreFoundation.cpp */; };
 		E5FB9CEC147D5CEE001A1829 /* nuiMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5ED551513FDED23004EFA83 /* nuiMidi.cpp */; };
 		E5FB9CED147D5CEE001A1829 /* nuiArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E53B3E7D1407CA7E005AD549 /* nuiArchive.cpp */; };
-		E5FB9CF0147D5CEE001A1829 /* libthirdparty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD341012E09CA800F1EF4E /* libthirdparty.a */; };
+		E5FB9CF0147D5CEE001A1829 /* libthirdparty_OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD341012E09CA800F1EF4E /* libthirdparty_OSX.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3901,7 +3901,7 @@
 		61D085100EAFAA3F00B73835 /* nuiSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiSurface.cpp; sourceTree = "<group>"; };
 		61D085130EAFAA5400B73835 /* nuiSurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiSurface.h; path = include/nuiSurface.h; sourceTree = SOURCE_ROOT; };
 		73F086E612E9BA0700656E84 /* libnuiPhone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnuiPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		73F09AC312E9D09E00656E84 /* libthirdparty_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libthirdparty_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		73F09AC312E9D09E00656E84 /* libthirdparty_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libthirdparty_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		941A98BA0E8BEAAE00CAFC3A /* nuiScrollingLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiScrollingLabel.cpp; path = src/Text/nuiScrollingLabel.cpp; sourceTree = SOURCE_ROOT; };
 		941A98BD0E8BEAD000CAFC3A /* nuiScrollingLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiScrollingLabel.h; path = include/nuiScrollingLabel.h; sourceTree = SOURCE_ROOT; };
 		941A98CA0E8BF04700CAFC3A /* nuiScrollBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiScrollBox.cpp; path = src/Layout/nuiScrollBox.cpp; sourceTree = SOURCE_ROOT; };
@@ -4628,7 +4628,7 @@
 		E540AB6010DFAC8F00791FBA /* nuiAsyncIStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiAsyncIStream.h; path = include/nuiAsyncIStream.h; sourceTree = SOURCE_ROOT; };
 		E5429EEF0C3F082800225219 /* jmemmgr.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = jmemmgr.c; path = deps/libjpeg/jmemmgr.c; sourceTree = SOURCE_ROOT; };
 		E5429EF60C3F08DC00225219 /* nglPath_Unix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = nglPath_Unix.cpp; path = src/File/Unix/nglPath_Unix.cpp; sourceTree = SOURCE_ROOT; };
-		E542A1AE0C3F0A5900225219 /* libnui.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnui.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E542A1AE0C3F0A5900225219 /* libnuiCarbon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnuiCarbon.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E548CEEE16E4EA9500F98E45 /* nuiUniformDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiUniformDesc.h; path = include/nuiUniformDesc.h; sourceTree = SOURCE_ROOT; };
 		E548CEF616E4EABF00F98E45 /* nuiUniformDesc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiUniformDesc.cpp; sourceTree = "<group>"; };
 		E54D8FBB16C1D7FD00102723 /* nuiAudioDevice_AudioUnit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = nuiAudioDevice_AudioUnit.mm; path = Audio/AudioUnit/nuiAudioDevice_AudioUnit.mm; sourceTree = "<group>"; };
@@ -5495,7 +5495,7 @@
 		E5D66E500CF433BA004783D4 /* nuiNativeResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiNativeResource.h; path = include/nuiNativeResource.h; sourceTree = SOURCE_ROOT; };
 		E5D9FEE81082B350008D0F11 /* nuiGLUTBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiGLUTBridge.h; path = include/nuiGLUTBridge.h; sourceTree = SOURCE_ROOT; };
 		E5D9FEEC1082B382008D0F11 /* nuiGLUTBridge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiGLUTBridge.cpp; sourceTree = "<group>"; };
-		E5DD341012E09CA800F1EF4E /* libthirdparty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libthirdparty.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5DD341012E09CA800F1EF4E /* libthirdparty_OSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libthirdparty_OSX.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5DE7A1B13C3EAB70018CD6C /* ImageDraggedFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageDraggedFile.cpp; path = graphics/DefaultDecoration/ImageDraggedFile.cpp; sourceTree = SOURCE_ROOT; };
 		E5DE7A1C13C3EAB80018CD6C /* ImageDraggedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageDraggedFile.h; path = graphics/DefaultDecoration/ImageDraggedFile.h; sourceTree = SOURCE_ROOT; };
 		E5EA30180F55926F0057CCA7 /* nuiCoverFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiCoverFlow.h; path = include/nuiCoverFlow.h; sourceTree = SOURCE_ROOT; };
@@ -5535,7 +5535,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E58E1B9112EDDF2E00D92EEB /* libthirdparty_ios.a in Frameworks */,
+				E58E1B9112EDDF2E00D92EEB /* libthirdparty_iOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5559,7 +5559,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5DD343F12E09FC400F1EF4E /* libthirdparty.a in Frameworks */,
+				E5DD343F12E09FC400F1EF4E /* libthirdparty_OSX.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5567,7 +5567,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E57D215F1318B45F007B3B7A /* libthirdparty.a in Frameworks */,
+				E57D215F1318B45F007B3B7A /* libthirdparty_OSX.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5590,7 +5590,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5FB9CF0147D5CEE001A1829 /* libthirdparty.a in Frameworks */,
+				E5FB9CF0147D5CEE001A1829 /* libthirdparty_OSX.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6571,11 +6571,11 @@
 		E58167400C3CEC1300902DFE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E542A1AE0C3F0A5900225219 /* libnui.a */,
+				E542A1AE0C3F0A5900225219 /* libnuiCarbon.a */,
 				E5D643E51209AB9C009C26A9 /* libnuiCocoa.a */,
-				E5DD341012E09CA800F1EF4E /* libthirdparty.a */,
+				E5DD341012E09CA800F1EF4E /* libthirdparty_OSX.a */,
 				73F086E612E9BA0700656E84 /* libnuiPhone.a */,
-				73F09AC312E9D09E00656E84 /* libthirdparty_ios.a */,
+				73F09AC312E9D09E00656E84 /* libthirdparty_iOS.a */,
 				E5FB9CF3147D5CEE001A1829 /* libminui.a */,
 			);
 			name = Products;
@@ -10610,7 +10610,7 @@
 			);
 			name = thirdparty_ios;
 			productName = nui3D;
-			productReference = 73F09AC312E9D09E00656E84 /* libthirdparty_ios.a */;
+			productReference = 73F09AC312E9D09E00656E84 /* libthirdparty_iOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		E5429F110C3F0A5900225219 /* nuiCarbon */ = {
@@ -10628,7 +10628,7 @@
 			);
 			name = nuiCarbon;
 			productName = nui3D;
-			productReference = E542A1AE0C3F0A5900225219 /* libnui.a */;
+			productReference = E542A1AE0C3F0A5900225219 /* libnuiCarbon.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		E5D63EBB1209AB9C009C26A9 /* nuiCocoa */ = {
@@ -10663,7 +10663,7 @@
 			);
 			name = thirdparty;
 			productName = nui3D;
-			productReference = E5DD341012E09CA800F1EF4E /* libthirdparty.a */;
+			productReference = E5DD341012E09CA800F1EF4E /* libthirdparty_OSX.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		E5FB9A20147D5CEE001A1829 /* minui */ = {
@@ -12466,7 +12466,7 @@
 				GCC_THUMB_SUPPORT = YES;
 				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				PRODUCT_NAME = thirdparty_ios;
+				PRODUCT_NAME = thirdparty_iOS;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -12477,7 +12477,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INSTALL_PATH = /usr/local/lib;
-				PRODUCT_NAME = nui;
+				PRODUCT_NAME = nuiCarbon;
 			};
 			name = Release;
 		};
@@ -12663,7 +12663,7 @@
 			buildSettings = {
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = nui;
+				PRODUCT_NAME = nuiCarbon;
 			};
 			name = Debug;
 		};
@@ -12778,7 +12778,7 @@
 					Carbon,
 				);
 				PRELINK_LIBS = "-liconv";
-				PRODUCT_NAME = thirdparty;
+				PRODUCT_NAME = thirdparty_OSX;
 				ZERO_LINK = NO;
 			};
 			name = Debug;
@@ -12792,7 +12792,7 @@
 				GCC_THUMB_SUPPORT = YES;
 				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				PRODUCT_NAME = thirdparty_ios;
+				PRODUCT_NAME = thirdparty_iOS;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -12900,7 +12900,7 @@
 					Carbon,
 				);
 				PRELINK_LIBS = "-liconv";
-				PRODUCT_NAME = thirdparty;
+				PRODUCT_NAME = thirdparty_OSX;
 				ZERO_LINK = NO;
 			};
 			name = Release;

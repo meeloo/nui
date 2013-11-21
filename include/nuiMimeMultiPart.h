@@ -44,14 +44,14 @@ protected:
   {
   public:
     File(const std::vector<uint8>& rData, const nglString& rVarName, const nglString& rFileName, const nglString& rType = _T("multipart/mixed"), const nglString rContentTransfertEncoding = _T("binary"))
-    : mVarName(rVarName), mType(rType), mFileName(rFileName), mContents(rData), mContentTransfertEncoding(rContentTransfertEncoding)
+    : mVarName(rVarName), mType(rType), mFileName(rFileName), mContentTransfertEncoding(rContentTransfertEncoding), mContents(rData)
     {
     }
     
     File(nglIStream* pStream, const nglString& rVarName, const nglString& rFileName, const nglString& rType = _T("multipart/mixed"), const nglString rContentTransfertEncoding = _T("binary"))
     : mVarName(rVarName), mType(rType), mFileName(rFileName), mContentTransfertEncoding(rContentTransfertEncoding)
     {
-      uint32 len = pStream->Available();
+      size_t len = (size_t)pStream->Available();
       mContents.resize(len);
       pStream->Read(&mContents[0], len, 1);
       delete pStream;
