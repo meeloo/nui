@@ -44,6 +44,7 @@ protected:
   bool mCanceled;
 };
 
+
 // No Param:
 template <class Ret>
 class nuiTask0 : public nuiTask

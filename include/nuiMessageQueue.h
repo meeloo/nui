@@ -13,27 +13,67 @@
 #include "nglSyncEvent.h"
 
 class nuiNotification;
+class nuiTask;
 
 /// implements a message queue for multi-threaded communication
 /// see nuiTest, MessageQueueWindow, for an application example
-class nuiMessageQueue
+template <class Message>
+class nuiProtectedQueue
 {
 public : 
 
-  nuiMessageQueue();
-  ~nuiMessageQueue();
-  
-  bool Post(nuiNotification* notif); ///< add a message to the message queue. !! DON'T USE THE SAME nuiNotification TWICE : IT'S SUPPOSED TO BE DELETED WHEN IT'S RECEIVED.
-  nuiNotification* Get(uint32 time = std::numeric_limits<uint32>::max()); ///< extract the first message of the queue. Will block 'til a message is posted or 'til the timeout is reached. After timeout, return NULL if there is no message.
-                                                /// !!! YOU ARE RESPONSIBLE FOR DELETING THE nuiNotification OBJECT. !!!
-  
+  nuiProtectedQueue(const char* queue_name = "basic queue")
+  : mQueueCS(queue_name)
+  {
+  }
+
+
+  ~nuiProtectedQueue()
+  {
+  }
+
+  bool Post(Message* message)
+  {
+    nglCriticalSectionGuard guard(mQueueCS);
+    message->Acquire();
+    mQueue.push(message);
+
+    // unlock thread waiting to read the message
+    mSyncEvent.Set ();
+    return true;
+  }
+
+  // Don't forget to ->Release the message you get from this method!
+  Message* Get(uint32 time)
+  {
+    // wait for an incoming message
+    mSyncEvent.Wait(time);
+
+    mQueueCS.Lock();
+    if (mQueue.empty())
+    {
+      mQueueCS.Unlock();
+      return NULL;
+    }
+    Message* message = mQueue.front();
+    mQueue.pop();
+
+    // no more messages. next call to Get will block 'til another message is posted.
+    if (mQueue.empty())
+      mSyncEvent.Reset();
+    mQueueCS.Unlock();
+    
+    return message;
+  }
+
 private : 
 
   nglCriticalSection mQueueCS;
-  std::queue<nuiNotification*> mQueue;
+  std::queue<Message*> mQueue;
   nglSyncEvent mSyncEvent;
 };
 
-
+typedef nuiProtectedQueue<nuiNotification> nuiMessageQueue;
+typedef nuiProtectedQueue<nuiTask> nuiTaskQueue;
 
 #endif
