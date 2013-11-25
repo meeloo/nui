@@ -1041,13 +1041,19 @@ bool nuiTopLevel::CallKeyUp (const nglKeyEvent& rEvent)
   return false;
 }
 
+const std::map<nglTouchId, nglMouseInfo>& nuiTopLevel::GetMouseStates() const
+{
+  return mMouseStates;
+}
+
 bool nuiTopLevel::CallMouseClick (nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
   
   mMouseClickedEvents[rInfo.TouchId] = rInfo;
-  
+  mMouseStates[rInfo.TouchId] = rInfo;
+
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;
   mMouseInfo.Buttons |= rInfo.Buttons;
@@ -1176,7 +1182,9 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
   std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
   if (it != mMouseClickedEvents.end())
     rInfo.Counterpart = &it->second;
-  
+  // Update state:
+  mMouseStates.erase(mMouseStates.find(rInfo.TouchId));
+
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;
   mMouseInfo.Buttons &= ~rInfo.Buttons;
@@ -1309,6 +1317,8 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
   if (it != mMouseClickedEvents.end())
     rInfo.Counterpart = &it->second;
+  // Update state:
+  mMouseStates[rInfo.TouchId] = rInfo;
 
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;

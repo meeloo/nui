@@ -251,7 +251,7 @@ public:
 
   /** @name Incomming mouse events */
   //@{
-  virtual bool AcceptsMultipleGrabs() { return false; }
+  virtual bool AcceptsMultipleGrabs() const { return false; }
   // These three methods receive the mouse coordinates in this object referential
   void EnableMouseEvent(bool enable);
   bool MouseEventsEnabled() const;
@@ -267,6 +267,7 @@ public:
   virtual bool MouseMoved(const nglMouseInfo& rInfo);
   virtual bool MouseGrabbed(nglTouchId Id);
   virtual bool MouseUngrabbed(nglTouchId Id);
+  virtual const std::map<nglTouchId, nglMouseInfo>& GetMouseStates() const;
   //@}
 
   /** @name Other Incomming events */

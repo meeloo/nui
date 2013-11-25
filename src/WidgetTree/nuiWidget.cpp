@@ -1758,6 +1758,13 @@ bool nuiWidget::MouseUngrabbed(nglTouchId id)
   return MouseUngrabbed();
 }
 
+const std::map<nglTouchId, nglMouseInfo>& nuiWidget::GetMouseStates() const
+{
+  nuiTopLevel* pTopLevel = GetTopLevel();
+  NGL_ASSERT(pTopLevel);
+  return pTopLevel->GetMouseStates();
+}
+
 
 ////// Private event management:
 bool nuiWidget::DispatchMouseClick(const nglMouseInfo& rInfo)
