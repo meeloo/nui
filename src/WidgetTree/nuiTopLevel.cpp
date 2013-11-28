@@ -1318,7 +1318,8 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   if (it != mMouseClickedEvents.end())
     rInfo.Counterpart = &it->second;
   // Update state:
-  mMouseStates[rInfo.TouchId] = rInfo;
+  if (mMouseStates.find(rInfo.TouchId) != mMouseStates.end())
+    mMouseStates[rInfo.TouchId] = rInfo;
 
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;
