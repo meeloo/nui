@@ -1604,6 +1604,9 @@
 		E51C807A136ADE98004C3FFB /* hb_nui.h in Headers */ = {isa = PBXBuildFile; fileRef = E51C8071136ADE98004C3FFB /* hb_nui.h */; };
 		E51C807D136ADE98004C3FFB /* hb_nui.h in Headers */ = {isa = PBXBuildFile; fileRef = E51C8071136ADE98004C3FFB /* hb_nui.h */; };
 		E51C807F136ADE98004C3FFB /* hb_nui.h in Headers */ = {isa = PBXBuildFile; fileRef = E51C8071136ADE98004C3FFB /* hb_nui.h */; };
+		E51DA3721847375000ADA1B0 /* nuiTaskThread.h in Headers */ = {isa = PBXBuildFile; fileRef = E51DA3711847375000ADA1B0 /* nuiTaskThread.h */; };
+		E51DA3731847375000ADA1B0 /* nuiTaskThread.h in Headers */ = {isa = PBXBuildFile; fileRef = E51DA3711847375000ADA1B0 /* nuiTaskThread.h */; };
+		E51DA3741847375000ADA1B0 /* nuiTaskThread.h in Headers */ = {isa = PBXBuildFile; fileRef = E51DA3711847375000ADA1B0 /* nuiTaskThread.h */; };
 		E51E54AE0FF1237F00FDF3BE /* nglImageGIFCodec.h in Headers */ = {isa = PBXBuildFile; fileRef = E51E54AA0FF1237F00FDF3BE /* nglImageGIFCodec.h */; };
 		E51E54AF0FF1237F00FDF3BE /* nglImageGIFCodec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E51E54AB0FF1237F00FDF3BE /* nglImageGIFCodec.cpp */; };
 		E51E565F0FF248AB00FDF3BE /* nuiHTMLHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = E51E565B0FF248AB00FDF3BE /* nuiHTMLHeader.h */; };
@@ -4202,6 +4205,7 @@
 		E51C8068136ADE1F004C3FFB /* nuiTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiTextLayout.h; path = include/nuiTextLayout.h; sourceTree = SOURCE_ROOT; };
 		E51C8070136ADE98004C3FFB /* hb_nui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hb_nui.cpp; sourceTree = "<group>"; };
 		E51C8071136ADE98004C3FFB /* hb_nui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hb_nui.h; sourceTree = "<group>"; };
+		E51DA3711847375000ADA1B0 /* nuiTaskThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiTaskThread.h; path = include/nuiTaskThread.h; sourceTree = SOURCE_ROOT; };
 		E51E549C0FF11FE000FDF3BE /* dgif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dgif_lib.c; path = deps/ungif/dgif_lib.c; sourceTree = SOURCE_ROOT; };
 		E51E549D0FF11FE000FDF3BE /* gif_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gif_lib.h; path = deps/ungif/gif_lib.h; sourceTree = SOURCE_ROOT; };
 		E51E549E0FF11FE000FDF3BE /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gif_lib_private.h; path = deps/ungif/gif_lib_private.h; sourceTree = SOURCE_ROOT; };
@@ -7391,6 +7395,7 @@
 				E5816D1B0C3CECAB00902DFE /* nuiWidgetElements.h */,
 				E5816D6B0C3CECAB00902DFE /* nuiXML.cpp */,
 				E5816D1E0C3CECAB00902DFE /* nuiXML.h */,
+				E51DA3711847375000ADA1B0 /* nuiTaskThread.h */,
 			);
 			name = Base;
 			path = src/Base;
@@ -8674,6 +8679,7 @@
 				73F0852212E9BA0700656E84 /* nuiBackgroundPane.h in Headers */,
 				73F0852312E9BA0700656E84 /* nuiCheckerboardDecoration.h in Headers */,
 				73F0852412E9BA0700656E84 /* nuiKnob.h in Headers */,
+				E51DA3741847375000ADA1B0 /* nuiTaskThread.h in Headers */,
 				73F0852512E9BA0700656E84 /* nuiImageSequence.h in Headers */,
 				73F0852612E9BA0700656E84 /* nuiPanose.h in Headers */,
 				73F0852712E9BA0700656E84 /* nuiSurface.h in Headers */,
@@ -9550,6 +9556,7 @@
 				E5DE7A2513C3EAB80018CD6C /* ImageDraggedFile.h in Headers */,
 				E5ED550613FDE943004EFA83 /* nuiMidi.h in Headers */,
 				E53B3E761407B070005AD549 /* nuiArchive.h in Headers */,
+				E51DA3721847375000ADA1B0 /* nuiTaskThread.h in Headers */,
 				E5D37EDD1413AEBB003CF2A3 /* nuiAttributeEditorPane.h in Headers */,
 				E5B006C7141EC86C003B61C9 /* nuiAttributeEditorBox.h in Headers */,
 				E531A9A01440A20F00ED88C9 /* nuiLayout.h in Headers */,
@@ -9786,6 +9793,7 @@
 				E5D640851209AB9C009C26A9 /* nuiColorDecoration.h in Headers */,
 				E5D640A01209AB9C009C26A9 /* nuiHTML.h in Headers */,
 				E5D640A11209AB9C009C26A9 /* nuiSizeAttributeEditor.h in Headers */,
+				E51DA3731847375000ADA1B0 /* nuiTaskThread.h in Headers */,
 				E5D640A21209AB9C009C26A9 /* nuiFontBrowser.h in Headers */,
 				E5D640A31209AB9C009C26A9 /* nglThreadChecker.h in Headers */,
 				E5D640A41209AB9C009C26A9 /* nuiIntrospector.h in Headers */,

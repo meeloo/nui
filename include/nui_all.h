@@ -118,6 +118,7 @@ typedef double nuiSize;
 
 
 #include "nuiTask.h"
+#include "nuiTaskThread.h"
 #include "nuiAttributeAnimation.h"
 #include "nuiLocale.h"
 #include "nuiMessageQueue.h"
