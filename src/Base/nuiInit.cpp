@@ -98,6 +98,8 @@ bool nuiInitMinimal(void* OSHandle = NULL, nuiKernel* pKernel)
 
 bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
 {
+  printf("nuiInit start\n");
+  nglTime start;
   if (gNUIReferences == 0)
   {
 #ifdef WIN32
@@ -163,6 +165,9 @@ bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
 
   gNUIReferences++;
 
+  nglTime end;
+  double total = (double)end - (double)start;
+  printf("nuiInit Took %f seconds\n", total);
 
   return App != NULL && !App->GetError();
 }

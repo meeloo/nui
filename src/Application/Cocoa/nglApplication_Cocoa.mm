@@ -602,10 +602,10 @@ int nglApplication::Main(int argc, const char** argv)
   //GetLog().SetLevel(_T("window"), 100);
   
   nglNSApplication *applicationObject = [nglNSApplication sharedApplication];
-  
+
   nglNSApplicationDelegate* appDelegate = [[nglNSApplicationDelegate alloc] init];
   [applicationObject setDelegate:appDelegate];
-  
+
   [applicationObject run];
   
   [pPool release];

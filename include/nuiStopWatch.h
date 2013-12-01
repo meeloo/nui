@@ -15,13 +15,15 @@ public:
   nuiStopWatch(const nglString& LogTitle);
   virtual ~nuiStopWatch();
   
-  void AddIntermediate(const nglString& title);
+  void AddIntermediate(const nglString& title, bool immediate = true);
   
   double GetElapsedTime() const;
   
 private:
   nglTime mCreationTime;
+  nglTime mLastTime;
   nglString mLogTitle;
   
   std::list<std::pair<nglString, nglTime> > mIntermediatePoints;
+  bool mOutputToLog;
 };

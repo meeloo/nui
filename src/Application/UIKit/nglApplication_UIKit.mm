@@ -24,6 +24,7 @@ void objCCallOnMemoryWarning();
 - (void) dealloc
 {
 //  NGL_OUT(_T("[nglUIApplication dealloc]\n"));
+  App->TimedPrint("nglUIApplication dealloc");
   [super dealloc];
 }
 
@@ -35,12 +36,14 @@ void objCCallOnMemoryWarning();
 
 - (void) sendEvent: (UIEvent*) pEvent
 {
+  App->TimedPrint("nglUIApplication sendEvent");
 //NGL_DEBUG( NGL_OUT(_T("[nglUIApplication sendEvent]\n")) );
   [super sendEvent: pEvent];
 }
 
 - (void) didReceiveMemoryWarning
 {
+  App->TimedPrint("nglUIApplication didReceiveMemoryWarning");
   printf("[nglUIApplication didReceiveMemoryWarning]\n");
   [super didReceiveMemoryWarning];
 }
@@ -55,12 +58,14 @@ void objCCallOnMemoryWarning();
 
 - (void) dealloc
 {
+  App->TimedPrint("nglUIApplicationDelegate dealloc");
   //NGL_OUT(_T("[nglUIApplicationDelegate dealloc]\n"));
   [super dealloc];
 }
 
 - (void) applicationDidFinishLaunching:       (UIApplication*) pUIApplication
 {
+  App->TimedPrint("nglUIApplicationDelegate applicationDidFinishLaunching");
   NGL_OUT(_T("[nglUIApplicationDelegate applicationDidFinishLaunching]\n"));
   NGL_ASSERT(App);
 
@@ -69,6 +74,7 @@ void objCCallOnMemoryWarning();
 
 - (BOOL)application:(UIApplication *)pUIApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 {
+  App->TimedPrint("nglUIApplicationDelegate didFinishLaunchingWithOptions");
 	NGL_ASSERT(App);
 	NSURL *launchURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];	
 	//objCCallOnInitWithURL(pUIApplication, nglString ((CFStringRef)@"bleepbox://oauth?oauth_verifier=fffff"));
@@ -86,6 +92,7 @@ void objCCallOnMemoryWarning();
 
 - (void) applicationDidBecomeActive:          (UIApplication*) pUIApplication
 {
+  App->TimedPrint("nglUIApplicationDelegate applicationDidBecomeActive");
   NGL_DEBUG( NGL_OUT(_T("[nglUIApplicationDelegate applicationDidBecomeActive]\n")); )
   NGL_ASSERT(App);
 
@@ -108,6 +115,7 @@ void objCCallOnMemoryWarning();
 
 - (void) applicationDidEnterBackground:       (UIApplication*) pUIApplication
 {
+  App->TimedPrint("nglUIApplicationDelegate applicationDidEnterBackground");
   NGL_DEBUG( NGL_OUT(_T("[nglUIApplicationDelegate applicationDidEnterBackground]\n")); )
   NGL_ASSERT(App);
 
@@ -130,18 +138,20 @@ void objCCallOnMemoryWarning();
 
 - (void) applicationDidReceiveMemoryWarning:  (UIApplication*) pUIApplication
 {
-  printf("[nglUIApplicationDelegate applicationDidReceiveMemoryWarning]\n");
+  App->TimedPrint("nglUIApplicationDelegate applicationDidReceiveMemoryWarning");
 	NGL_ASSERT(App);
   objCCallOnMemoryWarning();
 }
 
 - (void) applicationSignificantTimeChange:    (UIApplication*) pUIApplication
 {
+  App->TimedPrint("nglUIApplicationDelegate applicationSignificantTimeChange");
 //NGL_OUT(_T("[nglUIApplicationDelegate applicationSignificantTimeChange]\n"));
 }
 
 - (void) applicationWillTerminate:            (UIApplication*) pUIApplication
 {
+  App->TimedPrint("nglUIApplicationDelegate applicationWillTerminate");
 //	NGL_DEBUG( NGL_OUT(_T("[nglUIApplicationDelegate applicationWillTerminate]\n")) );
 
 	objCCallOnWillExit();
@@ -213,10 +223,15 @@ void nglApplication::Quit (int Code)
 int nglApplication::Main(int argc, const char** argv)
 {
   NSAutoreleasePool *pPool = [NSAutoreleasePool new];
+  {
+    App->TimedPrint("nglApplication::Main Init");
 
-  Init(argc, argv);
+    Init(argc, argv);
+  }
 
-  UIApplicationMain(argc, const_cast<char**>(argv), @"nglUIApplication", @"nglUIApplicationDelegate");
+  App->TimedPrint("nglApplication::Main UIApplication");
+  UIApplicationMain(argc, const_cast<char**>(argv), nil, @"nglUIApplicationDelegate");
+  //UIApplicationMain(argc, const_cast<char**>(argv), @"nglUIApplication", @"nglUIApplicationDelegate");
 
   [pPool release];
 

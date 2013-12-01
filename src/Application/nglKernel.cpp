@@ -22,6 +22,7 @@ extern const nglChar* gpKernelErrorTable[];
  */
 nglKernel * App = NULL;
 
+nglTime nglKernel::mStartTime;
 
 
 /*
@@ -311,13 +312,31 @@ const nglChar* nglKernel::OnError (uint& rError) const
   return FetchError(gpKernelErrorTable, NULL, rError);
 }
 
+void nglKernel::TimedPrint(const char* Format, ...) const
+{
+  va_list args;
+
+  va_start(args, Format);
+  TimedPrintv(Format, args);
+  va_end(args);
+}
+
+void nglKernel::TimedPrintv(const char* Format, va_list Args) const
+{
+  double now = nglTime();
+  double duration = now - (double)mStartTime;
+  nglString fmt;
+  fmt.Formatv(Format, Args);
+  printf("%f: %s\n", duration, fmt.GetChars());
+}
+
 void nglKernel::CallOnInit()
 {
   double now = nglTime();
   ucdata_init_static();
   double then = nglTime();
 
-  printf("ucdata_init_static took %f seconds\n", then - now);
+  TimedPrint("ucdata_init_static took %f seconds\n", then - now);
 
 #ifndef _MINUI3_
   NGL_DEBUG( NGL_LOG(_T("kernel"), NGL_LOG_INFO, _T("Init (%d parameter%s)"), GetArgCount(), (GetArgCount() > 1) ? _T("s") : _T("")); )
@@ -329,7 +348,9 @@ void nglKernel::CallOnInit()
   mKernelEventSink.Connect(pTimer->Tick, &nglKernel::ProcessMessages);
   mpNotificationManager = new nuiNotificationManager();
 
+  TimedPrint("before nglKernel::OnInit\n");
   OnInit();
+  TimedPrint("after nglKernel::OnInit\n");
 }
 
 void nglKernel::CallOnExit(int Code)

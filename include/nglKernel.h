@@ -333,6 +333,9 @@ public:
 #if (defined _UNIX_) || (defined _MINUI3_) || (defined _COCOA_) || (defined _CARBON_)
   void             CatchSignal (int Signal, void (*pHandler)(int));
 #endif
+
+  void TimedPrint(const char* Format, ...) const;
+  void TimedPrintv(const char* Format, va_list Args) const;
 protected:
   // Life cycle
   nglKernel();
@@ -361,6 +364,7 @@ protected:
 
   bool mActive;
 
+  static nglTime mStartTime;
   // From nglError
   virtual const nglChar* OnError (uint& rError) const;
 

@@ -7,6 +7,8 @@
 
 #include "nui.h"
 
+#define __NUI_NO_AA__
+
 #ifndef __NUI_NO_AA__
   #include "AAPrimitives.h"
 #endif
@@ -404,7 +406,7 @@ void nuiOutliner::TessellateObj(nuiRenderObject& rObject, const nuiPath& rVertic
 
 #else
 
-void nuiOutliner::TessellateObj(nuiRenderObject& rObject, const nuiPath& rVertices, uint offset, int count, float Quality)
+void nuiOutliner::TessellateObj(nuiRenderObject& rObject, const nuiPath& rVertices, uint offset, int count, float Quality) const
 {
   NGL_ASSERT(count);
 
