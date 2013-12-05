@@ -1636,6 +1636,10 @@
 		E52FA68314F686CF00992064 /* nuiStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = E52FA67E14F686CF00992064 /* nuiStringTemplate.h */; };
 		E52FA68514F686CF00992064 /* nuiStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = E52FA67E14F686CF00992064 /* nuiStringTemplate.h */; };
 		E52FA68614F686CF00992064 /* nuiStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = E52FA67E14F686CF00992064 /* nuiStringTemplate.h */; };
+		E52FD3A3184D49B10015935E /* clipper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52FD3A1184D49B10015935E /* clipper.cpp */; };
+		E52FD3A4184D49B10015935E /* clipper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52FD3A1184D49B10015935E /* clipper.cpp */; };
+		E52FD3A5184D49B10015935E /* clipper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E52FD3A2184D49B10015935E /* clipper.hpp */; };
+		E52FD3A6184D49B10015935E /* clipper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E52FD3A2184D49B10015935E /* clipper.hpp */; };
 		E531A9971440A1EE00ED88C9 /* nuiLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E531A9951440A1EE00ED88C9 /* nuiLayout.cpp */; };
 		E531A99A1440A1EE00ED88C9 /* nuiLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E531A9951440A1EE00ED88C9 /* nuiLayout.cpp */; };
 		E531A99C1440A1EE00ED88C9 /* nuiLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E531A9951440A1EE00ED88C9 /* nuiLayout.cpp */; };
@@ -4610,6 +4614,8 @@
 		E52EA7F4106D6E1F008598F5 /* nglWindow_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = nglWindow_Cocoa.mm; path = src/Window/Cocoa/nglWindow_Cocoa.mm; sourceTree = SOURCE_ROOT; };
 		E52FA67414F686AA00992064 /* nuiStringTemplate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiStringTemplate.cpp; sourceTree = "<group>"; };
 		E52FA67E14F686CF00992064 /* nuiStringTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiStringTemplate.h; path = include/nuiStringTemplate.h; sourceTree = SOURCE_ROOT; };
+		E52FD3A1184D49B10015935E /* clipper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = clipper.cpp; path = clipper/clipper.cpp; sourceTree = "<group>"; };
+		E52FD3A2184D49B10015935E /* clipper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = clipper.hpp; path = clipper/clipper.hpp; sourceTree = "<group>"; };
 		E531A9951440A1EE00ED88C9 /* nuiLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiLayout.cpp; sourceTree = "<group>"; };
 		E531A99E1440A20F00ED88C9 /* nuiLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiLayout.h; path = include/nuiLayout.h; sourceTree = SOURCE_ROOT; };
 		E533392513C372FE0080C465 /* Atlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Atlas.h; path = graphics/DefaultDecoration/Atlas.h; sourceTree = SOURCE_ROOT; };
@@ -6527,6 +6533,15 @@
 			name = Cocoa;
 			sourceTree = "<group>";
 		};
+		E52FD3A0184D499D0015935E /* clipper */ = {
+			isa = PBXGroup;
+			children = (
+				E52FD3A1184D49B10015935E /* clipper.cpp */,
+				E52FD3A2184D49B10015935E /* clipper.hpp */,
+			);
+			name = clipper;
+			sourceTree = "<group>";
+		};
 		E55DEDF90D350FE3002DA5BD /* SoftwareRasterizer */ = {
 			isa = PBXGroup;
 			children = (
@@ -6588,6 +6603,7 @@
 		E58167440C3CECA700902DFE /* deps */ = {
 			isa = PBXGroup;
 			children = (
+				E52FD3A0184D499D0015935E /* clipper */,
 				E573205B14BF2142008D488E /* premake4.lua */,
 				E58172B90C3CED8800902DFE /* AGL.framework */,
 				E5D435961004DC5300388BF5 /* ApplicationServices.framework */,
@@ -9122,6 +9138,7 @@
 				73F0997612E9D09E00656E84 /* propget.h in Headers */,
 				73F0997712E9D09E00656E84 /* propset.h in Headers */,
 				73F0997812E9D09E00656E84 /* select.h in Headers */,
+				E52FD3A6184D49B10015935E /* clipper.hpp in Headers */,
 				73F0997912E9D09E00656E84 /* parserutilserror.h in Headers */,
 				73F0997A12E9D09E00656E84 /* utils.h in Headers */,
 				73F0997B12E9D09E00656E84 /* dict-list.h in Headers */,
@@ -10270,6 +10287,7 @@
 				E5DD310B12E09CA700F1EF4E /* jsregexp.h in Headers */,
 				E5DD310C12E09CA700F1EF4E /* jsscan.h in Headers */,
 				E5DD310D12E09CA700F1EF4E /* jsscope.h in Headers */,
+				E52FD3A5184D49B10015935E /* clipper.hpp in Headers */,
 				E5DD310E12E09CA700F1EF4E /* jsscopeinlines.h in Headers */,
 				E5DD310F12E09CA700F1EF4E /* jsscript.h in Headers */,
 				E5DD311012E09CA700F1EF4E /* jsscriptinlines.h in Headers */,
@@ -11097,6 +11115,7 @@
 				73F099C112E9D09E00656E84 /* cff.c in Sources */,
 				73F099C212E9D09E00656E84 /* rdswitch.c in Sources */,
 				73F099C312E9D09E00656E84 /* rdbmp.c in Sources */,
+				E52FD3A4184D49B10015935E /* clipper.cpp in Sources */,
 				73F099C412E9D09E00656E84 /* jidctflt.c in Sources */,
 				73F099C512E9D09E00656E84 /* ftbitmap.c in Sources */,
 				73F099C612E9D09E00656E84 /* wrbmp.c in Sources */,
@@ -12140,6 +12159,7 @@
 				E5DD336E12E09CA800F1EF4E /* jsapi.cpp in Sources */,
 				E5DD336F12E09CA800F1EF4E /* jsarena.cpp in Sources */,
 				E5DD337012E09CA800F1EF4E /* jsarray.cpp in Sources */,
+				E52FD3A3184D49B10015935E /* clipper.cpp in Sources */,
 				E5DD337112E09CA800F1EF4E /* jsatom.cpp in Sources */,
 				E5DD337212E09CA800F1EF4E /* jsbool.cpp in Sources */,
 				E5DD337312E09CA800F1EF4E /* jsbuiltins.cpp in Sources */,
@@ -12566,7 +12586,7 @@
 				);
 				GCC_THREADSAFE_STATICS = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LLVM_VECTORIZE_LOOPS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx10.8;
@@ -12657,7 +12677,7 @@
 				);
 				GCC_THREADSAFE_STATICS = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx10.8;
 				SKIP_INSTALL = YES;

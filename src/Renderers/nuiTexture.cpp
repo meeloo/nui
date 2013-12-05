@@ -298,11 +298,11 @@ bool nuiTexture::CreateAtlasFromPath(const nglPath& rPath, int32 MaxTextureSize,
     offset = 1;
 
   //App->GetLog().SetLevel(_T("StopWatch"), 100);
-  nuiStopWatch watch(_T("Create atlas"));
+  //nuiStopWatch watch(_T("Create atlas"));
   std::vector<AtlasElem> images;
   
   GetAllImages(images, rPath, MaxTextureSize, ForceAtlasSize, AutoTrim);
-  watch.AddIntermediate(_T("Got all images"));
+  //watch.AddIntermediate(_T("Got all images"));
   
   TEXTURE_PACKER::TexturePacker* packer = TEXTURE_PACKER::createTexturePacker();
   packer->setTextureCount(images.size() + offset);
@@ -318,7 +318,7 @@ bool nuiTexture::CreateAtlasFromPath(const nglPath& rPath, int32 MaxTextureSize,
   
   int32 width = 0, height = 0;
   int unused_area = packer->packTextures(width, height, true, true);
-  watch.AddIntermediate(_T("Packed textures"));
+  //watch.AddIntermediate(_T("Packed textures"));
 
   // Create image buffer:
   nglImageInfo info(width, height, 32);
@@ -350,7 +350,7 @@ bool nuiTexture::CreateAtlasFromPath(const nglPath& rPath, int32 MaxTextureSize,
 
   TEXTURE_PACKER::releaseTexturePacker(packer);
 
-  watch.AddIntermediate(_T("Done"));
+  //watch.AddIntermediate(_T("Done"));
   return true;
 }
 

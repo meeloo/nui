@@ -23,20 +23,45 @@ public:
 
   nuiRenderObject* Generate(float Quality = 0.5f);
 
-  void SetFill(bool Set) { mOutLine = !Set; }
-  void SetOutLine(bool Set) { mOutLine = Set; }
-  bool GetFill() const { return !mOutLine; }
-  bool GetOutLine() const { return mOutLine; }
+  void SetFill(bool Set) { mOutline = !Set; }
+  void SetOutline(bool Set) { mOutline = Set; }
+  bool GetFill() const { return !mOutline; }
+  bool GetOutline() const { return mOutline; }
+  void SetAntialiasGradients(bool set) { mAntialiasGradients = true; }
+  bool GetAntialiasGradients() const { return mAntialiasGradients; }
 private:
   nuiPathGenerator* mpPath;
   nuiShape* mpShape;
-  bool mOutLine;
+  bool mOutline;
+  bool mAntialiasGradients;
 
   nuiRenderObject* GenerateFromPath(float Quality);
   nuiRenderObject* GenerateFromShape(float Quality);
 
   static struct GLUtesselator* mpTess;
   static uint32 mRefs;
+
+#ifndef CALLBACK
+#define CALLBACK
+#endif
+
+
+  static GLvoid CALLBACK StaticInternalTessBegin(GLenum type, void * polygon_data);
+  static GLvoid CALLBACK StaticInternalTessEdgeFlag(GLboolean flag, void * polygon_data);
+  static GLvoid CALLBACK StaticInternalTessVertex(void * vertex_data, void * polygon_data);
+  static GLvoid CALLBACK StaticInternalTessEnd(void * polygon_data);
+  static GLvoid CALLBACK StaticInternalTessCombine(GLdouble coords[3], void *vertex_data[4], GLfloat weight[4], void **outData, void * polygon_data);
+  static GLvoid CALLBACK StaticInternalTessError(GLenum ErrNo, void * polygon_data);
+  void InternalTessBegin(GLenum type);
+  void InternalTessEdgeFlag(GLboolean flag);
+  void InternalTessVertex(void* vertex_data);
+  void InternalTessCombine(GLdouble coords[3], void *vertex_data[4], GLfloat weight[4], void **outData);
+  void InternalTessEnd();
+  void InternalTessError(GLenum ErrNo);
+
+  nuiRenderObject* mpObject;
+  nuiPath mTempPoints;
+  bool mEdgeFlag;
 };
 
 #endif // nuiTessellator

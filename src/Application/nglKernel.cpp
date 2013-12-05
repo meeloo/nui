@@ -336,7 +336,7 @@ void nglKernel::CallOnInit()
   ucdata_init_static();
   double then = nglTime();
 
-  TimedPrint("ucdata_init_static took %f seconds\n", then - now);
+  //TimedPrint("ucdata_init_static took %f seconds\n", then - now);
 
 #ifndef _MINUI3_
   NGL_DEBUG( NGL_LOG(_T("kernel"), NGL_LOG_INFO, _T("Init (%d parameter%s)"), GetArgCount(), (GetArgCount() > 1) ? _T("s") : _T("")); )
@@ -348,9 +348,9 @@ void nglKernel::CallOnInit()
   mKernelEventSink.Connect(pTimer->Tick, &nglKernel::ProcessMessages);
   mpNotificationManager = new nuiNotificationManager();
 
-  TimedPrint("before nglKernel::OnInit\n");
+  //TimedPrint("before nglKernel::OnInit\n");
   OnInit();
-  TimedPrint("after nglKernel::OnInit\n");
+  //TimedPrint("after nglKernel::OnInit\n");
 }
 
 void nglKernel::CallOnExit(int Code)

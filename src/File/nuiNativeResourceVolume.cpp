@@ -15,10 +15,10 @@ nuiNativeResourceVolume::nuiNativeResourceVolume()
 {
   //App->GetLog().SetLevel(_T("StopWatch"), 100);
   
-  nuiStopWatch watch(_T("nuiNativeResourceVolume creation"));
+  //nuiStopWatch watch(_T("nuiNativeResourceVolume creation"));
   std::vector<nglPath> resources;
   nuiNativeResource::GetResourcesList(resources);
-  watch.AddIntermediate(_T("GetResourcesList"));
+  //watch.AddIntermediate(_T("GetResourcesList"));
                      
   //NGL_OUT(_T("Found %d resources in this executable\n"), resources.size());
   for (size_t i = 0; i < resources.size(); i++)

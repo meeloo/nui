@@ -27,7 +27,7 @@ nuiStopWatch::~nuiStopWatch()
     }
     else
     {
-      App->TimedPrint("%s\t\t%lf sec (%f Hz)\n\n", mLogTitle.GetChars(), seconds, 1.0f / seconds);
+      App->TimedPrint("%s\t\t%lf sec (%f Hz)\n", mLogTitle.GetChars(), seconds, 1.0f / seconds);
     }
 
   }
@@ -50,7 +50,7 @@ nuiStopWatch::~nuiStopWatch()
     }
     else
     {
-      App->TimedPrint("%s\n", log.GetChars());
+      App->TimedPrint("%s", log.GetChars());
     }
     
     ref = time;
