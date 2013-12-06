@@ -5,6 +5,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
+#import <OpenGLES/ES2/glext.h>
 
 /*
 ** Touches tracking ..
@@ -35,7 +36,7 @@ public:
   int angle;
   
   // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
-  GLuint defaultFrameBuffer, colorRenderBuffer, depthRenderBuffer;
+  GLuint defaultFrameBuffer, colorRenderBuffer, depthRenderBuffer, sampleFramebuffer, sampleColorRenderbuffer, sampleDepthRenderbuffer;
   
 }
 @end

@@ -898,6 +898,29 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
       glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderBuffer);
       
     }
+
+    // Multisample:
+    {
+      glGenFramebuffers(1, &sampleFramebuffer);
+      glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+
+      glGenRenderbuffers(1, &sampleColorRenderbuffer);
+      glBindRenderbuffer(GL_RENDERBUFFER, sampleColorRenderbuffer);
+      glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 4, GL_RGBA8_OES, backingWidth, backingHeight);
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, sampleColorRenderbuffer);
+
+      if (mpContextInfo->DepthBits)
+      {
+        glGenRenderbuffers(1, &sampleDepthRenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, sampleDepthRenderbuffer);
+        glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, backingWidth, backingHeight);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sampleDepthRenderbuffer);
+      }
+
+    }
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
   }
   else
   {
@@ -917,8 +940,22 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
       return NO;
     }
 
-    // this line seemed to fix some render buffer creation errors, but I'm not sure if it's necessary.
-    //glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, colorRenderBuffer);
+    // Multisample:
+    {
+      glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+      glBindRenderbuffer(GL_RENDERBUFFER, sampleColorRenderbuffer);
+      glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 4, GL_RGBA8_OES, backingWidth, backingHeight);
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, sampleColorRenderbuffer);
+
+      if (mpContextInfo->DepthBits)
+      {
+        glGenRenderbuffers(1, &sampleDepthRenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, sampleDepthRenderbuffer);
+        glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, backingWidth, backingHeight);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sampleDepthRenderbuffer);
+      }
+      
+    }
   }
 
   if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
@@ -967,11 +1004,18 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
 - (void) BeginSession
 {
   [EAGLContext setCurrentContext:context];
-  glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFrameBuffer);
+  //glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFrameBuffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
 }
 
 - (void) EndSession
 {
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, defaultFrameBuffer);
+  glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
+  glResolveMultisampleFramebufferAPPLE();
+  const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
+  glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
+
   glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderBuffer);
   //glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
   [context presentRenderbuffer:GL_RENDERBUFFER_OES];

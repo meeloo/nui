@@ -38,100 +38,6 @@ static int64 MakePOT(int64 v)
 }
 
 
-#ifdef _OPENGL_ES_
-
-#define glCheckFramebufferStatusNUI   glCheckFramebufferStatusOES
-#define glFramebufferRenderbufferNUI  glFramebufferRenderbufferOES
-#define glRenderbufferStorageNUI      glRenderbufferStorageOES
-#define glGenFramebuffersNUI          glGenFramebuffersOES
-#define glDeleteFramebuffersNUI       glDeleteFramebuffersOES
-#define glBindFramebufferNUI          glBindFramebufferOES
-#define glGenRenderbuffersNUI         glGenRenderbuffersOES
-#define glDeleteRenderbuffersNUI      glDeleteRenderbuffersOES
-#define glBindRenderbufferNUI         glBindRenderbufferOES
-#define glFramebufferTexture2DNUI     glFramebufferTexture2DOES
-#define glGetRenderbufferParameterivNUI glGetRenderbufferParameterivOES
-
-#define GL_FRAMEBUFFER_NUI                                GL_FRAMEBUFFER_OES
-#define GL_RENDERBUFFER_NUI                               GL_RENDERBUFFER_OES
-#define GL_FRAMEBUFFER_BINDING_NUI                        GL_FRAMEBUFFER_BINDING_OES
-#define GL_RENDERBUFFER_BINDING_NUI                       GL_RENDERBUFFER_BINDING_OES
-
-// FBO attachement points
-#define GL_STENCIL_ATTACHMENT_NUI                         GL_STENCIL_ATTACHMENT_OES
-#define GL_DEPTH_ATTACHMENT_NUI                           GL_DEPTH_ATTACHMENT_OES
-#define GL_COLOR_ATTACHMENT0_NUI                          GL_COLOR_ATTACHMENT0_OES
-
-// FBO errors:
-#define GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_NUI          GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_OES
-#define GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_NUI  GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_OES
-#define GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_NUI          GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_OES
-#define GL_FRAMEBUFFER_INCOMPLETE_FORMATS_NUI             GL_FRAMEBUFFER_INCOMPLETE_FORMATS_OES
-#define GL_FRAMEBUFFER_UNSUPPORTED_NUI                    GL_FRAMEBUFFER_UNSUPPORTED_OES
-#define GL_FRAMEBUFFER_COMPLETE_NUI                       GL_FRAMEBUFFER_COMPLETE_OES
-
-#ifndef _GL_DEPTH_COMPONENT16
-#define GL_DEPTH_COMPONENT16                              GL_DEPTH_COMPONENT16_OES
-#endif
-
-#define GL_DEPTH_COMPONENT24                              GL_DEPTH_COMPONENT24_OES
-
-#define GL_RENDERBUFFER_WIDTH_NUI                         GL_RENDERBUFFER_WIDTH_OES
-#define GL_RENDERBUFFER_HEIGHT_NUI                        GL_RENDERBUFFER_HEIGHT_OES
-
-//#elif defined(_OPENGL_)
-#else
-
-#ifdef _MACOSX_
-#define glCheckFramebufferStatusNUI   glCheckFramebufferStatus
-#define glFramebufferRenderbufferNUI  glFramebufferRenderbuffer
-#define glRenderbufferStorageNUI      glRenderbufferStorage
-#define glGenFramebuffersNUI          glGenFramebuffers
-#define glDeleteFramebuffersNUI       glDeleteFramebuffers
-#define glBindFramebufferNUI          glBindFramebuffer
-#define glGenRenderbuffersNUI         glGenRenderbuffers
-#define glDeleteRenderbuffersNUI      glDeleteRenderbuffers
-#define glBindRenderbufferNUI         glBindRenderbuffer
-#define glFramebufferTexture2DNUI     glFramebufferTexture2D
-#define glGetRenderbufferParameterivNUI glGetRenderbufferParameteriv
-#else
-#define glCheckFramebufferStatusNUI   mpContext->glCheckFramebufferStatus
-#define glFramebufferRenderbufferNUI  mpContext->glFramebufferRenderbuffer
-#define glRenderbufferStorageNUI      mpContext->glRenderbufferStorage
-#define glGenFramebuffersNUI          mpContext->glGenFramebuffers
-#define glDeleteFramebuffersNUI       mpContext->glDeleteFramebuffers
-#define glBindFramebufferNUI          mpContext->glBindFramebuffer
-#define glGenRenderbuffersNUI         mpContext->glGenRenderbuffers
-#define glDeleteRenderbuffersNUI      mpContext->glDeleteRenderbuffers
-#define glBindRenderbufferNUI         mpContext->glBindRenderbuffer
-#define glFramebufferTexture2DNUI     mpContext->glFramebufferTexture2D
-#define glGetRenderbufferParameterivNUI glGetRenderbufferParameteriv
-#endif
-
-#define GL_FRAMEBUFFER_NUI                                GL_FRAMEBUFFER
-#define GL_RENDERBUFFER_NUI                               GL_RENDERBUFFER
-#define GL_FRAMEBUFFER_BINDING_NUI                        GL_FRAMEBUFFER_BINDING
-#define GL_RENDERBUFFER_BINDING_NUI                       GL_RENDERBUFFER_BINDING
-
-// FBO attachement points
-#define GL_STENCIL_ATTACHMENT_NUI                         GL_STENCIL_ATTACHMENT
-#define GL_DEPTH_ATTACHMENT_NUI                           GL_DEPTH_ATTACHMENT
-#define GL_COLOR_ATTACHMENT0_NUI                          GL_COLOR_ATTACHMENT0
-
-// FBO errors:
-#define GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_NUI          GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT
-#define GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_NUI  GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT
-//#define GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_NUI          GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS
-//#define GL_FRAMEBUFFER_INCOMPLETE_FORMATS_NUI             GL_FRAMEBUFFER_INCOMPLETE_FORMATS
-#define GL_FRAMEBUFFER_UNSUPPORTED_NUI                    GL_FRAMEBUFFER_UNSUPPORTED
-#define GL_FRAMEBUFFER_COMPLETE_NUI                       GL_FRAMEBUFFER_COMPLETE
-
-#define GL_RENDERBUFFER_WIDTH_NUI                         GL_RENDERBUFFER_WIDTH
-#define GL_RENDERBUFFER_HEIGHT_NUI                        GL_RENDERBUFFER_HEIGHT
-
-//#else
-//#error "bleh"
-#endif
 
 void nuiGLLoadMatrix(const float* pMatrix)
 {
@@ -449,6 +355,8 @@ void nuiGLPainter::ResetOpenGLState()
   glDisable(GL_ALPHA_TEST);
 #endif
   glDisable(GL_CULL_FACE);
+
+  glEnable(GL_MULTISAMPLE);
 
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
   BlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -1976,6 +1884,10 @@ void nuiGLPainter::ResizeSurface(nuiSurface* pSurface, int32 newWidth, int32 new
     {
       pixelformat = GL_BGR;
     }
+#else
+  #ifdef _UIKIT_
+    pixelformat = GL_RGBA8_OES;
+  #endif
 #endif
 
     glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, pixelformat, newWidth, newHeight);
@@ -2284,6 +2196,10 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
         {
           pixelformat = GL_BGR;
         }
+#else
+#ifdef _UIKIT_
+        pixelformat = GL_RGBA8_OES;
+#endif
 #endif
 
         glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, pixelformat, width, height);
@@ -2341,6 +2257,10 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     //printf("UNBIND glBindFramebufferNUI -> %d\n", mDefaultFramebuffer);
     glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, mDefaultRenderbuffer);
     //printf("UNBIND glBindRenderbufferNUI -> %d\n", mDefaultRenderbuffer);
+
+#if defined _UIKIT_
+    glResolveMultisampleFramebufferAPPLE();
+#endif
 
     nuiCheckForGLErrors();
 #ifdef NGL_DEBUG

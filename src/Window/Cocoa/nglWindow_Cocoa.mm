@@ -237,6 +237,10 @@ float nuiGetInvScaleFactor()
     NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16,
     NSOpenGLPFAAccelerated,
     NSOpenGLPFABackingStore,
+
+    NSOpenGLPFAMultisample,
+    NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
+    NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)4,
     //NSOpenGLPFAWindow,
     (NSOpenGLPixelFormatAttribute)0
   };

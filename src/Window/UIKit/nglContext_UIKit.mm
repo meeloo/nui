@@ -8,6 +8,7 @@
 //#include <OpenGLES/EAGLDisplay.h>
 #include <OpenGLES/EAGLDrawable.h>
 #include <OpenGLES/ES1/glext.h>
+#include <OpenGLES/ES2/glext.h>
 
 #include <QuartzCore/QuartzCore.h>
 

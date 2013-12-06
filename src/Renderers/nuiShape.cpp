@@ -342,25 +342,20 @@ nuiRenderObject* nuiShape::Fill(float Quality)
 
 nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
 {
-  nuiOutliner* pOutliner = new nuiOutliner(NULL, LineWidth);
+  nuiOutliner* pOutliner = new nuiOutliner(this, LineWidth);
   pOutliner->SetLineJoin(LineJoin);
   pOutliner->SetLineCap(LineCap);
   pOutliner->SetMiterLimit(MiterLimit);
 
-  nuiRenderObject* pObj = new nuiRenderObject();
+  nuiPath outline;
+  pOutliner->Tessellate(outline, 1.0);
 
-  uint32 contours = GetContourCount();
-  for (uint32 i = 0; i < contours; i++)
-  {
-    nuiContour* pContour = GetContour(i);
+  nuiPolyLine polyline(outline);
+  nuiTessellator tesselator(&polyline);
+  nuiRenderObject* pObject = tesselator.Generate();
 
-    pOutliner->SetPath(pContour);
-    pOutliner->TessellateObj(*pObj, Quality);
-  }
+  return pObject;
 
-  delete pOutliner;
-
-  return pObj;
 }
 
 /*
