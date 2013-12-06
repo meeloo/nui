@@ -14,6 +14,25 @@
 
 class nuiPoint;
 
+float squared_distance(const nglVectorf& p1, const nglVectorf& p2, const nglVectorf& p3)
+{
+  nglVectorf v = p3 - p2;
+  nglVectorf w = p1 - p2;
+
+  float c1 = w * v;
+  float c2 = v * v;
+  float b = c1 / c2;
+
+  nglVectorf Pb = p2 + b * v;
+  return nglVectorf(Pb - p1).SquaredLength();
+}
+
+float distance(const nglVectorf& p1, const nglVectorf& p2, const nglVectorf& p3)
+{
+  return sqrtf(squared_distance(p1, p2, p3));
+}
+
+
 
 GLUtesselator* nuiTessellator::mpTess = NULL;
 uint32 nuiTessellator::mRefs = 0;
@@ -25,6 +44,7 @@ nuiTessellator::nuiTessellator(nuiPathGenerator* pPathGenerator)
   mpShape = NULL;
   mpObject = NULL;
   mEdgeFlag = true;
+  mOutline = false;
 
   if (!mpTess)
     mpTess = gluNewTess();
@@ -37,6 +57,9 @@ nuiTessellator::nuiTessellator(nuiShape* pShape)
   mAntialiasGradients = false;
   mpPath = NULL;
   mpShape = pShape;
+  mpObject = NULL;
+  mEdgeFlag = true;
+  mOutline = false;
 
   if (!mpTess)
     mpTess = gluNewTess();
@@ -231,14 +254,64 @@ void nuiTessellator::InternalTessVertex(void* vertex_data)
   nuiRenderArray* pArray = mpObject->GetLastArray();
   pArray->SetVertex(mTempPoints[(unsigned long int)vertex_data]);
   //pArray->SetEdgeFlag(mEdgeFlag);
+  pArray->PushVertex();
+
   if (mAntialiasGradients)
   {
     // Store the antialiasing gradients in the normal vectors:
-    int index = pArray->GetSize();
+    int index = pArray->GetSize() - 1;
     int offset = index %3;
-    //pArray->SetNormal();
+    mEdge[offset] = mEdgeFlag;
+    if (offset == 2)
+    {
+      // (i.e. we are at the last vertex for this triangle)
+      // Then we can fix the normals to hold the distance from each vertex to the opposite edge line.
+      nuiRenderArray::Vertex& rV1 = pArray->GetVertex(index - 2);
+      nuiRenderArray::Vertex& rV2 = pArray->GetVertex(index - 1);
+      nuiRenderArray::Vertex& rV3 = pArray->GetVertex(index - 0);
+      nglVectorf p1(rV1.mX, rV1.mY, rV1.mZ);
+      nglVectorf p2(rV2.mX, rV2.mY, rV2.mZ);
+      nglVectorf p3(rV3.mX, rV3.mY, rV3.mZ);
+
+      // The default is to have no edges at all:
+      const float huge = 100;
+
+      float d1 = distance(p1, p2, p3); // distance from p1 to [p2, p3]
+      float d2 = distance(p2, p1, p3); // distance from p2 to [p1, p3]
+      float d3 = distance(p3, p2, p1); // distance from p3 to [p2, p1]
+
+      // p1 to p2 is an edge
+      rV1.mNZ = 0;
+      rV2.mNZ = 0;
+      rV3.mNZ = d3;
+
+      // p1 to p3 is an edge
+      rV1.mNY = 0;
+      rV2.mNY = d2;
+      rV3.mNY = 0;
+
+      // p2 to p3 is an edge
+      rV1.mNX = d1;
+      rV2.mNX = 0;
+      rV3.mNX = 0;
+
+      if (!mEdge[0]) // [1,2] not an edge
+      {
+        rV1.mNZ = huge;
+        rV2.mNZ = huge;
+      }
+      if (!mEdge[1])  // [2,3] not an edge
+      {
+        rV2.mNX = huge;
+        rV3.mNX = huge;
+      }
+      if (!mEdge[2])  // [3,1] not an edge
+      {
+        rV1.mNY = huge;
+        rV3.mNY = huge;
+      }
+    }
   }
-  pArray->PushVertex();
 }
 
 void nuiTessellator::InternalTessCombine(GLdouble coords[3], void *vertex_data[4], GLfloat weight[4], void **outData)

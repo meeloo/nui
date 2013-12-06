@@ -52,6 +52,7 @@ protected:
   nuiShaderProgram* mpShader_TextureDifuseColor;
   nuiShaderProgram* mpShader_TextureAlphaDifuseColor;
   nuiShaderProgram* mpShader_DifuseColor;
+  nuiShaderProgram* mpShader_ShapeDifuseColor;
   nuiShaderProgram* mpShader_VertexColor;
 
   nuiMatrix mSurfaceMatrix;
