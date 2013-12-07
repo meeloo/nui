@@ -967,7 +967,10 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
   r.Move(rect.Left(), rect.Top());
 
   if (mpParent)
+  {
+    mpParent->CheckValid();
     mpParent->BroadcastInvalidateRect(pSender, r);
+  }
   DebugRefreshInfo();
 }
 

@@ -27,13 +27,11 @@ public:
   void SetOutline(bool Set) { mOutline = Set; }
   bool GetFill() const { return !mOutline; }
   bool GetOutline() const { return mOutline; }
-  void SetAntialiasGradients(bool set) { mAntialiasGradients = set; }
-  bool GetAntialiasGradients() const { return mAntialiasGradients; }
+
 private:
   nuiPathGenerator* mpPath;
   nuiShape* mpShape;
   bool mOutline;
-  bool mAntialiasGradients;
 
   nuiRenderObject* GenerateFromPath(float Quality);
   nuiRenderObject* GenerateFromShape(float Quality);
@@ -62,7 +60,6 @@ private:
   nuiRenderObject* mpObject;
   nuiPath mTempPoints;
   bool mEdgeFlag;
-  bool mEdge[3];
 };
 
 #endif // nuiTessellator

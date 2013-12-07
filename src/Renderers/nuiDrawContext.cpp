@@ -418,6 +418,36 @@ void nuiDrawContext::SetLineWidth(nuiSize Width)
 //  mStateChanges++;
 }
 
+void nuiDrawContext::SetLineJoin(nuiLineJoin join)
+{
+  mCurrentState.mLineJoin = join;
+}
+
+nuiLineJoin nuiDrawContext::GetLineJoin()const
+{
+  return mCurrentState.mLineJoin;
+}
+
+void nuiDrawContext::SetLineCap(nuiLineCap cap)
+{
+  mCurrentState.mLineCap = cap;
+}
+
+nuiLineCap nuiDrawContext::GetLineCap() const
+{
+  mCurrentState.mLineCap;
+}
+
+void nuiDrawContext::SetMiterLimit(float limit)
+{
+  mCurrentState.mMitterLimit = limit;
+}
+
+float nuiDrawContext::GetMiterLimit() const
+{
+  return mCurrentState.mMitterLimit;
+}
+
 void nuiDrawContext::EnableAntialiasing(bool set)
 {
   if (mCurrentState.mAntialiasing != set)
@@ -473,7 +503,7 @@ void nuiDrawContext::DrawShape(nuiShape* pShape, nuiShapeMode Mode, float Qualit
   {
   case eStrokeShape:
     {
-      nuiRenderObject* pObject = pShape->Outline(Quality, mCurrentState.mLineWidth, mCurrentState.mLineJoin, mCurrentState.mLineCap);
+      nuiRenderObject* pObject = pShape->Outline(Quality, mCurrentState.mLineWidth, mCurrentState.mLineJoin, mCurrentState.mLineCap, mCurrentState.mMitterLimit);
       SetFillColor(GetStrokeColor());
       //SetTexture(mpAATexture);
       //EnableTexturing(true);
@@ -502,7 +532,7 @@ void nuiDrawContext::DrawShape(nuiShape* pShape, nuiShapeMode Mode, float Qualit
       }
 
       {
-        nuiRenderObject* pObject = pShape->Outline(Quality, mCurrentState.mLineWidth, mCurrentState.mLineJoin, mCurrentState.mLineCap);
+        nuiRenderObject* pObject = pShape->Outline(Quality, mCurrentState.mLineWidth, mCurrentState.mLineJoin, mCurrentState.mLineCap, mCurrentState.mMitterLimit);
         SetFillColor(GetStrokeColor());
         //SetTexture(mpAATexture);
         //EnableTexturing(true);

@@ -111,6 +111,7 @@ void nuiOutliner::AddCap(const nuiPoint& rFirstPoint, const nuiPoint& rLastPoint
 
 void nuiOutliner::Tessellate(nuiPath& rPoints, const nuiPath& rVertices, uint offset, int count, float Quality) const
 {
+  //printf("nuiOutliner::Tessellate offset = %d count = %d\n", offset, count);
   nuiPath Left;
   nuiPath Right;
 
@@ -130,9 +131,13 @@ void nuiOutliner::Tessellate(nuiPath& rPoints, const nuiPath& rVertices, uint of
   {
     int p1 = i;
     int p2 = (p1+1);
+    if (closed)
+      p2 %= segments;
+    else
+      p2 %= segments + 1;
+
     p1 += offset;
     p2 += offset;
-
     const nuiPoint& rPoint = rVertices[p1];
     const nuiPoint& rNextPoint = rVertices[p2];
 
@@ -152,7 +157,19 @@ void nuiOutliner::Tessellate(nuiPath& rPoints, const nuiPath& rVertices, uint of
     }
   }
 
+  for (int i = 0; i < Left.GetCount(); i++)
+  {
+    //printf("Left %d:\n", i);
+    //Left[i].Dump();
+  }
+
   Right.Reverse();
+
+  for (int i = 0; i < Right.GetCount(); i++)
+  {
+    //printf("Right %d:\n", i);
+    //Right[i].Dump();
+  }
 
   if (!Left.GetCount() || !Right.GetCount()) // Case of a path where all points have the same coordinates
   {
@@ -197,17 +214,14 @@ void nuiOutliner::Tessellate(nuiPath& rPoints, const nuiPath& rVertices, uint of
   {
     // Left:
     int ndx1 = 0;
-    int ndx2 = 0;
+    int ndx2 = segments -1;
+    AddJoin(Left[ndx2], Left[ndx2+1], Left[ndx1], Left[ndx1+1], rPoints);
     for (i = 0; i < segments-1; i++)
     {
       ndx1 = i * 2;
       ndx2 = ndx1 + 2;
       AddJoin(Left[ndx1], Left[ndx1+1], Left[ndx2], Left[ndx2+1], rPoints);
     }
-    if (mLineJoin == nuiLineJoinBevel)
-      rPoints.AddVertexOptim(rPoints.Front());
-    else
-      rPoints.Back() = rPoints.Front();
     rPoints.StopPath();
 
     // Right:
@@ -244,7 +258,7 @@ void nuiOutliner::Tessellate(nuiPath& rPoints, const nuiPath& rVertices, uint of
       AddJoin(Right[ndx1], Right[ndx1+1], Right[ndx2], Right[ndx2+1], rPoints);
     }
     AddCap(Right.Back(), Left.Front(), rPoints);
-    rPoints.Front() = rPoints.Back();
+    //rPoints[offset] = rPoints.Back();
 
     rPoints.StopPath();
   }

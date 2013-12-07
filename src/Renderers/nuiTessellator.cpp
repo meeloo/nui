@@ -39,7 +39,6 @@ uint32 nuiTessellator::mRefs = 0;
 
 nuiTessellator::nuiTessellator(nuiPathGenerator* pPathGenerator)
 {
-  mAntialiasGradients = false;
   mpPath = pPathGenerator;
   mpShape = NULL;
   mpObject = NULL;
@@ -54,7 +53,6 @@ nuiTessellator::nuiTessellator(nuiPathGenerator* pPathGenerator)
 
 nuiTessellator::nuiTessellator(nuiShape* pShape)
 {
-  mAntialiasGradients = false;
   mpPath = NULL;
   mpShape = pShape;
   mpObject = NULL;
@@ -102,27 +100,34 @@ nuiRenderObject* nuiTessellator::GenerateFromPath(float Quality)
 
   gluTessBeginPolygon(mpTess, this);
 
-  gluTessBeginContour(mpTess);
+  bool beginNext = true;
 
-  printf("Start tesselation\n");
+  //printf("Start tesselation\n");
   uint count = Points.GetCount();
   for (uint i = 0; i < count; i++)
   {
     nuiPoint& rPoint = Points[i];
     if (rPoint.GetType() != nuiPointTypeStop)
     {
+      if (beginNext)
+      {
+        gluTessBeginContour(mpTess);
+        beginNext = false;
+      }
+
       double vec[4] = { rPoint[0], rPoint[1], rPoint[2], 0 };
-      printf("%d input %f %f\n", i, vec[0], vec[1]);
+      //printf("%d input %f %f\n", i, vec[0], vec[1]);
       gluTessVertex(mpTess, vec, (void*)mTempPoints.AddVertex(rPoint));
     }
     else
     {
-      printf("End Contour\n");
+      //printf("End Contour\n");
       gluTessEndContour(mpTess);
-      gluTessBeginContour(mpTess);
+      beginNext = true;
     }
   }
-  gluTessEndContour(mpTess);
+  if (Points.Back().GetType() != nuiPointTypeStop)
+    gluTessEndContour(mpTess);
 
   gluTessEndPolygon(mpTess); 
 
@@ -246,12 +251,9 @@ GLvoid nuiTessellator::StaticInternalTessError(GLenum ErrNo, void * polygon_data
 
 void nuiTessellator::InternalTessBegin(GLenum type)
 {
+  //printf("tess begin %d\n", type);
   nuiRenderArray* pArray = new nuiRenderArray(type, false, false, mOutline);
   pArray->EnableArray(nuiRenderArray::eVertex);
-  if (mAntialiasGradients)
-    pArray->EnableArray(nuiRenderArray::eNormal);
-
-  //pArray->EnableArray(nuiRenderArray::eEdgeFlag);
   mpObject->AddArray(pArray);
 }
 
@@ -264,76 +266,23 @@ void nuiTessellator::InternalTessVertex(void* vertex_data)
 {
   nuiRenderArray* pArray = mpObject->GetLastArray();
   pArray->SetVertex(mTempPoints[(unsigned long int)vertex_data]);
-  mTempPoints[(unsigned long int)vertex_data].Dump();
-  //pArray->SetEdgeFlag(mEdgeFlag);
+//  if (!(pArray->GetSize() % 3))
+//  {
+//    printf("Triangle %d\n", pArray->GetSize()/3);
+//  }
+//  mTempPoints[(unsigned long int)vertex_data].Dump();
   pArray->PushVertex();
-
-  if (mAntialiasGradients)
-  {
-    // Store the antialiasing gradients in the normal vectors:
-    int index = pArray->GetSize() - 1;
-    int offset = index %3;
-    mEdge[offset] = mEdgeFlag;
-    if (offset == 2)
-    {
-      // (i.e. we are at the last vertex for this triangle)
-      // Then we can fix the normals to hold the distance from each vertex to the opposite edge line.
-      nuiRenderArray::Vertex& rV1 = pArray->GetVertex(index - 2);
-      nuiRenderArray::Vertex& rV2 = pArray->GetVertex(index - 1);
-      nuiRenderArray::Vertex& rV3 = pArray->GetVertex(index - 0);
-      nglVectorf p1(rV1.mX, rV1.mY, rV1.mZ);
-      nglVectorf p2(rV2.mX, rV2.mY, rV2.mZ);
-      nglVectorf p3(rV3.mX, rV3.mY, rV3.mZ);
-
-      // The default is to have no edges at all:
-      const float huge = 100;
-
-      float d1 = distance(p1, p2, p3); // distance from p1 to [p2, p3]
-      float d2 = distance(p2, p1, p3); // distance from p2 to [p1, p3]
-      float d3 = distance(p3, p2, p1); // distance from p3 to [p2, p1]
-
-      // p1 to p2 is an edge
-      rV1.mNZ = 0;
-      rV2.mNZ = 0;
-      rV3.mNZ = d3;
-
-      // p1 to p3 is an edge
-      rV1.mNY = 0;
-      rV2.mNY = d2;
-      rV3.mNY = 0;
-
-      // p2 to p3 is an edge
-      rV1.mNX = d1;
-      rV2.mNX = 0;
-      rV3.mNX = 0;
-
-      if (!mEdge[0]) // [1,2] not an edge
-      {
-        rV1.mNZ = huge;
-        rV2.mNZ = huge;
-      }
-      if (!mEdge[1])  // [2,3] not an edge
-      {
-        rV2.mNX = huge;
-        rV3.mNX = huge;
-      }
-      if (!mEdge[2])  // [3,1] not an edge
-      {
-        rV1.mNY = huge;
-        rV3.mNY = huge;
-      }
-    }
-  }
 }
 
 void nuiTessellator::InternalTessCombine(GLdouble coords[3], void *vertex_data[4], GLfloat weight[4], void **outData)
 {
-  printf("Combine %f %f\n", coords[0], coords[1]);
+  //printf("Combine %f %f\n", coords[0], coords[1]);
   *outData = (void*)mTempPoints.AddVertex(nuiPoint((float)(coords[0]), (float)(coords[1]), (float)(coords[2])));
 }
 
 void nuiTessellator::InternalTessEnd()
 {
+  //printf("tess end\n");
 }
 
 void nuiTessellator::InternalTessError(GLenum ErrNo)

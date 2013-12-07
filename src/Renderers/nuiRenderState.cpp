@@ -21,7 +21,8 @@ nuiRenderState::nuiRenderState()
   mClearDepth = 1.0f;
 
   mLineCap = nuiLineCapBut;
-  mLineJoin = nuiLineJoinBevel;
+  mLineJoin = nuiLineJoinMiter;
+  mMitterLimit = 0.5;
 
   mBlendFunc = nuiBlendTransp;
 
@@ -71,6 +72,7 @@ void nuiRenderState::Copy(const nuiRenderState& rState)
   mFillColor      = rState.mFillColor;
   mLineCap        = rState.mLineCap;
   mLineJoin       = rState.mLineJoin;
+  mMitterLimit    = rState.mMitterLimit;
   mCulling        = rState.mCulling;
   mCullingMode    = rState.mCullingMode;
   mClearDepth     = rState.mClearDepth;
@@ -144,6 +146,7 @@ bool nuiRenderState::operator==(const nuiRenderState& rState) const
     (mFillColor      == rState.mFillColor)        &&
     (mLineCap        == rState.mLineCap)          &&
     (mLineJoin       == rState.mLineJoin)         &&
+    (mMitterLimit    == rState.mMitterLimit)      &&
     (mpShader        == rState.mpShader)          &&
     (mpShaderState   == rState.mpShaderState)     &&
     (mCulling        == rState.mCulling)          &&

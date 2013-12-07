@@ -192,39 +192,6 @@ gl_FragColor = ColorVar;\n\
 }"
 ;
 
-//////////////////////////////////////////////////////////////////////////////////
-static const char* ShapeDifuseColor_VTX =
-"attribute vec4 Position;\n\
-attribute vec3 Normal;\n\
-uniform mat4 SurfaceMatrix;\n\
-uniform mat4 ModelViewMatrix;\n\
-uniform mat4 ProjectionMatrix;\n\
-uniform vec4 Offset;\n\
-uniform vec4 DifuseColor;\n\
-varying vec4 ColorVar;\n\
-varying vec3 NormalVar;\n\
-void main()\n\
-{\n\
-ColorVar = DifuseColor;\n\
-NormalVar = Normal;\n\
-gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));\n\
-}"
-;
-
-static const char* ShapeDifuseColor_FGT =
-"uniform sampler2D texture;\n\
-varying vec4 ColorVar;\n\
-varying vec3 NormalVar;\n\
-void main()\n\
-{\n\
-//gl_FragColor = ColorVar;\n\
-float alpha = min(NormalVar.x, min(NormalVar.y, NormalVar.z));\n\
-alpha = clamp(alpha  * 2.0, 0.0, 1.0);\n\
-gl_FragColor = ColorVar * alpha;\n\
-//gl_FragColor = vec4(0, 0, 1, 1);\n\
-}"
-;
-
 static uint32 mins = 30000;
 static uint32 maxs = 0;
 static uint32 totalinframe = 0;
@@ -308,18 +275,6 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
 
-  mpShader_ShapeDifuseColor = nuiShaderProgram::GetProgram("ShapeDifuseColor");
-  if (!mpShader_ShapeDifuseColor)
-  {
-    mpShader_ShapeDifuseColor = new nuiShaderProgram("ShapeDifuseColor");
-    mpShader_ShapeDifuseColor->Acquire();
-    mpShader_ShapeDifuseColor->AddShader(eVertexShader, ShapeDifuseColor_VTX);
-    mpShader_ShapeDifuseColor->AddShader(eFragmentShader, ShapeDifuseColor_FGT);
-    mpShader_ShapeDifuseColor->Link();
-    mpShader_ShapeDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-    mpShader_ShapeDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-  }
-
 
   mpCurrentVertexBufferInfo = NULL;
   mpLastArray = NULL;
@@ -332,7 +287,6 @@ nuiGL2Painter::~nuiGL2Painter()
   mpShader_TextureAlphaVertexColor->Release();
   mpShader_TextureAlphaDifuseColor->Release();
   mpShader_DifuseColor->Release();
-  mpShader_ShapeDifuseColor->Release();
   mpShader_VertexColor->Release();
 }
 
@@ -555,10 +509,7 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
       }
       else
       {
-        if (pArray->IsArrayEnabled(nuiRenderArray::eNormal))
-          pShader = mpShader_ShapeDifuseColor;
-        else
-          pShader = mpShader_DifuseColor;
+        pShader = mpShader_DifuseColor;
       }
     }
 

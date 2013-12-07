@@ -94,6 +94,7 @@ public:
 
   nuiLineCap mLineCap;
   nuiLineJoin mLineJoin;
+  float mMitterLimit;
 
   bool mAntialiasing;
 };

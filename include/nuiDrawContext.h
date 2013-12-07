@@ -159,6 +159,12 @@ public:
   void SetLineWidth(nuiSize Width);
   void EnableAntialiasing(bool set);
   bool GetAntialiasing() const;
+  void SetLineJoin(nuiLineJoin join);
+  nuiLineJoin GetLineJoin()const;
+  void SetLineCap(nuiLineCap cap);
+  nuiLineCap GetLineCap() const;
+  void SetMiterLimit(float limit);
+  float GetMiterLimit() const;
 
   void SetWinding(nuiShape::Winding Rule); ///< Set the shapes filling/rasterization rule. This one is used only if the rendering shape have their rule set to nuiShape::eNone
   nuiShape::Winding GetWinding() const; ///< Get the shapes filling/rasterization rule.
