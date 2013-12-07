@@ -104,12 +104,23 @@ nuiRenderObject* nuiTessellator::GenerateFromPath(float Quality)
 
   gluTessBeginContour(mpTess);
 
+  printf("Start tesselation\n");
   uint count = Points.GetCount();
   for (uint i = 0; i < count; i++)
   {
     nuiPoint& rPoint = Points[i];
-    double vec[4] = { rPoint[0], rPoint[1], rPoint[2], 0 };
-    gluTessVertex(mpTess, vec, (void*)mTempPoints.AddVertex(rPoint));
+    if (rPoint.GetType() != nuiPointTypeStop)
+    {
+      double vec[4] = { rPoint[0], rPoint[1], rPoint[2], 0 };
+      printf("%d input %f %f\n", i, vec[0], vec[1]);
+      gluTessVertex(mpTess, vec, (void*)mTempPoints.AddVertex(rPoint));
+    }
+    else
+    {
+      printf("End Contour\n");
+      gluTessEndContour(mpTess);
+      gluTessBeginContour(mpTess);
+    }
   }
   gluTessEndContour(mpTess);
 
@@ -253,6 +264,7 @@ void nuiTessellator::InternalTessVertex(void* vertex_data)
 {
   nuiRenderArray* pArray = mpObject->GetLastArray();
   pArray->SetVertex(mTempPoints[(unsigned long int)vertex_data]);
+  mTempPoints[(unsigned long int)vertex_data].Dump();
   //pArray->SetEdgeFlag(mEdgeFlag);
   pArray->PushVertex();
 
@@ -316,6 +328,7 @@ void nuiTessellator::InternalTessVertex(void* vertex_data)
 
 void nuiTessellator::InternalTessCombine(GLdouble coords[3], void *vertex_data[4], GLfloat weight[4], void **outData)
 {
+  printf("Combine %f %f\n", coords[0], coords[1]);
   *outData = (void*)mTempPoints.AddVertex(nuiPoint((float)(coords[0]), (float)(coords[1]), (float)(coords[2])));
 }
 

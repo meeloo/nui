@@ -211,7 +211,7 @@ void nuiOutliner::Tessellate(nuiPath& rPoints, const nuiPath& rVertices, uint of
     rPoints.StopPath();
 
     // Right:
-    for (i = 0; i < segments; i++)
+    for (i = 0; i < segments-1; i++)
     {
       ndx1 = i * 2;
       ndx2 = ndx1 + 2;
