@@ -1394,7 +1394,7 @@ public:
         if (!pChild)
         {
           delete pCreator;
-          return false;
+          return NULL;
         }
 
         if (nparams == 0)
@@ -1702,7 +1702,7 @@ public:
       
       std::vector<nuiWidgetMatcher*> Matchers;
       if (!ReadMatchers(Matchers, _T(')')))
-        return false;;
+        return NULL;
 
       pMatcher = new nuiWidgetParentConditionMatcher(Matchers);
 

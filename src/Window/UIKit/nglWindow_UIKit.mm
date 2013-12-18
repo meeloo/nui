@@ -11,6 +11,7 @@
 
 #define NGL_WINDOW_FPS 60.0f
 
+#define USE_MULTISAMPLE 0
 
 //#include "nglImage.h"
 
@@ -95,6 +96,8 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
 
 - (id) initWithFrame: (CGRect) rect andNGLWindow: (nglWindow*) pNGLWindow andContextInfo: (nglContextInfo*)pContextInfo
 {
+  //[self setRootViewController: [[UIViewController alloc] init]];
+
   mpContextInfo = pContextInfo;
 	mInited = false;
 	mInvalidated = true;
@@ -124,6 +127,8 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
   }
   glView = [[EAGLView alloc] initWithFrame:rect replacing: nil contextInfo: pContextInfo];
   [self addSubview:glView];
+  //self.rootViewController = nglWindowViewController;
+
 	[self sendSubviewToBack:glView];
   
 //NGL_OUT(_T("[nglUIWindow initWithFrame]\n"));
@@ -149,7 +154,7 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
 	[self initializeKeyboard];
 
   [self makeKeyAndVisible];
-  
+
   return self;
 }
 
@@ -900,6 +905,7 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
     }
 
     // Multisample:
+    if (USE_MULTISAMPLE)
     {
       glGenFramebuffers(1, &sampleFramebuffer);
       glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
@@ -941,6 +947,7 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
     }
 
     // Multisample:
+    if (USE_MULTISAMPLE)
     {
       glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
       glBindRenderbuffer(GL_RENDERBUFFER, sampleColorRenderbuffer);
@@ -1004,20 +1011,36 @@ void AdjustFromAngle(uint Angle, const nuiRect& rRect, nglMouseInfo& rInfo)
 - (void) BeginSession
 {
   [EAGLContext setCurrentContext:context];
-  //glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFrameBuffer);
-  glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+  if (USE_MULTISAMPLE)
+    glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+  else
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFrameBuffer);
 }
 
 - (void) EndSession
 {
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, defaultFrameBuffer);
-  glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
-  glResolveMultisampleFramebufferAPPLE();
-  const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
-  glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
+  if (USE_MULTISAMPLE)
+  {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, defaultFrameBuffer);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
+    glResolveMultisampleFramebufferAPPLE();
+    const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
+    glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
 
-  glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderBuffer);
-  //glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderBuffer);
+  }
+  else
+  {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, defaultFrameBuffer);
+//    glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
+//    glResolveMultisampleFramebufferAPPLE();
+//    const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
+//    glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
+
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderBuffer);
+    //glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
+  }
+
   [context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
 

@@ -39,7 +39,7 @@ public:
   void SetMute(bool mute);
   
 private:
-  void Process(const std::vector<const float*>& rInput, const std::vector<float*>& rOutput, uint32 SampleFrames);
+  void Process(const std::vector<const float*>& rInput, const std::vector<float*>& rOutput, int32 SampleFrames);
   void InitAttributes();
   
   nuiAudioDevice* mpAudioDevice;

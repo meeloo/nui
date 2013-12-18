@@ -9,7 +9,7 @@
 #include "nui.h"
 #include "nuiInit.h"
 #include "Application.h"
-#include "MainWindow.h"
+#include "MainWindow_.h"
 
 #include "nglConsole.h"
 

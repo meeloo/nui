@@ -12,31 +12,6 @@
 #include "nuiClampedValueAttributeEditor.h"
 #include "nuiBooleanAttributeEditor.h"
 
-inline float GainToDB(float Gain)
-{
-  static const float logf10 = logf(10.0f);
-  static const float db_mul_constf = 20.0f / logf10;
-  if (Gain == 0.0f)
-    return (-144.0f);
-  else
-  {
-    float  dB;
-    
-    dB = logf(Gain) * db_mul_constf;
-    
-    if (dB < -144.0f)
-      dB = -144.0f;
-    
-    return (dB);    // convert factor to dB
-  }
-}
-
-inline float DBToGain(float dB)
-{
-  float Gain = powf(10.0f, dB / 20.0f);
-  return Gain;
-}
-
 
 AudioEngine::AudioEngine(double SampleRate, uint32 BufferSize)
 : mpAudioDevice(NULL),
@@ -58,8 +33,8 @@ AudioEngine::AudioEngine(double SampleRate, uint32 BufferSize)
   nuiAudioDeviceManager& rManager = nuiAudioDeviceManager::Get();
   mpAudioDevice = rManager.GetDefaultOutputDevice();
   
-  std::vector<uint32> InputChannels;  
-  std::vector<uint32> OutputChannels;
+  std::vector<int32> InputChannels;
+  std::vector<int32> OutputChannels;
   OutputChannels.push_back(0);
   OutputChannels.push_back(1);
   
@@ -101,7 +76,7 @@ void AudioEngine::InitAttributes()
   AddAttribute(pMuteAttrib);
 }
 
-void AudioEngine::Process(const std::vector<const float*>& rInput, const std::vector<float*>& rOutput, uint32 SampleFrames)
+void AudioEngine::Process(const std::vector<const float*>& rInput, const std::vector<float*>& rOutput, int32 SampleFrames)
 {
   uint32 channels = rOutput.size();
   

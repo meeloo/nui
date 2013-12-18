@@ -10,7 +10,7 @@
 #pragma once
  
  
-#include "nuiCommand.h"
+#include "nui.h"
  
  
 class cmdFirstSample: public nuiCommand

@@ -517,7 +517,7 @@ nuiWidgetPtr nuiContainer::DispatchMouseMove(const nglMouseInfo& rInfo)
   CheckValid();
   nuiAutoRef;
   if (!mMouseEventEnabled || mTrashed)
-    return false;
+    return NULL;
 
   nuiWidgetPtr pHandled=NULL;
   bool inside=false,res=false;

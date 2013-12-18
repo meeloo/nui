@@ -6,7 +6,7 @@
 */
 
 #include "nui.h"
-#include "MainWindow.h"
+#include "MainWindow_.h"
 #include "Application.h"
 
 #include "nuiCSS.h"

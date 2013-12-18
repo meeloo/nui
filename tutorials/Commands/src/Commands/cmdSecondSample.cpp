@@ -7,13 +7,14 @@
 
 
 
+#include "nui.h"
 #include "Commands/cmdSecondSample.h"
-#include "MainWindow.h"
 #include "Application.h"
+#include "MainWindow_.h"
 
  
 
-cmdSecondSample::cmdSecondSample() : nuiCommand(_T("SecondCommandRef"), _T("second Sample command"), false/*can undo*/, true/* use command manager*/, false/*can repeat*/)
+cmdSecondSample::cmdSecondSample() : nuiCommand("SecondCommandRef", "second Sample command", false/*can undo*/, true/* use command manager*/, false/*can repeat*/)
 {
 }
   
@@ -32,7 +33,7 @@ cmdSecondSample::~cmdSecondSample()
 //                    
 bool cmdSecondSample::ExecuteDo()
 {
-  GetMainWindow()->AddMessage(_T("cmdSecondSample ExecuteDo\ncmdSecondSample can not be undone\n=> the CommandManager stacks are reset.\n"));
+  GetMainWindow()->AddMessage("cmdSecondSample ExecuteDo\ncmdSecondSample can not be undone\n=> the CommandManager stacks are reset.\n");
   return true;
 }
     

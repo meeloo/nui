@@ -6,7 +6,7 @@
  */
 
 #include "MainMenu.h"
-#include "MainWindow.h"
+#include "MainWindow_.h"
 #include "Application.h"
 
 #include "nuiCommandManager.h"
@@ -107,7 +107,7 @@ void MainMenu::Init()
 
 void MainMenu::OnMenuCommand(const nuiEvent& rEvent)
 {
-  uint32 menuCmd = (uint32)rEvent.mpUser;
+  uint64 menuCmd = (uint64)rEvent.mpUser;
   
   // undo, redo and repeat are special cases
   switch (menuCmd)

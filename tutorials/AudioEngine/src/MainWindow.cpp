@@ -246,25 +246,25 @@ void MainWindow::OnCreation()
 
 void MainWindow::OnButtonActivated(const nuiEvent& rEvent)
 {
-  uint32 index = (uint32)rEvent.mpUser;  
+  uint64 index = (uint64)rEvent.mpUser;
   GetAudioEngine()->PlaySound(mSounds[index]);
 }
 
 void MainWindow::OnSoundHotKey(const nuiEvent& rEvent)
 {
-  uint32 i = (uint32)rEvent.mpUser;
+  uint64 i = (uint64)rEvent.mpUser;
   mSoundButtons[i]->Activate();
 }
 
 void MainWindow::OnSynthButtonActivated(const nuiEvent& rEvent)
 {
-  uint32 index = (uint32)rEvent.mpUser;  
+  uint64 index = (uint64)rEvent.mpUser;
   GetAudioEngine()->PlaySound(mSynthSounds[index]);
 }
 
 void MainWindow::OnSynthSoundHotKey(const nuiEvent& rEvent)
 {
-  uint32 i = (uint32)rEvent.mpUser;
+  uint64 i = (uint64)rEvent.mpUser;
   mSynthSoundButtons[i]->Activate();
 }
 
