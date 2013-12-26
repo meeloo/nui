@@ -168,8 +168,6 @@ protected:
   float mA;
   GLenum mTexEnvMode;
   
-  uint32 mViewPort[4];
-
   bool mUseShaders;
 
   // Only used for shaders:

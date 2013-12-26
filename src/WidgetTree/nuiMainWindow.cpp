@@ -323,9 +323,7 @@ void nuiMainWindow::Paint()
 void nuiMainWindow::OnResize(uint Width, uint Height)
 {
   FillTrash();
-  nuiRect Rect;
-  Rect.mRight=(nuiSize)Width;
-  Rect.mBottom=(nuiSize)Height;
+  nuiRect Rect((nuiSize)Width, (nuiSize)Height);
   //SetLayout(Rect);
 
   //NGL_OUT(_T("(OnResize)nglWindow::Invalidate()\n"));;

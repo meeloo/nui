@@ -37,14 +37,14 @@ const nglChar* gpWindowErrorTable[] =
 #if defined(_MULTI_TOUCHES_) && 1//defined(_DEBUG_)
 # define NGL_TOUCHES_OUT NGL_OUT
 #else//!_MULTI_TOUCHES_
-# define NGL_TOUCHES_OUT {}
+# define NGL_TOUCHES_OUT
 #endif//!_MULTI_TOUCHES_
 
 //#define _DEBUG_WINDOW_
 
 @implementation NGLViewController
 
-- (id) initWithFrame: (CGRect) rect andNGLWindow: (nglWindow*) pNGLWindow
+- (id) initWithNGLWindow: (nglWindow*) pNGLWindow
 {
   if (self =  [self initWithNibName:nil bundle:nil])
   {
@@ -86,7 +86,7 @@ const nglChar* gpWindowErrorTable[] =
 }
 
 
-- (id) initWithFrame: (CGRect) rect andNGLWindow: (nglWindow*) pNGLWindow andContextInfo: (nglContextInfo*)pContextInfo
+- (id) initWithNGLWindow: (nglWindow*) pNGLWindow andContextInfo: (nglContextInfo*)pContextInfo
 {
   mpContextInfo = pContextInfo;
 	mInited = false;
@@ -94,8 +94,7 @@ const nglChar* gpWindowErrorTable[] =
 	
 	mInvalidationTimer = nil;
 	mDisplayLink = nil;
-
-  if ( (self = [super initWithFrame: rect]) )
+  if ( (self = [super initWithFrame:[[UIScreen mainScreen] bounds]]) )
   {
     mpNGLWindow = pNGLWindow;
   }
@@ -104,7 +103,7 @@ const nglChar* gpWindowErrorTable[] =
     NGL_ASSERT(!"initWithFrame: Could not initialize UIWindow");
   }
 
-  NGLViewController* ctrl = [[NGLViewController alloc] initWithFrame:rect andNGLWindow:mpNGLWindow];
+  NGLViewController* ctrl = [[NGLViewController alloc] initWithNGLWindow:mpNGLWindow];
   EAGLContext * context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
   mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   mpGLKView.context = context;
@@ -114,27 +113,21 @@ const nglChar* gpWindowErrorTable[] =
   [mpGLKView bindDrawable];
   [self setRootViewController:ctrl];
 
-  //  //glView = [[EAGLView alloc] initWithFrame:rect replacing: nil contextInfo: pContextInfo];
-//  [self addSubview:glView];
-//  //self.rootViewController = nglWindowViewController;
-
-//	[self sendSubviewToBack:glView];
-
-//NGL_OUT(_T("[nglUIWindow initWithFrame]\n"));
+  //NGL_OUT(_T("[nglUIWindow initWithFrame]\n"));
 
 
   int frameInterval = 1;
-//  NSString* sysVersion = [[UIDevice currentDevice] systemVersion];
-//  if ([sysVersion compare:@"3.1" options:NSNumericSearch] != NSOrderedAscending) ///< CADisplayLink requires version 3.1 or greater
-//  {
-//    mDisplayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(Paint)];
-//    [mDisplayLink setFrameInterval:frameInterval];
-//    [mDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-//  }
-//  else ///< NSTimer is used as fallback
-//  {
-//    mInvalidationTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / NGL_WINDOW_FPS) target:self selector:@selector(Paint) userInfo:nil repeats:YES];
-//  }
+  //  NSString* sysVersion = [[UIDevice currentDevice] systemVersion];
+  //  if ([sysVersion compare:@"3.1" options:NSNumericSearch] != NSOrderedAscending) ///< CADisplayLink requires version 3.1 or greater
+  //  {
+  //    mDisplayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(Paint)];
+  //    [mDisplayLink setFrameInterval:frameInterval];
+  //    [mDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+  //  }
+  //  else ///< NSTimer is used as fallback
+  //  {
+  //    mInvalidationTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / NGL_WINDOW_FPS) target:self selector:@selector(Paint) userInfo:nil repeats:YES];
+  //  }
 
   mpNGLWindow->CallOnRescale(nuiGetScaleFactor());
   mpTimer = nuiAnimation::AcquireTimer();
@@ -253,7 +246,7 @@ const nglChar* gpWindowErrorTable[] =
 {
   if (!CGRectEqualToRect(oldrect, rect))
   {
-    mpNGLWindow->CallOnResize(CGRectGetWidth(rect), CGRectGetHeight(rect));
+    mpNGLWindow->SetSize(CGRectGetWidth(rect), CGRectGetHeight(rect));
     oldrect = rect;
   }
 
@@ -294,7 +287,7 @@ const nglChar* gpWindowErrorTable[] =
     if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
       info.Buttons |= nglMouseInfo::ButtonDoubleClick;
 
-    NGL_TOUCHES_OUT(_T("[%p][%d] Begin X:%d Y:%d\n"), pTouch, info.TouchId, x, y);
+    NGL_TOUCHES_OUT("[%p][%d] Begin X:%d Y:%d\n", pTouch, info.TouchId, x, y);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
@@ -325,7 +318,7 @@ const nglChar* gpWindowErrorTable[] =
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
 
-    NGL_TOUCHES_OUT(_T("[%p][%d] Release X:%d Y:%d\n"), pTouch, info.TouchId, x, y);
+    NGL_TOUCHES_OUT("[%p][%d] Release X:%d Y:%d\n", pTouch, info.TouchId, x, y);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
@@ -356,7 +349,7 @@ const nglChar* gpWindowErrorTable[] =
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
 
-    NGL_TOUCHES_OUT(_T("[%p][%d] Cancel X:%d Y:%d\n"), pTouch, info.TouchId, x, y);
+    NGL_TOUCHES_OUT("[%p][%d] Cancel X:%d Y:%d\n", pTouch, info.TouchId, x, y);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
@@ -387,7 +380,7 @@ const nglChar* gpWindowErrorTable[] =
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
 
-    NGL_TOUCHES_OUT(_T("[%p][%d] Moved X:%d Y:%d\n"), pTouch, info.TouchId, x, y);
+    NGL_TOUCHES_OUT("[%p][%d] Moved X:%d Y:%d\n", pTouch, info.TouchId, x, y);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
@@ -448,7 +441,7 @@ const nglChar* gpWindowErrorTable[] =
 // UITextFieldDelegate method.  Invoked when user types something.
 - (BOOL)textField:(UITextField *)_textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-  NGL_OUT(_T("change chars in range %d - %d\n"), range.location, range.length);
+  NGL_OUT("change chars in range %d - %d\n", range.location, range.length);
 	if ([string length] == 0)
   {
     mpNGLWindow->CallOnKeyDown(nglKeyEvent(NK_BACKSPACE, 8, 8)); // 8 = BS = BackSpace
@@ -569,7 +562,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   
 
   // Create the actual window
-  nglUIWindow* pUIWindow = [[nglUIWindow alloc] initWithFrame: rect andNGLWindow: this andContextInfo: new nglContextInfo(rContext)];
+  nglUIWindow* pUIWindow = [[nglUIWindow alloc] initWithNGLWindow: this andContextInfo: new nglContextInfo(rContext)];
 
   mOSInfo.mpUIWindow = pUIWindow;
   mpUIWindow = pUIWindow;

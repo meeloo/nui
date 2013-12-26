@@ -298,7 +298,9 @@ void nuiGL2Painter::SetViewport()
   GLint Height = GetCurrentHeight();
   const nuiRect& rViewport(mProjectionViewportStack.top());
   const nuiMatrix& rMatrix = mProjectionMatrixStack.top();
-  
+
+  //NGL_OUT("nuiGL2Painter::SetViewPort(%d, %d)\n", Width, Height);
+
   uint32 x, y, w, h;
   
   nuiRect r(rViewport);
@@ -315,9 +317,7 @@ void nuiGL2Painter::SetViewport()
   w = ToBelow(r.GetWidth());
   y = Height - ToBelow(r.Bottom());
   h = ToBelow(r.GetHeight());
-  
-  //printf("set projection matrix (%d %d - %d %d)\n", x, y, w, h);
-  //if (!mpSurface)
+
   {
     const float scale = mpContext->GetScale();
     x *= scale;
@@ -325,18 +325,9 @@ void nuiGL2Painter::SetViewport()
     w *= scale;
     h *= scale;
   }
-//  else
-//    glViewport(x, y, w, h);
 
-//  if (mViewPort[0] != x || mViewPort[1] != y || mViewPort[2] != w || mViewPort[3] != h)
   nuiCheckForGLErrors();
-  {
-    mViewPort[0] = x;
-    mViewPort[1] = y;
-    mViewPort[2] = w;
-    mViewPort[3] = h;
-    glViewport(mViewPort[0], mViewPort[1], mViewPort[2], mViewPort[3]);
-  }
+  glViewport(x, y, w, h);
 
   if (mpSurface)
   {

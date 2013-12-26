@@ -29,7 +29,7 @@ typedef std::map<UITouch*,nglTouchInfo> TouchesInfo;
   nglWindow* mpNGLWindow;
 }
 
-- (id) initWithFrame: (CGRect) rect andNGLWindow: (nglWindow*) pNGLWindow;
+- (id) initWithNGLWindow: (nglWindow*) pNGLWindow;
 
 @end
 
@@ -55,7 +55,7 @@ typedef std::map<UITouch*,nglTouchInfo> TouchesInfo;
   CGRect oldrect;
 }
 
-- (id) initWithFrame: (CGRect) rect andNGLWindow: (nglWindow*) pNGLWindow;
+- (id) initWithNGLWindow: (nglWindow*) pNGLWindow;
 - (void) setContext: (void*) pContext renderBuffer: (GLint) buffer;
 - (void) dealloc;
 - (void) invalidate;

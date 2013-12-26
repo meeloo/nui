@@ -1751,6 +1751,7 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
   DebugRefreshInfo();
 }
 
+#define _DEBUG_LAYOUT
 bool nuiTopLevel::SetRect(const nuiRect& rRect)
 {
   CheckValid();

@@ -162,10 +162,6 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   mB = -1;
   mA = -1;
   mTexEnvMode = 0;
-  mViewPort[0] = 0;
-  mViewPort[1] = 0;
-  mViewPort[2] = 0;
-  mViewPort[3] = 0;
   mUseShaders = false;
 
 
@@ -283,13 +279,7 @@ void nuiGLPainter::SetViewport()
 
 //  if (mViewPort[0] != x || mViewPort[1] != y || mViewPort[2] != w || mViewPort[3] != h)
   nuiCheckForGLErrors();
-  {
-    mViewPort[0] = x;
-    mViewPort[1] = y;
-    mViewPort[2] = w;
-    mViewPort[3] = h;
-    glViewport(mViewPort[0], mViewPort[1], mViewPort[2], mViewPort[3]);
-  }
+  glViewport(x, y, w, h);
 
   nuiCheckForGLErrors();
 
@@ -600,7 +590,7 @@ void nuiGLPainter::SetState(const nuiRenderState& rState, bool ForceApply)
 void nuiGLPainter::SetSize(uint32 w, uint32 h)
 {
   NUI_RETURN_IF_RENDERING_DISABLED;
-
+  NGL_OUT("nuiGLPainter::SetSize(%d, %d)\n", w, h);
   mWidth = w;
   mHeight = h;
 }
