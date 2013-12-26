@@ -1053,6 +1053,7 @@ bool nuiTopLevel::CallMouseClick (nglMouseInfo& rInfo)
   
   mMouseClickedEvents[rInfo.TouchId] = rInfo;
   mMouseStates[rInfo.TouchId] = rInfo;
+  //NGL_OUT("Added %x\n", rInfo.TouchId);
 
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;
@@ -1184,6 +1185,7 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
     rInfo.Counterpart = &it->second;
   // Update state:
   mMouseStates.erase(mMouseStates.find(rInfo.TouchId));
+  //NGL_OUT("Removed %x\n", rInfo.TouchId);
 
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;
@@ -1319,7 +1321,14 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
     rInfo.Counterpart = &it->second;
   // Update state:
   if (mMouseStates.find(rInfo.TouchId) != mMouseStates.end())
+  {
+    //NGL_OUT("Found %x\n", rInfo.TouchId);
     mMouseStates[rInfo.TouchId] = rInfo;
+  }
+  else
+  {
+    NGL_OUT("ERROR Touch Not found %x\n", rInfo.TouchId);
+  }
 
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;

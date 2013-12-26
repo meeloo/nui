@@ -108,6 +108,7 @@ const nglChar* gpWindowErrorTable[] =
   mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   mpGLKView.context = context;
   mpGLKView.delegate = self;
+  mpGLKView.multipleTouchEnabled = YES;
   ctrl.view = mpGLKView;
   ctrl.preferredFramesPerSecond = 60;
   [mpGLKView bindDrawable];
@@ -680,7 +681,7 @@ uint nglWindow::GetHeight () const
 
 bool nglWindow::SetSize (uint Width, uint Height)
 {
-  NGL_OUT(_T("nglWindow::SetSize(%d, %d)\n"), Width, Height);
+  //NGL_OUT(_T("nglWindow::SetSize(%d, %d)\n"), Width, Height);
   mWidth  = Width;
   mHeight = Height;
   CallOnResize(Width, Height);
@@ -849,6 +850,10 @@ void nglWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo
 
 int nglWindow::GetStatusBarSize() const
 {
-  return MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width);;
+  if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1)
+  {
+    return MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width);
+  }
+  return 0;
 }
 
