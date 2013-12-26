@@ -357,6 +357,7 @@ window = new nglWindow (context, info, NULL);
   virtual void SetRotation(uint Angle); ///< Set the current (user area) rotation angle
   void EnableAutoRotation(bool set); ///< Change the rotation and size of the screen to follow the device's screen orientation (this is the default behaviour).
   bool GetAutoRotation() const; ///< Change the rotation and size of the screen to follow the device's screen orientation (this is the default behaviour).
+  int GetStatusBarSize() const;
   //@}
 
 

@@ -2139,4 +2139,9 @@ bool nglWindow::IsEnteringText() const
   return false;
 }
 
+int nglWindow::GetStatusBarSize() const
+{
+  return 0;
+}
+
 

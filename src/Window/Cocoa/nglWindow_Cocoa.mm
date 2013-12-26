@@ -1439,3 +1439,8 @@ void nglWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo
 {
 }
 
+int nglWindow::GetStatusBarSize() const
+{
+  return 0;
+}
+

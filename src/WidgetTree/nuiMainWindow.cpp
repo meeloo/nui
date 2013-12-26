@@ -189,6 +189,11 @@ void nuiMainWindow::LazyPaint()
   }
 }
 
+nuiSize nuiMainWindow::GetStatusBarSize() const
+{
+  return mpNGLWindow->GetStatusBarSize();
+}
+
 static float Gx = 0;
 
 void nuiMainWindow::Paint()

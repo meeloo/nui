@@ -846,3 +846,9 @@ void nglWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo
 {
 }
 
+
+int nglWindow::GetStatusBarSize() const
+{
+  return MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width);;
+}
+
