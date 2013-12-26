@@ -256,13 +256,13 @@ void nuiGLPainter::SetViewport()
   uint32 x, y, w, h;
 
   nuiRect r(rViewport);
-  if (Angle == 90 || Angle == 270)
-  {
-    uint32 tmp = Width;
-    Width = Height;
-    Height = tmp;
-    r.Set(r.Top(), r.Left(), r.GetHeight(), r.GetWidth());
-  }
+//  if (Angle == 90 || Angle == 270)
+//  {
+//    uint32 tmp = Width;
+//    Width = Height;
+//    Height = tmp;
+//    r.Set(r.Top(), r.Left(), r.GetHeight(), r.GetWidth());
+//  }
 
 
   x = ToBelow(r.Left());
@@ -296,12 +296,12 @@ void nuiGLPainter::SetViewport()
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   //glScalef(scale, scale, 1.0f);
-  if (Angle != 0.0f)
-  {
-    glRotatef(Angle, 0.f,0.f,1.f);
-    glMultMatrixf(rMatrix.Array);
-  }
-  else
+//  if (Angle != 0.0f)
+//  {
+//    glRotatef(Angle, 0.f,0.f,1.f);
+//    glMultMatrixf(rMatrix.Array);
+//  }
+//  else
   {
     glLoadMatrixf(rMatrix.Array);
   }
@@ -513,28 +513,28 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
 
     int x,y,w,h;
     uint angle = (mpSurface && mpSurface->GetRenderToTexture()) ? 0 : mAngle;
-    if (angle == 90)
-    {
-      x = ToBelow(clip.Top());
-      y = ToBelow(clip.Left());
-      w = ToBelow(clip.GetHeight());
-      h = ToBelow(clip.GetWidth());
-    }
-    else if (angle == 180)
-    {
-      w = ToBelow(clip.GetWidth());
-      h = ToBelow(clip.GetHeight());
-      x = ToBelow(width - w - clip.Left());
-      y = ToBelow(clip.Top());
-    }
-    else if (angle == 270)
-    {
-      w = ToBelow(clip.GetHeight());
-      h = ToBelow(clip.GetWidth());
-      x = ToBelow(height - clip.Top() - w);
-      y = ToBelow(width - clip.Left() - h);
-    }
-    else
+//    if (angle == 90)
+//    {
+//      x = ToBelow(clip.Top());
+//      y = ToBelow(clip.Left());
+//      w = ToBelow(clip.GetHeight());
+//      h = ToBelow(clip.GetWidth());
+//    }
+//    else if (angle == 180)
+//    {
+//      w = ToBelow(clip.GetWidth());
+//      h = ToBelow(clip.GetHeight());
+//      x = ToBelow(width - w - clip.Left());
+//      y = ToBelow(clip.Top());
+//    }
+//    else if (angle == 270)
+//    {
+//      w = ToBelow(clip.GetHeight());
+//      h = ToBelow(clip.GetWidth());
+//      x = ToBelow(height - clip.Top() - w);
+//      y = ToBelow(width - clip.Left() - h);
+//    }
+//    else
     {
       NGL_ASSERT(!angle);
       x = ToBelow(clip.Left());
@@ -954,26 +954,26 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     hackX = ratio;
     hackY = ratio;
 #else
-    if (mAngle == 0)
+//    if (mAngle == 0)
     {
       hackX = ratio;
       hackY = ratio;
     }
-    else if (mAngle == 90)
-    {
-      hackX = 0;
-      hackY = ratio;
-    }
-    else if (mAngle == 180)
-    {
-      hackX = 0;
-      hackY = 0;
-    }
-    else/*mAngle == 270*/
-    {
-      hackX = ratio;
-      hackY = 0;
-    }
+//    else if (mAngle == 90)
+//    {
+//      hackX = 0;
+//      hackY = ratio;
+//    }
+//    else if (mAngle == 180)
+//    {
+//      hackX = 0;
+//      hackY = 0;
+//    }
+//    else/*mAngle == 270*/
+//    {
+//      hackX = ratio;
+//      hackY = 0;
+//    }
 #endif
     glTranslatef(hackX, hackY, 0);
   }

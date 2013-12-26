@@ -302,14 +302,14 @@ void nuiGL2Painter::SetViewport()
   uint32 x, y, w, h;
   
   nuiRect r(rViewport);
-  if (Angle == 90 || Angle == 270)
-  {
-    uint32 tmp = Width;
-    Width = Height;
-    Height = tmp;
-    r.Set(r.Top(), r.Left(), r.GetHeight(), r.GetWidth());
-  }
-  
+//  if (Angle == 90 || Angle == 270)
+//  {
+//    uint32 tmp = Width;
+//    Width = Height;
+//    Height = tmp;
+//    r.Set(r.Top(), r.Left(), r.GetHeight(), r.GetWidth());
+//  }
+
   
   x = ToBelow(r.Left());
   w = ToBelow(r.GetWidth());
@@ -348,10 +348,10 @@ void nuiGL2Painter::SetViewport()
   }
 
   float angle = GetAngle();
-  if (angle != 0.0f)
-  {
-    mSurfaceMatrix.Rotate(angle, 0 ,0, 1);
-  }
+//  if (angle != 0.0f)
+//  {
+//    mSurfaceMatrix.Rotate(angle, 0 ,0, 1);
+//  }
 
   nuiCheckForGLErrors();
 }
@@ -579,26 +579,26 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
     hackX = ratio;
     hackY = ratio;
 #else
-    if (mAngle == 0)
+//    if (mAngle == 0)
     {
       hackX = ratio;
       hackY = ratio;
     }
-    else if (mAngle == 90)
-    {
-      hackX = 0;
-      hackY = ratio;
-    }
-    else if (mAngle == 180)
-    {
-      hackX = 0;
-      hackY = 0;
-    }
-    else/*mAngle == 270*/
-    {
-      hackX = ratio;
-      hackY = 0;
-    }
+//    else if (mAngle == 90)
+//    {
+//      hackX = 0;
+//      hackY = ratio;
+//    }
+//    else if (mAngle == 180)
+//    {
+//      hackX = 0;
+//      hackY = 0;
+//    }
+//    else/*mAngle == 270*/
+//    {
+//      hackX = ratio;
+//      hackY = 0;
+//    }
 #endif
   }
 

@@ -6,11 +6,13 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 #import <OpenGLES/ES2/glext.h>
+#import <GLKit/GLKit.h>
 
 /*
 ** Touches tracking ..
 */
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class nglTouchInfo ///< Touch info
 {
 public:
@@ -19,41 +21,26 @@ public:
   int X, Y;
 };
 
-// This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
-// The view content is basically an EAGL surface you render your OpenGL scene into.
-// Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
-@interface EAGLView : UIView
-{    
-@private
-  
-  EAGLContext *context;
-  nglContextInfo* mpContextInfo;
+typedef std::map<UITouch*,nglTouchInfo> TouchesInfo;
 
-  // The pixel dimensions of the CAEAGLLayer
-  GLint backingWidth;
-  GLint backingHeight;
-  
-  int angle;
-  
-  // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
-  GLuint defaultFrameBuffer, colorRenderBuffer, depthRenderBuffer, sampleFramebuffer, sampleColorRenderbuffer, sampleDepthRenderbuffer;
-  
+@interface NGLViewController : GLKViewController
+{
+@private
+  nglWindow* mpNGLWindow;
 }
+
+- (id) initWithFrame: (CGRect) rect andNGLWindow: (nglWindow*) pNGLWindow;
+
 @end
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-typedef std::map<UITouch*,nglTouchInfo> TouchesInfo;
 
 /*
 ** nglUIWindow
 */
-@interface nglUIWindow : UIWindow<UITextFieldDelegate>
+@interface nglUIWindow : UIWindow<UITextFieldDelegate, GLKViewDelegate>
 {
   nglWindow*    mpNGLWindow;
   nglContextInfo* mpContextInfo;
-  TouchesInfo   mTouches;
-  TouchesInfo   mpTouches[_NUI_MAX_TOUCHES_];
-  uint8         mTouchCount;
   nglTime       mLastEventTime;
   bool          mInited;
   bool          mInvalidated;
@@ -62,29 +49,21 @@ typedef std::map<UITouch*,nglTouchInfo> TouchesInfo;
 	UITextField*  mpTextField;
 	BOOL          mKeyboardVisible;
 
+  GLKView* mpGLKView;
   nuiTimer*     mpTimer;
 
-  EAGLView* glView;
-  EAGLView* glViewOld;
-  NSTimer* OrientationTimer;
-  UIDeviceOrientation oldorientation;
-  int mAngle;
+  CGRect oldrect;
 }
 
-+ (Class) layerClass;
 - (id) initWithFrame: (CGRect) rect andNGLWindow: (nglWindow*) pNGLWindow;
-- (id) initWithWindow: (nglUIWindow*)pUIWindow;
 - (void) setContext: (void*) pContext renderBuffer: (GLint) buffer;
 - (void) dealloc;
 - (void) invalidate;
 - (void) sendEvent: (UIEvent*) pEvent;
-//- (void) touchesChangedWithEvent: (UIEvent*) pEvent;
+
 - (void) dumpTouch: (UITouch*) pTouch;
 - (void) dumpTouches: (UIEvent*) pEvent;
-- (void) handleEvent: (UIEvent*) pEvent;
 - (nglWindow *) getNGLWindow;
-- (void) UpdateOrientation;
-- (void) recreateWindow;
 - (void) disconnect;
 
 - (void)showKeyboard;

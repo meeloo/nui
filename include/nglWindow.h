@@ -30,7 +30,7 @@ This class is not available if the _NOGFX_ symbol is defined.
 
 #include "nglDragAndDropObjects.h"
 
-typedef int32 nglTouchId;
+typedef int64 nglTouchId;
 
 class nuiMainMenu;
 
@@ -672,6 +672,17 @@ window = new nglWindow (context, info, NULL);
 
     \a ButtonDoubleClick and \a ButtonTripleClick bits cannot be set in \a Buttons.
   */
+  virtual bool OnMouseCanceled (nglMouseInfo& rInfo);
+  /*!<
+   This method is called when a mouse button is canceled (if the system preempts mouse input).
+   \param rInfo mouse status
+   \return true is the mouse event was handled and false otherwise. If the key wasn't handled it is potentially sent back to the system or hosting application.
+
+   See GetMouse() for X and Y values exact interpretation.
+
+   \a ButtonDoubleClick and \a ButtonTripleClick bits cannot be set in \a Buttons.
+   */
+
   virtual bool OnMouseMove (nglMouseInfo& rInfo);
   /*!<
     This method is called when a mouse motion is detected.
@@ -778,6 +789,7 @@ public:
   bool CallOnMouseClick (nglMouseInfo& rInfo);
   bool CallOnMouseUnclick(nglMouseInfo& rInfo);
   bool CallOnMouseMove  (nglMouseInfo& rInfo);
+  bool CallOnMouseCanceled  (nglMouseInfo& rInfo);
   bool CallOnRotation(uint Angle);
   void CallOnRescale(float NewScale);
 
