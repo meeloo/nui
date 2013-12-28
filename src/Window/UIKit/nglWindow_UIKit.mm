@@ -103,17 +103,18 @@ const nglChar* gpWindowErrorTable[] =
     NGL_ASSERT(!"initWithFrame: Could not initialize UIWindow");
   }
 
-  NGLViewController* ctrl = [[NGLViewController alloc] initWithNGLWindow:mpNGLWindow];
   EAGLContext * context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-  mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  mpGLKView.context = context;
+  mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds] context:context];
   mpGLKView.delegate = self;
   mpGLKView.multipleTouchEnabled = YES;
+
+  NGLViewController* ctrl = [[NGLViewController alloc] initWithNGLWindow:mpNGLWindow];
   ctrl.view = mpGLKView;
   ctrl.preferredFramesPerSecond = 60;
-  [mpGLKView bindDrawable];
+
   [self setRootViewController:ctrl];
 
+  [mpGLKView bindDrawable];
   //NGL_OUT(_T("[nglUIWindow initWithFrame]\n"));
 
 

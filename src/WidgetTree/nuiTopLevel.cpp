@@ -1327,7 +1327,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   }
   else
   {
-    NGL_OUT("ERROR Touch Not found %x\n", rInfo.TouchId);
+    //NGL_OUT("ERROR Touch Not found %x\n", rInfo.TouchId);
   }
 
   mMouseInfo.X = rInfo.X;
