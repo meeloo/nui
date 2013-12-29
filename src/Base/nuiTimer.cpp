@@ -16,7 +16,7 @@ nuiTickEvent::nuiTickEvent(nglTime Lap)
   mLap = Lap;
 }
 
-nglTime nuiTickEvent::GetLap()
+nglTime nuiTickEvent::GetLap() const
 {
   return mLap;
 }
