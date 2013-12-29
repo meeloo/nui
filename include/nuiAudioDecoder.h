@@ -21,15 +21,15 @@ public:
   
   virtual int32 ReadDE(std::vector<void*> buffers, int32 sampleframes, nuiSampleBitFormat format = eSampleFloat32);
   virtual int32 ReadIN(void* pBuffer, int32 sampleframes, nuiSampleBitFormat format = eSampleFloat32);
-  
-  virtual void SetPosition(int64 position);
-  
+    
 private:
+  int32 InternalReadDE(std::vector<void*> buffers, int32 sampleframes, nuiSampleBitFormat format);
   bool CreateAudioDecoderPrivate();
   virtual bool ReadInfo();
   bool Seek(int64 SampleFrame);
   void Clear();
 
   class nuiAudioDecoderPrivate* mpPrivate;
+  int64 mCurrentPosition;
 };
 

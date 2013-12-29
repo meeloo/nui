@@ -9,7 +9,8 @@
 
 nuiAudioDecoder::nuiAudioDecoder(nglIStream& rStream) :
   nuiSampleReader(rStream),
-  mpPrivate(NULL)
+  mpPrivate(NULL),
+  mCurrentPosition(0)
 {
   CreateAudioDecoderPrivate();
 }
@@ -32,21 +33,6 @@ nuiSampleReader* nuiAudioDecoder::Clone(nglIStream& rStream) const
   pDecoder->Init();
   pDecoder->SetPosition(0);
   return pDecoder;
-}
-
-
-void nuiAudioDecoder::SetPosition(int64 pos)
-{
-  if (!mInitialized)
-    return;
-  
-  if (mPosition == pos)
-    return;
- 
-  if (Seek(pos))
-  {
-    mPosition = pos;
-  }
 }
 
 

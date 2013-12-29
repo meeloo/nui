@@ -31,6 +31,17 @@ public:
   ExtAudioFileRef mExtAudioFileRef;
   SInt64 mPos;
 	nglFileSize mSize;
+
+  void AdjustPreroll(int channels, int frames)
+  {
+    mPreroll.resize(channels * frames);
+    mPrerollBuffers.clear();
+    for (int i = 0; i < channels; i++)
+      mPrerollBuffers.push_back(&mPreroll[i * frames]);
+  }
+
+  std::vector<float> mPreroll;
+  std::vector<void*> mPrerollBuffers;
 };
 
 
@@ -188,6 +199,8 @@ bool nuiAudioDecoder::ReadInfo()
 bool nuiAudioDecoder::Seek(int64 SampleFrame)
 {
   OSStatus err = ExtAudioFileSeek(mpPrivate->mExtAudioFileRef, SampleFrame);
+  if (err == noErr)
+    mCurrentPosition = SampleFrame;
   return (err == noErr);
 }
 
@@ -195,9 +208,33 @@ int32 nuiAudioDecoder::ReadDE(std::vector<void*> buffers, int32 sampleframes, nu
 {
   if (!mInitialized)
     return 0;
-  
-  SetPosition(mPosition);
-  
+
+  if (mPosition != mCurrentPosition)
+  {
+    // We need to preroll :-(
+    int prerollsize = 2000;
+    int offset = mPosition - prerollsize;
+    if (offset < 0)
+    {
+      prerollsize += offset;
+      offset = 0;
+    }
+    mpPrivate->AdjustPreroll(buffers.size(), prerollsize);
+
+    Seek(offset);
+    if (InternalReadDE(mpPrivate->mPrerollBuffers, prerollsize, eSampleFloat32) != prerollsize)
+      return 0;
+
+    // We should have read enough dummy samples now:
+    NGL_ASSERT(mCurrentPosition == mPosition);
+  }
+
+  return InternalReadDE(buffers, sampleframes, format);
+}
+
+
+int32 nuiAudioDecoder::InternalReadDE(std::vector<void*> buffers, int32 sampleframes, nuiSampleBitFormat format)
+{
   int32 length = mInfo.GetSampleFrames();
   if (mPosition >= length)
     return 0;
@@ -234,7 +271,7 @@ int32 nuiAudioDecoder::ReadDE(std::vector<void*> buffers, int32 sampleframes, nu
   OSStatus err = ExtAudioFileRead(mpPrivate->mExtAudioFileRef, &frames, pBufList);
   if (err != noErr)
     frames = 0;
-  
+
   if (format == eSampleInt16)
   {
     for (int32 c = 0; c < channels; c++)
@@ -250,6 +287,7 @@ int32 nuiAudioDecoder::ReadDE(std::vector<void*> buffers, int32 sampleframes, nu
   delete pBufList;
   
   mPosition += frames;
+  mCurrentPosition += frames;
   return frames;
 }
 
@@ -262,6 +300,7 @@ int32 nuiAudioDecoder::ReadIN(void* pBuffer, int32 sampleframes, nuiSampleBitFor
   int32 length = mInfo.GetSampleFrames();
   if (mPosition >= length)
     return 0;
+
   sampleframes = MIN(sampleframes, length - mPosition);
   
   std::vector<float*> temp(channels);

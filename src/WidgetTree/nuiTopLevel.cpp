@@ -1182,10 +1182,12 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
   // Update counterpart:
   std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
   if (it != mMouseClickedEvents.end())
+  {
     rInfo.Counterpart = &it->second;
-  // Update state:
-  mMouseStates.erase(mMouseStates.find(rInfo.TouchId));
-  //NGL_OUT("Removed %x\n", rInfo.TouchId);
+    // Update state:
+    mMouseStates.erase(mMouseStates.find(rInfo.TouchId));
+    //NGL_OUT("Removed %x\n", rInfo.TouchId);
+  }
 
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;
