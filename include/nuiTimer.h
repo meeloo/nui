@@ -21,7 +21,7 @@ class nuiTickEvent: public nuiEvent
 public:
   nuiTickEvent(nglTime Lap);
 
-  nglTime GetLap();
+  nglTime GetLap() const;
   void SetLap(nglTime Lap);
 protected:
   nglTime mLap;

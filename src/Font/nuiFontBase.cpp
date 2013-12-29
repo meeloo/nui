@@ -1906,7 +1906,7 @@ uint32 POT(uint32 i)
   return t;
 }
 
-const int nuiFontBase::TEXTURE_SIZE = 128;
+const int nuiFontBase::TEXTURE_SIZE = 256;
 
 void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLocation)
 {
@@ -1921,7 +1921,7 @@ void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLoc
   if (!FindNextGlyphLocation(bmp.Width + 1, bmp.Height + 1, OffsetX, OffsetY))
   {
     mCurrentTexture++;
-    nuiTexture *texture = AllocateTexture(MAX(TEXTURE_SIZE, POT(MAX(bmp.Width, bmp.Height))));
+    nuiTexture *texture = AllocateTexture(MAX(TEXTURE_SIZE, 2 * POT(MAX(bmp.Width, bmp.Height))));
     mTextures.push_back(texture);
 
     mCurrentX = 0;

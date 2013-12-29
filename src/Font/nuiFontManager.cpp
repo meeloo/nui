@@ -1212,7 +1212,7 @@ bool nuiFontManager::Load(nglIStream& rStream, double lastscantime)
       
       // register the font 
       mpFonts.push_back(pFontDesc);
-      
+      NGL_OUT("Font %s (%s) available\n", pFontDesc->GetName().GetChars(), pFontDesc->GetPath().GetChars());
       // remove it from the compiled list
       itf = fontFiles.find(pFontDesc->GetPath());
       if (itf != fontFiles.end())
