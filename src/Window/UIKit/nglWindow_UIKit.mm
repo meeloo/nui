@@ -261,7 +261,9 @@ const nglChar* gpWindowErrorTable[] =
 
   {
     mInvalidated = false;
-    mpTimer->Tick();
+    GLKViewController* ctrl = (GLKViewController*)self.rootViewController;
+    double lap = ctrl.timeSinceLastDraw;
+    mpTimer->OnTick(lap);
   }
 }
 
