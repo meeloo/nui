@@ -13,6 +13,7 @@
 {
   nglWindow*    mpNGLWindow;
   nglTime       mLastEventTime;
+  double        mLastPaintTime;
   bool          mInited;
   bool          mInvalidated;
   id            mDisplayLink;

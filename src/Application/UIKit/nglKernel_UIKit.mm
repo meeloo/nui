@@ -98,7 +98,7 @@ void objCCallOnInit(void* pUIApplication)
       [next Paint];
   }
   
-  nuiAnimation::GetTimer()->Tick();
+  nuiAnimation::GetTimer()->OnTick(0);
 }
 
 void objCCallOnInitWithURL(void* pUIApplication, const nglString &url)

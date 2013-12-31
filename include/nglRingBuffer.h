@@ -12,38 +12,43 @@
 #include "nglAtomic.h"
 #include "nuiNonCopyable.h"
 
+#pragma once
 
 
-//////////////////////////////// nglRingBuffer.h 
-#define NGL_MAKE_POWER_OF_TWO_RINGBUFFER(X) { uint32 Y = 1; while (X>Y) Y = Y << 1; X = Y; }
+#include <vector>
+#include <string.h>
+#include <stdlib.h>
 
-
-// nglRingBuffer schematics legend:
+#define NGL_MAKE_POWER_OF_TWO_RINGBUFFER(X) { int Y = 1; while (X>Y) Y = Y << 1; X = Y; }
+// RingBuffer schematics legend:
 // [ and ] delimits the complete buffer. (= mSize)
 // * is a selected sample.
 // - is an unselected sample.
 // R is the read index.
 // W is the write index.
-class nglRingBuffer : nuiNonCopyable
+
+
+class  nglRingBuffer
 {
 public:
-  
-  nglRingBuffer(uint32 countOfElement, uint32 sizeOfElement, int8 nbChannels = 1)
+
+  nglRingBuffer(int countOfElement, int sizeOfElement, int nbChannels = 1, int leftOver = 3)
   {
     NGL_MAKE_POWER_OF_TWO_RINGBUFFER(countOfElement);
-    mSize = countOfElement * sizeOfElement; 
+    mSize = countOfElement * sizeOfElement;
     mSizeOfElement = sizeOfElement;
     mReadIndex = 0;
     mWriteIndex = 0;
     mEffectiveSize = countOfElement;
-    
-    // we add enough space at the end of the ring buffer for the linear interpolation
+    mLeftOver = leftOver;
+
+    // we add enough space (leftOver) at the end of the ring buffer for the interpolation
     //
     mpBuffers.resize(nbChannels);
     for (int i = 0; i < nbChannels; i++)
     {
-      mpBuffers[i] = (uint8*)AlignedMalloc(mEffectiveSize + sizeOfElement);
-      memset(mpBuffers[i], 0, mEffectiveSize + sizeOfElement);
+      mpBuffers[i] = (unsigned char*)AlignedMalloc(mEffectiveSize + mLeftOver);
+      memset(mpBuffers[i], 0, (mEffectiveSize + mLeftOver) * sizeOfElement);
     }
   }
 
@@ -55,44 +60,44 @@ public:
       AlignedFree(mpBuffers[i]);
   }
 
-  inline uint32 GetSizeOfElement() const ///< Return the number of bytes for one element in one channel.
+  inline int GetSizeOfElement() const ///< Return the number of bytes for one element in one channel.
   {
     return mSizeOfElement;
   }
 
   inline void Reset() ///< Reset the read and write indices and epty the buffer.
   {
-    ngl_atomic_set(mReadIndex, 0);
-    ngl_atomic_set(mWriteIndex, 0);
+    mReadIndex = 0;
+    mWriteIndex = 0;
   }
 
   // Getters and setters:
-  inline uint32 GetReadIndex() const ///< Return the current read index in number of elements.
+  inline int GetReadIndex() const ///< Return the current read index in number of elements.
   {
     return mReadIndex;
   }
 
-  inline uint32 GetWriteIndex() const ///< Return the current write index in number of elements.
+  inline int GetWriteIndex() const ///< Return the current write index in number of elements.
   {
     return mWriteIndex;
   }
 
-  inline void* GetReadPointer(uint32 Channel) const ///< Return the current read pointer for the given channel.
+  inline void* GetReadPointer(int Channel) const ///< Return the current read pointer for the given channel.
   {
     return mpBuffers[Channel] + (mReadIndex   * mSizeOfElement);
   }
 
-  inline void* GetWritePointer(uint32 Channel) const ///< Return the current write pointer for the given channel.
+  inline void* GetWritePointer(int Channel) const ///< Return the current write pointer for the given channel.
   {
     return mpBuffers[Channel] + (mWriteIndex  * mSizeOfElement);
   }
 
   // Get Available sizes for read and write:
-  inline uint32 GetReadable() const ///< Return the total number of elements we can read.
+  inline int GetReadable() const ///< Return the total number of elements we can read.
   {
-    const uint32 r = ngl_atomic_read(mReadIndex);
-    const uint32 w = ngl_atomic_read(mWriteIndex);
-    
+    const int r = mReadIndex;
+    const int w = mWriteIndex;
+
     if (w >= r)
     {
       // [-----R*****W-----]
@@ -105,11 +110,11 @@ public:
     }
   }
 
-  inline uint32 GetWritable() const ///< Return the total number of elements we can write.
+  inline int GetWritable() const ///< Return the total number of elements we can write.
   {
-    const uint32 r = ngl_atomic_read(mReadIndex);
-    const uint32 w = ngl_atomic_read(mWriteIndex);
-    
+    const int r = mReadIndex;
+    const int w = mWriteIndex;
+
     if ( w > r )
     {
       // [*****R-----W*****]
@@ -127,110 +132,214 @@ public:
     }
   }
 
-  inline uint32 GetWritableToEnd() const ///< Return the number of elements writeable until the end of the buffer
+  inline int GetWritableToEnd() const ///< Return the number of elements writeable until the end of the buffer
   {
-    const uint32 r = ngl_atomic_read(mReadIndex);
-    const uint32 w = ngl_atomic_read(mWriteIndex);
-    
+    const int r = mReadIndex;
+    const int w = mWriteIndex;
+
     if ( r > w )
     {
       // [-----W*****R-----]
       return (r - w - 1);
     }
-    
+
     if ( r != 0 )
     {
       // [-----R-----W*****]
       return (mEffectiveSize - w);
     }
-    
+
     // [R-----W*****]
     return (mEffectiveSize - w - 1);
   }
 
-  inline uint32 GetReadableToEnd() const ///< Return the number of elements readable until the end of the buffer
+  inline int GetReadableToEnd() const ///< Return the number of elements readable until the end of the buffer
   {
-    const uint32 r = ngl_atomic_read(mReadIndex);
-    const uint32 w = ngl_atomic_read(mWriteIndex);
-    
+    const int r = mReadIndex;
+    const int w = mWriteIndex;
+
     if ( w >= r )
     {
       // [-----R*****W-----]
       return (w - r);
     }
-    
+
     // [-----W-----R*****]
     return (mEffectiveSize - r);
   }
 
-  uint32 GetSize() const ///< Get the size in number of elements.
+  int GetSize() const ///< Get the size in number of elements.
   {
     return mEffectiveSize;
   }
-  
-  uint32 GetChannelSizeInBytes() const ///< Return the number of bytes per channel.
+
+  int GetChannelSizeInBytes() const ///< Return the number of bytes per channel.
   {
     return mSize;
   }
-  
-  bool AssertReadInRange(uint8* pPointer, int32 Channel) const ///< Return true if the given pointer is correct for the given channel.
+
+  bool AssertReadInRange(unsigned char* pPointer, int Channel) const ///< Return true if the given pointer is correct for the given channel.
   {
     return ( (pPointer < mpBuffers[Channel] + mSize) && (pPointer >= mpBuffers[Channel]) );
   }
 
-  inline void AdvanceReadIndex(uint32 Advance) ///< Advance the read index in number of elements.
+  inline void AdvanceReadIndex(int Advance) ///< Advance the read index in number of elements.
   {
-    ngl_atomic_set(mReadIndex, (mReadIndex + Advance) % mEffectiveSize);
+    mReadIndex = (mReadIndex + Advance) % mEffectiveSize;
   }
 
-  inline void SetReadIndex(uint32 readIndex) ///< Set the read index in number of elements.
+  inline void SetReadIndex(int readIndex) ///< Set the read index in number of elements.
   {
-    ngl_atomic_set(mReadIndex, readIndex % mEffectiveSize);
+    mReadIndex = readIndex % mEffectiveSize;
   }
 
-  inline void AdvanceWriteIndex(uint32 Advance) ///< Advance the write index in number of elements.
+  inline void AdvanceWriteIndex(int Advance) ///< Advance the write index in number of elements.
   {
-    if (mWriteIndex == 0)
+    if (mWriteIndex < mLeftOver)
     {
-      // copy one frame from the beginning of the ringbuffer to the end in order to ensure
-      // the correct linear interpolation
+      // copy 'count' frames from the beginning of the ringbuffer to the end in order to ensure
+      // the correct interpolation
+      int count = mLeftOver - mWriteIndex;
       for (int i=0; i < (int)mpBuffers.size(); i++)
-        memcpy(mpBuffers[i] + mSize, mpBuffers[i], mSizeOfElement);
+        memcpy(mpBuffers[i] + mSize, mpBuffers[i], count * mSizeOfElement);
     }
-    ngl_atomic_set(mWriteIndex, (mWriteIndex + Advance) % mEffectiveSize);
+    mWriteIndex = (mWriteIndex + Advance) % mEffectiveSize;
   }
 
-  uint32 GetNbChannels() const
+  int GetNbChannels() const
   {
-    return (uint32)mpBuffers.size(); 
+    return (int)mpBuffers.size();
+  }
+
+  int ReadBlock(unsigned char* pPointer, int Count, int Channel)
+  {
+    int r = 0;
+    void* pSrc = GetReadPointer(Channel);
+    int size = std::min(Count, GetReadableToEnd());
+    memcpy(pPointer, pSrc, size * mSizeOfElement);
+
+    r += size;
+    if (Count == size)
+      return r;
+
+    int remain = GetReadable() - GetReadableToEnd();
+    pPointer += size * mSizeOfElement;
+    size = std::min(remain, Count - size);
+
+    memcpy(pPointer, &mpBuffers[Channel][0], size * mSizeOfElement);
+    r += size;
+
+    return r;
+  }
+
+  int ReadBlock(unsigned char* pPointer, int Count, int Channel, int SrcOffset)
+  {
+    int r = 0;
+    int toskip = SrcOffset;
+    int readable = std::max(0, GetReadable() - toskip);
+    int readableToEnd = std::max(0, GetReadableToEnd() - toskip);
+
+    void* pSrc = (unsigned char*)GetReadPointer(Channel) + SrcOffset * mSizeOfElement;
+    int size = std::min(Count, readableToEnd);
+    memcpy(pPointer, pSrc, size * mSizeOfElement);
+
+    r += size;
+    if (Count == size)
+      return r;
+
+    int remain = readable - readableToEnd;
+    pPointer += size * mSizeOfElement;
+    size = std::min(remain, Count - size);
+
+    toskip -= std::min(toskip, GetReadableToEnd());
+    pSrc = &mpBuffers[Channel][0] + toskip * mSizeOfElement;
+
+    memcpy(pPointer, pSrc, size * mSizeOfElement);
+    r += size;
+
+    return r;
+  }
+
+  int WriteBlock(const unsigned char* pPointer, int Count, int Channel)
+  {
+    int w = 0;
+    void* pDst = GetWritePointer(Channel);
+    int size = std::min(Count, GetWritableToEnd());
+    memcpy(pDst, pPointer, size * mSizeOfElement);
+
+    w += size;
+    if (Count == size)
+      return w;
+
+    int remain = GetWritable() - GetWritableToEnd();
+    pPointer += size * mSizeOfElement;
+    size = std::min(remain, Count - size);
+
+    memcpy(&mpBuffers[Channel][0], pPointer, size * mSizeOfElement);
+    w += size;
+
+    return w;
+  }
+
+  template<typename T>
+  int OverlapAddBlock(
+                      const T* pPointer,
+                      int Count,
+                      int Tail,
+                      int Channel)
+  {
+    int w = 0;
+    T* pBase = reinterpret_cast<T*>(&mpBuffers[Channel][0]);
+    T* pDst = pBase + GetWriteIndex();
+    int size = std::min(Count, GetWritableToEnd());
+    int head = Count - Tail;
+    for (int i = 0; i < size; ++i)
+    {
+      pDst[i] = (w < head ? pDst[i] : 0) + *pPointer++;
+      ++w;
+    }
+
+    if (Count == size)
+      return w;
+
+    int remain = GetWritable() - GetWritableToEnd();
+    size = std::min(remain, Count - size);
+
+    for (int i = 0; i < size; ++i)
+    {
+      pBase[i] = (w < head ? pBase[i] : 0) + *pPointer++;
+      ++w;
+    }
+    return w;
   }
 
 private:
   ////////////////////////////////////////////
   //
 
-  inline  uint8* AlignedMalloc (int32 size)
+  inline  unsigned char* AlignedMalloc (int size)
   {
-    uint8* newptr;
-    
-    newptr = (uint8*) malloc (size * mSizeOfElement);
-    
+    unsigned char* newptr;
+
+    newptr = (unsigned char*) malloc (size * mSizeOfElement);
+
     return newptr;
   }
 
-  inline void AlignedFree (uint8* ptr)
+  inline void AlignedFree (unsigned char* ptr)
   {
     if (!ptr)
       return;
-    free (ptr);        
+    free (ptr);
   }
 
-  std::vector<uint8*> mpBuffers;
-  uint32 mSize; // Size if bytes
-  uint32 mEffectiveSize; // Size if number of elements
-  uint32 mSizeOfElement; // Size in byte of ONE element
+  std::vector<unsigned char*> mpBuffers;
+  int mSize; // Size if bytes
+  int mEffectiveSize; // Size if number of elements
+  int mSizeOfElement; // Size in byte of ONE element
 
-  nglAtomic32 mReadIndex; // Read index in number of elements
-  nglAtomic32 mWriteIndex; // Write index in number of elements
+  int mReadIndex; // Read index in number of elements
+  int mWriteIndex; // Write index in number of elements
+
+  int mLeftOver; // Size added at the end of the ring buffer for interpolation
 };
-

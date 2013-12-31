@@ -380,6 +380,8 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 	mInvalidationTimer = nil;
 	mDisplayLink = nil;
 
+  mLastPaintTime = 0;
+
   BOOL deffering = NO;
   uint32 styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
   NSBackingStoreType buffering = NSBackingStoreBuffered;
@@ -743,8 +745,13 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 - (void)Paint
 {
   [self InitNGLWindow];
+  nglTime now;
+  double lap = now - mLastPaintTime;
+  if (mLastPaintTime == 0)
+    lap = 0;
+  mLastPaintTime = now;
+  mpTimer->OnTick(lap);
 
-  mpTimer->Tick();
   if (mInvalidated)
   {
     mInvalidated = false;
