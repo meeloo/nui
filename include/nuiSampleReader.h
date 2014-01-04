@@ -31,6 +31,7 @@ public:
   
   int64 BytesToSampleFrames(int64 inBytes) const;
   int64 SampleFramesToBytes(int64 inSampleFrames) const;
+
 protected:
   virtual bool ReadInfo() = 0;
   

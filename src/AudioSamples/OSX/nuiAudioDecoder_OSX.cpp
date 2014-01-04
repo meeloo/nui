@@ -167,6 +167,8 @@ bool nuiAudioDecoder::ReadInfo()
     return false;
   
   double SampleRate = FileDesc.mSampleRate;
+  if (IsSampleRateForced())
+    SampleRate = GetForcedSampleRate();
   int32 channels = FileDesc.mChannelsPerFrame;
   int32 BitsPerSample = 32;
   ClientDesc.mSampleRate = SampleRate;

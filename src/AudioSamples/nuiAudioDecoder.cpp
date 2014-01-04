@@ -36,4 +36,18 @@ nuiSampleReader* nuiAudioDecoder::Clone(nglIStream& rStream) const
 }
 
 
+void nuiAudioDecoder::SetForcedSampleRate(double forcedSR)
+{
+  mForcedSampleRate = forcedSR;
+}
+
+double nuiAudioDecoder::GetForcedSampleRate() const
+{
+  return mForcedSampleRate;
+}
+
+bool nuiAudioDecoder::IsSampleRateForced() const
+{
+  return mForcedSampleRate == 0;
+}
 

@@ -21,7 +21,10 @@ public:
   
   virtual int32 ReadDE(std::vector<void*> buffers, int32 sampleframes, nuiSampleBitFormat format = eSampleFloat32);
   virtual int32 ReadIN(void* pBuffer, int32 sampleframes, nuiSampleBitFormat format = eSampleFloat32);
-    
+
+  void SetForcedSampleRate(double forcedSR);
+  double GetForcedSampleRate() const;
+  bool IsSampleRateForced() const;
 private:
   int32 InternalReadDE(std::vector<void*> buffers, int32 sampleframes, nuiSampleBitFormat format);
   bool CreateAudioDecoderPrivate();
@@ -31,5 +34,6 @@ private:
 
   class nuiAudioDecoderPrivate* mpPrivate;
   int64 mCurrentPosition;
+  double mForcedSampleRate;
 };
 
