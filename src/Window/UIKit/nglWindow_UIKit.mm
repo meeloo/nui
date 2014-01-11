@@ -107,6 +107,7 @@ const nglChar* gpWindowErrorTable[] =
   mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds] context:context];
   mpGLKView.delegate = self;
   mpGLKView.multipleTouchEnabled = YES;
+  mpGLKView.enableSetNeedsDisplay = NO;
 
   NGLViewController* ctrl = [[NGLViewController alloc] initWithNGLWindow:mpNGLWindow];
   ctrl.view = mpGLKView;
