@@ -986,15 +986,13 @@ void nuiWidget::Invalidate()
     return;
 
   //printf("nuiWidget::Invalidate '%s [%s]'\n", GetObjectClass().GetChars() , GetObjectName().GetChars());
-  
+  if (GetDebug())
+  {
+    NGL_OUT(_T("  nuiWidget::Invalidate '%s' [%s]\n"), GetObjectClass().GetChars(), GetObjectName().GetChars());
+  }
+
   if (!IsVisible(true))
   {
-#ifdef _DEBUG_
-    if (GetDebug())
-    {
-      NGL_OUT(_T("  nuiWidget::Invalidate '%s' [%s]\n"), GetObjectClass().GetChars(), GetObjectName().GetChars());
-    }
-#endif
     mNeedSelfRedraw = true;
     InvalidateSurface();
     return;
