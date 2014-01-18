@@ -94,7 +94,10 @@ bool nuiWaveReader::ReadInfo()
   mInfo.SetSampleRate(SamplesPerSec);
   mInfo.SetChannels(NbChannels);
   mInfo.SetBitsPerSample(BitsPerSample);
-  
+
+  if (!SamplesPerSec || !NbChannels || !BitsPerSample)
+    return false;
+
   //get number of sample frames
   for(int32 i = 0; i < mChunks.size(); i++)
   {

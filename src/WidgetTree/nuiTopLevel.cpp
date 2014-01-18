@@ -1185,7 +1185,9 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
   {
     rInfo.Counterpart = &it->second;
     // Update state:
-    mMouseStates.erase(mMouseStates.find(rInfo.TouchId));
+    auto i = mMouseStates.find(rInfo.TouchId);
+    if (i != mMouseStates.end())
+      mMouseStates.erase(i);
     //NGL_OUT("Removed %x\n", rInfo.TouchId);
   }
 
