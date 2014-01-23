@@ -245,7 +245,6 @@ typedef double nuiSize;
   #include "nuiTabView.h"
   #include "nuiKnob.h"
   #include "nuiWindowManager.h"
-  #include "nuiAnimView.h"
   #include "nuiScrollView.h"
   #include "nuiFileTree.h"
   #include "nuiZoomView.h"

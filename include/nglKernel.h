@@ -319,7 +319,7 @@ public:
   //@}
 
   bool IsActive() const; ///< Returns true is the application is in the active state (mainly for iOS multitasking).
-
+  nglThread::ID GetMainThreadID() const;
   void NonBlockingHeartBeat(); ///< Keep the application event loop alive without waiting for new events. (i.e. only process the events that are already in the queue).
 
   static void SetCrashReportEmail(const nglString& rEmail);
@@ -389,6 +389,7 @@ private:
   nglPath       mPath;
   nglString     mName;
   ArgList       mArgs;
+  nglThread::ID mMainThreadID;
 
 #ifndef _MINUI3_
   nglDataTypesRegistry mDataTypesRegistry;

@@ -272,7 +272,7 @@ bool nuiAudioDevice_AudioUnit::Open(std::vector<int32>& rInputChannels, std::vec
   {
     // Set the category
     UInt32 uCategory = kAudioSessionCategory_MediaPlayback;
-    if (HasAudioInput())
+    if (HasAudioInput() && !rInputChannels.empty())
       uCategory = kAudioSessionCategory_PlayAndRecord;
     
     err = AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(UInt32), &uCategory);
@@ -295,7 +295,7 @@ bool nuiAudioDevice_AudioUnit::Open(std::vector<int32>& rInputChannels, std::vec
     AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryDefaultToSpeaker, sizeof(doChangeDefaultRoute), &doChangeDefaultRoute);
 
     AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, audioRouteChangeListenerCallback, this);
-}
+  }
   
 
 	
@@ -550,6 +550,7 @@ bool nuiAudioDevice_AudioUnit::Open(std::vector<int32>& rInputChannels, std::vec
 	err = AudioUnitInitialize(mAudioUnit);
   
   int32 count = 4;
+
   while (err == -12983 && count--)
   {
     nglThread::MsSleep(100);

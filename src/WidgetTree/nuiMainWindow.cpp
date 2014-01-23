@@ -1021,12 +1021,14 @@ void nuiMainWindow::NGLWindow::OnDestruction()
 
 void nuiMainWindow::NGLWindow::OnActivation()
 {
+  mpMainWindow->SetPaintEnabled(true);
   mpMainWindow->OnActivation();
 }
 
 void nuiMainWindow::NGLWindow::OnDesactivation()
 {
   mpMainWindow->OnDesactivation();
+  mpMainWindow->SetPaintEnabled(false);
 }
 
 void nuiMainWindow::NGLWindow::OnClose()
@@ -1235,6 +1237,8 @@ double nuiMainWindow::GetLastInteractiveEventTime() const
 void nuiMainWindow::SetPaintEnabled(bool set)
 {
   mPaintEnabled = set;
+  if (set)
+    Invalidate();
 }
 
 bool nuiMainWindow::IsPaintEnabled() const

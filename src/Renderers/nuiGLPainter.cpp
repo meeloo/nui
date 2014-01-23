@@ -503,36 +503,10 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
 
     int x,y,w,h;
     uint angle = (mpSurface && mpSurface->GetRenderToTexture()) ? 0 : mAngle;
-//    if (angle == 90)
-//    {
-//      x = ToBelow(clip.Top());
-//      y = ToBelow(clip.Left());
-//      w = ToBelow(clip.GetHeight());
-//      h = ToBelow(clip.GetWidth());
-//    }
-//    else if (angle == 180)
-//    {
-//      w = ToBelow(clip.GetWidth());
-//      h = ToBelow(clip.GetHeight());
-//      x = ToBelow(width - w - clip.Left());
-//      y = ToBelow(clip.Top());
-//    }
-//    else if (angle == 270)
-//    {
-//      w = ToBelow(clip.GetHeight());
-//      h = ToBelow(clip.GetWidth());
-//      x = ToBelow(height - clip.Top() - w);
-//      y = ToBelow(width - clip.Left() - h);
-//    }
-//    else
-    {
-      NGL_ASSERT(!angle);
-      x = ToBelow(clip.Left());
-      y = ToBelow(height - clip.Bottom());
-      w = ToBelow(clip.GetWidth());
-      h = ToBelow(clip.GetHeight());
-    }
-    //NGL_OUT(_T("To Screen Clip {%d, %d, %d, %d}\n"), x,y,w,h);
+    x = ToBelow(clip.Left());
+    y = ToBelow(height - clip.Bottom());
+    w = ToBelow(clip.GetWidth());
+    h = ToBelow(clip.GetHeight());
 
     if (!mScissorOn || ForceApply)
     {

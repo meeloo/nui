@@ -34,7 +34,7 @@ const nglChar* gpWindowErrorTable[] =
 #define NGL_OUT {}
 #endif
 
-#if defined(_MULTI_TOUCHES_) && 1//defined(_DEBUG_)
+#if defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
 # define NGL_TOUCHES_OUT NGL_OUT
 #else//!_MULTI_TOUCHES_
 # define NGL_TOUCHES_OUT
@@ -107,7 +107,7 @@ const nglChar* gpWindowErrorTable[] =
   mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds] context:context];
   mpGLKView.delegate = self;
   mpGLKView.multipleTouchEnabled = YES;
-  mpGLKView.enableSetNeedsDisplay = NO;
+  mpGLKView.enableSetNeedsDisplay = YES;
 
   NGLViewController* ctrl = [[NGLViewController alloc] initWithNGLWindow:mpNGLWindow];
   ctrl.view = mpGLKView;

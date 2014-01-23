@@ -106,7 +106,7 @@ void nuiRange::SetDiscreetStepSize(bool DiscreetStepSize)
 void nuiRange::SetUnitValue(double Value)
 {
   NGL_ASSERT(IsValid());
-  NGL_ASSERT(finite(Value));
+  NGL_ASSERT(std::isfinite(Value));
   SetValue(ConvertFromUnit(nuiClamp(Value, 0.0, 1.0)));
 }
 
@@ -115,7 +115,7 @@ void nuiRange::SetValue(double Value)
 #ifdef DEBUG
   if (IsValid())
   {
-    NGL_ASSERT(finite(Value));
+    NGL_ASSERT(std::isfinite(Value));
   }
 #endif
   
@@ -343,7 +343,7 @@ double nuiRange::GetUnitValue() const
 {
   NGL_ASSERT(IsValid());
   const double v = ConvertToUnit(GetValue());
-  NGL_ASSERT(finite(v));
+  NGL_ASSERT(std::isfinite(v));
   return v;
 }
 
@@ -487,7 +487,7 @@ bool nuiRange::MakeInRangeVisual(double Position, double size)
 double nuiRange::ConvertToUnit(double RangeValue) const
 {
   NGL_ASSERT(IsValid());
-  NGL_ASSERT(finite(RangeValue));
+  NGL_ASSERT(std::isfinite(RangeValue));
   double t = RangeValue - mMinimum;
   double r = mMaximum - mMinimum;
   double v = t / r;
@@ -497,7 +497,7 @@ double nuiRange::ConvertToUnit(double RangeValue) const
 double nuiRange::ConvertFromUnit(double UnitValue) const
 {
   NGL_ASSERT(IsValid());
-  NGL_ASSERT(finite(UnitValue));
+  NGL_ASSERT(std::isfinite(UnitValue));
   double r = mMaximum - mMinimum;
   double v = pow(UnitValue, 1.0 / mUnitCurve);
   return v * r + mMinimum;

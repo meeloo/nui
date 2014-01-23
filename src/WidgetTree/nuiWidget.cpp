@@ -914,7 +914,7 @@ void nuiWidget::InvalidateRect(const nuiRect& rRect)
   CheckValid();
   #ifdef _DEBUG_LAYOUT
   if (GetDebug())
-    NGL_OUT(_T("  nuiWidget::InvalidateRect '%s' [%s] %s\n"), GetObjectClass().GetChars(), GetObjectName().GetChars(), rRect.GetValue().GetChars());
+    NGL_OUT(_T("  nuiWidget::InvalidateRect '%s' [%s] %s (thread: %d)\n"), GetObjectClass().GetChars(), GetObjectName().GetChars(), rRect.GetValue().GetChars(), nglThread::GetCurThreadID());
   #endif
   
   if (IsVisible(true))
@@ -986,9 +986,10 @@ void nuiWidget::Invalidate()
     return;
 
   //printf("nuiWidget::Invalidate '%s [%s]'\n", GetObjectClass().GetChars() , GetObjectName().GetChars());
+  NGL_ASSERT(nglThread::GetCurThreadID() == App->GetMainThreadID());
   if (GetDebug())
   {
-    NGL_OUT(_T("  nuiWidget::Invalidate '%s' [%s]\n"), GetObjectClass().GetChars(), GetObjectName().GetChars());
+    NGL_OUT(_T("  nuiWidget::Invalidate '%s' [%s] (thread: %d)\n"),  GetObjectClass().GetChars(), GetObjectName().GetChars(), nglThread::GetCurThreadID());
   }
 
   if (!IsVisible(true))

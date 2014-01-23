@@ -228,7 +228,7 @@ int32 nuiAudioDecoder::ReadDE(std::vector<void*> buffers, int32 sampleframes, nu
       return 0;
 
     // We should have read enough dummy samples now:
-    NGL_ASSERT(mCurrentPosition == mPosition);
+    mCurrentPosition = mPosition;
   }
 
   return InternalReadDE(buffers, sampleframes, format);

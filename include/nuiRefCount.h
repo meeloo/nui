@@ -37,7 +37,10 @@ public:
       NGL_OUT(_T("Release object %p (%d)\n"), this, mRefCount - 1);
     }
 
-    
+    if (mRefCount < 1)
+    {
+      printf("Hmmm\n");
+    }
     NGL_ASSERTR(mRefCount > 0, mRefCount);
     mRefCount--;
     if (mRefCount == 0)
@@ -96,7 +99,7 @@ public:
   virtual void OnFinalize() ///< This callback is called when we are about to delete this
   {
   }
-  
+
 protected:
   mutable bool mTrace;
 private:

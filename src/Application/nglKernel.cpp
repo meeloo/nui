@@ -332,6 +332,8 @@ void nglKernel::TimedPrintv(const char* Format, va_list Args) const
 
 void nglKernel::CallOnInit()
 {
+  mMainThreadID = nglThread::GetCurThreadID();
+  
   double now = nglTime();
   ucdata_init_static();
   double then = nglTime();
@@ -500,6 +502,11 @@ void nglKernel::CatchSignal (int Signal, void (*pHandler)(int))
   sigaction (Signal, &act, NULL);
 }
 #endif
+
+nglThread::ID nglKernel::GetMainThreadID() const
+{
+  return mMainThreadID;
+}
 
 
 

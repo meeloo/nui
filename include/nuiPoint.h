@@ -27,44 +27,44 @@ public:
   /// Initialize with values
   explicit nuiPoint(float X, float Y, float Z = 0.0f, float W = 1.f) : nuiVector(X,Y,Z,W), mType(nuiPointTypeNormal)
   {
-    NGL_ASSERT(finite(Elt[0]) && finite(Elt[1]) && finite(Elt[2]));
+    NGL_ASSERT(std::isfinite(Elt[0]) && std::isfinite(Elt[1]) && std::isfinite(Elt[2]));
   }
 
   /// Initialize with a two dimensional vector. Third element is zero, fourth is one.
   explicit nuiPoint(const nuiVector2& rVector) : nuiVector(rVector), mType(nuiPointTypeNormal)
   { 
-    NGL_ASSERT(finite(Elt[0]) && finite(Elt[1]) && finite(Elt[2]));
+    NGL_ASSERT(std::isfinite(Elt[0]) && std::isfinite(Elt[1]) && std::isfinite(Elt[2]));
   }
 
   /// Initialize with a two dimensional vector. Fourth element is one.
   explicit nuiPoint(const nuiVector3& rVector)  : nuiVector(rVector), mType(nuiPointTypeNormal)
   { 
-    NGL_ASSERT(finite(Elt[0]) && finite(Elt[1]) && finite(Elt[2]));
+    NGL_ASSERT(std::isfinite(Elt[0]) && std::isfinite(Elt[1]) && std::isfinite(Elt[2]));
   }
 
   /// Initialize with a four dimensional vector.
   explicit nuiPoint(const nuiVector& rVector)  : nuiVector(rVector), mType(nuiPointTypeNormal)
   { 
-    NGL_ASSERT(finite(Elt[0]) && finite(Elt[1]) && finite(Elt[2]));
+    NGL_ASSERT(std::isfinite(Elt[0]) && std::isfinite(Elt[1]) && std::isfinite(Elt[2]));
   }
 
   /// Initialize with a special point type.
   explicit nuiPoint(nuiPointType type)  : nuiVector(), mType(type)
   { 
-    NGL_ASSERT(finite(Elt[0]) && finite(Elt[1]) && finite(Elt[2]));
+    NGL_ASSERT(std::isfinite(Elt[0]) && std::isfinite(Elt[1]) && std::isfinite(Elt[2]));
   }
 
   /// Copy constructor
   nuiPoint(const nuiPoint& rPoint)  : nuiVector(rPoint), mType(rPoint.mType)
   {
-    NGL_ASSERT(finite(Elt[0]) && finite(Elt[1]) && finite(Elt[2]));
+    NGL_ASSERT(std::isfinite(Elt[0]) && std::isfinite(Elt[1]) && std::isfinite(Elt[2]));
   }
 
   nuiPoint& operator=(const nuiPoint& rPoint)
   {
     *((nuiVector*)this) = (nuiVector)rPoint;
     SetType(rPoint.mType);
-    NGL_ASSERT(finite(Elt[0]) && finite(Elt[1]) && finite(Elt[2]));
+    NGL_ASSERT(std::isfinite(Elt[0]) && std::isfinite(Elt[1]) && std::isfinite(Elt[2]));
     return *this;
   }
 
@@ -97,10 +97,10 @@ public:
 
   bool IsValid() const
   {
-    bool f0 = finite(Elt[0]) != 0;
-    bool f1 = finite(Elt[1]) != 0;
-    bool f2 = finite(Elt[2]) != 0;
-    bool f3 = finite(Elt[3]) != 0;
+    bool f0 = std::isfinite(Elt[0]) != 0;
+    bool f1 = std::isfinite(Elt[1]) != 0;
+    bool f2 = std::isfinite(Elt[2]) != 0;
+    bool f3 = std::isfinite(Elt[3]) != 0;
 
     bool res = f0 && f1 && f2 && f3;
 
