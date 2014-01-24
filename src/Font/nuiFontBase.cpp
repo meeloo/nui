@@ -1927,6 +1927,8 @@ void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLoc
     mCurrentX = 0;
     mCurrentY = 0;
     mRowMaxWidth = 0;
+    OffsetX = 0;
+    OffsetY = 0;
   }
 
   nuiTexture *pCurrentTexture = mTextures[mCurrentTexture];

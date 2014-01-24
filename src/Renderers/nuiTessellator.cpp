@@ -82,7 +82,10 @@ nuiRenderObject* nuiTessellator::GenerateFromPath(float Quality)
   nuiPath Points;
 
   mpPath->Tessellate(Points, Quality);
-
+  uint count = Points.GetCount();
+  if (!count)
+    return nullptr;
+  
   gluTessNormal(mpTess, 0,0,1);
   gluTessProperty(mpTess,GLU_TESS_TOLERANCE, 0);
   gluTessCallback(mpTess, GLU_TESS_BEGIN_DATA,    NUI_GLU_CALLBACK &nuiTessellator::StaticInternalTessBegin);
@@ -103,7 +106,6 @@ nuiRenderObject* nuiTessellator::GenerateFromPath(float Quality)
   bool beginNext = true;
 
   //printf("Start tesselation\n");
-  uint count = Points.GetCount();
   for (uint i = 0; i < count; i++)
   {
     nuiPoint& rPoint = Points[i];

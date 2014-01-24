@@ -504,6 +504,8 @@ void nuiDrawContext::DrawShape(nuiShape* pShape, nuiShapeMode Mode, float Qualit
   case eStrokeShape:
     {
       nuiRenderObject* pObject = pShape->Outline(Quality, mCurrentState.mLineWidth, mCurrentState.mLineJoin, mCurrentState.mLineCap, mCurrentState.mMitterLimit);
+      if (!pObject)
+        return;
       SetFillColor(GetStrokeColor());
       //SetTexture(mpAATexture);
       //EnableTexturing(true);
@@ -518,7 +520,8 @@ void nuiDrawContext::DrawShape(nuiShape* pShape, nuiShapeMode Mode, float Qualit
       nuiTessellator* pTess = new nuiTessellator(pShape);
       pTess->SetFill(true);
       nuiRenderObject* pObject = pTess->Generate(Quality);
-      DrawObject(*pObject);
+      if (pObject)
+        DrawObject(*pObject);
       delete pObject;
       delete pTess;
     }
@@ -527,7 +530,8 @@ void nuiDrawContext::DrawShape(nuiShape* pShape, nuiShapeMode Mode, float Qualit
     {
       {
         nuiRenderObject* pObject = pShape->Fill(Quality);
-        DrawObject(*pObject);
+        if (pObject)
+          DrawObject(*pObject);
         delete pObject;
       }
 
@@ -538,7 +542,8 @@ void nuiDrawContext::DrawShape(nuiShape* pShape, nuiShapeMode Mode, float Qualit
         //EnableTexturing(true);
         EnableBlending(true);
         SetBlendFunc(nuiBlendTransp);//GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        DrawObject(*pObject);
+        if (pObject)
+          DrawObject(*pObject);
         delete pObject;
       }
     }

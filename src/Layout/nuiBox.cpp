@@ -50,11 +50,31 @@ void nuiBox::InitBoxAttributes()
                 nuiMakeDelegate(this, &nuiBox::SetExpand)));                
   
   AddAttribute(new nuiAttribute<nuiExpandMode>
+               (nglString(_T("LastCellExpand")), nuiUnitExpand,
+                nuiMakeDelegate(this, &nuiBox::GetLastCellExpand),
+                nuiMakeDelegate(this, &nuiBox::_SetLastCellExpand)));
+
+  AddAttribute(new nuiAttribute<nuiExpandMode>
                (nglString(_T("CellExpand")), nuiUnitExpand,
                 nuiMakeDelegate(this, &nuiBox::GetCellExpand),
                 nuiMakeDelegate(this, &nuiBox::_SetCellExpand),
                 nuiMakeDelegate(this, &nuiBox::GetBoxDimensionRange)));
   
+}
+
+void nuiBox::SetLastCellExpand(nuiExpandMode mode, nuiSize ratio)
+{
+  SetCellExpand(GetNbCells() - 1, mode, ratio);
+}
+
+void nuiBox::_SetLastCellExpand(nuiExpandMode mode)
+{
+  SetLastCellExpand(mode, 1.0f);
+}
+
+nuiExpandMode nuiBox::GetLastCellExpand() const
+{
+  return GetCellExpand(GetNbCells() - 1);
 }
 
 void nuiBox::_SetCellExpand(uint32 cell, nuiExpandMode mode)

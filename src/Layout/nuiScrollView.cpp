@@ -193,6 +193,16 @@ nuiScrollView::~nuiScrollView()
   {
 //    mSVSink.Disconnect(mpVertical->GetRange().ValueChanged);
   }
+
+  delete mpShowAnimH;
+  delete mpShowAnimV;
+  delete mpHideAnimH;
+  delete mpHideAnimV;
+  mpShowAnimH = NULL;
+  mpShowAnimV = NULL;
+  mpHideAnimH = NULL;
+  mpHideAnimV = NULL;
+
 }
 
 
