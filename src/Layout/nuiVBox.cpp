@@ -265,6 +265,19 @@ void nuiVBox::AddCell(uint32 pos, nuiWidget* pWidget, nuiPosition position)
     nuiGrid::AddColumns(0,1);
   
   nuiGrid::SetCell(0, pos, pWidget, position); 
+
+  const char* props[] = { "Expand", "MaxGrow", "MaxPixels", "MinPixels", "MaxShrink", "Pixels", nullptr };
+  const char* attribs[] = { "CellExpand", "CellMaxGrow", "CellMaxPixels", "CellMinPixels", "CellMaxShrink", "CellPixels", nullptr };
+  for (int i = 0; props[i]; i++)
+  {
+    nglString val = pWidget->GetProperty(props[i]);
+    if (!val.IsNull())
+    {
+      nuiAttribBase attrib(GetAttribute(attribs[i]));
+      if (attrib.IsValid() && !attrib.IsReadOnly())
+        attrib.FromString(pos, val);
+    }
+  }
 }
 
 

@@ -262,7 +262,20 @@ void nuiHBox::AddCell(uint32 pos, nuiWidget* pWidget, nuiPosition position)
   if (GetNbRows() == 0)
     nuiGrid::AddRows(0,1);
   
-  nuiGrid::SetCell(pos, 0, pWidget, position); 
+  nuiGrid::SetCell(pos, 0, pWidget, position);
+
+  const char* props[] = { "Expand", "MaxGrow", "MaxPixels", "MinPixels", "MaxShrink", "Pixels", nullptr };
+  const char* attribs[] = { "CellExpand", "CellMaxGrow", "CellMaxPixels", "CellMinPixels", "CellMaxShrink", "CellPixels", nullptr };
+  for (int i = 0; props[i]; i++)
+  {
+    nglString val = pWidget->GetProperty(props[i]);
+    if (!val.IsNull())
+    {
+      nuiAttribBase attrib(GetAttribute(attribs[i]));
+      if (attrib.IsValid() && !attrib.IsReadOnly())
+        attrib.FromString(pos, val);
+    }
+  }
 }
 
 

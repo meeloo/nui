@@ -36,8 +36,6 @@ public:
   virtual void SetBoxSpacing(nuiSize gap) = 0; // Sets the spacing to gap around the box (hbox: vertically, vxob: horizontally)
   virtual void SetBoxSize(uint32 cells) = 0;         ///< Sets the grid size in number of cells, you have use this before inserting any element in the grid (via SetCell).
   virtual void SetCellExpand(uint32 cell, nuiExpandMode mode, nuiSize ratio = 1.f) = 0; ///< Sets the expand mode and ratio to the given cell. Ratio has to be equal or superior to 1.0, and is used to expand proportionnaly to other cell ratios
-  virtual void SetLastCellExpand(nuiExpandMode mode, nuiSize ratio = 1.f); ///< Sets the expand mode and ratio to the given cell. Ratio has to be equal or superior to 1.0, and is used to expand proportionnaly to other cell ratios
-  virtual nuiExpandMode GetLastCellExpand() const; ///< Sets the expand mode and ratio to the given cell. Ratio has to be equal or superior to 1.0, and is used to expand proportionnaly to other cell ratios
   virtual void SetAllCellsExpand(nuiExpandMode mode)=0; ///< Sets the expand mode and ratio to all cells.
   
   virtual void SetExpand(nuiExpandMode mode) = 0; ///< Sets the expand mode and ratio (hbox: vertically / vbox: horizontally)
@@ -94,7 +92,6 @@ protected:
   void InitBoxAttributes();
   uint32 GetBoxDimensionRange(uint32 dimension) const;
   void _SetCellExpand(uint32 cell, nuiExpandMode mode);
-  void _SetLastCellExpand(nuiExpandMode mode);
 };
 
 
