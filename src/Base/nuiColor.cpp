@@ -195,7 +195,7 @@ static static_color static_colors[] =
   {(nglChar*)_T("flat_carrot"), 230, 126, 34},
   {(nglChar*)_T("flat_pumpkin"), 211, 84, 0},
   {(nglChar*)_T("flat_alizarin"), 231, 76, 60},
-  {(nglChar*)_T("flat_pomegranat"), 192, 57, 43},
+  {(nglChar*)_T("flat_pomegranate"), 192, 57, 43},
   {(nglChar*)_T("flat_clouds"), 236, 240, 241},
   {(nglChar*)_T("flat_silver"), 189, 195, 199},
   {(nglChar*)_T("flat_concrete"), 149, 165, 166},
