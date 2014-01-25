@@ -343,6 +343,20 @@ bool nuiButton::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   return false;
 }
 
+bool nuiButton::MouseCanceled(const nglMouseInfo& rInfo)
+{
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+  {
+    mClicked = false;
+    Ungrab();
+    SetPressed(false);
+    Invalidate();
+    ButtonDePressedInactive();
+    return true;
+  }
+  return false;
+}
+
 bool nuiButton::MouseUngrabbed()
 {
   nuiWidget::MouseUngrabbed();

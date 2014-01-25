@@ -257,6 +257,7 @@ public:
   bool MouseEventsEnabled() const;
   virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
   virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  virtual bool MouseCanceled (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
   virtual bool MouseMoved    (nuiSize X, nuiSize Y);
   virtual bool MouseGrabbed();
   virtual bool MouseUngrabbed();
@@ -264,6 +265,7 @@ public:
   // Multitouch interface:
   virtual bool MouseClicked(const nglMouseInfo& rInfo);
   virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
+  virtual bool MouseCanceled(const nglMouseInfo& rInfo);
   virtual bool MouseMoved(const nglMouseInfo& rInfo);
   virtual bool MouseGrabbed(nglTouchId Id);
   virtual bool MouseUngrabbed(nglTouchId Id);
@@ -377,10 +379,12 @@ public:
 
   nuiMouseClicked PreClicked; ///< Send an event when the widget is clicked. This event is fired before the MouseClicked method is called on the widget.
   nuiMouseUnclicked PreUnclicked; ///< Send an event when the widget is clicked. This event is fired before the MouseUnclicked method is called on the widget.
+  nuiMouseUnclicked PreClickCanceled; ///< Send an event when the widget mouse interaction is canceled. This event is fired before the MouseCanceled method is called on the widget.
   nuiMouseMoved PreMouseMoved; ///< Send an event when the mouse moves over the widget. This event is fired before the MouseMoved method is called on the widget.
 
   nuiMouseClicked Clicked; ///< Send an event when the widget is clicked. This event is fired after the MouseClicked method is called on the widget.
   nuiMouseUnclicked Unclicked; ///< Send an event when the widget is clicked. This event is fired after the MouseUnclicked method is called on the widget.
+  nuiMouseUnclicked ClickCanceled; ///< Send an event when the widget is clicked. This event is fired after the MouseUnclicked method is called on the widget.
   nuiMouseMoved MovedMouse; ///< Send an event when the mouse moves over the widget. This event is fired after the MouseMoved method is called on the widget.
   //@}
 
@@ -389,6 +393,7 @@ public:
   /// Beware: these three methods receive the mouse coordinates in the repair of the root object!
   virtual bool DispatchMouseClick(const nglMouseInfo& rInfo);
   virtual bool DispatchMouseUnclick(const nglMouseInfo& rInfo);
+  virtual bool DispatchMouseCanceled(const nglMouseInfo& rInfo);
   virtual nuiWidgetPtr DispatchMouseMove(const nglMouseInfo& rInfo);
   
   virtual bool DispatchGrab(nuiWidgetPtr pWidget);
