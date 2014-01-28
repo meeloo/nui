@@ -71,7 +71,17 @@ public:
 
   nuiWidget* CreateWidget(const nglString& rClassName) const;
   nuiWidget* CreateWidget(const nglString& rClassName, const std::map<nglString, nglString>& rParamDictionary) const;
-  
+
+  static nuiWidget* Build(const nglString& rClassName)
+  {
+    return nuiBuilder::Get().CreateWidget(rClassName);
+  }
+
+  static nuiWidget* Build(const nglString& rClassName, const std::map<nglString, nglString>& rParamDictionary)
+  {
+    return nuiBuilder::Get().CreateWidget(rClassName, rParamDictionary);
+  }
+
   static nuiBuilder& Get()
   {
     return mBuilder;

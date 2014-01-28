@@ -9,6 +9,12 @@
 
 #define INACTIVE_SHADE_SIZE 8.f
 
+#ifdef _UIKIT_
+static const int DEFAULT_ACTIVATION_OFFSET = 15;
+#else
+static const int DEFAULT_ACTIVATION_OFFSET = 0;
+#endif
+
 nuiButton::nuiButton()
 : nuiSimpleContainer(),
   mEventSink(this)
@@ -24,7 +30,8 @@ nuiButton::nuiButton()
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
   mpAutoRepeatTimer = NULL;
-  mActivationOffset = 0;
+  mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
+
   EnableInteractiveDecoration(true);
   
   SetBorders(mDefaultBorders);
@@ -51,7 +58,7 @@ nuiButton::nuiButton(const nglString& rText)
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
   mpAutoRepeatTimer = NULL;
-  mActivationOffset = 0;
+  mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
   nuiLabel* pLabel = new nuiLabel(rText);
   AddChild(pLabel);
   pLabel->SetPosition(nuiCenter);
@@ -82,7 +89,7 @@ nuiButton::nuiButton(const nglImage& rImage)
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
   mpAutoRepeatTimer = NULL;
-  mActivationOffset = 0;
+  mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
   SetRedrawOnHover(true);
   EnableInteractiveDecoration(true);
 
@@ -114,7 +121,7 @@ nuiButton::nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired)
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
   mpAutoRepeatTimer = NULL;
-  mActivationOffset = 0;
+  mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
   SetRedrawOnHover(true);
   EnableInteractiveDecoration(true);
   
