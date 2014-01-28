@@ -98,7 +98,7 @@ bool nuiToggleButton::Draw(nuiDrawContext* pContext)
 //    DrawChildren(pContext);
 //  }
 //  else 
-    if (mDisplayAsFrameBox)
+  if (mDisplayAsFrameBox)
   {
     pContext->ResetState();
 

@@ -10,7 +10,7 @@
 #define INACTIVE_SHADE_SIZE 8.f
 
 #ifdef _UIKIT_
-static const int DEFAULT_ACTIVATION_OFFSET = 15;
+static const int DEFAULT_ACTIVATION_OFFSET = 20;
 #else
 static const int DEFAULT_ACTIVATION_OFFSET = 0;
 #endif

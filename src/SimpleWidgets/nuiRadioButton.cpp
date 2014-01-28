@@ -10,8 +10,8 @@
 nuiRadioButton::nuiRadioButton()
   : nuiToggleButton()
 {
-  SetObjectClass(_T("nuiRadioButton"));
-  SetGroup(_T("Default"));
+  SetObjectClass("nuiRadioButton");
+  SetGroup("Default");
   mpGroupManager = NULL;
   mCanToggle = false;
 }
@@ -19,8 +19,8 @@ nuiRadioButton::nuiRadioButton()
 nuiRadioButton::nuiRadioButton(const nglString& rText)
   : nuiToggleButton(rText)
 {
-  SetObjectClass(_T("nuiRadioButton"));
-  SetGroup(_T("Default"));
+  SetObjectClass("nuiRadioButton");
+  SetGroup("Default");
   mpGroupManager = NULL;
   mCanToggle = false;
 }
@@ -28,8 +28,8 @@ nuiRadioButton::nuiRadioButton(const nglString& rText)
 nuiRadioButton::nuiRadioButton(nuiStateDecoration* pDecoration)
   : nuiToggleButton(pDecoration)
 {
-  SetObjectClass(_T("nuiRadioButton"));
-  SetGroup(_T("Default"));
+  SetObjectClass("nuiRadioButton");
+  SetGroup("Default");
   mpGroupManager = NULL;
   mCanToggle = false;
 }
@@ -37,8 +37,8 @@ nuiRadioButton::nuiRadioButton(nuiStateDecoration* pDecoration)
 nuiRadioButton::nuiRadioButton(const nglImage& rImage)
   : nuiToggleButton(rImage)
 {
-  SetObjectClass(_T("nuiRadioButton"));
-  SetGroup(_T("Default"));
+  SetObjectClass("nuiRadioButton");
+  SetGroup("Default");
   mpGroupManager = NULL;
   mCanToggle = false;
 }
@@ -198,7 +198,7 @@ bool nuiRadioButton::MouseMoved(nuiSize X, nuiSize Y)
 
 void nuiRadioButton::SetGroup(const nglString& rGroupName)
 {
-  SetProperty(_T("Group"), rGroupName);
+  SetProperty("Group", rGroupName);
 }
 
 void nuiRadioButton::SetGroupManager(nuiRadioButtonGroup* pGroup)
@@ -211,9 +211,9 @@ nuiRadioButtonGroup* nuiRadioButton::GetGroupManager()
   return mpGroupManager;
 }
 
-const nglString& nuiRadioButton::GetGroup()
+nglString nuiRadioButton::GetGroup() const
 {
-  return GetProperty(_T("Group"));
+  return GetProperty("Group");
 }
 
 
