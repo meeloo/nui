@@ -12,7 +12,10 @@ nuiSize nuiToggleButton::mDefaultCheckSize = 14;
 nuiToggleButton::nuiToggleButton()
 : nuiButton()
 {
-  SetObjectClass(_T("nuiToggleButton"));
+  if (SetObjectClass("nuiToggleButton"))
+  {
+    InitAttributes();
+  }
   mDisplayAsCheckBox = false;
   mDisplayAsFrameBox = false;
   mCheckSize = mDefaultCheckSize;
@@ -22,7 +25,10 @@ nuiToggleButton::nuiToggleButton()
 nuiToggleButton::nuiToggleButton(const nglString& rText)
 : nuiButton(rText)
 {
-  SetObjectClass(_T("nuiToggleButton"));
+  if (SetObjectClass("nuiToggleButton"))
+  {
+    InitAttributes();
+  }
   mDisplayAsCheckBox = false;
   mDisplayAsFrameBox = false;
   mCheckSize = mDefaultCheckSize;
@@ -32,7 +38,10 @@ nuiToggleButton::nuiToggleButton(const nglString& rText)
 nuiToggleButton::nuiToggleButton(nuiStateDecoration* pDecoration)
 : nuiButton(pDecoration)
 {
-  SetObjectClass(_T("nuiToggleButton"));
+  if (SetObjectClass("nuiToggleButton"))
+  {
+    InitAttributes();
+  }
   mDisplayAsCheckBox = false;
   mDisplayAsFrameBox = false;
   mCheckSize = mDefaultCheckSize;
@@ -42,7 +51,10 @@ nuiToggleButton::nuiToggleButton(nuiStateDecoration* pDecoration)
 nuiToggleButton::nuiToggleButton(const nglImage& rImage)
 : nuiButton(rImage)
 {
-  SetObjectClass(_T("nuiToggleButton"));
+  if (SetObjectClass("nuiToggleButton"))
+  {
+    InitAttributes();
+  }
   mDisplayAsCheckBox = false;
   mDisplayAsFrameBox = false;
   mCheckSize = mDefaultCheckSize;
@@ -103,10 +115,20 @@ bool nuiToggleButton::Draw(nuiDrawContext* pContext)
     pContext->ResetState();
 
     if (!mPressed)
-      SetStrokeColor(pContext, eNormalButtonBg);
+    {
+      if (HasProperty("NormalBg"))
+        pContext->SetStrokeColor(nuiColor(GetProperty("NormalBg")));
+      else
+        SetStrokeColor(pContext, eNormalButtonBg);
+    }
     else
-      SetStrokeColor(pContext, eSelectedButtonBg);
-    
+    {
+      if (HasProperty("SelectedBg"))
+        pContext->SetStrokeColor(nuiColor(GetProperty("SelectedBg")));
+      else
+        SetStrokeColor(pContext, eSelectedButtonBg);
+    }
+
     nuiRect r(mRect.Size());
     pContext->DrawRect(r, eStrokeShape);
         
