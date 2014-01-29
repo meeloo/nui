@@ -1778,7 +1778,9 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
   
   nuiWidget::SetRect(rRect);
   nuiRect rect(mRect.Size());
-  rect.Move(0, GetStatusBarSize());
+  float barsize = GetStatusBarSize();
+  rect.SetHeight(rect.GetHeight() -  barsize);
+  rect.Move(0, barsize);
 
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
