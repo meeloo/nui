@@ -908,8 +908,8 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
 
 
   bool NeedTranslateHack = pArray->IsShape() || ((mode == GL_POINTS || mode == GL_LINES || mode == GL_LINE_LOOP || mode == GL_LINE_STRIP) && !pArray->Is3DMesh());
-  float hackX;
-  float hackY;
+  float hackX = 0;
+  float hackY = 0;
   if (NeedTranslateHack)
   {
     //    const float ratio=0.5f;

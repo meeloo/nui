@@ -204,24 +204,28 @@ nuiFontDesc::nuiFontDesc(const nglPath& rPath, int32 Face)
   
   error = FT_New_Face(gFTLibrary, rPath.GetChars(), Face, &pFace);
 
-  if (error)
-  {
-    nglIStream* pStream = rPath.OpenRead();
-    
-    if (!pStream)
-    {
-      NGL_LOG("font", NGL_LOG_ERROR, "Error Scanning font '%s' face %d\n", rPath.GetChars(), Face);
-      return;
-    }
-    
-    uint32 size = pStream->Available();
-    pBuffer = new FT_Byte[size];
-    pStream->ReadUInt8(pBuffer, size);
-    delete pStream;
-    
-    error = FT_New_Memory_Face(gFTLibrary, pBuffer, size, Face, &pFace);
-  }
-  
+//  if (error)
+//  {
+//    nglIStream* pStream = rPath.OpenRead();
+//    
+//    if (!pStream)
+//    {
+//      NGL_LOG("font", NGL_LOG_ERROR, "Error Scanning font '%s' face %d\n", rPath.GetChars(), Face);
+//      return;
+//    }
+//    
+//    uint32 size = pStream->Available();
+//    pBuffer = new FT_Byte[size];
+//    pStream->ReadUInt8(pBuffer, size);
+//    delete pStream;
+//    
+//    error = FT_New_Memory_Face(gFTLibrary, pBuffer, size, Face, &pFace);
+//    if (!error)
+//    {
+//      printf("HOLY SHIT IT WORKED!");
+//    }
+//  }
+
   if (error || pFace->num_faces <= Face)
   {
     if (!Face)
@@ -1918,7 +1922,7 @@ void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLoc
   int OffsetX = mCurrentX;
   int OffsetY = mCurrentY;
 
-  if (!FindNextGlyphLocation(bmp.Width + 1, bmp.Height + 1, OffsetX, OffsetY))
+  if (!FindNextGlyphLocation(bmp.Width + 4, bmp.Height + 4, OffsetX, OffsetY))
   {
     mCurrentTexture++;
     nuiTexture *texture = AllocateTexture(MAX(TEXTURE_SIZE, 2 * POT(MAX(bmp.Width, bmp.Height))));
@@ -1933,7 +1937,7 @@ void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLoc
 
   nuiTexture *pCurrentTexture = mTextures[mCurrentTexture];
 
-  rGlyphLocation = GlyphLocation (OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height, mCurrentTexture);
+  rGlyphLocation = GlyphLocation (OffsetX + 2, OffsetY + 2, bmp.Width, bmp.Height, mCurrentTexture);
   mGlyphLocationLookupTable.insert(std::make_pair(Index, rGlyphLocation));
 
   //printf("Glyph: %d %d (%d,%d) [%d * %d]\n", Index, (int)mGlyphLocationLookupTable.size(), OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height);
@@ -1941,7 +1945,7 @@ void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLoc
   CopyBitmapToTexture(bmp, pCurrentTexture, OffsetX + 1, OffsetY + 1);
 
   mCurrentX = OffsetX;
-  mCurrentY = OffsetY + bmp.Height + 2;
+  mCurrentY = OffsetY + bmp.Height + 4;
 }
 
 void nuiFontBase::GetCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLocation)
