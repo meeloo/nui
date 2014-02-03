@@ -43,7 +43,7 @@ public:
     NGL_ASSERT(mpQueue != NULL);
     while (!mDone)
     {
-      nuiTask* pTask = mpQueue->Get(1);
+      nuiTask* pTask = mpQueue->Get(10000);
       if (pTask)
       {
         pTask->Run();
