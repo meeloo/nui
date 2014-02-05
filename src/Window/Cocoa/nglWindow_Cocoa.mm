@@ -247,6 +247,7 @@ float nuiGetInvScaleFactor()
   NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
   
   oglContext = [[NSOpenGLContext alloc] initWithFormat: format shareContext: contextToShare];
+  [format release];
   GLint v = 1;
   [oglContext setValues:&v forParameter:NSOpenGLCPSwapInterval];
   [oglContext setView:self];

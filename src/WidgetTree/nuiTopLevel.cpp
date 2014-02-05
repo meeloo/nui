@@ -325,6 +325,7 @@ void nuiTopLevel::AdviseObjectDeath(nuiWidgetPtr pWidget)
   if (mpWatchedWidget == pWidget)
     mpWatchedWidget = NULL;
   
+  pWidget->StopAutoDraw();
   mHoveredWidgets.erase(pWidget);
 
   nuiGrabMap::iterator it2 = mpGrab.begin();
@@ -334,7 +335,6 @@ void nuiTopLevel::AdviseObjectDeath(nuiWidgetPtr pWidget)
       it2->second = NULL;
     ++it2;
   }
-  
   if (mpFocus == pWidget)
   {
     mpFocus = NULL;

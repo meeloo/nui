@@ -695,6 +695,7 @@ protected:
   bool mCanRespectConstraint: 1;
   bool mInSetRect: 1;
   bool mAutoClip: 1;
+  bool mAutoDraw: 1;
   bool mFixedAspectRatio: 1;
 
 

@@ -138,6 +138,7 @@ void nuiWidget::InitDefaultValues()
   mpLayoutAnimation = NULL;
   mFixedAspectRatio = false;
   mAutoClip = true;
+  mAutoDraw = false;
 }
 
 
@@ -619,6 +620,7 @@ nuiWidget::~nuiWidget()
   }
 #endif
   
+  StopAutoDraw();
   ClearAnimations();
 
   nuiTopLevel* pRoot = GetTopLevel();
@@ -3617,7 +3619,9 @@ nuiWidgetPtr nuiWidget::Find(const nglString& rName)
 void nuiWidget::StartAutoDraw()
 {
   CheckValid();
-  mGenericWidgetSink.Connect(nuiAnimation::AcquireTimer()->Tick, &nuiWidget::Animate);
+  if (!mAutoDraw)
+    mGenericWidgetSink.Connect(nuiAnimation::AcquireTimer()->Tick, &nuiWidget::Animate);
+  mAutoDraw = true;
   DebugRefreshInfo();
 }
 
@@ -3637,8 +3641,13 @@ bool nuiWidget::GetAutoDrawAnimateLayout() const
 void nuiWidget::StopAutoDraw()
 {
   CheckValid();
-  mGenericWidgetSink.DisconnectSource(nuiAnimation::GetTimer()->Tick);
-  nuiAnimation::ReleaseTimer();
+  nuiTimer* pTimer = nuiAnimation::GetTimer();
+  if (pTimer && mAutoDraw)
+  {
+    mGenericWidgetSink.DisconnectSource(pTimer->Tick);
+    nuiAnimation::ReleaseTimer();
+  }
+  mAutoDraw = false;
   DebugRefreshInfo();
 }
 

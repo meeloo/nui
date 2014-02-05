@@ -457,7 +457,8 @@ void nuiNavigationController::_PushViewController(nuiViewController* pViewContro
   if (mViewControllers.size() >0) 
   {
     // display the "Back" button by default (can be overwritten in the display callbacks)
-    mpIn->GetNavigationBar()->SetBackNavigationItem(true);
+    if (mShowNavigationBar)
+      mpIn->GetNavigationBar()->SetBackNavigationItem(true);
     
     // if no overlay, the current view has to move out, to let the next view move in.
     if (!viewOverlay)

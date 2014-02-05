@@ -19,7 +19,7 @@ class nuiViewController : public nuiSimpleContainer
   friend class nuiNavigationController;
   
 public:
-  nuiViewController();
+  nuiViewController(bool DefaultNavigationBar = true);
   virtual ~nuiViewController();
   
   void SetTitle(const nglString& rTitle);

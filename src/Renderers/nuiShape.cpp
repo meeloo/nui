@@ -342,13 +342,13 @@ nuiRenderObject* nuiShape::Fill(float Quality)
 
 nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
 {
-  nuiOutliner* pOutliner = new nuiOutliner(this, LineWidth);
-  pOutliner->SetLineJoin(LineJoin);
-  pOutliner->SetLineCap(LineCap);
-  pOutliner->SetMiterLimit(MiterLimit);
+  nuiOutliner Outliner(this, LineWidth);
+  Outliner.SetLineJoin(LineJoin);
+  Outliner.SetLineCap(LineCap);
+  Outliner.SetMiterLimit(MiterLimit);
 
   nuiPath outline;
-  pOutliner->Tessellate(outline, 1.0);
+  Outliner.Tessellate(outline, 1.0);
 
   nuiPolyLine polyline(outline);
   nuiTessellator tesselator(&polyline);

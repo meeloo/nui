@@ -8,7 +8,7 @@
 #include "nui.h"
 
 
-nuiViewController::nuiViewController()
+nuiViewController::nuiViewController(bool DefaultNavigationBar)
 : nuiSimpleContainer()
 {
   SetObjectClass(_T("nuiViewController"));
@@ -16,7 +16,7 @@ nuiViewController::nuiViewController()
   mOverlayed = false;
   mLoaded = false;
   
-  mpBar = new nuiNavigationBar();
+  mpBar = DefaultNavigationBar ? new nuiNavigationBar() : nullptr;
 }
 
 
@@ -74,6 +74,7 @@ void nuiViewController::ViewDidDisappear()
 
 void nuiViewController::SetTitle(const nglString& rTitle)
 {
+  NGL_ASSERT(mpBar);
   mpBar->SetTitle(rTitle);
 }
 

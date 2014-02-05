@@ -484,8 +484,7 @@ nglString nuiAudioDevice_CoreAudio::GetChannelName(bool IsInput, int32 index) co
   OSStatus error = AudioDeviceGetPropertyInfo(mDeviceID, index + 1, IsInput, kAudioDevicePropertyChannelName, &size, NULL); 
   if (!error)    
   {      
-    char* pName = new char[size];
-    pName = new char[size+1]; 
+    char* pName = new char[size+1]; 
     
     error = AudioDeviceGetProperty(mDeviceID, index + 1, IsInput, kAudioDevicePropertyChannelName, &size, pName);
     
