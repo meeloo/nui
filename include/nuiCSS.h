@@ -35,27 +35,51 @@ private:
   int32 mIndex1;
 };
 
-class nuiCSSRule : public nuiCSSAction
+class nuiCSSActionHolder : public nuiCSSAction
+{
+public:
+  nuiCSSActionHolder();
+  virtual ~nuiCSSActionHolder();
+  
+  void AddAction(nuiCSSAction* pAction);
+
+  virtual void ApplyAction(nuiObject* pObject);
+  
+private:
+  std::vector<nuiCSSAction*> mActions;
+};
+
+class nuiEventActionHolder : public nuiCSSActionHolder
+{
+public:
+  nuiEventActionHolder();
+  virtual ~nuiEventActionHolder();
+
+  bool Connect(nuiEventSource* pEventSource, nuiObject* pTargetObject);
+  void OnEventFired(const nuiEvent& rEvent);
+private:
+  nuiEventSink<nuiEventActionHolder> mEventSink;
+};
+
+class nuiCSSRule : public nuiCSSActionHolder
 {
 public:
   nuiCSSRule();
   virtual ~nuiCSSRule();
-  
+
   void AddMatcher(nuiWidgetMatcher* pMatcher);
-  void AddAction(nuiCSSAction* pAction);
   bool Match(nuiWidget* pWidget, uint32 MatchersMask); /// Returns true if the widget is matched by this rule
-  
+
   virtual void ApplyRule(nuiWidget* pWidget, uint32 MatchersTag);
-  
   virtual void ApplyAction(nuiObject* pObject);
-  
+
   uint32 GetMatchersTag() const;
 private:
   std::vector<nuiWidgetMatcher*> mMatchers;
-  std::vector<nuiCSSAction*> mActions;
-  
+
   uint32 mMatchersTag;
 };
+
 
 /**! Class nuiCSS
   Here are some examples of valid CSS declarations:

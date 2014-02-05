@@ -39,6 +39,7 @@ class nuiTheme;
 class nuiRectAttributeAnimation;
 
 class nuiMatrixNode;
+class nuiEventActionHolder;
 
 typedef nuiWidget* nuiWidgetPtr;
 typedef std::vector<nuiWidgetPtr> nuiWidgetList;
@@ -545,6 +546,7 @@ public:
   //@{
   nuiEventSource* GetEvent(const nglString& rName);
   void GetEvents(std::vector<nglString>& rNames);
+  bool AddEventAction(const std::string& rEventName, nuiEventActionHolder* pActions);
   //@}
 
   /** @name Decorations */
@@ -583,7 +585,8 @@ public:
 
 protected:
   std::map<nglString, nuiEventSource*, nglString::LessFunctor> mEventMap;
-  
+  std::vector<nuiEventActionHolder*> mEventActions;
+
   void AddEvent(const nglString& rName, nuiEventSource& rEvent);
   virtual void BroadcastInvalidate(nuiWidgetPtr pSender);
   virtual void BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect);

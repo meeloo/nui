@@ -2010,6 +2010,46 @@ nuiCSSAction::~nuiCSSAction()
 }
 
 
+//class nuiCSSActionHolder
+
+nuiCSSActionHolder::nuiCSSActionHolder()
+{
+}
+
+nuiCSSActionHolder::~nuiCSSActionHolder()
+{
+  {
+    std::vector<nuiCSSAction*>::iterator it = mActions.begin();
+    std::vector<nuiCSSAction*>::iterator end = mActions.end();
+    while (it != end)
+    {
+      delete *it;
+      ++it;
+    }
+  }
+}
+
+void nuiCSSActionHolder::AddAction(nuiCSSAction* pAction)
+{
+  mActions.push_back(pAction);
+}
+
+void nuiCSSActionHolder::ApplyAction(nuiObject* pObject)
+{
+  if (pObject)
+  {
+    std::vector<nuiCSSAction*>::iterator it = mActions.begin();
+    std::vector<nuiCSSAction*>::iterator end = mActions.end();
+    while (it != end)
+    {
+      nuiCSSAction* pAction = *it;
+      pAction->ApplyAction(pObject);
+      ++it;
+    }
+  }
+}
+
+
 //class nuiCSSRule
 
 nuiCSSRule::nuiCSSRule()
@@ -2028,27 +2068,12 @@ nuiCSSRule::~nuiCSSRule()
       ++it;
     }
   }
-
-  {
-    std::vector<nuiCSSAction*>::iterator it = mActions.begin();
-    std::vector<nuiCSSAction*>::iterator end = mActions.end();
-    while (it != end)
-    {
-      delete *it;
-      ++it;
-    }
-  }
 }
 
 void nuiCSSRule::AddMatcher(nuiWidgetMatcher* pMatcher)
 {
   mMatchers.push_back(pMatcher);
   mMatchersTag |= pMatcher->GetTag();
-}
-
-void nuiCSSRule::AddAction(nuiCSSAction* pAction)
-{
-  mActions.push_back(pAction);
 }
 
 bool nuiCSSRule::Match(nuiWidget* pWidget, uint32 MatchersMask)
@@ -2074,14 +2099,7 @@ void nuiCSSRule::ApplyRule(nuiWidget* pWidget, uint32 MatchersTag)
     return;
   if (pWidget)
   {
-    std::vector<nuiCSSAction*>::iterator it = mActions.begin();
-    std::vector<nuiCSSAction*>::iterator end = mActions.end();
-    while (it != end)
-    {
-      nuiCSSAction* pAction = *it;
-      pAction->ApplyAction(pWidget);
-      ++it;
-    }
+    nuiCSSActionHolder::ApplyAction(pWidget);
   }
 }
 
@@ -2096,6 +2114,30 @@ void nuiCSSRule::ApplyAction(nuiObject* pObject)
   ApplyRule(pWidget, -1);
 }
 
+
+//class nuiEventActionHolder : public nuiCSSActionHolder
+nuiEventActionHolder::nuiEventActionHolder()
+: mEventSink(this)
+{
+}
+
+nuiEventActionHolder::~nuiEventActionHolder()
+{
+}
+
+bool nuiEventActionHolder::Connect(nuiEventSource* pEventSource, nuiObject* pTargetObject)
+{
+  NGL_ASSERT(pEventSource != nullptr);
+  NGL_ASSERT(pTargetObject != nullptr);
+  mEventSink.Connect(*pEventSource, &nuiEventActionHolder::OnEventFired, pTargetObject);
+}
+
+void nuiEventActionHolder::OnEventFired(const nuiEvent& rEvent)
+{
+  nuiObject* pTargetObject = (nuiObject*)rEvent.mpUser;
+  NGL_ASSERT(pTargetObject != nullptr);
+  ApplyAction(pTargetObject);
+}
 
 
 // class nuiCSS

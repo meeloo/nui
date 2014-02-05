@@ -649,6 +649,10 @@ nuiWidget::~nuiWidget()
     delete mpMatrixNodes;
     mpMatrixNodes = NULL;
   }
+
+  // Event Actions:
+  for (auto pAction : mEventActions)
+    delete pAction;
 }
 
 void nuiWidget::Built()
@@ -4445,6 +4449,17 @@ void nuiWidget::AddEvent(const nglString& rName, nuiEventSource& rEvent)
 {
   CheckValid();
   mEventMap[rName] = &rEvent;
+}
+
+bool nuiWidget::AddEventAction(const std::string& rEventName, nuiEventActionHolder* pActions)
+{
+  nuiEventSource* pEvent = GetEvent(rEventName);
+  if (!pEvent)
+    return false;
+
+  pActions->Connect(pEvent, this);
+  mEventActions.push_back(pActions);
+  return true;
 }
 
 void nuiWidget::UpdateLayout()
