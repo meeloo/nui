@@ -382,6 +382,11 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
     }
   }
 
+  for (const auto& eventaction : mEventActions)
+  {
+    pWidget->AddEventAction(eventaction.first, eventaction.second);
+  }
+
   if (pWidget)
     pWidget->Built();
   return pWidget;
@@ -444,5 +449,10 @@ const std::map<nglString, nglString>& nuiWidgetCreator::GetDefaultDictionary() c
 std::map<nglString, nglString>& nuiWidgetCreator::GetDefaultDictionary()
 {
   return mDefaultDictionary;
+}
+
+void nuiWidgetCreator::SetActions(const std::vector<std::pair<nglString, nuiEventActionHolder*> >& rEventActions)
+{
+  mEventActions = rEventActions;
 }
 

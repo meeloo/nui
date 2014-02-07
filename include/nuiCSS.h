@@ -56,9 +56,11 @@ public:
   virtual ~nuiEventActionHolder();
 
   bool Connect(nuiEventSource* pEventSource, nuiObject* pTargetObject);
+  void Disconnect(nuiObject* pTargetObject);
   void OnEventFired(const nuiEvent& rEvent);
 private:
   nuiEventSink<nuiEventActionHolder> mEventSink;
+  std::map<nuiObject*, std::vector<nuiEventSource*> > mBindings;
 };
 
 class nuiCSSRule : public nuiCSSActionHolder

@@ -1209,7 +1209,8 @@ public:
     nglString type;
     nglString name;
     std::map<nglString, nglString> dict;
-    
+    std::vector<std::pair<nglString, nuiEventActionHolder*> > eventactions;
+
     if (!SkipBlank())
     {
       SetError(_T("unexpected end of file"));
@@ -1426,22 +1427,97 @@ public:
           return NULL;
         }
         
-        if (Operator == _T(':')) // attribute assignment
+        if (Operator == ':') // attribute assignment
         {
           pCreator->SetAttribute(LValue, RValue, i0, i1);
         }
-        else if (Operator == _T('=')) // property assignment
+        else if (Operator == '=') // property assignment
         {
           pCreator->SetProperty(LValue, RValue);
+        }
+        else if (Operator == '{')
+        {
+          if (!GetChar()) // Eat the equal sign
+          {
+            SetError(_T("Missing event actions"));
+            return NULL;
+          }
+
+          if (!SkipBlank())
+          {
+            SetError(_T("unexpected end of file"));
+            delete pCreator;
+            return NULL;
+          }
+
+          nuiEventActionHolder* pActionHolder = new nuiEventActionHolder();
+          while (mChar != _T('}'))
+          {
+            if (!SkipBlank())
+            {
+              SetError(_T("unexpected end of file"));
+              delete pCreator;
+              return NULL;
+            }
+
+            nglString LValue;
+            nglString RValue;
+            nglChar Operator;
+            int32 i0;
+            int32 i1;
+            res = ReadAction(LValue, RValue, Operator, i0, i1);
+            if (!res)
+            {
+              SetError(_T("error while reading an assignment"));
+              delete pCreator;
+              return NULL;
+            }
+
+            if (Operator == ':' || Operator == '=') // attribute assignment
+            {
+              nuiCSSAction* pAction = new nuiCSSAction_SetAttribute(LValue, RValue, i0, i1);
+              pActionHolder->AddAction(pAction);
+            }
+            else
+            {
+              SetError(_T("recursive event action prohibited"));
+              delete pCreator;
+              return NULL;
+            }
+
+            if (!SkipBlank())
+            {
+              SetError(_T("unexpected end of file"));
+              delete pCreator;
+              return NULL;
+            }
+            
+          }
+
+          if (!GetChar()) // Eat }
+          {
+            SetError(_T("unexpected end of file"));
+            return NULL;
+          }
+
+          if (!SkipBlank())
+          {
+            SetError(_T("unexpected end of file"));
+            delete pCreator;
+            return NULL;
+          }
+          
+
+          eventactions.push_back(std::make_pair(LValue, pActionHolder));
         }
 
         if (!SkipBlank())
         {
           SetError(_T("unexpected end of file"));
           delete pCreator;
-          return NULL;        
+          return NULL;
         }
-        
+
       }
 
     }
@@ -1452,7 +1528,8 @@ public:
       delete pCreator;
       return NULL;
     }
-    
+
+    pCreator->SetActions(eventactions);
     return pCreator;
   }
   
@@ -1926,14 +2003,20 @@ public:
     }
     
     nglChar op = 0;
-    if (mChar == _T('='))
+    if (mChar == '=')
       op = mChar;
-    if (mChar == _T(':'))
+    if (mChar == ':')
       op = mChar;
-    
+    if (mChar == '{')
+    {
+      rLValue = symbol;
+      rOperator = mChar;
+      return true;
+    }
+
     if (!op)
     {
-      SetError(_T("Missing action operator ('=' or ':')"));
+      SetError(_T("Missing action operator ('=', ':') ok '{'"));
       return false;
     }
     
@@ -2129,7 +2212,19 @@ bool nuiEventActionHolder::Connect(nuiEventSource* pEventSource, nuiObject* pTar
 {
   NGL_ASSERT(pEventSource != nullptr);
   NGL_ASSERT(pTargetObject != nullptr);
+  mBindings[pTargetObject].push_back(pEventSource);
   mEventSink.Connect(*pEventSource, &nuiEventActionHolder::OnEventFired, pTargetObject);
+}
+
+void nuiEventActionHolder::Disconnect(nuiObject* pTargetObject)
+{
+  NGL_ASSERT(pTargetObject != nullptr);
+  auto it = mBindings.find(pTargetObject);
+  if (it == mBindings.end())
+    return true;
+  for (auto source : it->second)
+    mEventSink.DisconnectSource(*source);
+  mBindings.erase(it);
 }
 
 void nuiEventActionHolder::OnEventFired(const nuiEvent& rEvent)

@@ -546,7 +546,7 @@ public:
   //@{
   nuiEventSource* GetEvent(const nglString& rName);
   void GetEvents(std::vector<nglString>& rNames);
-  bool AddEventAction(const std::string& rEventName, nuiEventActionHolder* pActions);
+  bool AddEventAction(const nglString& rEventName, nuiEventActionHolder* pActions);
   //@}
 
   /** @name Decorations */

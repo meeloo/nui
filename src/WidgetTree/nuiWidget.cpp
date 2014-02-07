@@ -652,7 +652,7 @@ nuiWidget::~nuiWidget()
 
   // Event Actions:
   for (auto pAction : mEventActions)
-    delete pAction;
+    pAction->Disconnect(this);
 }
 
 void nuiWidget::Built()
@@ -4451,7 +4451,7 @@ void nuiWidget::AddEvent(const nglString& rName, nuiEventSource& rEvent)
   mEventMap[rName] = &rEvent;
 }
 
-bool nuiWidget::AddEventAction(const std::string& rEventName, nuiEventActionHolder* pActions)
+bool nuiWidget::AddEventAction(const nglString& rEventName, nuiEventActionHolder* pActions)
 {
   nuiEventSource* pEvent = GetEvent(rEventName);
   if (!pEvent)
