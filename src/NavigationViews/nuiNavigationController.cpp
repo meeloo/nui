@@ -105,7 +105,7 @@ void nuiNavigationController::InitAttributes()
   AddAttribute(new nuiAttribute<nuiSize>
                (nglString(_T(".AnimPosition")), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiNavigationController::GetAnimPositon), 
-                nuiMakeDelegate(this, &nuiNavigationController::SetAnimPosition)));  
+                nuiMakeDelegate(this, &nuiNavigationController::SetAnimPosition)));
 }
 
 
@@ -322,7 +322,7 @@ bool nuiNavigationController::SetRect(const nuiRect& rRect)
   nuiWidget::SetRect(rRect);
   
   nuiRect rect;
-  rect.Set(mAnimPosition, rRect.Top(), rRect.GetWidth(), rRect.GetHeight());
+  rect.Set(mAnimPosition, 0.0, rRect.GetWidth(), rRect.GetHeight());
   if (mpIn)
   {
     float offset = 0;
@@ -337,10 +337,10 @@ bool nuiNavigationController::SetRect(const nuiRect& rRect)
       if (!pBar->GetTranslucent())
         offset = pBar->GetRect().GetHeight();
     }
-    
-    rect.SetHeight(rect.GetHeight() - offset);
-    rect.Move(0, offset);
-    mpIn->SetLayout(rect);
+    nuiRect r(rect);
+    r.SetHeight(rect.GetHeight() - offset);
+    r.Move(0, offset);
+    mpIn->SetLayout(r);
     
   }
   
@@ -358,14 +358,15 @@ bool nuiNavigationController::SetRect(const nuiRect& rRect)
         offset = pBar->GetRect().GetHeight();
     }
 
+    nuiRect r(rect);
     if (mPushed)
-      rect.Set(mAnimPosition - rRect.GetWidth(), rRect.Top(), rRect.GetWidth(), rRect.GetHeight());
+      r.Set(mAnimPosition - r.GetWidth(), 0.0, r.GetWidth(), r.GetHeight());
     else
-      rect.Set(mAnimPosition + rRect.GetWidth(), rRect.Top(), rRect.GetWidth(), rRect.GetHeight());
+      r.Set(mAnimPosition + r.GetWidth(), 0.0, r.GetWidth(), r.GetHeight());
     
-    rect.SetHeight(rect.GetHeight() - offset);
-    rect.Move(0, offset);
-    mpOut->SetLayout(rect);
+    r.SetHeight(r.GetHeight() - offset);
+    r.Move(0, offset);
+    mpOut->SetLayout(r);
     
   }
   

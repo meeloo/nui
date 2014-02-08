@@ -173,7 +173,7 @@ private:
 };
 
 /// This is a helper class that implements a simple event source with a fixed type.
-template <int eventtype> class nuiSimpleEventSource : public nuiEventSource
+template <int eventtype = 0> class nuiSimpleEventSource : public nuiEventSource
 {
 public:
   nuiSimpleEventSource()
@@ -210,5 +210,59 @@ private:
     // No way to implement this correctly. 
   }
 };
+
+class nuiRelayEventSource : public nuiSimpleEventSource<0>
+{
+public:
+  nuiRelayEventSource()
+  : mEventSink(this)
+  {
+  }
+
+  virtual ~nuiRelayEventSource()
+  {
+  }
+
+  virtual bool operator() ()
+  {
+    if (IsEnabled())
+    {
+      nuiEvent e(0);
+      return SendEvent(e);
+    }
+
+    return false;
+  }
+
+  virtual bool operator() (const nuiEvent& rEvent)
+  {
+    if (IsEnabled())
+    {
+      return SendEvent(rEvent);
+    }
+    return false;
+  }
+
+  void Connect(nuiEventSource& rSource, void* pUser = NULL)
+  {
+    mEventSink.Connect(rSource, &nuiRelayEventSource::RelayEvent, pUser);
+  }
+
+private:
+  nuiRelayEventSource(const nuiRelayEventSource& rSource)
+  : mEventSink(this)
+  {
+    // No way to implement this correctly.
+  }
+
+  void RelayEvent(const nuiEvent& rEvent)
+  {
+    (*this)(rEvent);
+  }
+
+  nuiEventSink<nuiRelayEventSource> mEventSink;
+};
+
+
 
 #endif // __nuiEvent_h__
