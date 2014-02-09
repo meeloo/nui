@@ -413,11 +413,11 @@ bool nuiContainer::DispatchMouseClick(const nglMouseInfo& rInfo)
   CheckValid();
   nuiAutoRef;
   if (!mMouseEventEnabled || mTrashed)
-    return false;
+  return false;
 
   bool hasgrab = HasGrab(rInfo.TouchId);
   if (IsDisabled() && !hasgrab)
-    return false;
+  return false;
 
   nglMouseInfo info(rInfo);
   GlobalToLocal(info.X, info.Y);
@@ -428,11 +428,11 @@ bool nuiContainer::DispatchMouseClick(const nglMouseInfo& rInfo)
     Grab();
     return true;
   }
-  
+
   if (IsInsideFromRoot(rInfo.X, rInfo.Y) || hasgrab)
   {
     if (!hasgrab)
-    {      
+    {
       IteratorPtr pIt;
       for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
       {
@@ -463,11 +463,61 @@ bool nuiContainer::DispatchMouseClick(const nglMouseInfo& rInfo)
     ret |= Clicked(info);
     ret = ret | (!mClickThru);
     if (ret)
-      Grab();
+    Grab();
 
     return ret;
   }
   return false;
+}
+
+bool nuiContainer::DispatchMouseCanceled(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  nuiAutoRef;
+  if (!mMouseEventEnabled || mTrashed)
+    return false;
+
+  bool hasgrab = HasGrab(rInfo.TouchId);
+
+  nglMouseInfo info(rInfo);
+  GlobalToLocal(info.X, info.Y);
+
+  // Get a chance to preempt the mouse event before the children get it:
+  if (PreClickCanceled(info))
+  {
+    return true;
+  }
+  
+  if (!hasgrab)
+  {      
+    IteratorPtr pIt;
+    for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      if (pItem)
+      {
+        if (!HasGrab(rInfo.TouchId))
+        {
+          if (pItem->DispatchMouseCanceled(rInfo))
+          {
+            delete pIt;
+            return true;
+          }
+        }
+      }
+    }
+    delete pIt;
+  }
+
+  GlobalToLocal(info.X, info.Y);
+  if (PreClickCanceled(info))
+  {
+    return true;
+  }
+  bool ret = MouseCanceled(info);
+  ret |= ClickCanceled(info);
+  ret = ret | (!mClickThru);
+  return ret;
 }
 
 bool nuiContainer::DispatchMouseUnclick(const nglMouseInfo& rInfo)

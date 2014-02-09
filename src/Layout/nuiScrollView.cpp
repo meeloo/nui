@@ -47,7 +47,7 @@ void nuiScrollView::InitAttributes()
   AddAttribute(new nuiAttribute<float>(_T("VPos"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetYPos), nuiMakeDelegate(this, &nuiScrollView::SetYPos)));  
 
   AddAttribute(new nuiAttribute<float>(_T("HOffset"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetXOffset), nuiMakeDelegate(this, &nuiScrollView::SetXOffset)));
-  AddAttribute(new nuiAttribute<float>(_T("VOffset"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetYOffset), nuiMakeDelegate(this, &nuiScrollView::SetYOffset)));  
+  AddAttribute(new nuiAttribute<float>(_T("VOffset"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetYOffset), nuiMakeDelegate(this, &nuiScrollView::SetYOffset)));
 }
 
 void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVerticalScrollBar, bool Horizontal, bool Vertical)
@@ -1183,7 +1183,6 @@ void nuiScrollView::ActivateMobileMode()
   mpHorizontal->SetForegroundDecoName(_T("nuiDefaultDecorationMobileScrollbarHandle"));
   mpVertical->SetForegroundDecoName(_T("nuiDefaultDecorationMobileScrollbarHandle"));
   SetBarSize(13);
-  
 }
 
 void nuiScrollView::ActivateHotRect(bool hset, bool vset)
@@ -1207,3 +1206,59 @@ bool nuiScrollView::IsVerticalHotRectActive() const
   return mVerticalHotRectActive;
 }
 
+bool nuiScrollView::PreMouseClicked(const nglMouseInfo& rInfo)
+{
+  if (!mDragEnabled)
+    return false;
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+  {
+    mTouch = rInfo;
+    mTouched = true;
+  }
+  return false;
+}
+
+bool nuiScrollView::PreMouseUnclicked(const nglMouseInfo& rInfo)
+{
+  if (!mDragEnabled)
+    return false;
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+  {
+    mTouched = false;
+  }
+  return false;
+}
+
+bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
+{
+  if (!mDragEnabled)
+    return false;
+
+  if (mTouched)
+  {
+    float x = mTouch.X - rInfo.X;
+    float y = mTouch.Y - rInfo.Y;
+
+    float dist = sqrt(x * x + y * y);
+
+    if (dist > 5)
+    {
+      NGL_OUT("nuiScrollView Preempting mouse from existing grabber!\n");
+      NGL_ASSERT(GetTopLevel());
+      nuiWidgetPtr pGrab = GetTopLevel()->GetGrab();
+      if (!pGrab)
+      {
+        NGL_OUT("No grabber found, continue as if nothing hapened\n");
+        return false;
+      }
+
+      NGL_OUT("Grabber found ungrab everything\n");
+      DispatchMouseCanceled(mTouch);
+      nuiSimpleContainer::MouseClicked(mTouch);
+      Grab();
+      mTouched = false;
+      return true;
+    }
+  }
+  return false;
+}

@@ -385,7 +385,7 @@ const nglChar* gpWindowErrorTable[] =
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
 
-    NGL_TOUCHES_OUT("[%p][%d] Moved X:%d Y:%d\n", pTouch, info.TouchId, x, y);
+    //NGL_TOUCHES_OUT("[%p][%d] Moved X:%d Y:%d\n", pTouch, info.TouchId, x, y);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))

@@ -158,8 +158,13 @@ private:
   nuiFadeOutWidgetAnim* mpHideAnimV;
   nuiTimer* mpHideTimer;
   nglTime mLastTime;
-  
 
+  bool PreMouseClicked(const nglMouseInfo& rInfo);
+  bool PreMouseUnclicked(const nglMouseInfo& rInfo);
+  bool PreMouseMoved(const nglMouseInfo& rInfo);
+
+  nglMouseInfo mTouch;
+  bool mTouched;
   nuiEventSink<nuiScrollView> mSVSink;
 };
 

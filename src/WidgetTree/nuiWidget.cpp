@@ -1866,35 +1866,29 @@ bool nuiWidget::DispatchMouseCanceled(const nglMouseInfo& rInfo)
   CheckValid();
   nuiAutoRef;
   if (!mMouseEventEnabled || mTrashed)
-    return false;
+  return NULL;
 
+  bool inside = false;
+  bool res = false;
   bool hasgrab = HasGrab(rInfo.TouchId);
-  if (IsDisabled() && !hasgrab)
-    return false;
-
   float X = rInfo.X;
   float Y = rInfo.Y;
 
-  if (IsInsideFromRoot(X,Y) || hasgrab)
+  if (IsInsideFromRoot(X, Y))
   {
-    GlobalToLocal(X,Y);
-    nglMouseInfo info(rInfo);
-    info.X = X;
-    info.Y = Y;
-
-    bool res = PreClickCanceled(info);
-    if (!res)
-    {
-      res = MouseCanceled(info);
-      res |= ClickCanceled(info);
-    }
-
-    res = res | (!mClickThru);
-
-    Ungrab();
-    return res;
+    inside = true;
   }
-  return false;
+
+  GlobalToLocal(X, Y);
+  nglMouseInfo info(rInfo);
+  info.X = X;
+  info.Y = Y;
+
+  if (PreClickCanceled(info))
+    return true;
+  res = MouseMoved(info);
+  res |= ClickCanceled(info) | (!mClickThru);
+  return res;
 }
 
 nuiWidgetPtr nuiWidget::DispatchMouseMove(const nglMouseInfo& rInfo)
