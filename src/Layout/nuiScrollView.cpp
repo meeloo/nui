@@ -1243,16 +1243,16 @@ bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
 
     if (dist > 5)
     {
-      NGL_OUT("nuiScrollView Preempting mouse from existing grabber!\n");
+      //NGL_OUT("nuiScrollView Preempting mouse from existing grabber!\n");
       NGL_ASSERT(GetTopLevel());
       nuiWidgetPtr pGrab = GetTopLevel()->GetGrab();
       if (!pGrab)
       {
-        NGL_OUT("No grabber found, continue as if nothing hapened\n");
+        //NGL_OUT("No grabber found, continue as if nothing hapened\n");
         return false;
       }
 
-      NGL_OUT("Grabber found ungrab everything\n");
+      //NGL_OUT("Grabber found ungrab everything\n");
       DispatchMouseCanceled(mTouch);
       nuiSimpleContainer::MouseClicked(mTouch);
       Grab();
