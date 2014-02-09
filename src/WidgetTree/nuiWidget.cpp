@@ -1817,7 +1817,10 @@ bool nuiWidget::DispatchMouseClick(const nglMouseInfo& rInfo)
       res |= Clicked(info);
     }
 
-    return res | (!mClickThru);
+    res = res | (!mClickThru);
+    if (res)
+      Grab();
+    return res;
   }
   return false;
 }
@@ -1850,7 +1853,10 @@ bool nuiWidget::DispatchMouseUnclick(const nglMouseInfo& rInfo)
       res |= Unclicked(info);
     }
 
-    return res | (!mClickThru);
+    res = res | (!mClickThru);
+    if (res)
+      Ungrab();
+    return res;
   }
   return false;
 }

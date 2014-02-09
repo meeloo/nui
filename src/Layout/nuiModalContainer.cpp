@@ -85,11 +85,16 @@ bool nuiModalContainer::DispatchMouseClick(const nglMouseInfo& rInfo)
     info.X = X;
     info.Y = Y;
     if (PreClicked(rInfo))
+    {
+      Grab();
       return true;
+    }
     bool ret = MouseClicked(rInfo);
     ret |= Clicked(rInfo);
-    
-    return mIsModal || ret;
+    ret = mIsModal || ret;
+    if (ret)
+      Grab();
+    return ret;
   }
   return false;
 }
@@ -130,8 +135,12 @@ bool nuiModalContainer::DispatchMouseUnclick(const nglMouseInfo& rInfo)
   
   if (mWantKeyboardFocus && (rInfo.Buttons == nglMouseInfo::ButtonLeft || rInfo.Buttons == nglMouseInfo::ButtonRight))
     Focus();
-  
-  return mIsModal || res;
+
+  res = mIsModal || res;
+
+  if (res)
+    Ungrab();
+  return res;
 }
 
 nuiWidgetPtr nuiModalContainer::DispatchMouseMove(const nglMouseInfo& rInfo)
