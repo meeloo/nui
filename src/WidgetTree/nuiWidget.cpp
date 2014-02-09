@@ -1883,7 +1883,10 @@ bool nuiWidget::DispatchMouseCanceled(const nglMouseInfo& rInfo)
       res |= ClickCanceled(info);
     }
 
-    return res | (!mClickThru);
+    res = res | (!mClickThru);
+
+    Ungrab();
+    return res;
   }
   return false;
 }

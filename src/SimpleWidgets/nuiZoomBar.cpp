@@ -45,7 +45,6 @@ bool nuiZoomBar::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   if (Button & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
-    Grab();
     Invalidate();
     
     mThumbClicked = false;
@@ -144,7 +143,6 @@ bool nuiZoomBar::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button
     mPageDownClicked = false;
     mRightSideClicked = false;
     mLeftSideClicked = false;
-    Ungrab();
     
     Invalidate();
     return true;

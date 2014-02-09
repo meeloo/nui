@@ -61,8 +61,7 @@ bool nuiSplitterHandle::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
 
     mClickPos = (mpParent->mOrientation == nuiVertical)? X : Y;
     mClicked = true;
-    Grab();
-    
+
     Invalidate();
     return true;
   }
@@ -77,7 +76,6 @@ bool nuiSplitterHandle::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags
     if (mClicked)
     {
       mClicked = false;
-      Ungrab();
 
       SetMouseCursor(eCursorArrow);
 

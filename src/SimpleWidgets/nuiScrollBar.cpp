@@ -215,7 +215,6 @@ bool nuiScrollBar::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butt
   if (Button & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
-    Grab();
     Invalidate();
 
     mThumbClicked = false;
@@ -301,7 +300,6 @@ bool nuiScrollBar::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Bu
     mThumbClicked = false;
     mPageUpClicked = false;
     mPageDownClicked = false;
-    Ungrab();
    
     Invalidate();
     return true;

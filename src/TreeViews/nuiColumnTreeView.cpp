@@ -566,7 +566,6 @@ bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
         if (r.IsInside(X,Y))
         {
           mActivateOnUnclick = true;
-          Grab();
           return true;
         }
       }
@@ -633,7 +632,6 @@ bool nuiColumnTreeView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags
   if (mActivateOnUnclick)
   {
     mActivateOnUnclick = false;
-    Ungrab();
     Activated();
   }
 

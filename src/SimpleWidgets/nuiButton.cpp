@@ -299,7 +299,6 @@ bool nuiButton::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 //    printf("clicked\n");
     mClicked = true;
     SetPressed(true);
-    Grab();
     Invalidate();
     
     if (mAutoRepeat)
@@ -328,7 +327,6 @@ bool nuiButton::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   {
 //    printf("was clicked\n");
     mClicked = false;
-    Ungrab();
     SetPressed(false);
     Invalidate();
     if (!mAutoRepeat)

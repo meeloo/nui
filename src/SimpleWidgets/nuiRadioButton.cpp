@@ -116,7 +116,6 @@ bool nuiRadioButton::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Bu
       SetPressed(!mWasPressed);
     else
       SetPressed(true);
-    Grab();
     Invalidate();
     return true;
   }
@@ -128,7 +127,6 @@ bool nuiRadioButton::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags 
   if ( (Button & nglMouseInfo::ButtonLeft) && mClicked)
   {
     mClicked = false;
-    Ungrab();
     if (IsInsideFromSelf(X,Y, GetActivationOffset()))
     {
       if (mCanToggle)

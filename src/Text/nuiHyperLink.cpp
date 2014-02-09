@@ -54,7 +54,6 @@ bool nuiHyperLink::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button
   if (Button & nglMouseInfo::ButtonLeft)
   {
     mClicked++;
-    Grab();
     return true;
   }
   return false;
@@ -65,7 +64,6 @@ bool nuiHyperLink::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butt
   if (mClicked && (Button & nglMouseInfo::ButtonLeft))
   {
     mClicked--;
-    Ungrab();
     if (!Activated())
     {
       // Open url in default browser

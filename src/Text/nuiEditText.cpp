@@ -482,7 +482,6 @@ bool nuiEditText::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     {
       mStartDragging = true;
       mDragging = false;
-      Grab();
       return true;
     }
 
@@ -500,7 +499,6 @@ bool nuiEditText::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
       mSelecting = true;
     }
   }
-  Grab();
   Invalidate();
   return handled;
 }
@@ -517,7 +515,6 @@ bool nuiEditText::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
     mSelecting = false;
     handled = true;
   }
-  Ungrab();
   return handled;
 }
 

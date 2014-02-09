@@ -893,7 +893,6 @@ bool nuiHTMLView::MouseClicked(const nglMouseInfo& rInfo)
   
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
-    Grab();
     mClicked = true;
   }
   return false;
@@ -936,7 +935,6 @@ bool nuiHTMLView::MouseUnclicked(const nglMouseInfo& rInfo)
           }
         }
       }
-      Ungrab();
     }
   }
   return false;

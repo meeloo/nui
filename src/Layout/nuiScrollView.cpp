@@ -751,7 +751,6 @@ bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
   }
   else if (Button & nglMouseInfo::ButtonLeft && mDragEnabled)
   {
-    Grab();
     mLeftClick = true;
     mClickX = X;
     mClickY = Y;
@@ -786,8 +785,6 @@ bool nuiScrollView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags But
   Dragged(X, Y);
   mLeftClick = false;
 
-  Ungrab();
-  
   nglTime now;
   double elapsed = now.GetValue() - mLastTime.GetValue();
   if (elapsed > 0.05)

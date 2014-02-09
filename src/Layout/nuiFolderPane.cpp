@@ -72,7 +72,6 @@ bool nuiFolderPane::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags B
 {
   if (mClicked && Button & nglMouseInfo::ButtonLeft)
   {
-    Ungrab();
     nuiRect rect = GetTitle()->GetRect();
     rect.SetSize (GetRect().GetWidth(), rect.GetHeight());
     rect.MoveTo (0, rect.Top());
@@ -103,7 +102,6 @@ bool nuiFolderPane::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags But
     if (rect.IsInside (X, Y))
     {
       mClicked = true;
-      Grab();
     }
     return true;
   }

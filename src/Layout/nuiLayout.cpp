@@ -1062,7 +1062,6 @@ bool nuiLayout::MouseClicked(const nglMouseInfo& rInfo)
       mMovingAnchorPos[0] = ComputeAnchorPosition(mMovingAnchor[0], 0, 0, mRect.GetWidth());
     if (!mMovingAnchor[1].IsNull())
       mMovingAnchorPos[1] = ComputeAnchorPosition(mMovingAnchor[1], 1, 0, mRect.GetHeight());
-    Grab();
     return true;
   }
   return false;
@@ -1072,8 +1071,6 @@ bool nuiLayout::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
-    Ungrab();
-
     UpdateLayout();
     return true;
   }

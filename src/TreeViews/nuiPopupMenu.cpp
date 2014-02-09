@@ -63,7 +63,6 @@ mpOldFocused(NULL)
   //mpOldFocused = pTopLevel->GetFocus();
   SetWantKeyboardFocus(true);
   Focus();
-  //  Grab();
 }
 
 nuiPopupMenu::~nuiPopupMenu()
@@ -87,7 +86,6 @@ nuiPopupMenu::~nuiPopupMenu()
   {
     mpOldFocused->Focus();
   }
-  //  Ungrab();
 }
 
 

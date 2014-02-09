@@ -363,7 +363,6 @@ bool nuiWindow::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 
     Invalidate();
 
-    Grab();
     return true;
   }
 
@@ -386,7 +385,6 @@ bool nuiWindow::MouseUnclicked (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button
 
     SetAlpha(1.0f);
     mMoving = eNoMove;
-    Ungrab();
     return true;
   }
 

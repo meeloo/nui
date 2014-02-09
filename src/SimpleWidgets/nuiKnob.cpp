@@ -254,7 +254,6 @@ bool nuiKnob::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   else if (Button & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
-    Grab();
     Invalidate();
     mClickValue = mRange.GetUnitValue();
     
@@ -301,8 +300,6 @@ bool nuiKnob::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   {
     mClicked = false;
 
-    Ungrab();
-    
     Invalidate();
     return true;
   }

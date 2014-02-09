@@ -141,7 +141,6 @@ bool nuiSwipeGestureRecognizer::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo:
   mStartX = X;
   mStartY = Y;
 
-  Grab();
   return false;
 }
 
@@ -158,8 +157,7 @@ bool nuiSwipeGestureRecognizer::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInf
   mInitiatedTime = 0;
   mStartX = 0;
   mStartY = 0;
-  Ungrab();
-  
+
   return false;
 }
 
@@ -380,7 +378,6 @@ bool nuiPadGestureRecognizer::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::F
   mLastX = X;
   mLastY = Y;
   
-  Grab();
   return false;
 }
 
@@ -396,7 +393,6 @@ bool nuiPadGestureRecognizer::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo:
   mLastX = 0;
   mLastY = 0;
 
-  Ungrab();
   return false;
 }
 

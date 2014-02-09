@@ -179,7 +179,6 @@ bool nuiToggleButton::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags B
     mClicked = true;
     mWasPressed = IsPressed();
     SetPressed(!mWasPressed);
-    Grab();
     Invalidate();
     return true;
   }
@@ -191,7 +190,6 @@ bool nuiToggleButton::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags
   if ( (Button & nglMouseInfo::ButtonLeft) && mClicked)
   {
     mClicked = false;
-    Ungrab();
 
     if (IsInsideFromSelf(X,Y, GetActivationOffset()))
     {

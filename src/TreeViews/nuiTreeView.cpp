@@ -762,7 +762,6 @@ bool nuiTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
       else
       {
         mClicked = true;
-        Grab();
       }
 
       Invalidate();
@@ -776,8 +775,7 @@ bool nuiTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
       if (IsMultiSelectable())
       {
         mClicked = true;
-        Grab();
-        
+
         Invalidate();
       }
     }
@@ -800,7 +798,6 @@ bool nuiTreeView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
       SelectionDone();
     }
     
-    Ungrab();
     Invalidate();
     return true;
   }
@@ -844,7 +841,6 @@ bool nuiTreeView::MouseMoved(nuiSize X, nuiSize Y)
           mDragging = false;
           mClicked = false;
           mDrawMarkee = false;
-          Ungrab();
           Invalidate();
         }
         

@@ -205,7 +205,6 @@ bool nuiSlider::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     mClicked = true;
     mThumbClicked = true;
     mInteractiveValueChanged = true;
-    Grab();
     Invalidate();
     mClickValue = mRange.GetValue();
     
@@ -254,7 +253,6 @@ bool nuiSlider::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
     mClicked = false;
     
     mThumbClicked = false;
-    Ungrab();
     
     Invalidate();
     return true;

@@ -138,7 +138,6 @@ bool nuiRectView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
       mClicked = true;
       mMouseX = X;
       mMouseY = Y;
-      Grab();
       Invalidate();
       
       return true;
@@ -153,7 +152,6 @@ bool nuiRectView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
   if (Button & nglMouseInfo::ButtonLeft)
   {
     mClicked = false;
-    Ungrab();
     InvalidateLayout();
     RectChanged(mCurrentRect);
     return true;

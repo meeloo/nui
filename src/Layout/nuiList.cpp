@@ -684,7 +684,6 @@ bool nuiList::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
         }
         mpLastItem = pItem; 
 
-        Grab();
         mpGrabedItem = pItem;
         mClicked = true;
       }
@@ -703,7 +702,6 @@ bool nuiList::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   if (mClicked && (Button & nglMouseInfo::ButtonLeft))
   {
     mpGrabedItem = NULL;
-    Ungrab();
   }
   
   mClicked = false;

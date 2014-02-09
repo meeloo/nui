@@ -110,7 +110,6 @@ bool nuiSpinnerLabel::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags B
     }
     else
     {
-      Grab();
       mClicked = true;
       mMoved = false;
 
@@ -217,8 +216,6 @@ bool nuiSpinnerLabel::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags
   if (mClicked)
   {
     mClicked = false;
-
-    Ungrab();
 
     nuiEvent rEvent;
     if (mMoved)
