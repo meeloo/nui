@@ -694,7 +694,6 @@ bool nuiMatrixView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags But
   mClicked = false;
   mCanChange = false;
   mClickedItem = NULL;
-  Ungrab();
   
   // send event if a changed occured
   if (mChanged)

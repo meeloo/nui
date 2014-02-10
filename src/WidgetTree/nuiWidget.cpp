@@ -1865,8 +1865,8 @@ bool nuiWidget::DispatchMouseCanceled(const nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
-  if (!mMouseEventEnabled || mTrashed)
-  return NULL;
+  if (mTrashed)
+    return NULL;
 
   bool inside = false;
   bool res = false;
@@ -1884,8 +1884,7 @@ bool nuiWidget::DispatchMouseCanceled(const nglMouseInfo& rInfo)
   info.X = X;
   info.Y = Y;
 
-  if (PreClickCanceled(info))
-    return true;
+  PreClickCanceled(info);
   res = MouseMoved(info);
   res |= ClickCanceled(info) | (!mClickThru);
   return res;
@@ -1963,10 +1962,18 @@ bool nuiWidget::HasGrab()
   CheckValid();
   return DispatchHasGrab(this);
 }
+
 bool nuiWidget::HasGrab(nglTouchId TouchId)
 {
   CheckValid();
   return DispatchHasGrab(this, TouchId);
+}
+
+bool nuiWidget::AcquireGrab(const nglMouseInfo& rInfo)
+{
+  nuiTopLevel* pTop = GetTopLevel();
+  NGL_ASSERT(pTop);
+  return pTop->AcquireGrab(this, rInfo);
 }
 
 bool nuiWidget::Grab()

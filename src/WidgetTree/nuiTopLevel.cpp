@@ -178,6 +178,7 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   mpInfoLabel = NULL;
 
   mpGrab.clear();
+  mpGrabAcquired.clear();
   mMouseInfo.TouchId = -1;
   mpFocus = NULL;
   mpUnderMouse = NULL;
@@ -213,6 +214,7 @@ void nuiTopLevel::Exit()
   mpToolTipLabel = NULL;
 #endif
   mpGrab.clear();
+  mpGrabAcquired.clear();
   mpFocus = NULL;
   mpUnderMouse = NULL;
   
@@ -332,9 +334,15 @@ void nuiTopLevel::AdviseObjectDeath(nuiWidgetPtr pWidget)
   while (it2 != mpGrab.end())
   {
     if (pWidget == it2->second)
+    {
       it2->second = NULL;
+      auto found = mpGrabAcquired.find(it2->first);
+      if (found != mpGrabAcquired.end())
+        mpGrabAcquired.erase(found);
+    }
     ++it2;
   }
+
   if (mpFocus == pWidget)
   {
     mpFocus = NULL;
@@ -486,8 +494,7 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget)
     return false;
   }
   
-  if (pWidget && !pWidget->AcceptsMultipleGrabs()
-///< Checks if the Widget has been grabbed by another touches
+  if (pWidget && !pWidget->AcceptsMultipleGrabs() ///< Checks if the Widget has been grabbed by another touches
       && HasGrab(pWidget))
   {
 
@@ -514,6 +521,8 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget)
 
   pGrab = pWidget;
   mpGrab[touchId] = pWidget;
+  mpGrabAcquired[touchId] = false;
+
   if (pGrab)
     pGrab->MouseGrabbed(touchId);
 
@@ -579,6 +588,32 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CancelGrab()\n")) );
     }
   }
   mpGrab.clear();
+  mpGrabAcquired.clear();
+  return true;
+}
+
+bool nuiTopLevel::AcquireGrab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
+{
+  NGL_ASSERT(pWidget);
+
+  auto acquired = mpGrabAcquired.find(rInfo.TouchId);
+  if (acquired != mpGrabAcquired.end() && acquired->second == true)
+  {
+    //NGL_OUT("Refused Grab requested by %s %s\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars());
+    return false;
+  }
+
+  nuiWidgetPtr oldgrab = GetGrab(rInfo.TouchId);
+  if (oldgrab)
+  {
+    oldgrab->MouseCanceled(rInfo);
+  }
+
+  NGL_OUT("Accepted Grab requested by %s %s\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars());
+  pWidget->DispatchMouseCanceled(rInfo);
+  pWidget->MouseClicked(rInfo);
+  pWidget->Grab();
+  mpGrabAcquired[rInfo.TouchId] = true;
   return true;
 }
 
@@ -1188,8 +1223,13 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
     auto i = mMouseStates.find(rInfo.TouchId);
     if (i != mMouseStates.end())
       mMouseStates.erase(i);
+
     //NGL_OUT("Removed %x\n", rInfo.TouchId);
   }
+
+  auto ii = mpGrabAcquired.find(rInfo.TouchId);
+  if (ii != mpGrabAcquired.end())
+  mpGrabAcquired.erase(ii);
 
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;

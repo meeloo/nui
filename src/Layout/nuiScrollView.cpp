@@ -159,7 +159,7 @@ void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVert
 
 bool nuiScrollView::GetEnableHorizontalScroll() const
 {
-  return (mpHorizontal || !mForceNoHorizontal);
+  return (mpHorizontal && !mForceNoHorizontal);
 }
 
 void nuiScrollView::SetEnableHorizontalScroll(bool set)
@@ -171,7 +171,7 @@ void nuiScrollView::SetEnableHorizontalScroll(bool set)
 
 bool nuiScrollView::GetEnableVerticalScroll() const
 {
-  return (mpVertical || !mForceNoVertical);
+  return (mpVertical && !mForceNoVertical);
 }
 
 void nuiScrollView::SetEnableVerticalScroll(bool set)
@@ -1182,7 +1182,7 @@ void nuiScrollView::ActivateMobileMode()
   
   mpHorizontal->SetForegroundDecoName(_T("nuiDefaultDecorationMobileScrollbarHandle"));
   mpVertical->SetForegroundDecoName(_T("nuiDefaultDecorationMobileScrollbarHandle"));
-  SetBarSize(13);
+  SetBarSize(6);
 }
 
 void nuiScrollView::ActivateHotRect(bool hset, bool vset)
@@ -1236,26 +1236,18 @@ bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
 
   if (mTouched)
   {
-    float x = mTouch.X - rInfo.X;
-    float y = mTouch.Y - rInfo.Y;
+    float x = 0;
+    if (GetEnableHorizontalScroll())
+      x = mTouch.X - rInfo.X;
+    float y = 0;
+    if (GetEnableVerticalScroll())
+      y = mTouch.Y - rInfo.Y;
 
     float dist = sqrt(x * x + y * y);
 
-    if (dist > 5)
+    if (dist > 5 && AcquireGrab(rInfo))
     {
       //NGL_OUT("nuiScrollView Preempting mouse from existing grabber!\n");
-      NGL_ASSERT(GetTopLevel());
-      nuiWidgetPtr pGrab = GetTopLevel()->GetGrab();
-      if (!pGrab)
-      {
-        //NGL_OUT("No grabber found, continue as if nothing hapened\n");
-        return false;
-      }
-
-      //NGL_OUT("Grabber found ungrab everything\n");
-      DispatchMouseCanceled(mTouch);
-      nuiSimpleContainer::MouseClicked(mTouch);
-      Grab();
       mTouched = false;
       return true;
     }

@@ -69,6 +69,7 @@ public:
   virtual bool Ungrab(nuiWidgetPtr pWidget); ///< Stop redirecting all mouse event to the given grab object.
   virtual nuiWidgetPtr GetGrab() const; ///< Returns the object that currently has the mouse focus.
   virtual bool CancelGrab(); ///< Cancel any current ongoing grab action and empty the grab stack.
+  bool AcquireGrab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo); ///< Try to assign the mouse/touch grab for the given mouse event to the given widget, canceling the event if necessary. If a widget already has acquired the grab it is refused and the function returns false.
 
   virtual bool SetFocus(nuiWidgetPtr pWidget); ///< Redirect all keyboard events to this object.
   virtual nuiWidgetPtr GetFocus() const; ///< Returns the object that currently has the keyboard focus.
@@ -192,6 +193,7 @@ protected:
 
   typedef std::map<nglTouchId, nuiWidgetPtr> nuiGrabMap;
   nuiGrabMap mpGrab;
+  std::map<nglTouchId, bool> mpGrabAcquired;
   bool HasGrab(nuiWidgetPtr pWidget); ///< Returns true if this \p pWidget has been grabbed by any touch
   nuiWidgetPtr GetGrab(nglTouchId touchId) const;  ///< Returns the Widget that has been grabbed by this \p touchId, NULL otherwise
   std::map<nglTouchId, nglMouseInfo> mMouseClickedEvents;

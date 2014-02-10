@@ -488,32 +488,19 @@ bool nuiContainer::DispatchMouseCanceled(const nglMouseInfo& rInfo)
     return true;
   }
   
-  if (!hasgrab)
-  {      
-    IteratorPtr pIt;
-    for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+  IteratorPtr pIt;
+  for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem)
     {
-      nuiWidgetPtr pItem = pIt->GetWidget();
-      if (pItem)
-      {
-        if (!HasGrab(rInfo.TouchId))
-        {
-          if (pItem->DispatchMouseCanceled(rInfo))
-          {
-            delete pIt;
-            return true;
-          }
-        }
-      }
+      pItem->DispatchMouseCanceled(rInfo);
     }
-    delete pIt;
   }
+  delete pIt;
 
   GlobalToLocal(info.X, info.Y);
-  if (PreClickCanceled(info))
-  {
-    return true;
-  }
+  PreClickCanceled(info);
   bool ret = MouseCanceled(info);
   ret |= ClickCanceled(info);
   ret = ret | (!mClickThru);

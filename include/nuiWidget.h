@@ -287,6 +287,8 @@ public:
   void SetMuteKeyboardFocusDispatch(bool Set); ///< A widget that mutes the keyboard focus will prevent its parent from gaining the focus.
   bool HasGrab();  ///< Ask if this widget has the mouse grab, or any touch grab
   bool HasGrab(nglTouchId TouchId);  ///< Ask if this widget has this touch grab \p TouchID.
+  bool AcquireGrab(const nglMouseInfo& rInfo); ///< Requests the grab concerning the given mouse info event, cancelling the use of this event in any currently grabbing widget. Returns if the grab was correctly acquired.
+
   bool Grab();  ///< Request the mouse grab
   bool Ungrab(); ///< Release the mouse grab
   bool HasFocus() const; ///< True if the object has the focus.
