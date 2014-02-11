@@ -594,7 +594,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CancelGrab()\n")) );
   return true;
 }
 
-bool nuiTopLevel::AcquireGrab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
+bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
 {
   NGL_ASSERT(pWidget);
 

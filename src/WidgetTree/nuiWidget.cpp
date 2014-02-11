@@ -1969,11 +1969,11 @@ bool nuiWidget::HasGrab(nglTouchId TouchId)
   return DispatchHasGrab(this, TouchId);
 }
 
-bool nuiWidget::AcquireGrab(const nglMouseInfo& rInfo)
+bool nuiWidget::StealMouseEvent(const nglMouseInfo& rInfo)
 {
   nuiTopLevel* pTop = GetTopLevel();
   NGL_ASSERT(pTop);
-  return pTop->AcquireGrab(this, rInfo);
+  return pTop->StealMouseEvent(this, rInfo);
 }
 
 bool nuiWidget::Grab()

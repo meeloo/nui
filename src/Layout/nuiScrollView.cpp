@@ -1245,7 +1245,7 @@ bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
 
     float dist = sqrt(x * x + y * y);
 
-    if (dist > 5 && AcquireGrab(rInfo))
+    if (dist > 5 && StealMouseEvent(rInfo))
     {
       //NGL_OUT("nuiScrollView Preempting mouse from existing grabber!\n");
       mTouched = false;
