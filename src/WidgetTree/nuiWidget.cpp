@@ -1885,7 +1885,7 @@ bool nuiWidget::DispatchMouseCanceled(const nglMouseInfo& rInfo)
   info.Y = Y;
 
   PreClickCanceled(info);
-  res = MouseMoved(info);
+  res = MouseCanceled(info);
   res |= ClickCanceled(info) | (!mClickThru);
   return res;
 }

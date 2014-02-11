@@ -73,6 +73,13 @@ public:
     return result;
   }
 
+  nglVector2<T> operator- (const nglVector2<T>& rVector) const
+  {
+    nglVector2<T> result = *this;
+    result -= rVector;
+    return result;
+  }
+
   /// Increment operator
   void operator+=(const nglVector2<T>& rVector)
   {

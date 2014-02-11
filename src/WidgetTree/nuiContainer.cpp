@@ -474,7 +474,7 @@ bool nuiContainer::DispatchMouseCanceled(const nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
-  if (!mMouseEventEnabled || mTrashed)
+  if (mTrashed)
     return false;
 
   bool hasgrab = HasGrab(rInfo.TouchId);
@@ -483,11 +483,8 @@ bool nuiContainer::DispatchMouseCanceled(const nglMouseInfo& rInfo)
   GlobalToLocal(info.X, info.Y);
 
   // Get a chance to preempt the mouse event before the children get it:
-  if (PreClickCanceled(info))
-  {
-    return true;
-  }
-  
+  PreClickCanceled(info);
+
   IteratorPtr pIt;
   for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
   {

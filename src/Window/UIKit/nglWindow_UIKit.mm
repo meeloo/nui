@@ -292,7 +292,7 @@ const nglChar* gpWindowErrorTable[] =
     if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
       info.Buttons |= nglMouseInfo::ButtonDoubleClick;
 
-    NGL_TOUCHES_OUT("[%p][%d] Begin X:%d Y:%d\n", pTouch, info.TouchId, x, y);
+    //NGL_TOUCHES_OUT("[%p][%d] Begin X:%d Y:%d\n", pTouch, info.TouchId, x, y);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
@@ -323,7 +323,7 @@ const nglChar* gpWindowErrorTable[] =
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
 
-    NGL_TOUCHES_OUT("[%p][%d] Release X:%d Y:%d\n", pTouch, info.TouchId, x, y);
+    //NGL_TOUCHES_OUT("[%p][%d] Release X:%d Y:%d\n", pTouch, info.TouchId, x, y);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
@@ -354,7 +354,7 @@ const nglChar* gpWindowErrorTable[] =
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
 
-    NGL_TOUCHES_OUT("[%p][%d] Cancel X:%d Y:%d\n", pTouch, info.TouchId, x, y);
+    //NGL_TOUCHES_OUT("[%p][%d] Cancel X:%d Y:%d\n", pTouch, info.TouchId, x, y);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))

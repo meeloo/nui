@@ -10,7 +10,7 @@
 
 #define PARTIAL_REDRAW_DEFAULT false
 
-#if 0//defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
+#if 0 //defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
 # define NGL_TOUCHES_DEBUG(X) (X)
 # define _NGL_DEBUG_TOUCHES_
 #else//!_MULTI_TOUCHES_
@@ -338,7 +338,10 @@ void nuiTopLevel::AdviseObjectDeath(nuiWidgetPtr pWidget)
       it2->second = NULL;
       auto found = mpGrabAcquired.find(it2->first);
       if (found != mpGrabAcquired.end())
+      {
         mpGrabAcquired.erase(found);
+        NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab (in AdviseObjectDeath)\n"));
+      }
     }
     ++it2;
   }
@@ -521,7 +524,6 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget)
 
   pGrab = pWidget;
   mpGrab[touchId] = pWidget;
-  mpGrabAcquired[touchId] = false;
 
   if (pGrab)
     pGrab->MouseGrabbed(touchId);
@@ -604,16 +606,19 @@ bool nuiTopLevel::AcquireGrab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
   }
 
   nuiWidgetPtr oldgrab = GetGrab(rInfo.TouchId);
-  if (oldgrab)
+  if (oldgrab && oldgrab != pWidget)
   {
+    NGL_TOUCHES_DEBUG( NGL_OUT("cancel touch on oldgrab = %p\n", oldgrab));
     oldgrab->MouseCanceled(rInfo);
   }
 
-  NGL_OUT("Accepted Grab requested by %s %s\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars());
+  NGL_TOUCHES_DEBUG( NGL_OUT("Accepted Grab requested by %s %s (%p)\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pWidget));
   pWidget->DispatchMouseCanceled(rInfo);
   pWidget->MouseClicked(rInfo);
-  pWidget->Grab();
+
+  mpGrab[rInfo.TouchId] = pWidget;
   mpGrabAcquired[rInfo.TouchId] = true;
+  NGL_TOUCHES_DEBUG( NGL_OUT("Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
   return true;
 }
 
@@ -1227,9 +1232,13 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
     //NGL_OUT("Removed %x\n", rInfo.TouchId);
   }
 
-  auto ii = mpGrabAcquired.find(rInfo.TouchId);
-  if (ii != mpGrabAcquired.end())
-  mpGrabAcquired.erase(ii);
+  {
+    auto it = mpGrabAcquired.find(rInfo.TouchId);
+    if (it != mpGrabAcquired.end())
+    {
+      mpGrabAcquired.erase(it);
+    }
+  }
 
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;
@@ -1266,6 +1275,21 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] BEGIN\n"), rInfo.TouchId) )
     }
 PRINT_GRAB_IDS();
 NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
+
+    {
+      auto it = mpGrab.find(rInfo.TouchId);
+      if (it != mpGrab.end())
+      {
+        if (it->second)
+        it->second->DispatchUngrab(it->second);
+        mpGrab.erase(it);
+      }
+    }
+    
+    if (it != mMouseClickedEvents.end())
+      mMouseClickedEvents.erase(it);
+
+    NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab1: Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
     return res ;
   }
 
@@ -1278,6 +1302,9 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
 PRINT_GRAB_IDS();
 NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
 
+  if (it != mMouseClickedEvents.end())
+    mMouseClickedEvents.erase(it);
+  NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab2: Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
 	return res;
 }
 
@@ -1338,13 +1365,13 @@ void nuiTopLevel::UpdateHoverList(nglMouseInfo& rInfo)
   std::list<nuiWidget*>::iterator tt = HoverList.begin();
   std::list<nuiWidget*>::iterator ttend = HoverList.end();
 
-  //printf("\nHover list\n");
+  //NGL_OUT("\nHover list\n");
   bool res = false;
   while ((tt != ttend) && !res)
   {
     nuiWidget* pWidget = *tt;
     res = pWidget->ActivateToolTip(pWidget);
-    //printf("%3ls - %s\n", YESNO(res), pWidget->GetObjectClass().GetChars());
+    //NGL_OUT("%3ls - %s\n", YESNO(res), pWidget->GetObjectClass().GetChars());
     ++tt;
   }
   if (!res && mpToolTipSource)
@@ -1364,6 +1391,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   if (it != mMouseClickedEvents.end())
     rInfo.Counterpart = &it->second;
   // Update state:
+
   if (mMouseStates.find(rInfo.TouchId) != mMouseStates.end())
   {
     //NGL_OUT("Found %x\n", rInfo.TouchId);
@@ -1501,6 +1529,41 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] BEGIN\n"), rInfo.TouchId) );
 #endif
 //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END\n"), rInfo.TouchId) );
   return pHandled != NULL;
+}
+
+bool nuiTopLevel::CallMouseCancel(nglMouseInfo& rInfo)
+{
+  DispatchMouseCanceled(rInfo);
+
+  {
+    auto it = mpGrabAcquired.find(rInfo.TouchId);
+    if (it != mpGrabAcquired.end())
+    {
+      mpGrabAcquired.erase(it);
+    }
+  }
+
+  {
+    auto it = mpGrab.find(rInfo.TouchId);
+    if (it != mpGrab.end())
+    {
+      mpGrab.erase(it);
+    }
+  }
+
+  {
+    auto it = mMouseClickedEvents.find(rInfo.TouchId);
+    if (it != mMouseClickedEvents.end())
+      mMouseClickedEvents.erase(it);
+  }
+
+  {
+    auto it = mMouseStates.find(rInfo.TouchId);
+    if (it != mMouseStates.end())
+      mMouseStates.erase(it);
+  }
+
+  NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseCancel: Grabs %d - %d / clicks %d / states %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size(), (uint32)mMouseClickedEvents.size(), (uint32)mMouseStates.size()));
 }
 
 void nuiTopLevel::SetDragFeedbackRect(int X, int Y)
@@ -1662,11 +1725,11 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
 
     int count = mDirtyRects.size();
 
-//    printf("drawing %d partial rects\n", count);
+//    NGL_OUT("drawing %d partial rects\n", count);
     
     for (int i = 0; i < count; i++)
     {
-//      printf("\t%d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
+//      NGL_OUT("\t%d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
       pContext->ResetState();
       pContext->ResetClipRect();
       pContext->Clip(mDirtyRects[i]);
@@ -1801,7 +1864,7 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
 
   r.Set(vec1[0], vec1[1], vec2[0], vec2[1], false);
 
-//  printf("nuiTopLevel::BroadcastInvalidateRect %s / %s / 0x%x RECT:%s\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender, rRect.GetValue().GetChars());
+//  NGL_OUT("nuiTopLevel::BroadcastInvalidateRect %s / %s / 0x%x RECT:%s\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender, rRect.GetValue().GetChars());
   AddInvalidRect(r);
   mNeedRender = true;
   DebugRefreshInfo();
@@ -1813,7 +1876,7 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
   CheckValid();
   #ifdef _DEBUG_LAYOUT
   if (GetDebug())
-    printf("toplevel set rect %f %f %f %f\n", rRect.Left(), rRect.Top(), rRect.GetWidth(), rRect.GetHeight());
+    NGL_OUT("toplevel set rect %f %f %f %f\n", rRect.Left(), rRect.Top(), rRect.GetWidth(), rRect.GetHeight());
   #endif
   
   nuiWidget::SetRect(rRect);
