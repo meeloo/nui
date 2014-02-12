@@ -10,7 +10,7 @@
 
 #define PARTIAL_REDRAW_DEFAULT false
 
-#if 0 //defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
+#if 1 //defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
 # define NGL_TOUCHES_DEBUG(X) (X)
 # define _NGL_DEBUG_TOUCHES_
 #else//!_MULTI_TOUCHES_
@@ -606,14 +606,15 @@ bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInf
   }
 
   nuiWidgetPtr oldgrab = GetGrab(rInfo.TouchId);
-  if (oldgrab && oldgrab != pWidget)
-  {
-    NGL_TOUCHES_DEBUG( NGL_OUT("cancel touch on oldgrab = %p\n", oldgrab));
-    oldgrab->MouseCanceled(rInfo);
-  }
+//  if (oldgrab && oldgrab != pWidget)
+//  {
+//    NGL_TOUCHES_DEBUG( NGL_OUT("cancel touch on oldgrab = %p\n", oldgrab));
+//    oldgrab->MouseCanceled(rInfo);
+//  }
+  DispatchMouseCanceled(rInfo);
 
   NGL_TOUCHES_DEBUG( NGL_OUT("Accepted Grab requested by %s %s (%p)\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pWidget));
-  pWidget->DispatchMouseCanceled(rInfo);
+//  pWidget->DispatchMouseCanceled(rInfo);
   pWidget->MouseClicked(rInfo);
 
   mpGrab[rInfo.TouchId] = pWidget;
@@ -1384,7 +1385,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
+//NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
 
   // Update counterpart:
   std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
@@ -1404,7 +1405,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   mMouseInfo.Y = rInfo.Y;
 
   mMouseInfo.TouchId = rInfo.TouchId;
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] BEGIN\n"), rInfo.TouchId) );
+//NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] BEGIN\n"), rInfo.TouchId) );
 
   nuiWidgetPtr pWidget = NULL;
   nuiWidgetPtr pWidgetUnder = NULL;
