@@ -255,6 +255,7 @@ typedef double nuiSize;
   #include "nuiZoomBar.h"
   #include "nuiColorSelector.h"
   #include "nuiFormatedLabel.h"
+  #include "nuiDrawerView.h"
 
   #include "nuiNavigationBar.h"
   #include "nuiNavigationController.h"
