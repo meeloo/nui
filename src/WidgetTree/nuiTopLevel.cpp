@@ -35,6 +35,36 @@
 #define PRINT_GRAB_IDS() {}
 #endif
 
+// Simple helper class that can prevents deleting a while subtree while doing event propagation (maintely for grab and ungrab)
+class WidgetBranchGuard
+{
+public:
+  WidgetBranchGuard(nuiWidgetPtr pWidget)
+  {
+    NGL_ASSERT(pWidget);
+    nuiTopLevel* pTop = pWidget->GetTopLevel();
+    NGL_ASSERT(pTop);
+    while (pWidget != pTop)
+    {
+      pWidget->Acquire();
+      mBranch.push_back(pWidget);
+      pWidget = pWidget->GetParent();
+    }
+  }
+
+  ~WidgetBranchGuard()
+  {
+    for (auto w : mBranch)
+    {
+      w->Release();
+    }
+  }
+
+private:
+  std::vector<nuiWidgetPtr> mBranch;
+};
+
+
 
 #ifndef DISABLE_TOOLTIP
 class nuiToolTip : public nuiSimpleContainer
@@ -1109,6 +1139,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] BEGIN\n"), rInfo.TouchId) );
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
+    WidgetBranchGuard guard(pGrab);
     std::vector<nuiContainerPtr> containers;
     nuiContainerPtr pParent = pGrab->GetParent();
     while (pParent)
@@ -1212,8 +1243,6 @@ void nuiTopLevel::DispatchKeyboardFocus(const nuiWidgetList& rWidgets)
     Focus();
 }
 
-
-
 bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
 {
   CheckValid();
@@ -1251,7 +1280,9 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] BEGIN\n"), rInfo.TouchId) )
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
+    WidgetBranchGuard guard(pGrab);
     NGL_ASSERT(!pGrab->IsTrashed(true));
+    pGrab->Acquire();
 
     std::vector<nuiContainerPtr> containers;
     nuiContainerPtr pParent = pGrab->GetParent();
@@ -1291,6 +1322,8 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
       mMouseClickedEvents.erase(it);
 
     NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab1: Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
+    pGrab->Release();
+
     return res ;
   }
 
@@ -1423,6 +1456,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
+    WidgetBranchGuard guard(pGrab);
     std::vector<nuiContainerPtr> containers;
     nuiContainerPtr pParent = pGrab->GetParent();
     while (pParent)
