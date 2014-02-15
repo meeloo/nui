@@ -9,8 +9,14 @@
 
 #include "nui.h"
 
-#if (defined _UIKIT_) || (defined _COCOA_)
+#if (defined _UIKIT_)
 #include "Cocoa/nglPath_Cocoa.h"
+#import <UIKit/UIKit.h>
+#endif
+
+#if (defined _COCOA_)
+#include "Cocoa/nglPath_Cocoa.h"
+#import <Cocoa/Cocoa.h>
 #endif
 
 using namespace std;
@@ -1642,4 +1648,23 @@ bool nglCompareNaturalPath(const nglPath& rLeft, const nglPath& rRight)
 #endif
 }
 
+void nglPath::SetBackupPermited(bool set)
+{
+#if (defined _UIKIT_) || (defined _COCOA_)
+//  uint8 attrValue = 1;
+//  int result = setxattr(fontdb.GetPathName().GetStdString().c_str(), "com.apple.MobileBackup", &attrValue, sizeof (attrValue), 0, 0);
+
+  NSURL *URL = [NSURL fileURLWithPath:[NSString stringWithUTF8String:GetChars()] isDirectory:FALSE];
+  {
+    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: set?NO:YES]
+                                  forKey: NSURLIsExcludedFromBackupKey error: &error];
+    if(!success){
+      NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+  }
+#endif
+}
 

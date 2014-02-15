@@ -750,7 +750,10 @@ void nuiFontManager::ScanFolders(bool rescanAllFolders /* = false */)
   
   nglOStream* pStream = mSavePath.OpenWrite();
   if (pStream)
+  {
     Save(*pStream);
+    mSavePath.SetBackupPermited(false);
+  }
   delete pStream;
 }
 
@@ -1070,11 +1073,12 @@ nuiFontManager& nuiFontManager::GetManager(bool InitIfNeeded)
       fontdb += nglString(NUI_FONTDB_PATH);
       nglOFile db(fontdb, eOFileCreate);
       if (db.IsOpen())
+      {
         gManager.Save(db);
+        // Prevent file from being backed-up on iCloud...
+        fontdb.SetBackupPermited(false);
+      }
       
-      // Prevent file from being backed-up on iCloud...
-      uint8 attrValue = 1;
-      int result = setxattr(fontdb.GetPathName().GetStdString().c_str(), "com.apple.MobileBackup", &attrValue, sizeof (attrValue), 0, 0);
       //NGL_ASSERT(result == 0);
     }
 #endif
@@ -1111,6 +1115,7 @@ nuiFontManager& nuiFontManager::LoadManager(nglIStream& rStream, double lastscan
 
 
 #define NUI_FONTDB_MARKER "nuiFontDatabase5"
+
 
 bool nuiFontManager::Save(nglOStream& rStream)
 {

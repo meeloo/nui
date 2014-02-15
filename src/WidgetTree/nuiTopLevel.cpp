@@ -10,7 +10,7 @@
 
 #define PARTIAL_REDRAW_DEFAULT false
 
-#if 1 //defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
+#if 0 //defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
 # define NGL_TOUCHES_DEBUG(X) (X)
 # define _NGL_DEBUG_TOUCHES_
 #else//!_MULTI_TOUCHES_

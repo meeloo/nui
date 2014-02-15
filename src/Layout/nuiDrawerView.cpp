@@ -168,7 +168,6 @@ bool nuiDrawerView::PreMouseMoved(const nglMouseInfo& rInfo)
 
       if (StealMouseEvent(rInfo))
       {
-        NGL_OUT("Stolen mouse event\n");
         mTouched = false;
         return true;
       }
@@ -186,7 +185,6 @@ bool nuiDrawerView::MouseClicked(const nglMouseInfo& rInfo)
 
     mTouch = rInfo;
     mOriginalOffset = mOffset;
-    NGL_OUT("MouseClicked mOriginalOffset = %f\n", mOriginalOffset);
 
     SetSelected(true);
     // Stop events, just in case...

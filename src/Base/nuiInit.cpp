@@ -153,7 +153,9 @@ bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
     {
       nglOFile db(fontdb, eOFileCreate);
       if (db.IsOpen())
+      {
         rManager.Save(db);
+      }
     }
 #endif
     
