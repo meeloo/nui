@@ -110,7 +110,6 @@ typedef double nuiSize;
 #include "nuiAiffWriter.h"
 
 #include "nuiStringTemplate.h"
-#include "nuiFormater.h"
 
 #include "nuiCommand.h"
 #include "nuiCommandContainer.h"
@@ -234,9 +233,6 @@ typedef double nuiSize;
   #include "nuiWindow.h"
   #include "nuiPane.h"
 
-  #include "nuiStateDummy.h"
-  #include "nuiHoverDummy.h"
-
 
   #include "nuiImageDropZone.h"
   #include "nuiShapeView.h"
@@ -254,7 +250,6 @@ typedef double nuiSize;
   #include "nuiApplication.h"
   #include "nuiZoomBar.h"
   #include "nuiColorSelector.h"
-  #include "nuiFormatedLabel.h"
   #include "nuiDrawerView.h"
 
   #include "nuiNavigationBar.h"
@@ -291,24 +286,17 @@ typedef double nuiSize;
   #include "nuiLabelAttribute.h"
   #include "nuiTitledPane.h"
   #include "nuiFolderPane.h"
-  #include "nuiSVGShape.h"
-  #include "nuiSVGView.h"
   #include "nuiProgressBar.h"
-  #include "nuiBackgroundPane.h"
   #include "nuiFlowView.h"
-  #include "nuiMatrixView.h"
   #include "nuiCoverFlow.h"
   #include "nuiFontBrowser.h"
   #include "nuiFrameView.h"
   #include "nuiHotKeyEditor.h"
-  #include "nuiRectView.h"
   #include "nuiRSS.h"
   #include "nuiRSSView.h"
   #include "nuiHyperLink.h"
   #include "nuiHTML.h"
   #include "nuiHTMLView.h"
-  #include "nuiScrollingLabel.h"
-  #include "nuiSpinnerLabel.h"
 
 
   #include "nuiScriptEngine.h"
@@ -321,7 +309,6 @@ typedef double nuiSize;
 
 
   #include "nuiIntrospector.h"
-  #include "nuiSeparator.h"
   #include "nuiWidgetInspector.h"
   #include "nuiThreadInspector.h"
   #include "nuiFontInspector.h"

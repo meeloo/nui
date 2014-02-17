@@ -37,8 +37,6 @@ void nuiBuilder::Init()
   NUI_ADD_WIDGET_CREATOR(nuiScrollBar,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiFixed,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiMainWindow,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiStateDummy,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiHoverDummy,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiScrollView,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiZoomView,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiTabBar,"Container");
@@ -59,20 +57,16 @@ void nuiBuilder::Init()
   NUI_ADD_WIDGET_CREATOR(nuiToggleButton,"Widget");
   NUI_ADD_WIDGET_CREATOR(nuiRadioButton,"Widget");
   NUI_ADD_WIDGET_CREATOR(nuiImage,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiSVGView,"Widget");
   NUI_ADD_WIDGET_CREATOR(nuiTab,"Widget");
   NUI_ADD_WIDGET_CREATOR(nuiProgressBar,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiFormatedLabel,"Widget");
   
   //NUI_ADD_WIDGET_CREATOR(nuiMessageBox,"Dialog");
   //NUI_ADD_WIDGET_CREATOR(nuiDialogSelectDirectory,"Dialog");
   //NUI_ADD_WIDGET_CREATOR(nuiDialogSelectFile,"Dialog");
   
-  NUI_ADD_WIDGET_CREATOR(nuiBackgroundPane, "Container");
   //NUI_ADD_WIDGET_CREATOR(nuiDialog, "Dialog");
   NUI_ADD_WIDGET_CREATOR(nuiFlowView, "Container");
   //NUI_ADD_WIDGET_CREATOR(nuiImageSequence, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiMatrixView, "Container");
   NUI_ADD_WIDGET_CREATOR(nuiModalContainer, "Container");
   //NUI_ADD_WIDGET_CREATOR(nuiOffscreenView, "Container");
   //NUI_ADD_WIDGET_CREATOR(nuiPopupView, "Container");
@@ -90,7 +84,6 @@ void nuiBuilder::Init()
   NUI_ADD_WIDGET_CREATOR(nuiFrameView, "Widget");
   NUI_ADD_WIDGET_CREATOR(nuiHotKeyEditor, "Widget");
   //NUI_ADD_WIDGET_CREATOR(nuiImageDropZone, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiRectView, "Widget");
   //NUI_ADD_WIDGET_CREATOR(nuiShapeView, "Widget");
   //NUI_ADD_WIDGET_CREATOR(nuiZoomBar, "Widget");
   NUI_ADD_WIDGET_CREATOR(nuiRSSView, "Widget");
@@ -99,8 +92,6 @@ void nuiBuilder::Init()
   //NUI_ADD_WIDGET_CREATOR(nuiLabelAttribute, "Widget");
   //NUI_ADD_WIDGET_CREATOR(nuiLabelRenamer, "Widget");
   NUI_ADD_WIDGET_CREATOR(nuiHTMLView, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiScrollingLabel, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiSpinnerLabel, "Widget");
 
   NUI_ADD_WIDGET_CREATOR(nuiNavigationBar, "Widget");
   NUI_ADD_WIDGET_CREATOR(nuiNavigationController, "Widget");

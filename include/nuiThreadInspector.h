@@ -8,10 +8,6 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiScrollView.h"
-#include "nuiVBox.h"
-#include "nglThreadChecker.h"
-#include "nuiFormatedLabel.h"
 
 class nuiThreadInspector : public nuiSimpleContainer
 {
@@ -61,9 +57,10 @@ private:
   
   nuiTreeNode* mpTree;
   
-  nuiFormatedLabel* mpUpdateCount;
+  nuiLabel* mpUpdateCount;
   bool mRunning;
   bool mUpdating;
+  int64 mUpdateCount;
   nuiRange mFrequency;
   double mCurrentTime;
   bool mShowLongLock;

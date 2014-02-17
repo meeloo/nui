@@ -38,7 +38,6 @@ void nuiDefaultDecoration::Init()
   InitImages();
     
   nuiWidget::SetDefaultDecoration(nuiObject::GetClassNameIndex(_T("nuiWindow")), &nuiDefaultDecoration::Window);
-  nuiWidget::SetDefaultDecoration(nuiObject::GetClassNameIndex(_T("nuiBackgroundPane")), &nuiDefaultDecoration::BackgroundPane);
 
   nuiWidget::SetDefaultDecoration(nuiObject::GetClassNameIndex(_T("nuiLabel")), &nuiDefaultDecoration::Label);
   nuiWidget::SetDefaultDecoration(nuiObject::GetClassNameIndex(_T("nuiEditText")), &nuiDefaultDecoration::EditText);
@@ -401,47 +400,6 @@ void nuiDefaultDecoration::Window(nuiWidget* pWidget)
 
 //**************************************************************************************************************
 //
-// nuiBackgroundPane
-//
-void nuiDefaultDecoration::BackgroundPane(nuiWidget* pWidget)
-{
-  nuiBackgroundPane* pPane = (nuiBackgroundPane*)pWidget;
-
-  nglString decoName;
-  const char* deco;
-  nuiRect rect;
-  
-  if (pPane->GetType() == eOutterBackground)
-  {
-    decoName = _T("nuiDefaultDecorationOutterPane");
-    deco = "PaneOutter";
-    rect = nuiRect(12,12,0,1);
-  }
-  else
-  {
-    decoName = _T("nuiDefaultDecorationInnerPane");
-    deco = "PaneInner";
-    rect = nuiRect(6,6,0,0);
-  }
-  
-  nuiFrame* pFrame = (nuiFrame*)nuiDecoration::Get(decoName);
-  
-  if (!pFrame)
-  {
-    nuiTexture* pTex = nuiTexture::GetTexture(deco);
-    NGL_ASSERT(pTex);
-    pFrame = new nuiFrame(decoName, pTex, rect);
-    pFrame->UseWidgetAlpha(true);
-  }
-  NGL_ASSERT(pFrame);
-  pWidget->SetDecoration(pFrame, eDecorationBorder);
-}
-
-
-
-
-//**************************************************************************************************************
-//
 // nuiLabel
 //
 void nuiDefaultDecoration::Label(nuiWidget* pWidget)
@@ -468,8 +426,6 @@ void nuiDefaultDecoration::EditText(nuiWidget* pWidget)
 //
 void nuiDefaultDecoration::EditLine(nuiWidget* pWidget)
 {
-  nuiBackgroundPane* pPane = (nuiBackgroundPane*)pWidget;
-  
   nglString decoName = _T("nuiDefaultDecorationInnerPane");
   nuiRect rect = nuiRect(6,6,0,0);
   

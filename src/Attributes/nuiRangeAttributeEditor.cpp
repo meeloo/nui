@@ -32,7 +32,9 @@ nuiRangeAttributeEditor::~nuiRangeAttributeEditor()
 void nuiRangeAttributeEditor::OnChanged(const nuiEvent& rEvent)
 {
   mRange.SetValue(mpSlider->GetRange().GetValue());
-  mpValue->SetValue(mRange.GetValue());
+  nglString str;
+  str.SetCDouble(mRange.GetValue());
+  mpValue->SetText(str);
   mAttribute.Set(mRange);
   rEvent.Cancel();
 }
@@ -54,7 +56,9 @@ void nuiRangeAttributeEditor::Update()
   nuiFont* pFont = nuiFontManager::GetManager().GetFont(rFontRequest);
 
   // display the attribute's value
-  mpValue = new nuiFormatedLabel(nuiFormatedLabel::DefaultFormater, mRange.GetValue(), pFont);
+  nglString str;
+  str.SetCDouble(mRange.GetValue());
+  mpValue = new nuiLabel(str, pFont);
   mpMainBox->SetCell(0, mpValue);
   mpMainBox->SetCellMinPixels(0, 25);
   mpMainBox->SetCellMaxPixels(0, 25);

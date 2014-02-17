@@ -160,7 +160,7 @@ void nuiThreadInspector::Build()
   pGrid->AddRows(row, 1);
   pLabel = new nuiLabel(_T("Update Count"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
   pGrid->SetCell(0,3, pLabel);
-  mpUpdateCount = new nuiFormatedLabel(nuiFormatedLabel::DefaultFormater, 0.f, nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  mpUpdateCount = new nuiLabel("0", nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
   pGrid->SetCell(1,3, mpUpdateCount);
 
   // update frequency
@@ -337,8 +337,11 @@ void nuiThreadInspector::Update(const nuiEvent& rEvent)
     rEvent.Cancel();
     return;
   }
-  
-  mpUpdateCount->SetValue(mpUpdateCount->GetValue()+1);
+
+  mUpdateCount++;
+  nglString str;
+  str.SetCInt(mUpdateCount);
+  mpUpdateCount->SetText(str);
   mCurrentTime = nglTime();
   
   // get the current threadchecker data
@@ -599,7 +602,10 @@ void nuiThreadInspector::SetRunning(bool run)
   else
   {
     mpTimer->Stop();
-    mpUpdateCount->SetValue(0);  
+    mUpdateCount = 0;
+    nglString str;
+    str.SetCInt(mUpdateCount);
+    mpUpdateCount->SetText(str);
   }
 }
 
@@ -623,7 +629,10 @@ void nuiThreadInspector::SetUpdating(bool update)
   else
   {
     mpTimer->Stop();
-    mpUpdateCount->SetValue(0);
+    mUpdateCount = 0;
+    nglString str;
+    str.SetCInt(mUpdateCount);
+    mpUpdateCount->SetText(str);
   }
 }
 

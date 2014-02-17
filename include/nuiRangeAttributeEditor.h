@@ -9,11 +9,6 @@
 
 
 #include "nui.h"
-#include "nuiAttributeEditor.h"
-#include "nuiVBox.h"
-#include "nuiHBox.h"
-#include "nuiSlider.h"
-#include "nuiFormatedLabel.h"
 
 class nuiRangeAttributeEditor : public nuiAttributeEditor
 {
@@ -35,7 +30,7 @@ private :
   nuiRange mRange;
   nuiHBox* mpMainBox;
   nuiSlider* mpSlider;
-  nuiFormatedLabel* mpValue;
+  nuiLabel* mpValue;
   
   nuiEventSink<nuiRangeAttributeEditor> mEventSink;
 };
