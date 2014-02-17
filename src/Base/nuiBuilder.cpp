@@ -30,7 +30,6 @@ void nuiBuilder::Init()
 {
   NUI_ADD_WIDGET_CREATOR(nuiWidget, "Widget");
   NUI_ADD_WIDGET_CREATOR(nuiSimpleContainer, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiWindow,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiSplitter,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiPopupMenu,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiList,"Container");

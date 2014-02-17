@@ -184,8 +184,6 @@ typedef double nuiSize;
 
   #include "nuiDecoration.h"
   #include "nuiBorderDecoration.h"
-  #include "nuiCheckerboardDecoration.h"
-  #include "nuiNavigationViewDecoration.h"
   #include "nuiColorDecoration.h"
   #include "nuiGradientDecoration.h"
   #include "nuiMetaDecoration.h"
@@ -216,7 +214,6 @@ typedef double nuiSize;
   #include "nuiFileList.h"
   #include "nuiFileSelector.h"
   #include "nuiFixed.h"
-  #include "nuiGladeLoader.h"
   #include "nuiImage.h"
   #include "nuiHugeImage.h"
   #include "nuiLabel.h"
@@ -230,7 +227,6 @@ typedef double nuiSize;
   #include "nuiText.h"
   #include "nuiTexture.h"
   #include "nuiUserArea.h"
-  #include "nuiWindow.h"
   #include "nuiPane.h"
 
 
@@ -240,7 +236,6 @@ typedef double nuiSize;
 
   #include "nuiTabView.h"
   #include "nuiKnob.h"
-  #include "nuiWindowManager.h"
   #include "nuiScrollView.h"
   #include "nuiFileTree.h"
   #include "nuiZoomView.h"

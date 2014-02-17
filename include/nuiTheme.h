@@ -14,7 +14,6 @@
 #include "nuiWidgetElements.h"
 
 class nuiDrawContext;
-class nuiWindow;
 class nuiTab;
 class nuiButton;
 class nuiScrollBar;
@@ -45,13 +44,6 @@ public:
 
   // Window decorations:
   virtual void DrawWindowShade (nuiDrawContext* pContext, const nuiRect& rRect, const nuiColor& rColor, bool Active);
-  virtual void DrawWindow(nuiDrawContext* pContext, nuiWindow* pWindow); ///< Render a normal window border
-  virtual void DrawActiveWindow(nuiDrawContext* pContext, nuiWindow* pWindow); ///< Render a Top Level window border
-  virtual void DrawMovingWindow(nuiDrawContext* pContext, nuiWindow* pWindow);
-  virtual void AdjustWindowRect(nuiRect& rRect, nuiWindowFlags Flags, bool RectIsClient = true, bool IncludeShadow = false);
-  virtual bool IsInsideWindow(nuiRect Rect,nuiSize X,nuiSize Y,nuiWindowFlags Flags);
-  virtual nuiPosition GetWindowPart(nuiRect rect,nuiSize X,nuiSize Y,nuiWindowFlags Flags, bool RectIsClient = true);
-  virtual void DrawWindowBackground(nuiDrawContext* pContext, nuiWindow* pWindow, bool Active);
 
   // Scrollbar:
   virtual void DrawScrollBarBackground(nuiDrawContext* pContext, nuiScrollBar* pScroll);

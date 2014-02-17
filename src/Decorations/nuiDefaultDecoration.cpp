@@ -37,8 +37,6 @@ void nuiDefaultDecoration::Init()
   InitIcons();
   InitImages();
     
-  nuiWidget::SetDefaultDecoration(nuiObject::GetClassNameIndex(_T("nuiWindow")), &nuiDefaultDecoration::Window);
-
   nuiWidget::SetDefaultDecoration(nuiObject::GetClassNameIndex(_T("nuiLabel")), &nuiDefaultDecoration::Label);
   nuiWidget::SetDefaultDecoration(nuiObject::GetClassNameIndex(_T("nuiEditText")), &nuiDefaultDecoration::EditText);
   nuiWidget::SetDefaultDecoration(nuiObject::GetClassNameIndex(_T("nuiEditLine")), &nuiDefaultDecoration::EditLine);
@@ -361,40 +359,6 @@ nglImage* nuiDefaultDecoration::GetImage(const nglString& rRef)
 }
 
 
-
-
-//**************************************************************************************************************
-//
-// nuiWindow
-//
-void nuiDefaultDecoration::Window(nuiWidget* pWidget)
-{
-  nuiWindow* pWindow = (nuiWindow*)pWidget;
-  if (pWindow->GetFlags() & nuiWindow::DecoratedBackground)
-  {
-    nuiGradientDecoration* pDeco = (nuiGradientDecoration*)nuiDecoration::Get(_T("nuiDefaultDecorationWindow"));
-    if (!pDeco)
-    {
-      nuiColor color1, color2;
-      nuiColor::GetColor(_T("nuiDefaultClrWindowBkg1"), color1);
-      nuiColor::GetColor(_T("nuiDefaultClrWindowBkg2"), color2);
-      
-      pDeco = new nuiGradientDecoration(_T("nuiDefaultDecorationWindow"), 
-                                        nuiRect(0,0, 0,0), color1, color2, nuiVertical, 1, nuiColor(175,175,175), eStrokeAndFillShape);
-      pDeco->SetOffset1(0.f);
-      pDeco->SetOffset2(0.5f);
-    }
-    pWindow->SetDecoration(pDeco);
-  }
-  else
-  {
-    pWindow->SetColor(eActiveWindowBg, nuiColor(255, 255, 255));
-    pWindow->SetColor(eInactiveWindowBg, nuiColor(200, 200, 200));
-  }
-
-  // see nuiTheme::DrawActiveWindow for the rest
-  
-}
 
 
 
