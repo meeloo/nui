@@ -268,6 +268,7 @@ public:
   virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
   virtual bool MouseCanceled(const nglMouseInfo& rInfo);
   virtual bool MouseMoved(const nglMouseInfo& rInfo);
+  virtual bool MouseWheelMoved(const nglMouseInfo& rInfo);
   virtual bool MouseGrabbed(nglTouchId Id);
   virtual bool MouseUngrabbed(nglTouchId Id);
   virtual const std::map<nglTouchId, nglMouseInfo>& GetMouseStates() const;
@@ -384,11 +385,13 @@ public:
   nuiMouseUnclicked PreUnclicked; ///< Send an event when the widget is clicked. This event is fired before the MouseUnclicked method is called on the widget.
   nuiMouseUnclicked PreClickCanceled; ///< Send an event when the widget mouse interaction is canceled. This event is fired before the MouseCanceled method is called on the widget.
   nuiMouseMoved PreMouseMoved; ///< Send an event when the mouse moves over the widget. This event is fired before the MouseMoved method is called on the widget.
+  nuiMouseMoved PreMouseWheelMoved; ///< Send an event when the mouse moves over the widget. This event is fired before the MouseMoved method is called on the widget.
 
   nuiMouseClicked Clicked; ///< Send an event when the widget is clicked. This event is fired after the MouseClicked method is called on the widget.
   nuiMouseUnclicked Unclicked; ///< Send an event when the widget is clicked. This event is fired after the MouseUnclicked method is called on the widget.
   nuiMouseUnclicked ClickCanceled; ///< Send an event when the widget is clicked. This event is fired after the MouseUnclicked method is called on the widget.
   nuiMouseMoved MovedMouse; ///< Send an event when the mouse moves over the widget. This event is fired after the MouseMoved method is called on the widget.
+  nuiMouseMoved WheelMovedMouse; ///< Send an event when the mouse moves over the widget. This event is fired after the MouseMoved method is called on the widget.
   //@}
 
   /** @name Private event management system (do not override unless you know what you're doing!!!) */
@@ -398,7 +401,8 @@ public:
   virtual bool DispatchMouseUnclick(const nglMouseInfo& rInfo);
   virtual bool DispatchMouseCanceled(const nglMouseInfo& rInfo);
   virtual nuiWidgetPtr DispatchMouseMove(const nglMouseInfo& rInfo);
-  
+  virtual nuiWidgetPtr DispatchMouseWheelMove(const nglMouseInfo& rInfo);
+
   virtual bool DispatchGrab(nuiWidgetPtr pWidget);
   virtual bool DispatchUngrab(nuiWidgetPtr pWidget);
   virtual bool DispatchHasGrab(nuiWidgetPtr pWidget);

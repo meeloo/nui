@@ -90,8 +90,7 @@ const nglChar* gpWindowErrorTable[] =
 {
   mpContextInfo = pContextInfo;
 	mInited = false;
-	mInvalidated = true;
-	
+
 	mInvalidationTimer = nil;
 	mDisplayLink = nil;
   if ( (self = [super initWithFrame:[[UIScreen mainScreen] bounds]]) )
@@ -261,7 +260,6 @@ const nglChar* gpWindowErrorTable[] =
   [self InitNGLWindow];
 
   {
-    mInvalidated = false;
     GLKViewController* ctrl = (GLKViewController*)self.rootViewController;
     double lap = ctrl.timeSinceLastDraw;
     mpTimer->OnTick(lap);
@@ -393,11 +391,6 @@ const nglChar* gpWindowErrorTable[] =
 
     mpNGLWindow->CallOnMouseMove(info);
   }
-}
-
-- (void) invalidate
-{
-  mInvalidated = true;
 }
 
 /////// Keyboard support:
@@ -759,7 +752,6 @@ bool nglWindow::MakeCurrent() const
 
 void nglWindow::Invalidate()
 {
-  [(nglUIWindow*)mpUIWindow invalidate];
 }
 
 bool nglWindow::SetCursor(nuiMouseCursor Cursor)

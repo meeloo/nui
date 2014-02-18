@@ -36,7 +36,8 @@ public:
   virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
   virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
   virtual bool MouseMoved(nuiSize X, nuiSize Y);
-  
+  virtual bool MouseWheelMoved(const nglMouseInfo& rInfo);
+
   void Dragged(nuiSize X, nuiSize Y);
 
   const nuiRect& GetChildrenUnionRect() { return mChildrenUnionRect; }

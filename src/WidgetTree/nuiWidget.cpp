@@ -557,12 +557,14 @@ void nuiWidget::Init()
   NUI_ADD_EVENT(Unclicked);
   NUI_ADD_EVENT(ClickCanceled);
   NUI_ADD_EVENT(MovedMouse);
+  NUI_ADD_EVENT(WheelMovedMouse);
 
   NUI_ADD_EVENT(FocusChanged);
   
   NUI_ADD_EVENT(PreClicked);
   NUI_ADD_EVENT(PreUnclicked);
   NUI_ADD_EVENT(PreMouseMoved);
+  NUI_ADD_EVENT(PreMouseWheelMoved);
 }
 
 bool nuiWidget::SetObjectClass(const nglString& rName)
@@ -1768,6 +1770,13 @@ bool nuiWidget::MouseMoved(const nglMouseInfo& rInfo)
   return MouseMoved(rInfo.X, rInfo.Y);
 }
 
+bool nuiWidget::MouseWheelMoved(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  return false;
+}
+
+
 bool nuiWidget::MouseGrabbed(nglTouchId id)
 {
   CheckValid();
@@ -1920,6 +1929,39 @@ nuiWidgetPtr nuiWidget::DispatchMouseMove(const nglMouseInfo& rInfo)
     return this;
   res = MouseMoved(info);
   res |= MovedMouse(info) | (!mClickThru);
+  return (res && inside) ? this : NULL;
+}
+
+nuiWidgetPtr nuiWidget::DispatchMouseWheelMove(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  nuiAutoRef;
+  if (!mMouseEventEnabled || mTrashed)
+    return NULL;
+
+  bool inside = false;
+  bool res = false;
+  bool hasgrab = HasGrab(rInfo.TouchId);
+  float X = rInfo.X;
+  float Y = rInfo.Y;
+
+  if (IsDisabled() && !hasgrab)
+    return NULL;
+
+  if (IsInsideFromRoot(X, Y))
+  {
+    inside = true;
+  }
+
+  GlobalToLocal(X, Y);
+  nglMouseInfo info(rInfo);
+  info.X = X;
+  info.Y = Y;
+
+  if (PreMouseWheelMoved(info))
+    return this;
+  res = MouseWheelMoved(info);
+  res |= WheelMovedMouse(info) | (!mClickThru);
   return (res && inside) ? this : NULL;
 }
 

@@ -111,6 +111,7 @@ public:
   bool CallKeyUp (const nglKeyEvent& rEvent);
   bool CallMouseClick (nglMouseInfo& rInfo);
   bool CallMouseUnclick(nglMouseInfo& rInfo);
+  bool CallMouseWheel (nglMouseInfo& rInfo);
   bool CallMouseMove (nglMouseInfo& rInfo);
   bool CallMouseCancel(nglMouseInfo& rInfo);
   void GetMouseInfo(nglMouseInfo& rMouseInfo) const;

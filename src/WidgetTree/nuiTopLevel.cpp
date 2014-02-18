@@ -1566,6 +1566,159 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
   return pHandled != NULL;
 }
 
+bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
+{
+  CheckValid();
+  nuiAutoRef;
+  //NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseWheel X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
+
+  // Update counterpart:
+  std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
+  if (it != mMouseClickedEvents.end())
+    rInfo.Counterpart = &it->second;
+  // Update state:
+
+  if (mMouseStates.find(rInfo.TouchId) != mMouseStates.end())
+  {
+    //NGL_OUT("Found %x\n", rInfo.TouchId);
+    // Only update the mouse state if there was an existing touch already registered.
+    // On a desktop computer with a mouse, when you move the mouse of the window with no button down there is no existing state to update.
+    mMouseStates[rInfo.TouchId] = rInfo;
+  }
+
+  mMouseInfo.X = rInfo.X;
+  mMouseInfo.Y = rInfo.Y;
+
+  mMouseInfo.TouchId = rInfo.TouchId;
+  //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseWheel [%d] BEGIN\n"), rInfo.TouchId) );
+
+  nuiWidgetPtr pWidget = NULL;
+  nuiWidgetPtr pWidgetUnder = NULL;
+
+#ifndef DISABLE_TOOLTIP
+  if (mToolTipTimerOn.IsRunning())
+  {
+    mToolTipTimerOn.Stop();
+    mToolTipTimerOn.Start(false);
+  }
+#endif
+	nuiWidgetPtr pHandled = NULL;
+
+  // If there is a grab on the mouse serve the grabbing widget and only this one:
+  nuiWidgetPtr pGrab = GetGrab();
+  if (pGrab)
+  {
+    WidgetBranchGuard guard(pGrab);
+    std::vector<nuiContainerPtr> containers;
+    nuiContainerPtr pParent = pGrab->GetParent();
+    while (pParent)
+    {
+      containers.push_back(pParent);
+      pParent = pParent->GetParent();
+    }
+
+    bool hook = false;
+    for (int32 i = containers.size() - 1; i >= 0 && !hook; i--)
+    {
+      nglMouseInfo info(rInfo);
+      containers[i]->GlobalToLocal(info.X, info.Y);
+      hook = containers[i]->PreMouseWheelMoved(info);
+      if (hook)
+        pHandled = containers[i];
+    }
+
+    //NGL_OUT(_T("grabbed mouse wheel move on '%s' / '%s'\n"), mpGrab->GetObjectClass().GetChars(), mpGrab->GetObjectName().GetChars());
+    NGL_ASSERT(mpGrab[mMouseInfo.TouchId]);
+    if (mpGrab[mMouseInfo.TouchId]->MouseEventsEnabled() && !hook)
+    {
+      pHandled = pGrab->DispatchMouseWheelMove(rInfo);
+    }
+
+    nuiWidgetPtr pChild = NULL;
+    // There might be no grab object left after the mouse wheel move event!
+    if (pGrab)
+      pChild = pGrab;
+    else
+      pChild = GetChild((nuiSize)rInfo.X, (nuiSize)rInfo.Y);
+
+    NGL_ASSERT(pChild);
+
+    // Set the mouse cursor to the right object:
+    nuiWidgetList widgets;
+    GetChildren(rInfo.X, rInfo.Y, widgets, true);
+    UpdateMouseCursor(widgets);
+
+#ifndef DISABLE_TOOLTIP
+    SetToolTipRect();
+#endif
+
+    //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseWheel [%d] END\n"), rInfo.TouchId) );
+    return pHandled != NULL;
+  }
+  else
+  { /// this is a mouse over event
+    UpdateHoverList(rInfo);
+    nuiSize x,y;
+
+    IteratorPtr pIt;
+    for (pIt = GetLastChild(false); pIt && pIt->IsValid() && !pHandled; GetPreviousChild(pIt))
+    {
+      // First find the widget directly under the mouse:
+      nuiWidgetPtr pPtr = pIt->GetWidget();
+
+      pWidgetUnder = pPtr->GetChild((nuiSize)rInfo.X, (nuiSize)rInfo.Y);
+      pWidget = pWidgetUnder;
+      if (pWidget)
+      {
+        // As long as there is no widget that handles the event, try to find one:
+        while (pWidget && !pHandled)
+        {
+          if (pWidget->MouseEventsEnabled())
+          {
+            pHandled = pWidget->DispatchMouseWheelMove(rInfo);
+          }
+          if (!pHandled)
+            pWidget = pWidget->GetParent();
+          else
+          {
+            pWidgetUnder = pWidget = pHandled;
+            break;
+          }
+        }
+      }
+    }
+    delete pIt;
+
+    if (mpUnderMouse && mpUnderMouse != pWidget)
+    {
+      if (mpUnderMouse->MouseEventsEnabled())
+      {
+        mpUnderMouse->DispatchMouseWheelMove(rInfo);
+      }
+    }
+
+    //if (pHandled)
+    {
+      if (mpUnderMouse != pWidget)
+      {
+        mpUnderMouse = pWidget;
+        GlobalHoverChanged();
+      }
+    }
+  }
+
+  nuiWidgetList widgets;
+  GetChildren(rInfo.X, rInfo.Y, widgets, true);
+  UpdateMouseCursor(widgets);
+
+#ifndef DISABLE_TOOLTIP
+  SetToolTipRect();
+#endif
+  //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseWheel [%d] END\n"), rInfo.TouchId) );
+  return pHandled != NULL;
+}
+
+
 bool nuiTopLevel::CallMouseCancel(nglMouseInfo& rInfo)
 {
   DispatchMouseCanceled(rInfo);

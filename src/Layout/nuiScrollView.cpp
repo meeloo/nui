@@ -668,6 +668,27 @@ bool nuiScrollView::GetFillChildren()
   return mFillChildren;
 }
 
+bool nuiScrollView::MouseWheelMoved(const nglMouseInfo& rInfo)
+{
+  if (mpHorizontal && !mForceNoHorizontal)
+  {
+    mpHorizontal->GetRange().SetValue(mpHorizontal->GetRange().GetValue() + rInfo.DeltaX);
+  }
+
+  if (mpVertical && !mForceNoVertical)
+  {
+    mpVertical->GetRange().SetValue(mpVertical->GetRange().GetValue() + rInfo.DeltaY);
+  }
+
+  if (mHideScrollBars)
+  {
+    ShowScrollBars(true);
+  }
+
+
+  return true;
+}
+
 bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 {
   bool res = false;

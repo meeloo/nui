@@ -132,7 +132,8 @@ public:
   virtual bool PreMouseClicked(const nglMouseInfo& rInfo);
   virtual bool PreMouseUnclicked(const nglMouseInfo& rInfo);
   virtual bool PreMouseMoved(const nglMouseInfo& rInfo);
-  //@}  
+  virtual bool PreMouseWheelMoved(const nglMouseInfo& rInfo);
+  //@}
   
   /** @name Private event management system (do not override unless you know what you're doing!!!) */
   //@{
@@ -140,6 +141,7 @@ public:
   virtual bool DispatchMouseClick(const nglMouseInfo& rInfo);
   virtual bool DispatchMouseUnclick(const nglMouseInfo& rInfo);
   virtual nuiWidgetPtr DispatchMouseMove(const nglMouseInfo& rInfo);
+  virtual nuiWidgetPtr DispatchMouseWheelMove(const nglMouseInfo& rInfo);
   virtual bool DispatchMouseCanceled(const nglMouseInfo& rInfo);
   //@}
 

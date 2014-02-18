@@ -42,6 +42,9 @@ public:
   {
     X = 0;
     Y = 0;
+    DeltaX = 0;
+    DeltaY = 0;
+
     Buttons = 0;
     
     TouchId = 0;
@@ -54,6 +57,8 @@ public:
   {
     X = rInfo.X;
     Y = rInfo.Y;
+    DeltaX = rInfo.DeltaX;
+    DeltaY = rInfo.DeltaY;
     Buttons = rInfo.Buttons;
     
     TouchId = rInfo.TouchId;
@@ -83,8 +88,10 @@ public:
 
   int32   X;        ///< Horizontal coordinate
   int32   Y;        ///< Vertical coordinate
-  Flags Buttons;  ///< Buttons state
+  int32 DeltaX;     ///< Mouse Wheel displacement in X
+  int32 DeltaY;     ///< Mouse Wheel displacement in Y
 
+  Flags Buttons;  ///< Buttons state
   nglTouchId    TouchId; ///< used to retrieve which finger acting
   
   nglTime EventTime; ///< Timestamp of the mouse info object (= time of the event if the mouse info comes from an event).
@@ -663,6 +670,19 @@ window = new nglWindow (context, info, NULL);
     \a ButtonDoubleClick and \a ButtonTripleClick bits might be set in \a aButton,
     together with the hit button flag.
   */
+
+  virtual bool OnMouseWheel (nglMouseInfo& rInfo);
+  /*!<
+   This method is called as soon as the mouse wheel is moved
+   \param rInfo mouse status. The DeltaX and DeltaY members contain the displacement of the wheel.
+   \return true is the mouse event was handled and false otherwise. If the key wasn't handled it is potentially sent back to the system or hosting application.
+
+   See GetMouse() for X and Y values exact interpretation.
+
+   \a ButtonDoubleClick and \a ButtonTripleClick bits might be set in \a aButton,
+   together with the hit button flag.
+   */
+
   virtual bool OnMouseUnclick (nglMouseInfo& rInfo);
   /*!<
     This method is called when a mouse button is released.
@@ -789,6 +809,7 @@ public:
   bool CallOnKeyUp      (const nglKeyEvent& rEvent);
   bool CallOnMouseClick (nglMouseInfo& rInfo);
   bool CallOnMouseUnclick(nglMouseInfo& rInfo);
+  bool CallOnMouseWheel (nglMouseInfo& rInfo);
   bool CallOnMouseMove  (nglMouseInfo& rInfo);
   bool CallOnMouseCanceled  (nglMouseInfo& rInfo);
   bool CallOnRotation(uint Angle);

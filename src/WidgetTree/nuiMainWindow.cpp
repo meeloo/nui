@@ -602,6 +602,13 @@ bool nuiMainWindow::OnMouseClick(nglMouseInfo& rInfo)
   return CallMouseClick(rInfo);
 }
 
+bool nuiMainWindow::OnMouseWheel(nglMouseInfo& rInfo)
+{
+  mLastEventTime = nglTime();
+  mLastInteractiveEventTime = nglTime();
+  return CallMouseWheel(rInfo);
+}
+
 bool nuiMainWindow::OnMouseUnclick(nglMouseInfo& rInfo)
 {
   mLastEventTime = nglTime();
@@ -1081,6 +1088,11 @@ bool nuiMainWindow::NGLWindow::OnMouseUnclick(nglMouseInfo& rInfo)
 bool nuiMainWindow::NGLWindow::OnMouseMove(nglMouseInfo& rInfo)
 {
   return mpMainWindow->OnMouseMove(rInfo);
+}
+
+bool nuiMainWindow::NGLWindow::OnMouseWheel(nglMouseInfo& rInfo)
+{
+  return mpMainWindow->OnMouseWheel(rInfo);
 }
 
 bool nuiMainWindow::NGLWindow::OnMouseCanceled (nglMouseInfo& rInfo)

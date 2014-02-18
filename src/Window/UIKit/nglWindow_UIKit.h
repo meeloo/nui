@@ -43,7 +43,6 @@ typedef std::map<UITouch*,nglTouchInfo> TouchesInfo;
   nglContextInfo* mpContextInfo;
   nglTime       mLastEventTime;
   bool          mInited;
-  bool          mInvalidated;
   id            mDisplayLink;
   NSTimer*      mInvalidationTimer;
 	UITextField*  mpTextField;

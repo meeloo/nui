@@ -180,6 +180,7 @@ protected:
   virtual bool OnKeyUp       (const nglKeyEvent& rEvent);
   virtual bool OnMouseClick  (nglMouseInfo& rInfo);
   virtual bool OnMouseUnclick(nglMouseInfo& rInfo);
+  virtual bool OnMouseWheel  (nglMouseInfo& rInfo);
   virtual bool OnMouseMove   (nglMouseInfo& rInfo);
   virtual bool OnMouseCanceled(nglMouseInfo& rInfo);
   virtual bool OnRotation    (uint Angle);
@@ -240,6 +241,7 @@ private:
     virtual bool OnKeyUp(const nglKeyEvent& rEvent);
     virtual bool OnMouseClick(nglMouseInfo& rInfo);
     virtual bool OnMouseUnclick(nglMouseInfo& rInfo);
+    virtual bool OnMouseWheel (nglMouseInfo& rInfo);
     virtual bool OnMouseMove(nglMouseInfo& rInfo);
     virtual bool OnMouseCanceled(nglMouseInfo& rInfo);
     virtual bool OnRotation(uint Angle);

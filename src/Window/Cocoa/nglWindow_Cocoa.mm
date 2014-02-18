@@ -566,31 +566,36 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   NSPoint p = [self mouseLocationOutsideOfEventStream];
   info.X = p.x;
   info.Y = [self contentRectForFrameRect:[self frame]].size.height - p.y;
+  info.DeltaX = x;
+  info.DeltaY = -y;
 
-  if (x > 0)
+  if (!mpNGLWindow->CallOnMouseWheel(info))
   {
-    info.Buttons = nglMouseInfo::ButtonWheelLeft;
-    mpNGLWindow->CallOnMouseClick(info);
-    mpNGLWindow->CallOnMouseUnclick(info);
-  }
-  else if (x < 0)
-  {
-    info.Buttons = nglMouseInfo::ButtonWheelRight;
-    mpNGLWindow->CallOnMouseClick(info);
-    mpNGLWindow->CallOnMouseUnclick(info);
-  }
+    if (x > 0)
+    {
+      info.Buttons = nglMouseInfo::ButtonWheelLeft;
+      mpNGLWindow->CallOnMouseClick(info);
+      mpNGLWindow->CallOnMouseUnclick(info);
+    }
+    else if (x < 0)
+    {
+      info.Buttons = nglMouseInfo::ButtonWheelRight;
+      mpNGLWindow->CallOnMouseClick(info);
+      mpNGLWindow->CallOnMouseUnclick(info);
+    }
 
-  if (y > 0)
-  {
-    info.Buttons = nglMouseInfo::ButtonWheelUp;
-    mpNGLWindow->CallOnMouseClick(info);
-    mpNGLWindow->CallOnMouseUnclick(info);
-  }
-  else if (y < 0)
-  {
-    info.Buttons = nglMouseInfo::ButtonWheelDown;
-    mpNGLWindow->CallOnMouseClick(info);
-    mpNGLWindow->CallOnMouseUnclick(info);
+    if (y > 0)
+    {
+      info.Buttons = nglMouseInfo::ButtonWheelUp;
+      mpNGLWindow->CallOnMouseClick(info);
+      mpNGLWindow->CallOnMouseUnclick(info);
+    }
+    else if (y < 0)
+    {
+      info.Buttons = nglMouseInfo::ButtonWheelDown;
+      mpNGLWindow->CallOnMouseClick(info);
+      mpNGLWindow->CallOnMouseUnclick(info);
+    }
   }
 }
 //////

@@ -1211,17 +1211,19 @@ OSStatus nglWindow::WindowEventHandler (EventHandlerCallRef eventHandlerCallRef,
           EventMouseWheelAxis wheelAxis;
           GetEventParameter (eventRef, kEventParamMouseWheelAxis, typeMouseWheelAxis, NULL, sizeof(wheelAxis), NULL, &wheelAxis);
           nglMouseInfo minfo;
-          
+
           if (wheelAxis == kEventMouseWheelAxisY)
           {
-            if (delta < 0) 
+            minfo.DeltaY = delta;
+            if (delta < 0)
               minfo.Buttons = nglMouseInfo::ButtonWheelDown;
             else
               minfo.Buttons = nglMouseInfo::ButtonWheelUp;
           }
           else
           {
-            if (delta > 0) 
+            minfo.DeltaX = delta;
+            if (delta > 0)
               minfo.Buttons = nglMouseInfo::ButtonWheelLeft;
             else
               minfo.Buttons = nglMouseInfo::ButtonWheelRight;
@@ -1229,10 +1231,13 @@ OSStatus nglWindow::WindowEventHandler (EventHandlerCallRef eventHandlerCallRef,
           
           minfo.X = mouseLocation.h - mXOffset;
           minfo.Y = mouseLocation.v - mYOffset;
-          
-          bool res = CallOnMouseClick(minfo);
-          res |= CallOnMouseUnclick(minfo);
-          result = res ? (OSStatus)noErr : (OSStatus)eventNotHandledErr;
+
+          if (!(result = (CallOnMouseWheel(minfo) ? (OSStatus)noErr : (OSStatus)eventNotHandledErr) ))
+          {
+            bool res = CallOnMouseClick(minfo);
+            res |= CallOnMouseUnclick(minfo);
+            result = res ? (OSStatus)noErr : (OSStatus)eventNotHandledErr;
+          }
         }
           break;
         default:
