@@ -148,6 +148,19 @@ bool nuiDrawerView::PreMouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
+    if (mTouched && !mMoving && mOffset != 0)
+    {
+      if (mpMain)
+      {
+        mpMain->DispatchMouseCanceled(rInfo);
+      }
+      mTouched = false;
+
+      mTargetOffset = 0;
+      mEventSink.Connect(nuiAnimation::GetTimer()->Tick, &nuiDrawerView::OnAnimateDrawer);
+
+      return true;
+    }
     mTouched = false;
   }
   return false;
@@ -169,6 +182,7 @@ bool nuiDrawerView::PreMouseMoved(const nglMouseInfo& rInfo)
       if (StealMouseEvent(rInfo))
       {
         mTouched = false;
+        mMoving = true;
         return true;
       }
     }
@@ -180,7 +194,7 @@ bool nuiDrawerView::MouseClicked(const nglMouseInfo& rInfo)
 {
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
-    mMoving = true;
+    mMoving = false;
     mTouched = false;
 
     mTouch = rInfo;
@@ -295,6 +309,22 @@ bool nuiDrawerView::MouseMoved(const nglMouseInfo& rInfo)
     //NGL_OUT("Mouse moved, new offset = %f\n", mOffset);
     UpdateLayout();
     return true;
+  }
+
+  if (mTouched)
+  {
+    float x = 0;
+    x = mTouch.X - rInfo.X;
+    float dist = fabs(x);
+
+    if (dist > MOVE_TOLERANCE)
+    {
+      //NGL_OUT("nuiDrawerView Preempting mouse from existing grabber!\n");
+      NGL_ASSERT(GetTopLevel());
+
+      mTouched = false;
+      mMoving = true;
+    }
   }
   return false;
 }

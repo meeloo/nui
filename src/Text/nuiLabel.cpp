@@ -72,9 +72,9 @@ void nuiLabel::InitDefaultValues()
   mpIdealLayout = NULL;
   mpFont = NULL;
   
-  mTextColorSet = false;
-  mBackColorSet = false;  
-  
+  mBackColor = nuiColor(255, 255, 255, 0);
+  mTextColor = nuiColor(0, 0, 0, 255);
+
   mUseEllipsis = false;
   mClearBg = false;
   mTextPosition = nuiLeft;
@@ -82,7 +82,6 @@ void nuiLabel::InitDefaultValues()
   mVMargin = NUI_LABEL_VMARGIN;
   mHMargin = NUI_LABEL_HMARGIN;
   mWrapping = false;
-  mIgnoreState = false; 
 }
 
 
@@ -187,14 +186,12 @@ const nglString& nuiLabel::_GetFont() const
 
 void nuiLabel::SetTextColor(const nuiColor& Color)
 {
-  mTextColorSet = true;
   mTextColor = Color;
   Invalidate();
 }
 
 void nuiLabel::SetBackgroundColor(const nuiColor& Color)
 {
-  mBackColorSet = true;
   mBackColor = Color;
   SetBackground(true);
   Invalidate();
@@ -219,51 +216,6 @@ bool nuiLabel::Draw(nuiDrawContext* pContext)
   CalcLayout();
 
   pContext->SetFont(mpFont);
-  
-  if (mIgnoreState)
-  {
-    if (!mBackColorSet)
-      ColorBg = GetColor(eNormalTextBg);
-    if (!mTextColorSet)
-      Color = GetColor(eNormalTextFg);
-  }
-  else
-  {
-    if (IsEnabled())
-    {
-      if (IsSelected())
-      {
-        if (!mBackColorSet)
-          ColorBg = GetColor(eSelectedTextBg);
-        if (!mTextColorSet)
-          Color = GetColor(eSelectedTextFg);
-      }
-      else
-      {
-        if (!mBackColorSet)
-          ColorBg = GetColor(eNormalTextBg);
-        if (!mTextColorSet)
-          Color = GetColor(eNormalTextFg);
-      }
-    }
-    else
-    {
-      if (IsSelected())
-      {
-        if (!mBackColorSet)
-          ColorBg = GetColor(eSelectedTextBg);
-        if (!mTextColorSet)
-          Color = GetColor(eDisabledTextFg);
-      }
-      else
-      {
-        if (!mBackColorSet)
-          ColorBg = GetColor(eDisabledTextBg);
-        if (!mTextColorSet)
-          Color = GetColor(eDisabledTextFg);
-      }
-    }
-  }
 
   nuiGlyphInfo GlyphInfo;
   mpLayout->GetMetrics(GlyphInfo);
@@ -490,51 +442,6 @@ void nuiLabel::SetText(const nglString& Text)
 const nglString& nuiLabel::GetText() const
 {
   return mText;
-}
-
-void nuiLabel::SetThemeTextColor(const nuiColor& Color, bool Selected, bool Enabled)
-{
-  if (Enabled && !Selected)
-    SetColor(eNormalTextFg, Color);
-  else if (Enabled && Selected)
-    SetColor(eSelectedTextFg, Color);
-  else if (!Enabled)
-    SetColor(eDisabledTextFg, Color);
-  Invalidate();
-}
-
-nuiColor nuiLabel::GetThemeTextColor(bool Selected, bool Enabled)
-{
-  if (Enabled && !Selected)
-    return GetColor(eNormalTextFg);
-  else if (Enabled && Selected)
-    return GetColor(eSelectedTextFg);
-  else if (!Enabled)
-    return GetColor(eDisabledTextFg);
-  return GetColor(eNormalTextFg);
-}
-
-void nuiLabel::SetThemeBackgroundColor(const nuiColor& Color, bool Selected, bool Enabled)
-{
-  SetBackground(true);
-  if (Enabled && !Selected)
-    SetColor(eNormalTextBg, Color);
-  else if (Enabled && Selected)
-    SetColor(eSelectedTextBg, Color);
-  else if (!Enabled)
-    SetColor(eDisabledTextBg, Color);
-  Invalidate();
-}
-
-nuiColor nuiLabel::GetThemeBackgroundColor(bool Selected, bool Enabled)
-{
-  if (Enabled && !Selected)
-    return GetColor(eNormalTextBg);
-  else if (Enabled && Selected)
-    return GetColor(eSelectedTextBg);
-  else if (!Enabled)
-    return GetColor(eDisabledTextBg);
-  return GetColor(eNormalTextBg);
 }
 
 void nuiLabel::SetBackground(bool bg)

@@ -25,8 +25,6 @@ public:
   nuiLabel(const nglString& Text, nuiFont* pFont, bool AlreadyAcquired = false);
   virtual ~nuiLabel();
 
-  void IgnoreState(bool ignoreState = true) { mIgnoreState = ignoreState; }
-
   void InitAttributes();
   void InitProperties();
   void InitDefaultValues();
@@ -38,10 +36,6 @@ public:
   virtual void SetText(const nglString& Text); ///< Modify the label's text.
   virtual const nglString& GetText() const; ///< Retrieve the label's text.
 
-  void SetThemeTextColor(const nuiColor& Color, bool Selected, bool Enabled); ///< Get the text color for the given widget state.
-  void SetThemeBackgroundColor(const nuiColor& Color, bool Selected, bool Enabled); ///< Set the background color to use to clear the rect before drawing the text.
-  nuiColor GetThemeTextColor(bool Selected, bool Enabled); ///< Get the text color for the given widget state.
-  nuiColor GetThemeBackgroundColor(bool Selected, bool Enabled); ///< Get the background color to use to clear the rect before drawing the text. 
   void SetFont(nuiTheme::FontStyle FontStyle); //< Change the font used by the widget.
   void SetFont(nuiFont* pFont, bool AlreadyAcquired = false); //< Change the font used by the widget.
   void SetFont(nuiFontRequest& rFontRequest);
@@ -96,7 +90,6 @@ protected:
   bool mClearBg;
   nuiFont* mpFont;
   nuiOrientation mOrientation;
-  bool mIgnoreState;
 
   nuiRect mIdealLayoutRect;
   nuiRect GetLayoutRect();
@@ -105,8 +98,6 @@ protected:
   bool mUnderline;
   bool mStrikeThrough;
 
-  bool mTextColorSet;
-  bool mBackColorSet;
   nuiColor mTextColor;
   nuiColor mBackColor;
   
