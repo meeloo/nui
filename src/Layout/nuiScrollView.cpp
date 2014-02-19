@@ -8,9 +8,10 @@
 #include "nui.h"
 
 #define SCROLL_SIZE 12.0f
-#define NUI_SMOOTH_SCROLL_RATIO (0.2f/1.f)
+#define NUI_SMOOTH_SCROLL_RATIO (0.2f/2.f)
 #define HIDE_SCROLLBARS_DELAY 0.6
-#define INERTIA_SPEED 1200
+#define INERTIA_SPEED 2400
+#define INERTIA_BRAKES 0.9
 #define EXTRA_OUT_SIZE_RATIO 0.5
 
 
@@ -672,12 +673,12 @@ bool nuiScrollView::MouseWheelMoved(const nglMouseInfo& rInfo)
 {
   if (mpHorizontal && !mForceNoHorizontal)
   {
-    mpHorizontal->GetRange().SetValue(mpHorizontal->GetRange().GetValue() + rInfo.DeltaX);
+    mpHorizontal->GetRange().SetValue(mpHorizontal->GetRange().GetValue() + rInfo.DeltaX * 5);
   }
 
   if (mpVertical && !mForceNoVertical)
   {
-    mpVertical->GetRange().SetValue(mpVertical->GetRange().GetValue() + rInfo.DeltaY);
+    mpVertical->GetRange().SetValue(mpVertical->GetRange().GetValue() + rInfo.DeltaY * 5);
   }
 
   if (mHideScrollBars)
@@ -982,14 +983,14 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     {
       SetXPos(GetXPos() + mSpeedX);
       //mXOffset = GetXPos();
-      mSpeedX *= 0.7;
+      mSpeedX *= INERTIA_BRAKES;
     }
     
     if (mSpeedY != 0)
     {
       SetYPos(GetYPos() + mSpeedY);
       //mYOffset = GetYPos();
-      mSpeedY *= 0.7;
+      mSpeedY *= INERTIA_BRAKES;
     }
   }
 

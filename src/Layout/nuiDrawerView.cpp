@@ -314,7 +314,7 @@ bool nuiDrawerView::MouseCanceled(const nglMouseInfo& rInfo)
 void nuiDrawerView::OnAnimateDrawer(const nuiEvent &rEvent)
 {
   float diff = mTargetOffset - mOffset;
-  mOffset += diff / 2;
+  mOffset += diff / 8;
 
   //NGL_OUT(".");
   diff = mTargetOffset - mOffset;
