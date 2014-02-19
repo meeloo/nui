@@ -150,16 +150,19 @@ bool nuiDrawerView::PreMouseUnclicked(const nglMouseInfo& rInfo)
   {
     if (mTouched && !mMoving && mOffset != 0)
     {
-      if (mpMain)
+      if ((mOffset < 0 && rInfo.X < mRect.GetWidth() + mOffset) || (mOffset > 0 && rInfo.X > mOffset))
       {
-        mpMain->DispatchMouseCanceled(rInfo);
+        if (mpMain)
+        {
+          mpMain->DispatchMouseCanceled(rInfo);
+        }
+        mTouched = false;
+
+        mTargetOffset = 0;
+        mEventSink.Connect(nuiAnimation::GetTimer()->Tick, &nuiDrawerView::OnAnimateDrawer);
+
+        return true;
       }
-      mTouched = false;
-
-      mTargetOffset = 0;
-      mEventSink.Connect(nuiAnimation::GetTimer()->Tick, &nuiDrawerView::OnAnimateDrawer);
-
-      return true;
     }
     mTouched = false;
   }
