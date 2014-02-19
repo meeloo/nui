@@ -94,9 +94,9 @@ float nuiGetScaleFactor()
 {
   if (gScaleFactor == 0)
   {
-    gScaleFactor = [UIScreen mainScreen].scale; 
+    gScaleFactor = [UIScreen mainScreen].scale;
   }
-  
+
   return gScaleFactor;
 }
 
@@ -104,7 +104,7 @@ float nuiGetInvScaleFactor()
 {
   if (gInvScaleFactor == 0)
   {
-    gInvScaleFactor = 1.0f / nuiGetScaleFactor(); 
+    gInvScaleFactor = 1.0f / nuiGetScaleFactor();
   }
 
   return gInvScaleFactor;

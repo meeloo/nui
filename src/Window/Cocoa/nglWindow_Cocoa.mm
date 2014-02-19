@@ -202,7 +202,7 @@ float nuiGetScaleFactor()
   {
     gScaleFactor = [[NSScreen mainScreen] backingScaleFactor];
   }
-
+  //gScaleFactor = 1;
   return gScaleFactor;
 }
 

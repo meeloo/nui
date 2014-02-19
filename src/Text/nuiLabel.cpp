@@ -233,7 +233,7 @@ bool nuiLabel::Draw(nuiDrawContext* pContext)
   rect.SetPosition(mTextPosition, mRect.Size());
   //pContext->DrawRect(rect, eStrokeShape);
   
-  rect.mTop += (nuiSize)ToNearest(info.Ascender) + mVMargin;
+  rect.mTop += (nuiSize)ToNearest(info.Ascender) + mVMargin + 1;
   rect.mLeft +=  mHMargin;
 
   if (mClearBg)

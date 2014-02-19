@@ -130,9 +130,9 @@ void nglContext::OnRescale(float NewScale)
 
 void nglContext::CallOnRescale(float NewScale)
 {
-  OnRescale(mScale);
   mScale = NewScale;
   mScaleInv = 1.0 / NewScale;
+  OnRescale(mScale);
 }
 
 float nglContext::GetScale() const

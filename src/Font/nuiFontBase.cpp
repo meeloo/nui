@@ -2007,8 +2007,9 @@ bool nuiFontBase::PrepareGlyph(float X, float Y, nuiTextGlyph& rGlyph)
   float hh = h * nuiGetInvScaleFactor();
   
   rGlyph.mDestRect.Set(X + x - 1, Y + y - 1, ww + 2, hh + 2);
-  rGlyph.mSourceRect.Set(GlyphLocation.mOffsetX - nuiGetScaleFactor(), GlyphLocation.mOffsetY - nuiGetScaleFactor(), w + 2 * nuiGetScaleFactor(), h + 2 * nuiGetScaleFactor());
-  
+  float f = nuiGetScaleFactor();
+  rGlyph.mSourceRect.Set(GlyphLocation.mOffsetX - f, GlyphLocation.mOffsetY - f, w + 2 * f, h + 2 * f);
+
   return true;
 }
 
