@@ -7,6 +7,7 @@ static const float STIFFNESS = .3f;
 static const float PULL_COEF = 4;
 static const float MOVE_TOLERANCE = 8;
 
+
 nuiDrawerView::nuiDrawerView() :
 mpLeft(nullptr), mpMain(nullptr), mpRight(nullptr), mOffset(0), mTouched(false), mMoving(false), mOriginalOffset(0), mTargetOffset(0), mEventSink(this)
 {
