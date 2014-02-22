@@ -2221,7 +2221,7 @@ void nuiEventActionHolder::Disconnect(nuiObject* pTargetObject)
   NGL_ASSERT(pTargetObject != nullptr);
   auto it = mBindings.find(pTargetObject);
   if (it == mBindings.end())
-    return true;
+    return;
   for (auto source : it->second)
     mEventSink.DisconnectSource(*source);
   mBindings.erase(it);

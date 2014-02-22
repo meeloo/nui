@@ -9,8 +9,9 @@ MY_INCLUDE_FILES := $(LOCAL_PATH)
 LOCAL_MODULE    := tidy
 LOCAL_C_INCLUDES := $(MY_INCLUDE_FILES)
 LOCAL_ARM_MODE := arm
+LOCAL_DISABLE_FORMAT_STRING_CHECKS := true
 
-LOCAL_CFLAGS    := -w \
+LOCAL_CFLAGS    := -Wno-error=format-security \
 -D_ANDROID_\ # added "|| defined(_ANDROID_)" in platform.h at the end of the line 523 to have the "ulong" type defined
 
 LOCAL_SRC_FILES := \
@@ -42,6 +43,7 @@ tagask.c \
 tmbstr.c \
 
 LOCAL_EXPORT_C_INCLUDES := $(MY_INCLUDE_FILES)
+LOCAL_DISABLE_FORMAT_STRING_CHECKS := true
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -53,6 +55,7 @@ include $(BUILD_STATIC_LIBRARY)
 # If you try to build (with ndk-build) a Android.mk file wich contains only a static library, it won't compile anything since there are no dependencies
 
 include $(CLEAR_VARS)
+
 LOCAL_MODULE := tidy-shared
 LOCAL_STATIC_LIBRARIES := tidy
 
