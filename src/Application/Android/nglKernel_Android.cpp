@@ -150,6 +150,12 @@ bool nglKernel::SysInit(android_app* app)
   return true;
 }
 
+bool nglKernel::SysInit()
+{
+  NGL_ASSERT(0);
+  return true;
+}
+
 void nglKernel::CatchSignal (int Signal, void (*pHandler)(int))
 {
   struct sigaction act;

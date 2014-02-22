@@ -11,8 +11,7 @@ LOCAL_MODULE    := ucdata
 LOCAL_C_INCLUDES := $(MY_INCLUDE_FILES)
 LOCAL_ARM_MODE := arm
 
-LOCAL_CFLAGS    := \
--std=c99 \
+LOCAL_CFLAGS    :=
 
 LOCAL_SRC_FILES := \
 ucdata.cpp \

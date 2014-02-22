@@ -161,3 +161,13 @@ bool nglTimer::IsRunning()
 {
   return mRunning;
 }
+
+nglTime nglTimer::GetTimeOut (nglTime Now)
+{
+  NGL_ASSERT(0);
+}
+
+void nglTimer::Update()
+{
+  NGL_ASSERT(0);
+}

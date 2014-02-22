@@ -195,6 +195,11 @@ bool nglWindow::SetCursor (nuiMouseCursor Cursor)
   return true;
 }
 
+int nglWindow::GetStatusBarSize() const
+{
+  NGL_ASSERT(0);
+  return 0;
+}
 
 /*
  * Events control
