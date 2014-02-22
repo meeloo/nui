@@ -7197,6 +7197,7 @@
 		E5816D510C3CECAB00902DFE /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				E5F5D3E40D4184BD00C36E8E /* nuiCSS.cpp */,
 				E5816D520C3CECAB00902DFE /* nui.cpp */,
 				E5F9B19A118656B600A703BA /* nuiApplication.cpp */,
 				E5816CB00C3CECAB00902DFE /* nuiApplication.h */,
@@ -7215,7 +7216,6 @@
 				BC6CCB280F121D750020EE35 /* nuiCommandContainer.h */,
 				BC6CCB210F121D580020EE35 /* nuiCommandManager.cpp */,
 				BC6CCB290F121D750020EE35 /* nuiCommandManager.h */,
-				E5F5D3E40D4184BD00C36E8E /* nuiCSS.cpp */,
 				E5F5D3E00D4180CC00C36E8E /* nuiCSS.h */,
 				E5816D590C3CECAB00902DFE /* nuiEvent.cpp */,
 				E5816CC20C3CECAB00902DFE /* nuiEvent.h */,
