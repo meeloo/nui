@@ -18,7 +18,7 @@ class nuiAndroidBridge : public nglContext, public nuiTopLevel
 {
 public:
   nuiAndroidBridge()
-  : nuiTopLevel(_T("")),
+  : nuiTopLevel(""),
     mEventSink(this)
   {
     *((nuiAndroidBridge**)&gmpNUI_AndroidBridge) = this;
@@ -26,7 +26,9 @@ public:
     mWidth = 100;
     mHeight = 200;
     mClearBackground = false;
-    
+    nuiMainWindow::SetRenderer(eOpenGL2);
+    mTargetAPI = eTargetAPI_OpenGL2;
+  
     EnableRenderCache(true);
     EnablePartialRedraw(false);    
     SetRect(nuiRect(0.0f, 0.0f, (nuiSize)mWidth, (nuiSize)mHeight));
@@ -51,6 +53,11 @@ public:
     *((nuiAndroidBridge**)&gmpNUI_AndroidBridge) = this;
   }
   
+  void Init()
+  {
+    InitPainter();
+  }
+
   void Display()
   {
     Paint();

@@ -66,6 +66,9 @@ bool nglContextInfo::Enum (uint Index, nglContextInfo& rInfo)
 nglContext::nglContext()
 {
   LOGI("nglContext::nglContext()");
+  mpPainter = NULL;
+  mScale = 1.0f;
+  mScaleInv = 1.0f;
   LOGI("nglContext::nglContext() OK");
 }
 
@@ -88,3 +91,5 @@ const nglChar* nglContext::OnError (uint& rError) const
 {
   return NULL;
 }
+
+

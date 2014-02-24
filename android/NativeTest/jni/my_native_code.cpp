@@ -119,6 +119,10 @@ static int engine_init_display(struct engine* engine)
   glShadeModel(GL_SMOOTH);
   glDisable(GL_DEPTH_TEST);
   
+    // Create the NUI bridge which also serves as the main window/widget tree:
+  gpBridge->Init();
+  
+
   return 0;
 }
 
@@ -281,11 +285,6 @@ void android_main(struct android_app* state)
   nuiInit(state);
   LOGI("nuiInit OK");
   
-  // Create the NUI bridge which also serves as the main window/widget tree:
-  LOGI("create Android Bridge");
-  gpBridge = new nuiAndroidBridge();
-  LOGI("create Android Bridge OK");
-  
   struct engine engine;
   
   // Make sure glue isn't stripped.
@@ -309,6 +308,11 @@ void android_main(struct android_app* state)
     // We are starting with a previous saved state; restore from it.
     engine.state = *(struct saved_state*)state->savedState;
   }
+  
+    // Create the NUI bridge which also serves as the main window/widget tree:
+  LOGI("create Android Bridge");
+  gpBridge = new nuiAndroidBridge();
+  LOGI("create Android Bridge OK");
   
   // loop waiting for stuff to do.
 
@@ -372,3 +376,4 @@ void android_main(struct android_app* state)
     }
   }
 }
+
