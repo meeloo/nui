@@ -232,6 +232,7 @@ NUI_LOCAL_SRC_FILES_LAYOUT := ../src/Layout/nuiBox.cpp \
                               ../src/Layout/nuiUserArea.cpp \
                               ../src/Layout/nuiVBox.cpp \
                               ../src/Layout/nuiZoomView.cpp \
+                              ../src/Layout/nuiDrawerView.cpp \
 
 
 NUI_LOCAL_SRC_FILES_MATH := ../src/Math/nglMath.cpp \

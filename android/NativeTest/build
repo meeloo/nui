@@ -1,11 +1,8 @@
 export NDK_MODULE_PATH=$(pwd)/../../
-export NDK_PATH=/Users/meeloo/work/ndk
-export SDK_PATH=/Users/meeloo/work/android-sdk/sdk
 echo ----------------------------------------------------------------------------------------
 echo Build lib
 echo ----------------------------------------------------------------------------------------
-#~/work/dev/android/android-ndk-r5b/ndk-build -j 8 NDK_DEBUG=1
-$NDK_PATH/ndk-build -j 8 NDK_DEBUG=1
+ndk-build -j 8 NDK_DEBUG=1
 
 
 echo ----------------------------------------------------------------------------------------
@@ -28,12 +25,12 @@ ant debug
 echo ----------------------------------------------------------------------------------------
 echo Uninstall old app
 echo ----------------------------------------------------------------------------------------
-$SDK_PATH/platform-tools/adb uninstall com.example.native_activity
+$ANDROID_HOME/platform-tools/adb uninstall com.example.native_activity
 
 echo ----------------------------------------------------------------------------------------
 echo Install new app
 echo ----------------------------------------------------------------------------------------
-$SDK_PATH/platform-tools/adb install bin/NativeActivity-debug.apk
+$ANDROID_HOME/platform-tools/adb install bin/NativeActivity-debug.apk
 
 echo ----------------------------------------------------------------------------------------
 echo Build OK

@@ -214,7 +214,10 @@ bool nuiCheckForGLErrorsReal();
 #define GL_FRAMEBUFFER_UNSUPPORTED_NUI                    GL_FRAMEBUFFER_UNSUPPORTED_OES
 #define GL_FRAMEBUFFER_COMPLETE_NUI                       GL_FRAMEBUFFER_COMPLETE_OES
 
+#ifndef GL_DEPTH_COMPONENT16
 #define GL_DEPTH_COMPONENT16                              GL_DEPTH_COMPONENT16_OES
+#endif
+
 #define GL_DEPTH_COMPONENT24                              GL_DEPTH_COMPONENT24_OES
 
 #define GL_RENDERBUFFER_WIDTH_NUI                         GL_RENDERBUFFER_WIDTH_OES
