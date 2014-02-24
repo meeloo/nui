@@ -56,6 +56,7 @@ struct engine
   */
 static int engine_init_display(struct engine* engine) 
 {
+  LOGI("Init opengl context");
   // initialize OpenGL ES and EGL
   
   /*
@@ -65,7 +66,8 @@ static int engine_init_display(struct engine* engine)
     */
   const EGLint attribs[] = 
   {
-    EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+    //EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
     EGL_BLUE_SIZE, 8,
     EGL_GREEN_SIZE, 8,
     EGL_RED_SIZE, 8,
@@ -73,7 +75,7 @@ static int engine_init_display(struct engine* engine)
   };
   EGLint w, h, dummy, format;
   EGLint numConfigs;
-  EGLConfig config;
+  EGLConfig configs[10];
   EGLSurface surface;
   EGLContext context;
   
@@ -84,18 +86,24 @@ static int engine_init_display(struct engine* engine)
   /* Here, the application chooses the configuration it desires. In this
     * sample, we have a very simplified selection process, where we pick
     * the first EGLConfig that matches our criteria */
-  eglChooseConfig(display, attribs, &config, 1, &numConfigs);
+  eglChooseConfig(display, attribs, configs, 10, &numConfigs);
+  LOGI("Init opengl num configs: %d", numConfigs);
   
   /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
     * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
     * As soon as we picked a EGLConfig, we can safely reconfigure the
     * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
-  eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format);
+  eglGetConfigAttrib(display, configs[0], EGL_NATIVE_VISUAL_ID, &format);
+  LOGI("Init opengl config format: %d", format);
   
   ANativeWindow_setBuffersGeometry(engine->app->window, 0, 0, format);
   
-  surface = eglCreateWindowSurface(display, config, engine->app->window, NULL);
-  context = eglCreateContext(display, config, NULL, NULL);
+  surface = eglCreateWindowSurface(display, configs[0], engine->app->window, NULL);
+  LOGI("Init opengl surface: %p", surface);
+
+  EGLint attribs2[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+  context = eglCreateContext(display, configs[0], NULL, attribs2);
+  LOGI("Init opengl context: %p", context);
   
   if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) 
   {
