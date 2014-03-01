@@ -335,7 +335,7 @@ void nuiLabel::CalcLayout()
 
 nuiRect nuiLabel::CalcIdealSize()
 {
-//  NGL_OUT(_T("Calc 0x%x\n"), this);
+  //NGL_OUT("Calc 0x%x\n", this);
   CalcLayout();
 
   if (mpLayout)
@@ -348,7 +348,7 @@ nuiRect nuiLabel::CalcIdealSize()
   }
 
   mIdealRect.RoundToBiggest();
-  //NGL_OUT(_T("%s [%s]"), mText.GetChars(), mIdealRect.GetValue().GetChars());
+  //NGL_OUT("%s %s", mText.GetChars(), mIdealRect.GetValue().GetChars());
   return mIdealRect;
 }
 

@@ -152,12 +152,14 @@ bool nglContext::CheckExtension (const nglChar* pExtName)
     return false;
 
   MakeCurrent();
-  
+  nuiCheckForGLErrorsReal();
+
   nglString temp(pExtName);
   char* extname = temp.Export();
 
   int extname_l = strlen(extname);
   const char* ext0 = (const char*)glGetString(GL_EXTENSIONS);
+  nuiCheckForGLErrorsReal();
   const char* ext = ext0;
   bool success = false;
 
@@ -171,6 +173,7 @@ bool nglContext::CheckExtension (const nglChar* pExtName)
   if (success || !strncmp(extname, "GL_VERSION_1_", 13) || !strncmp(extname, "GL_VERSION_2_", 13))
   {
     success = InitExtension(pExtName);
+    nuiCheckForGLErrorsReal();
 #ifdef _DEBUG_
     if (!success)
       NGL_LOG(_T("context"), NGL_LOG_WARNING, _T("'%s' extension setup failed"), pExtName);
@@ -260,6 +263,7 @@ void nglContext::Dump(uint Level) const
 
 void nglContext::InitPainter()
 {
+  nuiCheckForGLErrorsReal();
   mpPainter = NULL;
   switch (mTargetAPI)
   {
@@ -282,6 +286,7 @@ void nglContext::InitPainter()
       break;
 #endif
   }
+  nuiCheckForGLErrorsReal();
 }
 
 nuiPainter* nglContext::GetPainter() const

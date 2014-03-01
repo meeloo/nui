@@ -1606,7 +1606,7 @@ bool nuiFontBase::Load (const nglPath& rPath, uint Face, float Size)
 bool nuiFontBase::Load (const uint8* pBase, int32 BufferSize, uint Face, bool StaticBuffer, float Size)
 {
   // Load face from memory
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Loading logical font at %p (face %d, %d bytes)"), pBase, Face, Size); )
+  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Loading logical font at %p (face %d, size %f, %d bytes)"), pBase, Face, Size, BufferSize); )
   mpFace->SetFontInstance(new nuiFontInstance(pBase, BufferSize, Face, StaticBuffer));
   mpFace->Desc.face_id = nuiFontInstance::Install(mpFace->GetFontInstance());
   
@@ -1796,6 +1796,8 @@ nuiTexture *nuiFontBase::AllocateTexture(int size)
   pTexture->SetWrapT(GL_CLAMP);
 #endif
 
+  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Allocated new font texture (%d x %d) %s"), size, size, GetObjectName().GetChars()); )
+
   return pTexture;
 }
 
@@ -1940,7 +1942,7 @@ void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLoc
   rGlyphLocation = GlyphLocation (OffsetX + 2, OffsetY + 2, bmp.Width, bmp.Height, mCurrentTexture);
   mGlyphLocationLookupTable.insert(std::make_pair(Index, rGlyphLocation));
 
-  //printf("Glyph: %d %d (%d,%d) [%d * %d]\n", Index, (int)mGlyphLocationLookupTable.size(), OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height);
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Glyph: %d %d (%d,%d) [%d * %d]\n", Index, (int)mGlyphLocationLookupTable.size(), OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height); )
 
   CopyBitmapToTexture(bmp, pCurrentTexture, OffsetX + 1, OffsetY + 1);
 

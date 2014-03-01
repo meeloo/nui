@@ -121,14 +121,20 @@ static int engine_init_display(struct engine* engine)
   engine->height = h;
   engine->state.angle = 0;
   
+  nuiCheckForGLErrorsReal();
   // Initialize GL state.
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+  nuiCheckForGLErrorsReal();
   glEnable(GL_CULL_FACE);
+  nuiCheckForGLErrorsReal();
   glShadeModel(GL_SMOOTH);
+  nuiCheckForGLErrorsReal();
   glDisable(GL_DEPTH_TEST);
+  nuiCheckForGLErrorsReal();
   
     // Create the NUI bridge which also serves as the main window/widget tree:
   gpBridge->Init();
+  nuiCheckForGLErrorsReal();
   
 
   return 0;
@@ -146,9 +152,13 @@ static void engine_draw_frame(struct engine* engine)
   }
   
   // Just fill the screen with a color.
-  glClearColor(((float)engine->state.x)/engine->width, engine->state.angle,
-               ((float)engine->state.y)/engine->height, 1);
+  nuiCheckForGLErrorsReal();
+  glClearColor(((float)engine->state.x)/engine->width, engine->state.angle, ((float)engine->state.y)/engine->height, 1);
+  nuiCheckForGLErrorsReal();
+  glClearColor(0, 0, 0, 0);
+  nuiCheckForGLErrorsReal();
   glClear(GL_COLOR_BUFFER_BIT);
+  nuiCheckForGLErrorsReal();
   
   gpBridge->Display();
   
@@ -183,7 +193,7 @@ static void engine_term_display(struct engine* engine)
   // Exit the application
   // First destroy the NUI bridge / widget tree:
   LOGI("delete android bridge");
-  delete gpBridge;
+  gpBridge->Release();
   LOGI("delete android bridge OK");
   
   // Shutdown the basic NUI services:
@@ -241,12 +251,22 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
       // The window is being shown, get it ready.
       if (engine->app->window != NULL) 
       {
+        nuiCheckForGLErrorsReal();
         engine_init_display(engine);
+        nuiCheckForGLErrorsReal();
 
-        nuiAndroidBridge::androidResize(ANativeWindow_getWidth(app->window), ANativeWindow_getHeight(app->window));
+        int w = ANativeWindow_getWidth(app->window);
+        int h = ANativeWindow_getHeight(app->window);
+        nuiAndroidBridge::androidResize(w, h);
+        LOGI("Prout! %d x %d", w, h);
         nuiButton* pButton = new nuiButton("Prout!");
-//        pButton->SetPosition(nuiCenter);
+        pButton->SetUserSize(150, 150);
+        //pButton->SetPosition(nuiFill);
         gpBridge->AddChild(pButton);
+
+        nuiLabel* pLabel = new nuiLabel("Prout!", nuiFont::GetFont(16));
+        pLabel->SetTextColor("white");
+        gpBridge->AddChild(pLabel);
 
         engine_draw_frame(engine);
         engine->animating = 1;
@@ -320,6 +340,7 @@ void android_main(struct android_app* state)
     // Create the NUI bridge which also serves as the main window/widget tree:
   LOGI("create Android Bridge");
   gpBridge = new nuiAndroidBridge();
+  gpBridge->Acquire();
   LOGI("create Android Bridge OK");
   
   // loop waiting for stuff to do.

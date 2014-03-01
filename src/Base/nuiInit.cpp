@@ -115,6 +115,8 @@ bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
       App = new nuiManualKernel(OSHandle, pKernel);
 #elif defined(_ANDROID_)
       App = new nuiManualKernel(OSHandle, pKernel);
+      App->GetLog().SetLevel("all", NGL_LOG_ALWAYS);
+      NGL_OUT("Log level set");
 #else
       App = new nuiManualKernel(pKernel);
 #endif
@@ -126,13 +128,13 @@ bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
     nui_autoreleasepool = [[NSAutoreleasePool alloc] init];
 #endif
 
+    NGL_LOG("font", NGL_LOG_INFO, "nuiInit Init Font Manager");
+    NGL_OUT("nuiInit Init Font Manager");
 #ifndef _MINUI3_
     // Init the texture manager:
     nuiTexture::InitTextures();
 
     // Init the font manager:
-
-
     nglPath fontdb(ePathUserAppSettings);
     fontdb += nglString(NUI_FONTDB_PATH);
 
@@ -158,6 +160,7 @@ bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
       }
     }
 #endif
+    NGL_LOG("font", NGL_LOG_INFO, "nuiInit Init Font Manager Done");
     
     nuiDecoration::InitDecorationEngine();
     nuiDefaultDecoration::Init();
@@ -170,6 +173,7 @@ bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
   nglTime end;
   double total = (double)end - (double)start;
   printf("nuiInit Took %f seconds\n", total);
+  NGL_LOG("init", NGL_LOG_INFO, "nuiInit Took %f seconds\n", total);
 
   return App != NULL && !App->GetError();
 }

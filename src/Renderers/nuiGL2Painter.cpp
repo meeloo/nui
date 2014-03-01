@@ -48,6 +48,7 @@ varying vec2 TexCoordVar;\n\
 void main()\n\
 {\n\
 gl_FragColor = ColorVar * texture2D(texture, TexCoordVar);\n\
+//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n\
 }"
 ;
 
@@ -80,6 +81,7 @@ void main()\n\
 {\n\
 float v = texture2D(texture, TexCoordVar)[3];\
 gl_FragColor = ColorVar * v;\n\
+//gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n\
 }"
 ;
 
@@ -109,6 +111,7 @@ void main()\n\
 {\n\
 gl_FragColor = DifuseColor * texture2D(texture, TexCoordVar);\n\
 //gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);\n\
+//gl_FragColor = texture2D(texture, TexCoordVar);\n\
 }"
 ;
 
@@ -138,7 +141,6 @@ void main()\n\
 {\n\
 float v = texture2D(texture, TexCoordVar)[3];\
 gl_FragColor = DifuseColor * vec4(v, v, v, v);\n\
-//gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);\n\
 }"
 ;
 
@@ -200,6 +202,7 @@ static uint32 total = 0;
 nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
 : nuiGLPainter(pContext)
 {
+  nuiCheckForGLErrorsReal();
   mUseShaders = true;
 
   mpShader_TextureVertexColor = nuiShaderProgram::GetProgram("TextureVertexColor");
@@ -213,6 +216,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
     mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
   }
+  nuiCheckForGLErrorsReal();
   
   mpShader_TextureAlphaVertexColor = nuiShaderProgram::GetProgram("TextureAlphaVertexColor");
   if (!mpShader_TextureAlphaVertexColor)
@@ -225,6 +229,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
     mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
   }
+  nuiCheckForGLErrorsReal();
 
   mpShader_TextureDifuseColor = nuiShaderProgram::GetProgram("TextureDiffuseColor");
   if (!mpShader_TextureDifuseColor)
@@ -238,6 +243,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
     mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
   }
+  nuiCheckForGLErrorsReal();
 
   mpShader_TextureAlphaDifuseColor = nuiShaderProgram::GetProgram("TextureAlphaDifuseColor");
   if (!mpShader_TextureAlphaDifuseColor)
@@ -251,6 +257,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
     mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
   }
+  nuiCheckForGLErrorsReal();
 
   mpShader_VertexColor = nuiShaderProgram::GetProgram("VertexColor");
   if (!mpShader_VertexColor)
@@ -262,6 +269,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_VertexColor->Link();
     mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
+  nuiCheckForGLErrorsReal();
 
   mpShader_DifuseColor = nuiShaderProgram::GetProgram("DifuseColor");
   if (!mpShader_DifuseColor)
@@ -274,6 +282,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_DifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
     mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
+  nuiCheckForGLErrorsReal();
 
 
   mpCurrentVertexBufferInfo = NULL;
@@ -299,7 +308,7 @@ void nuiGL2Painter::SetViewport()
   const nuiRect& rViewport(mProjectionViewportStack.top());
   const nuiMatrix& rMatrix = mProjectionMatrixStack.top();
 
-  //NGL_OUT("nuiGL2Painter::SetViewPort(%d, %d)\n", Width, Height);
+  NGL_DEBUG(NGL_OUT("nuiGL2Painter::SetViewPort(%d, %d)\n", Width, Height);)
 
   uint32 x, y, w, h;
   

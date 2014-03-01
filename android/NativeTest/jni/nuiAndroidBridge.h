@@ -55,7 +55,9 @@ public:
   
   void Init()
   {
+    nuiCheckForGLErrorsReal();
     InitPainter();
+    nuiCheckForGLErrorsReal();
   }
 
   void Display()
@@ -169,7 +171,7 @@ protected:
     
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_SCISSOR_TEST);
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
   }
   
   void OnResize(uint Width, uint Height)
@@ -180,7 +182,7 @@ protected:
     nuiRect Rect;
     Rect.mRight=(nuiSize)Width;
     Rect.mBottom=(nuiSize)Height;
-    //SetLayout(Rect);
+    SetLayout(Rect);
     
     nuiDrawContext* pCtx = GetDrawContext();
     //pCtx->SetSize(Width,Height);

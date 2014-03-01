@@ -40,7 +40,7 @@ nglConsole::nglConsole(bool IsVisible)
   {
     mFlags = 0;
     //NGL_LOG(_T("console"), NGL_LOG_WARNING, _T("Warning: not connected to a tty, interactive console disabled\n"));
-    LOGI("OK");
+    LOGI("OK1");
     return;
   }
   mFlags = nglEvent::Read | nglEvent::Error;
@@ -48,7 +48,7 @@ nglConsole::nglConsole(bool IsVisible)
 
   if (mIsVisible)
     LOGI(NGL_CONSOLE_PROMPT);
-  LOGI("OK");
+  LOGI("OK2");
 }
 
 nglConsole::~nglConsole()
@@ -74,7 +74,8 @@ void nglConsole::Show (bool IsVisible)
 void nglConsole::OnOutput (const nglString& rText)
 {
   // 'char' mode : string buffer is considered to use the locale's encoding
-  __android_log_print(ANDROID_LOG_INFO, "nui", "%s", rText.GetChars());
+  //__android_log_print(ANDROID_LOG_INFO, "nui", "%s", rText.GetChars());
+  LOGI("%s", rText.GetChars());
 }
 
 #define IN_BUFFER_SIZE 1024
