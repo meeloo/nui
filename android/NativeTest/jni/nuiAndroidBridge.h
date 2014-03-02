@@ -185,9 +185,9 @@ protected:
     SetLayout(Rect);
     
     nuiDrawContext* pCtx = GetDrawContext();
-    //pCtx->SetSize(Width,Height);
+    pCtx->GetPainter()->SetSize(Width,Height);
     
-    //NGL_OUT(_T("(OnResize)nglWindow::Invalidate()\n"));;
+    NGL_OUT("(OnResize)nglWindow::Invalidate()\n");;
     InvalidateLayout();
     EmptyTrash();
   }

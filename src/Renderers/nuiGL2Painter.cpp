@@ -308,7 +308,7 @@ void nuiGL2Painter::SetViewport()
   const nuiRect& rViewport(mProjectionViewportStack.top());
   const nuiMatrix& rMatrix = mProjectionMatrixStack.top();
 
-  NGL_DEBUG(NGL_OUT("nuiGL2Painter::SetViewPort(%d, %d)\n", Width, Height);)
+  //NGL_DEBUG(NGL_OUT("nuiGL2Painter::SetViewPort(%d, %d)\n", Width, Height);)
 
   uint32 x, y, w, h;
   

@@ -132,7 +132,7 @@ static int engine_init_display(struct engine* engine)
   glDisable(GL_DEPTH_TEST);
   nuiCheckForGLErrorsReal();
   
-    // Create the NUI bridge which also serves as the main window/widget tree:
+  // Create the NUI bridge which also serves as the main window/widget tree:
   gpBridge->Init();
   nuiCheckForGLErrorsReal();
   
@@ -240,7 +240,8 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event)
 static void engine_handle_cmd(struct android_app* app, int32_t cmd) 
 {
   struct engine* engine = (struct engine*)app->userData;
-  switch (cmd) {
+  switch (cmd)
+  {
     case APP_CMD_SAVE_STATE:
       // The system has asked us to save our current state.  Do so.
       engine->app->savedState = malloc(sizeof(struct saved_state));
@@ -255,10 +256,37 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
         engine_init_display(engine);
         nuiCheckForGLErrorsReal();
 
-        int w = ANativeWindow_getWidth(app->window);
-        int h = ANativeWindow_getHeight(app->window);
+        int w = 0;
+        int h = 0;
+
+        int32_t orientation = AConfiguration_getOrientation(app->config);
+        switch(orientation)
+        {
+        case ACONFIGURATION_ORIENTATION_LAND:
+          NGL_OUT("Orientation changed to Landscape");
+          w = ANativeWindow_getWidth(app->window);
+          h = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_PORT:
+          NGL_OUT("Orientation changed to Portrait");
+          h = ANativeWindow_getWidth(app->window);
+          w = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_SQUARE:
+          NGL_OUT("Orientation changed to Square (WTF?)");
+          w = ANativeWindow_getWidth(app->window);
+          h = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_ANY:
+          NGL_ASSERT(false);
+          break;
+        default:
+          NGL_ASSERT(false);
+          break;
+        }
         nuiAndroidBridge::androidResize(w, h);
-        LOGI("Prout! %d x %d", w, h);
+
+        LOGI("Init window %d x %d", w, h);
         nuiButton* pButton = new nuiButton("Prout!");
         pButton->SetUserSize(150, 150);
         //pButton->SetPosition(nuiFill);
@@ -299,6 +327,76 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
       engine->animating = 1;
       engine_draw_frame(engine);
       break;
+    case APP_CMD_WINDOW_RESIZED:
+      {
+        int w = 0;
+        int h = 0;
+
+        int32_t orientation = AConfiguration_getOrientation(app->config);
+        switch(orientation)
+        {
+        case ACONFIGURATION_ORIENTATION_LAND:
+          NGL_OUT("resize Landscape");
+          w = ANativeWindow_getWidth(app->window);
+          h = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_PORT:
+          NGL_OUT("resize Portrait");
+          h = ANativeWindow_getWidth(app->window);
+          w = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_SQUARE:
+          NGL_OUT("resize Square (WTF?)");
+          w = ANativeWindow_getWidth(app->window);
+          h = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_ANY:
+          NGL_ASSERT(false);
+          break;
+        default:
+          NGL_ASSERT(false);
+          break;
+        }
+        nuiAndroidBridge::androidResize(w, h);
+
+      }
+      break;
+
+    case APP_CMD_CONFIG_CHANGED:
+      {
+        NGL_OUT("Android app config changed");
+        int w = 0;
+        int h = 0;
+
+        int32_t orientation = AConfiguration_getOrientation(app->config);
+        switch(orientation)
+        {
+        case ACONFIGURATION_ORIENTATION_LAND:
+          NGL_OUT("Orientation changed to Landscape");
+          w = ANativeWindow_getWidth(app->window);
+          h = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_PORT:
+          NGL_OUT("Orientation changed to Portrait");
+          h = ANativeWindow_getWidth(app->window);
+          w = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_SQUARE:
+          NGL_OUT("Orientation changed to Square (WTF?)");
+          w = ANativeWindow_getWidth(app->window);
+          h = ANativeWindow_getHeight(app->window);
+          break;
+        case ACONFIGURATION_ORIENTATION_ANY:
+          NGL_ASSERT(false);
+          break;
+        default:
+          NGL_ASSERT(false);
+          break;
+        }
+        nuiAndroidBridge::androidResize(w, h);
+      }
+      break;
+  
   }
 }
 
