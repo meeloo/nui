@@ -256,6 +256,7 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
         engine_init_display(engine);
         nuiCheckForGLErrorsReal();
 
+
         int w = 0;
         int h = 0;
 
@@ -284,6 +285,14 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
           NGL_ASSERT(false);
           break;
         }
+        float density = AConfiguration_getDensity(app->config);
+        float scale = 1;
+        if (density > 180)
+          scale = ToNearest(density / 165);
+        NGL_OUT("Screen density: %f / scale: %f", density, scale);
+        gpBridge->androidRescale(scale);
+        w /= scale;
+        h /= scale;
         nuiAndroidBridge::androidResize(w, h);
 
         LOGI("Init window %d x %d", w, h);
@@ -357,6 +366,12 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
           NGL_ASSERT(false);
           break;
         }
+        float density = AConfiguration_getDensity(app->config);
+        float scale = 1;
+        if (density > 180)
+          scale = ToNearest(density / 165);
+        w /= scale;
+        h /= scale;
         nuiAndroidBridge::androidResize(w, h);
 
       }
@@ -393,6 +408,12 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
           NGL_ASSERT(false);
           break;
         }
+        float density = AConfiguration_getDensity(app->config);
+        float scale = 1;
+        if (density > 180)
+          scale = ToNearest(density / 165);
+        w /= scale;
+        h /= scale;
         nuiAndroidBridge::androidResize(w, h);
       }
       break;

@@ -61,6 +61,3 @@ uint nglVideoMode::GetFrequency() const
   return 0; // Unknown
 }
 
-float nuiGetScaleFactor() { return 1.0;}
-float nuiGetInvScaleFactor() { return nuiGetScaleFactor()/1.0;}
-

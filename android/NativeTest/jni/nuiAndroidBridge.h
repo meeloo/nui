@@ -13,6 +13,7 @@
 #include "nuiAudioConvert.h"
 
 extern void* gmpNUI_AndroidBridge;
+extern float gScale;
 
 class nuiAndroidBridge : public nglContext, public nuiTopLevel
 {
@@ -93,6 +94,7 @@ public:
     ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->OnMouseMove(Info);
   }
   
+
   //------------------------------------------------------------------------
   // Function that handles mouse input
   //------------------------------------------------------------------------
@@ -124,6 +126,12 @@ public:
   void OnTimer(const nuiEvent& rEvent)
   {
     LOGI("nuiAndroidBridge::OnTimer");
+  }
+  
+  static void androidRescale(float s)
+  {
+    gScale = s;
+    ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->CallOnRescale(s);
   }
   
   
