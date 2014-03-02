@@ -202,6 +202,18 @@ static void engine_term_display(struct engine* engine)
   LOGI("nuiUninit OK");
 }
 
+float RemapCoords(struct android_app* app, int& x, int& y)
+{
+  float density = AConfiguration_getDensity(app->config);
+  float scale = ToNearest(density / 160);
+  //NGL_OUT("Remap %d x %d", x, y);
+  x /= scale;
+  y /= scale;
+  //NGL_OUT("To %d x %d (%f)", x, y, scale);
+  return scale;
+}
+
+
 /**
   * Process the next input event.
   */
@@ -212,6 +224,8 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event)
   {
     int x = AMotionEvent_getX(event, 0);
     int y = AMotionEvent_getY(event, 0);
+    RemapCoords(app, x, y);
+
     if ((AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event )) == AMOTION_EVENT_ACTION_DOWN)
     {
       nuiAndroidBridge::androidMouse(0, 0, x, y);
@@ -233,6 +247,47 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event)
   }
   return 0;
 }
+
+void UpdateConfig(struct android_app* app)
+{
+  int w = 0;
+  int h = 0;
+  int s1 = ANativeWindow_getWidth(app->window);
+  int s2 = ANativeWindow_getHeight(app->window);
+
+  int32_t orientation = AConfiguration_getOrientation(app->config);
+  switch(orientation)
+  {
+  case ACONFIGURATION_ORIENTATION_LAND:
+    NGL_OUT("Orientation changed to Landscape");
+    w = MAX(s1, s2);
+    h = MIN(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_PORT:
+    NGL_OUT("Orientation changed to Portrait");
+    w = MIN(s1, s2);
+    h = MAX(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_SQUARE:
+    NGL_OUT("Orientation changed to Square (WTF?)");
+    w = MAX(s1, s2);
+    h = MIN(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_ANY:
+    NGL_ASSERT(false);
+    break;
+  default:
+    NGL_ASSERT(false);
+    break;
+  }
+  float density = AConfiguration_getDensity(app->config);
+  float scale = ToNearest(density / 160);
+  w /= scale;
+  h /= scale;
+  nuiAndroidBridge::androidRescale(scale);
+  nuiAndroidBridge::androidResize(w, h);
+}
+
 
 /**
   * Process the next main command.
@@ -256,47 +311,13 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
         engine_init_display(engine);
         nuiCheckForGLErrorsReal();
 
+        UpdateConfig(app);
 
-        int w = 0;
-        int h = 0;
-
-        int32_t orientation = AConfiguration_getOrientation(app->config);
-        switch(orientation)
-        {
-        case ACONFIGURATION_ORIENTATION_LAND:
-          NGL_OUT("Orientation changed to Landscape");
-          w = ANativeWindow_getWidth(app->window);
-          h = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_PORT:
-          NGL_OUT("Orientation changed to Portrait");
-          h = ANativeWindow_getWidth(app->window);
-          w = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_SQUARE:
-          NGL_OUT("Orientation changed to Square (WTF?)");
-          w = ANativeWindow_getWidth(app->window);
-          h = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_ANY:
-          NGL_ASSERT(false);
-          break;
-        default:
-          NGL_ASSERT(false);
-          break;
-        }
-        float density = AConfiguration_getDensity(app->config);
-        float scale = 1;
-        if (density > 180)
-          scale = ToNearest(density / 165);
-        NGL_OUT("Screen density: %f / scale: %f", density, scale);
-        gpBridge->androidRescale(scale);
-        w /= scale;
-        h /= scale;
-        nuiAndroidBridge::androidResize(w, h);
-
-        LOGI("Init window %d x %d", w, h);
-        nuiButton* pButton = new nuiButton("Prout!");
+        LOGI("Init window");
+        nuiButton* pButton = new nuiButton();
+        nuiImage* pImage = new nuiImage("rsrc://Logo.png");
+        pImage->SetPosition(nuiCenter);
+        pButton->AddChild(pImage);
         pButton->SetUserSize(150, 150);
         //pButton->SetPosition(nuiFill);
         gpBridge->AddChild(pButton);
@@ -338,83 +359,15 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
       break;
     case APP_CMD_WINDOW_RESIZED:
       {
-        int w = 0;
-        int h = 0;
-
-        int32_t orientation = AConfiguration_getOrientation(app->config);
-        switch(orientation)
-        {
-        case ACONFIGURATION_ORIENTATION_LAND:
-          NGL_OUT("resize Landscape");
-          w = ANativeWindow_getWidth(app->window);
-          h = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_PORT:
-          NGL_OUT("resize Portrait");
-          h = ANativeWindow_getWidth(app->window);
-          w = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_SQUARE:
-          NGL_OUT("resize Square (WTF?)");
-          w = ANativeWindow_getWidth(app->window);
-          h = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_ANY:
-          NGL_ASSERT(false);
-          break;
-        default:
-          NGL_ASSERT(false);
-          break;
-        }
-        float density = AConfiguration_getDensity(app->config);
-        float scale = 1;
-        if (density > 180)
-          scale = ToNearest(density / 165);
-        w /= scale;
-        h /= scale;
-        nuiAndroidBridge::androidResize(w, h);
-
+        NGL_OUT("Android window resized");
+        UpdateConfig(app);
       }
       break;
 
     case APP_CMD_CONFIG_CHANGED:
       {
         NGL_OUT("Android app config changed");
-        int w = 0;
-        int h = 0;
-
-        int32_t orientation = AConfiguration_getOrientation(app->config);
-        switch(orientation)
-        {
-        case ACONFIGURATION_ORIENTATION_LAND:
-          NGL_OUT("Orientation changed to Landscape");
-          w = ANativeWindow_getWidth(app->window);
-          h = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_PORT:
-          NGL_OUT("Orientation changed to Portrait");
-          h = ANativeWindow_getWidth(app->window);
-          w = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_SQUARE:
-          NGL_OUT("Orientation changed to Square (WTF?)");
-          w = ANativeWindow_getWidth(app->window);
-          h = ANativeWindow_getHeight(app->window);
-          break;
-        case ACONFIGURATION_ORIENTATION_ANY:
-          NGL_ASSERT(false);
-          break;
-        default:
-          NGL_ASSERT(false);
-          break;
-        }
-        float density = AConfiguration_getDensity(app->config);
-        float scale = 1;
-        if (density > 180)
-          scale = ToNearest(density / 165);
-        w /= scale;
-        h /= scale;
-        nuiAndroidBridge::androidResize(w, h);
+        UpdateConfig(app);
       }
       break;
   

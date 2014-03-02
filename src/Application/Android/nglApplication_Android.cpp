@@ -322,71 +322,11 @@ void nglApplication::OnEvent(uint Flags)
   if (Flags & nglEvent::Idle)
     CallOnIdle();
 
-#ifdef _X11_
-  if (!(Flags & nglEvent::Read)) return;
-
-  int count = XPending (mpDisplay);
-  if (count == 0)
-    return;
-
-  int i;
-  for (i = 0; i < count; i++)
-  {
-    XEvent event;
-    nglWindow* win;
-
-    XNextEvent (mpDisplay, &event);
-    win = mWindows[event.xany.window];
-    if (win)
-      win->OnXEvent(event);
-  }
-#else
   NGL_DEBUG( NGL_LOG("app", NGL_LOG_INFO, _T("OnEvent(Flags: %d)\n"), Flags); )
-#endif // _X11_
 }
 
 
 
-/*
- * X11 event management
- */
-
-#ifdef _X11_
-void* nglApplication::GetDisplay()
-{
-  if (!mpDisplay)
-  {
-    /* Create X connection on first need
-     */
-    mpDisplay = XOpenDisplay (NULL);
-    if (mpDisplay == NULL)
-    {
-      SetError (_T("app"), NGL_APP_EXOPEN);
-      return NULL;
-    }
-    mFD = ConnectionNumber (mpDisplay);
-    mFlags |= nglEvent::Read | nglEvent::Error;
-  }
-
-  return mpDisplay;
-}
-
-void nglApplication::AddWindow (class nglWindow* pWin)
-{
-  Window handle = pWin->GetHandle();
-
-  if (handle)
-    mWindows[handle] = pWin;
-}
-
-void nglApplication::DelWindow (class nglWindow* pWin)
-{
-  Window handle = pWin->GetHandle();
-
-  if (handle)
-    mWindows.erase(mWindows.find(handle));
-}
-#endif // _X11_
 
 void nglApplication::EnterModalState()
 {
@@ -394,25 +334,6 @@ void nglApplication::EnterModalState()
 	while (!mExitReq && mModalState)
   {
 DBG_EVENT( NGL_OUT(_T("\nEvent loop entry\n")); )
-
-#ifdef _X11_
-    /* This XPending call is there for two reasons :
-     *  - it flushes the output buffer (sending all pending X commands)
-     *  - it checks if some events are _already_ read from server (ie. in client
-     *    queue), since such prefetched events would not raise a read event on the
-     *    X connection descriptor
-     */
-    if (mpDisplay)
-    {
-      int pending = XPending(mpDisplay);
-      if (pending > 0)
-      {
-DBG_EVENT( NGL_OUT(_T(" XPending: %d\n"), pending); )
-         OnEvent(nglEvent::Read); // Fake a read event on X's connection descriptor
-         continue; // Apply to the topmost while() scope here
-      }
-    }
-#endif // _X11_
 
     /* Compose fd sets
      */
