@@ -976,6 +976,21 @@ protected:
   bool mPBufferDisabled;
 #endif//_WIN32_
 
+#ifdef _ANDROID_
+  friend class nglKernel;
+  friend class nglApplication;
+  int32 mWidth, mHeight;
+  int32 mStatusBarSize;
+  bool InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared);
+  bool OnSysInit(struct android_app* app);
+  void OnTermDisplay();
+  float RemapCoords(struct android_app* app, int& x, int& y);
+  void OnHandleMouse(int device, int button, int state, int x, int y);
+  int32_t OnHandleInput(struct android_app* app, AInputEvent* event);
+  void OnUpdateConfig(struct android_app* app);
+  void OnContentRectChanged(ANativeActivity* activity, const ARect* rect);
+#endif
+
   GLuint mFBO_BackBuffer;
   GLuint mFBO_BackBufferTexture;
   GLuint mFBO_BackBufferStencil;

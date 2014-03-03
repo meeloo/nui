@@ -35,16 +35,6 @@ nglConsole::nglConsole(bool IsVisible)
   Setup(); // Portable code init
 
   mIsVisible = IsVisible;
-  mFD = STDIN_FILENO;
-  if (!isatty (mFD))
-  {
-    mFlags = 0;
-    //NGL_LOG(_T("console"), NGL_LOG_WARNING, _T("Warning: not connected to a tty, interactive console disabled\n"));
-    LOGI("OK1");
-    return;
-  }
-  mFlags = nglEvent::Read | nglEvent::Error;
-  App->AddEvent (this);
 
   if (mIsVisible)
     LOGI(NGL_CONSOLE_PROMPT);
@@ -53,7 +43,6 @@ nglConsole::nglConsole(bool IsVisible)
 
 nglConsole::~nglConsole()
 {
-  App->DelEvent (this);
 }
 
 
@@ -84,14 +73,4 @@ void nglConsole::OnEvent(uint Flags)
 {
   char buffer[IN_BUFFER_SIZE+1];
   int count;
-
-  count = read (mFD, buffer, IN_BUFFER_SIZE);
-  if (count > 0)
-  {
-    buffer[count] = '\0';
-    mInputBuffer = buffer;
-    Input (mInputBuffer);
-    if (mIsVisible)
-      NGL_OUT (nglString(NGL_CONSOLE_PROMPT)); // FIXME
-  }
 }

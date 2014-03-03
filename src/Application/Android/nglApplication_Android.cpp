@@ -65,80 +65,135 @@ void nglApplication::Quit(int Code)
   mExitCode = Code;
 }
 
+// Application Callbacks:
+
+int32_t nglApplication::engine_handle_input(struct android_app* app, AInputEvent* event) 
+{
+  nglApplication* engine = (nglApplication*)app->userData;
+  return engine->HandleInput(app, event);
+}
+
+int32_t nglApplication::HandleInput(struct android_app* app, AInputEvent* event) 
+{
+  if (mpWindow)
+    return mpWindow->OnHandleInput(app, event);
+}
+
+/**
+  * Process the next main command.
+  */
+void nglApplication::engine_handle_cmd(struct android_app* app, int32_t cmd) 
+{
+  nglApplication* engine = (nglApplication*)app->userData;
+  engine->HandleCmd(app, cmd);
+}
+
+void nglApplication::HandleCmd(struct android_app* app, int32_t cmd) 
+{
+  switch (cmd)
+  {
+    // case APP_CMD_SAVE_STATE:
+    //   // The system has asked us to save our current state.  Do so.
+    //   mpAndroidApp->savedState = malloc(sizeof(struct saved_state));
+    //   *((struct saved_state*)mpAndroidApp->savedState) = engine->state;
+    //   mpAndroidApp->savedStateSize = sizeof(struct saved_state);
+    //   break;
+    //#FIXME
+    case APP_CMD_INIT_WINDOW:
+      // The window is being shown, get it ready.
+      if (mpAndroidApp->window != NULL) 
+      {
+
+        if (mpWindow)
+        {
+          if (!mpWindow->OnSysInit(app))
+          {
+            NGL_LOG("window", NGL_LOG_ERROR, "Error while creating nglWindow");
+          }
+        }
+
+        LOGI("System window init ok");
+      }
+      break;
+    case APP_CMD_TERM_WINDOW:
+      // The window is being hidden or closed, clean it up.
+      mpWindow->OnTermDisplay();
+      break;
+    case APP_CMD_GAINED_FOCUS:
+      // When our app gains focus, we start monitoring the accelerometer.
+      // if (engine->accelerometerSensor != NULL) 
+      // {
+      //   ASensorEventQueue_enableSensor(engine->sensorEventQueue,
+      //                                  engine->accelerometerSensor);
+      //   // We'd like to get 60 events per second (in us).
+      //   ASensorEventQueue_setEventRate(engine->sensorEventQueue,
+      //                                  engine->accelerometerSensor, (1000L/60)*1000);
+      // }
+      break;
+    case APP_CMD_LOST_FOCUS:
+      // When our app loses focus, we stop monitoring the accelerometer.
+      // This is to avoid consuming battery while not being used.
+      // if (engine->accelerometerSensor != NULL) 
+      // {
+      //   ASensorEventQueue_disableSensor(engine->sensorEventQueue,
+      //                                   engine->accelerometerSensor);
+      // }
+      // // Also stop animating.
+      // engine->animating = 1;
+      // engine_draw_frame(engine);
+      break;
+    case APP_CMD_WINDOW_RESIZED:
+      {
+        NGL_OUT("Android window resized");
+        if (mpWindow)
+          mpWindow->OnUpdateConfig(app);
+      }
+      break;
+
+    case APP_CMD_CONFIG_CHANGED:
+      {
+        NGL_OUT("Android app config changed");
+        if (mpWindow)
+          mpWindow->OnUpdateConfig(app);
+      }
+      break;
+  
+  }
+}
+
 
 
 /*
  * Application entry point
  */
 
-int nglApplication::Main (int ArgCnt, char const ** pArg)
+void nglApplication::android_main(struct android_app* state)
 {
-  if (!Init(ArgCnt, pArg))
-    return 1;
+  SysInit(state);
+  //#TODO: WTF should we do with saved states?
+  // if (mpAndroidState->savedState != NULL) 
+  // {
+  //   // We are starting with a previous saved state; restore from it.
+  //   mpAndroidState = *(struct saved_state*)mpAndroidState->savedState;
+  // }
 
+  //ANativeActivity_setWindowFlags(mpAndroidState->activity, AWINDOW_FLAG_FULLSCREEN, AWINDOW_FLAG_FORCE_NOT_FULLSCREEN);
+  ANativeActivity_setWindowFlags(GetAndroidApp()->activity, AWINDOW_FLAG_FORCE_NOT_FULLSCREEN, AWINDOW_FLAG_FULLSCREEN);
+  ANativeActivity_setWindowFlags(GetAndroidApp()->activity, AWINDOW_FLAG_LAYOUT_INSET_DECOR, 0);
+  ANativeActivity_setWindowFlags(GetAndroidApp()->activity, AWINDOW_FLAG_LAYOUT_IN_SCREEN, 0);
+
+  //GetAndroidApp()->activity->callbacks->onContentRectChanged = onContentRectChanged;
+
+
+  GetAndroidApp()->userData = this;
+  GetAndroidApp()->onAppCmd = nglApplication::engine_handle_cmd;
+  GetAndroidApp()->onInputEvent = nglApplication::engine_handle_input;
+    
   CallOnInit();           // Call user OnInit() call back
   SysLoop();              // Run event pump till application ending
   CallOnExit(mExitCode);  // Call user OnExit() call back
 
-  Exit();
-  return mExitCode;
-}
-
-bool nglApplication::Init (int ArgCnt, char const** pArg)
-{
-  int i;
-
-  if (!SysInit())
-    return false;
-
-  /* Register ourselves for Idle and (optional) X11 events
-  */
-  AddEvent(this);
-
-  // Store user args in mArgs
-  for (i = 1; i < ArgCnt; i++)
-    AddArg(nglString(pArg[i]));
-
-  // Fetch application's name from argv[0]
-  nglString arg0 = nglString(pArg[0]);
-  nglString name = arg0;
-
-  i = name.FindLast (_T('/'));
-  if (i != -1)
-    name.DeleteLeft (i + 1); // Only keep file name if it's a full path
-  SetName(name);
-
-  // Fetch application's executable path
-  nglPath path;
-
-  /* Let's try the proc interface, and fallback to argv[0]
-   */
-  char buffer[PATH_MAX + 1];
-  int  buffer_len = readlink("/proc/self/exe", buffer, PATH_MAX);
-  if (buffer_len > 0)
-  {
-    buffer[buffer_len] = 0;
-    path = nglPath(buffer);
-  }
-  else
-  {
-    // Build application binary's file path from current dir and argv[0]
-    path = nglPath(ePathCurrent) + arg0;
-    path.Canonize();
-  }
-  SetPath(path);
-
-  return true;
-}
-
-void nglApplication::Exit()
-{
-  DelEvent(this);
-
-  mTimers.clear();
-  mEvents.clear();
-
-  nglKernel::Exit(0);
+  Exit(mExitCode);
 }
 
 
@@ -146,333 +201,56 @@ void nglApplication::Exit()
  * Event management
  */
 
-void nglApplication::AddEvent (class nglEvent* pEvent)
-{
-  mEvents.push_front (pEvent);
-}
+// void nglApplication::AddTimer (nglTimer* pTimer)
+// {
+//   mTimers.push_front (pTimer);
+// }
 
-void nglApplication::DelEvent (class nglEvent* pEvent)
-{
-  mEvents.remove (pEvent);
-}
-
-void nglApplication::AddTimer (nglTimer* pTimer)
-{
-  mTimers.push_front (pTimer);
-}
-
-void nglApplication::DelTimer (nglTimer* pTimer)
-{
-  mTimers.remove (pTimer);
-}
+// void nglApplication::DelTimer (nglTimer* pTimer)
+// {
+//   mTimers.remove (pTimer);
+// }
 
 #define DBG_EVENT(x)
 
 int nglApplication::SysLoop()
-{
-  while (!mExitReq)
+{  
+  while (1) 
   {
-DBG_EVENT( NGL_OUT(_T("\nEvent loop entry\n")); )
-
-    /* Compose fd sets
-     */
-    int fd_max = -1;
-    bool use_idle = false;
-    fd_set r_set, w_set, e_set;
-    EventList::iterator event;
-
-    FD_ZERO (&r_set);
-    FD_ZERO (&w_set);
-    FD_ZERO (&e_set);
-DBG_EVENT( NGL_OUT(_T(" building fd sets:\n")); )
-    for (event = mEvents.begin(); event != mEvents.end(); event++)
+    // Read all pending events.
+    int ident;
+    int events;
+    struct android_poll_source* source;
+    
+    // If not animating, we will block forever waiting for events.
+    // If animating, we loop until all events are read, then continue
+    // to draw the next frame of animation.
+    while ((ident=ALooper_pollAll(0, NULL, &events, (void**)&source)) >= 0) 
     {
-      nglEvent* e = *event;
-
-      // Collect select flags
-      int fd = e->GetFD();
-      int flags = e->GetFlags();
-      if (fd >= 0)
+      
+      // Process this event.
+      if (source != NULL) 
       {
-DBG_EVENT( NGL_OUT("  fd=%d  flags=%c%c%c%c\n", fd, (flags & nglEvent::Read)?'R':'_', (flags & nglEvent::Write)?'W':'_', (flags & nglEvent::Error)?'E':'_', (flags & nglEvent::Idle)?'I':'_'); )
-        if (flags & nglEvent::Read) FD_SET (fd, &r_set);
-        if (flags & nglEvent::Write) FD_SET (fd, &w_set);
-        if (flags & nglEvent::Error) FD_SET (fd, &e_set);
-        if (fd > fd_max) fd_max = fd;
-      }
-      if (flags & nglEvent::Idle)
-        use_idle = true;
-    }
-
-    /* Find out select() timeout
-     */
-    struct timeval tv;
-    struct timeval* ptv = &tv;
-    bool use_timer = false;
-
-    if (use_idle)
-    {
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-DBG_EVENT( NGL_OUT(_T(" idle used\n")); )
-    }
-    else
-    {
-      TimerList::iterator timer;
-      nglTime now;
-      nglTime timeout = 1E10;
-
-      for (timer = mTimers.begin(); timer != mTimers.end(); timer++)
-      {
-        nglTimer* t = *timer;
-
-        if (t->IsRunning())
-        {
-          nglTime self = t->GetTimeOut(now);
-
-          if (timeout > self)
-            timeout = self;
-          use_timer = true;
-DBG_EVENT( NGL_OUT(_T(" timer: self.timeout=%.3f  loop.timeout=%.3f\n"), (double)self, (double)timeout); )
-        }
+        source->process(mpAndroidApp, source);
       }
 
-      if (use_timer)
+      // Check if we are exiting.
+      if (mpAndroidApp->destroyRequested != 0) 
       {
-        double sec;
-
-        tv.tv_usec = (long) (modf(timeout, &sec) * 1E6f);
-        tv.tv_sec = (long) sec;
-        ptv = &tv;
-      }
-      else
-        ptv = NULL; // No idle, no timer, block indefinitely
-    }
-
-    /* Wait for event
-     */
-DBG_EVENT( NGL_OUT(" select(): "); )
-    int fd_count = select (fd_max+1, &r_set, &w_set, &e_set, ptv);
-DBG_EVENT( NGL_OUT("fd_count=%d\n", fd_count); )
-
-    /* Dispatch 'regular' event
-     */
-    if (fd_count > 0)
-    {
-DBG_EVENT( NGL_OUT(" dispatching events:\n"); )
-      int fd_todo = fd_count;
-
-      for (event = mEvents.begin(); fd_todo > 0 && event != mEvents.end(); event++)
-      {
-        int fd = (*event)->GetFD();
-        if (fd >= 0)
-        {
-          int flags = 0;
-
-          if (FD_ISSET(fd, &r_set)) flags |= nglEvent::Read;
-          if (FD_ISSET(fd, &w_set)) flags |= nglEvent::Write;
-          if (FD_ISSET(fd, &e_set)) flags |= nglEvent::Error;
-          if (flags)
-          {
-DBG_EVENT( NGL_OUT("  fd=%d  flags=%c%c%c%c\n", fd, (flags & nglEvent::Read)?'R':'_', (flags & nglEvent::Write)?'W':'_', (flags & nglEvent::Error)?'E':'_', (flags & nglEvent::Idle)?'I':'_'); )
-            (*event)->CallOnEvent (flags);
-            fd_todo--;
-          }
-        }
+        CallOnWillExit();
+        CallOnExit(mExitCode);
+        return mExitCode;
       }
     }
-
-    /* Dispatch timer events
-     */
-    if (use_timer)
+    
+    // Drawing is throttled to the screen update rate, so there
+    // is no need to do timing here.
+    if (mpWindow)
     {
-DBG_EVENT( NGL_OUT(" dispatching timer events\n"); )
-      TimerList::iterator timer;
-
-      for (timer = mTimers.begin(); timer != mTimers.end(); timer++)
-        (*timer)->Update();
+      mpWindow->CallOnPaint();
     }
-
-    /* Dispatch idle events
-     */
-    if (fd_count == 0 && !use_timer && use_idle)
-    {
-DBG_EVENT( NGL_OUT(" dispatching idle event\n"); )
-      for (event = mEvents.begin(); event != mEvents.end(); event++)
-      {
-        nglEvent* e = *event;
-
-        if (e->GetFlags() & nglEvent::Idle)
-          e->CallOnEvent(nglEvent::Idle);
-      }
-    }
-
-DBG_EVENT( NGL_OUT(" event loop done\n"); )
   }
 
   return mExitCode;
 }
 
-/* The application registers itself to the event loop with :
- * - nglEvent::Idle set if UseIdle() was called
- * - nglEvent::{Rear,Errpr}, FD = X connection descriptor (X11 only)
- */
-void nglApplication::OnEvent(uint Flags)
-{
-  if (Flags & nglEvent::Idle)
-    CallOnIdle();
-
-  NGL_DEBUG( NGL_LOG("app", NGL_LOG_INFO, _T("OnEvent(Flags: %d)\n"), Flags); )
-}
-
-
-
-
-void nglApplication::EnterModalState()
-{
-	mModalState = true;
-	while (!mExitReq && mModalState)
-  {
-DBG_EVENT( NGL_OUT(_T("\nEvent loop entry\n")); )
-
-    /* Compose fd sets
-     */
-    int fd_max = -1;
-    bool use_idle = false;
-    fd_set r_set, w_set, e_set;
-    EventList::iterator event;
-
-    FD_ZERO (&r_set);
-    FD_ZERO (&w_set);
-    FD_ZERO (&e_set);
-DBG_EVENT( NGL_OUT(_T(" building fd sets:\n")); )
-    for (event = mEvents.begin(); event != mEvents.end(); event++)
-    {
-      nglEvent* e = *event;
-
-      // Collect select flags
-      int fd = e->GetFD();
-      int flags = e->GetFlags();
-      if (fd >= 0)
-      {
-DBG_EVENT( NGL_OUT("  fd=%d  flags=%c%c%c%c\n", fd, (flags & nglEvent::Read)?'R':'_', (flags & nglEvent::Write)?'W':'_', (flags & nglEvent::Error)?'E':'_', (flags & nglEvent::Idle)?'I':'_'); )
-        if (flags & nglEvent::Read) FD_SET (fd, &r_set);
-        if (flags & nglEvent::Write) FD_SET (fd, &w_set);
-        if (flags & nglEvent::Error) FD_SET (fd, &e_set);
-        if (fd > fd_max) fd_max = fd;
-      }
-      if (flags & nglEvent::Idle)
-        use_idle = true;
-    }
-
-    /* Find out select() timeout
-     */
-    struct timeval tv;
-    struct timeval* ptv = &tv;
-    bool use_timer = false;
-
-    if (use_idle)
-    {
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-DBG_EVENT( NGL_OUT(_T(" idle used\n")); )
-    }
-    else
-    {
-      TimerList::iterator timer;
-      nglTime now;
-      nglTime timeout = 1E10;
-
-      for (timer = mTimers.begin(); timer != mTimers.end(); timer++)
-      {
-        nglTimer* t = *timer;
-
-        if (t->IsRunning())
-        {
-          nglTime self = t->GetTimeOut(now);
-
-          if (timeout > self)
-            timeout = self;
-          use_timer = true;
-DBG_EVENT( NGL_OUT(_T(" timer: self.timeout=%.3f  loop.timeout=%.3f\n"), (double)self, (double)timeout); )
-        }
-      }
-
-      if (use_timer)
-      {
-        double sec;
-
-        tv.tv_usec = (long) (modf(timeout, &sec) * 1E6f);
-        tv.tv_sec = (long) sec;
-        ptv = &tv;
-      }
-      else
-        ptv = NULL; // No idle, no timer, block indefinitely
-    }
-
-    /* Wait for event
-     */
-DBG_EVENT( NGL_OUT(" select(): "); )
-    int fd_count = select (fd_max+1, &r_set, &w_set, &e_set, ptv);
-DBG_EVENT( NGL_OUT("fd_count=%d\n", fd_count); )
-
-    /* Dispatch 'regular' event
-     */
-    if (fd_count > 0)
-    {
-DBG_EVENT( NGL_OUT(" dispatching events:\n"); )
-      int fd_todo = fd_count;
-
-      for (event = mEvents.begin(); fd_todo > 0 && event != mEvents.end(); event++)
-      {
-        int fd = (*event)->GetFD();
-        if (fd >= 0)
-        {
-          int flags = 0;
-
-          if (FD_ISSET(fd, &r_set)) flags |= nglEvent::Read;
-          if (FD_ISSET(fd, &w_set)) flags |= nglEvent::Write;
-          if (FD_ISSET(fd, &e_set)) flags |= nglEvent::Error;
-          if (flags)
-          {
-DBG_EVENT( NGL_OUT("  fd=%d  flags=%c%c%c%c\n", fd, (flags & nglEvent::Read)?'R':'_', (flags & nglEvent::Write)?'W':'_', (flags & nglEvent::Error)?'E':'_', (flags & nglEvent::Idle)?'I':'_'); )
-            (*event)->CallOnEvent (flags);
-            fd_todo--;
-          }
-        }
-      }
-    }
-
-    /* Dispatch timer events
-     */
-    if (use_timer)
-    {
-DBG_EVENT( NGL_OUT(" dispatching timer events\n"); )
-      TimerList::iterator timer;
-
-      for (timer = mTimers.begin(); timer != mTimers.end(); timer++)
-        (*timer)->Update();
-    }
-
-    /* Dispatch idle events
-     */
-    if (fd_count == 0 && !use_timer && use_idle)
-    {
-DBG_EVENT( NGL_OUT(" dispatching idle event\n"); )
-      for (event = mEvents.begin(); event != mEvents.end(); event++)
-      {
-        nglEvent* e = *event;
-
-        if (e->GetFlags() & nglEvent::Idle)
-          e->CallOnEvent(nglEvent::Idle);
-      }
-    }
-
-DBG_EVENT( NGL_OUT(" event loop done\n"); )
-  }
-}
-
-void nglApplication::ExitModalState()
-{
-	mModalState = false;
-}

@@ -22,7 +22,7 @@ This class is for NGL internal use only. It provides no service to the user.
 */
 class nglEvent
 {
-#ifdef _UNIX_
+#if (defined _UNIX_)  && (!defined _ANDROID_)
 public:
   static const uint Read;
   static const uint Write;
@@ -48,7 +48,7 @@ private:
 #else
 public:
   virtual ~nglEvent() {}
-#endif // _UNIX_
+#endif // _UNIX_ && !_ANDROID_
 };
 
 #endif // __nglEvent_h__

@@ -230,7 +230,7 @@ void nglApplication::SetIdle (bool UseIdle)
 
   
   mUseIdle = UseIdle;
-#ifdef _UNIX_
+#if (defined _UNIX_) && (!defined _ANDROID_)
   if (UseIdle)
     mFlags |= nglEvent::Idle;
   else

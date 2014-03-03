@@ -256,7 +256,7 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event)
   return 0;
 }
 
-int GetStatusBarSize(int density)
+int MyGetStatusBarSize(int density)
 {
   switch ( density )
    {
@@ -318,7 +318,7 @@ void UpdateConfig(struct android_app* app)
   h /= scale;
   nuiAndroidBridge::androidRescale(scale);
   nuiAndroidBridge::androidResize(w, h);
-  nuiAndroidBridge::androidSetStatusBarSize(GetStatusBarSize(density));
+  nuiAndroidBridge::androidSetStatusBarSize(MyGetStatusBarSize(density));
 }
 
 
@@ -362,6 +362,7 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
             nuiImage* pImage = new nuiImage("rsrc://Logo.png");
             pImage->SetFillRule(nuiCenter);
             pImage->SetPosition(nuiFill);
+            pImage->SetFixedAspectRatio(true);
             pButton->AddChild(pImage);
             pButton->SetUserSize(150, 150);
             //pButton->SetPosition(nuiFill);

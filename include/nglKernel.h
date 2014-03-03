@@ -22,6 +22,7 @@ class nglKernel;
 class nglPath;
 class nuiNotificationManager;
 class nuiNotificationObserver;
+class nglWindow;
 
 extern nglKernel* App;
 /*!<
@@ -103,10 +104,6 @@ void nglDumpStackTrace();
 #endif
 
 class nglDeviceInfo;
-
-#ifdef _ANDROID_
-struct android_app;
-#endif
 
 //! Kernel, application abstraction base class
 /*!
@@ -444,7 +441,7 @@ private:
   friend class nglPluginKernel;
   friend class nglPlugin;
 
-#ifdef _UNIX_
+#if (defined _UNIX_) && (!defined _ANDROID_)
 public:
   virtual void  AddEvent (nglEvent* pEvent);
   virtual void  DelEvent (nglEvent* pEvent);
@@ -456,8 +453,8 @@ public:
    * as part of the core kernel API.
    */
   virtual void* GetDisplay();
-  virtual void  AddWindow (class nglWindow* pWin);
-  virtual void  DelWindow (class nglWindow* pWin);
+  virtual void  AddWindow (nglWindow* pWin);
+  virtual void  DelWindow (nglWindow* pWin);
 #endif
 
 protected:
@@ -529,15 +526,20 @@ protected:
 public:
 	void * GetNSApplication() { return mpNSApplication; }
 
-#endif//_UIKIT_
+#endif//_COCOA_
 
 #ifdef _ANDROID_
 public:
   android_app* GetAndroidApp();
+  void  AddWindow (nglWindow* pWin);
+  void  DelWindow (nglWindow* pWin);
+  virtual void  AddTimer (nglTimer* pTimer);
+  virtual void  DelTimer (nglTimer* pTimer);
+
 protected:
   bool SysInit(android_app* app);
-private:
   android_app* mpAndroidApp;
+  nglWindow* mpWindow; /// Only one window at a time is possible with the Android NDK
 #endif
 
 };

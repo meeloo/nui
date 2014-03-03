@@ -69,6 +69,11 @@ nglContext::nglContext()
   mpPainter = NULL;
   mScale = 1.0f;
   mScaleInv = 1.0f;
+
+  mSurface = NULL;
+  mContext = NULL;
+  mDisplay = NULL;
+
   LOGI("nglContext::nglContext() OK");
 }
 
@@ -90,6 +95,79 @@ nglContext::GLExtFunc nglContext::LookupExtFunc (const char* pFuncName)
 const nglChar* nglContext::OnError (uint& rError) const
 {
   return NULL;
+}
+
+/**
+  * Initialize an EGL context for the current display.
+  */
+bool nglContext::Build(ANativeWindow* window) 
+{
+  LOGI("Init opengl context");
+  // initialize OpenGL ES and EGL
+  
+  /*
+    * Here specify the attributes of the desired configuration.
+    * Below, we select an EGLConfig with at least 8 bits per color
+    * component compatible with on-screen windows
+    */
+  const EGLint attribs[] = 
+  {
+    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+    //EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+    EGL_BLUE_SIZE, 8,
+    EGL_GREEN_SIZE, 8,
+    EGL_RED_SIZE, 8,
+    EGL_NONE
+  };
+  EGLint w, h, dummy, format;
+  EGLint numConfigs;
+  EGLConfig configs[10];
+  
+  mDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+  
+  eglInitialize(mDisplay, 0, 0);
+  
+  /* Here, the application chooses the configuration it desires. In this
+    * sample, we have a very simplified selection process, where we pick
+    * the first EGLConfig that matches our criteria */
+  eglChooseConfig(mDisplay, attribs, configs, 10, &numConfigs);
+  LOGI("Init opengl num configs: %d", numConfigs);
+  
+  /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
+    * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
+    * As soon as we picked a EGLConfig, we can safely reconfigure the
+    * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
+  eglGetConfigAttrib(mDisplay, configs[0], EGL_NATIVE_VISUAL_ID, &format);
+  LOGI("Init opengl config format: %d", format);
+  
+  ANativeWindow_setBuffersGeometry(window, 0, 0, format);
+  
+  mSurface = eglCreateWindowSurface(mDisplay, configs[0], window, NULL);
+  LOGI("Init opengl surface: %p", mSurface);
+
+  EGLint attribs2[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+  mContext = eglCreateContext(mDisplay, configs[0], NULL, attribs2);
+  LOGI("Init opengl context: %p", mContext);
+  
+  if (eglMakeCurrent(mDisplay, mSurface, mSurface, mContext) == EGL_FALSE) 
+  {
+    LOGI("Unable to eglMakeCurrent");
+    return false;
+  }
+    
+  nuiCheckForGLErrorsReal();
+  // Initialize GL state.
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+  nuiCheckForGLErrorsReal();
+  glEnable(GL_CULL_FACE);
+  nuiCheckForGLErrorsReal();
+  glShadeModel(GL_SMOOTH);
+  nuiCheckForGLErrorsReal();
+  glDisable(GL_DEPTH_TEST);
+  nuiCheckForGLErrorsReal();
+    
+
+  return true;
 }
 
 

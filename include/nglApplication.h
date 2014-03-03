@@ -287,7 +287,7 @@ protected:
 public:
 #endif//_UIKIT_
 
-#ifdef _UNIX_
+#if defined _UNIX_ && !defined _ANDROID_
 private:
   friend int main(int, const char**);
 
@@ -327,6 +327,24 @@ private:
   WindowList mWindows;
 #endif // _X11_
 #endif // _UNIX_
+
+#ifdef _ANDROID_
+private:
+  friend void android_main(struct android_app* state);
+
+  void android_main(struct android_app* state);
+  int  SysLoop();
+  bool       mExitReq;
+  int        mExitCode;
+
+  // Callbacks:
+  static int32_t engine_handle_input(struct android_app* app, AInputEvent* event);
+  int32_t HandleInput(struct android_app* app, AInputEvent* event);
+  static void engine_handle_cmd(struct android_app* app, int32_t cmd);
+  void HandleCmd(struct android_app* app, int32_t cmd);
+#endif // _WIN32_
+
+
 };
 
 
@@ -353,9 +371,9 @@ extern class nglKernel* App;
   #define __NGL_APP_MAINCALL WinMain(hInstance, hPrevInstance, lpCmdLine, nShowCmd)
 #endif // _WIN32_
 
-#if defined(_COCOA_)
-  #define __NGL_APP_MAINDECL int main(int argc, const char** argv)
-  #define __NGL_APP_MAINCALL Main(argc, argv)
+#if defined(_ANDROID_)
+  #define __NGL_APP_MAINDECL void android_main(struct android_app* state)
+  #define __NGL_APP_MAINCALL android_main(state); app_dummy()
 #endif // _COCOA_
 
 //#ifdef _CARBON_
@@ -365,7 +383,7 @@ extern class nglKernel* App;
 //#error "_UIKIT_ shouldn't be defined"
 //#endif
 
-#if defined(_UNIX_) || defined(_CARBON_) || defined(_UIKIT_)
+#if (defined(_UNIX_) || defined(_CARBON_) || defined(_UIKIT_) || defined (_COCOA_)) && !(defined _ANDROID_)
   #define __NGL_APP_MAINDECL int main(int argc, const char** argv)
   #define __NGL_APP_MAINCALL Main(argc, argv)
 #endif // _UNIX_
