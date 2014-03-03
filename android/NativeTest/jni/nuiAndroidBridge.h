@@ -26,6 +26,7 @@ public:
 
     mWidth = 100;
     mHeight = 200;
+    mStatusBarSize = 25;
     mClearBackground = false;
     nuiMainWindow::SetRenderer(eOpenGL2);
     mTargetAPI = eTargetAPI_OpenGL2;
@@ -85,7 +86,7 @@ public:
   //------------------------------------------------------------------------
   // Moves the screen based on mouse pressed button
   //------------------------------------------------------------------------
-  static void androidMotion(int x, int y)
+  static void androidMotion(int device, int x, int y)
   {
     nglMouseInfo Info;
     Info.Buttons = 0;
@@ -98,7 +99,7 @@ public:
   //------------------------------------------------------------------------
   // Function that handles mouse input
   //------------------------------------------------------------------------
-  static void androidMouse(int button, int state, int x, int y)
+  static void androidMouse(int device, int button, int state, int x, int y)
   {
     nglMouseInfo Info;
     Info.Buttons = 0;
@@ -116,6 +117,7 @@ public:
     }
     Info.X = x;
     Info.Y = y;
+    Info.TouchId = device;
     if (state)
       ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->OnMouseUnclick(Info);
     else
@@ -134,7 +136,20 @@ public:
     ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->CallOnRescale(s);
   }
   
-  
+  nuiSize GetStatusBarSize() const
+  {
+    return mStatusBarSize; 
+  }
+
+  void SetStatusBarSize(float size)
+  {
+    mStatusBarSize = size;
+  }
+
+  static void androidSetStatusBarSize(float size)
+  {
+    ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->SetStatusBarSize(size);
+  }
 protected:
   
   void Paint()
@@ -318,7 +333,7 @@ protected:
 
 protected:
   uint32 mWidth, mHeight;
-  
+  uint32 mStatusBarSize;
   nuiAudioEngine* mpAudioEngine;
   
   nuiEventSink<nuiAndroidBridge> mEventSink;

@@ -7,6 +7,7 @@
 #include <android/sensor.h>
 #include <android/log.h>
 #include <android_native_app_glue.h>
+#include <android/window.h>
 
 #include <pthread.h>
 #include <unistd.h>
@@ -222,30 +223,61 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event)
   struct engine* engine = (struct engine*)app->userData;
   if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) 
   {
-    int x = AMotionEvent_getX(event, 0);
-    int y = AMotionEvent_getY(event, 0);
-    RemapCoords(app, x, y);
+    int32_t id = AInputEvent_getDeviceId(event);
+    int32_t src = AInputEvent_getSource(event);
+    int32_t flags = AMotionEvent_getFlags(event);
+    size_t count = AMotionEvent_getPointerCount(event);
 
-    if ((AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event )) == AMOTION_EVENT_ACTION_DOWN)
+    for (int i = 0; i < count; i++)
     {
-      nuiAndroidBridge::androidMouse(0, 0, x, y);
-    }
-    else if ((AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event )) == AMOTION_EVENT_ACTION_UP)
-    {
-      nuiAndroidBridge::androidMouse(0, 1, x, y);      
-    }
-    else if ((AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event )) == AMOTION_EVENT_ACTION_MOVE)
-    {
-      nuiAndroidBridge::androidMotion(x, y);
-    }
+      int PointerId  = AMotionEvent_getPointerId( event, i );
+      int x = AMotionEvent_getX(event, i);
+      int y = AMotionEvent_getY(event, i);
+      RemapCoords(app, x, y);
 
-    
-    engine->animating = 1;
-    engine->state.x = AMotionEvent_getX(event, 0);
-    engine->state.y = AMotionEvent_getY(event, 0);
+      NGL_OUT("Event[%d] deviceid = %d  id = %d src = %d  flags = %d  count = %d (%d x %d)", i, id, PointerId, src, flags, (int)count, x, y);
+
+      int action = AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event );
+      if (action == AMOTION_EVENT_ACTION_DOWN || action == AMOTION_EVENT_ACTION_POINTER_DOWN)
+      {
+        nuiAndroidBridge::androidMouse(PointerId, 0, 0, x, y);
+      }
+      else if (action == AMOTION_EVENT_ACTION_UP || action == AMOTION_EVENT_ACTION_POINTER_UP)
+      {
+        nuiAndroidBridge::androidMouse(PointerId, 0, 1, x, y);      
+      }
+      else if (action == AMOTION_EVENT_ACTION_MOVE || action == AMOTION_EVENT_ACTION_POINTER_UP)
+      {
+        nuiAndroidBridge::androidMotion(PointerId, x, y);
+      }
+    }
     return 1;
   }
   return 0;
+}
+
+int GetStatusBarSize(int density)
+{
+  switch ( density )
+   {
+  case 160:
+      return 25;
+      break;
+  case 120:
+      return 19;
+      break;
+  case 240:
+      return 38;
+      break;
+  case 320:
+      return 50;
+      break;
+  default:
+      return 25;
+      break;
+  }
+
+  return -1;
 }
 
 void UpdateConfig(struct android_app* app)
@@ -286,6 +318,7 @@ void UpdateConfig(struct android_app* app)
   h /= scale;
   nuiAndroidBridge::androidRescale(scale);
   nuiAndroidBridge::androidResize(w, h);
+  nuiAndroidBridge::androidSetStatusBarSize(GetStatusBarSize(density));
 }
 
 
@@ -314,13 +347,27 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
         UpdateConfig(app);
 
         LOGI("Init window");
-        nuiButton* pButton = new nuiButton();
-        nuiImage* pImage = new nuiImage("rsrc://Logo.png");
-        pImage->SetPosition(nuiCenter);
-        pButton->AddChild(pImage);
-        pButton->SetUserSize(150, 150);
-        //pButton->SetPosition(nuiFill);
-        gpBridge->AddChild(pButton);
+
+        nuiGrid* pGrid = new nuiGrid(3, 6);
+        gpBridge->AddChild(pGrid);
+        for (int i = 0; i < 3; i++)
+        {
+          pGrid->SetColumnExpand(i, nuiExpandShrinkAndGrow);
+          for (int j = 0; j < 6; j++)
+          {
+            if (!i)
+              pGrid->SetRowExpand(j, nuiExpandShrinkAndGrow);
+
+            nuiButton* pButton = new nuiButton();
+            nuiImage* pImage = new nuiImage("rsrc://Logo.png");
+            pImage->SetFillRule(nuiCenter);
+            pImage->SetPosition(nuiFill);
+            pButton->AddChild(pImage);
+            pButton->SetUserSize(150, 150);
+            //pButton->SetPosition(nuiFill);
+            pGrid->SetCell(i, j , pButton);
+          }
+        }
 
         nuiLabel* pLabel = new nuiLabel("Prout!", nuiFont::GetFont(16));
         pLabel->SetTextColor("white");
@@ -374,6 +421,13 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
   }
 }
 
+void onContentRectChanged(ANativeActivity* activity, const ARect* rect)
+{
+  ARect r = *rect;
+  NGL_OUT("Window rect %d %d %d %d", r.left, r.top, r.right - r.left, r.bottom - r.top);
+}
+
+
 /**
   * This is the main entry point of a native application that is using
   * android_native_app_glue.  It runs in its own thread, with its own
@@ -390,6 +444,14 @@ void android_main(struct android_app* state)
   // Make sure glue isn't stripped.
   app_dummy();
   
+  //ANativeActivity_setWindowFlags(state->activity, AWINDOW_FLAG_FULLSCREEN, AWINDOW_FLAG_FORCE_NOT_FULLSCREEN);
+  ANativeActivity_setWindowFlags(state->activity, AWINDOW_FLAG_FORCE_NOT_FULLSCREEN, AWINDOW_FLAG_FULLSCREEN);
+  ANativeActivity_setWindowFlags(state->activity, AWINDOW_FLAG_LAYOUT_INSET_DECOR, 0);
+  ANativeActivity_setWindowFlags(state->activity, AWINDOW_FLAG_LAYOUT_IN_SCREEN, 0);
+
+  state->activity->callbacks->onContentRectChanged = onContentRectChanged;
+
+
   memset(&engine, 0, sizeof(engine));
   state->userData = &engine;
   state->onAppCmd = engine_handle_cmd;
