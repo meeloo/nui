@@ -130,6 +130,7 @@ void nglContext::OnRescale(float NewScale)
 
 void nglContext::CallOnRescale(float NewScale)
 {
+  NGL_OUT("CallOnRescale %f", NewScale);
   mScale = NewScale;
   mScaleInv = 1.0 / NewScale;
   OnRescale(mScale);
@@ -271,19 +272,23 @@ void nglContext::InitPainter()
 #ifndef __NUI_NO_GL__
     case eOpenGL:
       mpPainter = new nuiGLPainter(this);
+      NGL_OUT("nuiGLPainter created");
       break;
     case eOpenGL2:
       mpPainter = new nuiGL2Painter(this);
+      NGL_OUT("nuiGL2Painter created");
       break;
 #endif
 #ifndef __NUI_NO_D3D__
     case eDirect3D:
       mpPainter = new nuiD3DPainter(this);
+      NGL_OUT("nuiD3DPainter created");
       break;
 #endif
 #ifndef __NUI_NO_SOFTWARE__
     case eNone:
       mpPainter = new nuiSoftwarePainter(this);
+      NGL_OUT("nuiSoftwarePainter created");
       break;
 #endif
   }

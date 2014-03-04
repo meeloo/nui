@@ -247,6 +247,8 @@ int nglApplication::SysLoop()
       }
     }
     
+    nglTimer::DispatchTimers();
+    
     // Drawing is throttled to the screen update rate, so there
     // is no need to do timing here.
     if (mpWindow)
@@ -257,7 +259,7 @@ int nglApplication::SysLoop()
         mpWindow->CallOnPaint();
         firstwindowinit = true;
       }
-      
+
       mpWindow->CallOnPaint();
     }
   }

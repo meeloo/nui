@@ -365,8 +365,8 @@ bool nglWindow::OnSysInit(struct android_app* app)
 {
   NGL_OUT("nglWindow::OnSysInit");
   nglContext::Build(app->window);
-  eglQuerySurface(mDisplay, mSurface, EGL_WIDTH, &mWidth);
-  eglQuerySurface(mDisplay, mSurface, EGL_HEIGHT, &mHeight);
+  // eglQuerySurface(mDisplay, mSurface, EGL_WIDTH, &mWidth);
+  // eglQuerySurface(mDisplay, mSurface, EGL_HEIGHT, &mHeight);
 
   InitPainter();
   OnUpdateConfig(app);
@@ -460,7 +460,7 @@ int32_t nglWindow::OnHandleInput(struct android_app* app, AInputEvent* event)
       int y = AMotionEvent_getY(event, i);
       RemapCoords(app, x, y);
 
-      NGL_OUT("Event[%d] deviceid = %d  id = %d src = %d  flags = %d  count = %d (%d x %d)", i, id, PointerId, src, flags, (int)count, x, y);
+      //NGL_OUT("Event[%d] deviceid = %d  id = %d src = %d  flags = %d  count = %d (%d x %d)", i, id, PointerId, src, flags, (int)count, x, y);
 
       int action = AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event );
       if (action == AMOTION_EVENT_ACTION_DOWN || action == AMOTION_EVENT_ACTION_POINTER_DOWN)
@@ -550,6 +550,8 @@ void nglWindow::OnUpdateConfig(struct android_app* app)
   mStatusBarSize = ::GetStatusBarSize(density);
   gScale = scale;
   CallOnRescale(scale);
+  mWidth = w;
+  mHeight = h;
   CallOnResize(w, h);
 }
 
