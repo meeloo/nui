@@ -332,7 +332,7 @@ private:
 private:
   friend void android_main(struct android_app* state);
 
-  void android_main(struct android_app* state);
+  int android_main(struct android_app* state);
   int  SysLoop();
   bool       mExitReq;
   int        mExitCode;
@@ -369,11 +369,13 @@ extern class nglKernel* App;
 #ifdef _WIN32_
   #define __NGL_APP_MAINDECL int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
   #define __NGL_APP_MAINCALL WinMain(hInstance, hPrevInstance, lpCmdLine, nShowCmd)
+  #define __NGL_APP_RETURN return ret
 #endif // _WIN32_
 
 #if defined(_ANDROID_)
   #define __NGL_APP_MAINDECL void android_main(struct android_app* state)
   #define __NGL_APP_MAINCALL android_main(state); app_dummy()
+  #define __NGL_APP_RETURN
 #endif // _COCOA_
 
 //#ifdef _CARBON_
@@ -386,6 +388,7 @@ extern class nglKernel* App;
 #if (defined(_UNIX_) || defined(_CARBON_) || defined(_UIKIT_) || defined (_COCOA_)) && !(defined _ANDROID_)
   #define __NGL_APP_MAINDECL int main(int argc, const char** argv)
   #define __NGL_APP_MAINCALL Main(argc, argv)
+  #define __NGL_APP_RETURN return ret
 #endif // _UNIX_
 
 #if (defined _DEBUG_) && (defined _WIN32_)
@@ -408,7 +411,7 @@ extern class nglKernel* App;
       nuiUninit(); \
     } \
     /*NGL_CHECK_MEMORY*/\
-    return ret; \
+    __NGL_APP_RETURN; \
   }
 #endif // !_DOXYGEN_
 

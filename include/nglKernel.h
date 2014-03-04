@@ -535,11 +535,13 @@ public:
   void  DelWindow (nglWindow* pWin);
   virtual void  AddTimer (nglTimer* pTimer);
   virtual void  DelTimer (nglTimer* pTimer);
+  void WaitForWindowInit();
 
 protected:
   bool SysInit(android_app* app);
   android_app* mpAndroidApp;
   nglWindow* mpWindow; /// Only one window at a time is possible with the Android NDK
+  bool mWindowInited;
 #endif
 
 };

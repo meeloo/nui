@@ -73,6 +73,9 @@ uint gpKeymapXFree86[NGL_KEYMAP_SIZE] = {
 /* 78 */ 0, 0, 0, 0, 0, 0, 0, 0
 };
 
+float gScale = 1.0;
+float nuiGetScaleFactor() { return gScale;}
+float nuiGetInvScaleFactor() { return 1.0 / nuiGetScaleFactor();}
 
 /*
  * Constructors
@@ -186,8 +189,7 @@ bool nglWindow::SetCursor (nuiMouseCursor Cursor)
 
 int nglWindow::GetStatusBarSize() const
 {
-  NGL_ASSERT(0);
-  return 0;
+  return mStatusBarSize;
 }
 
 /*
@@ -354,20 +356,21 @@ bool nglWindow::IsEnteringText() const
 
 bool nglWindow::InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
 {
+  mTargetAPI = rContext.TargetAPI;
+  App->AddWindow(this);
+  App->WaitForWindowInit();
 }
 
 bool nglWindow::OnSysInit(struct android_app* app)
 {
-  if (nglContext::Build(app->window))
-  {
-    eglQuerySurface(mDisplay, mSurface, EGL_WIDTH, &mWidth);
-    eglQuerySurface(mDisplay, mSurface, EGL_HEIGHT, &mHeight);
-    OnUpdateConfig(app);
-    CallOnCreation();
-    CallOnPaint();
-  }
+  NGL_OUT("nglWindow::OnSysInit");
+  nglContext::Build(app->window);
+  eglQuerySurface(mDisplay, mSurface, EGL_WIDTH, &mWidth);
+  eglQuerySurface(mDisplay, mSurface, EGL_HEIGHT, &mHeight);
 
-  return false;
+  InitPainter();
+  OnUpdateConfig(app);
+  return true;
 }
 
 ////// Android callbacks:
@@ -545,6 +548,7 @@ void nglWindow::OnUpdateConfig(struct android_app* app)
   h /= scale;
 
   mStatusBarSize = ::GetStatusBarSize(density);
+  gScale = scale;
   CallOnRescale(scale);
   CallOnResize(w, h);
 }

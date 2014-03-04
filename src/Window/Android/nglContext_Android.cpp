@@ -165,7 +165,6 @@ bool nglContext::Build(ANativeWindow* window)
   nuiCheckForGLErrorsReal();
   glDisable(GL_DEPTH_TEST);
   nuiCheckForGLErrorsReal();
-    
 
   return true;
 }

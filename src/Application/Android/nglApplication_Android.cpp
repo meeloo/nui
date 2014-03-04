@@ -110,9 +110,11 @@ void nglApplication::HandleCmd(struct android_app* app, int32_t cmd)
           {
             NGL_LOG("window", NGL_LOG_ERROR, "Error while creating nglWindow");
           }
+          mWindowInited = true;
+          LOGI("System window init ok");
         }
 
-        LOGI("System window init ok");
+              LOGI("System window init done");
       }
       break;
     case APP_CMD_TERM_WINDOW:
@@ -167,7 +169,7 @@ void nglApplication::HandleCmd(struct android_app* app, int32_t cmd)
  * Application entry point
  */
 
-void nglApplication::android_main(struct android_app* state)
+int nglApplication::android_main(struct android_app* state)
 {
   SysInit(state);
   //#TODO: WTF should we do with saved states?
@@ -194,6 +196,7 @@ void nglApplication::android_main(struct android_app* state)
   CallOnExit(mExitCode);  // Call user OnExit() call back
 
   Exit(mExitCode);
+  return mExitCode;
 }
 
 
@@ -215,6 +218,7 @@ void nglApplication::android_main(struct android_app* state)
 
 int nglApplication::SysLoop()
 {  
+  bool firstwindowinit = false;
   while (1) 
   {
     // Read all pending events.
@@ -225,7 +229,7 @@ int nglApplication::SysLoop()
     // If not animating, we will block forever waiting for events.
     // If animating, we loop until all events are read, then continue
     // to draw the next frame of animation.
-    while ((ident=ALooper_pollAll(0, NULL, &events, (void**)&source)) >= 0) 
+    while ((ident = ALooper_pollAll(0, NULL, &events, (void**)&source)) >= 0) 
     {
       
       // Process this event.
@@ -247,6 +251,13 @@ int nglApplication::SysLoop()
     // is no need to do timing here.
     if (mpWindow)
     {
+      if (!firstwindowinit)
+      {
+        mpWindow->CallOnCreation();
+        mpWindow->CallOnPaint();
+        firstwindowinit = true;
+      }
+      
       mpWindow->CallOnPaint();
     }
   }

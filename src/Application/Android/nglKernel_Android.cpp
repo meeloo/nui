@@ -41,7 +41,7 @@ const nglChar* gpKernelErrorTable[] =
  */
 
 nglKernel::nglKernel()
-: mKernelEventSink(this), mpWindow(nullptr)
+: mKernelEventSink(this), mpWindow(nullptr), mWindowInited(false)
 {
   Init();
 
@@ -99,7 +99,7 @@ void nglKernel::AddWindow (class nglWindow* pWindow)
 {
   NGL_ASSERT(mpWindow == nullptr);
   mpWindow = pWindow;
-  if (mpAndroidApp->window != NULL) 
+  if (mpAndroidApp->window != NULL && mWindowInited) 
   {
     if (mpWindow)
     {
@@ -166,3 +166,39 @@ void nglKernel::CatchSignal (int Signal, void (*pHandler)(int))
 void nglKernel::NonBlockingHeartBeat()
 {
 }
+
+void nglKernel::WaitForWindowInit()
+{
+  if (mWindowInited)
+    return;
+  
+  int ident;
+  int events;
+  struct android_poll_source* source;
+  while ((ident = ALooper_pollAll(-1, NULL, &events, (void**)&source)) >= 0) 
+  {
+    // Process this event.
+    if (source != NULL) 
+    {
+      source->process(mpAndroidApp, source);
+    }
+
+    // Check if we are exiting.
+    if (mpAndroidApp->destroyRequested != 0) 
+    {
+      NGL_OUT("WaitForWindowInit() ERROR");
+      return;
+    }
+
+    if (mWindowInited)
+    {
+      NGL_OUT("WaitForWindowInit() OK");
+      return;
+    }
+
+      NGL_OUT("WaitForWindowInit()");
+  }
+      NGL_OUT("WaitForWindowInit() EXIT");
+}
+
+

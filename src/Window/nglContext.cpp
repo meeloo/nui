@@ -263,8 +263,9 @@ void nglContext::Dump(uint Level) const
 
 void nglContext::InitPainter()
 {
+  NGL_OUT("Init Painter");
   nuiCheckForGLErrorsReal();
-  mpPainter = NULL;
+  NGL_ASSERT(mpPainter == nullptr);
   switch (mTargetAPI)
   {
 #ifndef __NUI_NO_GL__
@@ -286,6 +287,8 @@ void nglContext::InitPainter()
       break;
 #endif
   }
+
+  NGL_ASSERT(mpPainter != nullptr);
   nuiCheckForGLErrorsReal();
 }
 
