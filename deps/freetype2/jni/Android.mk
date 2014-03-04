@@ -10,7 +10,7 @@ MY_INCLUDE_FILES := 	$(LOCAL_PATH)/../freetype-overlay/include 	\
 LOCAL_MODULE := freetype
 LOCAL_C_INCLUDES := $(MY_INCLUDE_FILES)
 LOCAL_CFLAGS := -DFT2_BUILD_LIBRARY -DFT_CONFIG_OPTION_SYSTEM_ZLIB
-LOCAL_ARM_MODE := thumb
+LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
 src/base/ftsystem.c \

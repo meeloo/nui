@@ -13,7 +13,6 @@
 #include "nuiAudioConvert.h"
 
 extern void* gmpNUI_AndroidBridge;
-extern float gScale;
 
 class nuiAndroidBridge : public nglContext, public nuiTopLevel
 {
@@ -132,7 +131,6 @@ public:
   
   static void androidRescale(float s)
   {
-    gScale = s;
     ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->CallOnRescale(s);
   }
   

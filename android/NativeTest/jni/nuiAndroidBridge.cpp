@@ -9,6 +9,3 @@
 
 void* gmpNUI_AndroidBridge = 0;
 
-float gScale = 1.0;
-float nuiGetScaleFactor() { return gScale;}
-float nuiGetInvScaleFactor() { return 1.0 / nuiGetScaleFactor();}

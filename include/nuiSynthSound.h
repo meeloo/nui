@@ -40,6 +40,7 @@ public:
   float GetPhase() const;
   void SetPhase(float phase);
   
+  static void InitTables();
 protected:
   nuiSynthSound(double sampleRate = 44100, double releaseTime = 1);
   virtual ~nuiSynthSound();
@@ -49,7 +50,6 @@ protected:
   typedef std::vector<float> Wave;
   typedef std::vector<Wave> WaveTable;
   static std::vector<WaveTable> mWaveTables;
-  static void InitTables();
   
   double mSampleRate;
   double mReleaseTime;
