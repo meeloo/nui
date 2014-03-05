@@ -159,7 +159,7 @@ nuiFont* nuiFont::GetFont(nuiSize size, const nglString& rID)
   nglString id = rID.IsEmpty()?GetUniqueID(_T("NGL Default Font"), size, face) : rID;
   NGL_ASSERT(!id.IsEmpty());
 
-  NGL_OUT(_T("nuiFont::GetFont4 %s\n"), id.GetChars());
+  //NGL_OUT(_T("nuiFont::GetFont4 %s\n"), id.GetChars());
 
   if (mpFonts.find(id) == mpFonts.end())
   { 
