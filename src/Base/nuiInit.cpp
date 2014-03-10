@@ -129,7 +129,6 @@ bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
 #endif
 
     NGL_LOG("font", NGL_LOG_INFO, "nuiInit Init Font Manager");
-    NGL_OUT("nuiInit Init Font Manager");
 #ifndef _MINUI3_
     // Init the texture manager:
     nuiTexture::InitTextures();

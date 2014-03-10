@@ -21,6 +21,7 @@ class nglOStream;
 
 /* Verbosity levels
  */
+#define NGL_LOG_NEVER   (-1)
 #define NGL_LOG_ALWAYS  (0)
 #define NGL_LOG_ERROR   (1)
 #define NGL_LOG_WARNING (2)
@@ -96,13 +97,13 @@ public:
 
   /** @name Domain management */
   //@{
-  uint       GetLevel (const nglChar* pDomain);
+  int       GetLevel (const nglChar* pDomain);
   /*!<
     Get the verbose level from a domain name
     \param pDomain domain name
     \return verbose level. This is set to zero if the domain is unknown
   */
-  void       SetLevel (const nglChar* pDomain, uint Level);
+  void       SetLevel (const nglChar* pDomain, int Level);
   /*!<
     Set the verbose level of a domain
     \param pDomain domain name
@@ -115,7 +116,7 @@ public:
 
   /** @name Output methods */
   //@{
-  void       Log (const nglChar* pDomain, uint Level, const nglChar* pText, ...);
+  void       Log (const nglChar* pDomain, int Level, const nglChar* pText, ...);
   /*!<
     Log an event
     \param pDomain domain name
@@ -134,7 +135,7 @@ public:
     Trailing newlines are automaticaly removed, and multiples lines message have each of their
     lines properly stamped.
   */
-  void       Logv (const nglChar* pDomain, uint Level, const nglChar* pText, va_list Args);
+  void       Logv (const nglChar* pDomain, int Level, const nglChar* pText, va_list Args);
   /*!<
     Log an event
     \param pDomain domain name
@@ -144,7 +145,7 @@ public:
 
     Vararg variant of the Log() method.
   */
-  void       Dump (uint Level = 0) const;  ///< Dumps domain usage statistics using \p Level verbosity
+  void       Dump (int Level = 0) const;  ///< Dumps domain usage statistics using \p Level verbosity
   //@}
 
 private:
@@ -155,19 +156,19 @@ private:
     nglAtomic Level;
     nglAtomic Count;
 
-    Domain(const nglChar* pName, uint LogLevel) : Name(pName), Level(LogLevel), Count(0) {}
+    Domain(const nglChar* pName, int LogLevel) : Name(pName), Level(LogLevel), Count(0) {}
   };
   typedef std::list<nglOStream*> OutputList;
   typedef std::vector<Domain>    DomainList;
 
-  uint       mDefaultLevel;
+  int       mDefaultLevel;
   bool       mUseConsole;
   StampFlags mStampFlags;
   nglString  mOutputBuffer;
   nglString  mPrefix;
   nglString  mBody;
   nglString  mDomainFormat;
-  uint       mDomainFormatLen;
+  int       mDomainFormatLen;
   OutputList mOutputList;
   DomainList mDomainList;
 

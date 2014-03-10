@@ -291,7 +291,7 @@ int32 nuiAudioDecoder::ReadIN(void* pBuffer, int32 sampleframes, nuiSampleBitFor
 
     if (err != MPG123_OK && err != MPG123_DONE)
     {
-      NGL_LOG("nuiAudioDecoder", NGL_LOG_ERROR, "mpg123 error while decoding: %s", mpg123_strerror(mpPrivate->mpHandle));
+      NGL_LOG("nuiAudioDecoder", NGL_LOG_INFO, "mpg123 error while decoding: %s", mpg123_strerror(mpPrivate->mpHandle));
     }
   }
 

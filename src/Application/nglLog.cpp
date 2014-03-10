@@ -12,7 +12,9 @@ const nglLog::StampFlags nglLog::TimeStamp   = 1 << 0;
 const nglLog::StampFlags nglLog::DateStamp   = 1 << 1;
 const nglLog::StampFlags nglLog::DomainStamp = 1 << 2;
 
-#define DISABLE_LOG 0
+#ifndef NGL_DISABLE_LOG
+#define NGL_DISABLE_LOG 0
+#endif
 
 /*
  * Life cycle
@@ -61,7 +63,7 @@ void nglLog::UseConsole(bool Use)
 
 bool nglLog::AddOutput (nglOStream* pStream)
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return false;
   #endif
 
@@ -76,7 +78,7 @@ bool nglLog::AddOutput (nglOStream* pStream)
 
 bool nglLog::DelOutput (nglOStream* pStream)
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return false;
   #endif
 
@@ -104,9 +106,9 @@ bool nglLog::DelOutput (nglOStream* pStream)
  * Domain management
  */
 
-uint nglLog::GetLevel (const nglChar* pDomain)
+int nglLog::GetLevel (const nglChar* pDomain)
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return 0;
   #endif
 
@@ -115,26 +117,26 @@ uint nglLog::GetLevel (const nglChar* pDomain)
   return slot ? slot->Level : 0;
 }
 
-void nglLog::SetLevel (const nglChar* pDomain, uint Level)
+void nglLog::SetLevel (const nglChar* pDomain, int Level)
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return;
   #endif
 
-  NGL_OUT("nglLog::SetLevel(%s, %d)", pDomain, Level);
+  // NGL_OUT("nglLog::SetLevel(%s, %d)", pDomain, Level);
   if (!pDomain)
     return;
 
   if (strcmp(pDomain, _T("all")) == 0)
   {
-    NGL_OUT("nglLog::SetLevel setting ALL LEVELS");
+    // NGL_OUT("nglLog::SetLevel setting ALL LEVELS");
     mLock.LockRead();
     DomainList::iterator dom = mDomainList.begin();
     DomainList::iterator end = mDomainList.end();
 
     for (; dom != end; ++dom)
     {
-      NGL_OUT("nglLog::SetLevel setting %s to %d", dom->Name.GetChars(), Level);
+      // NGL_OUT("nglLog::SetLevel setting %s to %d", dom->Name.GetChars(), Level);
       ngl_atomic_set(dom->Level, Level);
     }
     mLock.UnlockRead();
@@ -156,9 +158,9 @@ void nglLog::SetLevel (const nglChar* pDomain, uint Level)
  * Output functions
  */
 
-void nglLog::Log (const nglChar* pDomain, uint Level, const nglChar* pText, ...)
+void nglLog::Log (const nglChar* pDomain, int Level, const nglChar* pText, ...)
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return;
   #endif
 
@@ -173,9 +175,9 @@ void nglLog::Log (const nglChar* pDomain, uint Level, const nglChar* pText, ...)
   va_end (args);
 }
 
-void nglLog::Logv (const nglChar* pDomain, uint Level, const nglChar* pText, va_list Args)
+void nglLog::Logv (const nglChar* pDomain, int Level, const nglChar* pText, va_list Args)
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return;
   #endif
 
@@ -185,11 +187,14 @@ void nglLog::Logv (const nglChar* pDomain, uint Level, const nglChar* pText, va_
   Domain* dom = LookupDomain(pDomain);
   if (!dom)
   {
-    NGL_OUT("LookupDomain %s failed", pDomain);
+    // NGL_OUT("LookupDomain %s failed", pDomain);
     return;
   }
 
-  if (Level > dom->Level && dom->Level != NGL_LOG_ALWAYS)
+  if (dom->Level == NGL_LOG_NEVER)
+    return;
+
+  if ((Level > dom->Level) && (dom->Level != NGL_LOG_ALWAYS))
     return;
 
   // Update log item counter
@@ -268,9 +273,9 @@ void nglLog::Logv (const nglChar* pDomain, uint Level, const nglChar* pText, va_
   }
 }
 
-void nglLog::Dump (uint Level) const
+void nglLog::Dump (int Level) const
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return;
   #endif
 
@@ -298,7 +303,7 @@ void nglLog::Dump (uint Level) const
 
 nglLog::Domain* nglLog::LookupDomain (const nglChar* pName)
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return NULL;
   #endif
 
@@ -332,7 +337,7 @@ nglLog::Domain* nglLog::LookupDomain (const nglChar* pName)
 
 void nglLog::Output (const nglString& rText) const
 {
-  #if DISABLE_LOG
+  #if NGL_DISABLE_LOG
   return;
   #endif
 
