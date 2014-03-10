@@ -1,6 +1,7 @@
 solution "minui3"
     configurations { "Debug", "Release" }
     language "C++"
+    buildoptions "-std=c++11"
 
     includedirs
     {
@@ -38,20 +39,35 @@ solution "minui3"
           "scratchpads/minui_test.cpp"
         }
 
-        links
-        {
-            "minui3"
-        }
+        if os.is("linux") then
+            links
+            {
+                "z",
+                "curl",
+                "mpg123",
+                "minui3"
+            }
+        else
+            links
+            {
+                "z",
+                "iconv",
+                "curl",
+                "minui3"
+            }
+        end
 
     project "minui3"
-        kind     "SharedLib"
+       --kind "StaticLib"
+       kind "SharedLib"
 
 
         if os.is("linux") then
             links
             {
                 "z",
-                "curl"
+                "curl",
+                "mpg123"
             }
         else
             links
@@ -101,6 +117,10 @@ solution "minui3"
             "src/Application/nglModule.cpp",
             "src/Application/nglModule.cpp",
             -- "src/Application/nuiLocale.cpp",
+
+            "src/Audio/nuiAudioConvert.cpp",
+            "src/AudioSamples/*.cpp",
+            "src/AudioSamples/Unix/*.cpp",
 
             "src/String/nglString.cpp",
             "src/String/nuiRegExp.cpp",

@@ -41,7 +41,7 @@ void nuiObject::Init(const nglString& rObjectName)
     uint32 s = mObjects.size();
     if (!(s % 500))
     {
-      NGL_OUT(_T("Objects total count %d\n"), s);
+      NGL_LOG("nuiObject", NGL_LOG_INFO, "Objects total count %d\n", s);
     }
   }
 #endif
@@ -633,7 +633,7 @@ int32 nuiObject::GetClassNameIndex(const nglString& rName)
     mObjectClassNames.push_back(rName);
     mClassAttributes.resize(index + 1);
     mInheritanceMap.push_back(-2); // -1 = not parent, -2 = not initialized
-    NGL_DEBUG( printf("New class: %s [%d]\n", rName.GetChars(), index); )
+    NGL_DEBUG( NGL_LOG("nuiObject", NGL_LOG_INFO, "New class: %s [%d]\n", rName.GetChars(), index); )
 
     return index;
   }

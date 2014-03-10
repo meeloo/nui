@@ -51,6 +51,19 @@ typedef double nuiSize;
 #include "nglMath.h"
 #include "nuiSingleton.h"
 
+#include "nuiSampleInfo.h"
+#include "nuiSampleReader.h"
+#include "nuiChunkSampleReader.h"
+#include "nuiSampleWriter.h"
+#include "nuiWaveReader.h"
+#include "nuiAiffReader.h"
+#include "nuiAudioDecoder.h"
+#include "nuiWaveWriter.h"
+#include "nuiSample.h"
+#include "nuiAudioConvert.h"
+#include "nuiAiffWriter.h"
+
+
 #ifndef _MINUI3_
 #include "nuiPoint.h"
 #include "nuiPath.h"
@@ -85,10 +98,6 @@ typedef double nuiSize;
 #include "nuiMidi.h"
 #include "nuiAudioDevice.h"
 #include "nuiAudioDb.h"
-#include "nuiSampleInfo.h"
-#include "nuiSampleReader.h"
-#include "nuiChunkSampleReader.h"
-#include "nuiSampleWriter.h"
 #include "nuiSound.h"
 #include "nuiVoice.h"
 #include "nuiAudioEngine.h"
@@ -101,13 +110,6 @@ typedef double nuiSize;
 #include "nuiSynthVoice.h"
 #include "nuiFileSound.h"
 #include "nuiFileVoice.h"
-#include "nuiWaveReader.h"
-#include "nuiAiffReader.h"
-#include "nuiAudioDecoder.h"
-#include "nuiWaveWriter.h"
-#include "nuiSample.h"
-#include "nuiAudioConvert.h"
-#include "nuiAiffWriter.h"
 
 #include "nuiStringTemplate.h"
 
