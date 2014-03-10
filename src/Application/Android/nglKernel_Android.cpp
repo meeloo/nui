@@ -41,7 +41,7 @@ const nglChar* gpKernelErrorTable[] =
  */
 
 nglKernel::nglKernel()
-: mKernelEventSink(this)
+: mKernelEventSink(this), mpWindow(nullptr), mWindowInited(false)
 {
   Init();
 
@@ -87,14 +87,6 @@ bool nglKernel::SetClipboard(const nglString& rString)
  * Event handling (stubs rather than pure virtual methods)
  */
 
-void nglKernel::AddEvent (nglEvent* pEvent)
-{
-}
-
-void nglKernel::DelEvent (nglEvent* pEvent)
-{
-}
-
 void nglKernel::AddTimer (nglTimer* pTimer)
 {
 }
@@ -103,17 +95,26 @@ void nglKernel::DelTimer (nglTimer* pTimer)
 {
 }
 
-void* nglKernel::GetDisplay()
+void nglKernel::AddWindow (class nglWindow* pWindow)
 {
-  return NULL;
-}
+  NGL_ASSERT(mpWindow == nullptr);
+  mpWindow = pWindow;
+  if (mpAndroidApp->window != NULL && mWindowInited) 
+  {
+    if (mpWindow)
+    {
+      mpWindow->OnSysInit(mpAndroidApp);
+    }
 
-void nglKernel::AddWindow (class nglWindow* pWin)
-{
+    LOGI("Init window");
+
+  }
 }
 
 void nglKernel::DelWindow (class nglWindow* pWin)
 {
+  NGL_ASSERT(mpWindow != nullptr);
+  mpWindow = nullptr;
 }
 
 android_app* nglKernel::GetAndroidApp()
@@ -125,6 +126,8 @@ android_app* nglKernel::GetAndroidApp()
 /*
  * Internals (generic kernel setup)
  */
+
+
 
 bool nglKernel::SysInit(android_app* app)
 {
@@ -141,18 +144,12 @@ bool nglKernel::SysInit(android_app* app)
   };
   int sig;
 
-  for (sig = 0; signals[sig] != -1; sig++)
-    CatchSignal (signals[sig], OnSignal);
+  // for (sig = 0; signals[sig] != -1; sig++)
+  //   CatchSignal (signals[sig], OnSignal);
 
   // Set locale (for strtoup(), time/date formatting and so on)
   setlocale (LC_ALL, "");
 
-  return true;
-}
-
-bool nglKernel::SysInit()
-{
-  NGL_ASSERT(0);
   return true;
 }
 
@@ -166,44 +163,42 @@ void nglKernel::CatchSignal (int Signal, void (*pHandler)(int))
   sigaction (Signal, &act, NULL);
 }
 
-void nglKernel::OnSignal(int Signal) /* static method */
-{
-  switch (Signal)
-  {
-    case SIGSEGV:
-    {
-/*
-      if (isatty(STDIN_FILENO) && (crashcount < 1))
-        tcsetattr (STDIN_FILENO, TCSANOW, &App->mTermInfo);
-*/
-      NGL_DEBUG( NGL_LOG(_T("kernel"), NGL_LOG_ERROR, _T("** Segmentation fault\n")); )
-      _exit(2);
-    }
-
-    case SIGHUP:
-    case SIGINT:
-    case SIGQUIT:
-    case SIGPIPE:
-    case SIGTERM:
-    {
-      NGL_DEBUG( NGL_LOG(_T("kernel"), NGL_LOG_ERROR, _T("** Caught signal %d\n"), Signal); )
-      App->Quit(1);
-    }
-  }
-}
-
-void nglKernel::OnEvent(uint Flags)
-{
-}
-
-void nglKernel::EnterModalState()
-{
-}
-
-void nglKernel::ExitModalState()
-{
-}
-
 void nglKernel::NonBlockingHeartBeat()
 {
 }
+
+void nglKernel::WaitForWindowInit()
+{
+  if (mWindowInited)
+    return;
+  
+  int ident;
+  int events;
+  struct android_poll_source* source;
+  while ((ident = ALooper_pollAll(-1, NULL, &events, (void**)&source)) >= 0) 
+  {
+    // Process this event.
+    if (source != NULL) 
+    {
+      source->process(mpAndroidApp, source);
+    }
+
+    // Check if we are exiting.
+    if (mpAndroidApp->destroyRequested != 0) 
+    {
+      NGL_OUT("WaitForWindowInit() ERROR");
+      return;
+    }
+
+    if (mWindowInited)
+    {
+      NGL_OUT("WaitForWindowInit() OK");
+      return;
+    }
+
+      NGL_OUT("WaitForWindowInit()");
+  }
+      NGL_OUT("WaitForWindowInit() EXIT");
+}
+
+

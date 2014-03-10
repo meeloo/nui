@@ -342,7 +342,7 @@ void nglWindow::CallOnState (StateInfo State)
 
 void nglWindow::CallOnResize (uint Width, uint Height)
 {
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Resize: %dx%d"), Width, Height); )
+  NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Resize: %dx%d"), Width, Height);
   mpPainter->SetSize(Width, Height);
   OnResize (Width, Height);
 #ifdef _COCOA_

@@ -582,6 +582,31 @@ typedef unsigned int GLhandleARB;  /* shader object handle */
 
 #ifdef _ANDROID_
 #include "android/log.h"
+#include <EGL/egl.h>
+#include <GLES/gl.h>
+
+#include <android/sensor.h>
+#include <android/log.h>
+#include <android_native_app_glue.h>
+#include <android/window.h>
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+#include <android/bitmap.h>
+#include <android/configuration.h>
+#include <android/input.h>
+#include <android/keycodes.h>
+#include <android/looper.h>
+#include <android/native_activity.h>
+#include <android/native_window.h>
+#include <android/native_window_jni.h>
+#include <android/obb.h>
+#include <android/rect.h>
+#include <android/storage_manager.h>
+//#include <android/tts.h>
+
+#include <pthread.h>
+#include <unistd.h>
+#include <sys/time.h>
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "nui", __VA_ARGS__))
 #else
 #define LOGI

@@ -94,6 +94,7 @@ std::vector<nuiSynthSound::WaveTable> nuiSynthSound::mWaveTables;
 
 void nuiSynthSound::InitTables()
 {
+  NGL_OUT("nuiSynthSound::InitTables");
   if (!mWaveTables.empty())
     return;
   
@@ -102,7 +103,8 @@ void nuiSynthSound::InitTables()
     WaveTable table;
     
     
-    std::vector<float> wave(SYNTH_SOUND_TABLE_SIZE + 1, 0.f);
+    std::vector<float> wave;
+    wave.resize(SYNTH_SOUND_TABLE_SIZE + 1);
     
     int size = SYNTH_SOUND_TABLE_SIZE;
     int size_1_2 = size / 2;
@@ -116,29 +118,32 @@ void nuiSynthSound::InitTables()
     {
         // Sinus
       case eSinus:
+        NGL_OUT("nuiSynthSound::InitTables Sinus");
         for (i = 0; i < size; i++)
         {
           float p = ((float)i) * 2 * M_PI / (float)size;
           wave[i] = sin(p);
         }
-        wave[i] = wave[0];
+        wave[size] = wave[0];
         
         break;
         
         
         // Square
       case eSquare:
+        NGL_OUT("nuiSynthSound::InitTables Square");
         for (i = 0; i < size_1_2; i++)
         {
           wave[i] = 1.0f;
           wave[i + size_1_2] = -1.0f;
         }
-        wave[i] = wave[0];
+        wave[size] = wave[0];
         break;
         
         
         // Triangle
       case eTriangle:
+        NGL_OUT("nuiSynthSound::InitTables Triangle");
         incr = 1.0f / size_1_4;
         p = 0;
         for (i = 0; i < size_1_4; i++)
@@ -152,23 +157,25 @@ void nuiSynthSound::InitTables()
           p = 1.0f - ((float)i) * incr;
           wave[size_1_4 + i] = p;
         }
-        wave[size  +1] = wave[0];
+        wave[size] = wave[0];
         break;
         
         
         // Saw
       case eSaw:
+        NGL_OUT("nuiSynthSound::InitTables Saw");
         for (i = 0; i < size; i++)
         {
           float p = 1.0 - (((float)i) * (1.0f/(float)size));
           wave[i] = p;
         }
-        wave[i] = wave[0];
+        wave[size] = wave[0];
         break;
         
         
       case eLastType:
       default:
+        NGL_OUT("nuiSynthSound::InitTables Woot?");
         break;
     }
     

@@ -7,6 +7,7 @@
 #include <android/sensor.h>
 #include <android/log.h>
 #include <android_native_app_glue.h>
+#include <android/window.h>
 
 #include <pthread.h>
 #include <unistd.h>
@@ -121,14 +122,20 @@ static int engine_init_display(struct engine* engine)
   engine->height = h;
   engine->state.angle = 0;
   
+  nuiCheckForGLErrorsReal();
   // Initialize GL state.
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+  nuiCheckForGLErrorsReal();
   glEnable(GL_CULL_FACE);
+  nuiCheckForGLErrorsReal();
   glShadeModel(GL_SMOOTH);
+  nuiCheckForGLErrorsReal();
   glDisable(GL_DEPTH_TEST);
+  nuiCheckForGLErrorsReal();
   
-    // Create the NUI bridge which also serves as the main window/widget tree:
+  // Create the NUI bridge which also serves as the main window/widget tree:
   gpBridge->Init();
+  nuiCheckForGLErrorsReal();
   
 
   return 0;
@@ -146,9 +153,13 @@ static void engine_draw_frame(struct engine* engine)
   }
   
   // Just fill the screen with a color.
-  glClearColor(((float)engine->state.x)/engine->width, engine->state.angle,
-               ((float)engine->state.y)/engine->height, 1);
+  nuiCheckForGLErrorsReal();
+  glClearColor(((float)engine->state.x)/engine->width, engine->state.angle, ((float)engine->state.y)/engine->height, 1);
+  nuiCheckForGLErrorsReal();
+  glClearColor(0, 0, 0, 0);
+  nuiCheckForGLErrorsReal();
   glClear(GL_COLOR_BUFFER_BIT);
+  nuiCheckForGLErrorsReal();
   
   gpBridge->Display();
   
@@ -183,7 +194,7 @@ static void engine_term_display(struct engine* engine)
   // Exit the application
   // First destroy the NUI bridge / widget tree:
   LOGI("delete android bridge");
-  delete gpBridge;
+  gpBridge->Release();
   LOGI("delete android bridge OK");
   
   // Shutdown the basic NUI services:
@@ -191,6 +202,18 @@ static void engine_term_display(struct engine* engine)
   nuiUninit();
   LOGI("nuiUninit OK");
 }
+
+float RemapCoords(struct android_app* app, int& x, int& y)
+{
+  float density = AConfiguration_getDensity(app->config);
+  float scale = ToNearest(density / 160);
+  //NGL_OUT("Remap %d x %d", x, y);
+  x /= scale;
+  y /= scale;
+  //NGL_OUT("To %d x %d (%f)", x, y, scale);
+  return scale;
+}
+
 
 /**
   * Process the next input event.
@@ -200,29 +223,104 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event)
   struct engine* engine = (struct engine*)app->userData;
   if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) 
   {
-    int x = AMotionEvent_getX(event, 0);
-    int y = AMotionEvent_getY(event, 0);
-    if ((AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event )) == AMOTION_EVENT_ACTION_DOWN)
-    {
-      nuiAndroidBridge::androidMouse(0, 0, x, y);
-    }
-    else if ((AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event )) == AMOTION_EVENT_ACTION_UP)
-    {
-      nuiAndroidBridge::androidMouse(0, 1, x, y);      
-    }
-    else if ((AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event )) == AMOTION_EVENT_ACTION_MOVE)
-    {
-      nuiAndroidBridge::androidMotion(x, y);
-    }
+    int32_t id = AInputEvent_getDeviceId(event);
+    int32_t src = AInputEvent_getSource(event);
+    int32_t flags = AMotionEvent_getFlags(event);
+    size_t count = AMotionEvent_getPointerCount(event);
 
-    
-    engine->animating = 1;
-    engine->state.x = AMotionEvent_getX(event, 0);
-    engine->state.y = AMotionEvent_getY(event, 0);
+    for (int i = 0; i < count; i++)
+    {
+      int PointerId  = AMotionEvent_getPointerId( event, i );
+      int x = AMotionEvent_getX(event, i);
+      int y = AMotionEvent_getY(event, i);
+      RemapCoords(app, x, y);
+
+      NGL_OUT("Event[%d] deviceid = %d  id = %d src = %d  flags = %d  count = %d (%d x %d)", i, id, PointerId, src, flags, (int)count, x, y);
+
+      int action = AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event );
+      if (action == AMOTION_EVENT_ACTION_DOWN || action == AMOTION_EVENT_ACTION_POINTER_DOWN)
+      {
+        nuiAndroidBridge::androidMouse(PointerId, 0, 0, x, y);
+      }
+      else if (action == AMOTION_EVENT_ACTION_UP || action == AMOTION_EVENT_ACTION_POINTER_UP)
+      {
+        nuiAndroidBridge::androidMouse(PointerId, 0, 1, x, y);      
+      }
+      else if (action == AMOTION_EVENT_ACTION_MOVE || action == AMOTION_EVENT_ACTION_POINTER_UP)
+      {
+        nuiAndroidBridge::androidMotion(PointerId, x, y);
+      }
+    }
     return 1;
   }
   return 0;
 }
+
+int MyGetStatusBarSize(int density)
+{
+  switch ( density )
+   {
+  case 160:
+      return 25;
+      break;
+  case 120:
+      return 19;
+      break;
+  case 240:
+      return 38;
+      break;
+  case 320:
+      return 50;
+      break;
+  default:
+      return 25;
+      break;
+  }
+
+  return -1;
+}
+
+void UpdateConfig(struct android_app* app)
+{
+  int w = 0;
+  int h = 0;
+  int s1 = ANativeWindow_getWidth(app->window);
+  int s2 = ANativeWindow_getHeight(app->window);
+
+  int32_t orientation = AConfiguration_getOrientation(app->config);
+  switch(orientation)
+  {
+  case ACONFIGURATION_ORIENTATION_LAND:
+    NGL_OUT("Orientation changed to Landscape");
+    w = MAX(s1, s2);
+    h = MIN(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_PORT:
+    NGL_OUT("Orientation changed to Portrait");
+    w = MIN(s1, s2);
+    h = MAX(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_SQUARE:
+    NGL_OUT("Orientation changed to Square (WTF?)");
+    w = MAX(s1, s2);
+    h = MIN(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_ANY:
+    NGL_ASSERT(false);
+    break;
+  default:
+    NGL_ASSERT(false);
+    break;
+  }
+  float density = AConfiguration_getDensity(app->config);
+  float scale = ToNearest(density / 160);
+  w /= scale;
+  h /= scale;
+  nuiAndroidBridge::androidRescale(scale);
+  nuiAndroidBridge::androidResize(w, h);
+  nuiAndroidBridge::androidSetStatusBarSize(MyGetStatusBarSize(density));
+}
+
 
 /**
   * Process the next main command.
@@ -230,7 +328,8 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event)
 static void engine_handle_cmd(struct android_app* app, int32_t cmd) 
 {
   struct engine* engine = (struct engine*)app->userData;
-  switch (cmd) {
+  switch (cmd)
+  {
     case APP_CMD_SAVE_STATE:
       // The system has asked us to save our current state.  Do so.
       engine->app->savedState = malloc(sizeof(struct saved_state));
@@ -241,12 +340,39 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
       // The window is being shown, get it ready.
       if (engine->app->window != NULL) 
       {
+        nuiCheckForGLErrorsReal();
         engine_init_display(engine);
+        nuiCheckForGLErrorsReal();
 
-        nuiAndroidBridge::androidResize(ANativeWindow_getWidth(app->window), ANativeWindow_getHeight(app->window));
-        nuiButton* pButton = new nuiButton("Prout!");
-//        pButton->SetPosition(nuiCenter);
-        gpBridge->AddChild(pButton);
+        UpdateConfig(app);
+
+        LOGI("Init window");
+
+        nuiGrid* pGrid = new nuiGrid(3, 6);
+        gpBridge->AddChild(pGrid);
+        for (int i = 0; i < 3; i++)
+        {
+          pGrid->SetColumnExpand(i, nuiExpandShrinkAndGrow);
+          for (int j = 0; j < 6; j++)
+          {
+            if (!i)
+              pGrid->SetRowExpand(j, nuiExpandShrinkAndGrow);
+
+            nuiButton* pButton = new nuiButton();
+            nuiImage* pImage = new nuiImage("rsrc://Logo.png");
+            pImage->SetFillRule(nuiCenter);
+            pImage->SetPosition(nuiFill);
+            pImage->SetFixedAspectRatio(true);
+            pButton->AddChild(pImage);
+            pButton->SetUserSize(150, 150);
+            //pButton->SetPosition(nuiFill);
+            pGrid->SetCell(i, j , pButton);
+          }
+        }
+
+        nuiLabel* pLabel = new nuiLabel("Prout!", nuiFont::GetFont(16));
+        pLabel->SetTextColor("white");
+        gpBridge->AddChild(pLabel);
 
         engine_draw_frame(engine);
         engine->animating = 1;
@@ -279,8 +405,29 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd)
       engine->animating = 1;
       engine_draw_frame(engine);
       break;
+    case APP_CMD_WINDOW_RESIZED:
+      {
+        NGL_OUT("Android window resized");
+        UpdateConfig(app);
+      }
+      break;
+
+    case APP_CMD_CONFIG_CHANGED:
+      {
+        NGL_OUT("Android app config changed");
+        UpdateConfig(app);
+      }
+      break;
+  
   }
 }
+
+void onContentRectChanged(ANativeActivity* activity, const ARect* rect)
+{
+  ARect r = *rect;
+  NGL_OUT("Window rect %d %d %d %d", r.left, r.top, r.right - r.left, r.bottom - r.top);
+}
+
 
 /**
   * This is the main entry point of a native application that is using
@@ -298,6 +445,14 @@ void android_main(struct android_app* state)
   // Make sure glue isn't stripped.
   app_dummy();
   
+  //ANativeActivity_setWindowFlags(state->activity, AWINDOW_FLAG_FULLSCREEN, AWINDOW_FLAG_FORCE_NOT_FULLSCREEN);
+  ANativeActivity_setWindowFlags(state->activity, AWINDOW_FLAG_FORCE_NOT_FULLSCREEN, AWINDOW_FLAG_FULLSCREEN);
+  ANativeActivity_setWindowFlags(state->activity, AWINDOW_FLAG_LAYOUT_INSET_DECOR, 0);
+  ANativeActivity_setWindowFlags(state->activity, AWINDOW_FLAG_LAYOUT_IN_SCREEN, 0);
+
+  state->activity->callbacks->onContentRectChanged = onContentRectChanged;
+
+
   memset(&engine, 0, sizeof(engine));
   state->userData = &engine;
   state->onAppCmd = engine_handle_cmd;
@@ -320,6 +475,7 @@ void android_main(struct android_app* state)
     // Create the NUI bridge which also serves as the main window/widget tree:
   LOGI("create Android Bridge");
   gpBridge = new nuiAndroidBridge();
+  gpBridge->Acquire();
   LOGI("create Android Bridge OK");
   
   // loop waiting for stuff to do.

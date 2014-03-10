@@ -147,6 +147,7 @@ static uint32 total = 0;
 nuiGLPainter::nuiGLPainter(nglContext* pContext)
 : nuiPainter(pContext)
 {
+  nuiCheckForGLErrorsReal();
   mCanRectangleTexture = 0;
   mTextureTarget = 0;
   mTwoPassBlend = false;
@@ -219,10 +220,13 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   //  mDefaultFramebuffer = 0;
   //  mDefaultRenderbuffer = 0;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &mDefaultFramebuffer);
+  nuiCheckForGLErrorsReal();
   glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
+  nuiCheckForGLErrorsReal();
 #endif
 
   mActiveContexts++;
+  nuiCheckForGLErrorsReal();
 }
 
 nuiGLPainter::~nuiGLPainter()
@@ -564,7 +568,7 @@ void nuiGLPainter::SetState(const nuiRenderState& rState, bool ForceApply)
 void nuiGLPainter::SetSize(uint32 w, uint32 h)
 {
   NUI_RETURN_IF_RENDERING_DISABLED;
-  //NGL_OUT("nuiGLPainter::SetSize(%d, %d)\n", w, h);
+  NGL_DEBUG(NGL_OUT("nuiGLPainter::SetSize(%d, %d)\n", w, h);)
   mWidth = w;
   mHeight = h;
 }
@@ -2388,6 +2392,7 @@ bool nuiCheckForGLErrorsReal()
       break;
   }
   //#endif
+  NGL_ASSERT(0);
 #endif
 
   return true;

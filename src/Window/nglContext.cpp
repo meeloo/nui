@@ -130,6 +130,7 @@ void nglContext::OnRescale(float NewScale)
 
 void nglContext::CallOnRescale(float NewScale)
 {
+  NGL_OUT("CallOnRescale %f", NewScale);
   mScale = NewScale;
   mScaleInv = 1.0 / NewScale;
   OnRescale(mScale);
@@ -152,12 +153,14 @@ bool nglContext::CheckExtension (const nglChar* pExtName)
     return false;
 
   MakeCurrent();
-  
+  nuiCheckForGLErrorsReal();
+
   nglString temp(pExtName);
   char* extname = temp.Export();
 
   int extname_l = strlen(extname);
   const char* ext0 = (const char*)glGetString(GL_EXTENSIONS);
+  nuiCheckForGLErrorsReal();
   const char* ext = ext0;
   bool success = false;
 
@@ -171,6 +174,7 @@ bool nglContext::CheckExtension (const nglChar* pExtName)
   if (success || !strncmp(extname, "GL_VERSION_1_", 13) || !strncmp(extname, "GL_VERSION_2_", 13))
   {
     success = InitExtension(pExtName);
+    nuiCheckForGLErrorsReal();
 #ifdef _DEBUG_
     if (!success)
       NGL_LOG(_T("context"), NGL_LOG_WARNING, _T("'%s' extension setup failed"), pExtName);
@@ -260,28 +264,37 @@ void nglContext::Dump(uint Level) const
 
 void nglContext::InitPainter()
 {
-  mpPainter = NULL;
+  NGL_OUT("Init Painter");
+  nuiCheckForGLErrorsReal();
+  NGL_ASSERT(mpPainter == nullptr);
   switch (mTargetAPI)
   {
 #ifndef __NUI_NO_GL__
     case eOpenGL:
       mpPainter = new nuiGLPainter(this);
+      NGL_OUT("nuiGLPainter created");
       break;
     case eOpenGL2:
       mpPainter = new nuiGL2Painter(this);
+      NGL_OUT("nuiGL2Painter created");
       break;
 #endif
 #ifndef __NUI_NO_D3D__
     case eDirect3D:
       mpPainter = new nuiD3DPainter(this);
+      NGL_OUT("nuiD3DPainter created");
       break;
 #endif
 #ifndef __NUI_NO_SOFTWARE__
     case eNone:
       mpPainter = new nuiSoftwarePainter(this);
+      NGL_OUT("nuiSoftwarePainter created");
       break;
 #endif
   }
+
+  NGL_ASSERT(mpPainter != nullptr);
+  nuiCheckForGLErrorsReal();
 }
 
 nuiPainter* nglContext::GetPainter() const

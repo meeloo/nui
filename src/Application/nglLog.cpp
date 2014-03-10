@@ -121,17 +121,20 @@ void nglLog::SetLevel (const nglChar* pDomain, uint Level)
   return;
   #endif
 
+  NGL_OUT("nglLog::SetLevel(%s, %d)", pDomain, Level);
   if (!pDomain)
     return;
 
   if (strcmp(pDomain, _T("all")) == 0)
   {
+    NGL_OUT("nglLog::SetLevel setting ALL LEVELS");
     mLock.LockRead();
     DomainList::iterator dom = mDomainList.begin();
     DomainList::iterator end = mDomainList.end();
 
     for (; dom != end; ++dom)
     {
+      NGL_OUT("nglLog::SetLevel setting %s to %d", dom->Name.GetChars(), Level);
       ngl_atomic_set(dom->Level, Level);
     }
     mLock.UnlockRead();
@@ -181,9 +184,12 @@ void nglLog::Logv (const nglChar* pDomain, uint Level, const nglChar* pText, va_
 
   Domain* dom = LookupDomain(pDomain);
   if (!dom)
+  {
+    NGL_OUT("LookupDomain %s failed", pDomain);
     return;
+  }
 
-  if (Level > dom->Level)
+  if (Level > dom->Level && dom->Level != NGL_LOG_ALWAYS)
     return;
 
   // Update log item counter

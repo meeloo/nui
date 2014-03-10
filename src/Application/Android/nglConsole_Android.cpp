@@ -35,25 +35,14 @@ nglConsole::nglConsole(bool IsVisible)
   Setup(); // Portable code init
 
   mIsVisible = IsVisible;
-  mFD = STDIN_FILENO;
-  if (!isatty (mFD))
-  {
-    mFlags = 0;
-    //NGL_LOG(_T("console"), NGL_LOG_WARNING, _T("Warning: not connected to a tty, interactive console disabled\n"));
-    LOGI("OK");
-    return;
-  }
-  mFlags = nglEvent::Read | nglEvent::Error;
-  App->AddEvent (this);
 
   if (mIsVisible)
     LOGI(NGL_CONSOLE_PROMPT);
-  LOGI("OK");
+  LOGI("OK2");
 }
 
 nglConsole::~nglConsole()
 {
-  App->DelEvent (this);
 }
 
 
@@ -74,7 +63,8 @@ void nglConsole::Show (bool IsVisible)
 void nglConsole::OnOutput (const nglString& rText)
 {
   // 'char' mode : string buffer is considered to use the locale's encoding
-  __android_log_print(ANDROID_LOG_INFO, "nui", "%s", rText.GetChars());
+  //__android_log_print(ANDROID_LOG_INFO, "nui", "%s", rText.GetChars());
+  LOGI("%s", rText.GetChars());
 }
 
 #define IN_BUFFER_SIZE 1024
@@ -83,14 +73,4 @@ void nglConsole::OnEvent(uint Flags)
 {
   char buffer[IN_BUFFER_SIZE+1];
   int count;
-
-  count = read (mFD, buffer, IN_BUFFER_SIZE);
-  if (count > 0)
-  {
-    buffer[count] = '\0';
-    mInputBuffer = buffer;
-    Input (mInputBuffer);
-    if (mIsVisible)
-      NGL_OUT (nglString(NGL_CONSOLE_PROMPT)); // FIXME
-  }
 }

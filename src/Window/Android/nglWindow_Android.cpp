@@ -73,23 +73,9 @@ uint gpKeymapXFree86[NGL_KEYMAP_SIZE] = {
 /* 78 */ 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-
-/*
- * X events settings
- */
-
-#define NGL_CLICK_DELAY 250
-
-//#define NGL_X_EVENTS 0x1ffffff
-#define NGL_X_KEY_EVENTS   (KeyPressMask | KeyReleaseMask)
-#define NGL_X_MOUSE_EVENTS (ButtonPressMask | ButtonReleaseMask | PointerMotionMask)
-#define NGL_X_EVENTS \
-  ( ExposureMask | FocusChangeMask | \
-    StructureNotifyMask | \
-    EnterWindowMask | LeaveWindowMask | \
-    NGL_X_KEY_EVENTS | \
-    NGL_X_MOUSE_EVENTS )
-
+float gScale = 1.0;
+float nuiGetScaleFactor() { return gScale;}
+float nuiGetInvScaleFactor() { return 1.0 / nuiGetScaleFactor();}
 
 /*
  * Constructors
@@ -97,12 +83,18 @@ uint gpKeymapXFree86[NGL_KEYMAP_SIZE] = {
 
 nglWindow::nglWindow (uint Width, uint Height, bool IsFullScreen)
 {
+  mWidth = mHeight = 0;
+  mStatusBarSize = 25;
   nglContextInfo context; // Get default context
   nglWindowInfo info(Width, Height, IsFullScreen);
+  InternalInit(context, info, NULL);
 }
 
 nglWindow::nglWindow (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
 {
+  mWidth = mHeight = 0;
+  mStatusBarSize = 25;
+  InternalInit(rContext, rInfo, pShared);
 }
 
 
@@ -118,18 +110,18 @@ nglWindow::~nglWindow()
 
 uint nglWindow::GetWidth() const
 {
-  return 0;
+  return mWidth;
 }
 
 uint nglWindow::GetHeight() const
 {
-  return 0;
+  return mHeight;
 }
 
 void nglWindow::GetSize (uint& rWidth, uint& rHeight) const
 {
-  rWidth = 0;
-  rHeight = 0;
+  rWidth = mWidth;
+  rHeight = mHeight;
 }
 
 bool nglWindow::SetSize (uint Width, uint Height)
@@ -197,8 +189,7 @@ bool nglWindow::SetCursor (nuiMouseCursor Cursor)
 
 int nglWindow::GetStatusBarSize() const
 {
-  NGL_ASSERT(0);
-  return 0;
+  return mStatusBarSize;
 }
 
 /*
@@ -305,16 +296,23 @@ void nglWindow::OnDragStop(bool canceled)
 
 void nglWindow::BeginSession()
 {
+  MakeCurrent();
 }
 
 bool nglWindow::MakeCurrent() const
 {
+  if (mDisplay != EGL_NO_DISPLAY) 
+  {
+    eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
+    return true;
+  }
   return false;
 }
 
 
 void nglWindow::EndSession()
 {
+  eglSwapBuffers(mDisplay, mSurface);
 }
 
 void nglWindow::Invalidate()
@@ -329,13 +327,15 @@ void nglWindow::Invalidate()
 void nglWindow::EnterModalState()
 {
     NGL_LOG("deb", 0, "Entering modal state");
-	App->EnterModalState();
+    //#FIXME
+	//App->EnterModalState();
 }
 
 void nglWindow::ExitModalState()
 {
     NGL_LOG("deb", 0, "Exiting modal state");
-	App->ExitModalState();
+    //#FIXME
+	//App->ExitModalState();
 }
 
 void nglWindow::StartTextInput(int32 X, int32 Y, int32 W, int32 H)
@@ -353,4 +353,215 @@ bool nglWindow::IsEnteringText() const
   //#FIXME
   return false;
 }
+
+bool nglWindow::InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
+{
+  mTargetAPI = rContext.TargetAPI;
+  App->AddWindow(this);
+  App->WaitForWindowInit();
+}
+
+bool nglWindow::OnSysInit(struct android_app* app)
+{
+  NGL_OUT("nglWindow::OnSysInit");
+  nglContext::Build(app->window);
+  // eglQuerySurface(mDisplay, mSurface, EGL_WIDTH, &mWidth);
+  // eglQuerySurface(mDisplay, mSurface, EGL_HEIGHT, &mHeight);
+
+  InitPainter();
+  OnUpdateConfig(app);
+  return true;
+}
+
+////// Android callbacks:
+
+/**
+  * Tear down the EGL context currently associated with the display.
+  */
+void nglWindow::OnTermDisplay() 
+{
+  if (mDisplay != EGL_NO_DISPLAY) 
+  {
+    eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    if (mContext != EGL_NO_CONTEXT) 
+    {
+      eglDestroyContext(mDisplay, mContext);
+    }
+    if (mSurface != EGL_NO_SURFACE) 
+    {
+      eglDestroySurface(mDisplay, mSurface);
+    }
+    eglTerminate(mDisplay);
+  }
+  mDisplay = EGL_NO_DISPLAY;
+  mContext = EGL_NO_CONTEXT;
+  mSurface = EGL_NO_SURFACE;
+}
+
+float nglWindow::RemapCoords(struct android_app* app, int& x, int& y)
+{
+  float density = AConfiguration_getDensity(app->config);
+  float scale = ToNearest(density / 160);
+  //NGL_OUT("Remap %d x %d", x, y);
+  x /= scale;
+  y /= scale;
+  //NGL_OUT("To %d x %d (%f)", x, y, scale);
+  return scale;
+}
+
+
+/**
+  * Process the next input event.
+  */
+
+//------------------------------------------------------------------------
+// Function that handles mouse input
+//------------------------------------------------------------------------
+void nglWindow::OnHandleMouse(int device, int button, int state, int x, int y)
+{
+  nglMouseInfo Info;
+  Info.Buttons = 0;
+  switch (button)
+  {
+    case 0:
+      Info.Buttons = nglMouseInfo::ButtonLeft;
+      break;
+    case 1:
+      Info.Buttons = nglMouseInfo::ButtonRight;
+      break;
+    case 2:
+      Info.Buttons = nglMouseInfo::ButtonMiddle;
+      break;
+  }
+  Info.X = x;
+  Info.Y = y;
+  Info.TouchId = device;
+  if (state)
+    CallOnMouseUnclick(Info);
+  else
+    CallOnMouseClick(Info);
+}
+  
+
+int32_t nglWindow::OnHandleInput(struct android_app* app, AInputEvent* event) 
+{
+  struct engine* engine = (struct engine*)app->userData;
+  if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) 
+  {
+    int32_t id = AInputEvent_getDeviceId(event);
+    int32_t src = AInputEvent_getSource(event);
+    int32_t flags = AMotionEvent_getFlags(event);
+    size_t count = AMotionEvent_getPointerCount(event);
+
+    for (int i = 0; i < count; i++)
+    {
+      int PointerId  = AMotionEvent_getPointerId( event, i );
+      int x = AMotionEvent_getX(event, i);
+      int y = AMotionEvent_getY(event, i);
+      RemapCoords(app, x, y);
+
+      //NGL_OUT("Event[%d] deviceid = %d  id = %d src = %d  flags = %d  count = %d (%d x %d)", i, id, PointerId, src, flags, (int)count, x, y);
+
+      int action = AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event );
+      if (action == AMOTION_EVENT_ACTION_DOWN || action == AMOTION_EVENT_ACTION_POINTER_DOWN)
+      {
+        OnHandleMouse(PointerId, 0, 0, x, y);
+      }
+      else if (action == AMOTION_EVENT_ACTION_UP || action == AMOTION_EVENT_ACTION_POINTER_UP)
+      {
+        OnHandleMouse(PointerId, 0, 1, x, y);      
+      }
+      else if (action == AMOTION_EVENT_ACTION_MOVE || action == AMOTION_EVENT_ACTION_POINTER_UP)
+      {
+        nglMouseInfo Info;
+        Info.Buttons = 0;
+        Info.TouchId = PointerId;
+        Info.X = x;
+        Info.Y = y;
+        CallOnMouseMove(Info);
+      }
+    }
+    return 1;
+  }
+  return 0;
+}
+
+int GetStatusBarSize(int density)
+{
+  switch ( density )
+   {
+  case 160:
+      return 25;
+      break;
+  case 120:
+      return 19;
+      break;
+  case 240:
+      return 38;
+      break;
+  case 320:
+      return 50;
+      break;
+  default:
+      return 25;
+      break;
+  }
+
+  return -1;
+}
+
+void nglWindow::OnUpdateConfig(struct android_app* app)
+{
+  int w = 0;
+  int h = 0;
+  int s1 = ANativeWindow_getWidth(app->window);
+  int s2 = ANativeWindow_getHeight(app->window);
+
+  int32_t orientation = AConfiguration_getOrientation(app->config);
+  switch(orientation)
+  {
+  case ACONFIGURATION_ORIENTATION_LAND:
+    NGL_OUT("Orientation changed to Landscape");
+    w = MAX(s1, s2);
+    h = MIN(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_PORT:
+    NGL_OUT("Orientation changed to Portrait");
+    w = MIN(s1, s2);
+    h = MAX(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_SQUARE:
+    NGL_OUT("Orientation changed to Square (WTF?)");
+    w = MAX(s1, s2);
+    h = MIN(s1, s2);
+    break;
+  case ACONFIGURATION_ORIENTATION_ANY:
+    NGL_ASSERT(false);
+    break;
+  default:
+    NGL_ASSERT(false);
+    break;
+  }
+  float density = AConfiguration_getDensity(app->config);
+  float scale = ToNearest(density / 160);
+  w /= scale;
+  h /= scale;
+
+  mStatusBarSize = ::GetStatusBarSize(density);
+  gScale = scale;
+  CallOnRescale(scale);
+  mWidth = w;
+  mHeight = h;
+  CallOnResize(w, h);
+}
+
+
+
+void nglWindow::OnContentRectChanged(ANativeActivity* activity, const ARect* rect)
+{
+  ARect r = *rect;
+  NGL_OUT("Window rect %d %d %d %d", r.left, r.top, r.right - r.left, r.bottom - r.top);
+}
+
+
 

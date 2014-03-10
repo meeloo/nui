@@ -1,0 +1,19 @@
+/Users/meeloo/work/nui3/android/NativeTest2/bin/NativeActivity2.ap_ \
+ : /Users/meeloo/work/nui3/android/NativeTest2/res/drawable-hdpi/icon.png \
+/Users/meeloo/work/nui3/android/NativeTest2/res/drawable-ldpi/icon.png \
+/Users/meeloo/work/nui3/android/NativeTest2/res/drawable-mdpi/icon.png \
+/Users/meeloo/work/nui3/android/NativeTest2/res/layout/main.xml \
+/Users/meeloo/work/nui3/android/NativeTest2/res/values/strings.xml \
+/Users/meeloo/work/nui3/android/NativeTest2/bin/res/drawable-hdpi/icon.png \
+/Users/meeloo/work/nui3/android/NativeTest2/bin/res/drawable-ldpi/icon.png \
+/Users/meeloo/work/nui3/android/NativeTest2/bin/res/drawable-mdpi/icon.png \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/css \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/decorations \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/icon.icns \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/icon.ico \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/icon.png \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/resource.android \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/css/main.css \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/decorations/button1.png \
+/Users/meeloo/work/nui3/android/NativeTest2/assets/decorations/image.png \
+/Users/meeloo/work/nui3/android/NativeTest2/bin/AndroidManifest.xml \

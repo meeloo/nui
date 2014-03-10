@@ -8,3 +8,4 @@
 #include "nuiAndroidBridge.h"
 
 void* gmpNUI_AndroidBridge = 0;
+

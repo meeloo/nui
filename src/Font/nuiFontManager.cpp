@@ -639,6 +639,8 @@ void nuiFontManager::GetSystemFolders(std::map<nglString, nglPath>& rFolders)
   {
     rFolders[_T("System0")] = _T("/c:/windows/fonts/");
   }
+#elif (defined _ANDROID_)
+  rFolders["System"] = "/system/fonts/";
 #elif (defined _LINUX_)
   int count = 0;
   Display* pDisplay = XOpenDisplay(NULL);
@@ -686,6 +688,8 @@ static nuiLabel* gpFontPathLabel = NULL;
 
 void nuiFontManager::ScanFolders(bool rescanAllFolders /* = false */)
 {
+  NGL_LOG("font", NGL_LOG_INFO, "Scan font folders (rescanAllFolders: %s)", YESNO(rescanAllFolders));
+
   nuiContextInfo ContextInfo(nuiContextInfo::StandardContext3D);
   nglWindowInfo Info;
   
@@ -1058,6 +1062,7 @@ nuiFontManager nuiFontManager::gManager;
 
 nuiFontManager& nuiFontManager::GetManager(bool InitIfNeeded)
 {
+  NGL_LOG("font", NGL_LOG_INFO, "nuiFontManager::GetManager (init if needed = %s)", YESNO(InitIfNeeded));
   nuiFontBase::Init();
 
   const bool FORCE_FONT_ENUM = false;

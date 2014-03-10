@@ -309,6 +309,15 @@ protected:
   nglContextInfo mContextInfo;
   void Build(const nglContextInfo& rInfo);
 #endif
+
+#ifdef _ANDROID_
+protected:
+  EGLSurface mSurface;
+  EGLContext mContext;
+  EGLDisplay mDisplay;
+  bool Build(ANativeWindow* window);
+#endif
+
 };
 
 // Add some not yet officially defined values:

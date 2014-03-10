@@ -21,24 +21,4 @@
 #include "nglEvent.h"
 
 
-const uint nglEvent::Read   = 1 << 0;
-const uint nglEvent::Write  = 1 << 1;
-const uint nglEvent::Error  = 1 << 2;
-const uint nglEvent::Idle   = 1 << 3;
-
-
-nglEvent::nglEvent()
-{
-  mFD = -1;
-  mFlags = 0;
-}
-
-nglEvent::~nglEvent()
-{
-}
-
-void nglEvent::CallOnEvent (uint Flags)
-{
-  OnEvent(Flags);
-}
 

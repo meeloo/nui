@@ -25,6 +25,7 @@ public:
 
     mWidth = 100;
     mHeight = 200;
+    mStatusBarSize = 25;
     mClearBackground = false;
     nuiMainWindow::SetRenderer(eOpenGL2);
     mTargetAPI = eTargetAPI_OpenGL2;
@@ -55,7 +56,9 @@ public:
   
   void Init()
   {
+    nuiCheckForGLErrorsReal();
     InitPainter();
+    nuiCheckForGLErrorsReal();
   }
 
   void Display()
@@ -82,7 +85,7 @@ public:
   //------------------------------------------------------------------------
   // Moves the screen based on mouse pressed button
   //------------------------------------------------------------------------
-  static void androidMotion(int x, int y)
+  static void androidMotion(int device, int x, int y)
   {
     nglMouseInfo Info;
     Info.Buttons = 0;
@@ -91,10 +94,11 @@ public:
     ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->OnMouseMove(Info);
   }
   
+
   //------------------------------------------------------------------------
   // Function that handles mouse input
   //------------------------------------------------------------------------
-  static void androidMouse(int button, int state, int x, int y)
+  static void androidMouse(int device, int button, int state, int x, int y)
   {
     nglMouseInfo Info;
     Info.Buttons = 0;
@@ -112,6 +116,7 @@ public:
     }
     Info.X = x;
     Info.Y = y;
+    Info.TouchId = device;
     if (state)
       ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->OnMouseUnclick(Info);
     else
@@ -124,7 +129,25 @@ public:
     LOGI("nuiAndroidBridge::OnTimer");
   }
   
+  static void androidRescale(float s)
+  {
+    ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->CallOnRescale(s);
+  }
   
+  nuiSize GetStatusBarSize() const
+  {
+    return mStatusBarSize; 
+  }
+
+  void SetStatusBarSize(float size)
+  {
+    mStatusBarSize = size;
+  }
+
+  static void androidSetStatusBarSize(float size)
+  {
+    ((nuiAndroidBridge*)gmpNUI_AndroidBridge)->SetStatusBarSize(size);
+  }
 protected:
   
   void Paint()
@@ -169,7 +192,7 @@ protected:
     
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_SCISSOR_TEST);
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
   }
   
   void OnResize(uint Width, uint Height)
@@ -180,12 +203,12 @@ protected:
     nuiRect Rect;
     Rect.mRight=(nuiSize)Width;
     Rect.mBottom=(nuiSize)Height;
-    //SetLayout(Rect);
+    SetLayout(Rect);
     
     nuiDrawContext* pCtx = GetDrawContext();
-    //pCtx->SetSize(Width,Height);
+    pCtx->GetPainter()->SetSize(Width,Height);
     
-    //NGL_OUT(_T("(OnResize)nglWindow::Invalidate()\n"));;
+    NGL_OUT("(OnResize)nglWindow::Invalidate()\n");;
     InvalidateLayout();
     EmptyTrash();
   }
@@ -308,7 +331,7 @@ protected:
 
 protected:
   uint32 mWidth, mHeight;
-  
+  uint32 mStatusBarSize;
   nuiAudioEngine* mpAudioEngine;
   
   nuiEventSink<nuiAndroidBridge> mEventSink;
