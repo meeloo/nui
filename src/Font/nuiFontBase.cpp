@@ -1942,7 +1942,7 @@ void nuiFontBase::AddCacheGlyph(int Index, nuiFontBase::GlyphLocation &rGlyphLoc
   rGlyphLocation = GlyphLocation (OffsetX + 2, OffsetY + 2, bmp.Width, bmp.Height, mCurrentTexture);
   mGlyphLocationLookupTable.insert(std::make_pair(Index, rGlyphLocation));
 
-  NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Glyph: %d %d (%d,%d) [%d * %d]\n", Index, (int)mGlyphLocationLookupTable.size(), OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height); )
+  //NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Glyph: %d %d (%d,%d) [%d * %d]\n", Index, (int)mGlyphLocationLookupTable.size(), OffsetX + 1, OffsetY + 1, bmp.Width, bmp.Height); )
 
   CopyBitmapToTexture(bmp, pCurrentTexture, OffsetX + 1, OffsetY + 1);
 
