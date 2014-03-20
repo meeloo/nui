@@ -1650,7 +1650,7 @@ nglString& nglString::Format(const nglChar* pFormat, ...)
   return *this;
 }
 
-#define FORMAT_BUFSIZE (128)
+#define FORMAT_BUFSIZE (8192)
 
 nglString& nglString::Formatv(const nglChar* pFormat, va_list args)
 {

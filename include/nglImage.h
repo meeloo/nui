@@ -333,6 +333,9 @@ public:
   void PreMultiply(); ///< Premultiply the alpha in the image buffer
   void UnPreMultiply(); ///< Try to inverse the effect of PreMultiply.
 
+  void GaussianBlur(float radius); ///< blur the image with a Gaussian kernel of the given radius
+
+
   /** @name User callbacks */
   //@{
   virtual bool OnInfo (nglImageInfo& rInfo);

@@ -22,177 +22,191 @@
 #endif
 
 static const char* TextureVertexColor_VTX =
-"attribute vec4 Position;\n\
-attribute vec2 TexCoord;\n\
-attribute vec4 Color;\n\
-uniform mat4 SurfaceMatrix;\n\
-uniform mat4 ModelViewMatrix;\n\
-uniform mat4 ProjectionMatrix;\n\
-uniform vec4 Offset;\n\
-uniform vec2 TextureTranslate;\n\
-uniform vec2 TextureScale;\n\
-varying vec2 TexCoordVar;\n\
-varying vec4 ColorVar;\n\
-void main()\n\
-{\n\
-TexCoordVar = TexCoord * TextureScale + TextureTranslate;\n\
-ColorVar = Color;\n\
-gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));\n\
-}"
-;
+SHADER_STRING (
+  attribute vec4 Position;
+  attribute vec2 TexCoord;
+  attribute vec4 Color;
+  uniform mat4 SurfaceMatrix;
+  uniform mat4 ModelViewMatrix;
+  uniform mat4 ProjectionMatrix;
+  uniform vec4 Offset;
+  uniform vec2 TextureTranslate;
+  uniform vec2 TextureScale;
+  varying vec2 TexCoordVar;
+  varying vec4 ColorVar;
+
+  void main()
+  {
+    TexCoordVar = TexCoord * TextureScale + TextureTranslate;
+    ColorVar = Color;
+    gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
+  }
+);
 
 static const char* TextureVertexColor_FGT =
-"uniform sampler2D texture;\n\
-varying vec4 ColorVar;\n\
-varying vec2 TexCoordVar;\n\
-void main()\n\
-{\n\
-gl_FragColor = ColorVar * texture2D(texture, TexCoordVar);\n\
-//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n\
-}"
-;
+SHADER_STRING (
+uniform sampler2D texture;
+varying vec4 ColorVar;
+varying vec2 TexCoordVar;
+void main()
+{
+  gl_FragColor = ColorVar * texture2D(texture, TexCoordVar);
+  //gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+}
+);
 
 ////////////////////////////////////////////////////////////////////////////////
 static const char* TextureAlphaVertexColor_VTX =
-"attribute vec4 Position;\n\
-attribute vec2 TexCoord;\n\
-attribute vec4 Color;\n\
-uniform mat4 SurfaceMatrix;\n\
-uniform mat4 ModelViewMatrix;\n\
-uniform mat4 ProjectionMatrix;\n\
-uniform vec4 Offset;\n\
-uniform vec2 TextureTranslate;\n\
-uniform vec2 TextureScale;\n\
-varying vec2 TexCoordVar;\n\
-varying vec4 ColorVar;\n\
-void main()\n\
-{\n\
-TexCoordVar = TexCoord * TextureScale + TextureTranslate;\n\
-ColorVar = Color;\n\
-gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));\n\
-}"
-;
+SHADER_STRING (
+attribute vec4 Position;
+attribute vec2 TexCoord;
+attribute vec4 Color;
+uniform mat4 SurfaceMatrix;
+uniform mat4 ModelViewMatrix;
+uniform mat4 ProjectionMatrix;
+uniform vec4 Offset;
+uniform vec2 TextureTranslate;
+uniform vec2 TextureScale;
+varying vec2 TexCoordVar;
+varying vec4 ColorVar;
+void main()
+{
+  TexCoordVar = TexCoord * TextureScale + TextureTranslate;
+  ColorVar = Color;
+  gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
+}
+);
 
 static const char* TextureAlphaVertexColor_FGT =
-"uniform sampler2D texture;\n\
-varying vec4 ColorVar;\n\
-varying vec2 TexCoordVar;\n\
-void main()\n\
-{\n\
-float v = texture2D(texture, TexCoordVar)[3];\
-gl_FragColor = ColorVar * v;\n\
-//gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n\
-}"
-;
+SHADER_STRING (
+uniform sampler2D texture;
+varying vec4 ColorVar;
+varying vec2 TexCoordVar;
+void main()
+{
+  float v = texture2D(texture, TexCoordVar)[3];
+  gl_FragColor = ColorVar * v;
+  //gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+}
+);
 
 //////////////////////////////////////////////////////////////////////////////////
 static const char* TextureDifuseColor_VTX =
-"attribute vec4 Position;\n\
-attribute vec2 TexCoord;\n\
-uniform mat4 SurfaceMatrix;\n\
-uniform mat4 ModelViewMatrix;\n\
-uniform mat4 ProjectionMatrix;\n\
-uniform vec4 Offset;\n\
-uniform vec2 TextureTranslate;\n\
-uniform vec2 TextureScale;\n\
-varying vec2 TexCoordVar;\n\
-void main()\n\
-{\n\
-TexCoordVar = TexCoord * TextureScale + TextureTranslate;\n\
-gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));\n\
-}"
-;
+SHADER_STRING (
+attribute vec4 Position;
+attribute vec2 TexCoord;
+uniform mat4 SurfaceMatrix;
+uniform mat4 ModelViewMatrix;
+uniform mat4 ProjectionMatrix;
+uniform vec4 Offset;
+uniform vec2 TextureTranslate;
+uniform vec2 TextureScale;
+varying vec2 TexCoordVar;
+void main()
+{
+  TexCoordVar = TexCoord * TextureScale + TextureTranslate;
+  gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
+}
+);
 
 static const char* TextureDifuseColor_FGT =
-"uniform sampler2D texture;\n\
-uniform vec4 DifuseColor;\n\
-varying vec2 TexCoordVar;\n\
-void main()\n\
-{\n\
-gl_FragColor = DifuseColor * texture2D(texture, TexCoordVar);\n\
-//gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);\n\
-//gl_FragColor = texture2D(texture, TexCoordVar);\n\
-}"
-;
+SHADER_STRING (
+uniform sampler2D texture;
+uniform vec4 DifuseColor;
+varying vec2 TexCoordVar;
+void main()
+{
+  gl_FragColor = DifuseColor * texture2D(texture, TexCoordVar);
+  //gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+  //gl_FragColor = texture2D(texture, TexCoordVar);
+}
+);
 
 //////////////////////////////////////////////////////////////////////////////////
 static const char* TextureAlphaDifuseColor_VTX =
-"attribute vec4 Position;\n\
-attribute vec2 TexCoord;\n\
-uniform mat4 SurfaceMatrix;\n\
-uniform mat4 ModelViewMatrix;\n\
-uniform mat4 ProjectionMatrix;\n\
-uniform vec4 Offset;\n\
-uniform vec2 TextureTranslate;\n\
-uniform vec2 TextureScale;\n\
-varying vec2 TexCoordVar;\n\
-void main()\n\
-{\n\
-TexCoordVar = TexCoord * TextureScale + TextureTranslate;\n\
-gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));\n\
-}"
-;
+SHADER_STRING (
+attribute vec4 Position;
+attribute vec2 TexCoord;
+uniform mat4 SurfaceMatrix;
+uniform mat4 ModelViewMatrix;
+uniform mat4 ProjectionMatrix;
+uniform vec4 Offset;
+uniform vec2 TextureTranslate;
+uniform vec2 TextureScale;
+varying vec2 TexCoordVar;
+void main()
+{
+TexCoordVar = TexCoord * TextureScale + TextureTranslate;
+gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
+}
+);
 
 static const char* TextureAlphaDifuseColor_FGT =
-"uniform sampler2D texture;\n\
-uniform vec4 DifuseColor;\n\
-varying vec2 TexCoordVar;\n\
-void main()\n\
-{\n\
-float v = texture2D(texture, TexCoordVar)[3];\
-gl_FragColor = DifuseColor * vec4(v, v, v, v);\n\
-}"
-;
+SHADER_STRING (
+uniform sampler2D texture;
+uniform vec4 DifuseColor;
+varying vec2 TexCoordVar;
+void main()
+{
+  float v = texture2D(texture, TexCoordVar)[3];\
+  gl_FragColor = DifuseColor * vec4(v, v, v, v);
+}
+);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // No texture cases:
 static const char* VertexColor_VTX =
-"attribute vec4 Position;\n\
-attribute vec4 Color;\n\
-uniform mat4 SurfaceMatrix;\n\
-uniform mat4 ModelViewMatrix;\n\
-uniform mat4 ProjectionMatrix;\n\
-uniform vec4 Offset;\n\
-varying vec4 ColorVar;\n\
-void main()\n\
-{\n\
-ColorVar = Color;\n\
-gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));\n\
-}"
-;
+SHADER_STRING (
+attribute vec4 Position;
+attribute vec4 Color;
+uniform mat4 SurfaceMatrix;
+uniform mat4 ModelViewMatrix;
+uniform mat4 ProjectionMatrix;
+uniform vec4 Offset;
+varying vec4 ColorVar;
+void main()
+{
+  ColorVar = Color;
+  gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
+}
+);
 
 static const char* VertexColor_FGT =
-"varying vec4 ColorVar;\n\
-void main()\n\
-{\n\
-gl_FragColor = ColorVar;\n\
-}"
-;
+SHADER_STRING (
+varying vec4 ColorVar;
+void main()
+{
+  gl_FragColor = ColorVar;
+}
+);
 
 //////////////////////////////////////////////////////////////////////////////////
 static const char* DifuseColor_VTX =
-"attribute vec4 Position;\n\
-uniform mat4 SurfaceMatrix;\n\
-uniform mat4 ModelViewMatrix;\n\
-uniform mat4 ProjectionMatrix;\n\
-uniform vec4 Offset;\n\
-uniform vec4 DifuseColor;\n\
-varying vec4 ColorVar;\n\
-void main()\n\
-{\n\
-ColorVar = DifuseColor;\n\
-gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));\n\
-}"
-;
+SHADER_STRING (
+  attribute vec4 Position;
+  uniform mat4 SurfaceMatrix;
+  uniform mat4 ModelViewMatrix;
+  uniform mat4 ProjectionMatrix;
+  uniform vec4 Offset;
+  uniform vec4 DifuseColor;
+  varying vec4 ColorVar;
+
+  void main()
+  {
+    ColorVar = DifuseColor;
+    gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
+  }
+);
 
 static const char* DifuseColor_FGT =
-"uniform sampler2D texture;\n\
-varying vec4 ColorVar;\n\
-void main()\n\
-{\n\
-gl_FragColor = ColorVar;\n\
-}"
-;
+SHADER_STRING (
+  uniform sampler2D texture;
+  varying vec4 ColorVar;
+  void main()
+  {
+    gl_FragColor = ColorVar;
+  }
+);
 
 static uint32 mins = 30000;
 static uint32 maxs = 0;
@@ -202,7 +216,7 @@ static uint32 total = 0;
 nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
 : nuiGLPainter(pContext)
 {
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
   mUseShaders = true;
 
   mpShader_TextureVertexColor = nuiShaderProgram::GetProgram("TextureVertexColor");
@@ -216,7 +230,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
     mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
   }
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
   
   mpShader_TextureAlphaVertexColor = nuiShaderProgram::GetProgram("TextureAlphaVertexColor");
   if (!mpShader_TextureAlphaVertexColor)
@@ -229,7 +243,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
     mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
   }
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
 
   mpShader_TextureDifuseColor = nuiShaderProgram::GetProgram("TextureDiffuseColor");
   if (!mpShader_TextureDifuseColor)
@@ -243,7 +257,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
     mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
   }
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
 
   mpShader_TextureAlphaDifuseColor = nuiShaderProgram::GetProgram("TextureAlphaDifuseColor");
   if (!mpShader_TextureAlphaDifuseColor)
@@ -257,7 +271,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
     mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
   }
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
 
   mpShader_VertexColor = nuiShaderProgram::GetProgram("VertexColor");
   if (!mpShader_VertexColor)
@@ -269,7 +283,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_VertexColor->Link();
     mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
 
   mpShader_DifuseColor = nuiShaderProgram::GetProgram("DifuseColor");
   if (!mpShader_DifuseColor)
@@ -282,7 +296,7 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
     mpShader_DifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
     mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
 
 
   mpCurrentVertexBufferInfo = NULL;

@@ -229,3 +229,7 @@ private:
   static std::map<GLenum, std::pair<GLenum, GLint> > gParamTypeMap;
 };
 
+#define SHADER_STRING(text) #text
+
+
+

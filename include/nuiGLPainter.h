@@ -70,7 +70,6 @@ public:
   virtual void DestroyTexture(nuiTexture* pTexture);
   virtual void InvalidateTexture(nuiTexture* pTexture, bool ForceReload);
 
-  virtual void CreateSurface(nuiSurface* pSurface);
   virtual void DestroySurface(nuiSurface* pSurface);
   virtual void ResizeSurface(nuiSurface* pSurface, int32 width, int32 height);
 
@@ -176,14 +175,16 @@ protected:
 };
 
 bool nuiCheckForGLErrorsReal();
-#define nuiCheckForGLErrors() { NGL_ASSERT(nuiCheckForGLErrorsReal()); }
+//#define nuiCheckForGLErrors() { NGL_ASSERT(nuiCheckForGLErrorsReal()); }
+#define nuiCheckForGLErrors() {  }
 
 #ifdef _OPENGL_ES_
 
 #define glCheckFramebufferStatusNUI   glCheckFramebufferStatusOES
 #define glFramebufferRenderbufferNUI  glFramebufferRenderbufferOES
 #if defined _UIKIT_
-#define glRenderbufferStorageNUI(A,B,C,D)      glRenderbufferStorageMultisampleAPPLE(A,4,B,C,D)
+//#define glRenderbufferStorageNUI(A,B,C,D)      glRenderbufferStorageMultisampleAPPLE(A,0,B,C,D)
+#define glRenderbufferStorageNUI      glRenderbufferStorageOES
 #else
 #define glRenderbufferStorageNUI      glRenderbufferStorageOES
 #endif

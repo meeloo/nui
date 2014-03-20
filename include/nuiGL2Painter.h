@@ -60,8 +60,6 @@ protected:
   nuiRenderArray* mpLastArray;
 };
 
-#define nuiCheckForGLErrors() { NGL_ASSERT(nuiCheckForGLErrorsReal()); }
-
 #endif //   #ifndef __NUI_NO_GL__
 
 #endif //__nuiGL2Painter_h__

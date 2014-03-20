@@ -90,17 +90,6 @@ bool nglContextInfo::Enum(uint Index, nglContextInfo& rInfo)
   return true;
 }
 
-#define GET_GL_ERROR(str)\
-{\
-  GLenum __error = glGetError();\
-  if(__error) {\
-    str.CFormat(_T("OpenGL error 0x%04X in %s\n"), __error, __FUNCTION__);\
-  }\
-  else {\
-    str = _T("No Error\n");\
-  }\
-}
-
 const nglChar* gpContextErrorTable[] =
 {
 /*  0 */ _T("No error"),

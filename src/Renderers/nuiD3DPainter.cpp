@@ -1815,10 +1815,6 @@ void nuiD3DPainter::SetSurface(nuiSurface* pSurface)
   }
 }
 
-void nuiD3DPainter::CreateSurface(nuiSurface* pSurface)
-{
-}
-
 nuiD3DPainter::FramebufferInfo::FramebufferInfo()
 {
   bool mReload = true;

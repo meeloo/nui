@@ -481,7 +481,7 @@ const nglChar* gpWindowErrorTable[] =
 
 - (void) MakeCurrent
 {
-  [mpGLKView bindDrawable];
+  //[mpGLKView bindDrawable];
 }
 
 - (void) BeginSession

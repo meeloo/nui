@@ -147,7 +147,7 @@ static uint32 total = 0;
 nuiGLPainter::nuiGLPainter(nglContext* pContext)
 : nuiPainter(pContext)
 {
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
   mCanRectangleTexture = 0;
   mTextureTarget = 0;
   mTwoPassBlend = false;
@@ -220,13 +220,13 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   //  mDefaultFramebuffer = 0;
   //  mDefaultRenderbuffer = 0;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &mDefaultFramebuffer);
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
   glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
 #endif
 
   mActiveContexts++;
-  nuiCheckForGLErrorsReal();
+  nuiCheckForGLErrors();
 }
 
 nuiGLPainter::~nuiGLPainter()
@@ -1672,10 +1672,6 @@ nuiGLPainter::FramebufferInfo::FramebufferInfo()
   mStencilbuffer = 0;
 }
 
-void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
-{
-}
-
 void nuiGLPainter::ResizeSurface(nuiSurface* pSurface, int32 newWidth, int32 newHeight)
 {
   NGL_ASSERT(mpSurface != pSurface)
@@ -2225,9 +2221,10 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     //printf("UNBIND glBindFramebufferNUI -> %d\n", mDefaultFramebuffer);
     glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, mDefaultRenderbuffer);
     //printf("UNBIND glBindRenderbufferNUI -> %d\n", mDefaultRenderbuffer);
+    nuiCheckForGLErrors();
 
 #if defined _UIKIT_
-    glResolveMultisampleFramebufferAPPLE();
+//    glResolveMultisampleFramebufferAPPLE();
 #endif
 
     nuiCheckForGLErrors();

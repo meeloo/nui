@@ -102,6 +102,7 @@ nuiToolTip::nuiToolTip()
   mpLabel = new nuiLabel(nglString::Empty);
   mpLabel->SetWrapping(true);
   mpLabel->SetObjectName(_T("ToolTipLabel"));
+  mpLabel->Acquire();
   AddChild(mpLabel);
 }
 
@@ -198,6 +199,7 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   mDisplayToolTip = false;
   mpToolTipSource = NULL;
   mpToolTipLabel = new nuiToolTip();
+  mpToolTipLabel->Acquire();
   AddChild(mpToolTipLabel);
 
   mTopLevelSink.Connect(mToolTipTimerOn.Tick, &nuiTopLevel::ToolTipOn);
@@ -2068,7 +2070,8 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
   #endif
   
   nuiWidget::SetRect(rRect);
-  nuiRect rect(mRect.Size());
+  nuiRect rectfull(mRect.Size());
+  nuiRect rect(rectfull);
   float barsize = GetStatusBarSize();
   rect.SetHeight(rect.GetHeight() -  barsize);
   rect.Move(0, barsize);
@@ -2084,7 +2087,10 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
     if (pItem != mpDragFeedback)
     {
       pItem->GetIdealRect();
-      pItem->SetLayout(rect);
+      if (pItem->GetProperty("Layout").ToLower() == "fullscreen")
+        pItem->SetLayout(rectfull);
+      else
+        pItem->SetLayout(rect);
     }
   }
   delete pIt;

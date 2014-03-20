@@ -41,7 +41,6 @@ public:
   virtual void PushProjectionMatrix();
   virtual void PopProjectionMatrix();
 
-  virtual void CreateSurface(nuiSurface* pSurface);
   virtual void DestroySurface(nuiSurface* pSurface);
   virtual void InvalidateSurface(nuiSurface* pSurface, bool ForceReload);
 

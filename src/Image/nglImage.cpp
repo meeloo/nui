@@ -1069,6 +1069,118 @@ void nglImage::UnPreMultiply()
   mInfo.mPreMultAlpha = false;
 }
 
+void nglImage::GaussianBlur(float radius)
+{
+  const int MAX_RADIUS = 256;
+  NGL_ASSERT(radius * 2 < MAX_RADIUS);
+  NGL_ASSERT(radius >= 0);
+	//nombre d'octets par pixel
+	int bp = mInfo.mBytesPerPixel;
+	int bpl = mInfo.mBytesPerLine;
+  uint8* pBuffer = (uint8*)mInfo.mpBuffer;
+  int w = mInfo.mWidth;
+  int h = mInfo.mHeight;
+
+	uint8* temp = new uint8[w * bp + h * bpl];
+
+	float sigma2 = radius * radius;
+	int size = ToAbove(radius);//good approximation of filter
+
+
+	float pixel[4];
+	float sum;
+
+  float factorsX[MAX_RADIUS];
+  float factorsY[MAX_RADIUS];
+  for (int i = 0; i < size * 2; i++)
+  {
+    float pos = (float)i - radius;
+    float pos2 = pos * pos;
+    factorsY[i] = exp(-pos2 / (2.0 * sigma2));
+    factorsX[i] = factorsY[i];
+    NGL_OUT("factor[%d] = (%f  %f)\n", i, factorsX[i], factorsY[i]);
+  }
+  factorsX[size] = 1;
+
+	//blurs x components
+	for (int y = 0; y < h; y++)
+	{
+		for (int x = 0; x < w; x++)
+		{
+			//process a pixel
+			sum = 0;
+			pixel[0] = 0;
+			pixel[1] = 0;
+			pixel[2] = 0;
+			pixel[3] = 0;
+
+			//accumulate colors
+			for (int i = MAX(0, x - size); i <= MIN(w - 1, x + size); i++)
+			{
+//        const int index = i - x;
+//				float f = exp(-index * index / (2 * sigma2));
+
+        const int index2 = i - x + size;
+        float f2 = factorsX[index2];
+
+        //NGL_ASSERT(f == f2);
+        float factor = f2;
+				sum += factor;
+
+        for (int c = 0; c < bp; c++)
+				{
+					pixel[c] += factor * pBuffer[(i * bp + y * bpl) + c];
+				}
+			}
+
+			//copy a pixel
+			for (int c = 0; c < bp; c++)
+			{
+				temp[(x * bp + y * bpl) + c] = pixel[c] / sum;
+			}
+		}
+	}
+
+	//blurs x components
+	for (int y = 0; y < h; y++)
+	{
+		for (int x = 0; x < w; x++)
+		{
+			//process a pixel
+			sum = 0;
+			pixel[0] = 0;
+			pixel[1] = 0;
+			pixel[2] = 0;
+			pixel[3] = 0;
+
+			//accumulate colors
+			for (int i = MAX(0, y - size); i <= MIN(h - 1, y + size);i++)
+			{
+//        const int index = i - y;
+//				float f = exp(-index * index / (2 * sigma2));
+
+        const int index2 = i - y + size;
+        float f2 = factorsY[index2];
+
+        //NGL_ASSERT(f == f2);
+        float factor = f2;
+				sum += factor;
+				for(int c = 0; c < bp; c++)
+				{
+					pixel[c] += factor * temp[(x * bp + i * bpl) + c];
+				}
+			}
+			//copy a pixel
+			for (int c = 0; c < bp; c++)
+			{
+				pBuffer[(x * bp + y * bpl) + c] = pixel[c] / sum;
+			}
+		}
+	}
+
+	delete[] temp;
+  
+}
 
 /*
  * User callbacks
