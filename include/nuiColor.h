@@ -74,7 +74,8 @@ public:
   float Alpha() const { return mAlpha; }
 
   void SetOpacity(float v);
-  
+  float GetOpacity() const;
+
   void Set(float r=0.0f,float g=0.0f, float b=0.0f, float a=1.0f, bool Premultiplied = false)
   {
     if (Premultiplied)

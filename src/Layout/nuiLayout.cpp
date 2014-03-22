@@ -1016,8 +1016,10 @@ void nuiLayout::DoLayout(const nuiRect& rRect)
 
   SetHorizontalAnchor("left", 0, eAnchorAbsolute);
   SetHorizontalAnchor("right", width, eAnchorAbsolute);
+  SetHorizontalAnchor("center", width/2, eAnchorAbsolute);
   SetVerticalAnchor("top", 0, eAnchorAbsolute);
   SetVerticalAnchor("bottom", height, eAnchorAbsolute);
+  SetVerticalAnchor("center", height/2, eAnchorAbsolute);
   auto it = mConstraints.begin();
   while (it != mConstraints.end())
   {

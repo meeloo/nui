@@ -49,6 +49,16 @@ enum nuiAttributeUnit
   nuiUnitCustom,
 };
 
+// Getter and Setter helpers:
+#define NUI_GETSET(X, Y) \
+X Get##Y() const { return m##Y; } \
+void Set##Y(X val) { m##Y = val; }
+
+#define NUI_GETSETDO(X, Y, Z) \
+X Get##Y() const { return m##Y; } \
+void Set##Y(X val) { m##Y = val; Z; }
+
+
 
 #ifndef _MINUI3_
 nuiAttributeEditor* nuiCreateGenericAttributeEditor(void* pTarget, nuiAttributeBase* pAttribute);
