@@ -49,7 +49,7 @@ public:
   virtual void SetAutoAdjustHandle(bool Adjust); ///< when enabled, the handle offset, min and max position are automatically adjusted when an operation on them is made. The default is true.
   bool GetAutoAdjustHandle();
 
-  virtual void DrawBackground(bool DrawBackground);
+  virtual void SetDrawBackground(bool DrawBackground);
   
   void HookMouse();
   
@@ -77,6 +77,11 @@ public:
   static void SetDefaultFineSensitivityKey(nglKeyCode DefaultFineSensitivityKey);
   void SetFineSensitivityKey(nglKeyCode FineSensitivityKey);
 
+  bool AddChild(nuiWidgetPtr pChild);
+  bool DelChild(nuiWidgetPtr pChild);
+
+  virtual void DrawBackground(nuiDrawContext* pContext);
+  virtual void DrawForeground(nuiDrawContext* pContext);
 
 protected:
   void InitAttributes();
