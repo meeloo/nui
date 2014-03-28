@@ -568,7 +568,7 @@ void nuiGLPainter::SetState(const nuiRenderState& rState, bool ForceApply)
 void nuiGLPainter::SetSize(uint32 w, uint32 h)
 {
   NUI_RETURN_IF_RENDERING_DISABLED;
-  NGL_DEBUG(NGL_OUT("nuiGLPainter::SetSize(%d, %d)\n", w, h);)
+  NGL_DEBUG(NGL_LOG("painter", NGL_LOG_DEBUG, "nuiGLPainter::SetSize(%d, %d)\n", w, h);)
   mWidth = w;
   mHeight = h;
 }
