@@ -84,9 +84,11 @@ public:
   
 private:
   bool PrintGlyphs(nuiDrawContext *pContext, float X, float Y, const std::map<nuiTexture*, std::vector<nuiTextGlyph*> >& rGlyphs, bool AlignGlyphPixels) const;
+  void SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const nuiTextStyle& style, int32& pos, int32 len);
+
   nuiTextStyle mStyle;
   std::map<int32, nuiTextStyle> mStyleChanges;
-  std::map<nuiUnicodeScript, std::set<nglUChar> > mCharsets;
+  std::map<nuiFontBase*, std::map<nuiUnicodeScript, std::set<nglUChar> > > mCharsets;
   
   nuiOrientation mOrientation;
   
@@ -104,5 +106,9 @@ private:
   std::vector<nglUChar> mUnicode;
   std::vector<int32> mOffsetInString;
   std::vector<int32> mOffsetInUnicode;
+
+  float mSpaceWidth = 0;
+  float mTabWidth = 0;
+
 };
 

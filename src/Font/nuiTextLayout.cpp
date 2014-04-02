@@ -54,20 +54,23 @@ bool nuiTextLayout::Layout(const nglString& rString)
   //printf("layout ");
   while (i < len)
   {
+    int32 oldi = i;
     nglUChar ch = rString.GetNextUChar(i);
     //printf("'%c' (%d) ", (char)ch, ch);
     mUnicode.push_back(ch);
     mOffsetInString.push_back(i);
-    mOffsetInUnicode.push_back(mUnicode.size() - 1);
+    for (int j = 0; j < i - oldi; j++)
+      mOffsetInUnicode.push_back(mUnicode.size() - 1);
   }
   
   //printf("\n");
   
   // General algorithm:
   // 1. Split text into paragraphs (LayoutText)
-  // 2. Split paragraphs into ranges (LayoutParagraph)
-  // 3. Split ranges into fonts
-  // 4. Split ranges into lines / words if needed
+  // 2. Split text into fonts
+  // 3. Split paragraphs into ranges (LayoutParagraph)
+  // 4. Split ranges into fonts
+  // 5. Split ranges into lines / words if needed
   
   int32 start = 0;
   int32 position = 0;
@@ -99,10 +102,13 @@ bool nuiTextLayout::Layout(const nglString& rString)
   //printf("Map scripts to fonts:\n");
   int32 c = 0;
   // Find the needed fonts for each script:
-  std::map<nuiUnicodeScript, nuiFontBase*> FontSet;
+
+  std::map< std::pair<nuiFontBase*, nuiUnicodeScript> , nuiFontBase*> FontSet;
+  for (auto& item : mCharsets)
   {
-    std::map<nuiUnicodeScript, std::set<nglUChar> >::iterator it = mCharsets.begin();
-    std::map<nuiUnicodeScript, std::set<nglUChar> >::iterator end = mCharsets.end();
+    nuiFontBase* pFontBase = item.first;
+    auto it = item.second.begin();
+    auto end = item.second.end();
     while (it != end)
     {
       //printf("%d %s -> ", c, nuiGetUnicodeScriptName(it->first).GetChars());
@@ -118,7 +124,7 @@ bool nuiTextLayout::Layout(const nglString& rString)
         
         // If all the glyphs are available in the font we're done...
         if (it == end)
-          pFont = mStyle.GetFont();
+          pFont = pFontBase;
         else
         {
           //printf("[couldn't find glyph %d '%c' in requested font] ", *it, *it);
@@ -128,12 +134,12 @@ bool nuiTextLayout::Layout(const nglString& rString)
       // If the requested font doesn't work, try to find one that does:
       if (!pFont)
       {
-        nuiFontRequest request(mStyle.GetFont());
+        nuiFontRequest request(pFontBase);
         request.MustHaveGlyphs(charset, 500, false);
         pFont = nuiFontManager::GetManager().GetFont(request);
       }
       
-      FontSet[it->first] = pFont;
+      FontSet[std::make_pair(pFontBase, it->first)] = pFont;
       
       //printf("%s\n", pFont->GetFamilyName().GetChars());
       
@@ -165,7 +171,9 @@ bool nuiTextLayout::Layout(const nglString& rString)
         nuiTextRun* pRun = pLine->GetRun(r);
         pRun->mX = x;
         pRun->mY = y;
-        nuiFontBase* pFont = FontSet[pRun->GetScript()];
+        nuiFontBase* pFont = FontSet[std::make_pair(pRun->GetFont(), pRun->GetScript())];
+        if (!pFont)
+          pFont = mStyle.GetFont();
         if (!pRun->IsDummy())
         {
           // Only shape real runs.
@@ -240,157 +248,132 @@ bool Split(nglUChar previousch, nglUChar ch, int32 index)
   return false;
 }
 
+void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const nuiTextStyle& style, int32& pos, int32 len)
+{
+  int32 oldpos = pos;
+  if (len != 0)
+  {
+    // Split the paragraph into ranges:
+    nuiTextRangeList ranges;
+    nuiSplitText(mUnicode, ranges, nuiST_ScriptChange, pos, len, &Split);
+
+    {
+      int32 origin = pos;
+      for (const nuiTextRange& range: ranges)
+      {
+        int32 rlen = range.mLength;
+        int32 localpos = pos;
+        //printf("\trange %d (%d - %d) (%s - %s)\n", i, localpos, rlen, nuiGetUnicodeScriptName(range.mScript).GetChars(), nuiGetUnicodeRangeName(range.mRange).GetChars());
+
+        // Walk the range for this charset and create runs as well as populate the font/charset structures:
+        std::set<nglUChar>& charset(mCharsets[pFont][range.mScript]);
+        {
+          int32 runstart = localpos;
+          bool lastisspace = false;
+          int32 tabs = 0;
+          int32 spaces = 0;
+
+          while (localpos < pos + rlen)
+          {
+            nglUChar ch = mUnicode[localpos];
+            if (ucisprint(ch) && ch > 32)
+            {
+              if (lastisspace && localpos != runstart)
+              {
+                // this is the first special char, let's create a run for the previous range:
+                nuiTextRun* pRun = new nuiTextRun(*this, runstart, localpos - runstart, mSpaceWidth * (float)spaces + mTabWidth * (float)tabs, 0.0f);
+                pLine->AddRun(pRun);
+                runstart = localpos;
+                tabs = 0;
+                spaces = 0;
+              }
+              lastisspace = false;
+
+              // fill the charset:
+              charset.insert(ch);
+            }
+            else
+            {
+              if (!lastisspace && localpos != runstart)
+              {
+                // this is the first non special char, let's create a run for the previous range:
+                nuiTextRun* pRun = new nuiTextRun(*this, range.mScript, runstart, localpos - runstart, style);
+                pLine->AddRun(pRun);
+                runstart = localpos;
+              }
+
+              lastisspace = true;
+              if (ch == 9)
+                tabs++;
+              else
+                spaces++;
+
+            }
+
+            localpos++;
+          }
+
+          // Flush the last range:
+          if (lastisspace && localpos != runstart)
+          {
+            // space & special chars
+            nuiTextRun* pRun = new nuiTextRun(*this, runstart, localpos - runstart, mSpaceWidth * (float)spaces + mTabWidth * (float)tabs, 0.0f);
+            pLine->AddRun(pRun);
+          }
+          else if (!lastisspace && localpos != runstart)
+          {
+            // normal text:
+            nuiTextRun* pRun = new nuiTextRun(*this, range.mScript, runstart, localpos - runstart, style);
+            pLine->AddRun(pRun);
+          }
+        }
+
+        pos += rlen;
+      }
+    }
+
+  }
+  NGL_ASSERT(pos == oldpos + len);
+}
+
 bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
 {
   //printf("new paragraph: %d + %d\n", start, length);
 
-  float spacewidth = 0;
-  float tabwidth = 0;
   {
     nuiFontBase* pFont = mStyle.GetFont();
     nuiGlyphInfo glyphinfo;
     uint32 space = pFont->GetGlyphIndex(32);
     pFont->GetGlyphInfo(glyphinfo, space, nuiFontBase::eGlyphNative);
-    spacewidth = glyphinfo.AdvanceX;
-    tabwidth = 4 * spacewidth;
+    mSpaceWidth = glyphinfo.AdvanceX;
+    mTabWidth = 4 * mSpaceWidth;
   }
   
   mpParagraphs.push_back(new Paragraph());
 
   nuiTextLine* pLine = new nuiTextLine(*this, 0, 0);
   mpParagraphs.back()->push_back(pLine);
-  
-  // Split the paragraph into ranges:
-  nuiTextRangeList ranges;
-  nuiSplitText(mUnicode, ranges, nuiST_ScriptChange, start, length, &Split);
 
+  // Split the paragraph into font chunks:
+  nuiFontBase* pFont = mStyle.GetFont();
+  int32 pos = start;
+  nuiTextStyle style(mStyle);
+  for (auto it = mStyleChanges.begin(); it != mStyleChanges.end(); ++it)
   {
-    nuiTextRangeList::iterator it = ranges.begin();
-    nuiTextRangeList::iterator end = ranges.end();
-    int32 origin = start;
-    int32 i = 0;
-    while (it != end)
-    {
-      const nuiTextRange& range(*it);
-      int32 len = range.mLength;
-      int32 pos = origin;
-      //printf("\trange %d (%d - %d) (%s - %s)\n", i, pos, len, nuiGetUnicodeScriptName(range.mScript).GetChars(), nuiGetUnicodeRangeName(range.mRange).GetChars());
-      
-      std::set<nglUChar>& charset(mCharsets[range.mScript]);
-      {
-        while (pos < origin + len)
-        {
-          nglUChar ch = mUnicode[pos++];
-          if (ucisprint(ch) && ch > 32)
-            charset.insert(ch);
-        }
-      }
-
-      origin += len;
-      ++it;
-      i++;
-    }
+    const nuiTextStyle& newstyle(it->second);
+    nuiFontBase* pNewFont = newstyle.GetFont();
+    int32 len = mOffsetInUnicode[it->first] - pos;
+    SplitFontRange(pLine, pFont, style, pos, len);
+    style = newstyle;
+    if (pNewFont != nullptr)
+      pFont = pNewFont;
   }
-  
 
+  int32 len = start + length - pos;
+  if (len > 0)
   {
-    auto styleit = mStyleChanges.begin();
-    auto styleend = mStyleChanges.end();
-    nuiTextStyle style = mStyle;
-
-    nuiTextRangeList::iterator it = ranges.begin();
-    nuiTextRangeList::iterator end = ranges.end();
-    uint32 i = 0;
-    uint32 pos = start;
-    int32 oldp = -1;
-    while (it != end)
-    {
-      const nuiTextRange& range(*it);
-      uint32 len = range.mLength;
-      //printf("\trange %d (%d - %d) (%s - %s)\n", i, pos, len, nuiGetUnicodeScriptName(range.mScript).GetChars(), nuiGetUnicodeRangeName(range.mRange).GetChars());
-      nglUChar ch = mUnicode[pos];
-      
-      nuiTextRun* pRun = NULL;
-
-      while (len > 0 && styleit != styleend)
-      {
-        if (ch < 32)
-        {
-          int32 tabs = 0;
-          int32 spaces = 0;
-          for (uint32 i = pos; i < pos + len && mUnicode[i] < 32; i++)
-          {
-            if (mUnicode[i] == 9)
-              tabs++;
-            else
-              spaces++;
-          }
-          
-          pRun = new nuiTextRun(*this, pos, len, spacewidth * (float)spaces + tabwidth * (float)tabs, 0.0f);
-
-          if (styleit != styleend)
-          {
-            int32 p = styleit->first;
-            NGL_ASSERT(oldp <= p); oldp = p;
-
-            if ((p >= pos) && (p < pos + len))
-            {
-              style = styleit->second;
-              ++styleit;
-            }
-          }
-
-          pos += len;
-          len = 0;
-        }
-        else
-        {
-          if (styleit != styleend)
-          {
-            int32 p = styleit->first;
-            NGL_ASSERT(oldp <= p); oldp = p;
-
-            if ((p >= pos) && (p < pos + len))
-            {
-              // Change the style now:
-              int32 newpos = styleit->first;
-              int32 s = newpos - pos;
-
-              if (s > 0)
-              {
-                //printf ("Cutting run to change style (%d - %d)\n", pos, s);
-                pRun = new nuiTextRun(*this, range.mScript, pos, s, style);
-                pLine->AddRun(pRun);
-                pRun = NULL;
-              }
-
-              style = styleit->second;
-              pos += s;
-              len -= s;
-              ++styleit;
-            }
-            else
-              break;
-          }
-
-        }
-        
-      }
-
-      if (len > 0)
-      {
-        pRun = new nuiTextRun(*this, range.mScript, pos, len, style);
-        pos += len;
-        len = 0;
-      }
-      if (pRun)
-        pLine->AddRun(pRun);
-
-      ++i;
-      ++it;
-    }
+    SplitFontRange(pLine, pFont, style, pos, len);
   }
-  
   return true;
 }
 
