@@ -9,6 +9,11 @@
 
 nuiFlowView::nuiFlowView(float IdealWidth, float HSpace, float VSpace)
 {
+  if (SetObjectClass("nuiFlowView"))
+  {
+
+  }
+
   mIdealWidth = IdealWidth;
   mVSpace = VSpace;
   mHSpace = HSpace;
@@ -24,7 +29,7 @@ nuiRect nuiFlowView::CalcIdealSize()
   float IdealWidth = mIdealWidth;
   if (mRect.GetWidth() > 0)
     IdealWidth = mRect.GetWidth();
-  return Layout(false, mIdealWidth);
+  return Layout(false, IdealWidth);
 }
 
 void nuiFlowView::LayoutLine(nuiWidgetList& line, float& x, float &y, float& w, float& h, float& HSpace, float &VSpace, bool setLayout)
@@ -86,7 +91,7 @@ nuiRect nuiFlowView::Layout(bool setLayout, float IdealWidth)
   if (y > 0)
     y -= VSpace;
 
-  return nuiRect(mIdealWidth, y);
+  return nuiRect(IdealWidth, y);
 }
 
 bool nuiFlowView::SetRect(const nuiRect& rRect)
