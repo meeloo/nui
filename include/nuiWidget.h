@@ -589,6 +589,8 @@ public:
   uint32 GetCSSPass() const;
   //@}
 
+  NUI_GETSETDO(bool, ReverseRender, Invalidate());
+
 protected:
   std::map<nglString, nuiEventSource*, nglString::LessFunctor> mEventMap;
   std::vector<nuiEventActionHolder*> mEventActions;
@@ -706,6 +708,8 @@ protected:
   bool mAutoClip: 1;
   bool mAutoDraw: 1;
   bool mFixedAspectRatio: 1;
+  bool mReverseRender: 1;
+
 
 
   bool mClickThru: 1;

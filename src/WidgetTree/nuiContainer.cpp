@@ -368,13 +368,27 @@ bool nuiContainer::DrawChildren(nuiDrawContext* pContext)
 {
   CheckValid();
   IteratorPtr pIt;
-  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+
+  if (mReverseRender)
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
-    if (pItem)
-      DrawChild(pContext, pItem);
+    for (pIt = GetLastChild(); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      if (pItem)
+        DrawChild(pContext, pItem);
+    }
+    delete pIt;
   }
-  delete pIt;
+  else
+  {
+    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      if (pItem)
+        DrawChild(pContext, pItem);
+    }
+    delete pIt;
+  }
   return true;
 }
 

@@ -1213,19 +1213,40 @@ bool nuiGrid::Draw(nuiDrawContext *pContext)
   }
 
   IteratorPtr pIt;
-  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  if (mReverseRender)
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
-    if (pItem)
+    for (pIt = GetLastChild(); pIt && pIt->IsValid(); GetPreviousChild(pIt))
     {
-      //#FIXME #TEST
-      nuiRect r = pItem->GetIdealRect();
-      if (mDisplayWidgetBoundingRect)
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      if (pItem)
       {
-        pContext->DrawRect(pItem->GetRect(), eStrokeShape);
+        //#FIXME #TEST
+        nuiRect r = pItem->GetIdealRect();
+        if (mDisplayWidgetBoundingRect)
+        {
+          pContext->DrawRect(pItem->GetRect(), eStrokeShape);
+        }
+        
+        DrawChild(pContext, pItem);
       }
-      
-      DrawChild(pContext, pItem);
+    }
+  }
+  else
+  {
+    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      if (pItem)
+      {
+        //#FIXME #TEST
+        nuiRect r = pItem->GetIdealRect();
+        if (mDisplayWidgetBoundingRect)
+        {
+          pContext->DrawRect(pItem->GetRect(), eStrokeShape);
+        }
+
+        DrawChild(pContext, pItem);
+      }
     }
   }
 

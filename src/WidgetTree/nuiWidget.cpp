@@ -139,6 +139,7 @@ void nuiWidget::InitDefaultValues()
   mFixedAspectRatio = false;
   mAutoClip = true;
   mAutoDraw = false;
+  mReverseRender = false;
 }
 
 
@@ -472,7 +473,13 @@ void nuiWidget::InitAttributes()
                (nglString(_T("FixedAspectRatio")), nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetFixedAspectRatio), 
                 nuiMakeDelegate(this, &nuiWidget::SetFixedAspectRatio)));
-  
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("ReverseRender")), nuiUnitSize,
+                nuiMakeDelegate(this, &nuiWidget::GetReverseRender),
+                nuiMakeDelegate(this, &nuiWidget::SetReverseRender)));
+
+
   
 }
 

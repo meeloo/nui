@@ -132,18 +132,22 @@ nuiSize nuiColorDecoration::GetBorder(nuiPosition position, const nuiWidget* pWi
   switch (position)
   {
   case nuiLeft:
-  case nuiRight:
     return mClientRect.Left();
     break;
+  case nuiRight:
+    return mClientRect.GetWidth();
+    break;
   case nuiTop:
-  case nuiBottom:
     return mClientRect.Top();
     break;
+  case nuiBottom:
+    return mClientRect.GetHeight();
+    break;
   case nuiFillHorizontal:
-    return mClientRect.Left()*2;
+    return mClientRect.Right();
     break;
   case nuiFillVertical:
-    return mClientRect.Top()*2;
+    return mClientRect.Bottom();
     break;
   case nuiNoPosition: break;
   case nuiTopLeft: break;
@@ -171,11 +175,11 @@ void nuiColorDecoration::GetBorders(const nuiWidget* pWidget, float& rLeft, floa
   }
   
   rLeft = mClientRect.Left();
-  rRight = rLeft;
+  rRight = mClientRect.GetWidth();
   rTop = mClientRect.Top();
-  rBottom = rTop;
-  rHorizontal = rLeft * 2;
-  rVertical = rTop * 2;
+  rBottom = mClientRect.Bottom();
+  rHorizontal = rLeft + rRight;
+  rVertical = rTop + rBottom;
 }
 
 

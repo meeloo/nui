@@ -123,7 +123,7 @@ public:
   void SetEqualizeRows(bool set);
   bool GetEqualizeColumns() const;
   bool GetEqualizeRows() const;
-  
+
 protected:
 
   uint32 GetDimensionRange(uint32 dimension) const;
