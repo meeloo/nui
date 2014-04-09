@@ -20,6 +20,7 @@ nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, nuiUnicodeScript script, in
   mUnderline(false),
   mStrikeThrough(false),
   mDummy(false),
+  mWrapStart(false),
   mStyle(rStyle)
 {
 }
@@ -35,7 +36,8 @@ nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, int32 Position, int32 Lengt
   mAdvanceY(AdvanceY),
   mUnderline(false),
   mStrikeThrough(false),
-  mDummy(true)
+  mDummy(true), 
+  mWrapStart(false)
 {
 }
 
@@ -185,4 +187,15 @@ const nuiTextStyle& nuiTextRun::GetStyle() const
 {
   return mStyle;
 }
+
+bool nuiTextRun::IsWrapStart() const
+{
+  return mWrapStart;
+}
+
+void nuiTextRun::SetWrapStart(bool set)
+{
+  mWrapStart = set;
+}
+
 

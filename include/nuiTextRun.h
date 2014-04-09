@@ -86,6 +86,8 @@ public:
   nuiRect GetRect() const;
   
   bool IsDummy() const;
+  bool IsWrapStart() const;
+  void SetWrapStart(bool set);
 
   const nuiTextStyle& GetStyle() const;
 
@@ -101,6 +103,7 @@ private:
   bool mUnderline : 1;
   bool mStrikeThrough : 1;
   bool mDummy : 1;
+  bool mWrapStart : 1;
   
   std::vector<nuiTextGlyph> mGlyphs;
   float mX;

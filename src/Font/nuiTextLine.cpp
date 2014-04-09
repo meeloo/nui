@@ -139,4 +139,183 @@ const nuiTextGlyph* nuiTextLine::GetGlyphAt(float X, float Y) const
   return NULL;
 }
 
+float LayoutDirect(float PenX, float PenY, float globalwidth, float sublinewidth, float spacewidth, std::list<nuiTextRun*>& subline, nuiRect& globalrect)
+{
+  float h = 0;
+  float x = 0;
+  float y = 0;
+  for (nuiTextRun* pRun : subline)
+  {
+    nuiFontBase* pFont = pRun->GetFont();
+
+    nuiFontInfo finfo;
+
+    if (pFont)
+      pFont->GetInfo(finfo);
+
+    std::vector<nuiTextGlyph>& rGlyphs(pRun->GetGlyphs());
+
+    // Prepare glyphs:
+    for (int32 g = 0; g < rGlyphs.size(); g++)
+    {
+      nuiTextGlyph& rGlyph(rGlyphs.at(g));
+
+      pFont->PrepareGlyph(PenX + x, PenY + y, rGlyph);
+
+      const nuiSize W = rGlyph.AdvanceX;
+      const nuiSize X = rGlyph.mX + rGlyph.BearingX;
+      const nuiSize Y = rGlyph.mY - finfo.Ascender;
+      const nuiSize H = finfo.Height;
+
+      h = MAX(h, H);
+      nuiRect rr(globalrect);
+      globalrect.Union(rr, nuiRect(PenX + x + X, PenY + y + Y, W, H));
+    }
+
+    x += pRun->GetAdvanceX();
+  }
+
+  return h;
+}
+
+float LayoutJustify(float PenX, float PenY, float globalwidth, float sublinewidth, float spacewidth, std::list<nuiTextRun*>& subline, nuiRect& globalrect)
+{
+  float h = 0;
+  float x = 0;
+  float y = 0;
+
+  float ratio = (globalwidth - (sublinewidth - spacewidth)) / spacewidth;
+  for (nuiTextRun* pRun : subline)
+  {
+    nuiFontBase* pFont = pRun->GetFont();
+
+    nuiFontInfo finfo;
+    pFont->GetInfo(finfo);
+
+    std::vector<nuiTextGlyph>& rGlyphs(pRun->GetGlyphs());
+
+    // Prepare glyphs:
+    for (int32 g = 0; g < rGlyphs.size(); g++)
+    {
+      nuiTextGlyph& rGlyph(rGlyphs.at(g));
+
+      pFont->PrepareGlyph(PenX + x, PenY + y, rGlyph);
+
+      const nuiSize W = rGlyph.AdvanceX;
+      const nuiSize X = rGlyph.mX + rGlyph.BearingX;
+      const nuiSize Y = rGlyph.mY - finfo.Ascender;
+      const nuiSize H = finfo.Height;
+
+      h = MAX(h, H);
+      nuiRect rr(globalrect);
+      globalrect.Union(rr, nuiRect(PenX + x + X, PenY + y + Y, W, H));
+    }
+
+    if (pRun->IsDummy())
+    {
+      x += pRun->GetAdvanceX() * ratio;
+    }
+    else
+    {
+      x += pRun->GetAdvanceX();
+    }
+  }
+  
+  return h;
+}
+
+
+float LayoutLeft(float PenX, float PenY, float globalwidth, float sublinewidth, float spacewidth, std::list<nuiTextRun*>& subline, nuiRect& globalrect)
+{
+  return LayoutDirect(PenX, PenY, globalwidth, sublinewidth, spacewidth, subline, globalrect);
+}
+
+
+float LayoutRight(float PenX, float PenY, float globalwidth, float sublinewidth, float spacewidth, std::list<nuiTextRun*>& subline, nuiRect& globalrect)
+{
+  float x = globalwidth - sublinewidth;
+  return LayoutDirect(PenX + x, PenY, globalwidth, sublinewidth, spacewidth, subline, globalrect);
+}
+
+float LayoutCenter(float PenX, float PenY, float globalwidth, float sublinewidth, float spacewidth, std::list<nuiTextRun*>& subline, nuiRect& globalrect)
+{
+  float x = (globalwidth - sublinewidth) / 2;
+  return LayoutDirect(PenX + x, PenY, globalwidth, sublinewidth, spacewidth, subline, globalrect);
+}
+
+
+
+float nuiTextLine::Layout(float PenX, float PenY, float width, nuiTextLayoutMode mode, nuiRect& globalrect)
+{
+  SetPosition(PenX, PenY);
+
+  PenX = 0;
+  float x = 0;
+  float y = 0;
+
+  std::vector< std::list <nuiTextRun*> > sublines;
+  sublines.resize(1);
+  bool sublinestart = true;
+  // Prepare sublines:
+  for (uint32 r = 0; r < GetRunCount(); r++)
+  {
+    nuiTextRun* pRun = GetRun(r);
+    if (pRun->IsWrapStart())
+      sublines.resize(sublines.size() + 1);
+
+    sublines.back().push_back(pRun);
+  }
+
+  // Trim the dummy runs:
+  for (int l = 1; l < sublines.size(); l++)
+  {
+    // Remove dummy text runs from the start of the lines (except the first line):
+    while (!sublines.empty() && sublines[l].front()->IsDummy())
+      sublines[l].pop_front();
+
+    // Remove dummy text runs from the end of the lines:
+    while (!sublines.empty() && sublines[l].back()->IsDummy())
+      sublines[l].pop_back();
+  }
+
+
+  // Now position each run inside each subline:
+  for (int l = 0; l < sublines.size(); l++)
+  {
+    float w = 0;
+    float space = 0;
+    for (nuiTextRun* pRun : sublines[l])
+    {
+      float a = pRun->GetAdvanceX();
+      w += a;
+      if (pRun->IsDummy())
+        space += a;
+    }
+
+    float h = 0;
+    switch (mode)
+    {
+      case nuiTextLayoutLeft:
+        h = LayoutLeft(PenX, PenY, width, w, space, sublines[l], globalrect);
+        break;
+
+      case nuiTextLayoutRight:
+        h = LayoutRight(PenX, PenY, width, w, space, sublines[l], globalrect);
+        break;
+
+      case nuiTextLayoutJustify:
+        h = LayoutJustify(PenX, PenY, width, w, space, sublines[l], globalrect);
+        break;
+
+      case nuiTextLayoutCenter:
+        h = LayoutCenter(PenX, PenY, width, w, space, sublines[l], globalrect);
+        break;
+    }
+
+    PenY += h;
+  }
+
+  return PenY;
+}
+
 

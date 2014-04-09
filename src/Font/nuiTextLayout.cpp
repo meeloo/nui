@@ -153,7 +153,8 @@ bool nuiTextLayout::Layout(const nglString& rString)
   nuiRect rect;
   float PenX = 0;
   float PenY = 0;
-  // Assign the correct font to each run
+  float maxwidth = 0;
+  // First pass: Assign the correct font to each run, shape the runs and calculate wraping if needed:
   for (uint32 p = 0; p < mpParagraphs.size(); p++)
   {
     Paragraph* pParagraph = mpParagraphs[p];
@@ -182,28 +183,33 @@ bool nuiTextLayout::Layout(const nglString& rString)
 
           nuiFontInfo finfo;
           pFont->GetInfo(finfo);
-          
-          
-          // Prepare glyphs:
+
           std::vector<nuiTextGlyph>& rGlyphs(pRun->GetGlyphs());
-          for (int32 g = 0; g < rGlyphs.size(); g++)
+
+          if (mWrapX > 0)
           {
-            nuiTextGlyph& rGlyph(rGlyphs.at(g));
-            
-            pFont->PrepareGlyph(PenX + x, PenY + y, rGlyph);
-            
-            const nuiSize W = rGlyph.AdvanceX;
-            //    nuiSize h = finfo.AdvanceMaxH;
-            const nuiSize X = rGlyph.mX + rGlyph.BearingX;
-            const nuiSize Y = rGlyph.mY - finfo.Ascender;
-            const nuiSize H = finfo.Height;
-            
-            nuiRect rr(rect);
-            rect.Union(rr, nuiRect(PenX + x + X, PenY + y + Y, W, H));
+            // compute the bounding box:
+            float runw = 0;
+            for (int32 g = 0; g < rGlyphs.size(); g++)
+            {
+              const nuiTextGlyph& rGlyph(rGlyphs.at(g));
+              runw += rGlyph.AdvanceX;
+            }
+
+            if (PenX + x + runw >= mWrapX)
+            {
+              PenX = 0;
+              x = 0;
+              y += finfo.Height;
+              pRun->SetWrapStart(true);
+            }
           }
+
         }
-        
+
         x += pRun->GetAdvanceX();
+        maxwidth = MAX(maxwidth, PenX + x);
+
         //y += pRun->GetAdvanceY();
 
 
@@ -214,7 +220,24 @@ bool nuiTextLayout::Layout(const nglString& rString)
       PenY += pLine->GetAdvanceY();
     }
   }
-  
+
+  PenX = 0;
+  PenY = 0;
+
+  // Now place the glyphs correctly
+  for (uint32 p = 0; p < mpParagraphs.size(); p++)
+  {
+    Paragraph* pParagraph = mpParagraphs[p];
+    for (uint32 l = 0; l < pParagraph->size(); l++)
+    {
+      nuiTextLine* pLine = (*pParagraph)[l];
+
+      PenY = pLine->Layout(PenX, PenY, maxwidth, nuiTextLayoutCenter, rect);
+      //PenY += pLine->GetAdvanceY();
+    }
+  }
+
+
   nuiTextLine* pFirstLine = NULL;
   if (GetParagraphCount() > 0)
     if (GetLineCount(0) > 0)
@@ -524,12 +547,12 @@ nuiRect nuiTextLayout::GetRect() const
 
 void nuiTextLayout::SetWrapX(nuiSize WrapX)
 {
-  
+  mWrapX = WrapX;
 }
 
 nuiSize nuiTextLayout::GetWrapX() const
 {
-  return 0;
+  return mWrapX;
 }
 
 

@@ -17,7 +17,7 @@ nuiTextStyle::nuiTextStyle()
   mUnderline(false),
   mStrikeThrough(false),
   mBaseline(nuiTextBaselineNormal),
-  mJustify(false),
+  mMode(nuiTextLayoutLeft),
   mDirection(nuiLeftToRight)
 {
   
@@ -33,7 +33,7 @@ nuiTextStyle::nuiTextStyle(const nuiTextStyle& rStyle)
   mUnderline(rStyle.mUnderline),
   mStrikeThrough(rStyle.mStrikeThrough),
   mBaseline(rStyle.mBaseline),
-  mJustify(rStyle.mJustify),
+  mMode(rStyle.mMode),
   mDirection(rStyle.mDirection)
 {
   if (mpFont)
@@ -66,7 +66,7 @@ nuiTextStyle& nuiTextStyle::operator =(const nuiTextStyle& rStyle)
   mUnderline = (rStyle.mUnderline);
   mStrikeThrough = (rStyle.mStrikeThrough);
   mBaseline = (rStyle.mBaseline);
-  mJustify = (rStyle.mJustify);
+  mMode = (rStyle.mMode);
   mDirection = (rStyle.mDirection);
   
   return *this;
@@ -175,13 +175,13 @@ nuiTextDirection nuiTextStyle::GetDirection() const
   return mDirection;
 }
 
-void nuiTextStyle::SetJustify(bool set)
+void nuiTextStyle::SetMode(nuiTextLayoutMode set)
 {
-  mJustify = set;
+  mMode = set;
 }
 
-bool nuiTextStyle::GetJustify() const
+nuiTextLayoutMode nuiTextStyle::GetMode() const
 {
-  return mJustify;
+  return mMode;
 }
 

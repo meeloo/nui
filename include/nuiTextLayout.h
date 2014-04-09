@@ -109,6 +109,7 @@ private:
 
   float mSpaceWidth = 0;
   float mTabWidth = 0;
+  float mWrapX = 0;
 
 };
 

@@ -301,7 +301,7 @@ void nuiLabel::CalcLayout()
       {
         //NGL_OUT(_T("Setting wrapping to %f\n"), mConstraint.mMaxWidth);
         float wrap1 = mConstraint.mMaxWidth;
-        float wrap2 = GetMaxIdealWidth();
+        float wrap2 = MAX(GetMaxIdealWidth(), GetUserWidth());
         float wrap = 0;
         if (wrap1 > 0 && wrap2 > 0)
           wrap = MIN(wrap1, wrap2);
