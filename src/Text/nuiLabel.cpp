@@ -68,6 +68,8 @@ void nuiLabel::InitDefaultValues()
   mTextChanged = false;
   mFontChanged = true;
   mOrientation = nuiHorizontal;
+  mTextLayoutMode = nuiTextLayoutLeft;
+
   mpLayout = NULL;
   mpIdealLayout = NULL;
   mpFont = NULL;
@@ -163,6 +165,11 @@ void nuiLabel::InitAttributes()
                (nglString(_T("UseEllipsis")), nuiUnitYesNo,
                 nuiMakeDelegate(this, &nuiLabel::GetUseEllipsis), 
                 nuiMakeDelegate(this, &nuiLabel::UseEllipsis)));
+  
+  AddAttribute(new nuiAttribute<nuiTextLayoutMode>
+               (nglString(_T("TextLayoutMode")), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiLabel::GetTextLayoutMode),
+                nuiMakeDelegate(this, &nuiLabel::SetTextLayoutMode)));
   
 }
 
@@ -287,9 +294,11 @@ void nuiLabel::CalcLayout()
       mpLayout = NULL;
       mpIdealLayout = NULL;
       mpLayout = new nuiTextLayout(mpFont, mOrientation);
+      mpLayout->SetTextLayoutMode(mTextLayoutMode);
       mpLayout->SetUnderline(mUnderline);
       mpLayout->SetStrikeThrough(mStrikeThrough);
       mpIdealLayout = new nuiTextLayout(mpFont, mOrientation);
+      mpIdealLayout->SetTextLayoutMode(mTextLayoutMode);
       mpIdealLayout->SetUnderline(mUnderline);
       mpIdealLayout->SetStrikeThrough(mStrikeThrough);
       mFontChanged = false;
@@ -381,6 +390,9 @@ bool nuiLabel::SetRect(const nuiRect& rRect)
       delete mpLayout;
       mpLayout = new nuiTextLayout(mpFont);
       mpLayout->SetWrapX(0);
+      mpLayout->SetTextLayoutMode(mTextLayoutMode);
+      mpLayout->SetUnderline(mUnderline);
+      mpLayout->SetStrikeThrough(mStrikeThrough);
       mpLayout->Layout(text);
       GetLayoutRect();
     }
@@ -388,11 +400,17 @@ bool nuiLabel::SetRect(const nuiRect& rRect)
     {
       CalcLayout();
       delete mpLayout;
-      mpLayout = new nuiTextLayout(mpFont);
+      mpLayout = new nuiTextLayout(mpFont, mOrientation);
       delete mpIdealLayout;
-      mpIdealLayout = new nuiTextLayout(mpFont);
+      mpIdealLayout = new nuiTextLayout(mpFont, mOrientation);
       mpLayout->SetWrapX(mRect.GetWidth() - mBorderLeft - mBorderRight);
       mpIdealLayout->SetWrapX(mRect.GetWidth() - mBorderLeft - mBorderRight);
+      mpLayout->SetTextLayoutMode(mTextLayoutMode);
+      mpLayout->SetUnderline(mUnderline);
+      mpLayout->SetStrikeThrough(mStrikeThrough);
+      mpIdealLayout->SetTextLayoutMode(mTextLayoutMode);
+      mpIdealLayout->SetUnderline(mUnderline);
+      mpIdealLayout->SetStrikeThrough(mStrikeThrough);
       mpLayout->Layout(mText);
       mpIdealLayout->Layout(mText);
       GetLayoutRect();

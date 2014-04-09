@@ -232,7 +232,7 @@ bool nuiTextLayout::Layout(const nglString& rString)
     {
       nuiTextLine* pLine = (*pParagraph)[l];
 
-      PenY = pLine->Layout(PenX, PenY, maxwidth, nuiTextLayoutCenter, rect);
+      PenY = pLine->Layout(PenX, PenY, maxwidth, rect);
       //PenY += pLine->GetAdvanceY();
     }
   }
@@ -304,7 +304,7 @@ void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const
               if (lastisspace && localpos != runstart)
               {
                 // this is the first special char, let's create a run for the previous range:
-                nuiTextRun* pRun = new nuiTextRun(*this, runstart, localpos - runstart, mSpaceWidth * (float)spaces + mTabWidth * (float)tabs, 0.0f);
+                nuiTextRun* pRun = new nuiTextRun(*this, runstart, localpos - runstart, mSpaceWidth * (float)spaces + mTabWidth * (float)tabs, 0.0f, style);
                 pLine->AddRun(pRun);
                 runstart = localpos;
                 tabs = 0;
@@ -340,7 +340,7 @@ void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const
           if (lastisspace && localpos != runstart)
           {
             // space & special chars
-            nuiTextRun* pRun = new nuiTextRun(*this, runstart, localpos - runstart, mSpaceWidth * (float)spaces + mTabWidth * (float)tabs, 0.0f);
+            nuiTextRun* pRun = new nuiTextRun(*this, runstart, localpos - runstart, mSpaceWidth * (float)spaces + mTabWidth * (float)tabs, 0.0f, style);
             pLine->AddRun(pRun);
           }
           else if (!lastisspace && localpos != runstart)
@@ -776,6 +776,16 @@ void nuiTextLayout::SetStrikeThrough(bool set)
 bool nuiTextLayout::GetStrikeThrough() const
 {
   return mStyle.GetStrikeThrough();
+}
+
+void nuiTextLayout::SetTextLayoutMode(nuiTextLayoutMode set)
+{
+  mStyle.SetMode(set);
+}
+
+nuiTextLayoutMode nuiTextLayout::GetTextLayoutMode() const
+{
+  return mStyle.GetMode();
 }
 
 void nuiTextLayout::AddStyleChange(int32 StringPosition, const nuiTextStyle& rNewStyle)

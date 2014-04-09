@@ -246,7 +246,7 @@ float LayoutCenter(float PenX, float PenY, float globalwidth, float sublinewidth
 
 
 
-float nuiTextLine::Layout(float PenX, float PenY, float width, nuiTextLayoutMode mode, nuiRect& globalrect)
+float nuiTextLine::Layout(float PenX, float PenY, float width, nuiRect& globalrect)
 {
   SetPosition(PenX, PenY);
 
@@ -272,7 +272,7 @@ float nuiTextLine::Layout(float PenX, float PenY, float width, nuiTextLayoutMode
   {
     // Remove dummy text runs from the start of the lines (except the first line):
     bool skip = false;
-    if (mode == nuiTextLayoutJustify && l == 0)
+    if (sublines[l].front()->GetStyle().GetMode() == nuiTextLayoutJustify && l == 0)
       skip = true;
 
     if (!skip)
@@ -301,7 +301,7 @@ float nuiTextLine::Layout(float PenX, float PenY, float width, nuiTextLayoutMode
     }
 
     float h = 0;
-    switch (mode)
+    switch (sublines[l].front()->GetStyle().GetMode())
     {
       case nuiTextLayoutLeft:
         h = LayoutLeft(PenX, PenY, width, w, space, sublines[l], globalrect);

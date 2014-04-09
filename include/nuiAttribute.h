@@ -2260,4 +2260,24 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiExpandMode>::GetDefaultEditor(void* pTarget);
 #endif
 
+//********************************
+//
+// TextLayoutMode
+//
+
+template <>
+bool nuiAttribute<nuiTextLayoutMode>::ToString(nuiTextLayoutMode Value, nglString& rString) const;
+
+template <>
+bool nuiAttribute<nuiTextLayoutMode>::FromString(nuiTextLayoutMode& rValue, const nglString& rString) const;
+
+template <>
+void nuiAttribute<nuiTextLayoutMode>::FormatDefault(nuiTextLayoutMode value, nglString& string) const;
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiTextLayoutMode>::GetDefaultEditor(void* pTarget);
+#endif
+
+
 #endif

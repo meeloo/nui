@@ -56,7 +56,7 @@ class nuiTextRun : public nuiRefCount
 {
 public:
   nuiTextRun(const nuiTextLayout& rLayout, nuiUnicodeScript Script, int32 Position, int32 Length, const nuiTextStyle& rStyle);
-  nuiTextRun(const nuiTextLayout& rLayout, int32 Position, int32 Length, float AdvanceX, float AdvanceY); ///< Create a blank (dummy) layout
+  nuiTextRun(const nuiTextLayout& rLayout, int32 Position, int32 Length, float AdvanceX, float AdvanceY, const nuiTextStyle& rStyle); ///< Create a blank (dummy) layout
   virtual ~nuiTextRun();
   void SetFont(nuiFontBase* pFont);
   

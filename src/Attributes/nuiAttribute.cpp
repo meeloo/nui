@@ -265,6 +265,7 @@ NUI_DECLARE_ATTRIBUTE_TYPE(nglMatrixf);
 NUI_DECLARE_ATTRIBUTE_TYPE(nglQuaternionf);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiBlendFunc);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiExpandMode);
+NUI_DECLARE_ATTRIBUTE_TYPE(nuiTextLayoutMode);
 #endif
 
 template <typename T>
@@ -2668,6 +2669,86 @@ nuiAttributeEditor* nuiAttribute<nuiExpandMode>::GetDefaultEditor(void* pTarget)
   values.push_back(std::make_pair(_T("Shrink and Grow"), nuiExpandShrinkAndGrow));
   if (GetDimension() == 0)
     return new nuiComboAttributeEditor<nuiExpandMode>(nuiAttrib<nuiExpandMode>(pTarget, this), values);
+  else
+ 		return nuiCreateGenericAttributeEditor(pTarget, this);
+}
+#endif
+
+//********************************
+//
+// TextLayoutMode
+//
+
+template class nuiAttribute<nuiTextLayoutMode>;
+
+template <>
+void nuiAttribute<nuiTextLayoutMode>::FormatDefault(nuiTextLayoutMode value, nglString & string) const
+{
+  ToString(value, string);
+}
+
+template <>
+bool nuiAttribute<nuiTextLayoutMode>::ToString(nuiTextLayoutMode Value, nglString& rString) const
+{
+  switch (Value)
+  {
+    case nuiTextLayoutLeft:
+      rString = _T("Left"); break;
+    case nuiTextLayoutRight:
+      rString = _T("Right"); break;
+    case nuiTextLayoutCenter:
+      rString = _T("Center"); break;
+    case nuiTextLayoutJustify:
+      rString = _T("Justify"); break;
+
+    default:
+      rString = _T("UnknownTextLayoutMode");
+      return false;
+  }
+
+  return true;
+
+}
+
+template <>
+bool nuiAttribute<nuiTextLayoutMode>::FromString(nuiTextLayoutMode& rValue, const nglString& rString) const
+{
+  if (!rString.Compare(_T("Left"), false))
+  {
+    rValue = nuiTextLayoutLeft;
+    return true;
+  }
+  else if (!rString.Compare(_T("Right"), false))
+  {
+    rValue = nuiTextLayoutRight;
+    return true;
+  }
+  else if (!rString.Compare(_T("Center"), false))
+  {
+    rValue = nuiTextLayoutCenter;
+    return true;
+  }
+  else if (!rString.Compare(_T("Justify"), false))
+  {
+    rValue = nuiTextLayoutJustify;
+    return true;
+  }
+
+  rValue = nuiTextLayoutLeft;
+  return false;
+}
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiTextLayoutMode>::GetDefaultEditor(void* pTarget)
+{
+  std::vector<std::pair<nglString, nuiTextLayoutMode> > values;
+  values.push_back(std::make_pair(_T("Left"), nuiTextLayoutLeft));
+  values.push_back(std::make_pair(_T("Right"), nuiTextLayoutRight));
+  values.push_back(std::make_pair(_T("Center"), nuiTextLayoutCenter));
+  values.push_back(std::make_pair(_T("Justify"), nuiTextLayoutJustify));
+  if (GetDimension() == 0)
+    return new nuiComboAttributeEditor<nuiTextLayoutMode>(nuiAttrib<nuiTextLayoutMode>(pTarget, this), values);
   else
  		return nuiCreateGenericAttributeEditor(pTarget, this);
 }

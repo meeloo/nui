@@ -25,7 +25,7 @@ nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, nuiUnicodeScript script, in
 {
 }
 
-nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, int32 Position, int32 Length, float AdvanceX, float AdvanceY)
+nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, int32 Position, int32 Length, float AdvanceX, float AdvanceY, const nuiTextStyle& rStyle)
 : mLayout(rLayout),
   mPosition(Position),
   mLength(Length),
@@ -37,7 +37,8 @@ nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, int32 Position, int32 Lengt
   mUnderline(false),
   mStrikeThrough(false),
   mDummy(true), 
-  mWrapStart(false)
+  mWrapStart(false),
+  mStyle(rStyle)
 {
 }
 

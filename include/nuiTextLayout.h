@@ -73,7 +73,9 @@ public:
   bool GetUnderline() const;
   void SetStrikeThrough(bool set);
   bool GetStrikeThrough() const;
-  
+  void SetTextLayoutMode(nuiTextLayoutMode set);
+  nuiTextLayoutMode GetTextLayoutMode() const;
+
   void SetWrapX(nuiSize WrapX);
   nuiSize GetWrapX() const;
 

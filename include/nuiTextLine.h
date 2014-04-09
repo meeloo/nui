@@ -36,7 +36,7 @@ public:
   const nuiTextGlyph* GetGlyphAt (float X, float Y) const;
 
   float PreLayout(float wrap);
-  float Layout(float X, float Y, float width, nuiTextLayoutMode mode, nuiRect& globalrect);
+  float Layout(float X, float Y, float width, nuiRect& globalrect);
 private:
   friend class nuiTextLayout;
   

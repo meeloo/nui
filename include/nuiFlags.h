@@ -86,6 +86,29 @@ enum nuiExpandMode
   nuiExpandShrinkAndGrow
 };
 
+enum nuiTextDirection
+{
+  nuiLeftToRight,
+  nuiRightToLeft,
+  nuiTopToBottom,
+  nuiBottomToTop
+};
+
+enum nuiTextBaseline
+{
+  nuiTextBaselineNormal,
+  nuiTextBaselineSuperScript,
+  nuiTextBaselineSubScript
+};
+
+enum nuiTextLayoutMode
+{
+  nuiTextLayoutJustify,
+  nuiTextLayoutCenter,
+  nuiTextLayoutLeft,
+  nuiTextLayoutRight
+};
+
 
 
 // This is just plain ugly; i know...

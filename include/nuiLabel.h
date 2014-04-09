@@ -74,6 +74,7 @@ public:
   bool IsWrapping() const;
   virtual bool SetLayoutConstraint(const nuiWidget::LayoutConstraint& rConstraint);
 
+  NUI_GETSETDO(nuiTextLayoutMode, TextLayoutMode, InvalidateLayout());
 protected:
   void CalcLayout();
   void OnTextChanged(const nuiEvent& rEvent);
@@ -106,6 +107,7 @@ protected:
   const nglString& _GetFont() const;
   
   nuiPosition mTextPosition;
+  nuiTextLayoutMode mTextLayoutMode;
 };
 
 #endif // __nuiLabel_h__

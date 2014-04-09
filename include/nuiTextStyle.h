@@ -9,29 +9,6 @@
 
 class nuiFontBase;
 
-enum nuiTextDirection
-{
-  nuiLeftToRight,
-  nuiRightToLeft,
-  nuiTopToBottom,
-  nuiBottomToTop
-};
-
-enum nuiTextBaseline
-{
-  nuiTextBaselineNormal,
-  nuiTextBaselineSuperScript,
-  nuiTextBaselineSubScript
-};
-
-enum nuiTextLayoutMode
-{
-  nuiTextLayoutJustify,
-  nuiTextLayoutCenter,
-  nuiTextLayoutLeft,
-  nuiTextLayoutRight
-};
-
 class nuiTextStyle
 {
 public:
