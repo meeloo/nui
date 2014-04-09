@@ -190,7 +190,8 @@ float LayoutJustify(float PenX, float PenY, float globalwidth, float sublinewidt
     nuiFontBase* pFont = pRun->GetFont();
 
     nuiFontInfo finfo;
-    pFont->GetInfo(finfo);
+    if (pFont)
+      pFont->GetInfo(finfo);
 
     std::vector<nuiTextGlyph>& rGlyphs(pRun->GetGlyphs());
 
@@ -267,11 +268,18 @@ float nuiTextLine::Layout(float PenX, float PenY, float width, nuiTextLayoutMode
   }
 
   // Trim the dummy runs:
-  for (int l = 1; l < sublines.size(); l++)
+  for (int l = 0; l < sublines.size(); l++)
   {
     // Remove dummy text runs from the start of the lines (except the first line):
-    while (!sublines.empty() && sublines[l].front()->IsDummy())
-      sublines[l].pop_front();
+    bool skip = false;
+    if (mode == nuiTextLayoutJustify && l == 0)
+      skip = true;
+
+    if (!skip)
+    {
+      while (!sublines.empty() && sublines[l].front()->IsDummy())
+        sublines[l].pop_front();
+    }
 
     // Remove dummy text runs from the end of the lines:
     while (!sublines.empty() && sublines[l].back()->IsDummy())
