@@ -272,17 +272,17 @@ float nuiTextLine::Layout(float PenX, float PenY, float width, nuiRect& globalre
   {
     // Remove dummy text runs from the start of the lines (except the first line):
     bool skip = false;
-    if (sublines[l].front()->GetStyle().GetMode() == nuiTextLayoutJustify && l == 0)
+    if (!sublines[l].empty() && sublines[l].front()->GetStyle().GetMode() == nuiTextLayoutJustify && l == 0)
       skip = true;
 
     if (!skip)
     {
-      while (!sublines.empty() && sublines[l].front()->IsDummy())
+      while (!sublines.empty() && !sublines[l].empty() && sublines[l].front()->IsDummy())
         sublines[l].pop_front();
     }
 
     // Remove dummy text runs from the end of the lines:
-    while (!sublines.empty() && sublines[l].back()->IsDummy())
+    while (!sublines.empty() && !sublines[l].empty() && sublines[l].back()->IsDummy())
       sublines[l].pop_back();
   }
 
@@ -301,23 +301,26 @@ float nuiTextLine::Layout(float PenX, float PenY, float width, nuiRect& globalre
     }
 
     float h = 0;
-    switch (sublines[l].front()->GetStyle().GetMode())
+    if (!sublines[l].empty())
     {
-      case nuiTextLayoutLeft:
-        h = LayoutLeft(PenX, PenY, width, w, space, sublines[l], globalrect);
-        break;
+      switch (sublines[l].front()->GetStyle().GetMode())
+      {
+        case nuiTextLayoutLeft:
+          h = LayoutLeft(PenX, PenY, width, w, space, sublines[l], globalrect);
+          break;
 
-      case nuiTextLayoutRight:
-        h = LayoutRight(PenX, PenY, width, w, space, sublines[l], globalrect);
-        break;
+        case nuiTextLayoutRight:
+          h = LayoutRight(PenX, PenY, width, w, space, sublines[l], globalrect);
+          break;
 
-      case nuiTextLayoutJustify:
-        h = LayoutJustify(PenX, PenY, width, w, space, sublines[l], globalrect);
-        break;
+        case nuiTextLayoutJustify:
+          h = LayoutJustify(PenX, PenY, width, w, space, sublines[l], globalrect);
+          break;
 
-      case nuiTextLayoutCenter:
-        h = LayoutCenter(PenX, PenY, width, w, space, sublines[l], globalrect);
-        break;
+        case nuiTextLayoutCenter:
+          h = LayoutCenter(PenX, PenY, width, w, space, sublines[l], globalrect);
+          break;
+      }
     }
 
     PenY += h;
