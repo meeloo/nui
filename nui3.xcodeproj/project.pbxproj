@@ -7197,7 +7197,6 @@
 		E5816D510C3CECAB00902DFE /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				E5F5D3E40D4184BD00C36E8E /* nuiCSS.cpp */,
 				E5816D520C3CECAB00902DFE /* nui.cpp */,
 				E5F9B19A118656B600A703BA /* nuiApplication.cpp */,
 				E5816CB00C3CECAB00902DFE /* nuiApplication.h */,
@@ -7216,6 +7215,7 @@
 				BC6CCB280F121D750020EE35 /* nuiCommandContainer.h */,
 				BC6CCB210F121D580020EE35 /* nuiCommandManager.cpp */,
 				BC6CCB290F121D750020EE35 /* nuiCommandManager.h */,
+				E5F5D3E40D4184BD00C36E8E /* nuiCSS.cpp */,
 				E5F5D3E00D4180CC00C36E8E /* nuiCSS.h */,
 				E5816D590C3CECAB00902DFE /* nuiEvent.cpp */,
 				E5816CC20C3CECAB00902DFE /* nuiEvent.h */,
@@ -7254,6 +7254,7 @@
 				BCF8F3680F0E6C8B000588D5 /* nuiSingleton.h */,
 				E5A1EAF51247B87900392FEE /* nuiTask.cpp */,
 				E5A1EAD81247B4B400392FEE /* nuiTask.h */,
+				E51DA3711847375000ADA1B0 /* nuiTaskThread.h */,
 				E5816D680C3CECAB00902DFE /* nuiTheme.cpp */,
 				E5816D100C3CECAB00902DFE /* nuiTheme.h */,
 				E5816D690C3CECAB00902DFE /* nuiTimer.cpp */,
@@ -7269,7 +7270,6 @@
 				E5816D1B0C3CECAB00902DFE /* nuiWidgetElements.h */,
 				E5816D6B0C3CECAB00902DFE /* nuiXML.cpp */,
 				E5816D1E0C3CECAB00902DFE /* nuiXML.h */,
-				E51DA3711847375000ADA1B0 /* nuiTaskThread.h */,
 			);
 			name = Base;
 			path = src/Base;

@@ -56,7 +56,15 @@ void Set##Y(X val) { m##Y = val; }
 
 #define NUI_GETSETDO(X, Y, Z) \
 X Get##Y() const { return m##Y; } \
-void Set##Y(X val) { m##Y = val; Z; }
+void Set##Y(X val) \
+{\
+  if (m##Y == val)\
+  {\
+    return;\
+  }\
+  m##Y = val;\
+  Z;\
+}
 
 
 

@@ -31,6 +31,7 @@ protected:
   nuiRect Layout(bool setLayout, float IdealWidth);
   void LayoutLine(nuiWidgetList& line, float& x, float &y, float& w, float& h, float& HSpace, float &VSpace, bool setLayout);
   float mIdealWidth;
+  float mCurrentIdealWidth;
   float mVSpace;
   float mHSpace;
 };
