@@ -543,25 +543,9 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   mAutoRotate = true;
   
   mAngle = rInfo.Rotate;
-  CGRect rect = [[UIScreen mainScreen] applicationFrame];
-  float w, h;
-  mWidth = 0;
-  mHeight = 0;
-  if (mAngle == 270 || mAngle == 90)
-  {
-    w = rect.size.height;
-    h = rect.size.width;
-  }
-  else
-  {
-    w = rect.size.width;
-    h = rect.size.height;
-  }
-  
 
   // Create the actual window
   nglUIWindow* pUIWindow = [[nglUIWindow alloc] initWithNGLWindow: this andContextInfo: new nglContextInfo(rContext)];
-
   mOSInfo.mpUIWindow = pUIWindow;
   mpUIWindow = pUIWindow;
 
@@ -571,7 +555,8 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   [pUIWindow setMultipleTouchEnabled: YES];
   
   [pUIWindow makeKeyAndVisible];
-  
+
+
   NGL_LOG(_T("window"), NGL_LOG_INFO, _T("trying to create GLES context"));
   rContext.Dump(NGL_LOG_INFO);
   
@@ -583,12 +568,44 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     return;
   }
 	
+	Build(rContext);
+  CGRect rect = pUIWindow.frame;
 	CGRect r = [(nglUIWindow*)mpUIWindow frame];
 	NSLog(@"currentFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
 	r = [UIScreen mainScreen].applicationFrame;
 	NSLog(@"applicationFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
 
-	Build(rContext);
+  float w, h;
+  mWidth = 0;
+  mHeight = 0;
+
+  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+  switch (orientation)
+  {
+    case UIInterfaceOrientationPortrait:
+      mAngle = 0;
+      break;
+    case UIInterfaceOrientationPortraitUpsideDown:
+      mAngle = 180;
+      break;
+    case UIInterfaceOrientationLandscapeLeft:
+      mAngle = 90;
+      break;
+    case UIInterfaceOrientationLandscapeRight:
+      mAngle = 270;
+      break;
+  }
+  if (mAngle == 270 || mAngle == 90)
+  {
+    w = rect.size.height;
+    h = rect.size.width;
+  }
+  else
+  {
+    w = rect.size.width;
+    h = rect.size.height;
+  }
+
 	SetSize(w, h);
 	
 /* Ultra basic UIKit view integration on top of nuiWidgets

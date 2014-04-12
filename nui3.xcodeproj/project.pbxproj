@@ -10496,7 +10496,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = libNUI;
 			};
 			buildConfigurationList = E58167300C3CEBF100902DFE /* Build configuration list for PBXProject "nui3" */;
@@ -12189,7 +12189,6 @@
 		73F086E512E9BA0700656E84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(GCC_PREPROCESSOR_DEFINITIONS)";
 				"GCC_PREPROCESSOR_DEFINITIONS[sdk=iphonesimulator*][arch=*]" = (
@@ -12215,7 +12214,6 @@
 		73F09AC212E9D09E00656E84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_THUMB_SUPPORT = YES;
@@ -12264,7 +12262,6 @@
 		E58167310C3CEBF100902DFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = NO;
@@ -12341,7 +12338,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LLVM_VECTORIZE_LOOPS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = ". include deps/ deps/expat/lib deps/glu deps/libpng deps/tidy deps/gameswf deps/ucdata deps/ungif deps/libjpeg src/Application/UIKit src/Application/Carbon src/Text/HTML src/Stream/Zip deps/freetype2/include deps/tracemonkey deps/tracemonkey/vprof deps/tracemonkey/nanojit deps/harfbuzz deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include";
@@ -12351,7 +12348,6 @@
 		E58B44CF1836DFC8003F30B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = NO;
@@ -12433,7 +12429,8 @@
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				SDKROOT = macosx10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = ". include deps/ deps/expat/lib deps/glu deps/libpng deps/tidy deps/gameswf deps/ucdata deps/ungif deps/libjpeg src/Application/UIKit src/Application/Carbon src/Text/HTML src/Stream/Zip deps/freetype2/include deps/tracemonkey deps/tracemonkey/vprof deps/tracemonkey/nanojit deps/harfbuzz deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include";
@@ -12509,7 +12506,6 @@
 		E58B44D41836DFC8003F30B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(GCC_PREPROCESSOR_DEFINITIONS)";
 				"GCC_PREPROCESSOR_DEFINITIONS[sdk=iphonesimulator*][arch=*]" = (
@@ -12535,7 +12531,6 @@
 		E58B44D61836DFC8003F30B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
@@ -12549,7 +12544,6 @@
 		E58B44D71836DFC8003F30B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_AUTO_VECTORIZATION = YES;
@@ -12597,7 +12591,6 @@
 		E58B44D91836DFC8003F30B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_THUMB_SUPPORT = YES;
@@ -12629,7 +12622,6 @@
 		E5D643E41209AB9C009C26A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
@@ -12643,7 +12635,6 @@
 		E5DD340F12E09CA800F1EF4E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_AUTO_VECTORIZATION = YES;
