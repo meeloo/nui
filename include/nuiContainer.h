@@ -87,7 +87,7 @@ public:
   nuiContainerPtr GetRoot() const;
   nuiWidgetPtr Find (const nglString& rName); ///< Finds a node given its full path relative to the current node. Eg. Find("background/color/red").
 
-  virtual uint GetChildrenCount() const = 0; ///< Returns the number of children this object has.
+  virtual int GetChildrenCount() const = 0; ///< Returns the number of children this object has.
   virtual IteratorPtr GetFirstChild(bool DoRefCounting = false) = 0; 
   virtual IteratorPtr GetLastChild(bool DoRefCounting = false) = 0; 
   virtual bool GetNextChild(IteratorPtr pIterator) = 0;

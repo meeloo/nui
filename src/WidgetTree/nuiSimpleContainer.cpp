@@ -86,7 +86,7 @@ bool nuiSimpleContainer::LoadChildren(const nuiXMLNode* pNode)
 {
   CheckValid();
 	bool res=true;
-  uint i, count = pNode->GetChildrenCount();
+  int i, count = pNode->GetChildrenCount();
   for (i = 0; i < count; i++)
   {
     nuiXMLNode* pChild = pNode->GetChild(i);
@@ -150,8 +150,8 @@ bool nuiSimpleContainer::AddChild(nuiWidgetPtr pChild)
   nuiContainer* pParent = pChild->GetParent();
   NGL_ASSERT(pParent != this);
   
-  uint32 capacity = mpChildren.capacity();
-  uint32 size = mpChildren.size();
+  int32 capacity = mpChildren.capacity();
+  int32 size = mpChildren.size();
   if (size == capacity)
   {
     if (size < 128)
@@ -217,7 +217,7 @@ bool nuiSimpleContainer::DelChild(nuiWidgetPtr pChild)
   return false;
 }
 
-uint nuiSimpleContainer::GetChildrenCount() const
+int nuiSimpleContainer::GetChildrenCount() const
 {
   CheckValid();
   return mpChildren.size();
