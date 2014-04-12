@@ -435,7 +435,7 @@ void nuiDrawContext::SetLineCap(nuiLineCap cap)
 
 nuiLineCap nuiDrawContext::GetLineCap() const
 {
-  mCurrentState.mLineCap;
+  return mCurrentState.mLineCap;
 }
 
 void nuiDrawContext::SetMiterLimit(float limit)

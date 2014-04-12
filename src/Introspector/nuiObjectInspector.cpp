@@ -80,7 +80,7 @@ void nuiObjectInspector::OnObjectSelection(const nuiEvent& rEvent)
   nuiWidget* pW = pList->GetSelected();
   nglString info(_T("no info"));
   nglString name;
-  uint32 index = -1;
+  int32 index = -1;
   if (pW)
   {
     name = pW->GetProperty(_T("Object"));

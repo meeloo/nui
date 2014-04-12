@@ -644,6 +644,7 @@ bool nglImage::GetImageInfo(nglImageInfo& rInfo, nglIStream* pIFile, nglImageCod
   }
 
   delete pCodec;
+  return true;
 }
 
 bool nglImage::GetImageInfo(nglImageInfo& rInfo, const nglPath& rPath, nglImageCodec* pCodec)

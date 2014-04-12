@@ -86,7 +86,7 @@ const nglPath& nuiKnob::GetSequencePath() const
 {
   if (mpImageSequence)
     return mpImageSequence->GetTexturePath();
-  return nglPath();
+  return nglPath::EmptyPath;
 }
 
 void nuiKnob::SetSequencePath(const nglPath& rPath)

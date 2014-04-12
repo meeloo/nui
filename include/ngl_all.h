@@ -18,8 +18,9 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 #ifndef __ngl_all_h__
 #define __ngl_all_h__
 
+extern "C"
+{
 //#include "nui.h"
-
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
@@ -37,6 +38,7 @@ Lookup precompiled headers in the VC doc to learn how to use them.
 #include <sys/stat.h>
 #include <time.h>
 #include <fcntl.h>
+}// extern "C"
 
 #include <algorithm>
 #include <cstring>

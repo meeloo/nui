@@ -89,6 +89,7 @@ bool nuiMemorySound::LoadSamples(nglIStream* pSStream)
   delete pReader;
   if (!pSStream)
     delete pStream;
+  return true;
 }
 
 nuiVoice* nuiMemorySound::GetVoiceInternal()

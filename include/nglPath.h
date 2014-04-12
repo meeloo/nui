@@ -300,7 +300,9 @@ public:
 	//@}
   
   nglString GetVolumeName() const;
-  nglString GetVolumeLessPath() const;  
+  nglString GetVolumeLessPath() const;
+
+  static nglPath EmptyPath;
 protected:
 	nglString   mPathName;
 

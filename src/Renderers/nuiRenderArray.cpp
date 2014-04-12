@@ -591,16 +591,19 @@ nuiRenderArray::StreamDesc::~StreamDesc()
 int32 nuiRenderArray::AddStream(int32 StreamID, int32 count_per_vertex, const float* pData, bool CopyData, bool Normalize)
 {
   mStreams.push_back(new StreamDesc(StreamID, count_per_vertex, GetSize(), pData, CopyData, Normalize));
+  return mStreams.size() - 1;
 }
 
 int32 nuiRenderArray::AddStream(int32 StreamID, int32 count_per_vertex, const int32* pData, bool CopyData, bool Normalize)
 {
   mStreams.push_back(new StreamDesc(StreamID, count_per_vertex, GetSize(), pData, CopyData, Normalize));
+  return mStreams.size() - 1;
 }
 
 int32 nuiRenderArray::AddStream(int32 StreamID, int32 count_per_vertex, const uint8* pData, bool CopyData, bool Normalize)
 {
   mStreams.push_back(new StreamDesc(StreamID, count_per_vertex, GetSize(), pData, CopyData, Normalize));
+  return mStreams.size() - 1;
 }
 
 const nuiRenderArray::StreamDesc& nuiRenderArray::GetStream(int32 index) const
@@ -611,7 +614,7 @@ const nuiRenderArray::StreamDesc& nuiRenderArray::GetStream(int32 index) const
 
 int32 nuiRenderArray::GetStreamCount() const
 {
-  return mStreams.size();
+  return (int32)mStreams.size();
 }
 
 

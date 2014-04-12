@@ -629,7 +629,8 @@ protected:
 
   static nuiMatrix mIdentityMatrix;
   std::vector<nuiMatrixNode*>* mpMatrixNodes;
-  const nuiMatrix& _GetMatrix() const;
+  nuiMatrix _GetMatrix() const;
+  void _SetMatrix(nuiMatrix Matrix);
 
   
   nuiMatrix mSurfaceMatrix;

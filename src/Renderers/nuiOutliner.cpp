@@ -60,7 +60,7 @@ void nuiOutliner::AddJoin(const nuiPoint& Point0, const nuiPoint& Point1, const 
     const double ua = (x43 * y13 - y43 * x13) * denom_inv;
     const double ub = (x21 * y13 - y21 * x13) * denom_inv;
 
-    if (mLineJoin == nuiLineJoinMiter || (ua >= 0.0f && ua <= 1.0f) && (ub >= 0.0f && ub <= 1.0f))
+    if ((mLineJoin == nuiLineJoinMiter) || ((ua >= 0.0f && ua <= 1.0f) && (ub >= 0.0f && ub <= 1.0f)))
     {
       nuiPoint mitter((float)(x1 + ua*(x2-x1)), (float)(y1 + ua*(y2-y1)));
       rPoints.AddVertexOptim(mitter);

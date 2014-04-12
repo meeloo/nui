@@ -207,6 +207,7 @@ bool nuiAudioDevice_Android::Close()
   (*mpPlayer)->Destroy(mpPlayer);
   (*mpOutputMix)->Destroy(mpOutputMix);
   (*mpEngine)->Destroy(mpEngine);
+  return true;
 }
 
 

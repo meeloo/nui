@@ -1275,7 +1275,7 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
   mMouseInfo.X = rInfo.X;
   mMouseInfo.Y = rInfo.Y;
   mMouseInfo.Buttons &= ~rInfo.Buttons;
-  nglMouseInfo::Flags Buttons = rInfo.Buttons | mLastClickedButton & nglMouseInfo::ButtonDoubleClick;
+  nglMouseInfo::Flags Buttons = rInfo.Buttons | (mLastClickedButton & nglMouseInfo::ButtonDoubleClick);
 
   mMouseInfo.TouchId = rInfo.TouchId;
 NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] BEGIN\n"), rInfo.TouchId) );
@@ -1754,6 +1754,8 @@ bool nuiTopLevel::CallMouseCancel(nglMouseInfo& rInfo)
   }
 
   NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseCancel: Grabs %d - %d / clicks %d / states %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size(), (uint32)mMouseClickedEvents.size(), (uint32)mMouseStates.size()));
+
+  return true;
 }
 
 void nuiTopLevel::SetDragFeedbackRect(int X, int Y)

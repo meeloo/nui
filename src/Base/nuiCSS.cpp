@@ -2214,6 +2214,7 @@ bool nuiEventActionHolder::Connect(nuiEventSource* pEventSource, nuiObject* pTar
   NGL_ASSERT(pTargetObject != nullptr);
   mBindings[pTargetObject].push_back(pEventSource);
   mEventSink.Connect(*pEventSource, &nuiEventActionHolder::OnEventFired, pTargetObject);
+  return true;
 }
 
 void nuiEventActionHolder::Disconnect(nuiObject* pTargetObject)

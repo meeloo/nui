@@ -25,7 +25,7 @@ nglString nuiLocale::GetCurrentCountry()
   if (i < 0)
     return nglString::Null;
   
-  uint32 j = str.Find(_T('.'));
+  int32 j = str.Find(_T('.'));
   if (j < 0)
     j = str.GetLength();
   

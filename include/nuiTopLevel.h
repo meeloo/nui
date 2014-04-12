@@ -14,7 +14,7 @@
 #include "nuiDrawContext.h"
 #include "nuiNotification.h"
 
-#ifdef _ANDROID_ || _UIKIT_
+#if defined _ANDROID_ || defined _UIKIT_
 #define DISABLE_TOOLTIP
 #endif
 

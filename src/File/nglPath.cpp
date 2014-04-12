@@ -45,6 +45,7 @@ const nglPathVolume::VolumeFlags nglPathVolume::Removable  = (1 << 1);
 const nglPathVolume::VolumeFlags nglPathVolume::Offline    = (1 << 2);
 const nglPathVolume::VolumeFlags nglPathVolume::System     = (1 << 3);
 
+nglPath nglPath::EmptyPath;
 
 nglPathVolume::nglPathVolume(const nglPath& rPath, const nglString& rComment, nglPathVolume::VolumeFlags Flags, nglPathVolume::MediaType Type)
 {

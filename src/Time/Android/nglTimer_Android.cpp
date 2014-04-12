@@ -165,6 +165,7 @@ bool nglTimer::IsRunning()
 nglTime nglTimer::GetTimeOut (nglTime Now)
 {
   NGL_ASSERT(0);
+  return 0;
 }
 
 void nglTimer::Update()

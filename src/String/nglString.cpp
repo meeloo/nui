@@ -1529,8 +1529,8 @@ void nglString::DecodeUrl()
     if (*pSrc == '%')
     {
       char dec1, dec2;
-      if (-1 != (dec1 = Hex2Dec(*(pSrc + 1)))
-          && -1 != (dec2 = Hex2Dec(*(pSrc + 2))))
+      if (-1 != (int)(dec1 = Hex2Dec(*(pSrc + 1)))
+          && -1 != (int)(dec2 = Hex2Dec(*(pSrc + 2))))
       {
         *pEnd++ = (dec1 << 4) + dec2;
         pSrc += 3;

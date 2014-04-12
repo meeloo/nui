@@ -1,3 +1,4 @@
+#!/bin/bash
 export NDK_MODULE_PATH=$(pwd)/../../
 export NDK_PATH=$(pwd)/../../../ndk
 export SDK_PATH=$(pwd)/../../../android-sdk/sdk

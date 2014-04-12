@@ -106,6 +106,7 @@ nuiUniformDesc& nuiUniformDesc::operator=(const nuiUniformDesc& rDesc)
         NGL_ASSERT(0);
     }
   }
+  return *this;
 }
 
 nuiUniformDesc::nuiUniformDesc(const nglString& rName, GLenum Type, int count, GLuint Location, nuiShaderProgram* pProgram)

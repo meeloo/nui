@@ -497,6 +497,7 @@ nuiShaderState& nuiShaderState::operator= (const nuiShaderState& rState)
   mTextureTranslate = rState.mTextureTranslate;
   mDifuseColor = rState.mDifuseColor;
   mUniforms = rState.mUniforms;
+  return *this;
 }
 
 void nuiShaderState::Set(const nuiShaderState& rState)

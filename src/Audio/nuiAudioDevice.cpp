@@ -134,6 +134,7 @@ nuiAudioDevice* nuiAudioDeviceManager::GetDevice(int32 DeviceIndex)
     }
   }
   NGL_ASSERT(0);
+  return nullptr;
 }
 
 nglString nuiAudioDeviceManager::GetDeviceName(int32 DeviceIndex)
@@ -153,6 +154,7 @@ nglString nuiAudioDeviceManager::GetDeviceName(int32 DeviceIndex)
     }
   }
   NGL_ASSERT(0);
+  return nglString::Null;
 }
 
 nglString nuiAudioDeviceManager::GetDeviceAPIName(int32 DeviceIndex)
@@ -172,6 +174,7 @@ nglString nuiAudioDeviceManager::GetDeviceAPIName(int32 DeviceIndex)
     }
   }
   NGL_ASSERT(0);
+  return nglString::Null;
 }
 
 nuiAudioDevice* nuiAudioDeviceManager::GetDeviceWithNameAndAPI(const nglString& rDeviceName, const nglString& rApiName)
@@ -183,6 +186,7 @@ nuiAudioDevice* nuiAudioDeviceManager::GetDeviceWithNameAndAPI(const nglString& 
     return it->second->GetDevice(rDeviceName);
   }
   NGL_ASSERT(0);
+  return nullptr;
 }
 
 nuiAudioDevice* nuiAudioDeviceManager::GetDefaultOutputDevice()

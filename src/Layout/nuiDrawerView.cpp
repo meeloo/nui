@@ -48,6 +48,8 @@ bool nuiDrawerView::SetRect(const nuiRect& rRect)
     r.Move(MAX(mOffset + rRect.GetWidth(), rRect.GetWidth() - r.GetWidth()), 0);
     mpRight->SetLayout(r);
   }
+
+  return true;
 }
 
 nuiRect nuiDrawerView::CalcIdealSize()
@@ -76,7 +78,7 @@ bool nuiDrawerView::AddChild(nuiWidgetPtr pWidget)
       DelChild(mpMain);
     mpMain = pWidget;
   }
-  nuiSimpleContainer::AddChild(pWidget);
+  return nuiSimpleContainer::AddChild(pWidget);
 }
 
 bool nuiDrawerView::DelChild(nuiWidgetPtr pWidget)
@@ -87,7 +89,7 @@ bool nuiDrawerView::DelChild(nuiWidgetPtr pWidget)
     mpRight = NULL;
   if (pWidget == mpMain)
     mpMain = NULL;
-  nuiSimpleContainer::DelChild(pWidget);
+  return nuiSimpleContainer::DelChild(pWidget);
 }
 
 void nuiDrawerView::SetLeft(nuiWidgetPtr pWidget)

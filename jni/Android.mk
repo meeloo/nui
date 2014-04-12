@@ -30,7 +30,7 @@ MY_INCLUDE_FILES :=   \
                       $(LOCAL_PATH)/../src/Application/Unix \
                       $(LOCAL_PATH)/../deps \
 
-MY_C_FLAGS := -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -O0 -D_ANDROID_ -DNGL_STATIC_BUILD -DHAVE_BCOPY -DFT2_BUILD_LIBRARY -DDARWIN_NO_CARBON -DFT_CONFIG_OPTION_SYSTEM_ZLIB -DHAVE_BCOPY -DFEATURE_NANOJIT -DJS_TRACER -DXP_UNIX -DAVMPLUS_IA32 -D_DEBUG -DDEBUG -fexceptions -fvisibility=hidden -fno-threadsafe-statics -Wno-deprecated-declarations -frtti -DGL_GLEXT_PROTOTYPES=1 -Wno-narrowing
+MY_C_FLAGS := -x c++ -fmessage-length=0 -pipe -Wno-extern-c-compat -Wno-c++11-extensions -Wno-trigraphs -O0 -D_ANDROID_ -DNGL_STATIC_BUILD -DHAVE_BCOPY -DFT2_BUILD_LIBRARY -DDARWIN_NO_CARBON -DFT_CONFIG_OPTION_SYSTEM_ZLIB -DHAVE_BCOPY -DFEATURE_NANOJIT -DJS_TRACER -DXP_UNIX -DAVMPLUS_IA32 -D_DEBUG -DDEBUG -fexceptions -fvisibility=hidden -fno-threadsafe-statics -Wno-deprecated-declarations -frtti -DGL_GLEXT_PROTOTYPES=1 -Wno-narrowing
 
 MY_LDLIBS := -llog -lGLESv1_CM -lz -lGLESv2
 

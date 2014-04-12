@@ -85,6 +85,7 @@ void nuiHTMLStyle::CopyFrom(const nuiHTMLStyle& rStyle)
 nuiHTMLStyle& nuiHTMLStyle::operator=(const nuiHTMLStyle& rStyle)
 {
   CopyFrom(rStyle);
+  return *this;
 }
 
 

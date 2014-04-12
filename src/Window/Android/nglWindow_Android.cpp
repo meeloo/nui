@@ -359,6 +359,7 @@ bool nglWindow::InternalInit(const nglContextInfo& rContext, const nglWindowInfo
   mTargetAPI = rContext.TargetAPI;
   App->AddWindow(this);
   App->WaitForWindowInit();
+  return true;
 }
 
 bool nglWindow::OnSysInit(struct android_app* app)

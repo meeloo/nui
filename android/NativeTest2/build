@@ -1,3 +1,4 @@
+#!/bin/bash
 function testbuild {
     "$@"
     local status=$?
@@ -35,12 +36,12 @@ ant debug
 echo ----------------------------------------------------------------------------------------
 echo Uninstall old app
 echo ----------------------------------------------------------------------------------------
-$ANDROID_HOME/platform-tools/adb uninstall com.example.native_activity2
+$ANDROID_HOME/platform-tools/adb uninstall com.libnui.audioengine
 
 echo ----------------------------------------------------------------------------------------
 echo Install new app
 echo ----------------------------------------------------------------------------------------
-$ANDROID_HOME/platform-tools/adb install bin/NativeActivity2-debug.apk
+$ANDROID_HOME/platform-tools/adb install bin/NativeActivity-debug.apk
 
 echo ----------------------------------------------------------------------------------------
 echo Build OK

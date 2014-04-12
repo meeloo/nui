@@ -295,9 +295,10 @@ bool nuiPainter::GetDummyMode() const
 
 void nuiPainter::SetAngle(int32 Angle)
 {
-  mAngle = Angle % 360;
-  while (mAngle < 0)
-    mAngle += 360;
+  Angle = Angle % 360;
+  while (Angle < 0)
+    Angle += 360;
+  mAngle = Angle;
 }
 
 int32 nuiPainter::GetAngle() const

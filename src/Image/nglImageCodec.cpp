@@ -50,12 +50,14 @@ bool nglImageCodec::SendInfo (nglImageInfo& rInfo)  ///< Send image description 
 {
   if (mpImage)
     return mpImage->OnCodecInfo (rInfo);
+  return false;
 }
 
 bool nglImageCodec::SendData (float Completion)  ///< Acknowledge that more data was decoded to image buffer
 {
   if (mpImage)
     return mpImage->OnCodecData (Completion);
+  return false;
 }
 
 bool nglImageCodec::SendError()  ///< Signals an encoding/decoding error

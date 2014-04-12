@@ -77,6 +77,7 @@ int32_t nglApplication::HandleInput(struct android_app* app, AInputEvent* event)
 {
   if (mpWindow)
     return mpWindow->OnHandleInput(app, event);
+  return 0;
 }
 
 /**

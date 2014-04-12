@@ -95,9 +95,9 @@ bool nglImageGIFCodec::Feed(nglIStream* pIStream)
   
   // Local colormap has precedence over Global colormap
   ColorMapObject* pColormap = pImg->ColorMap ? pImg->ColorMap : pGIF->SColorMap;
-  uint32 numcolors = pColormap->ColorCount;
-  uint32 alphapalette = getTransparentColor(pGIF, 0);  
-  uint32 bgcolor = -1;
+  int32 numcolors = pColormap->ColorCount;
+  int32 alphapalette = getTransparentColor(pGIF, 0);
+  int32 bgcolor = -1;
   
   // bgcolor is the background color to fill the bitmap
   if (pGIF->SColorMap)         // There is a GlobalColorMap
@@ -117,7 +117,7 @@ bool nglImageGIFCodec::Feed(nglIStream* pIStream)
   
   uint32 palette[256];
   
-  for (uint32 i = 0; i < numcolors; i++)
+  for (int32 i = 0; i < numcolors; i++)
   {
     uint8 alpha = 255;
     if (i == bgcolor || i == alphapalette)
@@ -128,7 +128,7 @@ bool nglImageGIFCodec::Feed(nglIStream* pIStream)
   
   uint32* pOutBuf = (uint32*)mpImage->GetBuffer();
   uint8* pInBuf = (uint8*)(pGIF->SavedImages[0].RasterBits);
-  for (uint32 i = 0; i < pGIF->SWidth * pGIF->SHeight; i++)
+  for (int32 i = 0; i < pGIF->SWidth * pGIF->SHeight; i++)
     *pOutBuf++ = palette[*pInBuf++];
 
   SendData(1.0f);

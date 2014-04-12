@@ -2071,6 +2071,7 @@ void nuiAttribute<nglMatrixf>::FormatDefault(nglMatrixf value, nglString & strin
 
 
 
+
 //********************************
 //
 // const nglMatrixf&

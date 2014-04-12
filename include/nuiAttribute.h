@@ -2198,6 +2198,7 @@ template <>
 void nuiAttribute<nglMatrixf>::FormatDefault(nglMatrixf value, nglString& string) const;
 
 
+
 //********************************
 //
 // const nglQuaternionf&
