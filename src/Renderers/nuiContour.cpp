@@ -9,7 +9,6 @@
 
 //class nuiContour
 nuiContour::nuiContour()
-: mEventSink(this)
 {
 }
 
@@ -37,7 +36,6 @@ void nuiContour::AddLines(const nuiPath& rVertices)
     // The last object if not a polyline, lets add a new polyline contour element. 
     nuiPathGenerator* pContourElement = new nuiPolyLine(rVertices);
     mpElements.push_back( pContourElement);
-//    mEventSink.Connect(pContourElement->Changed, &nuiContour::ElementChanged, pContourElement);
   }
 //  Changed();
 }
@@ -57,9 +55,7 @@ void nuiContour::LineTo(const nuiPoint& rVertex)
     // The last object is not a polyline, lets add a new polyline contour element. 
     nuiPathGenerator* pContourElement = new nuiPolyLine(rVertex);
     mpElements.push_back(pContourElement);
-//    mEventSink.Connect(pContourElement->Changed, &nuiContour::ElementChanged, pContourElement);
   }
-//  Changed();
 }
 
 void nuiContour::Close()
@@ -76,16 +72,12 @@ void nuiContour::AddArc(const nuiPoint& rStartVertex, const nuiPoint& rStopVerte
 {
   nuiArc* pArc = new nuiArc(rStartVertex, rStopVertex, XRadius, YRadius, AngleInDegree, LargeArc, Sweep);
   mpElements.push_back(pArc);
-//  mEventSink.Connect(pArc->Changed, &nuiContour::ElementChanged, pArc);
-//  Changed();
 }
 
 void nuiContour::AddArc(float cX, float cY, float rX, float rY, float Theta1InDegree, float Theta2InDegree, float Phi)
 {
   nuiArc* pArc = new nuiArc(cX, cY, rX, rY, Theta1InDegree, Theta2InDegree, Phi);
   mpElements.push_back(pArc);
-//  mEventSink.Connect(pArc->Changed, &nuiContour::ElementChanged, pArc);
-//  Changed();
 }
 
 void nuiContour::ArcTo(const nuiPoint& rStopVertex, float XRadius, float YRadius, float Angle, bool LargeArc, bool Sweep)
@@ -99,16 +91,12 @@ void nuiContour::ArcTo(const nuiPoint& rStopVertex, float XRadius, float YRadius
 
   nuiArc* pArc = new nuiArc(StartVertex, rStopVertex, XRadius, YRadius, Angle, LargeArc, Sweep);
   mpElements.push_back(pArc);
-//  mEventSink.Connect(pArc->Changed, &nuiContour::ElementChanged, pArc);
-//  Changed();
 }
 
 void nuiContour::AddRect(const nuiRect& rRect, bool CCW)
 {
   nuiPathGenerator* pContourElement = new nuiRectPath(rRect, CCW);
   mpElements.push_back( pContourElement );
-//  mEventSink.Connect(pContourElement->Changed, &nuiContour::ElementChanged, pContourElement);
-//  Changed();
 }
 
 
@@ -116,8 +104,6 @@ void nuiContour::AddSpline(const nuiSpline& rSpline)
 {
   nuiPathGenerator* pContourElement = new nuiSpline(rSpline);
   mpElements.push_back( pContourElement );
-//  mEventSink.Connect(pContourElement->Changed, &nuiContour::ElementChanged, pContourElement);
-//  Changed();
 }
 
 
@@ -140,11 +126,6 @@ uint nuiContour::GetElementsCount() const
 const std::list<nuiPathGenerator*>* nuiContour::GetElements() const
 {
   return &mpElements;
-}
-
-void nuiContour::ElementChanged(const nuiEvent& rEvent)
-{
-//  Changed();
 }
 
 nuiPoint nuiContour::GetStartPoint() const

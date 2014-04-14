@@ -495,7 +495,7 @@ public:
   void SetTheme(nuiTheme* pTheme);
   nuiTheme* GetTheme();
 
-  void AutoTrash(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called. 
+  void AutoDestroy(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
   bool IsTrashed(bool combined = true) const;
 
   void AutoStartTransition(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called. 

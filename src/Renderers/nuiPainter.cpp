@@ -9,8 +9,12 @@
 
 ///////////////////////////////////
 // nuiPainter implementation:
+
+std::set<nuiPainter*> nuiPainter::gpPainters;
+
 nuiPainter::nuiPainter(nglContext* pContext)
 {
+  gpPainters.insert(this);
   ResetStats();
   mWidth = 0;
   mHeight = 0;
@@ -30,6 +34,7 @@ nuiPainter::~nuiPainter()
 {
   // Empty the clip stack:
   mpClippingStack = std::stack<nuiClipper>();
+  gpPainters.erase(this);
 }
 
 void nuiPainter::StartRendering()
@@ -328,4 +333,21 @@ void nuiPainter::AddBreakPoint()
 {
   // do nothing by default, this is only used to debug defered rendering (i.e. nuiMetaPainter).
 }
+
+void nuiPainter::BroadcastDestroyTexture(nuiTexture* pTexture)
+{
+  for (auto pPainter : gpPainters)
+  {
+    pPainter->DestroyTexture(pTexture);
+  }
+}
+
+void nuiPainter::BroadcastDestroySurface(nuiSurface* pSurface)
+{
+  for (auto pPainter : gpPainters)
+  {
+    pPainter->DestroySurface(pSurface);
+  }
+}
+
 

@@ -314,7 +314,7 @@ void nuiMessageBox(nuiContainer* pParent, const nglString& rTitle, const nglStri
   pButton->AddChild(pButtonLabel);
   
   nuiEventSink<nuiWidget> sink(pModal);
-  sink.Connect(pButton->Activated, &nuiWidget::AutoTrash);
+  sink.Connect(pButton->Activated, &nuiWidget::AutoDestroy);
   
   pModal->DoModal();
 }

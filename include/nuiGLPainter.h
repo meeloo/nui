@@ -66,12 +66,9 @@ public:
   virtual void PopProjectionMatrix();
   virtual uint32 GetRectangleTextureSupport() const;
 
-  virtual void CreateTexture(nuiTexture* pTexture);
   virtual void DestroyTexture(nuiTexture* pTexture);
-  virtual void InvalidateTexture(nuiTexture* pTexture, bool ForceReload);
 
   virtual void DestroySurface(nuiSurface* pSurface);
-  virtual void ResizeSurface(nuiSurface* pSurface, int32 width, int32 height);
 
   
 protected:

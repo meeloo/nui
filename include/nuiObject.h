@@ -112,7 +112,11 @@ public:
 #endif
       CheckValidInternal();
   }
-  
+
+#ifdef _NUI_DEBUG_OBJECTS_
+  static bool IsObject(void* pointer);
+#endif
+
 protected:
   void CheckValidInternal() const;
   static std::vector<int32> mInheritanceMap;

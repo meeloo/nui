@@ -11,6 +11,7 @@
 nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
 : nuiPainter(pContext)
 {
+  gpPainters.erase(this); // Don't store meta painters as actual painters
   mLastStateValid = false;
   mpCache = &mOperations;
   mNbDrawChild = 0;
@@ -32,14 +33,10 @@ nuiMetaPainter::~nuiMetaPainter()
 
 void nuiMetaPainter::DestroySurface(nuiSurface* pSurface)
 {
-  // Bleh
-  NGL_ASSERT(0);
 }
 
-void nuiMetaPainter::ResizeSurface(nuiSurface* pSurface, int32 width, int32 height)
+void nuiMetaPainter::DestroyTexture(nuiTexture* pTexture)
 {
-  // Bleh
-  NGL_ASSERT(0);
 }
 
 void nuiMetaPainter::StoreOpCode(OpCode code)

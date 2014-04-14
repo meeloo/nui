@@ -119,8 +119,12 @@ nuiSimpleContainer::~nuiSimpleContainer()
     nuiWidgetPtr pItem = pIt->GetWidget();
     if (pItem)
     {
-      if (!pItem->IsTrashed(false) && pItem->Release())
+//      if (!pItem->IsTrashed(false) && pItem->Release())
+//        pItem->SetParent(NULL);
+      if (!pItem->IsTrashed(false))
         pItem->SetParent(NULL);
+      pItem->Release();
+
     }
   }
   delete pIt;
@@ -198,7 +202,7 @@ bool nuiSimpleContainer::DelChild(nuiWidgetPtr pChild)
       if (!pChild->IsTrashed())
       {
         nuiTopLevel* pRoot = GetTopLevel();
-        Trashed();
+        pChild->Trashed();
         Invalidate();
         
         if (pRoot)
@@ -206,7 +210,6 @@ bool nuiSimpleContainer::DelChild(nuiWidgetPtr pChild)
         pChild->SetParent(NULL);
       }
       ChildDeleted(this, pChild);
-      Invalidate();
       InvalidateLayout();
       DebugRefreshInfo();
       pChild->Release();

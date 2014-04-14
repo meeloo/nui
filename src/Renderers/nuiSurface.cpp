@@ -76,15 +76,7 @@ nuiSurface::~nuiSurface()
     mpTexture->Release();
 //  NGL_OUT(_T("nuiSurface DTOR [0x%x] NAME: [%s] COUNT [%d]\n"), this, GetObjectName().GetChars(), mpSurfaces.size());
 
-  auto it = mPainters.begin();
-  auto end = mPainters.end();
-
-  while (it != end)
-  {
-    nuiPainter* pPainter = *it;
-    pPainter->DestroySurface(this);
-    ++it;
-  }
+  nuiPainter::BroadcastDestroySurface(this);
 }
 
 int32 nuiSurface::GetWidth() const
@@ -166,30 +158,3 @@ bool nuiSurface::IsPermanent()
   return mPermanent;
 }
 
-void nuiSurface::Resize(int32 width, int32 height)
-{
-  auto it = mPainters.begin();
-  auto end = mPainters.end();
-
-  while (it != end)
-  {
-    nuiPainter* pPainter = *it;
-    pPainter->ResizeSurface(this, width, height);
-    ++it;
-  }
-
-  mWidth = width;
-  mHeight = height;
-
-  mpTexture->ResizeSurface(width, height);
-}
-
-void nuiSurface::AddPainter(nuiPainter* pPainter)
-{
-  mPainters.insert(pPainter);
-}
-
-void nuiSurface::DelPainter(nuiPainter* pPainter)
-{
-  mPainters.erase(pPainter);
-}

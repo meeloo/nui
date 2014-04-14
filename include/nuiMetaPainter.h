@@ -76,7 +76,6 @@ public:
   bool GetDrawChildrenImmediat() const;
 
   virtual void DestroySurface(nuiSurface* pSurface);
-  virtual void ResizeSurface(nuiSurface* pSurface, int32 width, int32 height);
 
 #ifdef _DEBUG_
   void DBGSetReferenceObject(const nuiObject* pRef);
@@ -155,6 +154,7 @@ protected:
   
   std::vector<nuiRenderState> mRenderStates;
   std::vector<nuiRenderArray*> mRenderArrays;
+  virtual void DestroyTexture(nuiTexture* pTexture);
 };
 
 #endif // __nuiMetaPainter_h__

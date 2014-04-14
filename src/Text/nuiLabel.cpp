@@ -216,7 +216,8 @@ const nuiColor& nuiLabel::GetBackgroundColor() const
 
 bool nuiLabel::Draw(nuiDrawContext* pContext)
 {
-//  NGL_OUT(_T("Draw 0x%x\n"), this);
+  if (GetDebug())
+    NGL_OUT(_T("Draw 0x%x (%s)\n"), this, mText.GetChars());
   nuiColor Color = GetTextColor();
   nuiColor ColorBg = GetBackgroundColor();
 

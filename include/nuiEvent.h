@@ -119,6 +119,9 @@ private:
   // Restrict access to some methods & constructors:
   nuiEventSource(const nuiEventSource& rSource) ;
   bool mEnabled;
+  mutable std::set<nuiEventTargetBase*> mGraveYard;
+  mutable int32 mEnumerating = 0;
+
 };
 
 

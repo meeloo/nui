@@ -91,6 +91,8 @@ void nuiEventSource::DisconnectAll()
   while (!mpTargets.empty()) 
   {
     nuiEventTargetBase* pETB = mpTargets[mpTargets.size() - 1];
+    if (mEnumerating != 0)
+      mGraveYard.insert(pETB);
     pETB->DisconnectSource(*this);
   }
 }
@@ -116,6 +118,8 @@ void nuiEventSource::Disconnect(nuiEventTargetBase* t)
   {
     if (mpTargets[i] == t)
     {
+      if (mEnumerating != 0)
+        mGraveYard.insert(*(mpTargets.begin() + i));
       mpTargets.erase(mpTargets.begin() + i);
       return;
     }
@@ -131,14 +135,21 @@ bool nuiEventSource::SendEvent(const nuiEvent& rEvent)
     std::vector<nuiEventTargetBase*>::const_iterator it = targets.begin();
     std::vector<nuiEventTargetBase*>::const_iterator end = targets.end();
 
+    mEnumerating++;
     bool handled = false;
     while (it != end && !handled)
     {
-      ((*it)->OnEvent(rEvent));
-      handled = rEvent.IsCanceled();
+      nuiEventTargetBase* pETB = *it;
+      if (mGraveYard.find(pETB) == mGraveYard.end())
+      {
+        pETB->OnEvent(rEvent);
+        handled = rEvent.IsCanceled();
+      }
       ++it;
     }
 
+    mEnumerating--;
+    mGraveYard.clear();
     return handled;
   }
 
@@ -222,11 +233,32 @@ nuiEventSource::nuiEventSource(const nuiEventSource& rSource)
 nuiEventTargetBase::nuiEventTargetBase(void* pTarget)
 {
   mpTarget = pTarget;
+
+#ifdef _DEBUG_
+//  nuiObject* pObj = dynamic_cast<nuiObject*>((nuiObject*)pTarget);
+//  if (nuiObject::IsObject(pObj) && App)
+//    NGL_OUT("nuiEventTargetBase CTOR %p %p (%s - %s)\n", this, mpTarget, pObj->GetObjectClass().GetChars(), pObj->GetObjectName().GetChars());
+//  else
+//  {
+//    NGL_OUT("nuiEventTargetBase CTOR %p %p\n", this, pTarget);
+//  }
+#endif
+
 }
 
 nuiEventTargetBase::~nuiEventTargetBase()
 {
+#ifdef _DEBUG_
+//  nuiObject* pObj = dynamic_cast<nuiObject*>((nuiObject*)mpTarget);
+//  if (nuiObject::IsObject(pObj) && App)
+//    NGL_OUT("nuiEventTargetBase::~nuiEventTargetBase %p %p (%s - %s)\n", this, mpTarget, pObj->GetObjectClass().GetChars(), pObj->GetObjectName().GetChars());
+//  else
+//  {
+//    NGL_OUT("nuiEventTargetBase::~nuiEventTargetBase %p %p (%s)\n", this, mpTarget, mpTarget?typeid(mpTarget).name():"null");
+//  }
+#endif
   DisconnectAll();
+  mpTarget = nullptr;
 }
 
 void nuiEventTargetBase::DisconnectAll()
@@ -243,7 +275,6 @@ void nuiEventTargetBase::DisconnectAll()
 bool nuiEventTargetBase::OnEvent(const nuiEvent& rEvent)
 {
   bool handled = false;
-  
   nuiEventSource* pSource = (nuiEventSource*)rEvent.GetSource();
   LinksMap::const_iterator it_source = mpLinks.find(pSource);
   

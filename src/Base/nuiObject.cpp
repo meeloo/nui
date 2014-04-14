@@ -39,7 +39,7 @@ void nuiObject::Init(const nglString& rObjectName)
     mpTrace->mAlive = true;
 
     uint32 s = mObjects.size();
-    if (!(s % 500))
+    //if (!(s % 500))
     {
       NGL_LOG("nuiObject", NGL_LOG_INFO, "Objects total count %d\n", s);
     }
@@ -78,102 +78,6 @@ void nuiObject::InitAttributes()
 }
 
 
-//#FIXME This should be moved to an external set of serialization method!
-#if 0
-bool nuiObject::Load(const nuiXMLNode* pNode)
-{
-  CheckValid();
-	bool res=true;
-
-  nglString name;
-  name.CFormat(_T("%p"),this);
-
-	nuiAttrib<const nglString&> att(GetAttribute(_T("Name")));
-	att.Set(name);
-	SetProperty(nglString(_T("Name")), name);
-
-	// set the class of the node in the property xmlClass so that we can easily guess the final type even if we haven't finished the construction inheritance.
-  SetProperty(nglString(_T("xmlClass")),pNode->GetName());
-
-  mSerializeMode = eSaveNode;
-
-	// search for object attributes in xml attributes
-	std::map<nglString, nuiAttribBase> attributes;
-  GetAttributes(attributes);
-	std::map<nglString, nuiAttribBase>::const_iterator itp;
-	for (itp = attributes.begin(); itp != attributes.end(); ++itp)
-	{
-		nuiAttribBase base = itp->second;
-		if (pNode->HasAttribute(base.GetName()))
-		{
-			if (base.IsReadOnly())
-        continue;
-
-			res &= base.Load(pNode);
-		}
-	}
-
-  return res;
-}
-
-nuiXMLNode* nuiObject::Serialize(nuiXMLNode* pParentNode, bool Recursive) const
-{
-  CheckValid();
-  nuiXMLNode* pNode = NULL;
-
-  if (mSerializeMode == eDontSaveNode)
-    return NULL;
-
-  NGL_OUT(_T("Serialize: %s\n"), GetObjectClass().GetChars());
-
-  if (mSerializeMode != eSkipNode)
-  {
-    if (pParentNode)
-    {
-      pNode = new nuiXMLNode(GetObjectClass(),pParentNode);
-    }
-    else
-    {
-      pNode = new nuiXML(GetObjectClass());
-    }
-
-    if (!pNode)
-      return NULL;
-
-    pNode->SetAttribute(_T("Name"), GetObjectName());
-    pNode->SetAttribute(_T("Class"), GetObjectClass());
-
-    nuiPropertyMap::const_iterator it;
-    nuiPropertyMap::const_iterator end = mProperties.end();
-    for (it = mProperties.begin(); it!=end; ++it)
-    {
-      pNode->SetAttribute((*it).first,(*it).second);
-    }
-  }
-  else
-    pNode = pParentNode;
-
-
-  // save object attributes
-	std::map<nglString, nuiAttribBase>::const_iterator it;
-	std::map<nglString, nuiAttribBase> attributes;
-  GetAttributes(attributes);
-	for (it = attributes.begin(); it != attributes.end(); ++it)
-	{
-    const nglString& name(it->first);
-		nuiAttribBase base = it->second;
-
-		base.Serialize(pNode);
-	}
-
-
-  return pNode;
-
-}
-#endif
-
-
-
 void nuiObject::SetSerializeMode (nuiSerializeMode eMode)
 {
   CheckValid();
@@ -190,7 +94,9 @@ nuiSerializeMode nuiObject::GetSerializeMode () const
 nuiObject::~nuiObject()
 {
   CheckValid();
-  //NGL_OUT(_T("Deleting object '%s' (class='%s')\n"), GetObjectName().GetChars(), GetObjectClass().GetChars());
+#ifdef _NUI_DEBUG_OBJECTS_
+  NGL_LOG("nuiObject", NGL_LOG_DEBUG, "Deleting object '%s' (class='%s')\n", GetObjectName().GetChars(), GetObjectClass().GetChars());
+#endif
   delete mpToken;
 
   int32 c = mClassNameIndex;
@@ -725,6 +631,12 @@ bool nuiObject::ClearGlobalProperty(const char* pName)
 
 std::map<nuiObject*, nuiObject::Trace> nuiObject::mObjects;
 nglCriticalSection nuiObject::gObjectTraceCS;
+
+bool nuiObject::IsObject(void* pointer)
+{
+  std::map<nuiObject*, Trace>::const_iterator it = mObjects.find((nuiObject*)pointer);
+  return it != mObjects.end();
+}
 
 void nuiObject::CheckValidInternal() const
 {

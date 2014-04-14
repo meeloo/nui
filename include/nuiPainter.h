@@ -129,8 +129,10 @@ public:
   virtual void SetSurface(nuiSurface* pSurface);
   virtual nuiSurface* GetSurface() const;
 
+  static void BroadcastDestroyTexture(nuiTexture* pTexture);
+  static void BroadcastDestroySurface(nuiSurface* pSurface);
+
   virtual void DestroySurface(nuiSurface* pSurface) = 0;
-  virtual void ResizeSurface(nuiSurface* pSurface, int32 width, int32 height) = 0;
 
 protected:
   nuiSurface* mpSurface;
@@ -159,6 +161,8 @@ protected:
 
   int32 GetCurrentWidth() const;
   int32 GetCurrentHeight() const;
+  virtual void DestroyTexture(nuiTexture* pTexture) = 0;
+  static std::set<nuiPainter*> gpPainters;
 };
 
 #endif

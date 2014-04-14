@@ -33,12 +33,8 @@ public:
 
   /* @name Trash management */
   //@{
-  virtual void FillTrash(); ///< Marks the start of a trash filling period: we collect all the movement going on in the widget tree.
-  virtual bool IsTrashFilling() const; ///< Are we collecting change in the widget tree right now?
-  virtual void EmptyTrash(); ///< Empties the object trash: all the objects that have been placed in the trash (with the Trash() method) will be delete an removed from the trash. This method should be called after processing any event (comming from nglWindow).
   virtual void AdviseObjectDeath(nuiWidgetPtr pWidget); ///< Any nuiWidget will call this method when dying. Don't forget to call this version in any overriden AdviseObjectDeath you make.
   void AdviseSubTreeDeath(nuiWidgetPtr pWidget);
-  virtual void Trash(nuiWidgetPtr pWidget); ///< Ask for the destruction of this object as soon as possible.
   void DisconnectWidget(nuiWidget* pWidget);
 
   //@}
@@ -209,8 +205,6 @@ protected:
 
   nglMouseInfo mMouseInfo;
   
-  bool IsTrashFull() const;
-  
   nuiWidgetPtr mpWatchedWidget;
 
   void UpdateWidgetsCSS();
@@ -222,8 +216,6 @@ protected:
   //@{
   bool mFillTrash;
   bool mReleased;
-
-  std::list<nuiWidgetPtr> mpTrash;
   //@}
 
   nuiDrawContext* mpDrawContext;

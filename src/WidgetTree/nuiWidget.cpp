@@ -2153,6 +2153,11 @@ void nuiWidget::CallOnTrash()
   CheckValid();
   mTrashed = true;
 
+  while (!mHotKeyEvents.empty())
+  {
+    DelHotKey(mHotKeyEvents.begin()->first);
+  }
+
   nuiTopLevel* pRoot = GetTopLevel();
   if (pRoot)
   {
@@ -2181,10 +2186,11 @@ bool nuiWidget::Trash()
     CallOnTrash();
     TrashRequested();
   }
-  nuiAnimation* pAnim = GetAnimation(_T("TRASH"));
+
+  nuiAnimation* pAnim = GetAnimation("TRASH");
   if (pAnim && (pAnim->GetTime()==0 && pAnim->GetDuration()>0))
   {
-    StartAnimation(_T("TRASH"));
+    StartAnimation("TRASH");
   }
   else
   {
@@ -2194,29 +2200,12 @@ bool nuiWidget::Trash()
       return false;
 
     mDoneTrashed = true;
-
-    nuiTopLevel* pRoot = GetTopLevel();
-
-    if (!pRoot)
-    {
-      if (mpParent)
-        mpParent->DelChild(this);
-      return true;
-    }
-		
-    while (!mHotKeyEvents.empty())
-    {
-      DelHotKey(mHotKeyEvents.begin()->first);
-    }
-    
-    pRoot->Trash(this);
     Trashed();
-    Invalidate();
-
-    NGL_ASSERT(!HasGrab()); /// done with CallOnTrash
-//    pRoot->AdviseObjectDeath(this); /// done with CallOnTrash
 
     DebugRefreshInfo();
+    if (mpParent)
+      mpParent->DelChild(this);
+    return true;
   }
 
   return true;
@@ -3759,7 +3748,7 @@ void nuiWidget::AddAnimation(const nglString& rName, nuiAnimation* pAnim, bool T
   mAnimations[rName] = pAnim;
   pAnim->SetDeleteOnStop(false); /// Cancel anim delete on stop or we'll crash as soon as the widget is destroyed or the user starts to play the anim once more.
   if (rName == _T("TRASH"))
-    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiWidget::AutoTrash);
+    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiWidget::AutoDestroy);
   if (rName == _T("HIDE"))
     mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiWidget::AutoHide);
   
@@ -4191,10 +4180,11 @@ nuiTheme* nuiWidget::GetTheme()
   return nuiTheme::GetTheme();
 }
 
-void nuiWidget::AutoTrash(const nuiEvent& rEvent)
+void nuiWidget::AutoDestroy(const nuiEvent& rEvent)
 {
   CheckValid();
-  Trash();
+  NGL_ASSERT(mpParent!= nullptr);
+  mpParent->DelChild(this);
 }
 
 void nuiWidget::AutoHide(const nuiEvent& rEvent)

@@ -249,8 +249,6 @@ void nuiTopLevel::Exit()
   mpGrabAcquired.clear();
   mpFocus = NULL;
   mpUnderMouse = NULL;
-  
-  EmptyTrash();
 
   nuiWidgetList wlist(mpChildren);
   nuiWidgetList::iterator wit = wlist.begin();
@@ -294,63 +292,7 @@ void nuiTopLevel::Exit()
 void nuiTopLevel::DisconnectWidget(nuiWidget* pWidget)
 {
   CheckValid();
-  mpTrash.remove(pWidget);
   AdviseObjectDeath(pWidget);
-}
-
-void nuiTopLevel::Trash(nuiWidgetPtr pWidget)
-{
-  CheckValid();
-  mpTrash.remove(pWidget);
-  mpTrash.push_back(pWidget);
-}
-
-bool nuiTopLevel::IsTrashFilling() const
-{
-  CheckValid();
-  return mFillTrash;
-}
-
-void nuiTopLevel::FillTrash()
-{
-  CheckValid();
-  EmptyTrash();
-  mFillTrash = true;
-}
-
-void nuiTopLevel::EmptyTrash()
-{
-  CheckValid();
-  //BroadcastQueuedNotifications();
-  UpdateWidgetsCSS();
-
-  mFillTrash = false;
-
-  std::list<nuiWidgetPtr>::iterator it = mpTrash.begin();
-  std::list<nuiWidgetPtr>::iterator end = mpTrash.end();
-  nuiWidgetPtr pItem = NULL;
-
-  // Do the "DeleteWidget" opcode
-  for (; it != end; ++it)
-  {
-    pItem = *it;
-
-    AdviseSubTreeDeath(pItem);
-    nuiContainerPtr pParent = pItem->GetParent();
-    if (pParent)
-      pParent->DelChild(pItem);
-  }
-
-  if (mpTrash.size()) // If we removed anything from the active objects then we have to redraw...
-    Invalidate();
-
-  mpTrash.clear();
-  
-//  if (IsTrashed(false))
-//  {
-//    mTrashed = false;
-//    delete this;
-//  }
 }
 
 void nuiTopLevel::AdviseObjectDeath(nuiWidgetPtr pWidget)
@@ -2366,12 +2308,6 @@ void nuiTopLevel::PrintHotKeyMap(const nglString& rText)
   NGL_OUT(_T("\n"));
 }
 
-
-bool nuiTopLevel::IsTrashFull() const
-{
-  CheckValid();
-  return !mpTrash.empty();
-}
 
 void nuiTopLevel::SetWatchedWidget(nuiWidget* pWatchedWidget)
 {

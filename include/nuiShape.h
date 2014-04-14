@@ -85,8 +85,6 @@ public:
 
   void EmptyCaches();
 
-  //nuiSimpleEventSource<nuiChanged> Changed; ///< This event is fired each time the Shape is changed.
-
   float GetDistanceFromPoint(float X, float Y, float Quality = 0.5f) const;
   
 private:
@@ -95,9 +93,6 @@ private:
   nuiShape& operator=(const nuiShape& rShape);
 
   Winding mWinding;
-
-  void ElementChanged(const nuiEvent& rEvent);
-  nuiEventSink<nuiShape> mEventSink;
 };
 
 

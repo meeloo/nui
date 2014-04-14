@@ -231,15 +231,6 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
 
 nuiGLPainter::~nuiGLPainter()
 {
-  auto it = mFramebuffers.begin();
-  auto end = mFramebuffers.end();
-  while (it != end)
-  {
-    nuiSurface* pSurface = it->first;
-    pSurface->DelPainter(this);
-    ++it;
-  }
-
   mActiveContexts--;
   if (mActiveContexts == 0)
     glAAExit();
@@ -1277,10 +1268,6 @@ nuiGLPainter::TextureInfo::TextureInfo()
   mTexture = -1;
 }
 
-void nuiGLPainter::CreateTexture(nuiTexture* pTexture)
-{
-}
-
 void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 {
 #ifdef DEBUG
@@ -1646,22 +1633,6 @@ void nuiGLPainter::DestroyTexture(nuiTexture* pTexture)
   mTextures.erase(it);
 }
 
-void nuiGLPainter::InvalidateTexture(nuiTexture* pTexture, bool ForceReload)
-{
-  std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
-  if (it == mTextures.end())
-    return;
-  NGL_ASSERT(it != mTextures.end());
-
-  TextureInfo& info(it->second);
-  info.mReload = true;
-  if (!ForceReload && info.mTexture != -1)
-  {
-    glDeleteTextures(1, (GLuint*)&info.mTexture);
-    info.mTexture = -1;
-  }
-}
-
 nuiGLPainter::FramebufferInfo::FramebufferInfo()
 {
   mReload = true;
@@ -1670,223 +1641,6 @@ nuiGLPainter::FramebufferInfo::FramebufferInfo()
   mTexture = 0;
   mDepthbuffer = 0;
   mStencilbuffer = 0;
-}
-
-void nuiGLPainter::ResizeSurface(nuiSurface* pSurface, int32 newWidth, int32 newHeight)
-{
-  NGL_ASSERT(mpSurface != pSurface)
-  NGL_ASSERT(pSurface != NULL);
-
-  GLint oldFramebuffer;
-  GLint oldRenderbuffer;
-
-  glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &oldFramebuffer);
-  glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &oldRenderbuffer);
-
-
-  std::map<nuiSurface*, FramebufferInfo>::const_iterator it = mFramebuffers.find(pSurface);
-  NGL_ASSERT(it != mFramebuffers.end());
-  const FramebufferInfo& info = it->second;
-
-  float scale = mpContext->GetScale();
-  newWidth *= scale;
-  newHeight *= scale;
-
-  //NGL_OUT("Resize surface %s to %d x %d\n", pSurface->GetObjectName().GetChars(), newWidth, newHeight);
-  nuiTexture* pTexture = pSurface->GetTexture();
-
-#if defined DEBUG && defined _UIKIT_
-  glPushGroupMarkerEXT(0, pSurface->GetObjectName().GetChars());
-#endif
-
-  if (pTexture && !pTexture->IsPowerOfTwo())
-  {
-    switch (GetRectangleTextureSupport())
-    {
-      case 0:
-        newWidth  = MakePOT(newWidth);
-        newHeight = MakePOT(newHeight);
-        break;
-      case 1:
-      case 2:
-        break;
-    }
-  }
-
-  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, info.mFramebuffer);
-  nuiCheckForGLErrors();
-
-  glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
-  nuiCheckForGLErrors();
-
-  ///< Do we need a depth buffer
-  if (info.mDepthbuffer)
-  {
-    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mDepthbuffer);
-    nuiCheckForGLErrors();
-
-    glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI,
-                             GL_DEPTH_COMPONENT16,
-                             newWidth, newHeight);
-    nuiCheckForGLErrors();
-
-    GLint w, h;
-    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
-    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
-
-    NGL_ASSERT(w == newWidth);
-    NGL_ASSERT(h == newHeight);
-
-    NGL_OUT("New depth surface %d x %d (asked %d x %d)\n", w, h, newWidth, newHeight);
-
-    glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-                                 GL_DEPTH_ATTACHMENT_NUI,
-                                 GL_RENDERBUFFER_NUI,
-                                 info.mDepthbuffer);
-    nuiCheckForGLErrors();
-  }
-
-  ///< Do we need a stencil buffer
-  if (info.mStencilbuffer)
-  {
-    NGL_ASSERT(!"Stencil attachement not supported");
-#ifndef _OPENGL_ES_
-    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mStencilbuffer);
-    nuiCheckForGLErrors();
-
-    glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI,
-                             GL_STENCIL_INDEX,
-                             newWidth, newHeight);
-    nuiCheckForGLErrors();
-
-    GLint w, h;
-    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
-    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
-
-    NGL_ASSERT(w == newWidth);
-    NGL_ASSERT(h == newHeight);
-
-    NGL_OUT("New stencil surface %d x %d (asked %d x %d)\n", w, h, newWidth, newHeight);
-    
-
-    glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-                                 GL_STENCIL_ATTACHMENT_NUI,
-                                 GL_RENDERBUFFER_NUI,
-                                 info.mStencilbuffer);
-    nuiCheckForGLErrors();
-#endif
-  }
-
-  GLint oldTexture = 0;
-  GLenum target = 0;
-
-  ///< We definetly need a color attachement, either a texture, or a renderbuffer
-  if (pTexture && pSurface->GetRenderToTexture())
-  {
-    target = GetTextureTarget(pTexture->IsPowerOfTwo());
-    glActiveTexture(GL_TEXTURE0);
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &oldTexture);
-
-    std::map<nuiTexture*, TextureInfo>::iterator tex_it = mTextures.find(pTexture);
-    NGL_ASSERT(tex_it != mTextures.end());
-    TextureInfo& tex_info(tex_it->second);
-
-    glBindTexture(target, tex_info.mTexture);
-    nuiCheckForGLErrors();
-
-    int type = 8;
-    GLint pixelformat = 0;
-    GLint internalPixelformat = 0;
-    GLbyte* pBuffer = NULL;
-    bool allocated = false;
-
-#if !defined(_OPENGL_ES_) && defined(_MACOSX_)
-    internalPixelformat = pSurface->GetPixelFormat();
-    if (internalPixelformat == GL_RGBA)
-    {
-      internalPixelformat = GL_RGBA;
-      pixelformat = GL_BGRA;
-      type = GL_UNSIGNED_INT_8_8_8_8_REV;
-    }
-    else if (internalPixelformat == GL_RGB)
-    {
-      internalPixelformat = GL_RGB;
-      pixelformat = GL_BGR;
-      type = GL_UNSIGNED_BYTE;
-    }
-    else
-    {
-      pixelformat = pSurface->GetPixelFormat();
-      type = GL_UNSIGNED_BYTE;
-    }
-    glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_FALSE);
-#else
-    internalPixelformat = pSurface->GetPixelFormat();
-    pixelformat = pSurface->GetPixelFormat();
-    type = GL_UNSIGNED_BYTE;
-#endif
-
-    glTexImage2D(target, 0, internalPixelformat, newWidth, newHeight, 0, pixelformat, type, NULL);
-    nuiCheckForGLErrors();
-    //glFramebufferTexture2D(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, target, tex_info.mTexture, 0);
-    nuiCheckForGLErrors();
-  }
-  else
-  {
-    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mRenderbuffer);
-    nuiCheckForGLErrors();
-
-    GLint pixelformat = pSurface->GetPixelFormat();
-    GLint internalPixelformat = pSurface->GetPixelFormat();
-    internalPixelformat = GL_RGBA;
-#if !defined(_OPENGL_ES_) && defined(_MACOSX_)
-    if (internalPixelformat == GL_RGBA)
-    {
-      pixelformat = GL_BGRA;
-    }
-    else if (internalPixelformat == GL_RGB)
-    {
-      pixelformat = GL_BGR;
-    }
-#else
-  #ifdef _UIKIT_
-    pixelformat = GL_RGBA8_OES;
-  #endif
-#endif
-
-    glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, pixelformat, newWidth, newHeight);
-    nuiCheckForGLErrors();
-    GLint w, h;
-
-    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
-    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
-
-    NGL_ASSERT(w == newWidth);
-    NGL_ASSERT(h == newHeight);
-
-    NGL_OUT("New color surface %d x %d (asked %d x %d)\n", w, h, newWidth, newHeight);
-    
-  }
-
-#ifdef NGL_DEBUG
-  CheckFramebufferStatus();
-#endif
-  nuiCheckForGLErrors();
-
-  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, oldFramebuffer);
-  //printf("UNBIND glBindFramebufferNUI -> %d\n", mDefaultFramebuffer);
-  glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, oldRenderbuffer);
-  //printf("UNBIND glBindRenderbufferNUI -> %d\n", mDefaultRenderbuffer);
-
-  if (oldTexture)
-  {
-    glBindTexture(target, oldTexture);
-  }
-
-  nuiCheckForGLErrors();
-  #ifdef NGL_DEBUG
-  CheckFramebufferStatus();
-  #endif
 }
 
 void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
@@ -1980,7 +1734,6 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 
     if (create)
     {
-      pSurface->AddPainter(this);
       glGenFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
       printf("glGenFramebuffersNUI '%s' -> %d\n", pSurface->GetObjectName().GetChars(), info.mFramebuffer);
       NGL_ASSERT(info.mFramebuffer);

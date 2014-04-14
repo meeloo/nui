@@ -10,13 +10,11 @@
 
 // class nuiShape
 nuiShape::nuiShape()
-: mEventSink(this)
 {
   mWinding = eNone;
 }
 
 nuiShape::nuiShape(const nuiShape& rShape)
-: mEventSink(this)
 {
   NGL_ASSERT(0);
 }
@@ -50,16 +48,12 @@ void nuiShape::Clear()
 void nuiShape::AddContour(nuiContour* pContour)
 {
   mpContours.push_back(pContour);
-  //Changed();
-  mEventSink.Connect( pContour->Changed, &nuiShape::ElementChanged, pContour);
 }
 
 void nuiShape::AddContour()
 {
   nuiContour* pContour = new nuiContour();
   mpContours.push_back(pContour);
-  //Changed();
-  mEventSink.Connect( pContour->Changed, &nuiShape::ElementChanged, pContour);
 }
 
 void nuiShape::CloseContour()
@@ -179,12 +173,6 @@ void nuiShape::EmptyCaches()
 }
 
 
-
-void nuiShape::ElementChanged(const nuiEvent& rEvent)
-{
-  EmptyCaches();
-  //Changed();
-}
 
 #define CIRCLE_FACTOR (1.0/3.5)
 

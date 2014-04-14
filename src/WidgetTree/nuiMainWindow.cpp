@@ -203,23 +203,17 @@ void nuiMainWindow::Paint()
   
   mLastEventTime = nglTime();
   //nuiStopWatch watch(_T("nuiMainWindow::Paint"));
-  do 
-  {
-
-    FillTrash();
-    
+//  do 
+//  {
     GetIdealRect();
     SetLayout(nuiRect(0, 0, mpNGLWindow->GetWidth(), mpNGLWindow->GetHeight()));
     
-    EmptyTrash();
-  } while (IsTrashFull());
+//  } while (IsTrashFull());
 
   if (!mInvalidatePosted)
   {
     return;
   }
-  
-  FillTrash();
 
   //watch.AddIntermediate(_T("After FillTrash()"));
   
@@ -286,7 +280,6 @@ void nuiMainWindow::Paint()
 //  }
   
   pContext->StopRendering();
-  EmptyTrash();
 
 #ifndef __NUI_NO_SOFTWARE__
   if (pCTX)
@@ -327,7 +320,6 @@ void nuiMainWindow::Paint()
 
 void nuiMainWindow::OnResize(uint Width, uint Height)
 {
-  FillTrash();
   nuiRect Rect((nuiSize)Width, (nuiSize)Height);
   //SetLayout(Rect);
 
@@ -337,19 +329,15 @@ void nuiMainWindow::OnResize(uint Width, uint Height)
   mFullFrameRedraw++;
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
-  
-  EmptyTrash();
 }
 
 void nuiMainWindow::OnCreation()
 {
-  EmptyTrash();
 }
 
 void nuiMainWindow::OnDestruction()
 {
   //NGL_OUT(_T("OnDestruction\n"));
-  EmptyTrash();
 }
 
 void nuiMainWindow::OnActivation()
@@ -357,7 +345,6 @@ void nuiMainWindow::OnActivation()
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
   //OUT("OnActivation\n");
-  EmptyTrash();
   CancelGrab();
   mMouseInfo.Buttons = 0;
 }
@@ -367,7 +354,6 @@ void nuiMainWindow::OnDesactivation()
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
   //OUT("OnDesactivation\n");
-  EmptyTrash();
   CancelGrab();
   mMouseInfo.Buttons = 0;
 }
@@ -386,7 +372,6 @@ void nuiMainWindow::OnState (nglWindow::StateInfo State)
   //OUT("OnState\n");
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
-  EmptyTrash();
 }
 
 
@@ -1190,12 +1175,10 @@ bool nuiMainWindow::GetQuitOnClose() const
 
 void nuiMainWindow::EnterModalState()
 {
-  EmptyTrash();
   CancelGrab();
   mMouseInfo.Buttons = 0;
   
   mpNGLWindow->EnterModalState();
-  EmptyTrash();
   CancelGrab();
   mMouseInfo.Buttons = 0;
 }

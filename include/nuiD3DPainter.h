@@ -51,9 +51,7 @@ public:
 
   nglContext* GetContext() const;
 
-  virtual void CreateTexture(nuiTexture* pTexture);
   virtual void DestroyTexture(nuiTexture* pTexture);
-  virtual void InvalidateTexture(nuiTexture* pTexture, bool ForceReload);
 
   void        ApplyTextureFiltering(LPDIRECT3DDEVICE9 pDev, GLuint minfilter, GLuint magfilter);
   bool        IsTextureFormatSupported(LPDIRECT3DDEVICE9 pDev, D3DFORMAT format);

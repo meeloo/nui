@@ -1276,11 +1276,6 @@ nuiD3DPainter::TextureInfo::TextureInfo()
   mpTexture = NULL;
 }
 
-void nuiD3DPainter::CreateTexture(nuiTexture* pTexture)
-{
-
-}
-
 void nuiD3DPainter::UploadTexture(nuiTexture* pTexture)
 {
   //PROFILE_CHRONO_IN(4);
@@ -1657,24 +1652,6 @@ void nuiD3DPainter::DestroyTexture(nuiTexture* pTexture)
 }
 
 
-
-void nuiD3DPainter::InvalidateTexture(nuiTexture* pTexture, bool ForceReload)
-{
-  //PROFILE_CHRONO_IN(12);
-  std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
-  if (it == mTextures.end())
-    return; //not found
-  NGL_ASSERT(it != mTextures.end());
-  TextureInfo& info(it->second);
-  info.mReload = true;
-  if (!ForceReload && info.mpTexture != NULL)
-  {
-    //     glDeleteTextures(1, &info.mTexture);
-    info.mpTexture->Release();
-    info.mpTexture = NULL;
-  }
-  //PROFILE_CHRONO_OUT(12, "InvalidateTexture()");
-}
 
 GLenum nuiD3DPainter::GetTextureTarget(bool POT) const
 {

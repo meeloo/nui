@@ -39,14 +39,9 @@ public:
 
   nuiRect GetRect();
 
-
-  nuiSimpleEventSource<nuiChanged> Changed; ///< This event is fired each time the Contour is changed.
-
 private:
   std::list<nuiPathGenerator*> mpElements;
   nuiContour(const nuiContour& rContour);
-  void ElementChanged(const nuiEvent& rEvent);
-  nuiEventSink<nuiContour> mEventSink;
 };
 
 #endif // __nuiContour_h__
