@@ -254,6 +254,11 @@ const nglString& nuiWidgetCreator::LookUp(const std::map<nglString, nglString>& 
   return rString;
 }
 
+void nuiWidgetCreator::SetObjectNameIsClass()
+{
+  mObjectNameIsClass = true;
+}
+
 nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParamDictionary, const nuiBuilder* pBuilder) const
 {
   if (!pBuilder)
@@ -283,7 +288,10 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
             classname.GetChars(), objectname.GetChars());
     return NULL;
   }
-  
+
+  if (mObjectNameIsClass)
+    pWidget->SetObjectClass(mObjectName);
+
   if (!objectname.IsEmpty())
     pWidget->SetObjectName(objectname);
   

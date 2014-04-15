@@ -141,10 +141,12 @@ public:
   void SetDefaultDictionary(const std::map<nglString, nglString>& rParamDictionary);
   const std::map<nglString, nglString>& GetDefaultDictionary() const;
   std::map<nglString, nglString>& GetDefaultDictionary();
+  void SetObjectNameIsClass();
 protected:
   std::vector<nuiWidgetCreatorOperation> mOperations;
   nglString mClassName;
   nglString mObjectName;
+  bool mObjectNameIsClass = false;
   std::map<nglString, nglString> mDefaultDictionary;
   const nglString& LookUp(const std::map<nglString, nglString>& rParamDictionary, const nglString& rString) const;
   std::vector<std::pair<nglString, nuiEventActionHolder*> > mEventActions;

@@ -856,6 +856,12 @@ public:
       nuiWidgetCreator* pCreator = ReadWidgetCreator();
       if (!pCreator)
         return false;
+      if (pCreator->GetObjectName().IsEmpty())
+      {
+        SetError("Expected new widget type definitions to have a name");
+        return false;
+      }
+      pCreator->SetObjectNameIsClass();
       nuiBuilder::Get().SetHandler(pCreator->GetObjectName(), pCreator);
       return true;
     }
