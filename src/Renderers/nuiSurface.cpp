@@ -1,7 +1,6 @@
 #include "nui.h"
 
 nuiSurfaceMap nuiSurface::mpSurfaces;
-nuiSurfaceCacheSet nuiSurface::mpSurfaceCaches;
 
 nuiSurface* nuiSurface::GetSurface (const nglString& rName, bool Acquired)
 {
@@ -73,7 +72,10 @@ nuiSurface::~nuiSurface()
   mpSurfaces.erase(GetObjectName());
 
   if (mpTexture)
+  {
+    mpTexture->DetachSurface();
     mpTexture->Release();
+  }
 //  NGL_OUT(_T("nuiSurface DTOR [0x%x] NAME: [%s] COUNT [%d]\n"), this, GetObjectName().GetChars(), mpSurfaces.size());
 
   nuiPainter::BroadcastDestroySurface(this);
@@ -124,16 +126,6 @@ nuiTexture* nuiSurface::GetTexture() const
   return mpTexture;
 }
 
-
-void nuiSurface::AddCache(nuiSurfaceCache* pCache)
-{
-  mpSurfaceCaches.insert(pCache);
-}
-
-void nuiSurface::DelCache(nuiSurfaceCache* pCache)
-{
-  mpSurfaceCaches.erase(pCache);
-}
 
 void nuiSurface::SetPermanent(bool Permanent)
 {

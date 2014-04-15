@@ -574,7 +574,13 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, i
   auto it = mTextures.end();
   nuiTexture* pTexture = rState.mpTexture[slot];
   if (pTexture)
+  {
     it = mTextures.find(pTexture);
+    if (pTexture->GetTrace())
+    {
+      NGL_OUT("Applying texture %s\n", pTexture->GetSource().GetChars());
+    }
+ }
 
   bool uptodate = (it == mTextures.end()) ? false : ( !it->second.mReload && it->second.mTexture >= 0 );
   if (pTexture && !pTexture->IsUptoDate())
@@ -1324,8 +1330,6 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
   {
     bool firstload = false;
     bool reload = info.mReload;
-    if (!pSurface && !(pImage && pImage->GetPixelSize()) && !id)
-      return;
 
     uint i;
     if (info.mTexture == (GLint)-1)
@@ -1347,6 +1351,9 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
     glBindTexture(target, info.mTexture);
     nuiCheckForGLErrors();
+
+    if (!pSurface && !(pImage && pImage->GetPixelSize()) && !id)
+      return;
 
     if (reload)
     {

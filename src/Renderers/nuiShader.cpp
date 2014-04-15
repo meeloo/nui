@@ -688,6 +688,12 @@ nuiShaderProgram::~nuiShaderProgram()
 
   if (mProgram)
     glDeleteProgram(mProgram);
+
+  {
+    auto it = gpPrograms.find(mName);
+    NGL_ASSERT(it != gpPrograms.end());
+    gpPrograms.erase(it);
+  }
 }
 
 void nuiShaderProgram::AddShaderFromPath(nuiShaderKind shaderType, const nglPath& rPath)

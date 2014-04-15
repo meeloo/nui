@@ -1245,5 +1245,12 @@ const nuiRect& nuiTexture::GetProxyRect() const
   return mProxyRect;
 }
 
+void nuiTexture::DetachSurface()
+{
+  NGL_ASSERT(mpSurface != nullptr);
+  mpSurface = nullptr;
+}
+
+
 nuiSimpleEventSource<0> nuiTexture::TexturesChanged;
 

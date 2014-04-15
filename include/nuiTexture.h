@@ -128,6 +128,8 @@ protected:
   void Init();
   void InitAttributes();
 
+  void DetachSurface();
+
   nglImage* mpImage;
   bool mOwnImage;
 

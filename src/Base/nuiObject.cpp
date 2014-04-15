@@ -632,11 +632,13 @@ bool nuiObject::ClearGlobalProperty(const char* pName)
 std::map<nuiObject*, nuiObject::Trace> nuiObject::mObjects;
 nglCriticalSection nuiObject::gObjectTraceCS;
 
+#ifdef _NUI_DEBUG_OBJECTS_
 bool nuiObject::IsObject(void* pointer)
 {
   std::map<nuiObject*, Trace>::const_iterator it = mObjects.find((nuiObject*)pointer);
   return it != mObjects.end();
 }
+#endif
 
 void nuiObject::CheckValidInternal() const
 {

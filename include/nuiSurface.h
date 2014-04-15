@@ -9,16 +9,12 @@ class nuiSurfaceCache;
 class nuiTexture;
 
 typedef std::map<nglString, nuiSurface*, nglString::LessFunctor> nuiSurfaceMap;
-typedef std::set<nuiSurfaceCache*> nuiSurfaceCacheSet;
 
 class nuiSurface : public nuiObject
 {
 public:
   static nuiSurface* GetSurface (const nglString& rName, bool Acquired); ///< Get a surface from its ID
   static nuiSurface* CreateSurface (const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat = eImagePixelRGBA); ///< Create a surface
-
-  static void AddCache(nuiSurfaceCache* pCache);
-  static void DelCache(nuiSurfaceCache* pCache);
 
   int32 GetWidth() const;
   int32 GetHeight() const;
@@ -57,8 +53,7 @@ private:
   nuiTexture* mpTexture;
   
   static nuiSurfaceMap mpSurfaces;
-  static nuiSurfaceCacheSet mpSurfaceCaches;
-  
+
   bool mDirty;
 };
 
