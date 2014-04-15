@@ -512,6 +512,7 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget)
     mDisplayToolTip = false;
 #endif
 
+  UpdateWidgetsCSS();
   return true;
 }
 
@@ -537,6 +538,7 @@ bool nuiTopLevel::Ungrab(nuiWidgetPtr pWidget)
 
   Grab(NULL);
 
+  UpdateWidgetsCSS();
   return true;
 }
 
@@ -565,6 +567,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CancelGrab()\n")) );
   }
   mpGrab.clear();
   mpGrabAcquired.clear();
+  UpdateWidgetsCSS();
   return true;
 }
 
@@ -594,6 +597,7 @@ bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInf
   mpGrab[rInfo.TouchId] = pWidget;
   mpGrabAcquired[rInfo.TouchId] = true;
   NGL_TOUCHES_DEBUG( NGL_OUT("Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
+  UpdateWidgetsCSS();
   return true;
 }
 
@@ -658,6 +662,7 @@ bool nuiTopLevel::SetFocus(nuiWidgetPtr pWidget)
     }
     mpFocus->SetHotRect(hotrect);
   }
+  UpdateWidgetsCSS();
   return true;
 }
 
@@ -689,6 +694,7 @@ bool nuiTopLevel::ActivateToolTip(nuiWidgetPtr pWidget, bool Now)
     ToolTipOn(NULL);
   }
 
+  UpdateWidgetsCSS();
   return true;
 }
 
@@ -783,26 +789,35 @@ void nuiTopLevel::CallTextCompositionStarted()
   nuiAutoRef;
   if (mpFocus)
     mpFocus->TextCompositionStarted();
+  UpdateWidgetsCSS();
 }
+
 void nuiTopLevel::CallTextCompositionConfirmed()
 {
   nuiAutoRef;
   if (mpFocus)
     mpFocus->TextCompositionConfirmed();
+  UpdateWidgetsCSS();
 }
 
 void nuiTopLevel::CallTextCompositionCanceled()
 {
   nuiAutoRef;
   if (mpFocus)
+  {
     mpFocus->TextCompositionCanceled();
+    UpdateWidgetsCSS();
+  }
 }
 
 void nuiTopLevel::CallTextCompositionUpdated(const nglString& rString, int32 CursorPosition)
 {
   nuiAutoRef;
   if (mpFocus)
+  {
     mpFocus->TextCompositionUpdated(rString, CursorPosition);
+    UpdateWidgetsCSS();
+  }
 }
 
 nglString nuiTopLevel::CallGetTextComposition() const
@@ -831,15 +846,20 @@ bool nuiTopLevel::CallTextInput (const nglString& rUnicodeText)
   {
     if (mpFocus->DispatchTextInput(rUnicodeText))
     {
+      UpdateWidgetsCSS();
       return true;
     }
   }
   else
   {
     if (DispatchTextInput(rUnicodeText))
+    {
+      UpdateWidgetsCSS();
       return true;
+    }
   }
   
+  UpdateWidgetsCSS();
   return false;
 }
 
@@ -855,6 +875,7 @@ void nuiTopLevel::CallTextInputCancelled ()
   {
     DispatchTextInputCancelled();
   }
+  UpdateWidgetsCSS();
 }
 
 ////////////////// FOCUS UTILITY FUNCTIONS:
@@ -993,6 +1014,7 @@ bool nuiTopLevel::CallKeyDown (const nglKeyEvent& rEvent)
     {
       if (mpFocus->DispatchKeyDown(rEvent, mHotKeyMask))
       {
+        UpdateWidgetsCSS();
         return true;
       }
     }
@@ -1000,7 +1022,10 @@ bool nuiTopLevel::CallKeyDown (const nglKeyEvent& rEvent)
   else
   {
     if (DispatchKeyDown(rEvent, mHotKeyMask))
+    {
+      UpdateWidgetsCSS();
       return true;
+    }
   }
 
   if (rEvent.mKey == NK_TAB)
@@ -1029,10 +1054,12 @@ bool nuiTopLevel::CallKeyDown (const nglKeyEvent& rEvent)
     if (pNext)
       pNext->Focus();
     
+    UpdateWidgetsCSS();
     return true;
   }
   
   
+  UpdateWidgetsCSS();
   return false;
 }
 
@@ -1044,15 +1071,20 @@ bool nuiTopLevel::CallKeyUp (const nglKeyEvent& rEvent)
   {
     if (mpFocus->DispatchKeyUp(rEvent, mHotKeyMask))
     {
+      UpdateWidgetsCSS();
       return true;
     }
   }
   else
   {
     if (DispatchKeyUp(rEvent, mHotKeyMask))
+    {
+      UpdateWidgetsCSS();
       return true;
+    }
   }
 
+  UpdateWidgetsCSS();
   return false;
 }
 
@@ -1109,6 +1141,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] BEGIN\n"), rInfo.TouchId) );
 PRINT_GRAB_IDS();
 NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END\n"), rInfo.TouchId) );
 
+    UpdateWidgetsCSS();
     return res;
   }
 
@@ -1123,6 +1156,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END\n"), rInfo.TouchId) );
 PRINT_GRAB_IDS();
 NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END\n"), rInfo.TouchId) );
 
+  UpdateWidgetsCSS();
 	return res;
 }
 
@@ -1171,12 +1205,14 @@ void nuiTopLevel::DispatchKeyboardFocus(const nuiWidgetList& rWidgets)
     {
       // Focus this widget
       pWidget->Focus();
+      UpdateWidgetsCSS();
       return;
     }
     
     if (pWidget->GetMuteKeyboardFocusDispatch())
     {
       // Stop looking for focussed widgets now
+      UpdateWidgetsCSS();
       return;
     }
     
@@ -1185,6 +1221,7 @@ void nuiTopLevel::DispatchKeyboardFocus(const nuiWidgetList& rWidgets)
  
   if (!mpFocus)
     Focus();
+  UpdateWidgetsCSS();
 }
 
 bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
@@ -1268,6 +1305,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
     NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab1: Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
     pGrab->Release();
 
+    UpdateWidgetsCSS();
     return res ;
   }
 
@@ -1283,6 +1321,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
   if (it != mMouseClickedEvents.end())
     mMouseClickedEvents.erase(it);
   NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab2: Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
+  UpdateWidgetsCSS();
 	return res;
 }
 
@@ -1445,6 +1484,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
 #endif
 
 //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END\n"), rInfo.TouchId) );
+    UpdateWidgetsCSS();
     return pHandled != NULL;
   }
   else
@@ -1507,6 +1547,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
   SetToolTipRect();
 #endif
 //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END\n"), rInfo.TouchId) );
+  UpdateWidgetsCSS();
   return pHandled != NULL;
 }
 
@@ -1597,6 +1638,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
 #endif
 
     //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseWheel [%d] END\n"), rInfo.TouchId) );
+    UpdateWidgetsCSS();
     return pHandled != NULL;
   }
   else
@@ -1659,6 +1701,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
   SetToolTipRect();
 #endif
   //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseWheel [%d] END\n"), rInfo.TouchId) );
+  UpdateWidgetsCSS();
   return pHandled != NULL;
 }
 
@@ -1697,6 +1740,7 @@ bool nuiTopLevel::CallMouseCancel(nglMouseInfo& rInfo)
 
   NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseCancel: Grabs %d - %d / clicks %d / states %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size(), (uint32)mMouseClickedEvents.size(), (uint32)mMouseStates.size()));
 
+  UpdateWidgetsCSS();
   return true;
 }
 
@@ -1711,6 +1755,7 @@ void nuiTopLevel::SetDragFeedbackRect(int X, int Y)
   r.Move(X-r.GetWidth(), Y-r.GetHeight());
   mpDragFeedback->SetLayout(r);
   InvalidateRect(r);
+  UpdateWidgetsCSS();
 }
 
 
@@ -1843,6 +1888,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
 
   CheckValid();
   //nuiStopWatch watch(_T("nuiTopLevel::DrawTree"));
+  UpdateWidgetsCSS();
 
   uint32 clipWidth, clipHeight;
   {
@@ -2004,7 +2050,7 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
   DebugRefreshInfo();
 }
 
-#define _DEBUG_LAYOUT
+//#define _DEBUG_LAYOUT
 bool nuiTopLevel::SetRect(const nuiRect& rRect)
 {
   CheckValid();
