@@ -258,7 +258,8 @@ void nuiOutliner::Tessellate(nuiPath& rPoints, const nuiPath& rVertices, uint of
       AddJoin(Right[ndx1], Right[ndx1+1], Right[ndx2], Right[ndx2+1], rPoints);
     }
     AddCap(Right.Back(), Left.Front(), rPoints);
-    //rPoints[offset] = rPoints.Back();
+    if (rPoints.GetCount() > 2)
+      rPoints[offset] = rPoints[rPoints.GetCount() - 1];
 
     rPoints.StopPath();
   }
