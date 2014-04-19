@@ -12,6 +12,8 @@
 #include "nuiColor.h"
 #include "nglVector.h"
 
+class nuiTexture;
+
 class nuiCacheManager
 {
 public:
@@ -200,6 +202,12 @@ public:
   int32 GetStreamCount() const;
 
   nglString Dump() const;
+
+  // Helper method:
+  void AddImageRect(nuiTexture* pTexture, const nuiRect& rDest, const nuiRect& rSource, const nuiColor& rColor = nuiColor(255, 255, 255));
+  void AddRect(const nuiRect& rDest, const nuiColor& rColor = nuiColor(255, 255, 255));
+
+
 private:
   GLenum mMode;
   bool mEnabled[4];

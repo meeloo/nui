@@ -131,7 +131,8 @@ public:
   virtual void SetVisibleRect(const nuiRect& rRect); ///< This sets the rectangle that will actually be displayed in the parent widget (for example in case this widget is inside a nuiScrollView, only a part of it may be visible at once). The rectangle is local to the widget rect.
   void SilentSetVisibleRect(const nuiRect& rRect); ///< This method change the visible rect of the widget without invalidating it. It is useful if you need to change the visible rect from a parent's SetRect method: you allready know that you will need to redraw it. See SetVisibleRect for more information.
   const nuiRect& GetVisibleRect() const; ///< This sets the rectangle that will actually be displayed in the parent widget (for example in case this widget is inside a nuiScrollView, only a part of it may be visible at once). The rectangle is local to the widget rect.
-  
+  void ResetVisibleRect();
+
   void StartTransition(); ///< Signals to this widget that its state is being transitionned and that it should start ignoring layout changes from its parent.
   void StopTransition(); ///<  Signals to this widget that its state transition is done and that must obei to the layout changes from its parent again.
   bool IsInTransition() const;
@@ -710,6 +711,7 @@ protected:
   bool mAutoDraw: 1;
   bool mFixedAspectRatio: 1;
   bool mReverseRender: 1;
+  bool mOverrideVisibleRect : 1;
 
 
 

@@ -637,7 +637,6 @@ void nuiScrollView::OnHotRectChanged(const nuiEvent& rEvent)
 {
   if (mHorizontalHotRectActive || mVerticalHotRectActive)
   {
-    UpdateLayout();
     nuiWidgetPtr pChild = (nuiWidgetPtr)rEvent.mpUser;
 
     if (!pChild)
@@ -648,12 +647,20 @@ void nuiScrollView::OnHotRectChanged(const nuiEvent& rEvent)
 
     if (!mForceNoVertical && mVerticalHotRectActive)
     {
-      mpVertical->GetRange().MakeInRangeVisual(rect.Top(), rect.GetHeight());
+      bool moved = mpVertical->GetRange().MakeInRangeVisual(rect.Top(), rect.GetHeight());
+      if (moved)
+      {
+        printf("moved vertical\n");
+      }
     }
 
     if (!mForceNoHorizontal && mHorizontalHotRectActive)
     {
-      mpHorizontal->GetRange().MakeInRangeVisual(rect.Left(), rect.GetWidth());
+      bool moved = mpHorizontal->GetRange().MakeInRangeVisual(rect.Left(), rect.GetWidth());
+      if (moved)
+      {
+        printf("moved horizontal\n");
+      }
     }
   }
 }

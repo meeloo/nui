@@ -617,4 +617,99 @@ int32 nuiRenderArray::GetStreamCount() const
   return (int32)mStreams.size();
 }
 
+void nuiRenderArray::AddImageRect(nuiTexture* pTexture, const nuiRect& rDest, const nuiRect& rSource, const nuiColor& rColor)
+{
+  float x0 = rDest.mLeft, y0 = rDest.mTop;
+  float x1 = rDest.mRight, y1 = rDest.mTop;
+  float x2 = rDest.mRight, y2 = rDest.mBottom;
+  float x3 = rDest.mLeft, y3 = rDest.mBottom;
+
+  nuiSize tx0,tx1,tx2,tx3;
+  nuiSize ty0,ty1,ty2,ty3;
+
+  tx0 = rSource.mLeft;
+  ty0 = rSource.mTop;
+
+  tx1 = rSource.mRight;
+  ty1 = rSource.mTop;
+
+  tx2 = rSource.mRight;
+  ty2 = rSource.mBottom;
+
+  tx3 = rSource.mLeft;
+  ty3 = rSource.mBottom;
+
+  pTexture->ImageToTextureCoord(tx0, ty0);
+  pTexture->ImageToTextureCoord(tx1, ty1);
+  pTexture->ImageToTextureCoord(tx2, ty2);
+  pTexture->ImageToTextureCoord(tx3, ty3);
+
+  EnableArray(nuiRenderArray::eVertex, true);
+  EnableArray(nuiRenderArray::eTexCoord, true);
+  EnableArray(nuiRenderArray::eColor, true);
+
+//  Reserve(6 + GetSize());
+
+  // 1
+  SetColor(rColor);
+  SetTexCoords(tx0,ty0);
+  SetVertex(x0, y0);
+  PushVertex();
+
+  SetTexCoords(tx3,ty3);
+  SetVertex(x3, y3);
+  PushVertex();
+
+  SetTexCoords(tx1,ty1);
+  SetVertex(x1, y1);
+  PushVertex();
+
+  // 2
+  SetTexCoords(tx1,ty1);
+  SetVertex(x1, y1);
+  PushVertex();
+
+  SetTexCoords(tx3,ty3);
+  SetVertex(x3, y3);
+  PushVertex();
+
+  SetTexCoords(tx2,ty2);
+  SetVertex(x2, y2);
+  PushVertex();
+  
+}
+
+void nuiRenderArray::AddRect(const nuiRect& rDest, const nuiColor& rColor)
+{
+  float x0 = rDest.mLeft, y0 = rDest.mTop;
+  float x1 = rDest.mRight, y1 = rDest.mTop;
+  float x2 = rDest.mRight, y2 = rDest.mBottom;
+  float x3 = rDest.mLeft, y3 = rDest.mBottom;
+
+  EnableArray(nuiRenderArray::eVertex, true);
+  EnableArray(nuiRenderArray::eColor, true);
+
+//  Reserve(6 + GetSize());
+
+  // 1
+  SetColor(rColor);
+  SetVertex(x0, y0);
+  PushVertex();
+
+  SetVertex(x3, y3);
+  PushVertex();
+
+  SetVertex(x1, y1);
+  PushVertex();
+
+  // 2
+  SetVertex(x1, y1);
+  PushVertex();
+
+  SetVertex(x3, y3);
+  PushVertex();
+
+  SetVertex(x2, y2);
+  PushVertex();
+}
 

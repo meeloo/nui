@@ -140,6 +140,7 @@ void nuiWidget::InitDefaultValues()
   mAutoClip = true;
   mAutoDraw = false;
   mReverseRender = false;
+  mOverrideVisibleRect = false;
 }
 
 
@@ -2143,7 +2144,10 @@ float nuiWidget::GetAlpha() const
 void nuiWidget::SetAlpha(float Alpha)
 {
   CheckValid();
-  mAlpha = nuiClamp(Alpha, 0.0f, 1.0f);
+  const float a = nuiClamp(Alpha, 0.0f, 1.0f);
+  if (mAlpha == a)
+    return;
+  mAlpha = a;
   Invalidate();
   DebugRefreshInfo();
 }
@@ -2952,7 +2956,9 @@ bool nuiWidget::SetRect(const nuiRect& rRect)
     mRect.Set(rRect.Left(), rRect.Top(), mIdealRect.GetWidth(), mIdealRect.GetHeight());
   else 
     mRect = rRect;
-  mVisibleRect = GetOverDrawRect(true, true);
+
+  if (!mOverrideVisibleRect)
+    mVisibleRect = GetOverDrawRect(true, true);
   
   if (inval)
     Invalidate();
@@ -3130,10 +3136,12 @@ void nuiWidget::GetBorder(nuiSize& rLeft, nuiSize& rRight, nuiSize& rTop, nuiSiz
 void nuiWidget::SetVisibleRect(const nuiRect& rRect)
 {
   CheckValid();
+  nuiRect temp = mVisibleRect;
   if (mVisibleRect == rRect)
     return;
   
   mVisibleRect = rRect;
+  mOverrideVisibleRect = true;
   Invalidate();
 }
 
@@ -3144,9 +3152,17 @@ void nuiWidget::SilentSetVisibleRect(const nuiRect& rRect)
     return;
   
   mVisibleRect = rRect;
+  mOverrideVisibleRect = true;
   SilentInvalidate();
 }
 
+void nuiWidget::ResetVisibleRect()
+{
+  if (!mOverrideVisibleRect)
+    return;
+  mOverrideVisibleRect = false;
+  InvalidateLayout();
+}
 const nuiRect& nuiWidget::GetVisibleRect() const
 {
   CheckValid();
@@ -3343,8 +3359,9 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect)
   mNeedSelfLayout = mNeedSelfLayout || SizeChanged;
   
   InternalSetLayout(rect, PositionChanged, SizeChanged);
-  
-  mVisibleRect = GetOverDrawRect(true, true);
+
+  if (!mOverrideVisibleRect)
+    mVisibleRect = GetOverDrawRect(true, true);
   
   if (PositionChanged && mpParent)
     mpParent->Invalidate();

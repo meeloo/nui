@@ -99,7 +99,9 @@ bool nuiFlowView::SetRect(const nuiRect& rRect)
 {
   nuiWidget::SetRect(rRect);
   if (mCurrentIdealWidth != rRect.GetWidth())
+  {
     InvalidateLayout();
+  }
   Layout(true, rRect.GetWidth());
   return true;
 }
