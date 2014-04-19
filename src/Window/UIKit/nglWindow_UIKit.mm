@@ -42,6 +42,20 @@ const nglChar* gpWindowErrorTable[] =
 
 //#define _DEBUG_WINDOW_
 
+@interface CAEAGLLayer (Retained)
+
+@end
+
+@implementation CAEAGLLayer (Retained)
+
+- (NSDictionary*) drawableProperties
+{
+  return @{kEAGLDrawablePropertyRetainedBacking : @(YES)};
+}
+
+@end
+
+
 @implementation NGLViewController
 
 - (id) initWithNGLWindow: (nglWindow*) pNGLWindow

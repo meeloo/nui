@@ -8,7 +8,7 @@
 #include "nui.h"
 #include <iterator>
 
-#define PARTIAL_REDRAW_DEFAULT false
+#define PARTIAL_REDRAW_DEFAULT true
 
 #if 0 //defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
 # define NGL_TOUCHES_DEBUG(X) (X)
@@ -1906,10 +1906,10 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
     int count = mDirtyRects.size();
 
 //    NGL_OUT("drawing %d partial rects\n", count);
-    
+
     for (int i = 0; i < count; i++)
     {
-//      NGL_OUT("\t%d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
+//      NGL_OUT("\tDirty Rect: %d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
       pContext->ResetState();
       pContext->ResetClipRect();
       pContext->Clip(mDirtyRects[i]);
@@ -2024,6 +2024,14 @@ nuiSize nuiTopLevel::GetStatusBarSize() const
 
 void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect)
 {
+//  nglString senderclass = pSender->GetObjectClass();
+//  if (senderclass == "nuiMainWindow"
+//      || senderclass == "nuiNavigationController"
+//      || senderclass == "MainViewInstance"
+//      )
+//  {
+//    printf("");
+//  }
   //NGL_ASSERT(!mIsDrawing);
   CheckValid();
   nuiRect r = rRect;

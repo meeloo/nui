@@ -650,7 +650,7 @@ void nuiScrollView::OnHotRectChanged(const nuiEvent& rEvent)
       bool moved = mpVertical->GetRange().MakeInRangeVisual(rect.Top(), rect.GetHeight());
       if (moved)
       {
-        printf("moved vertical\n");
+//        printf("moved vertical\n");
       }
     }
 
@@ -659,7 +659,7 @@ void nuiScrollView::OnHotRectChanged(const nuiEvent& rEvent)
       bool moved = mpHorizontal->GetRange().MakeInRangeVisual(rect.Left(), rect.GetWidth());
       if (moved)
       {
-        printf("moved horizontal\n");
+//        printf("moved horizontal\n");
       }
     }
   }

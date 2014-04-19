@@ -5048,7 +5048,7 @@ bool nuiWidget::GetClickThru() const
 void nuiWidget::AddInvalidRect(const nuiRect& rRect)
 {
   CheckValid();
-  //printf("+++ AddInvalidRect %s\n", rRect.GetValue().GetChars());
+//  NGL_OUT("+++ AddInvalidRect in %s %s %s\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), rRect.GetValue().GetChars());
   int count = mDirtyRects.size();
   
   nuiRect intersect;
@@ -5072,7 +5072,7 @@ void nuiWidget::AddInvalidRect(const nuiRect& rRect)
   }
   
   // Found no rect to blend into, let's create a new one:
-  //printf("--- AddInvalidRect OK %s\n", rRect.GetValue().GetChars());
+//  NGL_OUT("--- AddInvalidRect OK %s\n", rRect.GetValue().GetChars());
   mDirtyRects.push_back(rRect);
 }
 
