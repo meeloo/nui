@@ -400,15 +400,15 @@ void nuiMainWindow::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect&
 
 void nuiMainWindow::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOnly)
 {
-  nglString senderclass = pSender->GetObjectClass();
-  if (senderclass == "nuiMainWindow"
-      || senderclass == "nuiNavigationController"
-      || senderclass == "MainViewInstance"
-      )
-  {
-    printf("");
-  }
-  NGL_OUT(_T("(Invalidate)BroadcastInvalidateLayout(%s)\n"), pSender->GetObjectClass().GetChars());
+//  nglString senderclass = pSender->GetObjectClass();
+//  if (senderclass == "nuiMainWindow"
+//      || senderclass == "nuiNavigationController"
+//      || senderclass == "MainViewInstance"
+//      )
+//  {
+//    printf("");
+//  }
+//  NGL_OUT(_T("(Invalidate)BroadcastInvalidateLayout(%s)\n"), pSender->GetObjectClass().GetChars());
 
   nuiTopLevel::BroadcastInvalidateLayout(pSender, BroadCastOnly);
 
