@@ -42,17 +42,38 @@ const nglChar* gpWindowErrorTable[] =
 
 //#define _DEBUG_WINDOW_
 
-@interface CAEAGLLayer (Retained)
-
+@interface RetainedEAGLLayer : CAEAGLLayer
 @end
 
-@implementation CAEAGLLayer (Retained)
-
-- (NSDictionary*) drawableProperties
+@implementation RetainedEAGLLayer
+- (void)setDrawableProperties:(NSDictionary *)drawableProperties
 {
-  return @{kEAGLDrawablePropertyRetainedBacking : @(YES)};
+  // Copy the dictionary and add/modify the retained property
+  NSMutableDictionary *mutableDictionary = [[NSMutableDictionary alloc] initWithCapacity:drawableProperties.count + 1];
+  [drawableProperties enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop)
+  {
+    // Copy all keys except the retained backing
+    if (![key isKindOfClass:[NSString class]] || ![(NSString *)key isEqualToString:kEAGLDrawablePropertyRetainedBacking])
+    {
+      [mutableDictionary setObject:object forKey:key];
+    }
+  }];
+  // Add the retained backing setting
+  [mutableDictionary setObject:@(YES) forKey:kEAGLDrawablePropertyRetainedBacking];
+  // Continue
+  [super setDrawableProperties:mutableDictionary];
+  [mutableDictionary release];
 }
+@end
 
+@interface RetainedGLKView : GLKView
+@end
+
+@implementation RetainedGLKView
++ (Class)layerClass
+{
+  return [RetainedEAGLLayer class];
+}
 @end
 
 
@@ -117,10 +138,11 @@ const nglChar* gpWindowErrorTable[] =
   }
 
   EAGLContext * context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-  mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds] context:context];
+  mpGLKView = [[RetainedGLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds] context:context];
+//  mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds] context:context];
   mpGLKView.delegate = self;
   mpGLKView.multipleTouchEnabled = YES;
-  mpGLKView.enableSetNeedsDisplay = YES;
+  mpGLKView.enableSetNeedsDisplay = NO;
 
   NGLViewController* ctrl = [[NGLViewController alloc] initWithNGLWindow:mpNGLWindow];
   ctrl.view = mpGLKView;
@@ -495,7 +517,7 @@ const nglChar* gpWindowErrorTable[] =
 
 - (void) MakeCurrent
 {
-  //[mpGLKView bindDrawable];
+  BOOL res = [EAGLContext setCurrentContext:(EAGLContext*) mpGLKView.context];
 }
 
 - (void) BeginSession

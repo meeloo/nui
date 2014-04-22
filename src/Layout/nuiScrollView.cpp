@@ -15,6 +15,8 @@
 #define INERTIA_BRAKES 0.9
 #define EXTRA_OUT_SIZE_RATIO 0.5
 
+#define _DEBUG_LAYOUT 1
+
 
 nuiScrollView::nuiScrollView(bool Horizontal, bool Vertical)
   : nuiSimpleContainer(),
@@ -220,7 +222,13 @@ nuiRect nuiScrollView::CalcIdealSize()
     if (pItem != mpHorizontal && pItem != mpVertical)
     {
       pItem->SetLayoutConstraint(mConstraint);
-      rect.Union(rect, pItem->GetIdealRect()); 
+      rect.Union(rect, pItem->GetIdealRect());
+#ifdef _DEBUG_LAYOUT
+      if (GetDebug())
+      {
+        NGL_OUT(_T("\tnuiScrollView::CalcIdealSize: [%s %s] size %s\n"), pItem->GetObjectClass().GetChars(), pItem->GetObjectName().GetChars(), mIdealRect.GetValue().GetChars());
+      }
+#endif
     }
     else if (pItem)
     {
