@@ -18,6 +18,11 @@ mpLeft(nullptr), mpMain(nullptr), mpRight(nullptr), mOffset(0), mTouched(false),
                  (nglString(_T("Interactive")), nuiUnitBoolean,
                   nuiMakeDelegate(this, &nuiDrawerView::GetInteractive),
                   nuiMakeDelegate(this, &nuiDrawerView::SetInteractive)));
+
+    AddAttribute(new nuiAttribute<float>
+                 (nglString(_T("AnimRatio")), nuiUnitBoolean,
+                  nuiMakeDelegate(this, &nuiDrawerView::GetAnimRatio),
+                  nuiMakeDelegate(this, &nuiDrawerView::SetAnimRatio)));
   }
 
   nuiAnimation::AcquireTimer();
@@ -448,7 +453,7 @@ bool nuiDrawerView::MouseCanceled(const nglMouseInfo& rInfo)
 void nuiDrawerView::OnAnimateDrawer(const nuiEvent &rEvent)
 {
   float diff = mTargetOffset - mOffset;
-  mOffset += diff / 8;
+  mOffset += diff * mAnimRatio;
 
   //NGL_OUT(".");
   diff = mTargetOffset - mOffset;

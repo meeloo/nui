@@ -33,6 +33,7 @@ public:
   bool PreMouseMoved(const nglMouseInfo& rInfo);
 
   NUI_GETSET(bool, Interactive);
+  NUI_GETSET(float, AnimRatio);
 
   void OpenLeft();
   void OpenRight();
@@ -52,6 +53,7 @@ protected:
   float mOriginalOffset;
   float mTargetOffset;
   bool mInteractive;
+  float mAnimRatio = 1.0 / 8.0;
 
   nglMouseInfo mTouch;
   nuiEventSink<nuiDrawerView> mEventSink;
