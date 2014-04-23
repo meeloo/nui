@@ -32,7 +32,16 @@ public:
   bool PreMouseUnclicked(const nglMouseInfo& rInfo);
   bool PreMouseMoved(const nglMouseInfo& rInfo);
 
+  NUI_GETSET(bool, Interactive);
 
+  void OpenLeft();
+  void OpenRight();
+  void Close();
+  void ToggleLeft();
+  void ToggleRight();
+  bool IsOpen() const;
+  bool IsLeftOpen() const;
+  bool IsRightOpen() const;
 protected:
   nuiWidgetPtr mpLeft;
   nuiWidgetPtr mpMain;
@@ -42,6 +51,8 @@ protected:
   bool mMoving;
   float mOriginalOffset;
   float mTargetOffset;
+  bool mInteractive;
+
   nglMouseInfo mTouch;
   nuiEventSink<nuiDrawerView> mEventSink;
   void OnAnimateDrawer(const nuiEvent& rEvent);

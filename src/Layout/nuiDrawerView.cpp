@@ -9,11 +9,15 @@ static const float MOVE_TOLERANCE = 8;
 
 
 nuiDrawerView::nuiDrawerView() :
-mpLeft(nullptr), mpMain(nullptr), mpRight(nullptr), mOffset(0), mTouched(false), mMoving(false), mOriginalOffset(0), mTargetOffset(0), mEventSink(this)
+mpLeft(nullptr), mpMain(nullptr), mpRight(nullptr), mOffset(0), mTouched(false), mMoving(false), mOriginalOffset(0), mTargetOffset(0), mEventSink(this), mInteractive(true)
 {
   if (SetObjectClass("nuiDrawerView"))
   {
     // Init attributes:
+    AddAttribute(new nuiAttribute<bool>
+                 (nglString(_T("Interactive")), nuiUnitBoolean,
+                  nuiMakeDelegate(this, &nuiDrawerView::GetInteractive),
+                  nuiMakeDelegate(this, &nuiDrawerView::SetInteractive)));
   }
 
   nuiAnimation::AcquireTimer();
@@ -23,6 +27,91 @@ nuiDrawerView::~nuiDrawerView()
 {
   nuiAnimation::ReleaseTimer();
 }
+
+void nuiDrawerView::OpenLeft()
+{
+  if (!mpLeft)
+    return;
+
+  mMoving = false;
+  mTouched = false;
+
+  float width = mpLeft->GetIdealRect().GetWidth();
+  mTargetOffset = width;
+
+  if (mOffset != mTargetOffset)
+  {
+    mEventSink.Connect(nuiAnimation::GetTimer()->Tick, &nuiDrawerView::OnAnimateDrawer);
+  }
+
+  UpdateLayout();
+}
+
+void nuiDrawerView::OpenRight()
+{
+  if (!mpRight)
+    return;
+
+  mMoving = false;
+  mTouched = false;
+
+  float width = mpRight->GetIdealRect().GetWidth();
+    mTargetOffset = -width;
+
+  if (mOffset != mTargetOffset)
+  {
+    mEventSink.Connect(nuiAnimation::GetTimer()->Tick, &nuiDrawerView::OnAnimateDrawer);
+  }
+
+  UpdateLayout();
+}
+
+void nuiDrawerView::Close()
+{
+  mMoving = false;
+  mTouched = false;
+
+  mTargetOffset = 0;
+
+  if (mOffset != mTargetOffset)
+  {
+    mEventSink.Connect(nuiAnimation::GetTimer()->Tick, &nuiDrawerView::OnAnimateDrawer);
+  }
+
+  UpdateLayout();
+}
+
+bool nuiDrawerView::IsOpen() const
+{
+  return mTargetOffset != 0;
+}
+
+bool nuiDrawerView::IsLeftOpen() const
+{
+  return mTargetOffset > 0;
+}
+
+bool nuiDrawerView::IsRightOpen() const
+{
+  return mTargetOffset < 0;
+}
+
+void nuiDrawerView::ToggleLeft()
+{
+  if (!IsLeftOpen())
+    OpenLeft();
+  else
+    Close();
+}
+
+void nuiDrawerView::ToggleRight()
+{
+  if (!IsRightOpen())
+    OpenRight();
+  else
+    Close();
+}
+
 
 bool nuiDrawerView::SetRect(const nuiRect& rRect)
 {
@@ -137,6 +226,9 @@ nuiWidgetPtr nuiDrawerView::GetRight()
 
 bool nuiDrawerView::PreMouseClicked(const nglMouseInfo& rInfo)
 {
+  if (!mInteractive)
+    return false;
+
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mTouch = rInfo;
@@ -149,6 +241,9 @@ bool nuiDrawerView::PreMouseClicked(const nglMouseInfo& rInfo)
 
 bool nuiDrawerView::PreMouseUnclicked(const nglMouseInfo& rInfo)
 {
+  if (!mInteractive)
+    return false;
+
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     if (mTouched && !mMoving && mOffset != 0)
@@ -174,6 +269,9 @@ bool nuiDrawerView::PreMouseUnclicked(const nglMouseInfo& rInfo)
 
 bool nuiDrawerView::PreMouseMoved(const nglMouseInfo& rInfo)
 {
+  if (!mInteractive)
+    return false;
+
   if (mTouched && !mMoving)
   {
     float x = 0;
