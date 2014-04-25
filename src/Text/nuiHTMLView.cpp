@@ -285,22 +285,25 @@ bool nuiHTMLView::Draw(nuiDrawContext* pContext)
   if (mDebugBoxes)
   {
     std::vector<nuiHTMLItem*> items;
-    mpRootBox->GetItemsAt(items, mMouseX, mMouseY);
-    if (!items.empty())
+    if (mpRootBox)
     {
-      float alpha = 0.5f;
-      for (uint32 i = 0; i < items.size(); i++)
+      mpRootBox->GetItemsAt(items, mMouseX, mMouseY);
+      if (!items.empty())
       {
-        int32 ii = items.size() - 1 - i;
-        nuiHTMLItem* pItem = items[ii];
-        
-        pContext->SetFillColor(nuiColor(0.0, 0.0, 1.0, alpha * .5f));
-        pContext->SetStrokeColor(nuiColor(0.0, 0.0, 1.0, alpha));
+        float alpha = 0.5f;
+        for (uint32 i = 0; i < items.size(); i++)
+        {
+          int32 ii = items.size() - 1 - i;
+          nuiHTMLItem* pItem = items[ii];
+          
+          pContext->SetFillColor(nuiColor(0.0, 0.0, 1.0, alpha * .5f));
+          pContext->SetStrokeColor(nuiColor(0.0, 0.0, 1.0, alpha));
 
-        nuiRect r(pItem->GetGlobalRect());
-        pContext->DrawRect(r, eStrokeAndFillShape);
-        
-        alpha *= 0.5f;
+          nuiRect r(pItem->GetGlobalRect());
+          pContext->DrawRect(r, eStrokeAndFillShape);
+          
+          alpha *= 0.5f;
+        }
       }
     }
   }

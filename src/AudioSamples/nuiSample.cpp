@@ -46,7 +46,7 @@ nuiSample::nuiSample(nuiSampleReader& rReader)
       mSamples[c][s] = TempBuffer[Channels * s + c];
     }
   }
-  delete TempBuffer;
+  delete[] TempBuffer;
 }
 
 
@@ -97,7 +97,7 @@ bool nuiSample::Save(nuiSampleWriter& rWriter, int32 BitsPerSample)
   if (false == rWriter.Finalize())
     return false;
   //
-  delete TempBuffer;
+  delete[] TempBuffer;
   //
   return true;
 }

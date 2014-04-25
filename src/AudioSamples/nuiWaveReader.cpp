@@ -61,7 +61,7 @@ bool nuiWaveReader::ReadInfo()
   if (!res)
     return false;
   std::vector<char> fileFormat(4);
-  char* waveFormat = "WAVE";
+  const char* waveFormat = "WAVE";
   for (int32 i = 0; i < 4; i++)
   {
     if( 1 != mrStream.ReadUInt8((uint8*)&(fileFormat[i]), 1))

@@ -15,6 +15,8 @@
 #define STUPIDBASE
 #endif
 
+//#define DRAW_TO_SURFACE
+
 using namespace std;
 
 #define NUI_MULTISAMPLES 0
@@ -232,6 +234,31 @@ void nuiMainWindow::Paint()
   mpNGLWindow->BeginSession();
 
   pContext->StartRendering();
+
+#ifdef DRAW_TO_SURFACE
+  if (mpSurface)
+  {
+    if (mpSurface->GetWidth() != GetWidth() || mpSurface->GetHeight() != GetHeight() )
+    {
+      mpSurface->Release();
+      mpSurface = nullptr;
+    }
+  }
+
+  if (!mpSurface)
+  {
+    nglString name;
+    static int count = 0;
+    name.CFormat("nuiMainWindow %p %d", this, count++);
+    mpSurface = nuiSurface::CreateSurface(name, GetWidth(), GetHeight());
+    name.CFormat("nuiMainWindow_Texture %p %d", this, count++);
+    mpSurface->GetTexture()->SetSource(name);
+    mpSurface->Acquire();
+  }
+
+  pContext->SetSurface(mpSurface);
+#endif
+
   pContext->Set2DProjectionMatrix(GetRect().Size());
   bool DrawFullFrame = !mInvalidatePosted || (mFullFrameRedraw > 0);
   bool RestorePartial = IsPartialRedrawEnabled();
@@ -278,7 +305,23 @@ void nuiMainWindow::Paint()
 //  {
 //    
 //  }
-  
+
+#ifdef DRAW_TO_SURFACE
+
+  pContext->SetSurface(nullptr);
+
+  pContext->StartRendering();
+  pContext->Set2DProjectionMatrix(GetRect().Size());
+  nuiTexture* pTex = mpSurface->GetTexture();
+  pContext->SetTexture(pTex);
+  pContext->EnableTexturing(true);
+  pContext->SetFillColor(nuiColor(255, 255, 255));
+  pContext->ResetClipRect();
+  pContext->EnableClipping(false);
+  nuiRect r((int)pTex->GetWidth(), (int)pTex->GetHeight());
+  pContext->DrawImage(r,  r);
+#endif
+
   pContext->StopRendering();
 
 #ifndef __NUI_NO_SOFTWARE__
@@ -310,8 +353,7 @@ void nuiMainWindow::Paint()
   //printf("Frame stats | RenderOps: %d | Vertices %d | Batches %d\n", rops, verts, batches);
   
   //Invalidate();
-  
-  
+
   if (mDebugSlowRedraw)
   {
     nglThread::Sleep(1);

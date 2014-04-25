@@ -784,7 +784,7 @@ css_error node_classes(void *pw, void *n, lwc_string ***classes, uint32_t *n_cla
   cls.Tokenize(tokens);
   uint32 count = tokens.size();
   
-  *classes = (lwc_string**)realloc(NULL, sizeof(lwc_string **) * count);
+  *classes = (lwc_string**)realloc(NULL, sizeof(lwc_string *) * count);
   if (*classes == NULL)
     return CSS_NOMEM;
   
@@ -1420,9 +1420,16 @@ css_error node_presentational_hint(void *pw, void *node, uint32_t property, css_
         return error;
       
       if (is_visited)
+      {
         pCol = n->GetAttribute(nuiHTMLAttrib::eAttrib_VLINK);
+      }
       else
-        pCol = n->GetAttribute(nuiHTMLAttrib::eAttrib_LINK);
+      {
+        if (n)
+        {
+          pCol = n->GetAttribute(nuiHTMLAttrib::eAttrib_LINK);
+        }
+      }
     }
     else if (n->GetName().Compare(_T("body"), false) == 0)
     {

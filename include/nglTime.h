@@ -31,14 +31,14 @@ in calendar units.
 class nglTimeInfo
 {
 public:
-  int Seconds;  ///< 0..59
-  int Minutes;  ///< 0..59
-  int Hours;    ///< 0..23
-  int Day;      ///< 1..31
-  int Month;    ///< 1..12 (unlike system's gmtime, 0..11)
-  int Year;     ///< number of years since 1900
-  int WeekDay;  ///< 0..6 (0 is Sunday)
-  int DST;      ///< Un drapeau indiquant si le décalage d'heure hiver/éte est en cours au moment de l'appel. La valeur retournée est positive si le décalage est en fonction, nulle s'il ne l'est pas, et négative si l'information n'est pas disponible.
+  int Seconds = 0;  ///< 0..59
+  int Minutes = 0;  ///< 0..59
+  int Hours = 0;    ///< 0..23
+  int Day = 0;      ///< 1..31
+  int Month = 0;    ///< 1..12 (unlike system's gmtime, 0..11)
+  int Year = 0;     ///< number of years since 1900
+  int WeekDay = 0;  ///< 0..6 (0 is Sunday)
+  int DST = 0;      ///< Un drapeau indiquant si le décalage d'heure hiver/éte est en cours au moment de l'appel. La valeur retournée est positive si le décalage est en fonction, nulle s'il ne l'est pas, et négative si l'information n'est pas disponible.
 
 private:
   void CopyToSys   (struct tm* pTM) const;

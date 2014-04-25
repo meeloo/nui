@@ -786,21 +786,25 @@ nuiAttributeEditor* nuiAttribute<float>::GetDefaultEditor(void* pTarget)
 	{
 	case nuiUnitPercent:
 		return new nuiPercentAttributeEditor(nuiAttrib<float>(pTarget, this));
-	case nuiUnitNone : break;
+    case nuiUnitNone : break;
     case nuiUnitSeconds : break;
-	case nuiUnitPixels : break;
+    case nuiUnitPixels : break;
     case nuiUnitBytes : break;
     case nuiUnitOnOff : break;
-	case nuiUnitYesNo : break;
-	case nuiUnitBoolean : break;
-	case nuiUnitName : break;
-	case nuiUnitHumanName : break;
-	case nuiUnitPosition : break;
-	case nuiUnitSize : break;
-	case nuiUnitExpand : break;
-	case nuiUnitOrientation : break;
-	case nuiUnitColor : break;
-	case nuiUnitCustom : break;
+    case nuiUnitYesNo : break;
+    case nuiUnitBoolean : break;
+    case nuiUnitName : break;
+    case nuiUnitHumanName : break;
+    case nuiUnitPosition : break;
+    case nuiUnitSize : break;
+    case nuiUnitExpand : break;
+    case nuiUnitOrientation : break;
+    case nuiUnitColor : break;
+    case nuiUnitCustom : break;
+
+    case nuiUnitMatrix: NGL_ASSERT(0); break;
+    case nuiUnitVector: NGL_ASSERT(0); break;
+    case nuiUnitRangeKnob: NGL_ASSERT(0); break;
 	}
 
 	// if this code is executed, it means a case processing is missing
@@ -864,6 +868,10 @@ nuiAttributeEditor* nuiAttribute<double>::GetDefaultEditor(void* pTarget)
     case nuiUnitOrientation : break;
     case nuiUnitColor : break;
     case nuiUnitCustom : break;
+
+    default:
+      NGL_ASSERT(0);
+      break;
   }
 
   // if this code is executed, it means a case processing is missing

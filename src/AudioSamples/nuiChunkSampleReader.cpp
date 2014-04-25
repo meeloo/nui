@@ -38,7 +38,7 @@ nuiChunkSampleReader::~nuiChunkSampleReader()
 }
 
 
-bool nuiChunkSampleReader::GoToChunk(char* pId)
+bool nuiChunkSampleReader::GoToChunk(const char* pId)
 {
   bool found = false;
   int32 index = 0;
@@ -59,7 +59,7 @@ bool nuiChunkSampleReader::GoToChunk(char* pId)
   return found;
 }
 
-nuiChunkSampleReader::Chunk* nuiChunkSampleReader::GetChunk(char* Id)
+nuiChunkSampleReader::Chunk* nuiChunkSampleReader::GetChunk(const char* Id)
 {
   bool found = false;
   int32 index = 0;

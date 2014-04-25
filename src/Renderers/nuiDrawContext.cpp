@@ -18,6 +18,7 @@ nuiDrawContext::nuiDrawContext(const nuiRect& rRect)
 {
   mWidth = rRect.GetWidth();
   mHeight = rRect.GetHeight();
+  mDebug = false;
 
   mClipOffsetX = mClipOffsetY = 0;
 
@@ -1048,6 +1049,8 @@ void nuiDrawContext::DrawPoint(const nuiVector2& rPoint)
 
 void nuiDrawContext::DrawArray(nuiRenderArray* pArray)
 {
+  pArray->SetDebug(mDebug);
+
   uint32 size = pArray->GetSize();
   if (!size)
   {

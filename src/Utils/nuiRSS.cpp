@@ -389,7 +389,7 @@ bool nuiRSS::UpdateFromXML(nuiXMLNode* pXML)
         }
         ENDELEM;
         
-        printf("%d item found", mItems.size());
+        printf("%lu item found", mItems.size());
         
         return true;
       }
@@ -430,7 +430,7 @@ bool nuiRSS::UpdateFromXML(nuiXMLNode* pXML)
       }
       ENDELEM;
       
-      printf("%d item found", mItems.size());
+      printf("%lu item found", mItems.size());
       
       return true;
     }

@@ -161,6 +161,8 @@ void nuiHTMLItem::Layout(nuiHTMLContext& rContext)
       }
     }
     break;
+  default:
+    break;
   }
 }
 

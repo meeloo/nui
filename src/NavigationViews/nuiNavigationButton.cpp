@@ -26,6 +26,8 @@ nuiNavigationButton::nuiNavigationButton(nuiBarButtonSystemItem systemItem)
     case eBarButtonSystemItemReply: text = _T("Reply"); break;
     case eBarButtonSystemItemUndo: text = _T("Undo"); break;
     case eBarButtonSystemItemRedo: text = _T("Redo"); break;
+    default:
+      break;
   }
   
   if (!text.IsEmpty())

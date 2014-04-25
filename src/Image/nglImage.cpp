@@ -517,7 +517,7 @@ void ScaleRectAvg(uint8* pTarget, int32 TgtWidth, int32 TgtHeight,
     pTarget += TgtWidth * bpp;
   }
   
-  delete pScanLine;
+  delete[] pScanLine;
   delete pScanLineAhead;
 }
 
@@ -1378,6 +1378,9 @@ void nglImage::GetPixel(uint32 X, uint32 Y, nglImage::Color& rColor) const
         rColor.mRed   = rColor.mGreen = rColor.mBlue = 1.0f;
         rColor.mAlpha = bytes[index] / 255.0f;
         break;
+      default:
+        NGL_ASSERT(0);
+        break;
       }
     }
     break;
@@ -1401,6 +1404,9 @@ void nglImage::GetPixel(uint32 X, uint32 Y, nglImage::Color& rColor) const
       case eImagePixelLumA:
         rColor.mRed   = rColor.mGreen = rColor.mBlue = bytes[index];
         rColor.mAlpha = bytes[index + 1];
+        break;
+        default:
+        NGL_ASSERT(0);
         break;
       }
     }
@@ -1446,11 +1452,13 @@ void nglImage::SetPixel(uint32 X, uint32 Y, const nglImage::Color& rColor)
         NGL_ASSERT(0);
         break;
       case eImagePixelLum:
-        bytes[index] = ToBelow((rColor.mRed + rColor.mGreen + rColor.mBlue) * 255.0f);
+        bytes[index] = (uint8)ToBelow((rColor.mRed + rColor.mGreen + rColor.mBlue) * 255.0f);
         break;
       case eImagePixelAlpha:
-        bytes[index] = ToBelow(rColor.mAlpha * 255.0f);
+        bytes[index] = (uint8)ToBelow(rColor.mAlpha * 255.0f);
         break;
+      default:
+        NGL_ASSERT(0);
       }
     }
     break;
@@ -1476,8 +1484,11 @@ void nglImage::SetPixel(uint32 X, uint32 Y, const nglImage::Color& rColor)
         NGL_ASSERT(0);
         break;
       case eImagePixelLumA:
-        bytes[index]      = ToBelow((rColor.mRed + rColor.mGreen + rColor.mBlue) * 255.0f);
-        bytes[index + 1]  = ToBelow(rColor.mAlpha * 255.0f);
+        bytes[index]      = (uint8)ToBelow((rColor.mRed + rColor.mGreen + rColor.mBlue) * 255.0f);
+        bytes[index + 1]  = (uint8)ToBelow(rColor.mAlpha * 255.0f);
+        break;
+      default:
+        NGL_ASSERT(0);
         break;
       }
     }
@@ -1485,18 +1496,18 @@ void nglImage::SetPixel(uint32 X, uint32 Y, const nglImage::Color& rColor)
   case 24:
     {
       // RGB
-      bytes[index]     = ToBelow(rColor.mRed   * 255.0f);
-      bytes[index + 1] = ToBelow(rColor.mGreen * 255.0f);
-      bytes[index + 2] = ToBelow(rColor.mBlue  * 255.0f);
+      bytes[index]     = (uint8)ToBelow(rColor.mRed   * 255.0f);
+      bytes[index + 1] = (uint8)ToBelow(rColor.mGreen * 255.0f);
+      bytes[index + 2] = (uint8)ToBelow(rColor.mBlue  * 255.0f);
     }
     break;
   case 32:
     {
       //RGBA
-      bytes[index]     = ToBelow(rColor.mRed   * 255.0f);
-      bytes[index + 1] = ToBelow(rColor.mGreen * 255.0f);
-      bytes[index + 2] = ToBelow(rColor.mBlue  * 255.0f);
-      bytes[index + 3] = ToBelow(rColor.mAlpha * 255.0f);
+      bytes[index]     = (uint8)ToBelow(rColor.mRed   * 255.0f);
+      bytes[index + 1] = (uint8)ToBelow(rColor.mGreen * 255.0f);
+      bytes[index + 2] = (uint8)ToBelow(rColor.mBlue  * 255.0f);
+      bytes[index + 3] = (uint8)ToBelow(rColor.mAlpha * 255.0f);
     }
     break;
   }

@@ -66,7 +66,7 @@ bool nglCondition::Wait(uint32 time)
 	pthread_mutex_lock( &mutex );
 	
 	int ret;
-	if (time != ULONG_MAX) 
+	if (time != UINT_MAX)
 	{
 		struct timeval tv;
 		gettimeofday(&tv, 0);

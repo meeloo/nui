@@ -286,7 +286,7 @@ int32 nuiAudioDecoder::InternalReadDE(std::vector<void*> buffers, int32 samplefr
     }
   }
   
-  delete pBufList;
+  delete[] pBufList;
   
   mPosition += frames;
   mCurrentPosition += frames;

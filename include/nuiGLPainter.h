@@ -136,6 +136,7 @@ protected:
   };
   
   std::map<nuiRenderArray*, VertexBufferInfo> mVertexBuffers;
+  std::vector<nuiRenderArray*> mFrameArrays;
 
   bool CheckFramebufferStatus();
   virtual void SetViewport();

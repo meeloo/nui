@@ -29,8 +29,8 @@ nuiPoint nuiPathGenerator::GetEndPoint() const
 
 nuiRect nuiPathGenerator::GetRect()
 {
-  float minx, maxx;
-  float miny, maxy;
+  float minx = 0, maxx = 0;
+  float miny = 0, maxy = 0;
   bool first = true;
 
   nuiPath points;

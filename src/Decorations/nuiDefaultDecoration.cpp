@@ -1257,6 +1257,10 @@ void nuiDefaultDecoration::TabView_Contents(nuiTabView* pView, nuiWidget* pConte
       deco = "TabBottomContents";
       frameRect = nuiRect(4,5,2,4);
       break;
+
+    default:
+      NGL_ASSERT(0);
+      break;
   }
   
   nuiFrame* pDeco = (nuiFrame*)nuiDecoration::Get(decoName);

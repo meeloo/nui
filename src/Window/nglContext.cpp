@@ -291,6 +291,9 @@ void nglContext::InitPainter()
       NGL_OUT("nuiSoftwarePainter created");
       break;
 #endif
+    default:
+      NGL_ASSERT(0);
+      break;
   }
 
   NGL_ASSERT(mpPainter != nullptr);

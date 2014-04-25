@@ -13,6 +13,7 @@
 nuiRenderArray::nuiRenderArray(uint32 mode, bool Static, bool _3dmesh, bool _shape)
 {
   Acquire();
+  mDebug = false;
   
   for (uint i = 0; i < 4; i++)
     mEnabled[i] = false;
@@ -49,7 +50,8 @@ nuiRenderArray::nuiRenderArray(const nuiRenderArray& rArray)
 : mVertices(rArray.mVertices)
 {
   Acquire();
-  
+  mDebug = false;
+
   for (uint i = 0; i < 5; i++)
     mEnabled[i] = rArray.mEnabled[i];
   mStatic = rArray.mStatic;

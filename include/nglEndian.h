@@ -80,7 +80,7 @@ enum nglEndian
 #ifdef __NEED_BYTESWAP_CODE
 static inline uint16 bswap_16(uint16 x)
 {
-  return (((x & 0x00ff) <<  8) |
+  return (uint16)(((x & 0x00ff) <<  8) |
           ((x & 0xff00) >>  8));
 }
 

@@ -190,7 +190,8 @@ nglKeyCode CocoaToNGLKeyCode(unichar c, uint16 scanCode)
 -(void)windowWillClose:(NSNotification *)note
 {
   //[[NSApplication sharedApplication] terminate:self];
-  [super close];//mpNGLWindow->CallOnDestruction();
+  [super windowWillClose:note];
+  //mpNGLWindow->CallOnDestruction();
 }
 
 static float gScaleFactor = 0.0f;
@@ -282,7 +283,7 @@ float nuiGetInvScaleFactor()
 - (void)drawRect:(NSRect)frameRect
 {
   [oglContext update];
-  [[self window] doPaint];
+  [(nglNSWindow*)[self window] doPaint];
 }
 
 // this tells the window manager that nothing behind our view is visible
@@ -1134,7 +1135,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
 nglWindow::~nglWindow()
 {
-  [mpNSWindow Unregister];
+  [(id)mpNSWindow Unregister];
   Unregister();
 }
 
@@ -1151,16 +1152,16 @@ void nglWindow::SetState (StateChange State)
 	switch (State)
 	{
 		case eHide:
-      [mpNSWindow hide:nil];
+      [(id)mpNSWindow hide:nil];
 			break;
 		case eShow:
-      [mpNSWindow makeKeyAndOrderFront:nil];
+      [(id)mpNSWindow makeKeyAndOrderFront:nil];
 			break;
 		case eMinimize:
-      [mpNSWindow makeKeyAndOrderFront:nil];
+      [(id)mpNSWindow makeKeyAndOrderFront:nil];
 			break;
 		case eMaximize:
-      [mpNSWindow makeKeyAndOrderFront:nil];
+      [(id)mpNSWindow makeKeyAndOrderFront:nil];
 			break;
 	};
 }
@@ -1208,7 +1209,7 @@ bool nglWindow::SetPosition (int XPos, int YPos)
 
 nglString nglWindow::GetTitle() const
 {
-  NSString* pR = [mpNSWindow title];
+  NSString* pR = [(id)mpNSWindow title];
   nglString r((CFStringRef)pR);
   [pR release];
   return r;
@@ -1216,7 +1217,7 @@ nglString nglWindow::GetTitle() const
 
 void nglWindow::SetTitle (const nglString& rTitle)
 {
-  [mpNSWindow setTitle: (NSString*)rTitle.ToCFString()];
+  [(id)mpNSWindow setTitle: (NSString*)rTitle.ToCFString()];
 }
 
 bool IsThisKeyDown(const short theKey)
@@ -1281,7 +1282,7 @@ void nglWindow::BeginSession()
 #endif
   //  MakeCurrent();
   NGL_ASSERT(mpNSWindow);
-  [mpNSWindow BeginSession];
+  [(id)mpNSWindow BeginSession];
 }
 
 void nglWindow::EndSession()
@@ -1293,14 +1294,14 @@ void nglWindow::EndSession()
 #endif
 	
   NGL_ASSERT(mpNSWindow);
-  [mpNSWindow EndSession];
+  [(id)mpNSWindow EndSession];
 #endif
 }
 
 bool nglWindow::MakeCurrent() const
 {
   NGL_ASSERT(mpNSWindow);
-  [mpNSWindow MakeCurrent];
+  [(id)mpNSWindow MakeCurrent];
 
   return true;
 }
@@ -1365,6 +1366,8 @@ bool nglWindow::SetCursor(nuiMouseCursor Cursor)
       [[NSCursor pointingHandCursor] set]; break;
     case eCursorResizeSE:
       [[NSCursor pointingHandCursor] set]; break;
+    default:
+      break;
   }
   return true;
 }

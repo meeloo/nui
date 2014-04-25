@@ -426,7 +426,7 @@ public:
       }
     }
 
-    NGL_ASSERT(NULL);
+    NGL_ASSERT(0);
     return *pContents;
   }
 
@@ -944,7 +944,7 @@ public:
       }
     }
 
-    NGL_ASSERT(NULL);
+    NGL_ASSERT(0);
     return *pContents;
   }
 

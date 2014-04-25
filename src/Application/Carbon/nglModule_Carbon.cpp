@@ -77,6 +77,7 @@ void* nglModule::GetSymbol(const char* pName)
   {
     pResult = CFBundleGetDataPointerForName(mHandle, functionNameStringRef);
   }
+  CFRelease(functionNameStringRef);
   
   return pResult;
 }

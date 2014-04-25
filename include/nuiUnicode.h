@@ -244,6 +244,7 @@ bool nuiIsUnicodeBlank(nglUChar ch);
 class nuiUCharIterator
 {
 public:
+  virtual ~nuiUCharIterator() {}
   virtual nglUChar GetNextUChar(int32& position) const = 0;
   virtual int32 GetLength() const = 0;
 };

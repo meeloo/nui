@@ -351,7 +351,7 @@ bool nuiSplitter::SetRectHorizontal(const nuiRect& rRect)
   int i;
   it = mpChildren.begin();
   i = 0;
-  nuiSize h;
+  nuiSize h = 0;
   
   // don't process the splitter handle before the first child (we need the size of the first child)
   if (it != end)

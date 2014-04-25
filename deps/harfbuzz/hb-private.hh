@@ -190,7 +190,7 @@ _hb_bit_storage (unsigned int number)
 #if defined(__GNUC__) && (__GNUC__ >= 4) && defined(__OPTIMIZE__)
   return likely (number) ? (sizeof (unsigned int) * 8 - __builtin_clz (number)) : 0;
 #else
-  register unsigned int n_bits = 0;
+  unsigned int n_bits = 0;
   while (number) {
     n_bits++;
     number >>= 1;
@@ -206,7 +206,7 @@ _hb_ctz (unsigned int number)
 #if defined(__GNUC__) && (__GNUC__ >= 4) && defined(__OPTIMIZE__)
   return likely (number) ? __builtin_ctz (number) : 0;
 #else
-  register unsigned int n_bits = 0;
+  unsigned int n_bits = 0;
   if (unlikely (!number)) return 0;
   while (!(number & 1)) {
     n_bits++;

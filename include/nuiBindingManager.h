@@ -162,6 +162,7 @@ private:
 class nuiTypeContainer
 {
 public:
+  virtual ~nuiTypeContainer() {}
   virtual void DumpArgs(std::vector<nglString>& rTypes) const = 0;
 };
 

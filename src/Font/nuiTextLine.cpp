@@ -48,7 +48,7 @@ void nuiTextLine::AddRun(nuiTextRun* pRun)
 
 int32 nuiTextLine::GetRunCount() const
 {
-  return mpRuns.size();
+  return (int32)mpRuns.size();
 }
 
 nuiTextRun* nuiTextLine::GetRun(int32 index) const
@@ -160,16 +160,19 @@ float LayoutDirect(float PenX, float PenY, float globalwidth, float sublinewidth
     {
       nuiTextGlyph& rGlyph(rGlyphs.at(g));
 
-      pFont->PrepareGlyph(PenX + x, PenY + y, rGlyph);
+      if (pFont)
+      {
+        pFont->PrepareGlyph(PenX + x, PenY + y, rGlyph);
 
-      const nuiSize W = rGlyph.AdvanceX;
-      const nuiSize X = rGlyph.mX + rGlyph.BearingX;
-      const nuiSize Y = rGlyph.mY - finfo.Ascender;
-      const nuiSize H = finfo.Height;
+        const nuiSize W = rGlyph.AdvanceX;
+        const nuiSize X = rGlyph.mX + rGlyph.BearingX;
+        const nuiSize Y = rGlyph.mY - finfo.Ascender;
+        const nuiSize H = finfo.Height;
 
-      h = MAX(h, H);
-      nuiRect rr(globalrect);
-      globalrect.Union(rr, nuiRect(PenX + x + X, PenY + y + Y, W, H));
+        h = MAX(h, H);
+        nuiRect rr(globalrect);
+        globalrect.Union(rr, nuiRect(PenX + x + X, PenY + y + Y, W, H));
+      }
     }
 
     x += pRun->GetAdvanceX();
@@ -200,16 +203,19 @@ float LayoutJustify(float PenX, float PenY, float globalwidth, float sublinewidt
     {
       nuiTextGlyph& rGlyph(rGlyphs.at(g));
 
-      pFont->PrepareGlyph(PenX + x, PenY + y, rGlyph);
+      if (pFont)
+      {
+        pFont->PrepareGlyph(PenX + x, PenY + y, rGlyph);
 
-      const nuiSize W = rGlyph.AdvanceX;
-      const nuiSize X = rGlyph.mX + rGlyph.BearingX;
-      const nuiSize Y = rGlyph.mY - finfo.Ascender;
-      const nuiSize H = finfo.Height;
+        const nuiSize W = rGlyph.AdvanceX;
+        const nuiSize X = rGlyph.mX + rGlyph.BearingX;
+        const nuiSize Y = rGlyph.mY - finfo.Ascender;
+        const nuiSize H = finfo.Height;
 
-      h = MAX(h, H);
-      nuiRect rr(globalrect);
-      globalrect.Union(rr, nuiRect(PenX + x + X, PenY + y + Y, W, H));
+        h = MAX(h, H);
+        nuiRect rr(globalrect);
+        globalrect.Union(rr, nuiRect(PenX + x + X, PenY + y + Y, W, H));
+      }
     }
 
     if (pRun->IsDummy())

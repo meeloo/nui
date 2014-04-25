@@ -151,6 +151,7 @@ bool nuiToolTip::Draw(nuiDrawContext* pContext)
   pContext->EnableBlending(false);
 
   DrawChildren(pContext);
+
   return true;
 }
 
@@ -712,7 +713,8 @@ bool nuiTopLevel::ReleaseToolTip(nuiWidgetPtr pWidget)
     }
     mpToolTipSource = NULL;
     //Invalidate();
-    mpToolTipLabel->Invalidate();
+    if (mpToolTipLabel)
+      mpToolTipLabel->Invalidate();
   }
 
   return true;
@@ -942,11 +944,13 @@ nuiWidgetPtr GetNextFocussableWidget(nuiWidgetPtr pWidget)
     if (dynamic_cast<nuiModalContainer*>(pNextWidget))
       return DeepSearchNextFocussableWidget(pNextWidget, true);
   }
-  
-  nuiTopLevel* pTop = pWidget->GetTopLevel();
-  if (pTop != pWidget)
-    return GetNextFocussableWidget(pTop);
-  
+
+  if (pWidget)
+  {
+    nuiTopLevel* pTop = pWidget->GetTopLevel();
+    if (pTop != pWidget)
+      return GetNextFocussableWidget(pTop);
+  }
   return NULL;
 }
 
@@ -1047,7 +1051,7 @@ bool nuiTopLevel::CallKeyDown (const nglKeyEvent& rEvent)
     {
       // Forward
       pNext = GetTabForward(pFocus);
-      if (!pNext && pFocus->GetParent())
+      if (!pNext && pFocus && pFocus->GetParent())
         pNext = GetNextFocussableWidget(pFocus);
     }
     
@@ -2068,6 +2072,7 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
   #endif
   
   nuiWidget::SetRect(rRect);
+
   nuiRect rectfull(mRect.Size());
   nuiRect rect(rectfull);
   float barsize = GetStatusBarSize();

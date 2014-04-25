@@ -431,6 +431,12 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
     return;
   }
 
+  if (pArray->GetDebug())
+  {
+    NGL_OUT("Texturing %s (%p)\n", YESNO(mFinalState.mTexturing), mFinalState.mpTexture[0]);
+    pArray->Dump();
+  }
+
 #ifdef DEBUG
   nuiGLDebugGuard g("nuiGL2Painter::DrawArray");
 #endif
@@ -536,6 +542,10 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
   NGL_ASSERT(mState.mpShader != NULL);
 
   ApplyState(mState, mForceApply);
+  pArray->Acquire();
+  mFrameArrays.push_back(pArray);
+
+
 
   if (mFinalState.mpTexture && pArray->IsArrayEnabled(nuiRenderArray::eTexCoord))
   {
@@ -700,7 +710,7 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
       {
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_) || (defined _ANDROID_)
-        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
+        glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
 #else
         glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
 #endif
@@ -720,7 +730,7 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
       {
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_) || (defined _ANDROID_)
-        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
+        glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
 #else
         glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
 #endif
@@ -746,7 +756,7 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
       {
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_) || (defined _ANDROID_)
-        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
+        glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
 #else
         glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
 #endif

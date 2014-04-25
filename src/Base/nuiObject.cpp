@@ -642,6 +642,7 @@ bool nuiObject::IsObject(void* pointer)
 
 void nuiObject::CheckValidInternal() const
 {
+#ifdef _NUI_DEBUG_OBJECTS_
   nglCriticalSectionGuard g(gObjectTraceCS);
   std::map<nuiObject*, Trace>::const_iterator it = mObjects.find(const_cast<nuiObject*>(this));
   if (it == mObjects.end())
@@ -655,6 +656,7 @@ void nuiObject::CheckValidInternal() const
   NGL_ASSERT(it != mObjects.end());
   const Trace& rTrace(it->second);
   NGL_ASSERT(rTrace.mAlive);
+#endif
 }
 
 int32 nuiObject::GetClassCount()

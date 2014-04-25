@@ -43,6 +43,8 @@ void nuiHTMLHeader::Layout(nuiHTMLContext& rContext)
   case nuiHTML::eTag_H6:
     s = 12;
     break;
+    default:
+      break;
   }
   
   rContext.mFont.ClearMustHaveSize();

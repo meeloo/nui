@@ -207,13 +207,15 @@ public:
   void AddImageRect(nuiTexture* pTexture, const nuiRect& rDest, const nuiRect& rSource, const nuiColor& rColor = nuiColor(255, 255, 255));
   void AddRect(const nuiRect& rDest, const nuiColor& rColor = nuiColor(255, 255, 255));
 
-
+  void SetDebug(bool set) { mDebug = set; }
+  bool GetDebug() const { return mDebug; }
 private:
   GLenum mMode;
   bool mEnabled[4];
   bool mStatic : 1;
   bool m3DMesh : 1;
   bool mShape : 1;
+  bool mDebug : 1;
   mutable void* mpCacheHandle;
   mutable nuiCacheManager* mpCacheManager;
 

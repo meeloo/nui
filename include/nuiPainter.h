@@ -136,6 +136,7 @@ public:
 
 protected:
   nuiSurface* mpSurface;
+  std::stack<nuiSurface*> mpSurfaceStack;
 
   nuiRenderState mState;
   std::stack<nuiClipper> mpClippingStack;

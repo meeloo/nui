@@ -491,10 +491,10 @@ nglString nuiAudioDevice_CoreAudio::GetChannelName(bool IsInput, int32 index) co
     if ( !error )
     {
       nglString tmp(pName);
-      delete pName;
+      delete[] pName;
       return tmp;
     }
-    delete pName;
+    delete[] pName;
   }
   
   nglString str;

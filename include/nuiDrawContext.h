@@ -214,12 +214,15 @@ public:
 
   void SetSurface(nuiSurface* pSurface);
   nuiSurface* GetSurface() const;
+
+  NUI_GETSET(bool, Debug);
 protected:
   // Render state stack:
   std::stack<nuiRenderState*> mpRenderStateStack;
   nuiRenderState mCurrentState;
   
   nuiSize mWidth,mHeight;
+  bool mDebug : 1;
 
 #ifndef CALLBACK 
   #define CALLBACK 

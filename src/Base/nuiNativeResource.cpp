@@ -73,6 +73,7 @@ nglPath nuiGetNativeResourcePath()
     bundle = CFBundleGetMainBundle();
 
   CFURLRef resURLref = CFBundleCopyResourcesDirectoryURL(bundle);
+  CFRelease(bundle);
   char buffer[2048];
   Boolean res = CFURLGetFileSystemRepresentation(resURLref, true, (UInt8*)buffer, 2048);
   CFRelease(resURLref);

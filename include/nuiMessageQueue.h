@@ -47,7 +47,8 @@ public :
   Message* Get(uint32 time)
   {
     // wait for an incoming message
-    mSyncEvent.Wait(time);
+    if (time > 0)
+      mSyncEvent.Wait(time);
 
     mQueueCS.Lock();
     if (mQueue.empty())

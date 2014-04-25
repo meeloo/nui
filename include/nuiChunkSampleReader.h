@@ -37,9 +37,9 @@ public:
   virtual int32 ReadDE(std::vector<void*> buffers, int32 sampleframes, nuiSampleBitFormat format = eSampleFloat32);
   
 protected:
-  bool GoToChunk(char* pId);
+  bool GoToChunk(const char* pId);
   bool ScanAllChunks();
-  Chunk* GetChunk(char* Id);
+  Chunk* GetChunk(const char* Id);
   void ClearChunks();
   
   std::vector<Chunk*> mChunks;

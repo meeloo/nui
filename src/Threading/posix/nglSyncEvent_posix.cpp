@@ -67,7 +67,7 @@ bool nglSyncEvent::Wait(uint32 time)
     
     int ret;
     
-    if (time != ULONG_MAX)
+    if (time != UINT_MAX)
     {
       struct timeval tv;
       gettimeofday(&tv, 0);

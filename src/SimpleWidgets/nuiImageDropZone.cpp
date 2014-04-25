@@ -88,7 +88,7 @@ void nuiImageDropZone::OnDropped(nglDragAndDrop* pDragObject, nuiSize X, nuiSize
   nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType(_T("ngl/Files"));
   const std::list<nglString>&rFiles(pFiles->GetFiles());
 
-  printf("dropped files: %d\n", rFiles.size());
+  printf("dropped files: %lu\n", rFiles.size());
   
   nglPath imgpath = rFiles.front();
 

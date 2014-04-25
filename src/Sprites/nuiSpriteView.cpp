@@ -29,7 +29,8 @@ bool nuiSpriteFrame::SetTexture(nuiTexture* pTexture, const nuiRect& rRect)
   if (pTexture)
     pTexture->CheckValid();
   mpTexture = pTexture;
-  mpTexture->Acquire();
+  if (mpTexture)
+    mpTexture->Acquire();
   mRect = rRect;
   return true;
 }

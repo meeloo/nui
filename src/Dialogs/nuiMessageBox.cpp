@@ -104,6 +104,10 @@ void nuiMessageBox::Init(const nglString& rTitle, nuiWidget* pContents, nuiMessa
       
     case eMB_Custom:
       break;
+
+    case eMB_None:
+      NGL_ASSERT(0);
+      break;
   }
   
   

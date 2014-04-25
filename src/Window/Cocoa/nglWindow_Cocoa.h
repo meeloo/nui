@@ -25,10 +25,7 @@
   class nglDragAndDrop* mpDropObject;
 }
 
-+ (Class) layerClass;
-- (id) initWithFrame: (NSRect) rect andNGLWindow: (nglWindow*) pNGLWindow;
-- (id) initWithWindow: (nglNSWindow*)pNSWindow;
-- (void) setContext: (void*) pContext renderBuffer: (GLint) buffer;
+- (id) initWithFrame: (NSRect) rect andNGLWindow: (nglWindow*) pNGLWindow andSharedContext:(NSOpenGLContext*)sharedContext;
 - (void) dealloc;
 - (void) invalidate;
 - (nglWindow *) getNGLWindow;
@@ -42,6 +39,8 @@
 - (void)draggingExited: (id <NSDraggingInfo>)sender;
 - (BOOL)prepareForDragOperation: (id <NSDraggingInfo>)sender;
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender;
+
+- (void)resize: (NSSize) size;
 
 @end///< nglNSWindow
 

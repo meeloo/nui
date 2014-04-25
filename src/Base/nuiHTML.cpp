@@ -483,7 +483,7 @@ const nglString& nuiHTML::GetSourceURL() const
 void nuiHTML::SetSourceURL(const nglString& rURL)
 {
   mSourceURL = rURL;
-  printf("New source URL (0x%x): %s\n", this, mSourceURL.GetChars());
+  printf("New source URL (0x%p): %s\n", this, mSourceURL.GetChars());
 }
 
 // Stolen from nglPath!

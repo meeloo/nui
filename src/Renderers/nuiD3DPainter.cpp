@@ -1746,6 +1746,24 @@ uint32 nuiD3DPainter::GetRectangleTextureSupport() const
 void nuiD3DPainter::SetSurface(nuiSurface* pSurface)
 {
   NGL_OUT(_T("SetSurface(0x%x)\n"), pSurface);
+//  if (pSurface)
+//  {
+//    if (mpSurface)
+//    {
+//      mpSurface->Acquire();
+//      mpSurfaceStack.push(mpSurface);
+//    }
+//  }
+//  else
+//  {
+//    if (!mpSurfaceStack.empty())
+//    {
+//      pSurface = mpSurfaceStack.top();
+//      pSurface->Release();
+//      mpSurfaceStack.pop();
+//    }
+//  }
+
 
   LPDIRECT3DDEVICE9 pDev = mpContext->GetDirect3DDevice();
   if (pSurface)

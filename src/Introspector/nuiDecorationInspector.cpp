@@ -109,6 +109,10 @@ void nuiDecorationInspector::OnDecoSelection(const nuiEvent& rEvent)
   {
     nglString name = pW->GetProperty(_T("Deco"));
     pDeco = nuiDecoration::Get(name);
+    if (!pDeco)
+    {
+      return;
+    }
     info = nglString::Empty;
     info.Add(name).AddNewLine().Add(pDeco->GetObjectClass());
   }

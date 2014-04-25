@@ -977,7 +977,7 @@ nglChar* CRegCompilerBase::regatom(int * flagp)
     // flags |= SIMPLE at the end.
     {
       nglChar *regprev;
-      register nglChar ch;
+      nglChar ch;
 
       regparse--;     /* Look at cur char */
       ret = regnode(EXACTLY);

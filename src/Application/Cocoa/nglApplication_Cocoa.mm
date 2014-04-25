@@ -79,7 +79,8 @@ static NSString* GetApplicationName(void)
 	submenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Edit", @"The Edit menu")];
 	[self populateEditMenu:submenu];
 	[mainMenu setSubmenu:submenu forItem:menuItem];
-	
+  [submenu release];
+
 	/* TODO
    menuItem = [mainMenu addItemWithTitle:@"View" action:NULL keyEquivalent:@""];
    submenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"View", @"The View menu")];
@@ -92,12 +93,14 @@ static NSString* GetApplicationName(void)
 	[self populateWindowMenu:submenu];
 	[mainMenu setSubmenu:submenu forItem:menuItem];
 	[NSApp setWindowsMenu:submenu];
-	
+  [submenu release];
+
 	menuItem = [mainMenu addItemWithTitle:@"Help" action:NULL keyEquivalent:@""];
 	submenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Help", @"The Help menu")];
 	[self populateHelpMenu:submenu];
 	[mainMenu setSubmenu:submenu forItem:menuItem];
-	
+  [submenu release];
+
 	/* TODO
    menuItem = [mainMenu addItemWithTitle:@"Debug" action:NULL keyEquivalent:@""];
    submenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Debug", @"The Debug menu")];
@@ -106,6 +109,7 @@ static NSString* GetApplicationName(void)
    */
 	
 	[NSApp setMainMenu:mainMenu];
+  [mainMenu release];
 }
 
 +(void) populateApplicationMenu:(NSMenu *)aMenu
@@ -399,7 +403,13 @@ static NSString* GetApplicationName(void)
   objCCallOnInit(pNSApplication);
 }
 
-- (BOOL)application:(NSApplication *)pNSApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+- (void)applicationDidReceiveMemoryWarning:  (NSApplication*) pUIApp
+{
+
+}
+
+
+- (BOOL)application:(NSApplication *)pNSApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	NGL_ASSERT(App);
 	//NSURL *launchURL = [launchOptions objectForKey:NSApplicationLaunchOptionsURLKey];	
@@ -601,11 +611,10 @@ int nglApplication::Main(int argc, const char** argv)
 
   //GetLog().SetLevel(_T("window"), 100);
   
-  nglNSApplication *applicationObject = [nglNSApplication sharedApplication];
+  nglNSApplication *applicationObject = (nglNSApplication *)[nglNSApplication sharedApplication];
 
   nglNSApplicationDelegate* appDelegate = [[nglNSApplicationDelegate alloc] init];
   [applicationObject setDelegate:appDelegate];
-
   [applicationObject run];
   
   [pPool release];

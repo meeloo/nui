@@ -944,6 +944,8 @@ int64 nglFile::Read (void* pData, int64 WordCount, uint WordSize)
 
 int64 nglFile::Write (const void* pData, int64 WordCount, uint WordSize)
 {
+  if (WordSize == 0 || WordCount == 0)
+    return 0;
   int64 done, rest;
 
   if (!IsOpen() || (mMode == eFileRead) || (pData == NULL) || (WordCount == 0)) return 0;

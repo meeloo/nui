@@ -234,6 +234,9 @@ nuiGLPainter::~nuiGLPainter()
   mActiveContexts--;
   if (mActiveContexts == 0)
     glAAExit();
+  for (auto pArray : mFrameArrays)
+    pArray->Release();
+  mFrameArrays.clear();
 }
 
 void nuiGLPainter::SetViewport()
@@ -300,6 +303,10 @@ void nuiGLPainter::SetViewport()
 void nuiGLPainter::StartRendering()
 {
   nuiPainter::StartRendering();
+  for (auto pArray : mFrameArrays)
+    pArray->Release();
+  mFrameArrays.clear();
+
   ResetOpenGLState();
 }
 
@@ -516,7 +523,11 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
       mScissorW = w;
       mScissorH = h;
 
-      //if (!mpSurface)
+      if (mpSurface)
+      {
+        y = mpSurface->GetHeight() - (y + h);
+      }
+
       {
         float scale = mpContext->GetScale();
         x *= scale;
@@ -855,6 +866,9 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   //      return;
   //    }
   //  }
+
+  pArray->Acquire();
+  mFrameArrays.push_back(pArray);
 
   uint32 s = pArray->GetSize();
 
@@ -1673,6 +1687,23 @@ void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
 
 void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 {
+  //NGL_OUT("nuiGLPainter::SetSurface %p\n", pSurface);
+  if (pSurface)
+  {
+    if (mpSurface)
+    {
+      mpSurfaceStack.push(mpSurface);
+    }
+  }
+  else
+  {
+    if (!mpSurfaceStack.empty())
+    {
+      pSurface = mpSurfaceStack.top();
+      mpSurfaceStack.pop();
+    }
+  }
+
   if (mpSurface == pSurface)
     return;
 

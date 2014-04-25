@@ -179,6 +179,10 @@ void nuiImage::ForceReload()
 bool nuiImage::Draw(nuiDrawContext* pContext)
 {
 //  int x=0,y=0;
+  if (GetDebug())
+  {
+    NGL_OUT("nuiImage::Draw\n");
+  }
   if (!mpTexture)
   {
     return false;
@@ -206,8 +210,12 @@ bool nuiImage::Draw(nuiDrawContext* pContext)
   c.Multiply(alpha);
   
   pContext->SetFillColor(c);
+  bool debug = pContext->GetDebug();
+  pContext->SetDebug(GetDebug());
+//  pContext->SetDebug(true);
   pContext->DrawImage(rect, mTextureRect);
-  
+  pContext->SetDebug(debug);
+
   pContext->EnableBlending(false);
   pContext->EnableTexturing(false);
 

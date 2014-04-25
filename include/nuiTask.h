@@ -79,7 +79,7 @@ class nuiTask1 : public nuiTask
 public:
   typedef nuiFastDelegate1<P0, Ret> Delegate;
   nuiTask1(const Delegate& rDelegate, const P0& rP0)
-  : mDelegate(rDelegate), mP0(rP0)
+  : mP0(rP0), mDelegate(rDelegate)
   {    
   }
   
