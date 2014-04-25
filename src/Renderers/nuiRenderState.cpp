@@ -57,6 +57,31 @@ nuiRenderState& nuiRenderState::operator =(const nuiRenderState& rState)
 
 void nuiRenderState::Copy(const nuiRenderState& rState)
 {
+  for (int i = 0; i < NUI_MAX_TEXTURE_UNITS; i++)
+  {
+    if (rState.mpTexture[i])
+      rState.mpTexture[i]->Acquire();
+    if (mpTexture[i])
+      mpTexture[i]->Release();
+  }
+
+  if (rState.mpShader)
+    rState.mpShader->Acquire();
+  if (mpShader)
+    mpShader->Release();
+
+  if (rState.mpShaderState)
+    rState.mpShaderState->Acquire();
+  if (mpShaderState)
+    mpShaderState->Release();
+
+  if (rState.mpFont)
+    rState.mpFont->Acquire();
+  if (mpFont)
+    mpFont->Release();
+
+  memcpy(&mBlending, &rState.mBlending, offsetof(nuiRenderState, mAntialiasing)  - offsetof(nuiRenderState, mBlending) + sizeof(mAntialiasing) );
+#if 0
   mBlending       = rState.mBlending;
   mTexturing      = rState.mTexturing;
   mColorBuffer    = rState.mColorBuffer;
@@ -107,6 +132,7 @@ void nuiRenderState::Copy(const nuiRenderState& rState)
     mpFont->Acquire();
   if (pOldFont)
     pOldFont->Release();
+#endif
 
 }
 

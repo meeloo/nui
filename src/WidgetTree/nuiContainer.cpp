@@ -756,6 +756,9 @@ void nuiContainer::SetSelected(bool set)
 void nuiContainer::SetVisible(bool Visible)
 {
   CheckValid();
+  if (IsVisible(false) == Visible)
+    return;
+
   nuiWidget::SetVisible(Visible);
   if (mVisible)
     BroadcastVisible();

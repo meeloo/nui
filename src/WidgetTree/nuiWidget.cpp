@@ -2444,7 +2444,10 @@ void nuiWidget::SetVisible(bool Visible)
 {
   CheckValid();
   //NGL_OUT(_T("(%p) nuiWidget::SetVisible(%s) '%s' / '%s'\n"), this, TRUEFALSE(Visible), GetObjectClass().GetChars(), GetObjectName().GetChars());
-  
+
+  if (IsVisible(false) == Visible)
+    return;
+
   nuiAnimation* pHideAnim = GetAnimation(_T("HIDE"));
   nuiAnimation* pShowAnim = GetAnimation(_T("SHOW"));
   
