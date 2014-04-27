@@ -9,13 +9,8 @@
 
 #include "nui.h"
 
-//#define STUPID
-//#define STUPIDBASE
-#ifdef STUPID
-#define STUPIDBASE
-#endif
-
-//#define DRAW_TO_SURFACE
+#define DRAW_TO_SURFACE
+const bool DrawDirtyRects = true;
 
 using namespace std;
 
@@ -253,7 +248,6 @@ void nuiMainWindow::Paint()
     mpSurface = nuiSurface::CreateSurface(name, GetWidth(), GetHeight());
     name.CFormat("nuiMainWindow_Texture %p %d", this, count++);
     mpSurface->GetTexture()->SetSource(name);
-    mpSurface->Acquire();
   }
 
   pContext->SetSurface(mpSurface);
@@ -310,7 +304,7 @@ void nuiMainWindow::Paint()
 
   pContext->SetSurface(nullptr);
 
-  pContext->StartRendering();
+//  pContext->StartRendering();
   pContext->Set2DProjectionMatrix(GetRect().Size());
   nuiTexture* pTex = mpSurface->GetTexture();
   pContext->SetTexture(pTex);
@@ -338,6 +332,15 @@ void nuiMainWindow::Paint()
     }
   }
 #endif//__NUI_NO_SOFTWARE__
+
+  if (DrawDirtyRects)
+  {
+    pContext->SetFillColor(nuiColor(255, 255, 255, 100));
+    pContext->SetStrokeColor(nuiColor(255, 255, 255, 182));
+    pContext->EnableBlending(true);
+    for (uint i = 0; i < RedrawList.size(); i++)
+      pContext->DrawRect(RedrawList[i], eStrokeAndFillShape);
+  }
 
   //watch.AddIntermediate(_T("Before EndSession()"));
   pContext->EndSession();

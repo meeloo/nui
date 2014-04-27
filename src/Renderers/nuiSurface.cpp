@@ -64,7 +64,8 @@ nuiSurface::nuiSurface(const nglString& rName, int32 Width, int32 Height, nglIma
   mpTexture = nuiTexture::GetTexture(this);
   mpTexture->Acquire();
   
-//  NGL_OUT(_T("nuiSurface CTOR [0x%x] SIZE[%dx%d]\n"), this, Width, Height);
+  //NGL_OUT(_T("nuiSurface CTOR [0x%x] SIZE[%dx%d]\n"), this, Width, Height);
+  //SetTrace(true);
 }
 
 nuiSurface::~nuiSurface()
@@ -76,7 +77,7 @@ nuiSurface::~nuiSurface()
     mpTexture->DetachSurface();
     mpTexture->Release();
   }
-//  NGL_OUT(_T("nuiSurface DTOR [0x%x] NAME: [%s] COUNT [%d]\n"), this, GetObjectName().GetChars(), mpSurfaces.size());
+  //NGL_OUT(_T("nuiSurface DTOR [0x%x] NAME: [%s] COUNT [%d]\n"), this, GetObjectName().GetChars(), mpSurfaces.size());
 
   nuiPainter::BroadcastDestroySurface(this);
 }

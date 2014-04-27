@@ -21,28 +21,28 @@ public:
 
   uint32 Acquire() const   
   { 
+    mRefCount++;
     if (mTrace)
     {
-      NGL_OUT(_T("Acquire object %p (%d)\n"), this, mRefCount + 1);
+      NGL_OUT(_T("Acquire object %p (%d)\n"), this, mRefCount);
     }
-    
-    mRefCount++;
     return mRefCount;
   }
 
   uint32 Release() const
   { 
-    if (mTrace)
-    {
-      NGL_OUT(_T("Release object %p (%d)\n"), this, mRefCount - 1);
-    }
-
     if (mRefCount < 1)
     {
       printf("Hmmm\n");
     }
     NGL_ASSERTR(mRefCount > 0, mRefCount);
     mRefCount--;
+
+    if (mTrace)
+    {
+      NGL_OUT(_T("Release object %p (%d)\n"), this, mRefCount);
+    }
+
     if (mRefCount == 0)
     {
       if (mTrace)

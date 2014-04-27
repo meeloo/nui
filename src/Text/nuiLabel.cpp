@@ -438,9 +438,9 @@ nuiRect nuiLabel::GetLayoutRect()
 //    printf("New layout rect: %s\n", mIdealLayoutRect.GetValue().GetChars());
 //  }
   
-  if (!(mIdealLayoutRect == mIdealRect))
-    InvalidateLayout();
-  
+//  if (!(mIdealLayoutRect == mIdealRect))
+//    InvalidateLayout();
+
   return mIdealLayoutRect;
 }
 

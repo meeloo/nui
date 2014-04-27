@@ -9,8 +9,8 @@
 
 #include "nui.h"
 
-//const bool gGlobalUseRenderCache = false;
-const bool gGlobalUseRenderCache = true;
+const bool gGlobalUseRenderCache = false;
+//const bool gGlobalUseRenderCache = true;
 
 //#define NUI_LOG_GETIDEALRECT
 
@@ -141,6 +141,7 @@ void nuiWidget::InitDefaultValues()
   mAutoDraw = false;
   mReverseRender = false;
   mOverrideVisibleRect = false;
+  mAutoUpdateLayout = false;
 }
 
 
@@ -476,10 +477,14 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::SetFixedAspectRatio)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("ReverseRender")), nuiUnitSize,
+               (nglString(_T("ReverseRender")), nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetReverseRender),
                 nuiMakeDelegate(this, &nuiWidget::SetReverseRender)));
 
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("AutoUpdateLayout")), nuiUnitOnOff,
+                nuiMakeDelegate(this, &nuiWidget::GetAutoUpdateLayout),
+                nuiMakeDelegate(this, &nuiWidget::SetAutoUpdateLayout)));
 
   
 }
@@ -1143,7 +1148,15 @@ void nuiWidget::SilentInvalidateLayout()
 void nuiWidget::InvalidateLayout()
 {
   CheckValid();
-  if (!mNeedSelfLayout && HasUserRect())
+
+  if (mAutoUpdateLayout)
+  {
+    UpdateLayout();
+    Invalidate();
+    return;
+  }
+
+  if ((!mNeedSelfLayout && HasUserRect()))
   {
     UpdateLayout();
     return;
@@ -1177,7 +1190,8 @@ void nuiWidget::ForcedInvalidateLayout()
 void nuiWidget::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOnly)
 {
   CheckValid();
-  if (!mNeedSelfLayout && HasUserSize()) // A child can't change the ideal position of its parent so we can stop broadcasting if the parent has a fixed ideal size.
+
+  if ((!mNeedSelfLayout && HasUserSize())) // A child can't change the ideal position of its parent so we can stop broadcasting if the parent has a fixed ideal size.
   {
     UpdateLayout();
     return;
@@ -1196,7 +1210,7 @@ void nuiWidget::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOn
   if (mpParent)
   {
     mpParent->BroadcastInvalidateLayout(pSender, BroadCastOnly);
-    //NGL_OUT(_T("nuiWidget::BroadcastInvalidateLayout %s / %s / 0x%x\n"), pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
+//    NGL_OUT(_T("nuiWidget::BroadcastInvalidateLayout %s / %s / 0x%x\n"), pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
   }
 
 #ifdef DEBUG
@@ -3336,7 +3350,9 @@ void nuiWidget::SetLayout(const nuiRect& rRect)
 {
   if (IsInTransition())
     return;
-  
+
+  mLayoutRect = rRect;
+
   CheckValid();
   nuiRect rect(GetLayoutForRect(rRect));
   
@@ -4542,12 +4558,16 @@ void nuiWidget::UpdateLayout()
   CheckValid();
   if (IsInSetRect())
     return;
-  GetIdealRect();
-  nuiRect r(GetRect());
-  mInSetRect = true;
-  SetRect(r);
-  mInSetRect = false;
 
+  mNeedSelfLayout = true;
+  mNeedIdealRect = true;
+
+  GetIdealRect();
+//  nuiRect r(GetRect());
+//  mInSetRect = true;
+//  SetRect(r);
+  SetLayout(mLayoutRect);
+//  mInSetRect = false;
   Invalidate();
 }
 

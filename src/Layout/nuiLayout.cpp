@@ -11,7 +11,6 @@
 nuiLayoutConstraint::nuiLayoutConstraint()
 : mType(eFreeLayout), mSize(0)
 {
-
 }
 
 nuiLayoutConstraint::~nuiLayoutConstraint()
@@ -381,6 +380,7 @@ bool nuiLayout::AddChild(nuiWidgetPtr pChild)
   if (nuiSimpleContainer::AddChild(pChild))
   {
     SetConstraint(pChild, pChild->GetProperty("Layout"));
+    pChild->SetAutoUpdateLayout(true);
     return true;
   }
 

@@ -511,7 +511,8 @@ public:
 
   //@}
   
-  
+  NUI_GETSET(bool, AutoUpdateLayout);
+
   /** @name Layout Constraints */
   //@{
   class LayoutConstraint
@@ -611,6 +612,7 @@ protected:
 
   float mAlpha; ///< Indicates the transparency level of the object. Optional. 
   nuiRect mRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
+  nuiRect mLayoutRect; ///< The rect given by the parent (may be different than mRect)
   nuiRect mVisibleRect; ///< The active bounding box of the nuiObject (in local coordinates).
   nuiRect mIdealRect; ///< The ideal bounding box of the nuiObject (in coordinates of its parent) position should be at the origin.
   nuiRect mUserRect; ///< The bounding box of the nuiObject if set by the user (in coordinates of its parent).
@@ -712,6 +714,7 @@ protected:
   bool mFixedAspectRatio: 1;
   bool mReverseRender: 1;
   bool mOverrideVisibleRect : 1;
+  bool mAutoUpdateLayout : 1;
 
 
 

@@ -266,7 +266,7 @@ void nuiGLPainter::SetViewport()
 
   const float scale = mpContext->GetScale();
 
-  //printf("set projection matrix (%d %d - %d %d)\n", x, y, w, h);
+  //NGL_OUT("set projection matrix (%d %d - %d %d)\n", x, y, w, h);
   //if (!mpSurface)
   {
     x *= scale;
@@ -581,6 +581,9 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, i
   nuiGLDebugGuard g("nuiGLPainter::ApplTexture()");
 #endif
 
+  NGL_ASSERT(slot < NUI_MAX_TEXTURE_UNITS);
+  NGL_ASSERT(slot >= 0);
+  
   // 2D Textures:
   auto it = mTextures.end();
   nuiTexture* pTexture = rState.mpTexture[slot];
@@ -843,7 +846,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
 
       //      #ifdef _DEBUG
       //      if (!(skipped_ops % 100))
-      //        printf("optim (%d / %d) - %2.2f%%\n", skipped_ops, ops, (float)skipped_ops * 100.0f / (float)ops);
+      //        NGL_OUT("optim (%d / %d) - %2.2f%%\n", skipped_ops, ops, (float)skipped_ops * 100.0f / (float)ops);
       //      #endif
 
       return;
@@ -876,7 +879,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   totalinframe += s;
   mins = MIN(mins, s);
   maxs = MAX(maxs, s);
-  //printf("DA (%d) min = %d  max = %d\n", s, mins, maxs);
+  //NGL_OUT("DA (%d) min = %d  max = %d\n", s, mins, maxs);
 
   if (!s)
   {
@@ -1157,7 +1160,7 @@ void nuiGLPainter::EndSession()
 {
   // Bleh!
   NUI_RETURN_IF_RENDERING_DISABLED;
-  //printf("min = %d max = %d total in frame = %d total = %d\n", mins, maxs, totalinframe, total);
+  //NGL_OUT("min = %d max = %d total in frame = %d total = %d\n", mins, maxs, totalinframe, total);
 }
 
 void nuiGLPainter::LoadMatrix(const nuiMatrix& rMatrix)
@@ -1710,10 +1713,10 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
   if (!mpSurface && pSurface)
   {
 //#ifdef _OPENGL_ES_
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &mDefaultFramebuffer);
-    nuiCheckForGLErrors();
-    glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
-    nuiCheckForGLErrors();
+//    glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &mDefaultFramebuffer);
+//    nuiCheckForGLErrors();
+//    glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
+//    nuiCheckForGLErrors();
 //#endif
 
   }
@@ -1773,7 +1776,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     if (create)
     {
       glGenFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
-      printf("glGenFramebuffersNUI '%s' -> %d\n", pSurface->GetObjectName().GetChars(), info.mFramebuffer);
+//      NGL_OUT("glGenFramebuffersNUI '%s' -> %d\n", pSurface->GetObjectName().GetChars(), info.mFramebuffer);
       NGL_ASSERT(info.mFramebuffer);
       nuiCheckForGLErrors();
 
@@ -1928,7 +1931,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
                                   GetTextureTarget(pTexture->IsPowerOfTwo()),
                                   tex_info.mTexture,
                                   0);
-        //printf("surface texture -> %d\n", tex_info.mTexture);
+        //NGL_OUT("surface texture -> %d\n", tex_info.mTexture);
         nuiCheckForGLErrors();
       }
       else
@@ -1974,7 +1977,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
                                      GL_COLOR_ATTACHMENT0_NUI,
                                      GL_RENDERBUFFER_NUI,
                                      info.mRenderbuffer);
-        //printf("surface render buffer -> %d\n", info.mRenderbuffer);
+        //NGL_OUT("surface render buffer -> %d\n", info.mRenderbuffer);
         nuiCheckForGLErrors();
       }
 
@@ -1990,12 +1993,12 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
       info = it->second;
       glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, info.mFramebuffer);
       nuiCheckForGLErrors();
-      //printf("glBindFramebufferNUI -> %d\n", info.mFramebuffer);
+      //NGL_OUT("glBindFramebufferNUI -> %d\n", info.mFramebuffer);
       if (info.mRenderbuffer >= 0)
       {
         glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mRenderbuffer);
         nuiCheckForGLErrors();
-        //printf("glBindRenderbufferNUI -> %d\n", info.mRenderbuffer);
+        //NGL_OUT("glBindRenderbufferNUI -> %d\n", info.mRenderbuffer);
       }
 
       nuiCheckForGLErrors();
@@ -2009,9 +2012,9 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     /// !pSurface
     glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, mDefaultFramebuffer);
     nuiCheckForGLErrors();
-    //printf("UNBIND glBindFramebufferNUI -> %d\n", mDefaultFramebuffer);
+//    NGL_OUT("UNBIND glBindFramebufferNUI -> %d\n", mDefaultFramebuffer);
     glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, mDefaultRenderbuffer);
-    //printf("UNBIND glBindRenderbufferNUI -> %d\n", mDefaultRenderbuffer);
+//    NGL_OUT("UNBIND glBindRenderbufferNUI -> %d\n", mDefaultRenderbuffer);
     nuiCheckForGLErrors();
 
 #if defined _UIKIT_

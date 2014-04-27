@@ -114,7 +114,6 @@ protected:
     GLint mStencilbuffer;
   };
   std::map<nuiSurface*, FramebufferInfo> mFramebuffers;
-  GLint mDefaultFramebuffer, mDefaultRenderbuffer;
 
   class VertexBufferInfo
   {
@@ -170,6 +169,9 @@ protected:
   // Only used for shaders:
   nglVector2f mTextureTranslate;
   nglVector2f mTextureScale;
+
+  GLint mDefaultFramebuffer;
+  GLint mDefaultRenderbuffer;
 };
 
 bool nuiCheckForGLErrorsReal();
