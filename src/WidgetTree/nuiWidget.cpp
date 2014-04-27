@@ -9,8 +9,8 @@
 
 #include "nui.h"
 
-const bool gGlobalUseRenderCache = false;
-//const bool gGlobalUseRenderCache = true;
+//const bool gGlobalUseRenderCache = false;
+const bool gGlobalUseRenderCache = true;
 
 //#define NUI_LOG_GETIDEALRECT
 

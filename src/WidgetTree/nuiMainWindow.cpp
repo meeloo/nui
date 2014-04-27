@@ -9,8 +9,9 @@
 
 #include "nui.h"
 
-#define DRAW_TO_SURFACE
-const bool DrawDirtyRects = true;
+//#define DRAW_TO_SURFACE
+//const bool DrawDirtyRects = true;
+const bool DrawDirtyRects = false;
 
 using namespace std;
 
