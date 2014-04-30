@@ -13,7 +13,7 @@
 
 class nuiRasterizer;
 
-class nuiSoftwarePainter : public nuiPainter, public nuiCacheManager
+class nuiSoftwarePainter : public nuiPainter
 {
 public:
   nuiSoftwarePainter(nglContext* pContext = NULL);
@@ -36,8 +36,6 @@ public:
   }
 
 protected:
-
-  virtual void ReleaseCacheObject(void* pHandle);
 
   class nuiRasterizer* mpRasterizer;
 

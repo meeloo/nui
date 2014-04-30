@@ -30,7 +30,8 @@ public:
   virtual void PushMatrix();
   virtual void PopMatrix();
 
-  
+  void DestroyRenderArray(nuiRenderArray* pArray);
+
 protected:
   virtual void ResetOpenGLState();
 
@@ -40,8 +41,8 @@ protected:
   void SetVertexPointers(const nuiRenderArray& rArray);
 
   //  VBO Setup:
-  void SetVertexBuffersPointers(const nuiRenderArray& rArray, const VertexBufferInfo& rInfo);
-  void SetStreamBuffersPointers(const nuiRenderArray& rArray, const VertexBufferInfo& rInfo, int index);
+  void SetVertexBuffersPointers(const nuiRenderArray& rArray, RenderArrayInfo& rInfo);
+  void SetStreamBuffersPointers(const nuiRenderArray& rArray, const RenderArrayInfo& rInfo, int index);
 
   // Reset vertices modes
   void ResetVertexPointers(const nuiRenderArray& rArray);
@@ -56,7 +57,7 @@ protected:
 
   nuiMatrix mSurfaceMatrix;
 
-  VertexBufferInfo* mpCurrentVertexBufferInfo;
+  RenderArrayInfo* mpCurrentRenderArrayInfo;
   nuiRenderArray* mpLastArray;
 };
 

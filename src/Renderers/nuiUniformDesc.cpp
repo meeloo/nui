@@ -10,12 +10,6 @@
 
 //class nuiUniformDesc
 
-nuiUniformDesc::nuiUniformDesc()
-: mType(-1), mCount(-1), mLocation(-1), mChanged(false)
-{
-  mValues.mpFloats = NULL;
-}
-
 nuiUniformDesc::nuiUniformDesc(const nuiUniformDesc& rDesc)
 : mName(rDesc.mName), mType(rDesc.mType), mCount(rDesc.mCount), mLocation(rDesc.mLocation), mChanged(rDesc.mChanged)
 {
@@ -202,23 +196,30 @@ void nuiUniformDesc::Set(const float* pV, int32 count, bool apply)
 {
   switch (mType)
   {
-    case GL_FLOAT:        NGL_ASSERT(count <= mCount * 1); break;
-    case GL_FLOAT_VEC2:   NGL_ASSERT(count <= mCount * 2); break;
-    case GL_FLOAT_VEC3:   NGL_ASSERT(count <= mCount * 3); break;
-    case GL_FLOAT_VEC4:   NGL_ASSERT(count <= mCount * 4); break;
+    case GL_FLOAT:        NGL_ASSERT(count <= (int32)mCount * 1); break;
+    case GL_FLOAT_VEC2:   NGL_ASSERT(count <= (int32)mCount * 2); break;
+    case GL_FLOAT_VEC3:   NGL_ASSERT(count <= (int32)mCount * 3); break;
+    case GL_FLOAT_VEC4:   NGL_ASSERT(count <= (int32)mCount * 4); break;
 
-    case GL_FLOAT_MAT2:   NGL_ASSERT(count <= mCount * 2 * 2); break;
-    case GL_FLOAT_MAT3:   NGL_ASSERT(count <= mCount * 3 * 3); break;
-    case GL_FLOAT_MAT4:   NGL_ASSERT(count <= mCount * 4 * 4); break;
+    case GL_FLOAT_MAT2:   NGL_ASSERT(count <= (int32)mCount * 2 * 2); break;
+    case GL_FLOAT_MAT3:   NGL_ASSERT(count <= (int32)mCount * 3 * 3); break;
+    case GL_FLOAT_MAT4:   NGL_ASSERT(count <= (int32)mCount * 4 * 4); break;
 
     default:
       NGL_ASSERT(0);
   }
 
+  bool same = true;
   for (int32 i = 0; i < count; i++)
-    mValues.mpFloats[i] = pV[i];
+  {
+    const float v1 = mValues.mpFloats[i];
+    const float v2 = pV[i];
 
-  mChanged = true;
+    mValues.mpFloats[i] = v2;
+    same = same && (v1 == v2);
+  }
+
+  mChanged = mChanged || !same;
 
   if (apply)
     Apply();
@@ -234,23 +235,31 @@ void nuiUniformDesc::Set(const int32* pV, int32 count, bool apply)
 {
   switch (mType)
   {
-    case GL_INT:            NGL_ASSERT(count <= mCount * 1); break;
-    case GL_INT_VEC2:       NGL_ASSERT(count <= mCount * 2); break;
-    case GL_INT_VEC3:       NGL_ASSERT(count <= mCount * 3); break;
-    case GL_INT_VEC4:       NGL_ASSERT(count <= mCount * 4); break;
+    case GL_INT:            NGL_ASSERT(count <= (int32)mCount * 1); break;
+    case GL_INT_VEC2:       NGL_ASSERT(count <= (int32)mCount * 2); break;
+    case GL_INT_VEC3:       NGL_ASSERT(count <= (int32)mCount * 3); break;
+    case GL_INT_VEC4:       NGL_ASSERT(count <= (int32)mCount * 4); break;
 
-    case GL_UNSIGNED_INT:   NGL_ASSERT(count <= mCount * 4); break;
-    case GL_SAMPLER_2D:     NGL_ASSERT(count <= mCount * 4); break;
-    case GL_SAMPLER_CUBE:   NGL_ASSERT(count <= mCount * 4); break;
+    case GL_UNSIGNED_INT:   NGL_ASSERT(count <= (int32)mCount * 4); break;
+    case GL_SAMPLER_2D:     NGL_ASSERT(count <= (int32)mCount * 4); break;
+    case GL_SAMPLER_CUBE:   NGL_ASSERT(count <= (int32)mCount * 4); break;
 
     default:
       NGL_ASSERT(0);
   }
 
+  bool same = true;
   for (int32 i = 0; i < count; i++)
-    mValues.mpInts[i] = pV[i];
+  {
+    const GLint v1 = mValues.mpInts[i];
+    const GLint v2 = pV[i];
 
-  mChanged = true;
+    mValues.mpInts[i] = v2;
+    same = same && (v1 == v2);
+  }
+
+  mChanged = mChanged || !same;
+
 
   if (apply)
     Apply();
@@ -367,23 +376,18 @@ void nuiUniformDesc::Set(const nglMatrixf& rMat, bool apply)
 
 static bool copycmp(int32 *p1, const int32* p2, int count)
 {
-  uint32 v1 = 0;
-  uint32 v2 = 0;
-  uint32 pa = 0;
-  uint32 pb = 0;
-
+  bool same = true;
   for (int i = 0; i < count; i++)
   {
-    v1 = *p1;
-    v2 = *p2++;
+    const uint32 v1 = *p1;
+    const uint32 v2 = *p2++;
     *p1++ = v2;
 
     // Accumulate the test:
-    pa ^= v1;
-    pb ^= v2;
+    same = same && (v1 == v2);
   }
 
-  return pa == pb;
+  return same;
 }
 
 static bool copycmp(float *p1, const float* p2, int count)

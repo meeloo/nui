@@ -43,7 +43,7 @@ public:
   }
 };
 
-class nuiGLPainter : public nuiPainter, public nuiCacheManager
+class nuiGLPainter : public nuiPainter
 {
 public:
   nuiGLPainter(nglContext* pContext);
@@ -70,24 +70,10 @@ public:
 
   virtual void DestroySurface(nuiSurface* pSurface);
 
+  virtual void DestroyRenderArray(nuiRenderArray* pArray);
+
   
 protected:
-  virtual void ResetOpenGLState();
-  void SetSurface(nuiSurface* pSurface);
-  nglContext* mpContext;
-
-  void ApplyState(const nuiRenderState& rState, bool ForceApply);
-  nuiRenderState mFinalState;
-  bool mForceApply;
-  static uint32 mActiveContexts;
-
-  virtual void ReleaseCacheObject(void* pHandle);
-
-  uint32 mCanRectangleTexture;
-  GLenum mTextureTarget;
-
-  void ApplyTexture(const nuiRenderState& rState, bool ForceApply, int slot);
-  
   class TextureInfo
   {
   public:
@@ -96,10 +82,6 @@ protected:
     bool mReload;
     GLint mTexture;
   };
-  std::map<nuiTexture*, TextureInfo> mTextures;
-
-  GLenum GetTextureTarget(bool POT) const;
-  void UploadTexture(nuiTexture* pTexture, int slot);
 
   class FramebufferInfo
   {
@@ -113,40 +95,64 @@ protected:
     GLint mDepthbuffer;
     GLint mStencilbuffer;
   };
-  std::map<nuiSurface*, FramebufferInfo> mFramebuffers;
 
-  class VertexBufferInfo
+  class RenderArrayInfo
   {
   public:
-    VertexBufferInfo(nuiRenderArray* pRenderArray = NULL);
-    VertexBufferInfo(const VertexBufferInfo& rInfo);
+
+    static RenderArrayInfo* Create(nuiRenderArray* pRenderArray);
+    static void Recycle(nuiGLPainter::RenderArrayInfo* pInfo);
+
+    void BindVertices() const;
+    void BindStream(int index) const;
+    void BindIndices(int index) const;
+    void Draw() const;
+
+    std::map<nuiShaderProgram*, GLint> mVAOs;
+  private:
+    RenderArrayInfo(nuiRenderArray* pRenderArray);
+    ~RenderArrayInfo();
+    void Destroy();
+    void Rebind(nuiRenderArray* pRenderArray);
 
     nuiRenderArray* mpRenderArray;
     GLuint mVertexBuffer;
     std::vector<GLuint> mIndexBuffers;
     std::vector<GLuint> mStreamBuffers;
 
-    void Create(nuiRenderArray* pRenderArray);
-    void BindVertices() const;
-    void BindStream(int index) const;
-    void BindIndices(int index) const;
-    void Draw() const;
-    void Destroy();
+    static std::list<RenderArrayInfo*> mHeap;
   };
-  
-  std::map<nuiRenderArray*, VertexBufferInfo> mVertexBuffers;
-  std::vector<nuiRenderArray*> mFrameArrays;
 
+  virtual void ResetOpenGLState();
+  void SetSurface(nuiSurface* pSurface);
+
+  void ApplyState(const nuiRenderState& rState, bool ForceApply);
+  void ApplyTexture(const nuiRenderState& rState, bool ForceApply, int slot);
+
+  GLenum GetTextureTarget(bool POT) const;
+  void UploadTexture(nuiTexture* pTexture, int slot);
+  
   bool CheckFramebufferStatus();
   virtual void SetViewport();
   
+  void BlendFuncSeparate(GLenum src, GLenum dst, GLenum srcalpha = GL_ONE, GLenum dstalpha = GL_ONE);
+
+  static uint32 mActiveContexts;
+  nglContext* mpContext;
+  nuiRenderState mFinalState;
+  bool mForceApply;
+  uint32 mCanRectangleTexture;
+  GLenum mTextureTarget;
+  std::map<nuiTexture*, TextureInfo> mTextures;
+  std::map<nuiSurface*, FramebufferInfo> mFramebuffers;
+  int64 dummy = 0;
+  std::vector<nuiRenderArray*> mFrameArrays;
+  std::map<nuiRenderArray*, RenderArrayInfo*> mRenderArrays;
   int32 mScissorX;
   int32 mScissorY;
   int32 mScissorW;
   int32 mScissorH;
   bool mScissorOn;
-
-  void BlendFuncSeparate(GLenum src, GLenum dst, GLenum srcalpha = GL_ONE, GLenum dstalpha = GL_ONE);
   bool mTwoPassBlend;
   GLenum mSrcColor;
   GLenum mDstColor;
@@ -163,6 +169,8 @@ protected:
   float mB;
   float mA;
   GLenum mTexEnvMode;
+  int mActiveTextureSlot = -1;
+
   
   bool mUseShaders;
 
@@ -172,11 +180,18 @@ protected:
 
   GLint mDefaultFramebuffer;
   GLint mDefaultRenderbuffer;
+
+  nuiShaderProgram* mpShader = nullptr;
+  nuiShaderState* mpShaderState = nullptr;
+
 };
 
 bool nuiCheckForGLErrorsReal();
-//#define nuiCheckForGLErrors() { NGL_ASSERT(nuiCheckForGLErrorsReal()); }
+#ifdef _DEBUG_
+#define nuiCheckForGLErrors() { NGL_ASSERT(nuiCheckForGLErrorsReal()); }
+#else
 #define nuiCheckForGLErrors() {  }
+#endif
 
 #ifdef _OPENGL_ES_
 

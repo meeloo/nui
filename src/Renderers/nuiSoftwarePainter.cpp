@@ -134,7 +134,7 @@ void nuiSoftwarePainter::StartRendering()
 
 void nuiSoftwarePainter::SetState(const nuiRenderState& rState, bool ForceApply)
 {
-  mState = rState;
+  mpState = &rState;
 
   int32 x = MIN(ToNearest(mClip.Left()), (int32)mWidth);
   int32 y = MIN(ToNearest(mClip.Top()), (int32)mHeight);
@@ -199,7 +199,7 @@ void nuiSoftwarePainter::DrawArray(nuiRenderArray* pArray)
 
 void nuiSoftwarePainter::ClearColor()
 {
-  uint32 col = NUI_RGBA_F(mState.mClearColor.Red(), mState.mClearColor.Green(), mState.mClearColor.Blue(), mState.mClearColor.Alpha());
+  uint32 col = NUI_RGBA_F(mpState->mClearColor.Red(), mpState->mClearColor.Green(), mpState->mClearColor.Blue(), mpState->mClearColor.Alpha());
   mpRasterizer->ClearColor(col);
 
 }
@@ -380,7 +380,7 @@ void nuiSoftwarePainter::DrawLine(const nuiRenderArray* pArray, int p1, int p2)
   }
   else
   {
-    c1 = c2 = mState.mFillColor;
+    c1 = c2 = mpState->mFillColor;
   }
 
   // Texture coords:
@@ -396,9 +396,9 @@ void nuiSoftwarePainter::DrawLine(const nuiRenderArray* pArray, int p1, int p2)
   }
   
   
-  if (mState.mpTexture && mState.mTexturing)
+  if (mpState->mpTexture && mpState->mTexturing)
   {
-    nuiTexture* pTexture = mState.mpTexture;
+    nuiTexture* pTexture = mpState->mpTexture;
     int32 width = pTexture->GetImage()->GetWidth();
     int32 height = pTexture->GetImage()->GetHeight();
     
@@ -437,10 +437,10 @@ break; \
 case eImagePixelNone: break; \
 case eImagePixelIndex: break; 
 
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_Transp);
             default:
@@ -448,7 +448,7 @@ case eImagePixelIndex: break;
           }
           break;
         case nuiBlendTranspAdd:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_TranspAdd);
             default:
@@ -457,7 +457,7 @@ case eImagePixelIndex: break;
           break;
         case nuiBlendSource:
         default:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_Copy);
             default:
@@ -468,7 +468,7 @@ case eImagePixelIndex: break;
     }
     //    else
     //    {
-    //      switch (mState.mBlendFunc)
+    //      switch (mpState->mBlendFunc)
     //      {
     //        case nuiBlendTransp:
     //          mpRasterizer->DrawTriangle<nuiPixelBlender_Transp>(nuiVertex_Gouraud(x1, y1, nuiGouraudColor(c1)),
@@ -497,7 +497,7 @@ case eImagePixelIndex: break;
     { // One Color:
       const uint32 col = NUI_RGBA_F(c1.Red(), c1.Green(), c1.Blue(), c1.Alpha());
       
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
           mpRasterizer->DrawLine<nuiPixelBlender_Transp>(nuiVertex_Solid(x1, y1, col), nuiVertex_Solid(x2, y2, col));
@@ -513,7 +513,7 @@ case eImagePixelIndex: break;
     }
     else
     {
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
           mpRasterizer->DrawLine<nuiPixelBlender_Transp>(nuiVertex_Gouraud(x1, y1, nuiGouraudColor(c1)),
@@ -577,7 +577,7 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
       case GL_LINES:
       case GL_LINE_LOOP:
       case GL_LINE_STRIP:
-        c1 = c2 = c3 = mState.mStrokeColor;
+        c1 = c2 = c3 = mpState->mStrokeColor;
         break;
         
       case GL_TRIANGLES:
@@ -586,7 +586,7 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
 //      case GL_QUADS:
 //      case GL_QUAD_STRIP:
 //      case GL_POLYGON:
-        c1 = c2 = c3 = mState.mFillColor;
+        c1 = c2 = c3 = mpState->mFillColor;
         break;
     }
   }
@@ -606,9 +606,9 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
     v3 = rVertices[p3].mTY;
   }
 
-  if (mState.mpTexture && mState.mTexturing)
+  if (mpState->mpTexture && mpState->mTexturing)
   {
-    nuiTexture* pTexture = mState.mpTexture;
+    nuiTexture* pTexture = mpState->mpTexture;
     int32 width = pTexture->GetImage()->GetWidth();
     int32 height = pTexture->GetImage()->GetHeight();
 
@@ -652,10 +652,10 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
 	case eImagePixelNone: break; \
 	case eImagePixelIndex: break;
       
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_Transp);
             default:
@@ -663,7 +663,7 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
           }
           break;
         case nuiBlendTranspAdd:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_TranspAdd);
             default:
@@ -672,7 +672,7 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
           break;
         case nuiBlendSource:
         default:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_Copy);
             default:
@@ -683,7 +683,7 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
     }
 //    else
 //    {
-//      switch (mState.mBlendFunc)
+//      switch (mpState->mBlendFunc)
 //      {
 //        case nuiBlendTransp:
 //          mpRasterizer->DrawTriangle<nuiPixelBlender_Transp>(nuiVertex_Gouraud(x1, y1, nuiGouraudColor(c1)),
@@ -712,7 +712,7 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
     { // One Color:
       const uint32 col = NUI_RGBA_F(c1.Red(), c1.Green(), c1.Blue(), c1.Alpha());
       
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
           if (c1.Alpha() < 1.0f)
@@ -731,7 +731,7 @@ void nuiSoftwarePainter::DrawTriangle(const nuiRenderArray* pArray, int p1, int 
     }
     else
     {
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
           if ((c1.Alpha() < 1.0f) && (c2.Alpha() < 1.0f) && (c3.Alpha() < 1.0f))
@@ -770,7 +770,7 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
 
   float bias = 0.0f;
 
-//  if (!mState.mAntialiasing && !mState.mTexturing)
+//  if (!mpState->mAntialiasing && !mpState->mTexturing)
 //    bias = 0.5f;
 
   float x1 = rVertices[p1].mX, y1 = rVertices[p1].mY;
@@ -805,7 +805,7 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
   }
   else
   {
-    c1 = c2 = c3 = c4 = mState.mFillColor;
+    c1 = c2 = c3 = c4 = mpState->mFillColor;
   }
 
   // Texture coords:
@@ -827,9 +827,9 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
   }
 
   
-  if (mState.mpTexture && mState.mTexturing)
+  if (mpState->mpTexture && mpState->mTexturing)
   {
-    nuiTexture* pTexture = mState.mpTexture;
+    nuiTexture* pTexture = mpState->mpTexture;
     int32 width = pTexture->GetImage()->GetWidth();
     int32 height = pTexture->GetImage()->GetHeight();
     
@@ -872,10 +872,10 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
   case eImagePixelNone: break; \
   case eImagePixelIndex: break;
 
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_Transp);
             default:
@@ -883,7 +883,7 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
           }
           break;
         case nuiBlendTranspAdd:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_TranspAdd);
             default:
@@ -892,7 +892,7 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
           break;
         case nuiBlendSource:
         default:
-          switch (mState.mpTexture->GetImage()->GetPixelFormat())
+          switch (mpState->mpTexture->GetImage()->GetPixelFormat())
           {
             RASTERIZERS(nuiPixelBlender_Copy);
             default:
@@ -903,7 +903,7 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
     }
     //    else
     //    {
-    //      switch (mState.mBlendFunc)
+    //      switch (mpState->mBlendFunc)
     //      {
     //        case nuiBlendTransp:
     //          mpRasterizer->DrawTriangle<nuiPixelBlender_Transp>(nuiVertex_Gouraud(x1, y1, nuiGouraudColor(c1)),
@@ -932,7 +932,7 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
     { // One Color:
       const uint32 col = NUI_RGBA_F(c1.Red(), c1.Green(), c1.Blue(), c1.Alpha());
       
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
           mpRasterizer->DrawRectangle<nuiPixelBlender_Transp>(nuiVertex_Solid(x1, y1, col), nuiVertex_Solid(x2, y2, col), nuiVertex_Solid(x3, y3, col), nuiVertex_Solid(x4, y4, col));
@@ -948,7 +948,7 @@ void nuiSoftwarePainter::DrawRectangle(const nuiRenderArray* pArray, int p1, int
     }
     else
     {
-      switch (mState.mBlendFunc)
+      switch (mpState->mBlendFunc)
       {
         case nuiBlendTransp:
           mpRasterizer->DrawRectangle<nuiPixelBlender_Transp>(nuiVertex_Gouraud(x1, y1, nuiGouraudColor(c1)),

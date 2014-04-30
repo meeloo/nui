@@ -131,14 +131,17 @@ public:
 
   static void BroadcastDestroyTexture(nuiTexture* pTexture);
   static void BroadcastDestroySurface(nuiSurface* pSurface);
+  static void BroadcastDestroyRenderArray(nuiRenderArray* pArray);
 
   virtual void DestroySurface(nuiSurface* pSurface) = 0;
+  virtual void DestroyRenderArray(nuiRenderArray* pSurface) = 0;
 
 protected:
   nuiSurface* mpSurface;
   std::stack<nuiSurface*> mpSurfaceStack;
 
-  nuiRenderState mState;
+  const nuiRenderState mDefaultState;
+  const nuiRenderState* mpState = &mDefaultState;
   std::stack<nuiClipper> mpClippingStack;
   uint32 mWidth;
   uint32 mHeight;

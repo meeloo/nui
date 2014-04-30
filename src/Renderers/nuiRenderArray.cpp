@@ -19,15 +19,13 @@ nuiRenderArray::nuiRenderArray(uint32 mode, bool Static, bool _3dmesh, bool _sha
     mEnabled[i] = false;
   mEnabled[eVertex] = true; // Enable Vertices by default
   mStatic = Static;
+  mStatic = true;
   mMode = mode;
 #ifdef GL_RECT
   NGL_ASSERT(mode != GL_RECT); // GL_RECT Can
 #endif
   m3DMesh = _3dmesh;
   mShape = _shape;
-
-  mpCacheHandle = NULL;
-  mpCacheManager = NULL;
 
   mCurrentVertex.mX = 0.0f;
   mCurrentVertex.mY = 0.0f;
@@ -59,20 +57,15 @@ nuiRenderArray::nuiRenderArray(const nuiRenderArray& rArray)
   m3DMesh = rArray.m3DMesh;
   mShape = rArray.mShape;
 
-  mpCacheHandle = NULL;
-  mpCacheManager = NULL;
-
   mCurrentVertex = rArray.mCurrentVertex;
 }
 
 nuiRenderArray::~nuiRenderArray()
 {
-  if (mpCacheManager)
-    mpCacheManager->ReleaseCacheObject(mpCacheHandle);
-  mpCacheHandle = NULL;
-  
   for (uint32 i = 0; i < mIndexedArrays.size(); i++)
     delete mIndexedArrays[i];
+
+  nuiPainter::BroadcastDestroyRenderArray(this);
 }
 
 void nuiRenderArray::SetMode(GLenum mode)
@@ -140,17 +133,6 @@ void nuiRenderArray::Resize(uint Count)
 void nuiRenderArray::Reset()
 {
   mVertices.clear();
-}
-
-void* nuiRenderArray::GetCacheHandle(nuiCacheManager* pManager) const
-{
-  return mpCacheHandle;
-}
-
-void nuiRenderArray::SetCacheHandle(nuiCacheManager* pManager, void* pHandle) const
-{
-  mpCacheManager = pManager;
-  mpCacheHandle = pHandle;
 }
 
 uint32 nuiRenderArray::GetTotalSize() const

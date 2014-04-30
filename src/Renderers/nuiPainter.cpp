@@ -302,7 +302,7 @@ void nuiPainter::GetSize(uint32& rX, uint32& rY) const
 
 const nuiRenderState& nuiPainter::GetState() const
 {
-  return mState;
+  return *mpState;
 }
 
 void nuiPainter::SetDummyMode(bool set)
@@ -367,4 +367,11 @@ void nuiPainter::BroadcastDestroySurface(nuiSurface* pSurface)
   }
 }
 
+void nuiPainter::BroadcastDestroyRenderArray(nuiRenderArray* pArray)
+{
+  for (auto pPainter : gpPainters)
+  {
+    pPainter->DestroyRenderArray(pArray);
+  }
+}
 

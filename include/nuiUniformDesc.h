@@ -13,13 +13,11 @@ class nuiShaderProgram;
 class nuiUniformDesc
 {
 public:
-  nuiUniformDesc();
   nuiUniformDesc(const nuiUniformDesc& rDesc);
   nuiUniformDesc(const nglString& rName, GLenum Type, int count, GLuint Location, nuiShaderProgram* pProgram = NULL);
 
   ~nuiUniformDesc();
 
-  nuiUniformDesc& operator=(const nuiUniformDesc& rDesc);
 
   void Set(const float* pV, int32 count, bool apply = false);
   void Set(const std::vector<float>& rV, bool apply = false);
@@ -59,5 +57,10 @@ public:
   } mValues;
 
   bool operator == (const nuiUniformDesc& rDesc) const;
+  nuiUniformDesc& operator=(const nuiUniformDesc& rDesc);
+
+private:
+  nuiUniformDesc();
+
 };
 

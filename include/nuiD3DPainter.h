@@ -18,7 +18,7 @@
 
 #ifndef __NUI_NO_D3D__
 
-class nuiD3DPainter : public nuiPainter, public nuiCacheManager
+class nuiD3DPainter : public nuiPainter
 {
 public:
   nuiD3DPainter(nglContext* pContext);
@@ -42,6 +42,8 @@ public:
   virtual void PopProjectionMatrix();
 
   virtual void DestroySurface(nuiSurface* pSurface);
+  virtual void DestroyRenderArray(nuiRenderArray* pArray);
+
   virtual void InvalidateSurface(nuiSurface* pSurface, bool ForceReload);
 
   virtual void CreateDeviceObjects();
@@ -66,8 +68,6 @@ protected:
 
   void ApplyTexture(const nuiRenderState& rState, bool ForceApply);
 
-  virtual void ReleaseCacheObject(void* pHandle);
-  //void DrawSmallArray(const nuiRenderArray& rArray);
   void LoadCurrentMatrix();
 
   class TextureInfo

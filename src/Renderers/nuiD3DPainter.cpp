@@ -395,16 +395,16 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //blending -------------------
   //----------------------------
   //#ifdef BLENDING_ENABLED
-  if (ForceApply || mState.mBlending != rState.mBlending)
+  if (ForceApply || mpState->mBlending != rState.mBlending)
   {
-    //NGL_OUT(_T("Blending Value %d "), mState.mBlending);
-    mState.mBlending = rState.mBlending;
-    if (mState.mBlending)
+    //NGL_OUT(_T("Blending Value %d "), mpState->mBlending);
+    mpState->mBlending = rState.mBlending;
+    if (mpState->mBlending)
     {
       hr = pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-      if (ForceApply || mState.mBlendFunc != rState.mBlendFunc)
+      if (ForceApply || mpState->mBlendFunc != rState.mBlendFunc)
       {
-        mState.mBlendFunc = rState.mBlendFunc;
+        mpState->mBlendFunc = rState.mBlendFunc;
         DWORD src, dst;
         nuiGetBlendFuncFactorsD3D(rState.mBlendFunc, src, dst);
         hr = pDev->SetRenderState(D3DRS_SRCBLEND, src);
@@ -422,18 +422,18 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //stencil test ---------------
   //----------------------------
   #ifdef STENCIL_ENABLED
-  if (ForceApply || mState.mStencilMode != rState.mStencilMode || mState.mStencilValue != rState.mStencilValue)
+  if (ForceApply || mpState->mStencilMode != rState.mStencilMode || mpState->mStencilValue != rState.mStencilValue)
   {
     //NGL_OUT(_T("Stencil mode"));
-    mState.mStencilMode = rState.mStencilMode;
-    mState.mStencilValue = rState.mStencilValue;
-    switch (mState.mStencilMode)
+    mpState->mStencilMode = rState.mStencilMode;
+    mpState->mStencilValue = rState.mStencilValue;
+    switch (mpState->mStencilMode)
     {
     case nuiIgnoreStencil:
-      NGL_OUT(_T("nuiIgnoreStencil Value %d "), mState.mStencilValue);
+      NGL_OUT(_T("nuiIgnoreStencil Value %d "), mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILENABLE, FALSE);
       hr = pDev->SetRenderState(D3DRS_STENCILMASK, 0);
-      hr = pDev->SetRenderState(D3DRS_STENCILREF, mState.mStencilValue);
+      hr = pDev->SetRenderState(D3DRS_STENCILREF, mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_NEVER);
       hr = pDev->SetRenderState(D3DRS_STENCILWRITEMASK, ~0);
       hr = pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
@@ -442,10 +442,10 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
       break;
 
     case nuiReadStencil:
-      NGL_OUT(_T("nuiReadStencil Value %d "), mState.mStencilValue);
+      NGL_OUT(_T("nuiReadStencil Value %d "), mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILENABLE, TRUE);
       hr = pDev->SetRenderState(D3DRS_STENCILMASK, 0);
-      hr = pDev->SetRenderState(D3DRS_STENCILREF, mState.mStencilValue);
+      hr = pDev->SetRenderState(D3DRS_STENCILREF, mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
       hr = pDev->SetRenderState(D3DRS_STENCILWRITEMASK, ~0);
       hr = pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
@@ -454,10 +454,10 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
       break;
 
     case nuiAddToStencil:
-      NGL_OUT(_T("nuiAddToStencil Value %d "), mState.mStencilValue);
+      NGL_OUT(_T("nuiAddToStencil Value %d "), mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILENABLE, TRUE);
       hr = pDev->SetRenderState(D3DRS_STENCILMASK, ~0);
-      hr = pDev->SetRenderState(D3DRS_STENCILREF, mState.mStencilValue);
+      hr = pDev->SetRenderState(D3DRS_STENCILREF, mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
       hr = pDev->SetRenderState(D3DRS_STENCILWRITEMASK, ~0);
       hr = pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_REPLACE);
@@ -466,10 +466,10 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
       break;
 
     case nuiBlendToStencil:
-      NGL_OUT(_T("nuiBlendToStencil Value %d "), mState.mStencilValue);
+      NGL_OUT(_T("nuiBlendToStencil Value %d "), mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILENABLE, TRUE);
       hr = pDev->SetRenderState(D3DRS_STENCILMASK, ~0);
-      hr = pDev->SetRenderState(D3DRS_STENCILREF, mState.mStencilValue);
+      hr = pDev->SetRenderState(D3DRS_STENCILREF, mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS); 
       hr = pDev->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_INCR);
       hr = pDev->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_INCR);
@@ -489,11 +489,11 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //rendering color buffer -----
   //----------------------------
   //#ifdef COLORBUFFER_ENABLED
-  if (ForceApply || mState.mColorBuffer != rState.mColorBuffer)
+  if (ForceApply || mpState->mColorBuffer != rState.mColorBuffer)
   {
-    //NGL_OUT(_T("ColorBuffer Value %d "), mState.mColorBuffer);
-    mState.mColorBuffer = rState.mColorBuffer;
-    if (mState.mColorBuffer == GL_TRUE)
+    //NGL_OUT(_T("ColorBuffer Value %d "), mpState->mColorBuffer);
+    mpState->mColorBuffer = rState.mColorBuffer;
+    if (mpState->mColorBuffer == GL_TRUE)
     {
       //ARVB bitmask 
       hr = pDev->SetRenderState(D3DRS_COLORWRITEENABLE, 0x0F); //0x0F
@@ -534,21 +534,21 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //----------------------------
   //colors ---------------------
   //----------------------------
-  mState.mClearColor = rState.mClearColor;
-  mState.mStrokeColor = rState.mStrokeColor;
-  mState.mFillColor = rState.mFillColor;
+  mpState->mClearColor = rState.mClearColor;
+  mpState->mStrokeColor = rState.mStrokeColor;
+  mpState->mFillColor = rState.mFillColor;
 
 
   //pDev->SetRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1 );
-  if (mState.mTexturing)
+  if (mpState->mTexturing)
   {
-    nuiSurface* pSurface = mState.mpTexture->GetSurface();
-    nglImage* pImage = mState.mpTexture->GetImage();
+    nuiSurface* pSurface = mpState->mpTexture->GetSurface();
+    nglImage* pImage = mpState->mpTexture->GetImage();
     if (pImage)
     {
       //selon le type de texture, on prend la texture ou on add la texture à la diffuse
       //attention au blending avec les textures 8 bits !!!
-      if (mState.mpTexture->GetImage()->GetBitDepth() == 8)
+      if (mpState->mpTexture->GetImage()->GetBitDepth() == 8)
       {
         hr = pDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);
       }
@@ -748,10 +748,10 @@ void nuiD3DPainter::ClearColor()
 
   LPDIRECT3DDEVICE9 pDev = mpContext->GetDirect3DDevice();
 
-  float alpha = mState.mClearColor.Alpha() * 255.f;
-  float red = mState.mClearColor.Red() * 255.f;
-  float green = mState.mClearColor.Green() * 255.f;
-  float blue = mState.mClearColor.Blue() * 255.f;
+  float alpha = mpState->mClearColor.Alpha() * 255.f;
+  float red = mpState->mClearColor.Red() * 255.f;
+  float green = mpState->mClearColor.Green() * 255.f;
+  float blue = mpState->mClearColor.Blue() * 255.f;
   uint8 a = (uint8)alpha; 
   uint8 r = (uint8)red;
   uint8 g = (uint8)green; 
@@ -823,7 +823,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
   {
   case GL_POINTS:
     primtype = D3DPT_POINTLIST;
-    c = mState.mStrokeColor;
+    c = mpState->mStrokeColor;
     primitivecount = size;
     translate_hack = true;
     //NGL_OUT(_T("Primitive : Point list %d "), size);
@@ -831,7 +831,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
 
   case GL_LINES:
     primtype = D3DPT_LINELIST;
-    c = mState.mStrokeColor;
+    c = mpState->mStrokeColor;
     primitivecount = size/2;
     translate_hack = true;
     //NGL_OUT(_T("Primitive : Line list %d "), size);
@@ -841,7 +841,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
     //NGL_ASSERT(0);
     //return;
     primtype = D3DPT_LINESTRIP; //#FIXME : close the loop 
-    c = mState.mStrokeColor;
+    c = mpState->mStrokeColor;
     primitivecount = size-1;
     translate_hack = true;
     //NGL_OUT(_T("Primitive : Line loop %d "), size);
@@ -849,7 +849,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
 
   case GL_LINE_STRIP:
     primtype = D3DPT_LINESTRIP;
-    c = mState.mStrokeColor;
+    c = mpState->mStrokeColor;
     primitivecount = size-1;
     translate_hack = true;
     //NGL_OUT(_T("Primitive : Line strip %d "), size);
@@ -857,14 +857,14 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
 
   case GL_TRIANGLES:
     primtype = D3DPT_TRIANGLELIST;
-    c = mState.mFillColor;
+    c = mpState->mFillColor;
     primitivecount = size/3;
     //NGL_OUT(_T("Primitive : Triangle list %d "), size);
     break;
 
   case GL_TRIANGLE_STRIP:
     primtype = D3DPT_TRIANGLESTRIP;
-    c = mState.mFillColor;
+    c = mpState->mFillColor;
     primitivecount = size-2;
     //NGL_OUT(_T("Primitive : Triangle strip %d "), size);
     //return; //@@@
@@ -872,7 +872,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
 
   case GL_TRIANGLE_FAN:
     primtype = D3DPT_TRIANGLEFAN;
-    c = mState.mFillColor;
+    c = mpState->mFillColor;
     primitivecount = size-1;
     //NGL_OUT(_T("Primitive : Triangle fan %d "), size);
     break;
@@ -901,7 +901,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
   hr = pDev->SetFVF(VertexFVF);
 
 #ifdef DIRECTX_FULL_LOG
-  if (mState.mTexturing)
+  if (mpState->mTexturing)
   {
     NGL_OUT(_T("TEXTURING ENABLED"));
   }
@@ -1039,7 +1039,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
       {
         case GL_POINTS:
           primtype = D3DPT_POINTLIST;
-          c = mState.mStrokeColor;
+          c = mpState->mStrokeColor;
           primitivecount = size;
           translate_hack = true;
           //NGL_OUT(_T("Primitive : Point list %d "), size);
@@ -1047,7 +1047,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           
         case GL_LINES:
           primtype = D3DPT_LINELIST;
-          c = mState.mStrokeColor;
+          c = mpState->mStrokeColor;
           primitivecount = size/2;
           translate_hack = true;
           //NGL_OUT(_T("Primitive : Line list %d "), size);
@@ -1057,7 +1057,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           //NGL_ASSERT(0);
           //return;
           primtype = D3DPT_LINESTRIP; //#FIXME : close the loop 
-          c = mState.mStrokeColor;
+          c = mpState->mStrokeColor;
           primitivecount = size-1;
           translate_hack = true;
           //NGL_OUT(_T("Primitive : Line loop %d "), size);
@@ -1065,7 +1065,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           
         case GL_LINE_STRIP:
           primtype = D3DPT_LINESTRIP;
-          c = mState.mStrokeColor;
+          c = mpState->mStrokeColor;
           primitivecount = size-1;
           translate_hack = true;
           //NGL_OUT(_T("Primitive : Line strip %d "), size);
@@ -1073,14 +1073,14 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           
         case GL_TRIANGLES:
           primtype = D3DPT_TRIANGLELIST;
-          c = mState.mFillColor;
+          c = mpState->mFillColor;
           primitivecount = size/3;
           //NGL_OUT(_T("Primitive : Triangle list %d "), size);
           break;
           
         case GL_TRIANGLE_STRIP:
           primtype = D3DPT_TRIANGLESTRIP;
-          c = mState.mFillColor;
+          c = mpState->mFillColor;
           primitivecount = size-2;
           //NGL_OUT(_T("Primitive : Triangle strip %d "), size);
           //return; //@@@
@@ -1088,7 +1088,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           
         case GL_TRIANGLE_FAN:
           primtype = D3DPT_TRIANGLEFAN;
-          c = mState.mFillColor;
+          c = mpState->mFillColor;
           primitivecount = size-1;
           //NGL_OUT(_T("Primitive : Triangle fan %d "), size);
           break;
@@ -1664,28 +1664,28 @@ void nuiD3DPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
   HRESULTChecker hr = S_OK;
 
   /*
-  if (ForceApply || mState.mTexturing != rState.mTexturing)
+  if (ForceApply || mpState->mTexturing != rState.mTexturing)
   {
-  mState.mTexturing = rState.mTexturing;
-  if (mState.mTexturing)
+  mpState->mTexturing = rState.mTexturing;
+  if (mpState->mTexturing)
   pDev->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
   else
   pDev->SetTexture(0, NULL);
   }
 
-  if (mState.mpTexture != rState.mpTexture || (mState.mpTexture && !mState.mpTexture->IsUptoDate()))
+  if (mpState->mpTexture != rState.mpTexture || (mpState->mpTexture && !mpState->mpTexture->IsUptoDate()))
   { 
-  if (mState.mpTexture)
+  if (mpState->mpTexture)
   {
-  // FIXME!!! mState.mpTexture->UnapplyD3D(this);
-  mState.mpTexture->Release();
+  // FIXME!!! mpState->mpTexture->UnapplyD3D(this);
+  mpState->mpTexture->Release();
   }
 
-  mState.mpTexture = rState.mpTexture ;
+  mpState->mpTexture = rState.mpTexture ;
 
-  if (mState.mpTexture)
+  if (mpState->mpTexture)
   {
-  mState.mpTexture->Acquire();
+  mpState->mpTexture->Acquire();
   std::map<nuiTexture*, TextureInfo>::const_iterator it = mTextures.find(rState.mpTexture);
   //if (it)
   {
@@ -1695,20 +1695,20 @@ void nuiD3DPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
   }
 
 
-  // FIXME!!! mState.mpTexture->ApplyD3D(this);
-  //mState.mpTexture->ApplyD3D(this);
+  // FIXME!!! mpState->mpTexture->ApplyD3D(this);
+  //mpState->mpTexture->ApplyD3D(this);
 
-  //if (mState.mpShader)
-  //  mState.mpShader->SetTexture2D(0, mState.mpTexture->GetGLTexture());
+  //if (mpState->mpShader)
+  //  mpState->mpShader->SetTexture2D(0, mpState->mpTexture->GetGLTexture());
   }
   }
   */
 
 
-  if (ForceApply || mState.mTexturing != rState.mTexturing)
+  if (ForceApply || mpState->mTexturing != rState.mTexturing)
   {
-    mState.mTexturing = rState.mTexturing;
-    if (mState.mTexturing)
+    mpState->mTexturing = rState.mTexturing;
+    if (mpState->mTexturing)
       pDev->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
     else
       pDev->SetTexture(0, NULL);
@@ -1717,13 +1717,13 @@ void nuiD3DPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
   // 2D Textures: 
   std::map<nuiTexture*, TextureInfo>::const_iterator it = mTextures.find(rState.mpTexture);
   bool uptodate = (it == mTextures.end()) ? false : ( !it->second.mReload && it->second.mpTexture != NULL );
-  if (ForceApply || (mState.mpTexture != rState.mpTexture) || (mState.mpTexture && !uptodate))
+  if (ForceApply || (mpState->mpTexture != rState.mpTexture) || (mpState->mpTexture && !uptodate))
   { 
-    mState.mpTexture = rState.mpTexture ;
-    if (mState.mpTexture)
+    mpState->mpTexture = rState.mpTexture ;
+    if (mpState->mpTexture)
     {
-      mState.mpTexture->Acquire();
-      UploadTexture(mState.mpTexture);
+      mpState->mpTexture->Acquire();
+      UploadTexture(mpState->mpTexture);
       std::map<nuiTexture*, TextureInfo>::const_iterator it = mTextures.find(rState.mpTexture);
       IDirect3DTexture9* pTexture = it->second.mpTexture;
       hr = pDev->SetTexture(0, it->second.mpTexture);
@@ -1834,6 +1834,12 @@ void nuiD3DPainter::DestroySurface(nuiSurface* pSurface)
     // Surface not found...
   }
 }
+
+void nuiD3DPainter::DestroyRenderArray(nuiRenderArray* pArray)
+{
+  NGL_ASSERT(0); //#TODO
+}
+
 
 void nuiD3DPainter::InvalidateSurface(nuiSurface* pSurface, bool ForceReload)
 {

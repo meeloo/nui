@@ -64,22 +64,16 @@ public:
 
   bool operator == (const nuiRenderState& rState) const;
   
-  bool mBlending;
-  nuiBlendFunc mBlendFunc;
-
-  bool mDepthTest;
-  bool mDepthWrite;
-
-  bool mCulling;
-  nuiCulling mCullingMode;
-  
-  bool mTexturing;
-  nuiTexture* mpTexture[NUI_MAX_TEXTURE_UNITS];
   nuiShaderProgram* mpShader;
+  nuiTexture* mpTexture[NUI_MAX_TEXTURE_UNITS];
+  nuiFont* mpFont;
   nuiShaderState* mpShaderState;
 
+  nuiBlendFunc mBlendFunc;
+  nuiCulling mCullingMode;
+  
+
   // Rendering buffers:
-  bool mColorBuffer;
 
   // Actual drawing params:
   nuiColor mStrokeColor;
@@ -88,15 +82,23 @@ public:
   nuiShape::Winding mWinding;
 
   nuiColor mClearColor;
-  float mClearDepth;
   nuiColor mTextColor;
-  nuiFont* mpFont;
+  float mClearDepth;
 
   nuiLineCap mLineCap;
   nuiLineJoin mLineJoin;
+
+  bool mBlending : 1,
+  mDepthTest : 1,
+  mDepthWrite : 1,
+  mCulling : 1,
+  mTexturing : 1,
+  mColorBuffer : 1,
+  mAntialiasing : 1;
+
+
   float mMitterLimit;
 
-  bool mAntialiasing;
 };
 
 #endif // __nuiRenderState_h__

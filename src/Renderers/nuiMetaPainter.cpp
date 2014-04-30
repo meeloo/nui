@@ -35,6 +35,12 @@ void nuiMetaPainter::DestroySurface(nuiSurface* pSurface)
 {
 }
 
+void nuiMetaPainter::DestroyRenderArray(nuiRenderArray* pArray)
+{
+  NGL_ASSERT(0); //#TODO
+}
+
+
 void nuiMetaPainter::DestroyTexture(nuiTexture* pTexture)
 {
 }
@@ -436,7 +442,7 @@ void nuiMetaPainter::Reset(nuiPainter const * pFrom)
 
   if (pFrom)
   {
-    mState = pFrom->GetState();
+    mpState = &pFrom->GetState();
     pFrom->GetSize(mWidth, mHeight);
     bool clip = pFrom->GetClipRect(mClip, false);
     

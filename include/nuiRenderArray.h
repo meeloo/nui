@@ -14,14 +14,6 @@
 
 class nuiTexture;
 
-class nuiCacheManager
-{
-public:
-  nuiCacheManager() {}
-  virtual ~nuiCacheManager() {}
-  virtual void ReleaseCacheObject(void* pHandle) = 0;
-};
-
 class nuiRenderArray : public nuiRefCount
 {
 public:
@@ -150,8 +142,6 @@ public:
   void Reserve(uint Count);
   void Resize(uint Count);
   void Reset();
-  void* GetCacheHandle(nuiCacheManager* pManager) const;
-  void SetCacheHandle(nuiCacheManager* pManager, void* pHandle) const;
   uint32 GetTotalSize() const;
   void FillBuffer(GLubyte* pBuffer) const;
 
@@ -216,8 +206,6 @@ private:
   bool m3DMesh : 1;
   bool mShape : 1;
   bool mDebug : 1;
-  mutable void* mpCacheHandle;
-  mutable nuiCacheManager* mpCacheManager;
 
   Vertex mCurrentVertex;
   std::vector<Vertex> mVertices;

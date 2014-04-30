@@ -76,6 +76,7 @@ public:
   bool GetDrawChildrenImmediat() const;
 
   virtual void DestroySurface(nuiSurface* pSurface);
+  virtual void DestroyRenderArray(nuiRenderArray* pArray);
 
 #ifdef _DEBUG_
   void DBGSetReferenceObject(const nuiObject* pRef);

@@ -21,6 +21,12 @@
 #define NUI_USE_MULTISAMPLE_AA
 #endif
 
+#ifdef _UIKIT_
+#define glDeleteVertexArrays glDeleteVertexArraysOES
+#elif defined __APPLE__
+#define glDeleteVertexArrays glDeleteVertexArraysAPPLE
+#endif
+
 static int64 MakePOT(int64 v)
 {
   uint i;
@@ -384,7 +390,7 @@ void nuiGLPainter::ResetOpenGLState()
   mTexEnvMode = 0;
 
   mFinalState = nuiRenderState();
-  mState = nuiRenderState();
+  mpState = &mDefaultState;
   nuiCheckForGLErrors();
 }
 
@@ -449,7 +455,6 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
       glDisable(GL_CULL_FACE);
     }
   }
-  glDisable(GL_CULL_FACE);
 
   if (ForceApply || mFinalState.mCullingMode != rState.mCullingMode)
   {
@@ -467,25 +472,25 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
     ApplyTexture(rState, ForceApply, i);
   }
 
-  if (ForceApply || mFinalState.mpShader != rState.mpShader)
+  if (ForceApply || mFinalState.mpShader != mpShader)
   {
-    if (rState.mpShader)
-      rState.mpShader->Acquire();
+    if (mpShader)
+      mpShader->Acquire();
     if (mFinalState.mpShader)
       mFinalState.mpShader->Release();
 
-    mFinalState.mpShader = rState.mpShader;
+    mFinalState.mpShader = mpShader;
 #if DEBUG
-    rState.mpShader->Validate();
+    mpShader->Validate();
 #endif
-    glUseProgram(rState.mpShader->GetProgram());
+    glUseProgram(mpShader->GetProgram());
   }
 
-  if (rState.mpShaderState)
-    rState.mpShaderState->Acquire();
+  if (mpShaderState)
+    mpShaderState->Acquire();
   if (mFinalState.mpShaderState)
     mFinalState.mpShaderState->Release();
-  mFinalState.mpShaderState = rState.mpShaderState;
+  mFinalState.mpShaderState = mpShaderState;
 
   // Rendering buffers:
   if (ForceApply || mFinalState.mColorBuffer != rState.mColorBuffer)
@@ -562,7 +567,7 @@ void nuiGLPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //TEST_FBO_CREATION();
   NUI_RETURN_IF_RENDERING_DISABLED;
 
-  mState = rState;
+  mpState = &rState;
   mForceApply |= ForceApply;
   //ApplyState(rState, ForceApply);
 }
@@ -596,11 +601,22 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, i
     }
  }
 
-  bool uptodate = (it == mTextures.end()) ? false : ( !it->second.mReload && it->second.mTexture >= 0 );
+  bool uptodate = false;
+  if (it != mTextures.end())
+  {
+    if (!it->second.mReload && it->second.mTexture >= 0)
+    {
+      uptodate = true;
+    }
+  }
+
   if (pTexture && !pTexture->IsUptoDate())
   {
     uptodate = false;
-    it->second.mReload = true;
+    if (it != mTextures.end())
+    {
+      it->second.mReload = true;
+    }
   }
 
   if (ForceApply || (mFinalState.mpTexture[slot] != pTexture) || (mFinalState.mpTexture[slot] && !uptodate))
@@ -694,7 +710,7 @@ void nuiGLPainter::Clear(bool color, bool depth, bool stencil)
   mRenderOperations++;
   NUI_RETURN_IF_RENDERING_DISABLED;
 
-  glClearColor(mState.mClearColor.Red(),mState.mClearColor.Green(),mState.mClearColor.Blue(),mState.mClearColor.Alpha());
+  glClearColor(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
 #ifdef _OPENGL_ES_
     glClearDepthf(mFinalState.mClearDepth);
 #else
@@ -893,7 +909,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     return;
   }
 
-  ApplyState(mState, mForceApply);
+  ApplyState(*mpState, mForceApply);
 
   mVertices += s;
   GLenum mode = pArray->GetMode();
@@ -1243,20 +1259,6 @@ void nuiGLPainter::PopProjectionMatrix()
 }
 
 
-
-#ifdef glDeleteBuffersARB
-#undef glDeleteBuffersARB
-#endif
-
-void nuiGLPainter::ReleaseCacheObject(void* pHandle)
-{
-  /* Not 64 bit-safe and 'dead code' as Meeloo said
-   GLuint array = (GLuint)pHandle;
-   mpContext->glDeleteBuffersARB(1, &array);
-   nuiCheckForGLErrors();
-   */
-}
-
 uint32 nuiGLPainter::GetRectangleTextureSupport() const
 {
   return mCanRectangleTexture;
@@ -1297,7 +1299,11 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
   nuiGLDebugGuard g("nuiGLPainter::UploadTexture()");
 #endif
 
-  glActiveTexture(GL_TEXTURE0 + slot);
+  if (mActiveTextureSlot != slot)
+  {
+    glActiveTexture(GL_TEXTURE0 + slot);
+    mActiveTextureSlot = slot;
+  }
 
   nuiTexture* pProxy = pTexture->GetProxyTexture();
   if (pProxy)
@@ -1570,7 +1576,11 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
   {
     mpContext->BeginSession();
     nuiCheckForGLErrors();
-    glActiveTexture(GL_TEXTURE0 + slot);
+    if (mActiveTextureSlot != slot)
+    {
+      glActiveTexture(GL_TEXTURE0 + slot);
+      mActiveTextureSlot = slot;
+    }
     glBindTexture(target, info.mTexture);
     nuiCheckForGLErrors();
     if (mTexEnvMode != pTexture->GetEnvMode())
@@ -1912,7 +1922,11 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
       if (pTexture && pSurface->GetRenderToTexture())
       {
         GLint oldTexture;
-        glActiveTexture(GL_TEXTURE0);
+        if (mActiveTextureSlot != 0)
+        {
+          glActiveTexture(GL_TEXTURE0);
+          mActiveTextureSlot = 0;
+        }
         glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &oldTexture);
 
         UploadTexture(pTexture, 0);
@@ -2030,32 +2044,54 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
   ResetOpenGLState();
 }
 
-nuiGLPainter::VertexBufferInfo::VertexBufferInfo(nuiRenderArray* pRenderArray)
+std::list<nuiGLPainter::RenderArrayInfo*> nuiGLPainter::RenderArrayInfo::mHeap;
+nuiGLPainter::RenderArrayInfo* nuiGLPainter::RenderArrayInfo::Create(nuiRenderArray* pRenderArray)
+{
+  if (!mHeap.empty())
+  {
+    RenderArrayInfo* pInfo = mHeap.front();
+    mHeap.pop_front();
+    pInfo->Rebind(pRenderArray);
+    return pInfo;
+  }
+  else
+  {
+    return new RenderArrayInfo(pRenderArray);
+  }
+}
+
+void nuiGLPainter::RenderArrayInfo::Recycle(nuiGLPainter::RenderArrayInfo* pInfo)
+{
+  pInfo->Destroy();
+}
+
+
+nuiGLPainter::RenderArrayInfo::RenderArrayInfo(nuiRenderArray* pRenderArray)
 {
   mpRenderArray = NULL;
   mVertexBuffer = -1;
 
   if (pRenderArray)
-    Create(pRenderArray);
+    Rebind(pRenderArray);
 }
 
-nuiGLPainter::VertexBufferInfo::VertexBufferInfo(const VertexBufferInfo& rInfo)
-: mpRenderArray(rInfo.mpRenderArray),
-  mVertexBuffer(rInfo.mVertexBuffer),
-  mIndexBuffers(rInfo.mIndexBuffers),
-  mStreamBuffers(rInfo.mStreamBuffers)
+nuiGLPainter::RenderArrayInfo::~RenderArrayInfo()
 {
-
+  Destroy();
 }
 
-void nuiGLPainter::VertexBufferInfo::Create(nuiRenderArray* pRenderArray)
+
+void nuiGLPainter::RenderArrayInfo::Rebind(nuiRenderArray* pRenderArray)
 {
   mpRenderArray = pRenderArray;
 
   int32 count = pRenderArray->GetSize();
   glGenBuffers(1, &mVertexBuffer);
+  nuiCheckForGLErrors();
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+  nuiCheckForGLErrors();
   glBufferData(GL_ARRAY_BUFFER, sizeof(nuiRenderArray::Vertex) * count, &pRenderArray->GetVertices()[0], GL_STATIC_DRAW);
+  nuiCheckForGLErrors();
 
   if (pRenderArray->GetIndexArrayCount() > 0)
   {
@@ -2065,13 +2101,16 @@ void nuiGLPainter::VertexBufferInfo::Create(nuiRenderArray* pRenderArray)
     for (uint32 i = 0; i < indexcount; i++)
     {
       glGenBuffers(1, &mIndexBuffers[i]);
+      nuiCheckForGLErrors();
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[i]);
+      nuiCheckForGLErrors();
       const nuiRenderArray::IndexArray& indices(pRenderArray->GetIndexArray(i));
   #ifdef _UIKIT_
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.mIndices.size() * sizeof(GLushort), &indices.mIndices[0], GL_STATIC_DRAW);
   #else
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.mIndices.size() * sizeof(GLuint), &indices.mIndices[0], GL_STATIC_DRAW);
   #endif
+      nuiCheckForGLErrors();
     }
   }
 
@@ -2082,7 +2121,9 @@ void nuiGLPainter::VertexBufferInfo::Create(nuiRenderArray* pRenderArray)
     const nuiRenderArray::StreamDesc& stream(pRenderArray->GetStream(i));
 
     glGenBuffers(1, &mStreamBuffers[i]);
+    nuiCheckForGLErrors();
     glBindBuffer(GL_ARRAY_BUFFER, mStreamBuffers[i]);
+    nuiCheckForGLErrors();
     int32 s = 1;
     switch (stream.mType)
     {
@@ -2091,39 +2132,64 @@ void nuiGLPainter::VertexBufferInfo::Create(nuiRenderArray* pRenderArray)
       case nuiRenderArray::eByte: s = 1; break;
     }
     glBufferData(GL_ARRAY_BUFFER, count * stream.mCount * s, stream.mData.mpFloats, GL_STATIC_DRAW);
+    nuiCheckForGLErrors();
   }
 
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void nuiGLPainter::VertexBufferInfo::Destroy()
+void nuiGLPainter::RenderArrayInfo::Destroy()
 {
-  if (mVertexBuffer == -1)
+  if ((GLint)mVertexBuffer == -1)
     return;
 
+  for (auto vao : mVAOs)
+  {
+    glDeleteVertexArrays(1, (GLuint*)&vao.second);
+    nuiCheckForGLErrors();
+  }
+  mVAOs.clear();
+
   glDeleteBuffers(1, &mVertexBuffer);
+  nuiCheckForGLErrors();
+  mVertexBuffer = -1;
+
   for (uint32 i = 0; i < mIndexBuffers.size(); i++)
+  {
     glDeleteBuffers(1, &mIndexBuffers[i]);
+    nuiCheckForGLErrors();
+  }
+  mIndexBuffers.clear();
 
   for (uint32 i = 0; i < mStreamBuffers.size(); i++)
+  {
     glDeleteBuffers(1, &mStreamBuffers[i]);
+    nuiCheckForGLErrors();
+  }
+
+  mStreamBuffers.clear();
 }
 
-void nuiGLPainter::VertexBufferInfo::BindVertices() const
+void nuiGLPainter::RenderArrayInfo::BindVertices() const
 {
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+  nuiCheckForGLErrors();
 }
 
-void nuiGLPainter::VertexBufferInfo::BindStream(int index) const
+void nuiGLPainter::RenderArrayInfo::BindStream(int index) const
 {
   glBindBuffer(GL_ARRAY_BUFFER, mStreamBuffers[index]);
+  nuiCheckForGLErrors();
 }
 
-void nuiGLPainter::VertexBufferInfo::BindIndices(int index) const
+void nuiGLPainter::RenderArrayInfo::BindIndices(int index) const
 {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[index]);
+  nuiCheckForGLErrors();
 }
 
-void nuiGLPainter::VertexBufferInfo::Draw() const
+void nuiGLPainter::RenderArrayInfo::Draw() const
 {
   BindVertices();
 
@@ -2139,6 +2205,7 @@ void nuiGLPainter::VertexBufferInfo::Draw() const
 #else
       glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, (void*)0);
 #endif
+      nuiCheckForGLErrors();
     }
   }
   else
@@ -2146,6 +2213,12 @@ void nuiGLPainter::VertexBufferInfo::Draw() const
 
   }
 }
+
+
+void nuiGLPainter::DestroyRenderArray(nuiRenderArray* pArray)
+{
+}
+
 
 
 bool nuiCheckForGLErrorsReal()
