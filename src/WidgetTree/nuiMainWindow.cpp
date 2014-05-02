@@ -9,10 +9,6 @@
 
 #include "nui.h"
 
-//#define DRAW_TO_SURFACE
-//const bool DrawDirtyRects = true;
-const bool DrawDirtyRects = false;
-
 using namespace std;
 
 #define NUI_MULTISAMPLES 0
@@ -166,10 +162,19 @@ nuiMainWindow::~nuiMainWindow()
 void nuiMainWindow::InitAttributes()
 {
   AddAttribute(new nuiAttribute<nuiRect>
-               (nglString(_T("WindowRect")), nuiUnitNone,
+               (nglString("WindowRect"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiMainWindow::GetWindowRect),
                 nuiMakeDelegate(this, &nuiMainWindow::SetWindowRect)));
   
+  AddAttribute(new nuiAttribute<bool>
+               (nglString("DrawToSurface"), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiMainWindow::GetDrawToSurface),
+                nuiMakeDelegate(this, &nuiMainWindow::SetDrawToSurface)));
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString("DrawDirtyRects"), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiMainWindow::GetDrawDirtyRects),
+                nuiMakeDelegate(this, &nuiMainWindow::SetDrawDirtyRects)));
 }
 
 void nuiMainWindow::OnPaint()
@@ -231,28 +236,29 @@ void nuiMainWindow::Paint()
 
   pContext->StartRendering();
 
-#ifdef DRAW_TO_SURFACE
-  if (mpSurface)
+  if (mDrawToSurface)
   {
-    if (mpSurface->GetWidth() != GetWidth() || mpSurface->GetHeight() != GetHeight() )
+    if (mpSurface)
     {
-      mpSurface->Release();
-      mpSurface = nullptr;
+      if (mpSurface->GetWidth() != GetWidth() || mpSurface->GetHeight() != GetHeight() )
+      {
+        mpSurface->Release();
+        mpSurface = nullptr;
+      }
     }
-  }
 
-  if (!mpSurface)
-  {
-    nglString name;
-    static int count = 0;
-    name.CFormat("nuiMainWindow %p %d", this, count++);
-    mpSurface = nuiSurface::CreateSurface(name, GetWidth(), GetHeight());
-    name.CFormat("nuiMainWindow_Texture %p %d", this, count++);
-    mpSurface->GetTexture()->SetSource(name);
-  }
+    if (!mpSurface)
+    {
+      nglString name;
+      static int count = 0;
+      name.CFormat("nuiMainWindow %p %d", this, count++);
+      mpSurface = nuiSurface::CreateSurface(name, GetWidth(), GetHeight());
+      name.CFormat("nuiMainWindow_Texture %p %d", this, count++);
+      mpSurface->GetTexture()->SetSource(name);
+    }
 
-  pContext->SetSurface(mpSurface);
-#endif
+    pContext->SetSurface(mpSurface);
+  }
 
   pContext->Set2DProjectionMatrix(GetRect().Size());
   bool DrawFullFrame = !mInvalidatePosted || (mFullFrameRedraw > 0);
@@ -301,21 +307,21 @@ void nuiMainWindow::Paint()
 //    
 //  }
 
-#ifdef DRAW_TO_SURFACE
+  if (mDrawToSurface)
+  {
+    pContext->SetSurface(nullptr);
 
-  pContext->SetSurface(nullptr);
-
-//  pContext->StartRendering();
-  pContext->Set2DProjectionMatrix(GetRect().Size());
-  nuiTexture* pTex = mpSurface->GetTexture();
-  pContext->SetTexture(pTex);
-  pContext->EnableTexturing(true);
-  pContext->SetFillColor(nuiColor(255, 255, 255));
-  pContext->ResetClipRect();
-  pContext->EnableClipping(false);
-  nuiRect r((int)pTex->GetWidth(), (int)pTex->GetHeight());
-  pContext->DrawImage(r,  r);
-#endif
+  //  pContext->StartRendering();
+    pContext->Set2DProjectionMatrix(GetRect().Size());
+    nuiTexture* pTex = mpSurface->GetTexture();
+    pContext->SetTexture(pTex);
+    pContext->EnableTexturing(true);
+    pContext->SetFillColor(nuiColor(255, 255, 255));
+    pContext->ResetClipRect();
+    pContext->EnableClipping(false);
+    nuiRect r((int)pTex->GetWidth(), (int)pTex->GetHeight());
+    pContext->DrawImage(r,  r);
+  }
 
   pContext->StopRendering();
 
@@ -334,7 +340,7 @@ void nuiMainWindow::Paint()
   }
 #endif//__NUI_NO_SOFTWARE__
 
-  if (DrawDirtyRects)
+  if (mDrawDirtyRects)
   {
     pContext->SetFillColor(nuiColor(255, 255, 255, 100));
     pContext->SetStrokeColor(nuiColor(255, 255, 255, 182));

@@ -9,6 +9,7 @@
 #include "nuiAudioDevice.h"
 #include "nuiAudioDevice_AudioUnit.h"
 #import <UIKit/UIKit.h>
+#import <Accelerate/Accelerate.h>
 
 #define kOutputBus	(0)
 #define kInputBus		(1)
@@ -179,7 +180,8 @@ void nuiAudioDevice_AudioUnit::Process(uint uNumFrames, AudioBufferList* ioData)
       const float* ptr0 = mOutputBuffers[0];
       const float* ptr1 = mOutputBuffers[1];
       
-      const int32 mult = ((1 << 15) - 1);
+      const float mult = ((1 << 15) - 1);
+#if 1
       for (int32 s = 0; s < uNumFrames; s++)
       {
         const float sl = nuiClamp(*ptr0, -1.0f, 1.0f);
@@ -194,6 +196,19 @@ void nuiAudioDevice_AudioUnit::Process(uint uNumFrames, AudioBufferList* ioData)
         ptr0++;
         ptr1++;
       }
+#else
+      float splitdest[uNumFrames * 2];
+      float dest[uNumFrames * 2];
+      const float minusone = -1;
+      const float one = 1;
+      vDSP_vclip(ptr0, 1, &minusone, &one, splitdest, 1, uNumFrames);
+      vDSP_vclip(ptr1, 1, &minusone, &one, splitdest + uNumFrames, 1, uNumFrames);
+
+      vDSP_vsmul(splitdest, 1, &mult, dest, 1, uNumFrames * 2);
+
+      vDSP_vfix16(dest, 2, dst0, 2, uNumFrames);
+      vDSP_vfix16(dest + 1, 2, dst0 + 1, 2, uNumFrames);
+#endif
     }
   }
 } 

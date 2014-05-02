@@ -149,6 +149,9 @@ public:
   
   static void DestroyAllWindows();
 
+  NUI_GETSETDO(bool, DrawDirtyRects, Invalidate());
+  NUI_GETSETDO(bool, DrawToSurface, Invalidate());
+
 private:
   void Register();
   void Unregister();
@@ -280,6 +283,10 @@ private:
   double mFPSDelay;
   uint32 mFPSCount;
   float mFPS;
+
+  bool mDrawDirtyRects = false;
+  bool mDrawToSurface = false;
+
   CreateDragFeedbackDelegate mCreateDragFeedbackDelegate;
 };
 

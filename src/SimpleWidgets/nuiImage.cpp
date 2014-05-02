@@ -108,6 +108,10 @@ void nuiImage::InitAttributes()
                 nuiMakeDelegate(this, &nuiImage::GetColor), 
                 nuiMakeDelegate(this, &nuiImage::SetColor)));
   
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("UseAlpha")), nuiUnitYesNo,
+                nuiMakeDelegate(this, &nuiImage::GetUseAlpha),
+                nuiMakeDelegate(this, &nuiImage::SetUseAlpha)));
 }
 
 
@@ -123,7 +127,7 @@ void nuiImage::SetTexturePath(const nglPath& rTexturePath)
   nuiTexture* pTexture = nuiTexture::GetTexture(mTexturePath, NULL);
   SetTexture(pTexture);
   pTexture->Release();
-  mUseAlpha = true;
+//  mUseAlpha = true;
   //SetFixedAspectRatio(true);
   SetProperty(_T("Source"), mTexturePath.GetPathName());
 }
@@ -136,7 +140,7 @@ void nuiImage::SetTexture(nuiTexture* pTex)
     mpTexture->Release();
 
   mpTexture = pTex;
-  mUseAlpha = true;
+//  mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
   SetProperty(_T("Source"), _T("Memory Buffer"));
