@@ -12,11 +12,11 @@
 
 nuiProgressBar::nuiProgressBar(float Progress)
 {
-  if (SetObjectClass(_T("nuiProgressBar")))
+  if (SetObjectClass("nuiProgressBar"))
     InitAttributes();
   
-  nuiColor::GetColor(_T("nuiDefaultClrProgressFg"), mFGColor);
-  nuiColor::GetColor(_T("nuiDefaultClrProgressBg"), mBGColor);
+  nuiColor::GetColor("nuiDefaultClrProgressFg", mFGColor);
+  nuiColor::GetColor("nuiDefaultClrProgressBg", mBGColor);
   
   mProgress = Progress;
   mAlphaIncr = INC;
@@ -31,11 +31,11 @@ nuiProgressBar::nuiProgressBar(float Progress)
 
 nuiProgressBar::nuiProgressBar()
 {
-  if (SetObjectClass(_T("nuiProgressBar")))
+  if (SetObjectClass("nuiProgressBar"))
     InitAttributes();
   
-  nuiColor::GetColor(_T("nuiDefaultClrProgressFg"), mFGColor);
-  nuiColor::GetColor(_T("nuiDefaultClrProgressBg"), mBGColor);
+  nuiColor::GetColor("nuiDefaultClrProgressFg", mFGColor);
+  nuiColor::GetColor("nuiDefaultClrProgressBg", mBGColor);
 
   mProgress = 0.f;
   mAlphaIncr = INC;
@@ -57,17 +57,17 @@ nuiProgressBar::~nuiProgressBar()
 void nuiProgressBar::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("ForegroundColor")), nuiUnitNone,
+               ("ForegroundColor", nuiUnitNone,
                 nuiMakeDelegate(this, &nuiProgressBar::GetFGColor), 
                 nuiMakeDelegate(this, &nuiProgressBar::SetFGColor)));
 
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("BackgroundColor")), nuiUnitNone,
+               ("BackgroundColor", nuiUnitNone,
                 nuiMakeDelegate(this, &nuiProgressBar::GetBGColor), 
                 nuiMakeDelegate(this, &nuiProgressBar::SetBGColor)));
 
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("Glow")), nuiUnitNone,
+               ("Glow", nuiUnitNone,
                 nuiMakeDelegate(this, &nuiProgressBar::GetGlow), 
                 nuiMakeDelegate(this, &nuiProgressBar::SetGlow)));
   
@@ -141,71 +141,26 @@ bool nuiProgressBar::Draw(nuiDrawContext* pContext)
   
   pContext->EnableBlending(true);
   pContext->SetBlendFunc(nuiBlendTransp);
+
   pContext->SetFillColor(mBGColor);
   pContext->DrawRect(size, eFillShape);
-  
+
   nuiColor col = mFGColor;
   
   col.Add(alpha);
   col.Crop();
-  
-  if (mEndless)
-  {
-    mEndlessAnim += mEndlessIncr * (float)lap * .25f;
-    
-    float ratio = fmod(mEndlessAnim, 1.f);
-    
-    nuiGradient grad;
-    grad.AddStop(col, ratio);
-    
-    nuiColor noAlpha = col;
-    noAlpha.SetOpacity(0.f);
-    if (ratio > .5f)
-    {
-      grad.AddStop(noAlpha, ratio - .5f);
-      
-      nuiColor midAlpha = col;
-      midAlpha.Multiply(2.f*ratio - 1.f);
-      grad.AddStop(midAlpha, 0.0);
-      grad.AddStop(midAlpha, 1.0);
-    }
-    else
-    {
-      grad.AddStop(noAlpha, ratio + .5f);
-      
-      nuiColor midAlpha = col;
-      midAlpha.Multiply(-2.f*ratio + 1.f);
-      grad.AddStop(midAlpha, 0.0);
-      grad.AddStop(midAlpha, 1.0);
-    }
-    
-    pContext->SetBlendFunc(nuiBlendTranspAdd);
-    pContext->DrawGradient(grad, size, size.mLeft, size.mBottom, size.mRight, size.mBottom);
-    
-    pContext->SetBlendFunc(nuiBlendTransp);
-    pContext->DrawGradient(grad, size, size.mLeft, size.mBottom, size.mRight, size.mBottom);
-  }
-  else
+  pContext->SetFillColor(col);
+
+//  if (mEndless)
+//  {
+//    mEndlessAnim += mEndlessIncr * (float)lap * .25f;
+//    float ratio = fmod(mEndlessAnim, 1.f);
+//  }
+//  else
   {
     nuiRect r(0.0f, 0.0f, 0.01f * mProgress * size.GetWidth(), size.GetHeight());
-    
-    pContext->SetBlendFunc(nuiBlendTranspAdd);
-    pContext->SetFillColor(col);
-    pContext->DrawRect(r, eFillShape);
-    
-    pContext->SetBlendFunc(nuiBlendTransp);
-    pContext->SetFillColor(col);
     pContext->DrawRect(r, eFillShape);
   }
-  
-  pContext->SetBlendFunc(nuiBlendTransp);
-  nuiReflection ref(.5f, .3f);
-  ref.Draw(pContext, size, NULL);
-  
-  pContext->SetBlendFunc(nuiBlendTransp);
-  pContext->EnableAntialiasing(true);
-  pContext->SetStrokeColor(nuiColor(0,0,0));
-  pContext->DrawRect(GetRect().Size(), eStrokeShape);
   
   return true;
 }
