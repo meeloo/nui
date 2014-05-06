@@ -89,7 +89,9 @@ and in NGL user application code.
 
   //#elif (defined _COCOA_)
   #else // Make Cocoa the default choice when compiling on a Mac, even when using gcc
-    #define _COCOA_
+    #ifndef _COCOA_
+        #define _COCOA_
+    #endif
     #define __MACHO__
     #define __NGL_MACHO__
     #if !__LP64__
