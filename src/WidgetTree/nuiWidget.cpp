@@ -9,8 +9,17 @@
 
 #include "nui.h"
 
-//const bool gGlobalUseRenderCache = false;
-const bool gGlobalUseRenderCache = true;
+bool nuiWidget::mGlobalUseRenderCache = true;
+
+void nuiWidget::SetGlobalUseRenderCache(bool set)
+{
+  mGlobalUseRenderCache = set;
+}
+
+bool nuiWidget::GetGlobalUseRenderCache()
+{
+  return mGlobalUseRenderCache;
+}
 
 //#define NUI_LOG_GETIDEALRECT
 
@@ -1007,7 +1016,6 @@ void nuiWidget::Invalidate()
   if ((mNeedRender && mNeedSelfRedraw))
     return;
 
-  //printf("nuiWidget::Invalidate '%s [%s]'\n", GetObjectClass().GetChars() , GetObjectName().GetChars());
   NGL_ASSERT(nglThread::GetCurThreadID() == App->GetMainThreadID());
   if (GetDebug())
   {
@@ -1021,14 +1029,10 @@ void nuiWidget::Invalidate()
     return;
   }
 
-  ////  nuiWidget::InvalidateRect(GetOverDrawRect(true, true));
   nuiRect r(GetOverDrawRect(true, true));
   r.Intersect(r, GetVisibleRect());
   nuiWidget::InvalidateRect(r);
-//  nuiWidget::InvalidateRect(GetVisibleRect());
-  ////  nuiWidget::InvalidateRect(GetRect());
   SilentInvalidate();
-
   if (mpParent)
     mpParent->BroadcastInvalidate(this);
   DebugRefreshInfo();
@@ -1443,7 +1447,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     nuiDrawContext* pSavedCtx = pContext;
     
     bool rendertest = mNeedRender;
-    if (gGlobalUseRenderCache && mUseRenderCache)
+    if (mGlobalUseRenderCache && mUseRenderCache)
     {
       NGL_ASSERT(mpRenderCache);
       

@@ -25,6 +25,11 @@ mpLeft(nullptr), mpMain(nullptr), mpRight(nullptr), mOffset(0), mTouched(false),
                   nuiMakeDelegate(this, &nuiDrawerView::SetAnimRatio)));
   }
 
+  NUI_ADD_EVENT(LeftOpened);
+  NUI_ADD_EVENT(RightOpened);
+  NUI_ADD_EVENT(Opened);
+  NUI_ADD_EVENT(Closed);
+
   nuiAnimation::AcquireTimer();
 }
 
@@ -463,6 +468,24 @@ void nuiDrawerView::OnAnimateDrawer(const nuiEvent &rEvent)
     mOffset = mTargetOffset;
     //NGL_OUT("!!!!!!!! Anim end mOffset = %f\n", mOffset);
     mEventSink.DisconnectAll();
+
+
+    if (IsOpen())
+    {
+      Opened();
+      if (IsLeftOpen())
+      {
+        LeftOpened();
+      }
+      else
+      {
+        RightOpened();
+      }
+    }
+    else
+    {
+      Closed();
+    }
   }
 
   mOriginalOffset = mOffset;

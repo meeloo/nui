@@ -593,6 +593,9 @@ public:
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
 
+  static void SetGlobalUseRenderCache(bool set);
+  static bool GetGlobalUseRenderCache();
+
 protected:
   std::map<nglString, nuiEventSource*, nglString::LessFunctor> mEventMap;
   std::vector<nuiEventActionHolder*> mEventActions;
@@ -669,6 +672,8 @@ protected:
   void DispatchFocus(nuiWidgetPtr pWidget); ///< Advise the objet of a change of focus object. pWidget can be null.
 
   static bool mShowFocusDefault;
+  static bool mGlobalUseRenderCache;
+
 
   bool mAnimateLayout : 1;
   bool mRedrawOnHover : 1;

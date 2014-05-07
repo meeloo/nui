@@ -43,6 +43,11 @@ public:
   bool IsOpen() const;
   bool IsLeftOpen() const;
   bool IsRightOpen() const;
+
+  nuiSimpleEventSource<0> LeftOpened;
+  nuiSimpleEventSource<0> RightOpened;
+  nuiSimpleEventSource<0> Opened;
+  nuiSimpleEventSource<0> Closed;
 protected:
   nuiWidgetPtr mpLeft;
   nuiWidgetPtr mpMain;
