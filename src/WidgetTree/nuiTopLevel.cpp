@@ -1119,6 +1119,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] BEGIN\n"), rInfo.TouchId) );
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
+    NGL_TOUCHES_DEBUG( NGL_OUT(_T("  destination %p %s %s\n"), pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
     WidgetBranchGuard guard(pGrab);
     std::vector<nuiContainerPtr> containers;
     nuiContainerPtr pParent = pGrab->GetParent();
@@ -1158,7 +1159,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END\n"), rInfo.TouchId) );
     DispatchKeyboardFocus(widgets);
 
 PRINT_GRAB_IDS();
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END\n"), rInfo.TouchId) );
+NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END2\n"), rInfo.TouchId) );
 
   UpdateWidgetsCSS();
 	return res;
@@ -1265,6 +1266,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] BEGIN\n"), rInfo.TouchId) )
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
+    NGL_TOUCHES_DEBUG( NGL_OUT(_T("  destination %p %s %s\n"), pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
     WidgetBranchGuard guard(pGrab);
     NGL_ASSERT(!pGrab->IsTrashed(true));
     pGrab->Acquire();
@@ -1306,7 +1308,14 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
     if (it != mMouseClickedEvents.end())
       mMouseClickedEvents.erase(it);
 
-    NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab1: Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
+    NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab1: Grabs %d - %d (from %p)\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size(), pGrab));
+#ifdef _NGL_DEBUG_TOUCHES_
+    if (pGrab)
+    {
+      NGL_OUT("  from widget: %s / %s\n", pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars());
+    }
+#endif
+
     pGrab->Release();
 
     UpdateWidgetsCSS();
@@ -1405,7 +1414,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
-//NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
+NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
 
   // Update counterpart:
   std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
@@ -1415,7 +1424,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
 
   if (mMouseStates.find(rInfo.TouchId) != mMouseStates.end())
   {
-    //NGL_OUT("Found %x\n", rInfo.TouchId);
+    NGL_TOUCHES_DEBUG( NGL_OUT("Found %x\n", rInfo.TouchId) );
     // Only update the mouse state if there was an existing touch already registered.
     // On a desktop computer with a mouse, when you move the mouse of the window with no button down there is no existing state to update.
     mMouseStates[rInfo.TouchId] = rInfo;
@@ -1425,7 +1434,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
   mMouseInfo.Y = rInfo.Y;
 
   mMouseInfo.TouchId = rInfo.TouchId;
-//NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] BEGIN\n"), rInfo.TouchId) );
+  NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] BEGIN\n"), rInfo.TouchId) );
 
   nuiWidgetPtr pWidget = NULL;
   nuiWidgetPtr pWidgetUnder = NULL;
@@ -1443,6 +1452,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
+    NGL_TOUCHES_DEBUG( NGL_OUT(_T("  destination %p %s %s\n"), pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
     WidgetBranchGuard guard(pGrab);
     std::vector<nuiContainerPtr> containers;
     nuiContainerPtr pParent = pGrab->GetParent();
@@ -1487,7 +1497,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
     SetToolTipRect();
 #endif
 
-//NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END\n"), rInfo.TouchId) );
+    NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END1\n"), rInfo.TouchId) );
     UpdateWidgetsCSS();
     return pHandled != NULL;
   }
@@ -1550,7 +1560,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
 #ifndef DISABLE_TOOLTIP
   SetToolTipRect();
 #endif
-//NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END\n"), rInfo.TouchId) );
+  NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END2\n"), rInfo.TouchId) );
   UpdateWidgetsCSS();
   return pHandled != NULL;
 }
