@@ -10,6 +10,39 @@
 #include "nuiFastDelegate.h"
 #include "nuiRefCount.h"
 
+
+template <class Param>
+class DeRefConst
+{
+public:
+  typedef Param Type;
+};
+
+template <class Param>
+class DeRefConst<const Param&>
+{
+public:
+  typedef Param Type;
+};
+
+template <class Param>
+class RefConst
+{
+public:
+  typedef const Param& Type;
+};
+
+template <class Param>
+class RefConst<const Param&>
+{
+public:
+  typedef const Param& Type;
+};
+
+
+
+
+
 class nuiTask : public nuiRefCount
 {
 public:
@@ -78,12 +111,12 @@ class nuiTask1 : public nuiTask
 {
 public:
   typedef nuiFastDelegate1<P0, Ret> Delegate;
-  nuiTask1(const Delegate& rDelegate, const P0& rP0)
+  nuiTask1(const Delegate& rDelegate, typename RefConst<P0>::Type rP0)
   : mP0(rP0), mDelegate(rDelegate)
   {    
   }
   
-  DEFPARAM(0, P0);
+  DEFPARAM(0, typename DeRefConst<P0>::Type);
 private:
   Delegate mDelegate;
   virtual void Execute() const
@@ -302,19 +335,19 @@ nuiTask0<RetType>* nuiMakeTask(Y* x, RetType (X::*func)() const)
 
 // 1 Param
 template <class Param0, class RetType>
-nuiTask1<Param0, RetType>* nuiMakeTask(RetType (*func)(Param0 p0), Param0 P0)
+nuiTask1<Param0, RetType>* nuiMakeTask(RetType (*func)(Param0 p0), typename RefConst<Param0>::Type P0)
 { 
 	return new nuiTask1<Param0, RetType>(func, P0);
 }
 
 template <class X, class Y, class Param0, class RetType>
-nuiTask1<Param0, RetType>* nuiMakeTask(Y* x, RetType (X::*func)(Param0 p0), Param0 P0)
+nuiTask1<Param0, RetType>* nuiMakeTask(Y* x, RetType (X::*func)(Param0 p0), typename RefConst<Param0>::Type  P0)
 { 
 	return new nuiTask1<Param0, RetType>(nuiMakeDelegate(x, func), P0);
 }
 
 template <class X, class Y, class Param0, class RetType>
-nuiTask1<Param0, RetType>* nuiMakeTask(Y* x, RetType (X::*func)(Param0 p0) const, Param0 P0)
+nuiTask1<Param0, RetType>* nuiMakeTask(Y* x, RetType (X::*func)(Param0 p0) const, typename RefConst<Param0>::Type  P0)
 { 
 	return new nuiTask1<Param0, RetType>(nuiMakeDelegate(x, func), P0);
 }
