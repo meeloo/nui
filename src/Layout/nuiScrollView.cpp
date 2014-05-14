@@ -790,6 +790,9 @@ bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
   else if (Button & nglMouseInfo::ButtonLeft && mDragEnabled)
   {
     mLeftClick = true;
+    mTimerOn = false;
+    mSpeedX = 0;
+    mSpeedY = 0;
     mClickX = X;
     mClickY = Y;
     mLastX = X;
@@ -830,7 +833,12 @@ bool nuiScrollView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags But
     mSpeedX = 0;
     mSpeedY = 0;
   }
-  
+  else
+  {
+    if (mSpeedX != 0 || mSpeedY != 0)
+      mTimerOn = true;
+  }
+
   if (mHideScrollBars)
   {
     HideScrollBars();
@@ -844,13 +852,13 @@ bool nuiScrollView::MouseMoved(nuiSize X, nuiSize Y)
     return false;
   
   nglTime now;
-  double elapsed = now.GetValue() - mLastTime.GetValue();
+  float elapsed = now.GetValue() - mLastTime.GetValue();
   
   nuiSize vectX = mLastX - X;
   nuiSize vectY = mLastY - Y;
   nuiSize module = sqrt(vectX * vectX + vectY * vectY);
-  mSpeedX = (vectX / module) * INERTIA_SPEED * elapsed;
-  mSpeedY = (vectY / module) * INERTIA_SPEED * elapsed;  
+  mSpeedX += (vectX / module) * INERTIA_SPEED * elapsed;
+  mSpeedY += (vectY / module) * INERTIA_SPEED * elapsed;
   
   mLastX = X;
   mLastY = Y;
@@ -969,6 +977,9 @@ nuiSize nuiScrollView::GetVIncrement() const
 
 void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
 {
+  mSpeedX *= INERTIA_BRAKES;
+  mSpeedY *= INERTIA_BRAKES;
+
   if (!mTimerOn)
     return;
 
@@ -999,14 +1010,12 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     {
       SetXPos(GetXPos() + mSpeedX);
       //mXOffset = GetXPos();
-      mSpeedX *= INERTIA_BRAKES;
     }
     
     if (mSpeedY != 0)
     {
       SetYPos(GetYPos() + mSpeedY);
       //mYOffset = GetYPos();
-      mSpeedY *= INERTIA_BRAKES;
     }
   }
 
