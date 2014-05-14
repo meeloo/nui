@@ -131,13 +131,13 @@ class nuiTask2 : public nuiTask
 {
 public:
   typedef nuiFastDelegate2<P0, P1, Ret> Delegate;
-  nuiTask2(const Delegate& rDelegate, const P0& rP0, const P1& rP1)
+  nuiTask2(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1)
   {    
   }
   
-  DEFPARAM(0, P0);
-  DEFPARAM(1, P1);
+  DEFPARAM(0, typename DeRefConst<P0>::Type);
+  DEFPARAM(1, typename DeRefConst<P1>::Type);
 
 private:
   Delegate mDelegate;
@@ -153,15 +153,15 @@ class nuiTask3 : public nuiTask
 {
 public:
   typedef nuiFastDelegate3<P0, P1, P2, Ret> Delegate;
-  nuiTask3(const Delegate& rDelegate, const P0& rP0, const P1& rP1, const P2& rP2)
+  nuiTask3(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2)
   {    
   }
   
-  DEFPARAM(0, P0);
-  DEFPARAM(1, P1);
-  DEFPARAM(2, P2);
-  
+  DEFPARAM(0, typename DeRefConst<P0>::Type);
+  DEFPARAM(1, typename DeRefConst<P1>::Type);
+  DEFPARAM(2, typename DeRefConst<P2>::Type);
+
 private:
   Delegate mDelegate;
   virtual void Execute() const
@@ -176,16 +176,16 @@ class nuiTask4 : public nuiTask
 {
 public:
   typedef nuiFastDelegate4<P0, P1, P2, P3, Ret> Delegate;
-  nuiTask4(const Delegate& rDelegate, const P0& rP0, const P1& rP1, const P2& rP2, const P3& rP3)
+  nuiTask4(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3)
   {    
   }
   
-  DEFPARAM(0, P0);
-  DEFPARAM(1, P1);
-  DEFPARAM(2, P2);
-  DEFPARAM(3, P3);
-  
+  DEFPARAM(0, typename DeRefConst<P0>::Type);
+  DEFPARAM(1, typename DeRefConst<P1>::Type);
+  DEFPARAM(2, typename DeRefConst<P2>::Type);
+  DEFPARAM(3, typename DeRefConst<P3>::Type);
+
 private:
   Delegate mDelegate;
   virtual void Execute() const
@@ -201,17 +201,17 @@ class nuiTask5 : public nuiTask
 {
 public:
   typedef nuiFastDelegate5<P0, P1, P2, P3, P4, Ret> Delegate;
-  nuiTask5(const Delegate& rDelegate, const P0& rP0, const P1& rP1, const P2& rP2, const P3& rP3, const P4& rP4)
+  nuiTask5(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4)
   {    
   }
   
-  DEFPARAM(0, P0);
-  DEFPARAM(1, P1);
-  DEFPARAM(2, P2);
-  DEFPARAM(3, P3);
-  DEFPARAM(4, P4);
-  
+  DEFPARAM(0, typename DeRefConst<P0>::Type);
+  DEFPARAM(1, typename DeRefConst<P1>::Type);
+  DEFPARAM(2, typename DeRefConst<P2>::Type);
+  DEFPARAM(3, typename DeRefConst<P3>::Type);
+  DEFPARAM(4, typename DeRefConst<P4>::Type);
+
 private:
   Delegate mDelegate;
   virtual void Execute() const
@@ -228,18 +228,18 @@ class nuiTask6 : public nuiTask
 {
 public:
   typedef nuiFastDelegate6<P0, P1, P2, P3, P4, P5, Ret> Delegate;
-  nuiTask6(const Delegate& rDelegate, const P0& rP0, const P1& rP1, const P2& rP2, const P3& rP3, const P4& rP4, const P5& rP5)
+  nuiTask6(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5)
   {    
   }
   
-  DEFPARAM(0, P0);
-  DEFPARAM(1, P1);
-  DEFPARAM(2, P2);
-  DEFPARAM(3, P3);
-  DEFPARAM(4, P4);
-  DEFPARAM(5, P5);
-  
+  DEFPARAM(0, typename DeRefConst<P0>::Type);
+  DEFPARAM(1, typename DeRefConst<P1>::Type);
+  DEFPARAM(2, typename DeRefConst<P2>::Type);
+  DEFPARAM(3, typename DeRefConst<P3>::Type);
+  DEFPARAM(4, typename DeRefConst<P4>::Type);
+  DEFPARAM(5, typename DeRefConst<P5>::Type);
+
 private:
   Delegate mDelegate;
   virtual void Execute() const
@@ -256,19 +256,19 @@ class nuiTask7 : public nuiTask
 {
 public:
   typedef nuiFastDelegate7<P0, P1, P2, P3, P4, P5, P6, Ret> Delegate;
-  nuiTask7(const Delegate& rDelegate, const P0& rP0, const P1& rP1, const P2& rP2, const P3& rP3, const P4& rP4, const P5& rP5, const P6& rP6)
+  nuiTask7(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5, typename RefConst<P6>::Type rP6)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5), mP6(rP6)
   {    
   }
   
-  DEFPARAM(0, P0);
-  DEFPARAM(1, P1);
-  DEFPARAM(2, P2);
-  DEFPARAM(3, P3);
-  DEFPARAM(4, P4);
-  DEFPARAM(5, P5);
-  DEFPARAM(6, P6);
-  
+  DEFPARAM(0, typename DeRefConst<P0>::Type);
+  DEFPARAM(1, typename DeRefConst<P1>::Type);
+  DEFPARAM(2, typename DeRefConst<P2>::Type);
+  DEFPARAM(3, typename DeRefConst<P3>::Type);
+  DEFPARAM(4, typename DeRefConst<P4>::Type);
+  DEFPARAM(5, typename DeRefConst<P5>::Type);
+  DEFPARAM(6, typename DeRefConst<P6>::Type);
+
 private:
   Delegate mDelegate;
   virtual void Execute() const
@@ -285,20 +285,20 @@ class nuiTask8 : public nuiTask
 {
 public:
   typedef nuiFastDelegate8<P0, P1, P2, P3, P4, P5, P6, P7, Ret> Delegate;
-  nuiTask8(const Delegate& rDelegate, const P0& rP0, const P1& rP1, const P2& rP2, const P3& rP3, const P4& rP4, const P5& rP5, const P6& rP6, const P7& rP7)
+  nuiTask8(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5, typename RefConst<P6>::Type rP6, typename RefConst<P7>::Type rP7)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5), mP6(rP6), mP7(rP7)
   {    
   }
   
-  DEFPARAM(0, P0);
-  DEFPARAM(1, P1);
-  DEFPARAM(2, P2);
-  DEFPARAM(3, P3);
-  DEFPARAM(4, P4);
-  DEFPARAM(5, P5);
-  DEFPARAM(6, P6);
-  DEFPARAM(7, P7);
-  
+  DEFPARAM(0, typename DeRefConst<P0>::Type);
+  DEFPARAM(1, typename DeRefConst<P1>::Type);
+  DEFPARAM(2, typename DeRefConst<P2>::Type);
+  DEFPARAM(3, typename DeRefConst<P3>::Type);
+  DEFPARAM(4, typename DeRefConst<P4>::Type);
+  DEFPARAM(5, typename DeRefConst<P5>::Type);
+  DEFPARAM(6, typename DeRefConst<P6>::Type);
+  DEFPARAM(7, typename DeRefConst<P7>::Type);
+
 private:
   Delegate mDelegate;
   virtual void Execute() const
