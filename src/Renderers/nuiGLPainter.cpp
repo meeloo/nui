@@ -2169,6 +2169,7 @@ void nuiGLPainter::RenderArrayInfo::Destroy()
   }
 
   mStreamBuffers.clear();
+  mHeap.push_back(this);
 }
 
 void nuiGLPainter::RenderArrayInfo::BindVertices() const

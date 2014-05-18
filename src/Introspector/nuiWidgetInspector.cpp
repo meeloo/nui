@@ -89,7 +89,7 @@ void nuiWidgetInspectorNode::UpdateInfos(const nuiEvent& rEvent)
   if (mpTarget->GetNeedSelfRedraw())
     b = .5f;
   
-  pLabel->SetColor(eNormalTextFg, nuiColor(r, g, b));
+  pLabel->SetTextColor(nuiColor(r, g, b));
 }
 
 nuiWidgetInspectorNode::~nuiWidgetInspectorNode()
