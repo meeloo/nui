@@ -148,6 +148,7 @@ public:
   double GetLastEventTime() const;
   
   static void DestroyAllWindows();
+  bool ShowWidgetInspector();
 
   NUI_GETSETDO(bool, DrawDirtyRects, Invalidate());
   NUI_GETSETDO(bool, DrawToSurface, Invalidate());
@@ -201,7 +202,6 @@ protected:
   nuiWidget*      mpDragSource; ///< widget that has initialized a drag operation
   nuiWidget*      mpWidgetCanDrop; ///< if not NULL, this is the last widget that return true to an OnCanDrop call (used for DragLeave)
   
-  bool ShowWidgetInspector();
 private:
   
   // attributes

@@ -11,11 +11,13 @@
 #define NUI_SMOOTH_SCROLL_RATIO (0.2f/2.f)
 #define HIDE_SCROLLBARS_DELAY 0.6
 //#define INERTIA_SPEED 2400
-#define INERTIA_SPEED 4800
-#define INERTIA_BRAKES 0.9
+#define INERTIA_SPEED 1
+#define INERTIA_BRAKES 0.95
 #define EXTRA_OUT_SIZE_RATIO 0.5
 
+#ifdef DEBUG
 #define _DEBUG_LAYOUT 1
+#endif
 
 
 nuiScrollView::nuiScrollView(bool Horizontal, bool Vertical)
@@ -836,7 +838,9 @@ bool nuiScrollView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags But
   else
   {
     if (mSpeedX != 0 || mSpeedY != 0)
+    {
       mTimerOn = true;
+    }
   }
 
   if (mHideScrollBars)
@@ -857,9 +861,12 @@ bool nuiScrollView::MouseMoved(nuiSize X, nuiSize Y)
   nuiSize vectX = mLastX - X;
   nuiSize vectY = mLastY - Y;
   nuiSize module = sqrt(vectX * vectX + vectY * vectY);
-  mSpeedX += (vectX / module) * INERTIA_SPEED * elapsed;
-  mSpeedY += (vectY / module) * INERTIA_SPEED * elapsed;
-  
+  module = 1;
+  elapsed = 1;
+
+  mSpeedX += (vectX / module) * INERTIA_SPEED / elapsed;
+  mSpeedY += (vectY / module) * INERTIA_SPEED / elapsed;
+
   mLastX = X;
   mLastY = Y;
   mLastTime = now;
@@ -980,6 +987,13 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
   mSpeedX *= INERTIA_BRAKES;
   mSpeedY *= INERTIA_BRAKES;
 
+  const float MINSPEED = 0.5;
+  if (mSpeedX < MINSPEED && mSpeedX > -MINSPEED)
+    mSpeedX = 0;
+
+  if (mSpeedY < MINSPEED && mSpeedY > -MINSPEED)
+    mSpeedY = 0;
+
   if (!mTimerOn)
     return;
 
@@ -1001,21 +1015,21 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     else
       mYOffset = YOffset;
 
-    if (mXOffset == XOffset && mYOffset == YOffset)
-    {
-      mTimerOn = false;
-    }
-    
     if (mSpeedX != 0)
     {
       SetXPos(GetXPos() + mSpeedX);
-      //mXOffset = GetXPos();
+      mXOffset = GetXPos();
     }
     
     if (mSpeedY != 0)
     {
       SetYPos(GetYPos() + mSpeedY);
-      //mYOffset = GetYPos();
+      mYOffset = GetYPos();
+    }
+
+    if (mXOffset == XOffset && mYOffset == YOffset && mSpeedX == 0 && mSpeedY == 0)
+    {
+      mTimerOn = false;
     }
   }
 
@@ -1261,6 +1275,28 @@ bool nuiScrollView::PreMouseClicked(const nglMouseInfo& rInfo)
   {
     mTouch = rInfo;
     mTouched = true;
+    if (mSpeedX != 0 || mSpeedY != 0)
+    {
+      mLeftClick = true;
+      mTimerOn = false;
+      mSpeedX = 0;
+      mSpeedY = 0;
+      mClickX = rInfo.X;
+      mClickY = rInfo.Y;
+      mLastX = rInfo.X;
+      mLastY = rInfo.Y;
+      mXOffset = GetXPos();
+      mYOffset = GetYPos();
+      mClickValueH = mXOffset;
+      mClickValueV = mYOffset;
+
+      mLastTime = nglTime();
+      if (StealMouseEvent(rInfo))
+      {
+        mTouched = false;
+        return true;
+      }
+    }
   }
   return false;
 }
@@ -1294,7 +1330,6 @@ bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
 
     if (dist > 10 && StealMouseEvent(rInfo))
     {
-      //NGL_OUT("nuiScrollView Preempting mouse from existing grabber!\n");
       mTouched = false;
       return true;
     }
