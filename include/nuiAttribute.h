@@ -66,6 +66,22 @@ void Set##Y(X val) \
   Z;\
 }
 
+#define NUI_OBJGETSET(X, Y) \
+const X& Get##Y() const { return m##Y; } \
+void Set##Y(const X& val) { m##Y = val; }
+
+#define NUI_OBJGETSETDO(X, Y, Z) \
+const X& Get##Y() const { return m##Y; } \
+void Set##Y(const X& val) \
+{\
+if (m##Y == val)\
+{\
+return;\
+}\
+m##Y = val;\
+Z;\
+}
+
 
 
 #ifndef _MINUI3_
