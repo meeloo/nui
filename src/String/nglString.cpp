@@ -2881,6 +2881,12 @@ CFStringRef nglString::ToCFString() const
 
 nglString::nglString(CFStringRef string)
 {
+  if (!string)
+  {
+    Nullify();
+    return;
+  }
+
   CFIndex length = CFStringGetLength(string);
   {
     const char* str = CFStringGetCStringPtr(string, kCFStringEncodingUTF8);
