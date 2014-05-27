@@ -55,6 +55,7 @@ protected:
   float mOffset;
   bool mTouched;
   bool mMoving;
+  bool mStealRefused = false;
   float mOriginalOffset;
   float mTargetOffset;
   bool mInteractive;
