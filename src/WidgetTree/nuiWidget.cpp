@@ -151,6 +151,7 @@ void nuiWidget::InitDefaultValues()
   mReverseRender = false;
   mOverrideVisibleRect = false;
   mAutoUpdateLayout = false;
+  mAutoAcceptMouseCancel = true;
 }
 
 
@@ -495,7 +496,11 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetAutoUpdateLayout),
                 nuiMakeDelegate(this, &nuiWidget::SetAutoUpdateLayout)));
 
-  
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("AutoAcceptMouseCancel")), nuiUnitOnOff,
+                nuiMakeDelegate(this, &nuiWidget::GetAutoAcceptMouseCancel),
+                nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseCancel)));
+
 }
 
  
@@ -1761,7 +1766,7 @@ bool nuiWidget::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 bool nuiWidget::MouseCanceled (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 {
   CheckValid();
-  return false;
+  return mAutoAcceptMouseCancel;
 }
 
 

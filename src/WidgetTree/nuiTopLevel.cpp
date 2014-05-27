@@ -589,7 +589,8 @@ bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInf
 //    NGL_TOUCHES_DEBUG( NGL_OUT("cancel touch on oldgrab = %p\n", oldgrab));
 //    oldgrab->MouseCanceled(rInfo);
 //  }
-  DispatchMouseCanceled(rInfo);
+  if (!DispatchMouseCanceled(rInfo))
+    return false;
 
   NGL_TOUCHES_DEBUG( NGL_OUT("Accepted Grab requested by %s %s (%p)\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pWidget));
 //  pWidget->DispatchMouseCanceled(rInfo);

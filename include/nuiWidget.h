@@ -592,6 +592,7 @@ public:
   //@}
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
+  NUI_GETSET(bool, AutoAcceptMouseCancel);
 
   static void SetGlobalUseRenderCache(bool set);
   static bool GetGlobalUseRenderCache();
@@ -720,6 +721,7 @@ protected:
   bool mReverseRender: 1;
   bool mOverrideVisibleRect : 1;
   bool mAutoUpdateLayout : 1;
+  bool mAutoAcceptMouseCancel : 1;
 
 
 
