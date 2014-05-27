@@ -503,7 +503,7 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseCancel)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("AutoAcceptMouseStolen")), nuiUnitOnOff,
+               (nglString(_T("AutoAcceptMouseSteal")), nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetAutoAcceptMouseSteal),
                 nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseSteal)));
 
