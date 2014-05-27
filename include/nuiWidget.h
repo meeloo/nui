@@ -272,6 +272,7 @@ public:
   virtual bool MouseWheelMoved(const nglMouseInfo& rInfo);
   virtual bool MouseGrabbed(nglTouchId Id);
   virtual bool MouseUngrabbed(nglTouchId Id);
+  virtual bool RequestStolenMouse(const nglMouseInfo& rInfo); ///< Return false if you want to refuse to the mouse grab be stolen by another widget
   virtual const std::map<nglTouchId, nglMouseInfo>& GetMouseStates() const;
   //@}
 
@@ -593,6 +594,7 @@ public:
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
+  NUI_GETSET(bool, AutoAcceptMouseSteal);
 
   static void SetGlobalUseRenderCache(bool set);
   static bool GetGlobalUseRenderCache();
@@ -722,6 +724,7 @@ protected:
   bool mOverrideVisibleRect : 1;
   bool mAutoUpdateLayout : 1;
   bool mAutoAcceptMouseCancel : 1;
+  bool mAutoAcceptMouseSteal : 1;
 
 
 

@@ -152,6 +152,7 @@ void nuiWidget::InitDefaultValues()
   mOverrideVisibleRect = false;
   mAutoUpdateLayout = false;
   mAutoAcceptMouseCancel = true;
+  mAutoAcceptMouseSteal = true;
 }
 
 
@@ -500,6 +501,11 @@ void nuiWidget::InitAttributes()
                (nglString(_T("AutoAcceptMouseCancel")), nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetAutoAcceptMouseCancel),
                 nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseCancel)));
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("AutoAcceptMouseStolen")), nuiUnitOnOff,
+                nuiMakeDelegate(this, &nuiWidget::GetAutoAcceptMouseSteal),
+                nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseSteal)));
 
 }
 
@@ -2047,6 +2053,11 @@ bool nuiWidget::StealMouseEvent(const nglMouseInfo& rInfo)
   nuiTopLevel* pTop = GetTopLevel();
   NGL_ASSERT(pTop);
   return pTop->StealMouseEvent(this, rInfo);
+}
+
+bool nuiWidget::RequestStolenMouse(const nglMouseInfo& rInfo)
+{
+  return mAutoAcceptMouseSteal;
 }
 
 bool nuiWidget::Grab()

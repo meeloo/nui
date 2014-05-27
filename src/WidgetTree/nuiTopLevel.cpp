@@ -584,6 +584,14 @@ bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInf
   }
 
   nuiWidgetPtr oldgrab = GetGrab(rInfo.TouchId);
+  if (oldgrab)
+  {
+    if (!oldgrab->RequestStolenMouse(rInfo))
+    {
+      return false;
+    }
+  }
+  
 //  if (oldgrab && oldgrab != pWidget)
 //  {
 //    NGL_TOUCHES_DEBUG( NGL_OUT("cancel touch on oldgrab = %p\n", oldgrab));
