@@ -310,6 +310,7 @@ bool nuiDrawerView::PreMouseMoved(const nglMouseInfo& rInfo)
       }
       else
       {
+        NGL_LOG("nuiDrawer", NGL_LOG_DEBUG, "PreMouseMoved: StealMouseEvent refused\n");
         mStealRefused = true;
       }
     }
