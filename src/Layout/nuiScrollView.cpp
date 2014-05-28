@@ -11,7 +11,8 @@
 #define NUI_SMOOTH_SCROLL_RATIO (0.2f/2.f)
 #define HIDE_SCROLLBARS_DELAY 0.6
 //#define INERTIA_SPEED 2400
-#define INERTIA_SPEED 1
+#define INERTIA_SPEED 0.8
+#define INITIAL_BRAKES 0.5
 #define INERTIA_BRAKES 0.95
 #define EXTRA_OUT_SIZE_RATIO 0.5
 
@@ -864,8 +865,15 @@ bool nuiScrollView::MouseMoved(nuiSize X, nuiSize Y)
   module = 1;
   elapsed = 1;
 
-  mSpeedX += (vectX / module) * INERTIA_SPEED / elapsed;
-  mSpeedY += (vectY / module) * INERTIA_SPEED / elapsed;
+  mSpeedX *= INITIAL_BRAKES;
+  mSpeedY *= INITIAL_BRAKES;
+  float tmpY = mSpeedY;
+  float addX = vectX  * INERTIA_SPEED / elapsed;
+  float addY = vectY * INERTIA_SPEED / elapsed;
+  mSpeedX += addX;
+  mSpeedY += addY;
+
+//  NGL_OUT("Scroll: %f = %f + %f * INERTIA / %f \n", mSpeedY, tmpY, vectY, elapsed);
 
   mLastX = X;
   mLastY = Y;
@@ -988,10 +996,10 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
   mSpeedY *= INERTIA_BRAKES;
 
   const float MINSPEED = 0.5;
-  if (mSpeedX < MINSPEED && mSpeedX > -MINSPEED)
+  if (fabs(mSpeedX) < MINSPEED)
     mSpeedX = 0;
 
-  if (mSpeedY < MINSPEED && mSpeedY > -MINSPEED)
+  if (fabs(mSpeedY) < MINSPEED)
     mSpeedY = 0;
 
   if (!mTimerOn)
