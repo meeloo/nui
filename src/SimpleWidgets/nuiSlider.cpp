@@ -217,7 +217,8 @@ bool nuiSlider::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     mInteractiveValueChanged = true;
     Invalidate();
     mClickValue = mRange.GetValue();
-    
+    mAutoAcceptMouseSteal = true;
+
     return true;
   }
   else if (Button == nglMouseInfo::ButtonWheelUp)
@@ -263,7 +264,8 @@ bool nuiSlider::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
     mClicked = false;
     
     mThumbClicked = false;
-    
+    mAutoAcceptMouseSteal = true;
+
     Invalidate();
     return true;
   }
@@ -274,7 +276,26 @@ bool nuiSlider::MouseMoved  (nuiSize X, nuiSize Y)
 {
   if (mThumbClicked)
   {
-    
+    if (mAutoAcceptMouseSteal)
+    {
+      switch (mOrientation)
+      {
+      case nuiHorizontal:
+        {
+          if (abs(mClickX - X) < 16)
+            mAutoAcceptMouseSteal = false;
+        }
+        break;
+      case nuiVertical:
+        {
+          if (abs(mClickY - Y) < 16)
+            mAutoAcceptMouseSteal = false;
+        }
+        break;
+      }
+
+    }
+
     
     nuiSize x,y;
     nuiSize range = (nuiSize)fabs(mHandlePosMax - mHandlePosMin);
@@ -565,4 +586,5 @@ void nuiSlider::SetFineSensitivityKey(nglKeyCode FineSensitivityKey)
 {
   mFineSensitivityKey = FineSensitivityKey;
 }
+
 
