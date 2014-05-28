@@ -89,7 +89,7 @@ void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVert
   mDragEnabled = false;
   mHideScrollBars = false;
   
-  mLeftClick = false;
+  mLeftClick = 0;
   
 
   if (pHorizontalScrollBar)
@@ -709,12 +709,12 @@ bool nuiScrollView::MouseWheelMoved(const nglMouseInfo& rInfo)
   return true;
 }
 
-bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
 {
   bool res = false;
   bool autoHideScrollbars = true;
   bool v = IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT);
-  if (Button & nglMouseInfo::ButtonWheelUp)
+  if (rInfo.Buttons & nglMouseInfo::ButtonWheelUp)
   {
     if (v)
     {
@@ -744,7 +744,7 @@ bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
     }
 
   }
-  else if (Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelDown)
   {
     if (v)
     {
@@ -774,7 +774,7 @@ bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
       }
     }
   }
-  else if (Button & nglMouseInfo::ButtonWheelLeft)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelLeft)
   {
     if (mpHorizontal && !mForceNoHorizontal)
     {
@@ -782,7 +782,7 @@ bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
       res = true;
     }
   }
-  else if (Button & nglMouseInfo::ButtonWheelRight)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelRight)
   {
     if (mpHorizontal && !mForceNoHorizontal)
     {
@@ -790,16 +790,14 @@ bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
       res = true;
     }
   }
-  else if (Button & nglMouseInfo::ButtonLeft && mDragEnabled)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonLeft && mDragEnabled && !mLeftClick)
   {
-    mLeftClick = true;
+    mLeftClick++;
     mTimerOn = false;
     mSpeedX = 0;
     mSpeedY = 0;
-    mClickX = X;
-    mClickY = Y;
-    mLastX = X;
-    mLastY = Y;
+    mLastX = rInfo.X;
+    mLastY = rInfo.Y;
     mClickValueH = GetRange(nuiHorizontal)->GetValue();
     mClickValueV = GetRange(nuiVertical)->GetValue();
     
@@ -821,37 +819,40 @@ bool nuiScrollView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
   return res;
 }
 
-bool nuiScrollView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiScrollView::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (!mLeftClick)
     return false;
 
-  Dragged(X, Y);
-  mLeftClick = false;
+  Dragged(rInfo);
+  mLeftClick--;
 
-  nglTime now;
-  double elapsed = now.GetValue() - mLastTime.GetValue();
-  if (elapsed > 0.05)
+  if (!mLeftClick)
   {
-    mSpeedX = 0;
-    mSpeedY = 0;
-  }
-  else
-  {
-    if (mSpeedX != 0 || mSpeedY != 0)
+    nglTime now;
+    double elapsed = now.GetValue() - mLastTime.GetValue();
+    if (elapsed > 0.05)
     {
-      mTimerOn = true;
+      mSpeedX = 0;
+      mSpeedY = 0;
     }
-  }
+    else
+    {
+      if (mSpeedX != 0 || mSpeedY != 0)
+      {
+        mTimerOn = true;
+      }
+    }
 
-  if (mHideScrollBars)
-  {
-    HideScrollBars();
+    if (mHideScrollBars)
+    {
+      HideScrollBars();
+    }
   }
   return true;
 }
 
-bool nuiScrollView::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiScrollView::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (!mLeftClick)
     return false;
@@ -859,8 +860,8 @@ bool nuiScrollView::MouseMoved(nuiSize X, nuiSize Y)
   nglTime now;
   float elapsed = now.GetValue() - mLastTime.GetValue();
   
-  nuiSize vectX = mLastX - X;
-  nuiSize vectY = mLastY - Y;
+  nuiSize vectX = mLastX - rInfo.X;
+  nuiSize vectY = mLastY - rInfo.Y;
   nuiSize module = sqrt(vectX * vectX + vectY * vectY);
   module = 1;
   elapsed = 1;
@@ -875,17 +876,20 @@ bool nuiScrollView::MouseMoved(nuiSize X, nuiSize Y)
 
 //  NGL_OUT("Scroll: %f = %f + %f * INERTIA / %f \n", mSpeedY, tmpY, vectY, elapsed);
 
-  mLastX = X;
-  mLastY = Y;
+  mLastX = rInfo.X;
+  mLastY = rInfo.Y;
   mLastTime = now;
-  Dragged(X, Y);
+  Dragged(rInfo);
   return true;
 }
 
-void nuiScrollView::Dragged(nuiSize X, nuiSize Y)
+void nuiScrollView::Dragged(const nglMouseInfo& rInfo)
 {
-  nuiSize diffX = mClickX - X;
-  nuiSize diffY = mClickY - Y;
+  float OldX = rInfo.Counterpart->X;
+  float OldY = rInfo.Counterpart->Y;
+  GlobalToLocal(OldX, OldY);
+  nuiSize diffX = OldX - rInfo.X;
+  nuiSize diffY = OldY - rInfo.Y;
   
   if (mpHorizontal && !mForceNoHorizontal)
   {
@@ -948,6 +952,12 @@ void nuiScrollView::Dragged(nuiSize X, nuiSize Y)
     }
   }
 }
+
+bool nuiScrollView::MouseCanceled(const nglMouseInfo& rInfo)
+{
+  mLeftClick--;
+}
+
 
 nuiScrollBar* nuiScrollView::GetScrollBar(nuiOrientation Orientation)
 {
@@ -1285,12 +1295,10 @@ bool nuiScrollView::PreMouseClicked(const nglMouseInfo& rInfo)
     mTouched = true;
     if (mSpeedX != 0 || mSpeedY != 0)
     {
-      mLeftClick = true;
+      mLeftClick++;
       mTimerOn = false;
       mSpeedX = 0;
       mSpeedY = 0;
-      mClickX = rInfo.X;
-      mClickY = rInfo.Y;
       mLastX = rInfo.X;
       mLastY = rInfo.Y;
       mXOffset = GetXPos();

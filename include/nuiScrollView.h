@@ -33,12 +33,13 @@ public:
 
   virtual bool Clear();
 
-  virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseMoved(nuiSize X, nuiSize Y);
+  virtual bool MouseClicked(const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
+  virtual bool MouseMoved(const nglMouseInfo& rInfo);
   virtual bool MouseWheelMoved(const nglMouseInfo& rInfo);
+  virtual bool MouseCanceled(const nglMouseInfo& rInfo);
 
-  void Dragged(nuiSize X, nuiSize Y);
+  void Dragged(const nglMouseInfo& rInfo);
 
   const nuiRect& GetChildrenUnionRect() { return mChildrenUnionRect; }
 
@@ -140,9 +141,7 @@ private:
   bool mMinimalResize;
   nuiRect mOldIdealRect;
   
-  bool mLeftClick;
-  nuiSize mClickX;
-  nuiSize mClickY;
+  int mLeftClick;
   double mClickValueH;
   double mClickValueV;
   nuiSize mSpeedX;
