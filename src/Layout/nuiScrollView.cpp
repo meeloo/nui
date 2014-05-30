@@ -1005,7 +1005,11 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
   mSpeedX *= INERTIA_BRAKES;
   mSpeedY *= INERTIA_BRAKES;
 
-  const float MINSPEED = 0.5;
+//  const float SPRING_K = 0.5;
+//  if (mYOffset < 0)
+//    mSpeedY += -mYOffset * SPRING_K;
+
+  const float MINSPEED = 0.1;
   if (fabs(mSpeedX) < MINSPEED)
     mSpeedX = 0;
 
