@@ -32,7 +32,10 @@ nuiRange::nuiRange(double Value, double Min, double Max, double Increment, doubl
   mPageIncrement = PageIncrement;
   
   mValue = Value;
-  SetValue(Value);
+  if (isfinite(Value))
+  {
+    SetValue(Value);
+  }
 
   if (std::isnan(Origin))
   {
@@ -112,12 +115,7 @@ void nuiRange::SetUnitValue(double Value)
 
 void nuiRange::SetValue(double Value)
 {
-#ifdef DEBUG
-  if (IsValid())
-  {
-    NGL_ASSERT(std::isfinite(Value));
-  }
-#endif
+  NGL_ASSERT(std::isfinite(Value));
   
   double OldValue = mValue;
 
