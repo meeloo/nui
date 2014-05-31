@@ -401,7 +401,7 @@ public:
   /// Beware: these three methods receive the mouse coordinates in the repair of the root object!
   virtual bool DispatchMouseClick(const nglMouseInfo& rInfo);
   virtual bool DispatchMouseUnclick(const nglMouseInfo& rInfo);
-  virtual bool DispatchMouseCanceled(const nglMouseInfo& rInfo);
+  virtual bool DispatchMouseCanceled(nuiWidgetPtr pThief, const nglMouseInfo& rInfo);
   virtual nuiWidgetPtr DispatchMouseMove(const nglMouseInfo& rInfo);
   virtual nuiWidgetPtr DispatchMouseWheelMove(const nglMouseInfo& rInfo);
 

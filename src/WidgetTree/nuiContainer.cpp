@@ -484,7 +484,7 @@ bool nuiContainer::DispatchMouseClick(const nglMouseInfo& rInfo)
   return false;
 }
 
-bool nuiContainer::DispatchMouseCanceled(const nglMouseInfo& rInfo)
+bool nuiContainer::DispatchMouseCanceled(nuiWidgetPtr pThief, const nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
@@ -505,17 +505,22 @@ bool nuiContainer::DispatchMouseCanceled(const nglMouseInfo& rInfo)
     nuiWidgetPtr pItem = pIt->GetWidget();
     if (pItem)
     {
-      pItem->DispatchMouseCanceled(rInfo);
+      pItem->DispatchMouseCanceled(pThief, rInfo);
     }
   }
   delete pIt;
 
-  GlobalToLocal(info.X, info.Y);
-  PreClickCanceled(info);
-  bool ret = MouseCanceled(info);
-  ret |= ClickCanceled(info);
-  ret = ret | (!mClickThru);
-  return ret;
+  if (pThief != this)
+  {
+    GlobalToLocal(info.X, info.Y);
+    PreClickCanceled(info);
+    bool ret = MouseCanceled(info);
+    ret |= ClickCanceled(info);
+    ret = ret | (!mClickThru);
+    return ret;
+  }
+
+  return false;
 }
 
 bool nuiContainer::DispatchMouseUnclick(const nglMouseInfo& rInfo)
@@ -730,6 +735,8 @@ nuiWidgetPtr nuiContainer::DispatchMouseWheelMove(const nglMouseInfo& rInfo)
 void nuiContainer::SetAlpha(float Alpha)
 {
   CheckValid();
+  if (Alpha == mAlpha)
+    return;
   nuiWidget::SetAlpha(Alpha);
   SilentInvalidateChildren(true);
   DebugRefreshInfo();
@@ -738,6 +745,8 @@ void nuiContainer::SetAlpha(float Alpha)
 void nuiContainer::SetEnabled(bool set)
 {
   CheckValid();
+  if (set == mEnabled)
+    return;
   nuiWidget::SetEnabled(set);
   SilentInvalidateChildren(true);
   Invalidate();
@@ -747,6 +756,8 @@ void nuiContainer::SetEnabled(bool set)
 void nuiContainer::SetSelected(bool set)
 {
   CheckValid();
+  if (mSelected == set)
+    return;
   nuiWidget::SetSelected(set);
   SilentInvalidateChildren(true);
   Invalidate();

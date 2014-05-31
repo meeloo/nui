@@ -270,7 +270,7 @@ bool nuiDrawerView::PreMouseUnclicked(const nglMouseInfo& rInfo)
       {
         if (mpMain)
         {
-          mpMain->DispatchMouseCanceled(rInfo);
+          mpMain->DispatchMouseCanceled(this, rInfo);
         }
         mTouched = false;
 

@@ -1907,12 +1907,15 @@ bool nuiWidget::DispatchMouseUnclick(const nglMouseInfo& rInfo)
   return false;
 }
 
-bool nuiWidget::DispatchMouseCanceled(const nglMouseInfo& rInfo)
+bool nuiWidget::DispatchMouseCanceled(nuiWidgetPtr pThief, const nglMouseInfo& rInfo)
 {
   CheckValid();
+  if (pThief == this)
+    return false;
+
   nuiAutoRef;
   if (mTrashed)
-    return NULL;
+    return false;
 
   bool inside = false;
   bool res = false;

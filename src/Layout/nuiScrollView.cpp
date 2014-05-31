@@ -90,7 +90,8 @@ void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVert
   mHideScrollBars = false;
   
   mLeftClick = 0;
-  
+//  NGL_OUT("nuiScrollView::Init LeftClick: %d\n", mLeftClick);
+
 
   if (pHorizontalScrollBar)
   {
@@ -793,6 +794,7 @@ bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
   else if (rInfo.Buttons & nglMouseInfo::ButtonLeft && mDragEnabled && !mLeftClick)
   {
     mLeftClick++;
+//    NGL_OUT("nuiScrollView::MouseClicked LeftClick: %d\n", mLeftClick);
     mTimerOn = false;
     mSpeedX = 0;
     mSpeedY = 0;
@@ -826,6 +828,7 @@ bool nuiScrollView::MouseUnclicked(const nglMouseInfo& rInfo)
 
   Dragged(rInfo);
   mLeftClick--;
+//  NGL_OUT("nuiScrollView::MouseUnclicked LeftClick: %d\n", mLeftClick);
 
   if (!mLeftClick)
   {
@@ -956,6 +959,7 @@ void nuiScrollView::Dragged(const nglMouseInfo& rInfo)
 bool nuiScrollView::MouseCanceled(const nglMouseInfo& rInfo)
 {
   mLeftClick--;
+//  NGL_OUT("nuiScrollView::MouseCanceled LeftClick: %d\n", mLeftClick);
 }
 
 
@@ -1293,27 +1297,25 @@ bool nuiScrollView::PreMouseClicked(const nglMouseInfo& rInfo)
 {
   if (!mDragEnabled)
     return false;
+
+  if (mLeftClick)
+    return false;
+
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mTouch = rInfo;
     mTouched = true;
     if (mSpeedX != 0 || mSpeedY != 0)
     {
-      mLeftClick++;
-      mTimerOn = false;
-      mSpeedX = 0;
-      mSpeedY = 0;
-      mLastX = rInfo.X;
-      mLastY = rInfo.Y;
-      mXOffset = GetXPos();
-      mYOffset = GetYPos();
-      mClickValueH = mXOffset;
-      mClickValueV = mYOffset;
-
-      mLastTime = nglTime();
       if (StealMouseEvent(rInfo))
       {
         mTouched = false;
+        mXOffset = GetXPos();
+        mYOffset = GetYPos();
+        mClickValueH = mXOffset;
+        mClickValueV = mYOffset;
+
+        mLastTime = nglTime();
         return true;
       }
     }
@@ -1325,6 +1327,7 @@ bool nuiScrollView::PreMouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (!mDragEnabled)
     return false;
+
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mTouched = false;
@@ -1337,7 +1340,7 @@ bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
   if (!mDragEnabled)
     return false;
 
-  if (mTouched)
+  if (mTouched && !mLeftClick)
   {
     float x = 0;
     if (GetEnableHorizontalScroll())
@@ -1351,6 +1354,12 @@ bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
     if (dist > 10 && StealMouseEvent(rInfo))
     {
       mTouched = false;
+      mXOffset = GetXPos();
+      mYOffset = GetYPos();
+      mClickValueH = mXOffset;
+      mClickValueV = mYOffset;
+
+      mLastTime = nglTime();
       return true;
     }
   }

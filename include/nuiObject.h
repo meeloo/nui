@@ -107,10 +107,11 @@ public:
     if (!mpTrace)
       printf("Object bugged: CLASS:%s NAME:%s\n", mObjectClassNames[mClassNameIndex].GetChars(), mObjectName.GetChars());
     NGL_ASSERT(mpTrace);
+    CheckValidInternal();
 #else
-    if (mpTrace)
+//    if (mpTrace)
+//      CheckValidInternal();
 #endif
-      CheckValidInternal();
   }
 
 #ifdef _NUI_DEBUG_OBJECTS_

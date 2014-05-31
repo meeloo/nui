@@ -597,11 +597,11 @@ bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInf
 //    NGL_TOUCHES_DEBUG( NGL_OUT("cancel touch on oldgrab = %p\n", oldgrab));
 //    oldgrab->MouseCanceled(rInfo);
 //  }
-  if (!DispatchMouseCanceled(rInfo))
+  if (!DispatchMouseCanceled(pWidget, rInfo))
     return false;
 
   NGL_TOUCHES_DEBUG( NGL_OUT("Accepted Grab requested by %s %s (%p)\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pWidget));
-//  pWidget->DispatchMouseCanceled(rInfo);
+//  pWidget->DispatchMouseCanceled(pWidget, rInfo);
   pWidget->MouseClicked(rInfo);
 
   mpGrab[rInfo.TouchId] = pWidget;
@@ -1729,9 +1729,9 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
 }
 
 
-bool nuiTopLevel::CallMouseCancel(nglMouseInfo& rInfo)
+bool nuiTopLevel::CallMouseCancel(nuiWidgetPtr pThief, nglMouseInfo& rInfo)
 {
-  DispatchMouseCanceled(rInfo);
+  DispatchMouseCanceled(pThief, rInfo);
 
   {
     auto it = mpGrabAcquired.find(rInfo.TouchId);

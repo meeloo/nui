@@ -638,7 +638,7 @@ bool nuiMainWindow::OnMouseCanceled (nglMouseInfo& rInfo)
 {
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
-  return CallMouseCancel(rInfo);
+  return CallMouseCancel(nullptr, rInfo);
 }
 
 bool nuiMainWindow::OnMouseClick(nglMouseInfo& rInfo)
