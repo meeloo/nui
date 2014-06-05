@@ -496,7 +496,7 @@ typedef wchar_t nglUChar;
 
 #  elif !defined _MINUI3_
 
-#    include <OpenGL/gl.h>
+#    include <GL/gl.h>
 //#    include <GL/glu.h>
 #    include "nui_GL/glext.h"
 #  endif

@@ -888,6 +888,9 @@ bool nuiScrollView::MouseMoved(const nglMouseInfo& rInfo)
 
 void nuiScrollView::Dragged(const nglMouseInfo& rInfo)
 {
+  if (!rInfo.Counterpart)
+    return;
+
   float OldX = rInfo.Counterpart->X;
   float OldY = rInfo.Counterpart->Y;
   GlobalToLocal(OldX, OldY);
