@@ -6,9 +6,10 @@
 
 @class nglUIWindow;
 
-@interface nglUIApplicationDelegate : NSObject
+@interface nglUIApplicationDelegate : NSObject <UIApplicationDelegate>
 {
 }
+
 - (void) dealloc;
 - (void) applicationDidFinishLaunching:       (UIApplication*) pUIApp;
 - (BOOL) application:(UIApplication *)pUIApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
@@ -17,6 +18,16 @@
 - (void) applicationDidReceiveMemoryWarning:  (UIApplication*) pUIApp;
 - (void) applicationSignificantTimeChange:    (UIApplication*) pUIApp;
 - (void) applicationWillTerminate:            (UIApplication*) pUIApp;
+
+// Handling Remote Notifications
+
+- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo;
+//- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
+- (void) application: (UIApplication*) pUIApp didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
+- (void) application: (UIApplication*) pUIApp didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+
+// Handling Local Notifications
+- (void) application: (UIApplication*) pUIApp didReceiveLocalNotification:(UILocalNotification *)notification;
 
 
 @end//nglUIApplicationDelegate

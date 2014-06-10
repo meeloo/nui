@@ -137,6 +137,50 @@ void objCCallOnMemoryWarning();
   objCCallOnExit(0);
 }
 
+///////// Notifications:
+- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo
+{
+  std::map<nglString, nglString> infos;
+  for (id key in userInfo)
+  {
+    nglString _key((CFStringRef)key);
+    nglString _value((CFStringRef)[userInfo objectForKey:key]);
+    infos[_key] = _value;
+
+    NGL_OUT("Notif params: %s -> %s\n", _key.GetChars(), _value.GetChars());
+  }
+
+  App->DidReceiveNotification(infos);
+}
+
+//- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+//{
+//
+//}
+
+- (void) application: (UIApplication*) pUIApp didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  std::vector<uint8> token;
+  token.resize(deviceToken.length);
+  [deviceToken getBytes:&token[0] length:token.size()];
+  App->DidRegisterForRemoteNotifications(token);
+
+}
+
+- (void) application: (UIApplication*) pUIApp didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+  std::vector<uint8> token;
+  App->DidRegisterForRemoteNotifications(token); // Send an empty token
+}
+
+
+// Handling Local Notifications
+- (void) application: (UIApplication*) pUIApp didReceiveLocalNotification:(UILocalNotification *)notification
+{
+}
+
+
+
 @end///< nglUIApplicationDelegate
 
 /*

@@ -24,6 +24,14 @@ class nuiNotificationManager;
 class nuiNotificationObserver;
 class nglWindow;
 
+enum nuiNotificationType
+{
+  nuiNotification_None = 0,
+  nuiNotification_Badge = 1 << 0,
+  nuiNotification_Sound = 1 << 1,
+  nuiNotification_Alert = 1 << 2,
+};
+
 extern nglKernel* App;
 /*!<
 A well designed program should have only one global. This is the unique NGL global,
@@ -320,6 +328,11 @@ public:
   void NonBlockingHeartBeat(); ///< Keep the application event loop alive without waiting for new events. (i.e. only process the events that are already in the queue).
 
   static void SetCrashReportEmail(const nglString& rEmail);
+
+  // Notifications:
+  virtual void DidReceiveNotification(const std::map<nglString, nglString>& infos);
+  virtual void DidRegisterForRemoteNotifications(const std::vector<uint8>& deviceToken); ///< If deviceToken.IsNull() then registration failed.
+  void RegisterForRemoteNotifications(int32 types); ///< nuiNotificationType bit field
 
   // Notification manager proxy:
   void PostNotification(nuiNotification* pNotification); ///< Put this notification in a queue in order to broadcast when the system feels like it.
