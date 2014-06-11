@@ -327,27 +327,30 @@ OSStatus nuiAudioDevice_CoreAudio::Process(AudioDeviceID inDevice, const AudioTi
     }
   }
   
-  // Prepare the output buffers list:
-  mOutputBuffers.resize(mActiveOutputChannels.size());
-  for (ch = 0; ch < mActiveOutputChannels.size(); ch++)
+  if (mOutputChannels.size() == mActiveOutputChannels.size())
   {
-    int32 Channel = mActiveOutputChannels[ch];
-    NGL_ASSERT(Channel < mOutputChannels.size());
-    
-    // Find the buffer and the channel inside the buffer:
-    int32 buffer  = mOutMap[Channel].first;
-    int32 channel = mOutMap[Channel].second;
-    
-    // Copy the data if needed (only when it's interleaved)
-    int32 stride = outOutputData->mBuffers[buffer].mNumberChannels;
-    if (stride == 1)
+    // Prepare the output buffers list:
+    mOutputBuffers.resize(mActiveOutputChannels.size());
+    for (ch = 0; ch < mActiveOutputChannels.size(); ch++)
     {
-      mOutputBuffers[Channel] = (float*)outOutputData->mBuffers[buffer].mData;
-    }
-    else
-    {
-      // We need to deinterleave so we use a temp buffer:
-      mOutputBuffers[ch] = &mOutputSamples[ch][0];
+      int32 Channel = mActiveOutputChannels[ch];
+      NGL_ASSERT(Channel < mOutputChannels.size());
+      
+      // Find the buffer and the channel inside the buffer:
+      int32 buffer  = mOutMap[Channel].first;
+      int32 channel = mOutMap[Channel].second;
+      
+      // Copy the data if needed (only when it's interleaved)
+      int32 stride = outOutputData->mBuffers[buffer].mNumberChannels;
+      if (stride == 1)
+      {
+        mOutputBuffers[Channel] = (float*)outOutputData->mBuffers[buffer].mData;
+      }
+      else
+      {
+        // We need to deinterleave so we use a temp buffer:
+        mOutputBuffers[ch] = &mOutputSamples[ch][0];
+      }
     }
   }
   
@@ -356,42 +359,44 @@ OSStatus nuiAudioDevice_CoreAudio::Process(AudioDeviceID inDevice, const AudioTi
   mAudioProcessFn(mInputBuffers, mOutputBuffers, mBufferSize);
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
-  // Put back the output data in the actual buffers:
-  mOutputBuffers.resize(mActiveOutputChannels.size());
-  for (ch = 0; ch < mActiveOutputChannels.size(); ch++)
+  if (mOutputChannels.size() == mActiveOutputChannels.size())
   {
-    int32 Channel = mActiveOutputChannels[ch];
-    NGL_ASSERT(Channel < mOutputChannels.size());
-    
-    // Find the buffer and the channel inside the buffer:
-    int32 buffer  = mOutMap[Channel].first;
-    int32 channel = mOutMap[Channel].second;
-    
-    // Copy the data if needed (only when it's interleaved)
-    int32 stride = outOutputData->mBuffers[buffer].mNumberChannels;
-    if (stride == 1)
+    // Put back the output data in the actual buffers:
+    mOutputBuffers.resize(mActiveOutputChannels.size());
+    for (ch = 0; ch < mActiveOutputChannels.size(); ch++)
     {
-      // Do nothing, the buffer was modified inplace
-    }
-    else
-    {
-      // We need to interleave:
-      float* pData = (float*)outOutputData->mBuffers[buffer].mData;
-      float* pOutputSamples = &(mOutputSamples[Channel][0]);
-      pData += channel;
-      for (int32 s = 0; s < mBufferSize; s++)
+      int32 Channel = mActiveOutputChannels[ch];
+      NGL_ASSERT(Channel < mOutputChannels.size());
+      
+      // Find the buffer and the channel inside the buffer:
+      int32 buffer  = mOutMap[Channel].first;
+      int32 channel = mOutMap[Channel].second;
+      
+      // Copy the data if needed (only when it's interleaved)
+      int32 stride = outOutputData->mBuffers[buffer].mNumberChannels;
+      if (stride == 1)
       {
+        // Do nothing, the buffer was modified inplace
+      }
+      else
+      {
+        // We need to interleave:
+        float* pData = (float*)outOutputData->mBuffers[buffer].mData;
+        float* pOutputSamples = &(mOutputSamples[Channel][0]);
+        pData += channel;
+        for (int32 s = 0; s < mBufferSize; s++)
+        {
 #ifdef DEBUG
-        // Clip the output data, as we are debugging we may have audio bugs blowing out the speakers, not to mention your ears...
-        *pData = nuiClamp(*(pOutputSamples++), -1.0f, 1.0f);
+          // Clip the output data, as we are debugging we may have audio bugs blowing out the speakers, not to mention your ears...
+          *pData = nuiClamp(*(pOutputSamples++), -1.0f, 1.0f);
 #else
-        *pData = *(pOutputSamples++);
+          *pData = *(pOutputSamples++);
 #endif
-        pData += stride;
+          pData += stride;
+        }
       }
     }
   }
-  
   return 0;
 }
 
