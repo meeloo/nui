@@ -99,6 +99,8 @@ nuiObject::~nuiObject()
 #endif
   delete mpToken;
 
+  ClearLinkedObjects();
+  
   int32 c = mClassNameIndex;
   while (c >= 0)
   {
