@@ -17,6 +17,10 @@
 #import <UIKit/UIkit.h>
 #endif
 
+#ifdef _COCOA_
+#import <Cocoa/Cocoa.h>
+#endif
+
 /* Defined in <platform>/nglKernel.cpp
  */
 extern const nglChar* gpKernelErrorTable[];
@@ -532,7 +536,7 @@ void nglKernel::RegisterForRemoteNotifications(int32 types)
 #endif
 
 #ifdef _COCOA_
-  [[NSApplication sharedApplication] registerForRemoteNotifications];
+  [[NSApplication sharedApplication] registerForRemoteNotificationTypes: types];
 #endif
 
 }

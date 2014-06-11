@@ -404,7 +404,7 @@ void nuiMatrixNode_Pivot::Update() const
 {
   mMatrix.SetRotation(mAngle, mAxis);
   nuiMatrix tr;
-  tr.SetTranslation(mPivot);
+  tr.SetTranslation(-mPivot);
   mMatrix *= tr;
 }
 

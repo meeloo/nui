@@ -77,7 +77,11 @@ public:
 
   void SetToken(nuiTokenBase* pToken);
   nuiTokenBase* GetToken() const;
-	
+
+  void LinkObject(nuiObject* pLinkedObject); // A linked object is an object that has its life cycle linked to this object. When this object is deleted, all linked objects are unreferenced too
+  void UnlinkObject(nuiObject* pLinkedObject);
+  void ClearLinkedObjects();
+
 	/** @name Attributes system */
 	//@{
 	void GetAttributes(std::map<nglString, nuiAttribBase>& rAttributeMap) const;
@@ -146,7 +150,8 @@ private :
   static std::vector<std::map<nglString, nuiAttributeBase*> > mClassAttributes;
   std::map<nglString, nuiAttributeBase*> mInstanceAttributes;
   static std::map<nglString, int32> mObjectClassNamesMap;
-  
+  std::list<nuiObject*> mpLinkedObjects;
+
   uint32 mClassNameIndex;
   nglString mObjectName;
   

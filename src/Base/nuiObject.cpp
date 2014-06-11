@@ -664,3 +664,29 @@ int32 nuiObject::GetClassCount()
   return mObjectClassNames.size();
 }
 
+
+void nuiObject::LinkObject(nuiObject* pLinkedObject)
+{
+  pLinkedObject->Acquire();
+  mpLinkedObjects.push_back(pLinkedObject);
+}
+
+void nuiObject::UnlinkObject(nuiObject* pLinkedObject)
+{
+  for (auto it = mpLinkedObjects.begin(); it != mpLinkedObjects.end(); ++it)
+  {
+    (*it)->Release();
+    mpLinkedObjects.erase(it++);
+  }
+}
+
+void nuiObject::ClearLinkedObjects()
+{
+  for (auto o : mpLinkedObjects)
+  {
+    o->Release();
+  }
+
+  mpLinkedObjects.clear();
+}
+
