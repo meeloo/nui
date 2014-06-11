@@ -285,9 +285,12 @@ bool nuiScrollView::SetRect(const nuiRect& rRect)
       YOffset = mYOffset;
   }
 
-  mXOffset = XOffset;
-  mYOffset = YOffset;
-
+  if (0)
+  {
+    mXOffset = XOffset;
+    mYOffset = YOffset;
+  }
+  
   XOffset = (nuiSize)ToNearest(XOffset);
   YOffset = (nuiSize)ToNearest(YOffset);
 
@@ -834,7 +837,7 @@ bool nuiScrollView::MouseUnclicked(const nglMouseInfo& rInfo)
   {
     nglTime now;
     double elapsed = now.GetValue() - mLastTime.GetValue();
-    if (elapsed > 0.05)
+    if (elapsed > 0.5)
     {
       mSpeedX = 0;
       mSpeedY = 0;
@@ -1028,21 +1031,21 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
 
   if (!mLeftClick)
   {
-    float XOffset = mpHorizontal->GetRange().GetValue();
-    float YOffset = mpVertical->GetRange().GetValue();
+    float XOffset = (float)mpHorizontal->GetRange().GetValue();
+    float YOffset = (float)mpVertical->GetRange().GetValue();
 
     float xdiff = XOffset - mXOffset;
     float ydiff = YOffset - mYOffset;
 
-    if (xdiff > 2 || xdiff < -2)
+//    if (xdiff > 2 || xdiff < -2)
       mXOffset += xdiff * NUI_SMOOTH_SCROLL_RATIO;
-    else
-      mXOffset = XOffset;
+//    else
+//      mXOffset = XOffset;
 
-    if (ydiff > 2 || ydiff < -2)
+//    if (ydiff > 2 || ydiff < -2)
       mYOffset += ydiff * NUI_SMOOTH_SCROLL_RATIO;
-    else
-      mYOffset = YOffset;
+//    else
+//      mYOffset = YOffset;
 
     if (mSpeedX != 0)
     {

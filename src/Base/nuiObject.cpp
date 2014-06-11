@@ -97,10 +97,11 @@ nuiObject::~nuiObject()
 #ifdef _NUI_DEBUG_OBJECTS_
   NGL_LOG("nuiObject", NGL_LOG_DEBUG, "Deleting object '%s' (class='%s')\n", GetObjectName().GetChars(), GetObjectClass().GetChars());
 #endif
-  delete mpToken;
 
   ClearLinkedObjects();
   
+  delete mpToken;
+
   int32 c = mClassNameIndex;
   while (c >= 0)
   {
