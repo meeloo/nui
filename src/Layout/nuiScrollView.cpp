@@ -1050,13 +1050,13 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     if (mSpeedX != 0)
     {
       SetXPos(GetXPos() + mSpeedX);
-      mXOffset = GetXPos();
+//      mXOffset = GetXPos();
     }
     
     if (mSpeedY != 0)
     {
       SetYPos(GetYPos() + mSpeedY);
-      mYOffset = GetYPos();
+//      mYOffset = GetYPos();
     }
 
     if (mXOffset == XOffset && mYOffset == YOffset && mSpeedX == 0 && mSpeedY == 0)

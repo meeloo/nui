@@ -139,11 +139,6 @@ nuiHTTPResponse* nuiHTTPRequest::SendRequest(const nuiHTTPResponseReceivedDelega
         //pResponse = new nuiHTTPResponse(statusCode, status);
       }
       
-      if (!pResponse)
-      {
-        pResponse = new nuiHTTPResponse(0, nglString::Null);
-      }
-      
       if (rResponseReceived)
         rResponseReceived(pResponse);
     }
