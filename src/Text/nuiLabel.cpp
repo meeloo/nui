@@ -418,6 +418,7 @@ bool nuiLabel::SetRect(const nuiRect& rRect)
     }
 
     SetToolTip(mText);
+    InvalidateLayout();
   }
   else
   {
