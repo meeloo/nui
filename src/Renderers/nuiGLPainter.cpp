@@ -1519,9 +1519,10 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 #endif
         {
           glTexImage2D(target, 0, internalPixelformat, (int)Width, (int)Height, 0, pixelformat, type, pBuffer);
+          nuiCheckForGLErrors();
           pTexture->ResetForceReload();
+          nuiCheckForGLErrors();
         }
-        nuiCheckForGLErrors();
 
 #ifdef _UIKIT_
 #ifdef NGL_DEBUG
