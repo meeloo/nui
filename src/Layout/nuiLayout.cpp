@@ -1064,7 +1064,8 @@ bool nuiLayout::MouseClicked(const nglMouseInfo& rInfo)
       mMovingAnchorPos[0] = ComputeAnchorPosition(mMovingAnchor[0], 0, 0, mRect.GetWidth());
     if (!mMovingAnchor[1].IsNull())
       mMovingAnchorPos[1] = ComputeAnchorPosition(mMovingAnchor[1], 1, 0, mRect.GetHeight());
-    return true;
+    if (!mMovingAnchor[0].IsNull() || !mMovingAnchor[1].IsNull())
+      return true;
   }
   return false;
 }

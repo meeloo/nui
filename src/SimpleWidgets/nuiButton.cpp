@@ -353,7 +353,7 @@ bool nuiButton::MouseCanceled(const nglMouseInfo& rInfo)
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = false;
-    SetPressed(false);
+    mPressed = false;
     Invalidate();
     ButtonDePressedInactive();
     return true;

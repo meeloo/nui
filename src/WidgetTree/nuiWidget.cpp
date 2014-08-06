@@ -2058,6 +2058,7 @@ bool nuiWidget::HasGrab(nglTouchId TouchId)
 
 bool nuiWidget::StealMouseEvent(const nglMouseInfo& rInfo)
 {
+  NGL_OUT("%s/%s (%p) Preempting mouse from existing grabber!\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), this);
   nuiTopLevel* pTop = GetTopLevel();
   NGL_ASSERT(pTop);
   return pTop->StealMouseEvent(this, rInfo);

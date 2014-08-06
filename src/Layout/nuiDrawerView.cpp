@@ -300,7 +300,6 @@ bool nuiDrawerView::PreMouseMoved(const nglMouseInfo& rInfo)
 
     if (dist > MOVE_TOLERANCE)
     {
-      //NGL_OUT("nuiDrawerView Preempting mouse from existing grabber!\n");
       NGL_ASSERT(GetTopLevel());
 
       if (StealMouseEvent(rInfo))
