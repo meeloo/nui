@@ -2686,7 +2686,8 @@ void nuiTopLevel::UnregisterObserver(nuiNotificationObserver* pObserver, const n
 
 void nuiTopLevel::DumpGrabMap(int line) const
 {
-//#ifdef DEBUG
+#if 0
+#ifdef DEBUG
   NGL_OUT("Grab Map (line %d)\n", line);
   for (const auto& item : mpGrab)
   {
@@ -2700,7 +2701,8 @@ void nuiTopLevel::DumpGrabMap(int line) const
       
     }
   }
-//#endif
+#endif
+#endif
 }
 
 

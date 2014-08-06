@@ -964,8 +964,9 @@ void nuiScrollView::Dragged(const nglMouseInfo& rInfo)
 
 bool nuiScrollView::MouseCanceled(const nglMouseInfo& rInfo)
 {
-  mLeftClick--;
-  mTouched = false;
+  if (mTouched)
+    mLeftClick--;
+  mTouched = (mLeftClick != 0);
 //  NGL_OUT("nuiScrollView::MouseCanceled LeftClick: %d\n", mLeftClick);
 }
 
