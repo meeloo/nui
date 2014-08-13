@@ -2593,7 +2593,7 @@ void nuiTopLevel::SetTabBackward(nuiWidget* pSource, nuiWidget* pDestination, bo
   // Add the relation to the reverse table (for quick removal when the pointed widget will die)
   mTabBackwardRev[pDestination].insert(pSource);
   
-  // If needed, added the bacward relation too (so that Tab and then shift-Tab goes back to the original source)
+  // If needed, added the backward relation too (so that Tab and then shift-Tab goes back to the original source)
   if (AutoReverse)
   {
     SetTabForward(pDestination, pSource, false);
@@ -2705,5 +2705,13 @@ void nuiTopLevel::DumpGrabMap(int line) const
 #endif
 }
 
+float nuiTopLevel::GetScale() const
+{
+  return nuiGetScaleFactor();
+}
 
+float nuiTopLevel::GetScaleInv() const
+{
+  return nuiGetInvScaleFactor();
+}
 

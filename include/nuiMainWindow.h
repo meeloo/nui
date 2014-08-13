@@ -188,6 +188,9 @@ protected:
   virtual bool OnMouseMove   (nglMouseInfo& rInfo);
   virtual bool OnMouseCanceled(nglMouseInfo& rInfo);
   virtual bool OnRotation    (uint Angle);
+  virtual float GetScale() const;
+  virtual float GetScaleInv() const;
+  
   //@}
 
   nuiEventSink<nuiMainWindow> mMainWinSink;

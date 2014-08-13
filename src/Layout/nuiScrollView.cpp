@@ -290,9 +290,11 @@ bool nuiScrollView::SetRect(const nuiRect& rRect)
     mXOffset = XOffset;
     mYOffset = YOffset;
   }
+  const float pixel_size = GetScale();
+  const float inv_pixel_size = GetScaleInv();
   
-  XOffset = (nuiSize)ToNearest(XOffset);
-  YOffset = (nuiSize)ToNearest(YOffset);
+  XOffset = (nuiSize)ToNearest(XOffset * pixel_size) * inv_pixel_size;
+  YOffset = (nuiSize)ToNearest(YOffset * pixel_size) * inv_pixel_size;
 
   GetIdealRect();
   nuiRect rIdealRect(mChildrenUnionRect); ///< needed because GetIdealRect may return a UserRect

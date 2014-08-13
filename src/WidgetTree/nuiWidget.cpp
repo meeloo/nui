@@ -2058,7 +2058,7 @@ bool nuiWidget::HasGrab(nglTouchId TouchId)
 
 bool nuiWidget::StealMouseEvent(const nglMouseInfo& rInfo)
 {
-  NGL_OUT("%s/%s (%p) Preempting mouse from existing grabber!\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), this);
+  NGL_DEBUG(if (GetDebug()) NGL_LOG("widget", NGL_LOG_INFO, "%s/%s (%p) Preempting mouse from existing grabber!\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), this););
   nuiTopLevel* pTop = GetTopLevel();
   NGL_ASSERT(pTop);
   return pTop->StealMouseEvent(this, rInfo);
@@ -5169,3 +5169,20 @@ void nuiWidget::ClearDefaultDecorations()
 {
   mDefaultDecorations.clear();
 }
+
+float nuiWidget::GetScale() const
+{
+  nuiTopLevel* pTop = GetTopLevel();
+  if (pTop)
+    return pTop->GetScale();
+  return nuiGetScaleFactor();
+}
+
+float nuiWidget::GetScaleInv() const
+{
+  nuiTopLevel* pTop = GetTopLevel();
+  if (pTop)
+    return pTop->GetScaleInv();
+  return nuiGetInvScaleFactor();
+}
+

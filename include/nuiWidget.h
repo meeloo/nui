@@ -510,6 +510,8 @@ public:
   bool GetNeedSelfRedraw() const { return mNeedSelfRedraw; }
   bool GetNeedIdealRect() const { return mNeedIdealRect; }
 
+  virtual float GetScale() const; ///< Return current HDPI scaling
+  virtual float GetScaleInv() const; ///< Return 1.0/GetScale()
   //@}
   
   NUI_GETSET(bool, AutoUpdateLayout);

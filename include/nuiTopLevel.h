@@ -167,6 +167,9 @@ public:
   virtual const std::map<nglTouchId, nglMouseInfo>& GetMouseStates() const;
   virtual nuiSize GetStatusBarSize() const;
 
+  virtual float GetScale() const;
+  virtual float GetScaleInv() const;
+
 protected:
   void Exit();
   void SetDrawContext(nuiDrawContext* pDrawContext);
