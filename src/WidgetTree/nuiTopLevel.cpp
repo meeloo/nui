@@ -320,7 +320,8 @@ void nuiTopLevel::AdviseObjectDeath(nuiWidgetPtr pWidget)
     }
     ++it2;
   }
-
+  DumpGrabMap(__LINE__);
+  
   if (mpFocus == pWidget)
   {
     mpFocus = NULL;
@@ -499,7 +500,8 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget)
 
   pGrab = pWidget;
   mpGrab[touchId] = pWidget;
-
+  DumpGrabMap(__LINE__);
+  
   if (pGrab)
     pGrab->MouseGrabbed(touchId);
 
@@ -568,6 +570,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CancelGrab()\n")) );
   }
   mpGrab.clear();
   mpGrabAcquired.clear();
+  DumpGrabMap(__LINE__);
   UpdateWidgetsCSS();
   return true;
 }
@@ -608,6 +611,7 @@ bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInf
   mpGrabAcquired[rInfo.TouchId] = true;
   NGL_TOUCHES_DEBUG( NGL_OUT("Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
   UpdateWidgetsCSS();
+  DumpGrabMap(__LINE__);
   return true;
 }
 
@@ -1328,6 +1332,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
     pGrab->Release();
 
     UpdateWidgetsCSS();
+    DumpGrabMap(__LINE__);
     return res ;
   }
 
@@ -1344,6 +1349,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
     mMouseClickedEvents.erase(it);
   NGL_TOUCHES_DEBUG( NGL_OUT("Released acquired grab2: Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
   UpdateWidgetsCSS();
+  DumpGrabMap(__LINE__);
 	return res;
 }
 
@@ -2587,7 +2593,7 @@ void nuiTopLevel::SetTabBackward(nuiWidget* pSource, nuiWidget* pDestination, bo
   // Add the relation to the reverse table (for quick removal when the pointed widget will die)
   mTabBackwardRev[pDestination].insert(pSource);
   
-  // If needed, added the bacward relation too (so that Tab and then shift-Tab goes back to the original source)
+  // If needed, added the backward relation too (so that Tab and then shift-Tab goes back to the original source)
   if (AutoReverse)
   {
     SetTabForward(pDestination, pSource, false);
@@ -2676,4 +2682,36 @@ void nuiTopLevel::UnregisterObserver(nuiNotificationObserver* pObserver, const n
 }
 
 
+//typedef std::map<nglTouchId, nuiWidgetPtr> nuiGrabMap;
+
+void nuiTopLevel::DumpGrabMap(int line) const
+{
+#if 0
+#ifdef DEBUG
+  NGL_OUT("Grab Map (line %d)\n", line);
+  for (const auto& item : mpGrab)
+  {
+    if (item.second != nullptr)
+    {
+      NGL_OUT("Grab %d -> %s / %s (%p)\n", item.first, item.second->GetObjectClass().GetChars(), item.second->GetObjectName().GetChars(), item.second);
+    }
+    else
+    {
+      NGL_OUT("Grab %d -> NONE\n", item.first);
+      
+    }
+  }
+#endif
+#endif
+}
+
+float nuiTopLevel::GetScale() const
+{
+  return nuiGetScaleFactor();
+}
+
+float nuiTopLevel::GetScaleInv() const
+{
+  return nuiGetInvScaleFactor();
+}
 

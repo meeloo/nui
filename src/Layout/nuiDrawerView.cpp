@@ -15,12 +15,12 @@ mpLeft(nullptr), mpMain(nullptr), mpRight(nullptr), mOffset(0), mTouched(false),
   {
     // Init attributes:
     AddAttribute(new nuiAttribute<bool>
-                 (nglString(_T("Interactive")), nuiUnitBoolean,
+                 ("Interactive", nuiUnitBoolean,
                   nuiMakeDelegate(this, &nuiDrawerView::GetInteractive),
                   nuiMakeDelegate(this, &nuiDrawerView::SetInteractive)));
 
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("AnimRatio")), nuiUnitBoolean,
+                 ("AnimRatio", nuiUnitBoolean,
                   nuiMakeDelegate(this, &nuiDrawerView::GetAnimRatio),
                   nuiMakeDelegate(this, &nuiDrawerView::SetAnimRatio)));
   }
@@ -45,6 +45,7 @@ void nuiDrawerView::OpenLeft()
 
   mMoving = false;
   mTouched = false;
+  mStealRefused = false;
 
   float width = mpLeft->GetIdealRect().GetWidth();
   mTargetOffset = width;
@@ -64,6 +65,7 @@ void nuiDrawerView::OpenRight()
 
   mMoving = false;
   mTouched = false;
+  mStealRefused = false;
 
   float width = mpRight->GetIdealRect().GetWidth();
     mTargetOffset = -width;
@@ -80,6 +82,7 @@ void nuiDrawerView::Close()
 {
   mMoving = false;
   mTouched = false;
+  mStealRefused = false;
 
   mTargetOffset = 0;
 
@@ -274,8 +277,7 @@ bool nuiDrawerView::PreMouseUnclicked(const nglMouseInfo& rInfo)
         }
         mTouched = false;
 
-        mTargetOffset = 0;
-        mEventSink.Connect(nuiAnimation::GetTimer()->Tick, &nuiDrawerView::OnAnimateDrawer);
+        Close();
 
         return true;
       }
@@ -298,7 +300,6 @@ bool nuiDrawerView::PreMouseMoved(const nglMouseInfo& rInfo)
 
     if (dist > MOVE_TOLERANCE)
     {
-      //NGL_OUT("nuiDrawerView Preempting mouse from existing grabber!\n");
       NGL_ASSERT(GetTopLevel());
 
       if (StealMouseEvent(rInfo))
@@ -347,7 +348,8 @@ void nuiDrawerView::ReleaseTouch()
     if (-mOffset < width * 0.5)
     {
       // We're less than half way though, so we go back to our original position:
-      mTargetOffset = 0;
+      Close();
+      return;
     }
     else
     {
@@ -361,7 +363,8 @@ void nuiDrawerView::ReleaseTouch()
     if (mOffset < width * 0.5)
     {
       // We're less than half way though, so we go back to our original position:
-      mTargetOffset = 0;
+      Close();
+      return;
     }
     else
     {
