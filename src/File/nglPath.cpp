@@ -1660,11 +1660,35 @@ void nglPath::SetBackupPermited(bool set)
     assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
 
     NSError *error = nil;
+    {
+      NSNumber* res = nil;
+      BOOL success = [URL getResourceValue: &res
+                                    forKey: NSURLIsExcludedFromBackupKey error: &error];
+
+      if (!success)
+      {
+        NSLog(@"getResourceValue error\n");
+      }
+    }
+
     BOOL success = [URL setResourceValue: [NSNumber numberWithBool: set?NO:YES]
                                   forKey: NSURLIsExcludedFromBackupKey error: &error];
-    if(!success){
+    if(!success)
+    {
       NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
     }
+
+    {
+      NSNumber* res = nil;
+      BOOL success = [URL getResourceValue: &res
+                                    forKey: NSURLIsExcludedFromBackupKey error: &error];
+
+      if (!success)
+      {
+        NSLog(@"getResourceValue error\n");
+      }
+    }
+
   }
 #endif
 }

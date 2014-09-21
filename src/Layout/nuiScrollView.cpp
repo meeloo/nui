@@ -831,6 +831,8 @@ bool nuiScrollView::MouseUnclicked(const nglMouseInfo& rInfo)
 
   Dragged(rInfo);
   mLeftClick--;
+  if (mLeftClick < 0)
+    mLeftClick = 0;
 //  NGL_OUT("nuiScrollView::MouseUnclicked LeftClick: %d\n", mLeftClick);
 
   if (!mLeftClick)
@@ -964,7 +966,15 @@ void nuiScrollView::Dragged(const nglMouseInfo& rInfo)
 
 bool nuiScrollView::MouseCanceled(const nglMouseInfo& rInfo)
 {
-  mLeftClick--;
+  mLeftClick = 0;
+  Dragged(rInfo);
+  mSpeedX = 0;
+  mSpeedY = 0;
+
+  if (mHideScrollBars)
+  {
+    HideScrollBars();
+  }
 //  NGL_OUT("nuiScrollView::MouseCanceled LeftClick: %d\n", mLeftClick);
 }
 
