@@ -717,6 +717,7 @@ bool nuiScrollView::MouseWheelMoved(const nglMouseInfo& rInfo)
 
 bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
 {
+  NGL_ASSERT(mLeftClick >= 0);
   bool res = false;
   bool autoHideScrollbars = true;
   bool v = IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT);
@@ -828,13 +829,13 @@ bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
 
 bool nuiScrollView::MouseUnclicked(const nglMouseInfo& rInfo)
 {
+  NGL_ASSERT(mLeftClick >= 0);
   if (!mLeftClick)
     return false;
 
   Dragged(rInfo);
-  mLeftClick--;
-  if (mLeftClick < 0)
-    mLeftClick = 0;
+  mLeftClick = nuiClamp(mLeftClick - 1, 0, mLeftClick);
+  NGL_ASSERT(mLeftClick >= 0);
 //  NGL_OUT("nuiScrollView::MouseUnclicked LeftClick: %d\n", mLeftClick);
 
   if (!mLeftClick)
@@ -864,6 +865,7 @@ bool nuiScrollView::MouseUnclicked(const nglMouseInfo& rInfo)
 
 bool nuiScrollView::MouseMoved(const nglMouseInfo& rInfo)
 {
+  NGL_ASSERT(mLeftClick >= 0);
   if (!mLeftClick)
     return false;
   
@@ -968,8 +970,8 @@ void nuiScrollView::Dragged(const nglMouseInfo& rInfo)
 
 bool nuiScrollView::MouseCanceled(const nglMouseInfo& rInfo)
 {
-  if (mTouched)
-    mLeftClick--;
+  NGL_ASSERT(mLeftClick >= 0);
+    mLeftClick = 0;
   NGL_ASSERT(mLeftClick >= 0);
   mTouched = (mLeftClick != 0);
   Dragged(rInfo);
@@ -1043,6 +1045,7 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
   if (!mTimerOn)
     return;
 
+  NGL_ASSERT(mLeftClick >= 0);
   if (!mLeftClick)
   {
     float XOffset = (float)mpHorizontal->GetRange().GetValue();
@@ -1237,6 +1240,7 @@ void nuiScrollView::SetHideScrollBars(bool hide)
     mpShowAnimV = new nuiFadeInWidgetAnim(mpVertical, inDuration, true);
     mpHideAnimH = new nuiFadeOutWidgetAnim(mpHorizontal, outDuration, true);
     mpHideAnimV = new nuiFadeOutWidgetAnim(mpVertical, outDuration, true);
+    NGL_ASSERT(mLeftClick >= 0);
     mpHorizontal->SetAlpha(mLeftClick ? 1 : 0);
     mpVertical->SetAlpha(mLeftClick ? 1 : 0);
   }
@@ -1318,6 +1322,7 @@ bool nuiScrollView::PreMouseClicked(const nglMouseInfo& rInfo)
   if (!mDragEnabled)
     return false;
 
+  NGL_ASSERT(mLeftClick >= 0);
   if (mLeftClick)
     return false;
 
@@ -1360,6 +1365,7 @@ bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
   if (!mDragEnabled)
     return false;
 
+  NGL_ASSERT(mLeftClick >= 0);
   if (mTouched && !mLeftClick)
   {
     float x = 0;
