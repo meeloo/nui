@@ -90,7 +90,7 @@ void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVert
   mHideScrollBars = false;
   
   mLeftClick = 0;
-  NGL_OUT("nuiScrollView::Init LeftClick: %d\n", mLeftClick);
+//  NGL_OUT("nuiScrollView::Init LeftClick: %d\n", mLeftClick);
 
 
   if (pHorizontalScrollBar)
@@ -230,7 +230,7 @@ nuiRect nuiScrollView::CalcIdealSize()
 #ifdef _DEBUG_LAYOUT
       if (GetDebug())
       {
-        NGL_OUT(_T("\tnuiScrollView::CalcIdealSize: [%s %s] size %s\n"), pItem->GetObjectClass().GetChars(), pItem->GetObjectName().GetChars(), mIdealRect.GetValue().GetChars());
+//        NGL_OUT("\tnuiScrollView::CalcIdealSize: [%s %s] size %s\n", pItem->GetObjectClass().GetChars(), pItem->GetObjectName().GetChars(), mIdealRect.GetValue().GetChars());
       }
 #endif
     }
@@ -253,7 +253,7 @@ nuiRect nuiScrollView::CalcIdealSize()
   #ifdef _DEBUG_LAYOUT
   if (GetDebug())
   {
-    NGL_OUT(_T("nuiScrollView::CalcIdealSize: %s\n"), mIdealRect.GetValue().GetChars());
+    NGL_OUT("nuiScrollView::CalcIdealSize: %s\n", mIdealRect.GetValue().GetChars());
   }
   #endif
   
@@ -265,7 +265,7 @@ bool nuiScrollView::SetRect(const nuiRect& rRect)
   #ifdef _DEBUG_LAYOUT
   if (GetDebug())
   {
-    NGL_OUT(_T("nuiScrollView::SetRect: %s\n"), rRect.GetValue().GetChars());
+//    NGL_OUT("nuiScrollView::SetRect: %s\n", rRect.GetValue().GetChars());
   }
   #endif
       
@@ -447,7 +447,7 @@ bool nuiScrollView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy
   #ifdef _DEBUG_LAYOUT
   if (GetDebug())
   {
-    NGL_OUT(_T("\tnuiScrollView::SetChildrenRect: (%f, %f) (%f, %f) - (%f, %f)\n"), x, y, xx, yy, scrollv, scrollh);
+//    NGL_OUT("\tnuiScrollView::SetChildrenRect: (%f, %f) (%f, %f) - (%f, %f)\n", x, y, xx, yy, scrollv, scrollh);
   }
   #endif
   
@@ -498,7 +498,7 @@ bool nuiScrollView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy
         #ifdef _DEBUG_LAYOUT
         if (GetDebug())
         {
-          NGL_OUT(_T("\tnuiScrollView::SetChildrenRect: SetLayout(%s)\n"), rect.GetValue().GetChars());
+//          NGL_OUT("\tnuiScrollView::SetChildrenRect: SetLayout(%s)\n", rect.GetValue().GetChars());
         }
         #endif
 
@@ -539,7 +539,7 @@ bool nuiScrollView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy
         #ifdef _DEBUG_LAYOUT
         if (GetDebug())
         {
-          NGL_OUT(_T("\tnuiScrollView::SetChildrenRect: SetLayout(%s)\n"), rect.GetValue().GetChars());
+//          NGL_OUT("\tnuiScrollView::SetChildrenRect: SetLayout(%s)\n", rect.GetValue().GetChars());
         }
         #endif
         
@@ -800,7 +800,7 @@ bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
   else if (rInfo.Buttons & nglMouseInfo::ButtonLeft && mDragEnabled && !mLeftClick)
   {
     mLeftClick++;
-    NGL_OUT("nuiScrollView::MouseClicked LeftClick: %d\n", mLeftClick);
+//    NGL_OUT("nuiScrollView::MouseClicked LeftClick: %d\n", mLeftClick);
     mTimerOn = false;
     mSpeedX = 0;
     mSpeedY = 0;
@@ -835,7 +835,7 @@ bool nuiScrollView::MouseUnclicked(const nglMouseInfo& rInfo)
 
   Dragged(rInfo);
   mLeftClick--;
-  NGL_OUT("nuiScrollView::MouseUnclicked LeftClick: %d\n", mLeftClick);
+//  NGL_OUT("nuiScrollView::MouseUnclicked LeftClick: %d\n", mLeftClick);
   NGL_ASSERT(mLeftClick >= 0);
 
   if (!mLeftClick)
@@ -972,7 +972,7 @@ bool nuiScrollView::MouseCanceled(const nglMouseInfo& rInfo)
 {
   NGL_ASSERT(mLeftClick >= 0);
   mLeftClick = 0;
-  NGL_OUT("nuiScrollView::MouseCanceled LeftClick: %d\n", mLeftClick);
+//  NGL_OUT("nuiScrollView::MouseCanceled LeftClick: %d\n", mLeftClick);
 
   NGL_ASSERT(mLeftClick >= 0);
   mTouched = (mLeftClick != 0);
