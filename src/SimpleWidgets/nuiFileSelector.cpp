@@ -521,7 +521,7 @@ void nuiFileSelector::FormatFileSize(nuiSize size, nglString& str)
 
 nuiWidget* nuiFileSelector::GetFileInfo(const nglPath& rPath)
 {
-  nuiSimpleContainer* pMainCont = new nuiSimpleContainer();
+  nuiContainer* pMainCont = new nuiContainer();
   pMainCont->SetObjectName(_T("nuiFileSelector::InfoView"));
   pMainCont->SetObjectClass(_T("nuiFileSelector::InfoView"));
   

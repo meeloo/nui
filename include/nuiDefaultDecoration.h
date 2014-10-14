@@ -12,7 +12,7 @@
 #include "nuiNavigationBarStyle.h"
 
 class nuiWidget;
-class nuiSimpleContainer;
+class nuiContainer;
 class nuiMainWindow;
 class nuiMessageBox;
 class nuiTabView;
@@ -32,7 +32,7 @@ public:
 
   // special case
   static void MainWindow(nuiMainWindow* pWindow);
-  static void Dialog(nuiSimpleContainer* pCont);
+  static void Dialog(nuiContainer* pCont);
   static void MessageBox(nuiMessageBox* pBox);
   static void TabView_Tab(nuiTabView* pView, nuiWidget* pTab);
   static void TabView_Contents(nuiTabView* pView, nuiWidget* pContents);

@@ -102,7 +102,7 @@ protected:
   nglString mKey;
 };
 
-class nuiColumnTreeViewPreview : public nuiSimpleContainer
+class nuiColumnTreeViewPreview : public nuiContainer
 {
 public:
   nuiColumnTreeViewPreview(nuiColumnTreeView* pParent);

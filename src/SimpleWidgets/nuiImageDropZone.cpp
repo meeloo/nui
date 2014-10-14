@@ -152,7 +152,7 @@ bool nuiImageDropZone::Draw(nuiDrawContext* pContext)
     pContext->DrawShape(&shp, eStrokeShape);
   }
 
-  nuiSimpleContainer::Draw(pContext);
+  nuiContainer::Draw(pContext);
   return true;
 }
 

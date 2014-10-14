@@ -17,7 +17,7 @@
 #define SBMINTHUMB 20.f // Min Thumb size
 
 /// Basic scroll bar with range support. Used in too many compound widgets to name :).
-class nuiScrollBar : public nuiSimpleContainer
+class nuiScrollBar : public nuiContainer
 {
 public:
   nuiScrollBar(nuiOrientation orientation = nuiHorizontal, const nuiRange& rRange = nuiRange(), nuiWidgetPtr pThumb = NULL);

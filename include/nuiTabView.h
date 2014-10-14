@@ -23,7 +23,7 @@ public:
 
 
 
-class nuiTabView : public nuiSimpleContainer
+class nuiTabView : public nuiContainer
 {
 private:
   class Tab;
@@ -92,7 +92,7 @@ protected:
   float mFoldRatio;
   
 private:
-  class Tab : public nuiSimpleContainer
+  class Tab : public nuiContainer
   {
   public:
     Tab(nuiWidget* pWidget);

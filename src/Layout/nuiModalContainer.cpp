@@ -8,7 +8,7 @@
 #include "nui.h"
 
 nuiModalContainer::nuiModalContainer(nuiContainerPtr pParent)
-: nuiSimpleContainer(),
+: nuiContainer(),
   mIsModal(true),
   mInModalState(false),
   mModalEventSink(this)
@@ -279,7 +279,7 @@ void nuiModalContainer::OnTrash()
   if (mpPreviousFocus)
     mpPreviousFocus->Focus();
   */
-  nuiSimpleContainer::OnTrash();
+  nuiContainer::OnTrash();
 }
 
 #include "nuiPane.h"

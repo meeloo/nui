@@ -183,7 +183,7 @@ bool nuiSplitterHandle::MouseMoved(nuiSize X, nuiSize Y)
 
 
 nuiSplitter::nuiSplitter ( nuiOrientation orientation, nuiSplitterMode mode)
-: nuiSimpleContainer()
+: nuiContainer()
 //  mSplitterSink(this)
 {
   if (SetObjectClass(_T("nuiSplitter")))

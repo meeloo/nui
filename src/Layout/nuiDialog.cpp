@@ -19,7 +19,7 @@ nuiDialog::nuiDialog(nuiContainer* pParent)
 
 
 
-void nuiDialog::InitDialog(nuiSimpleContainer* pLayoutContainer, uint32 buttons)
+void nuiDialog::InitDialog(nuiContainer* pLayoutContainer, uint32 buttons)
 {
   if (pLayoutContainer)
     SetLayoutContainer(pLayoutContainer);
@@ -42,7 +42,7 @@ void nuiDialog::InitDialog(nuiSimpleContainer* pLayoutContainer, uint32 buttons)
   mSink.Connect( GetHotKeyEvent(_T("AcceptDialogAlt")), &nuiDialog::OnAccept );  
 }
 
-void nuiDialog::InitDialog(const nglString& rMessage, nuiSimpleContainer* pLayoutContainer, uint32 buttons)
+void nuiDialog::InitDialog(const nglString& rMessage, nuiContainer* pLayoutContainer, uint32 buttons)
 {
   nuiLabel* pLabel = new nuiLabel(rMessage);
   
@@ -51,7 +51,7 @@ void nuiDialog::InitDialog(const nglString& rMessage, nuiSimpleContainer* pLayou
   InitDialog(pLabel, pLayoutContainer, buttons);
 }
 
-void nuiDialog::InitDialog(nuiLabel* pLabel, nuiSimpleContainer* pLayoutContainer, uint32 buttons)
+void nuiDialog::InitDialog(nuiLabel* pLabel, nuiContainer* pLayoutContainer, uint32 buttons)
 {
   pLabel->SetObjectClass(_T("nuiDialog::Title"));
   pLabel->SetObjectName(_T("nuiDialog::Title"));
@@ -293,9 +293,9 @@ void nuiDialog::SetDefaultAnimations()
   AddAnimation(_T("TRASH"), pMetaAnim);
 }
 
-nuiSimpleContainer* nuiDialog::CreateDefaultLayout()
+nuiContainer* nuiDialog::CreateDefaultLayout()
 {
-  mpPane = new nuiSimpleContainer();
+  mpPane = new nuiContainer();
   mpPane->SetObjectClass(_T("nuiDialog::Pane"));
   mpPane->SetObjectName(_T("nuiDialog::Pane"));
   mpPane->SetColor(eNormalTextFg, nuiColor(0,0,0));
@@ -327,12 +327,12 @@ void nuiDialog::SetUserPos(nuiSize X, nuiSize Y)
   mpLayoutContainer->SetUserPos(x, y);
 }
 
-nuiSimpleContainer* nuiDialog::GetLayoutContainer()
+nuiContainer* nuiDialog::GetLayoutContainer()
 {
   return mpLayoutContainer;
 }
 
-void nuiDialog::SetLayoutContainer(nuiSimpleContainer* pContainer, bool saveChilds)
+void nuiDialog::SetLayoutContainer(nuiContainer* pContainer, bool saveChilds)
 {
   std::list<nuiWidget*> pChilds;
   NGL_ASSERT(pContainer);

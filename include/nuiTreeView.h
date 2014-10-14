@@ -124,7 +124,7 @@ typedef nuiFastDelegate1<nuiTreeNode*,nglDragAndDrop*>  DragStartDelegate;
 typedef nuiFastDelegate3<nuiTreeNode*,nglDragAndDrop*,const nglString&>  DragRequestDataDelegate;
 typedef nuiFastDelegate2<nuiTreeNode*,bool>  DragStopDelegate;
 
-class nuiTreeView : public nuiSimpleContainer
+class nuiTreeView : public nuiContainer
 {
 public:
   nuiTreeView(nuiTreeNode* pTree = NULL, bool displayRoot=true);

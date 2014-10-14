@@ -13,7 +13,7 @@
 #define NUI_DEFAULT_ROW_EXPAND_SHRINK 0
 
 nuiGrid::nuiGrid(uint32 nbcolumns, uint32 nbrows)
-: nuiSimpleContainer()
+: nuiContainer()
 {
   if (SetObjectClass(_T("nuiGrid")))
     InitAttributes();
@@ -1164,7 +1164,7 @@ void nuiGrid::RemoveRows(uint32 pos, uint32 rows)
 
 bool nuiGrid::Clear()
 {
-  bool res = nuiSimpleContainer::Clear();
+  bool res = nuiContainer::Clear();
 
   mGrid.clear();
 

@@ -1053,7 +1053,7 @@ void nuiDefaultDecoration::MainWindow(nuiMainWindow* pWindow)
 //
 // nuiDialog
 //
-void nuiDefaultDecoration::Dialog(nuiSimpleContainer* pCont)
+void nuiDefaultDecoration::Dialog(nuiContainer* pCont)
 {
   nuiFrame* pFrame = (nuiFrame*)nuiDecoration::Get(_T("nuiDefaultDecorationOutterPane"));
   if (!pFrame)

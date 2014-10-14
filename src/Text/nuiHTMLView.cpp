@@ -274,7 +274,7 @@ bool nuiHTMLView::Draw(nuiDrawContext* pContext)
     mLastVisibleRect = mVisibleRect;
   }
   
-  nuiSimpleContainer::Draw(pContext);
+  nuiContainer::Draw(pContext);
   pContext->SetBlendFunc(nuiBlendTransp);
   pContext->EnableBlending(true);
   if (mpRootBox)

@@ -36,7 +36,7 @@ class nuiDialogSelectFile : public nuiDialog
     void OnDialogDone(const nuiEvent& rEvent);
     
     nuiMainWindow* mpParent;
-    nuiSimpleContainer* mpContainer;
+    nuiContainer* mpContainer;
     nuiFileSelector* mpSelector;
     nuiEditLine* mpEditLine;
     

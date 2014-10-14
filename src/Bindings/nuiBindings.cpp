@@ -12,7 +12,6 @@ NUI_DECLARE_ATTRIBUTE_TYPE(void*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiObject*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiWidget*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiContainer*);
-NUI_DECLARE_ATTRIBUTE_TYPE(nuiSimpleContainer*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiTopLevel*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiMainWindow*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiLabel*);
@@ -95,14 +94,14 @@ bool nuiInitBindings()
   nuiAddMethod(GetPreviousSibling, nuiContainer::GetPreviousSibling);
   nuiEndClass;
 
-  nuiBindClass(nuiSimpleContainer);
+  nuiBindClass(nuiContainer);
   nuiInheritFrom(nuiContainer);
-  nuiAddCtor(nuiCreateObject<nuiSimpleContainer>);
-  nuiAddMethod(AddChild, nuiSimpleContainer::AddChild);
+  nuiAddCtor(nuiCreateObject<nuiContainer>);
+  nuiAddMethod(AddChild, nuiContainer::AddChild);
   nuiEndClass;
   
   nuiBindClass(nuiTopLevel);
-  nuiInheritFrom(nuiSimpleContainer);
+  nuiInheritFrom(nuiContainer);
   nuiEndClass;
   
   nuiBindClass(nuiMainWindow);

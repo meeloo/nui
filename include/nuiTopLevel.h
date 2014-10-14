@@ -22,7 +22,7 @@ class nuiLabel;
 class nuiCSS;
 class nuiToolTip;
 
-class nuiTopLevel : public nuiSimpleContainer
+class nuiTopLevel : public nuiContainer
 {
 public:
   /** @name Life */

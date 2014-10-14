@@ -9,7 +9,7 @@
 
 #include "nui.h"
 
-class nuiThreadInspector : public nuiSimpleContainer
+class nuiThreadInspector : public nuiContainer
 {
 public:
   nuiThreadInspector();

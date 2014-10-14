@@ -8,11 +8,11 @@
 
 #include "nuiContainer.h"
 
-class nuiShadeContainer : public nuiSimpleContainer
+class nuiShadeContainer : public nuiContainer
 {
 public:
   nuiShadeContainer(nuiSize shadeSize)
-  : nuiSimpleContainer(), mShadeSize(shadeSize)
+  : nuiContainer(), mShadeSize(shadeSize)
   {
   }
   
@@ -22,7 +22,7 @@ public:
   
   nuiRect CalcIdealSize()
   {
-    nuiRect idealRect = nuiSimpleContainer::CalcIdealSize();
+    nuiRect idealRect = nuiContainer::CalcIdealSize();
     idealRect.SetSize(idealRect.GetWidth()+2*mShadeSize, idealRect.GetHeight()+mShadeSize);
     return idealRect; 
   }

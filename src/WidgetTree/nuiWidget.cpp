@@ -3448,7 +3448,7 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
   //#TEST
 #ifdef _DEBUG_
   {
-    nuiSimpleContainer* pCont = dynamic_cast<nuiSimpleContainer*> (this);
+    nuiContainer* pCont = dynamic_cast<nuiContainer*> (this);
     if (pCont)
     {
       for (uint32 i = 0; i < pCont->GetChildrenCount(); i++)

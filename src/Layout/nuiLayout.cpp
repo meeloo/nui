@@ -377,7 +377,7 @@ nuiAnchorType nuiLayout::GetVerticalAnchorType(const nglString& rName) const
 
 bool nuiLayout::AddChild(nuiWidgetPtr pChild)
 {
-  if (nuiSimpleContainer::AddChild(pChild))
+  if (nuiContainer::AddChild(pChild))
   {
     SetConstraint(pChild, pChild->GetProperty("Layout"));
     pChild->SetAutoUpdateLayout(true);

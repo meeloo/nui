@@ -22,7 +22,7 @@
 
 
 nuiScrollView::nuiScrollView(bool Horizontal, bool Vertical)
-  : nuiSimpleContainer(),
+  : nuiContainer(),
     mSVSink(this),
     mVerticalHotRectActive(true),
     mHorizontalHotRectActive(true)
@@ -31,7 +31,7 @@ nuiScrollView::nuiScrollView(bool Horizontal, bool Vertical)
 }
 
 nuiScrollView::nuiScrollView(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVerticalScrollBar )
-: nuiSimpleContainer(),
+: nuiContainer(),
   mSVSink(this),
   mVerticalHotRectActive(true),
   mHorizontalHotRectActive(true)

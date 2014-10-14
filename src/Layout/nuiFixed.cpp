@@ -8,7 +8,7 @@
 #include "nui.h"
 
 nuiFixed::nuiFixed()
-  : nuiSimpleContainer()
+  : nuiContainer()
 {
   SetObjectClass(_T("nuiFixed"));
 }

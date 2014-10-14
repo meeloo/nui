@@ -17,7 +17,7 @@
 
 
 nuiGestureRecognizer::nuiGestureRecognizer()
-: nuiSimpleContainer()
+: nuiContainer()
 {
   mState = eGestureRecognizerStatePossible;
 }

@@ -13,7 +13,7 @@
 
 #include "nuiPopupMenu.h"
 
-class nuiComboBox : public nuiSimpleContainer
+class nuiComboBox : public nuiContainer
 {
 public:
   nuiComboBox();

@@ -12,7 +12,7 @@
 #define DEFAULT_HANDLE_OFFSET  12.f
 
 nuiComboBox::nuiComboBox()
-: nuiSimpleContainer(), 
+: nuiContainer(), 
   mpChoicesTree(NULL), 
   mpSelected(NULL), 
   mpOldSelected(NULL), 
@@ -27,7 +27,7 @@ nuiComboBox::nuiComboBox()
 
 
 nuiComboBox::nuiComboBox(nuiTreeNode* pChoicesTree, bool ownTree)
-: nuiSimpleContainer(), 
+: nuiContainer(), 
   mpChoicesTree(pChoicesTree), 
   mpSelected(NULL), 
   mpOldSelected(NULL), 

@@ -71,31 +71,37 @@ public:
   virtual ~nuiContainer(); 
   //@}
 
-  virtual bool SetObjectClass(const nglString& rName);
-  virtual void SetObjectName(const nglString& rName);
-  
-  /** @name Object relation management */
-  //@{
+  virtual bool AddChild(nuiWidgetPtr pChild);
+  virtual bool DelChild(nuiWidgetPtr pChild); ///< Remove this child from the object. If Delete is true then the child will be deleted too. Returns true if success.
+  virtual int GetChildrenCount() const;
   virtual nuiWidgetPtr GetChild(int index); ///< Returns the child which has the given index (first child = 0). Return NULL in case of faillure.
   virtual nuiWidgetPtr GetChild(nuiSize X, nuiSize Y); ///< Returns the child which is under the pixel (X,Y) in this object or this if there is no such child. X and Y are given in the coordinate system of the parent object.
-  virtual void GetChildren(nuiSize X, nuiSize Y, nuiWidgetList& rChildren, bool DeepSearch = false); /// Return all the children under the pixel (X, Y) in this container. 
+  virtual nuiWidgetPtr GetChild(const nglString& rName, bool ResolveNameAsPath = true); ///< Find a child by its name property. Try to resolve path names like /window/fixed/toto or ../../tata if deepsearch is true
+  virtual bool Clear();///< Clear all children. By default the children are deleted unless Delete == false.
+
+  virtual nuiContainer::Iterator* GetFirstChild(bool DoRefCounting = false);
+  virtual nuiContainer::ConstIterator* GetFirstChild(bool DoRefCounting = false) const;
+  virtual nuiContainer::Iterator* GetLastChild(bool DoRefCounting = false);
+  virtual nuiContainer::ConstIterator* GetLastChild(bool DoRefCounting = false) const;
+  virtual bool GetNextChild(nuiContainer::IteratorPtr pIterator);
+  virtual bool GetNextChild(nuiContainer::ConstIteratorPtr pIterator) const;
+  virtual bool GetPreviousChild(nuiContainer::IteratorPtr pIterator);
+  virtual bool GetPreviousChild(nuiContainer::ConstIteratorPtr pIterator) const;
+
+  virtual void RaiseChild(nuiWidgetPtr pChild);
+  virtual void LowerChild(nuiWidgetPtr pChild);
+  virtual void RaiseChildToFront(nuiWidgetPtr pChild);
+  virtual void LowerChildToBack(nuiWidgetPtr pChild);
+
+
+  /** @name Object relation management */
+  //@{
+  virtual void GetChildren(nuiSize X, nuiSize Y, nuiWidgetList& rChildren, bool DeepSearch = false); /// Return all the children under the pixel (X, Y) in this container.
   
   nuiWidgetPtr GetChildIf(nuiSize X, nuiSize Y, TestWidgetFunctor* pFunctor); ///< Returns the child that satisfies the given functor object and that is under the pixel (X,Y) in this object or this if there is no such child. X and Y are given in the coordinate system of the parent object. rFunctor is a std::unary_functor<nuiWidgetPtr, bool> object defined by the user.
-  virtual nuiWidgetPtr GetChild(const nglString& rName, bool ResolveNameAsPath = true); ///< Find a child by its name property. Try to resolve path names like /window/fixed/toto or ../../tata if deepsearch is true
   nuiWidgetPtr SearchForChild(const nglString& rName, bool recurse = true);  ///< Find a child by its name property, recurse the search in the subchildren if asked politely. 
-  virtual bool Clear() = 0; ///< Clear all children. By default the children are deleted unless Delete == false.
   nuiContainerPtr GetRoot() const;
   nuiWidgetPtr Find (const nglString& rName); ///< Finds a node given its full path relative to the current node. Eg. Find("background/color/red").
-
-  virtual int GetChildrenCount() const = 0; ///< Returns the number of children this object has.
-  virtual IteratorPtr GetFirstChild(bool DoRefCounting = false) = 0; 
-  virtual IteratorPtr GetLastChild(bool DoRefCounting = false) = 0; 
-  virtual bool GetNextChild(IteratorPtr pIterator) = 0;
-  virtual bool GetPreviousChild(IteratorPtr pIterator) = 0;
-  virtual ConstIteratorPtr GetFirstChild(bool DoRefCounting = false) const = 0;
-  virtual ConstIteratorPtr GetLastChild(bool DoRefCounting = false) const = 0;
-  virtual bool GetNextChild(ConstIteratorPtr pIterator) const = 0;
-  virtual bool GetPreviousChild(ConstIteratorPtr pIterator) const = 0;
 
   virtual IteratorPtr GetChildIterator(nuiWidgetPtr pChild, bool DoRefCounting = false);
   virtual ConstIteratorPtr GetChildIterator(nuiWidgetPtr pChild, bool DoRefCounting = false) const;
@@ -145,8 +151,6 @@ public:
   virtual bool DispatchMouseCanceled(nuiWidgetPtr pThief, const nglMouseInfo& rInfo);
   //@}
 
-  virtual bool DelChild(nuiWidgetPtr pChild) = 0;
-
   /** @name Children Layout animations: */
    //@{
   void SetChildrenLayoutAnimationDuration(float duration);
@@ -167,6 +171,8 @@ protected:
   void ChildrenCallOnTrash();
   virtual void InternalResetCSSPass();
   void InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged);
+
+  nuiWidgetList mpChildren;
 
 };
 

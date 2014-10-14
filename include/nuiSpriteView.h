@@ -198,7 +198,7 @@ private:
 };
 
 
-class nuiSpriteView : public nuiSimpleContainer
+class nuiSpriteView : public nuiContainer
 {
 public:
   nuiSpriteView();

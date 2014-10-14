@@ -21,7 +21,7 @@ class nuiAsyncIStream;
 class nuiCSSEngine;
 class nuiCSSStyleSheet;
 
-class nuiHTMLView : public nuiSimpleContainer
+class nuiHTMLView : public nuiContainer
 {
 public:
   nuiHTMLView(float IdealWidth = 800);

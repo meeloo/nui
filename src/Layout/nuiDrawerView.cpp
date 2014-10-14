@@ -180,7 +180,7 @@ bool nuiDrawerView::AddChild(nuiWidgetPtr pWidget)
       DelChild(mpMain);
     mpMain = pWidget;
   }
-  return nuiSimpleContainer::AddChild(pWidget);
+  return nuiContainer::AddChild(pWidget);
 }
 
 bool nuiDrawerView::DelChild(nuiWidgetPtr pWidget)
@@ -191,7 +191,7 @@ bool nuiDrawerView::DelChild(nuiWidgetPtr pWidget)
     mpRight = NULL;
   if (pWidget == mpMain)
     mpMain = NULL;
-  return nuiSimpleContainer::DelChild(pWidget);
+  return nuiContainer::DelChild(pWidget);
 }
 
 void nuiDrawerView::SetLeft(nuiWidgetPtr pWidget)

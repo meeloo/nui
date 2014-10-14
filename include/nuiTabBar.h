@@ -55,7 +55,7 @@ public:
   }
 };
 
-class nuiTabBar : public nuiSimpleContainer
+class nuiTabBar : public nuiContainer
 {
 public:
   nuiTabBar(); ///< Create a tab bar

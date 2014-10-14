@@ -56,7 +56,7 @@ void nuiMessageBox::Init(const nglString& rTitle, nuiWidget* pContents, nuiMessa
 
   if (showIcon)
   {
-    nuiSimpleContainer* pIcon = new nuiSimpleContainer();
+    nuiContainer* pIcon = new nuiContainer();
     nglString objectName;
     objectName.Format(_T("nuiMessageBox::Icon"), rTitle.GetChars());
     pIcon->SetObjectName(objectName);

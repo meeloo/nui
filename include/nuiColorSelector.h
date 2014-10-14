@@ -24,7 +24,7 @@ enum ColorSelectorMode
 
 // can apply decoration on "nuiColorSelector::SwatchGrid"
 
-class nuiColorSelector : public nuiSimpleContainer
+class nuiColorSelector : public nuiContainer
 {
 public:
   nuiColorSelector(const nuiColor& rInitialColor = nuiColor(1.f, 1.f, 1.f, 1.f), const std::vector<nuiColor>& rInitialColorList = std::vector<nuiColor>(), ColorSelectorMode mode = eModeRGB);
@@ -64,7 +64,7 @@ private:
   void MakeSwatchGrid();
   
   nuiVBox* mpMainBox;
-  nuiSimpleContainer* mpColorPane;
+  nuiContainer* mpColorPane;
   nuiColorDecoration* mpColorPaneDeco;
   
   nuiTabView* mpTabView;

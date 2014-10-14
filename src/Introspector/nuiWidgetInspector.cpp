@@ -7,7 +7,7 @@
 
 #include "nui.h"
 
-class nuiMetaPainterInspector : public nuiSimpleContainer
+class nuiMetaPainterInspector : public nuiContainer
   {
   public:
     nuiMetaPainterInspector()
@@ -139,7 +139,7 @@ nuiWidget* nuiWidgetInspectorNode::GetTarget()
 }
 
 nuiWidgetInspector::nuiWidgetInspector(nuiWidget* pTarget)
-: nuiSimpleContainer(),
+: nuiContainer(),
 mInspectorSink(this)
 {
   SetObjectClass(_T("nuiWidgetInspector"));
@@ -247,7 +247,7 @@ class nuiWidgetProxy : public nuiWidget
   };
 
 nuiWidgetInfo::nuiWidgetInfo(nuiWidget* pTarget)
-: nuiSimpleContainer(),
+: nuiContainer(),
 mWISink(this)
 {
   mpTarget = NULL;
@@ -511,7 +511,7 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
 
 void nuiWidgetInfo::BuildInfo()
 {
-  mpDummy = new nuiSimpleContainer();
+  mpDummy = new nuiContainer();
   nuiVBox* pMainBox = new nuiVBox(3);
   mpInfos = pMainBox;
   //if (mpTarget)

@@ -13,7 +13,7 @@
 
 
 nuiTabView::nuiTabView(nuiPosition tabPosition, bool decoratedBackground)
-: nuiSimpleContainer(), mTabViewEvents(this),
+: nuiContainer(), mTabViewEvents(this),
   mCurrentTabIndex(0), mTabPosition(tabPosition), mDecoratedBackground(decoratedBackground),
 mChangeOnDrag(false)
 {
@@ -301,7 +301,7 @@ int32 nuiTabView::AddTab(nuiWidget* pTitle, nuiWidget* pContents)
 
 void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, int32 pos)
 {
-  nuiSimpleContainer* pDecoContents;
+  nuiContainer* pDecoContents;
   
   NGL_ASSERT(pTitle);
   NGL_ASSERT(pContents);
@@ -311,7 +311,7 @@ void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, int32 pos)
   
   if (mDecoratedBackground)
   {
-    pDecoContents = new nuiSimpleContainer();
+    pDecoContents = new nuiContainer();
     pDecoContents->SetObjectName(_T("nuiTabView::Contents"));
     pDecoContents->SetObjectClass(_T("nuiTabView::Contents"));
     pDecoContents->AddChild(pContents);
@@ -476,7 +476,7 @@ int32 nuiTabView::GetTabIndexByContents(nuiWidget* pContents) const
   auto i = mIcons.begin();
   for (auto it = mTabs.begin(); it != mTabs.end(); ++it, ++i)
   {
-    if (((nuiSimpleContainer*)*it)->GetChild(0) == pContents)
+    if (((nuiContainer*)*it)->GetChild(0) == pContents)
     {
       return index;
     }
@@ -593,7 +593,7 @@ TabEvent::TabEvent(int32 index) : nuiEvent(), mTabIndex(index)
 }
 
 /////////
-//class Tab : public nuiSimpleContainer
+//class Tab : public nuiContainer
 nuiTabView::Tab::Tab(nuiWidget* pWidget)
 {
   SetObjectName(_T("nuiTabView::Tab"));

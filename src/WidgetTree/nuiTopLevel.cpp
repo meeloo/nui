@@ -67,7 +67,7 @@ private:
 
 
 #ifndef DISABLE_TOOLTIP
-class nuiToolTip : public nuiSimpleContainer
+class nuiToolTip : public nuiContainer
 {
 public:
   nuiToolTip();
@@ -95,7 +95,7 @@ protected:
 };
 
 nuiToolTip::nuiToolTip()
- : nuiSimpleContainer()
+ : nuiContainer()
 {
   SetObjectClass(_T("nuiToolTip"));
   SetObjectName(_T("ToolTipContainer"));
@@ -134,7 +134,7 @@ bool nuiToolTip::SetRect(const nuiRect& rRect)
 
 nuiRect nuiToolTip::CalcIdealSize()
 {
-  nuiRect ideal(nuiSimpleContainer::CalcIdealSize());
+  nuiRect ideal(nuiContainer::CalcIdealSize());
   ideal.Grow(NUI_TOOLTIP_MARGIN_X, NUI_TOOLTIP_MARGIN_Y);
   return ideal;
 }
@@ -171,7 +171,7 @@ nglString nuiToolTip::GetText() const
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
-  : nuiSimpleContainer(),
+  : nuiContainer(),
 #ifndef DISABLE_TOOLTIP
     mToolTipTimerOn(0.5f),
     mToolTipTimerOff(5.0f),

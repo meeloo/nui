@@ -8,9 +8,9 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiSimpleContainer.h"
+#include "nuiContainer.h"
 
-class nuiPopupView : public nuiSimpleContainer
+class nuiPopupView : public nuiContainer
 {
 public:
   nuiPopupView(nuiWidget* pWidget, nuiSize X, nuiSize Y);

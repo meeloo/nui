@@ -10,12 +10,13 @@
 #include "nui.h"
 #include "nuiContainer.h"
 
-class nuiSimpleContainer : public nuiContainer
+/*
+class nuiContainer : public nuiContainer
 {
 public:
-  nuiSimpleContainer();
+  nuiContainer();
   
-  virtual ~nuiSimpleContainer();
+  virtual ~nuiContainer();
   
   virtual bool SetObjectClass(const nglString& rName);
   virtual void SetObjectName(const nglString& rName);
@@ -46,3 +47,4 @@ public:
 protected:
   nuiWidgetList mpChildren;
 };
+*/

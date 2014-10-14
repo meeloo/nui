@@ -20,7 +20,7 @@ enum nuiSplitterMode
 };
 
 
-class nuiSplitterHandle : public nuiSimpleContainer
+class nuiSplitterHandle : public nuiContainer
 {
 public:
   nuiSplitterHandle(nuiSplitter* pParent);
@@ -46,7 +46,7 @@ private:
 
 
 /// This is a split view widget. It divides its client area in two views (horizontaly or verticaly) which acts as two subcontainers. The user can change the proportional size of the area, but it is also possible to lock the split to prevent modification.
-class nuiSplitter : public nuiSimpleContainer
+class nuiSplitter : public nuiContainer
 {
   friend class nuiSplitterHandle;
 

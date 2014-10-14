@@ -852,7 +852,7 @@ void nuiSprite::GetSpritesAtPoint(float x, float y, std::vector<nuiSprite*>& rSp
 
 
 /////////////////////////////////////////////
-// class nuiSpriteView : public nuiSimpleContainer
+// class nuiSpriteView : public nuiContainer
 nuiSpriteView::nuiSpriteView()
 {
   mLastTime = 0;

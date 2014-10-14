@@ -149,7 +149,7 @@ bool nuiNavigationBar::Draw(nuiDrawContext* pContext)
 //  gradient.AddStop(nuiColor(255,255,255,16), 1.f);
 //  pContext->DrawGradient(gradient, rect, 0, rect.Top(), 0, rect.Bottom());
 //  
-//  bool res = nuiSimpleContainer::Draw(pContext);
+//  bool res = nuiContainer::Draw(pContext);
 //  
 //  return res;
 //}

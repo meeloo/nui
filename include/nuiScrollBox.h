@@ -28,7 +28,7 @@ class nuiBox;
 //                            
 //     SCROLLBOX_SPACING      SCROLLBOX_SPACING                                   SCROLLBOX_SPACING        SCROLLBOX_SPACING
 
-class nuiScrollBox : public nuiSimpleContainer
+class nuiScrollBox : public nuiContainer
 {
 public:
   nuiScrollBox(nuiWidget* pBackward, nuiWidget* pForward, nuiOrientation Orientation, nuiWidget* pScrolledWidget);

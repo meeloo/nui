@@ -8,10 +8,10 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiSimpleContainer.h"
+#include "nuiContainer.h"
 
 
-class nuiFontInspector : public nuiSimpleContainer
+class nuiFontInspector : public nuiContainer
 {
 public:
   nuiFontInspector();

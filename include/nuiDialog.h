@@ -38,14 +38,14 @@ public:
   virtual const nglString& GetDecorationName();
   
   void InitAttributes();
-  virtual void    InitDialog(nuiSimpleContainer* pLayoutContainer = NULL, uint32 buttons = 0);
-  virtual void    InitDialog(const nglString& rMessage, nuiSimpleContainer* pLayoutContainer = NULL, uint32 buttons = eDialogButtonOk);
-  virtual void    InitDialog(nuiLabel* pLabel, nuiSimpleContainer* pLayoutContainer = NULL, uint32 buttons = eDialogButtonOk);
+  virtual void    InitDialog(nuiContainer* pLayoutContainer = NULL, uint32 buttons = 0);
+  virtual void    InitDialog(const nglString& rMessage, nuiContainer* pLayoutContainer = NULL, uint32 buttons = eDialogButtonOk);
+  virtual void    InitDialog(nuiLabel* pLabel, nuiContainer* pLayoutContainer = NULL, uint32 buttons = eDialogButtonOk);
 
   void SetContents(nuiWidget* pWidget, nuiPosition Position = nuiFill);
   
-  nuiSimpleContainer* GetLayoutContainer(); ///< Get the decorative container that future child of the Dialog should be parented to
-  void SetLayoutContainer(nuiSimpleContainer* pContainer, bool saveChilds = false); ///< Set the decorative container that future child of the Dialog should be parented to
+  nuiContainer* GetLayoutContainer(); ///< Get the decorative container that future child of the Dialog should be parented to
+  void SetLayoutContainer(nuiContainer* pContainer, bool saveChilds = false); ///< Set the decorative container that future child of the Dialog should be parented to
   
   void SetDefaultButton(DialogButtonType button);
   
@@ -70,7 +70,7 @@ protected:
   void          CreateGrids(); ///< creates grids to display content and buttons
   void          SetDefaultButtons(uint32 buttons); ///< set default buttons by calling AddButton(const nglString&, nuiDialogButtonType) accordind to uint32 buttons representative bits. skips eDialogButtonCustom type
   
-  virtual nuiSimpleContainer* CreateDefaultLayout(); ///< creates a the default the decorative Container mpLayoutContainer, override it to change its look
+  virtual nuiContainer* CreateDefaultLayout(); ///< creates a the default the decorative Container mpLayoutContainer, override it to change its look
   
   virtual void  OnOk(const nuiEvent& rEvent);
   virtual void  OnCancel(const nuiEvent& rEvent);
@@ -78,10 +78,10 @@ protected:
   virtual void  OnAccept(const nuiEvent& rEvent);
 
 	nuiEventSink<nuiDialog> mSink;
-  nuiSimpleContainer*   mpLayoutContainer;
+  nuiContainer*   mpLayoutContainer;
   nuiGrid*        mpGlobalGrid;
   nuiGrid*        mpButtonsGrid;
-  nuiSimpleContainer* mpPane;
+  nuiContainer* mpPane;
 
   DialogResult    mResult;
   nuiButton*      mpButtonOk;

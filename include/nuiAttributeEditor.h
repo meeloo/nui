@@ -8,9 +8,9 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiSimpleContainer.h"
+#include "nuiContainer.h"
 
-class nuiAttributeEditor : public nuiSimpleContainer
+class nuiAttributeEditor : public nuiContainer
 {
 public:
 

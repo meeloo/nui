@@ -10,7 +10,7 @@
 
 
 nuiColorSelector::nuiColorSelector(const nuiColor& rInitialColor, const std::vector<nuiColor>& rInitialColorList, ColorSelectorMode mode /* = eModeRGB */)
-: nuiSimpleContainer(), 
+: nuiContainer(), 
   mpSwatchGrid(NULL),
   mCurrentColor(rInitialColor), 
   mColorList(rInitialColorList),
@@ -24,7 +24,7 @@ nuiColorSelector::nuiColorSelector(const nuiColor& rInitialColor, const std::vec
   mpMainBox->SetExpand(nuiExpandShrinkAndGrow);
   AddChild(mpMainBox);
 
-  mpColorPane = new nuiSimpleContainer();
+  mpColorPane = new nuiContainer();
   mpColorPane->SetBorder(2.f, 2.f);
   mpColorPane->SetUserSize(20.f, 20.f);
   mpMainBox->AddCell(mpColorPane, nuiLeft);

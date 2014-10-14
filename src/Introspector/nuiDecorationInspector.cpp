@@ -80,7 +80,7 @@ void nuiDecorationInspector::UpdateDecos()
   nuiSplitter* pSplit2 = new nuiSplitter(nuiHorizontal);
   pSplit2->SetMasterChild(false);
   pSplitter->AddChild(pSplit2);
-  nuiSimpleContainer* pCont = new nuiSimpleContainer();
+  nuiContainer* pCont = new nuiContainer();
   pSplit2->AddChild(pCont);
   mpLabel = new nuiLabel(_T("Test Widget.\nApply decorations\nto me, from the list\non the left"), nuiFont::GetFont(16));
   mpLabel->SetPosition(nuiCenter);

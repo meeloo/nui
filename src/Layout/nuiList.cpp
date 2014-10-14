@@ -10,7 +10,7 @@
 using namespace std;
 
 nuiList::nuiList(nuiOrientation Orientation)
-  : nuiSimpleContainer(),
+  : nuiContainer(),
     mEventSink(this)
 {
   SetObjectClass(_T("nuiList"));

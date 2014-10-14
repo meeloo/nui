@@ -12,7 +12,7 @@
 #include "nuiContainer.h"
 
 /// nuiFixed is a widget container that keep all its children at their original position and size.
-class nuiFixed : public nuiSimpleContainer
+class nuiFixed : public nuiContainer
 {
 public:
   nuiFixed();

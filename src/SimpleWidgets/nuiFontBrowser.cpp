@@ -7,7 +7,7 @@
 
 #include "nui.h"
 
-//class nuiFontBrowser : public nuiSimpleContainer
+//class nuiFontBrowser : public nuiContainer
 nuiFontBrowser::nuiFontBrowser()
 : mSink(this)
 {

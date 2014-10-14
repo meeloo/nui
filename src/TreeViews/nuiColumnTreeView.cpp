@@ -549,7 +549,7 @@ bool nuiColumnTreeView::KeyUp (const nglKeyEvent& rEvent)
 
 bool nuiColumnTreeView::DispatchMouseClick(const nglMouseInfo& rInfo)
 {
-  return nuiSimpleContainer::DispatchMouseClick(rInfo);
+  return nuiContainer::DispatchMouseClick(rInfo);
 }
 
 bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
@@ -962,7 +962,7 @@ nuiWidgetPtr nuiColumnTreeView::GetPreview() const
 
 // Standard preview widget:
 nuiColumnTreeViewPreview::nuiColumnTreeViewPreview(nuiColumnTreeView* pParent)
-: nuiSimpleContainer(),
+: nuiContainer(),
   mPreviewSink(this)
 {
   mPreviewSink.Connect(pParent->SelectionChanged, &nuiColumnTreeViewPreview::OnUpdatePreview);

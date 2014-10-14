@@ -9,7 +9,7 @@
 #define __nuiWidgetInspector_h__
 
 #include "nuiTreeView.h"
-#include "nuiSimpleContainer.h"
+#include "nuiContainer.h"
 
 class nuiVBox;
 class nuiGrid;
@@ -34,7 +34,7 @@ private:
 };
 
 
-class nuiWidgetInfo : public nuiSimpleContainer
+class nuiWidgetInfo : public nuiContainer
 {
 public:
   nuiWidgetInfo(nuiWidget* pTarget);
@@ -51,7 +51,7 @@ protected:
   nuiTimer* mpTimer;
   bool mNeedUpdate;
   
-  nuiSimpleContainer* mpDummy;
+  nuiContainer* mpDummy;
   nuiVBox* mpInfos;
 
   nuiLabel* mpName;
@@ -77,7 +77,7 @@ protected:
   void BuildInfo();
 };
 
-class nuiWidgetInspector : public nuiSimpleContainer
+class nuiWidgetInspector : public nuiContainer
 {
 public:
   nuiWidgetInspector(nuiWidget* pTarget);
