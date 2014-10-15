@@ -272,7 +272,7 @@ nuiWidgetPtr nuiTreeNode::GetSubElement(uint32 index)
 /////////////////////////////
 // nuiTreeView
 nuiTreeView::nuiTreeView(nuiTreeNodePtr pTree, bool displayRoot)
-: nuiContainer(),
+: nuiWidget(),
   mTreeViewSink(this),
   mDisplayRoot(displayRoot),
   mHandleColor(nuiColor(0,0,0)),

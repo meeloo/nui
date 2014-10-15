@@ -10,12 +10,12 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 class nuiColumnTreeView;
 class nuiFontDesc;
 
-class nuiFontBrowser : public nuiContainer
+class nuiFontBrowser : public nuiWidget
 {
 public:
   nuiFontBrowser();

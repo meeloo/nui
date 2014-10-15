@@ -8,7 +8,7 @@
 #ifndef __nuiPopupMenu_h__
 #define __nuiPopupMenu_h__
 
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiTree.h"
 #include "nuiTreeView.h"
 #include "nuiScrollBar.h"
@@ -16,7 +16,7 @@
 class nuiTimer;
 class nuiMenuRect;
 
-class nuiPopupMenu : public nuiContainer
+class nuiPopupMenu : public nuiWidget
 {
 public:
   nuiPopupMenu(nuiWidget* pParent = NULL, nuiTreeNode* pTree = NULL, const nuiRect& rRect = nuiRect(), bool OwnTree = true);

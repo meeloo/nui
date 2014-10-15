@@ -202,7 +202,7 @@ void nuiFolderPane::SetTitleWithHandle(const nglString& rTitle, nuiPosition posi
 void nuiFolderPane::SetTitleWithHandle(nuiWidget* pTitleWidget, nuiPosition position)
 {
   nuiHBox* pTitleBox = new nuiHBox(0);
-  nuiContainer* pPaneHandle = new nuiContainer();
+  nuiWidget* pPaneHandle = new nuiWidget();
   
   nuiTreeHandleDecoration* pHandleDeco = (nuiTreeHandleDecoration*)nuiDecoration::Get(_T("nuiFolderPaneTreeHandleDecoration"));
   if (!pHandleDeco)

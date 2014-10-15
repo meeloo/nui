@@ -9,7 +9,7 @@
 #define __nuiTreeView_h__
 
 #include "nuiTree.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 #include "nglDragAndDropObjects.h"
 
@@ -124,7 +124,7 @@ typedef nuiFastDelegate1<nuiTreeNode*,nglDragAndDrop*>  DragStartDelegate;
 typedef nuiFastDelegate3<nuiTreeNode*,nglDragAndDrop*,const nglString&>  DragRequestDataDelegate;
 typedef nuiFastDelegate2<nuiTreeNode*,bool>  DragStopDelegate;
 
-class nuiTreeView : public nuiContainer
+class nuiTreeView : public nuiWidget
 {
 public:
   nuiTreeView(nuiTreeNode* pTree = NULL, bool displayRoot=true);

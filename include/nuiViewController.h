@@ -14,7 +14,7 @@
 
 class nuiNavigationBar;
 
-class nuiViewController : public nuiContainer
+class nuiViewController : public nuiWidget
 {
   friend class nuiNavigationController;
   

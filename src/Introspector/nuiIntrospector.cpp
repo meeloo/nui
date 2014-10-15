@@ -126,7 +126,7 @@ nuiWidget* nuiIntrospector::GetToolbar()
 
 nuiWidget* nuiIntrospector::GetStatusbar()
 {
-  nuiContainer* pCont = new nuiContainer();
+  nuiWidget* pCont = new nuiWidget();
   return pCont;
 }
 

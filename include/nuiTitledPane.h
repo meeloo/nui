@@ -9,7 +9,7 @@
 #define __nuiTitledPane_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiVBox.h"
 #include "nuiLabelAttribute.h"
 

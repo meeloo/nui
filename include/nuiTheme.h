@@ -19,7 +19,7 @@ class nuiButton;
 class nuiScrollBar;
 class nuiSlider;
 class nuiToggleButton;
-class nuiContainer;
+class nuiWidget;
 class nuiDialog;
 
 class nuiSplitter;
@@ -74,7 +74,7 @@ public:
   void SetElementColor(nuiWidgetElement Element,const nuiColor& rColor);
 
   // Dialog Creation
-  virtual nuiDialog*  CreateDefaultDialog(nuiContainer* pParent);
+  virtual nuiDialog*  CreateDefaultDialog(nuiWidget* pParent);
 
   virtual nuiLabel *CreateTreeNodeLabel(const nglString &text);
 

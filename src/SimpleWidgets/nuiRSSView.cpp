@@ -7,7 +7,7 @@
 
 #include "nui.h"
 
-//class nuiRSSView : public nuiContainer
+//class nuiRSSView : public nuiWidget
 nuiRSSView::nuiRSSView(const nglString& rURL, int32 SecondsBetweenUpdates, nglIStream* pOriginalStream, bool ForceNoHTML)
 : mViewSink(this)
 {
@@ -36,12 +36,12 @@ nuiRSSView::~nuiRSSView()
 
 nuiRect nuiRSSView::CalcIdealSize()
 {
-  return nuiContainer::CalcIdealSize();
+  return nuiWidget::CalcIdealSize();
 }
 
 bool nuiRSSView::SetRect(const nuiRect& rRect)
 {
-  nuiContainer::SetRect(rRect);
+  nuiWidget::SetRect(rRect);
   return true;
 }
 

@@ -9,7 +9,7 @@
 
 
 nuiZoomView::nuiZoomView(nuiScrollBar *pHorizontalScrollbar, nuiScrollBar *pVerticalScrollbar, nuiSlider * pHorizontalSlider, nuiSlider * pVerticalSlider, bool calcWidthFromIdealSize, bool calcHeightFromIdealSize)
-: nuiContainer(),
+: nuiWidget(),
   mSVSink(this)
 {
   SetObjectClass(_T("nuiZoomView"));

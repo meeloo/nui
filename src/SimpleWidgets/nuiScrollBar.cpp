@@ -11,7 +11,7 @@
 #define SCROLL_IDEAL_SIZE 50
 
 nuiScrollBar::nuiScrollBar(nuiOrientation orientation, const nuiRange& rRange, nuiWidgetPtr pThumb)
-  : nuiContainer(),
+  : nuiWidget(),
     mRange(rRange),
     mpRange(NULL),
     mpThumb(pThumb),

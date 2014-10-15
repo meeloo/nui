@@ -9,7 +9,7 @@
 #define __nuiFolderPane_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiTitledPane.h"
 #include "nuiShapeView.h"
 #include "nuiLabelAttribute.h"

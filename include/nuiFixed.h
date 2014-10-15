@@ -9,10 +9,10 @@
 #define __nuiFixed_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 /// nuiFixed is a widget container that keep all its children at their original position and size.
-class nuiFixed : public nuiContainer
+class nuiFixed : public nuiWidget
 {
 public:
   nuiFixed();

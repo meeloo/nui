@@ -9,7 +9,7 @@
 #define __nuiButton_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiEvent.h"
 #include "nuiImage.h"
 #include "nuiDecoration.h"
@@ -18,7 +18,7 @@ class nuiButton;
 
 
 /// This class implements a simple push button that acts as a container for a label, an image, or any other inactive widget element.
-class nuiButton : public nuiContainer
+class nuiButton : public nuiWidget
 { 
 public:
   nuiButton(); ///< Create a simple button (empty).

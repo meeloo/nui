@@ -10,7 +10,7 @@
 
 //#include "nui.h"
 #include "nglString.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiButton.h"
 
 class nuiTab : public nuiButton
@@ -55,7 +55,7 @@ public:
   }
 };
 
-class nuiTabBar : public nuiContainer
+class nuiTabBar : public nuiWidget
 {
 public:
   nuiTabBar(); ///< Create a tab bar

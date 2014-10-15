@@ -10,12 +10,12 @@
 
 //#include "nui.h"
 #include "nuiWidget.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiScrollBar.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiWidgetAnimation.h"
 
-class nuiScrollView : public nuiContainer
+class nuiScrollView : public nuiWidget
 {
 public:
   nuiScrollView(bool Horizontal = true, bool Vertical = true);

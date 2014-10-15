@@ -8,7 +8,7 @@
 #include "nui.h"
 
 nuiHotKeyEditor::nuiHotKeyEditor()
-: nuiContainer(), mEventSink(this)
+: nuiWidget(), mEventSink(this)
 {
   SetObjectClass(_T("nuiHotKeyEditor"));
   
@@ -51,7 +51,7 @@ nuiHotKeyEditor::~nuiHotKeyEditor()
 
 void nuiHotKeyEditor::ConnectTopLevel()
 {
-  nuiContainer::ConnectTopLevel();
+  nuiWidget::ConnectTopLevel();
   
   mpTopLevel = GetTopLevel();
   

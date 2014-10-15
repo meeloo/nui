@@ -33,7 +33,7 @@ bool nuiTab::Draw(nuiDrawContext* pContext)
 
 // nuiTabBar
 nuiTabBar::nuiTabBar()
-: nuiContainer(),
+: nuiWidget(),
   mTabsSink(this)
 {
   SetObjectClass(_T("nuiTabBar"));

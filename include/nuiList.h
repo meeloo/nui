@@ -13,10 +13,10 @@
 #include "nuiApplication.h"
 #include "nuiEvent.h"
 #include "nuiMouseEvent.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 /// This class implements a simple list of elements. It has no multicolumn support, see nuiTable for multicolumn lists.
-class nuiList : public nuiContainer
+class nuiList : public nuiWidget
 {
 public:
   nuiList(nuiOrientation orientation = nuiVertical);

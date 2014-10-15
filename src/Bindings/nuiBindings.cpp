@@ -11,7 +11,6 @@ NUI_DECLARE_ATTRIBUTE_TYPE(void);
 NUI_DECLARE_ATTRIBUTE_TYPE(void*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiObject*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiWidget*);
-NUI_DECLARE_ATTRIBUTE_TYPE(nuiContainer*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiTopLevel*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiMainWindow*);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiLabel*);
@@ -83,25 +82,25 @@ bool nuiInitBindings()
   nuiAddMethod(Ungrab, nuiWidget::Ungrab);
   nuiEndClass;
   
-  nuiBindClass(nuiContainer);
+  nuiBindClass(nuiWidget);
   nuiInheritFrom(nuiWidget);
-  //nuiAddMethod(GetChild, nuiContainer::GetChild);
-  pClass->AddMethod(_T("GetChild"), new nuiFunction(&nuiContainer::GetChild));
-  nuiAddMethod(GetChildrenCount, nuiContainer::GetChildrenCount);
-  nuiAddMethod(GetNextFocussableChild, nuiContainer::GetNextFocussableChild);
-  nuiAddMethod(GetPreviousFocussableChild, nuiContainer::GetPreviousFocussableChild);
-  nuiAddMethod(GetNextSibling, nuiContainer::GetNextSibling);
-  nuiAddMethod(GetPreviousSibling, nuiContainer::GetPreviousSibling);
+  //nuiAddMethod(GetChild, nuiWidget::GetChild);
+  pClass->AddMethod(_T("GetChild"), new nuiFunction(&nuiWidget::GetChild));
+  nuiAddMethod(GetChildrenCount, nuiWidget::GetChildrenCount);
+  nuiAddMethod(GetNextFocussableChild, nuiWidget::GetNextFocussableChild);
+  nuiAddMethod(GetPreviousFocussableChild, nuiWidget::GetPreviousFocussableChild);
+  nuiAddMethod(GetNextSibling, nuiWidget::GetNextSibling);
+  nuiAddMethod(GetPreviousSibling, nuiWidget::GetPreviousSibling);
   nuiEndClass;
 
-  nuiBindClass(nuiContainer);
-  nuiInheritFrom(nuiContainer);
-  nuiAddCtor(nuiCreateObject<nuiContainer>);
-  nuiAddMethod(AddChild, nuiContainer::AddChild);
+  nuiBindClass(nuiWidget);
+  nuiInheritFrom(nuiWidget);
+  nuiAddCtor(nuiCreateObject<nuiWidget>);
+  nuiAddMethod(AddChild, nuiWidget::AddChild);
   nuiEndClass;
   
   nuiBindClass(nuiTopLevel);
-  nuiInheritFrom(nuiContainer);
+  nuiInheritFrom(nuiWidget);
   nuiEndClass;
   
   nuiBindClass(nuiMainWindow);

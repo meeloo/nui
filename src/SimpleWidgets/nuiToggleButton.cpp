@@ -302,7 +302,7 @@ nuiRect nuiToggleButton::CalcIdealSize()
 {
   if (mDisplayAsFrameBox)
   {
-    nuiRect r(nuiContainer::CalcIdealSize());
+    nuiRect r(nuiWidget::CalcIdealSize());
     //r.Grow(2,2);
     return r.Size();
   }

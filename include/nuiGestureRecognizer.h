@@ -44,7 +44,7 @@ enum nuiGestureRecognizerState
 //
 // mother class to handle a gesture recognizer
 //
-class nuiGestureRecognizer : public nuiContainer
+class nuiGestureRecognizer : public nuiWidget
 {
 public:
   nuiGestureRecognizer();

@@ -19,7 +19,7 @@ licence: see nui3/LICENCE.TXT
 
 
 nuiPopupMenu::nuiPopupMenu(nuiWidget* pParent, nuiTreeNodePtr pTree, const nuiRect& rRect, bool OwnTree)
-: nuiContainer(),
+: nuiWidget(),
 mPopupTreeSink(this),
 mpSelectedNode(NULL),
 mpNewSelectedNode(NULL),
@@ -366,7 +366,7 @@ bool nuiPopupMenu::DelChild(nuiTreePtr pTree, nuiWidgetPtr pChild, bool Delete)
       bool res = pTree->DelChild(pNode, false);
       if (res)
       {
-        res = nuiContainer::DelChild(pChild, Delete); 
+        res = nuiWidget::DelChild(pChild, Delete); 
       }
       return res;
     }

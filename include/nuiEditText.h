@@ -7,7 +7,7 @@
 #ifndef __nuiEditText_h__
 #define __nuiEditText_h__
 
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiTheme.h"
 
 #include "nglDragAndDropObjects.h"
@@ -18,7 +18,7 @@
 
 class nuiFont;
 
-class nuiEditText : public nuiContainer
+class nuiEditText : public nuiWidget
 {
 protected:
   class TextBlock;

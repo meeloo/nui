@@ -67,7 +67,7 @@ private:
 
 
 #ifndef DISABLE_TOOLTIP
-class nuiToolTip : public nuiContainer
+class nuiToolTip : public nuiWidget
 {
 public:
   nuiToolTip();
@@ -95,7 +95,7 @@ protected:
 };
 
 nuiToolTip::nuiToolTip()
- : nuiContainer()
+ : nuiWidget()
 {
   SetObjectClass(_T("nuiToolTip"));
   SetObjectName(_T("ToolTipContainer"));
@@ -134,7 +134,7 @@ bool nuiToolTip::SetRect(const nuiRect& rRect)
 
 nuiRect nuiToolTip::CalcIdealSize()
 {
-  nuiRect ideal(nuiContainer::CalcIdealSize());
+  nuiRect ideal(nuiWidget::CalcIdealSize());
   ideal.Grow(NUI_TOOLTIP_MARGIN_X, NUI_TOOLTIP_MARGIN_Y);
   return ideal;
 }
@@ -171,7 +171,7 @@ nglString nuiToolTip::GetText() const
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
-  : nuiContainer(),
+  : nuiWidget(),
 #ifndef DISABLE_TOOLTIP
     mToolTipTimerOn(0.5f),
     mToolTipTimerOff(5.0f),
@@ -258,7 +258,7 @@ void nuiTopLevel::Exit()
   {
     nuiWidgetPtr pItem = *wit;
     pItem->CallOnTrash();
-    nuiContainer* pCtr = pItem->GetParent();
+    nuiWidget* pCtr = pItem->GetParent();
     if (pCtr)
       pCtr->DelChild(pItem);
 //    del//ete pItem;
@@ -378,7 +378,7 @@ void nuiTopLevel::AdviseSubTreeDeath(nuiWidgetPtr pWidget)
 {
   CheckValid();
   IteratorPtr pIt;
-  nuiContainer* pContainer = dynamic_cast<nuiContainer*> (pWidget);
+  nuiWidget* pContainer = dynamic_cast<nuiWidget*> (pWidget);
   if (pContainer)
   {  
     for (pIt = pContainer->GetFirstChild(true); pIt && pIt->IsValid(); pContainer->GetNextChild(pIt))
@@ -899,10 +899,10 @@ nuiWidgetPtr DeepSearchNextFocussableWidget(nuiWidgetPtr pWidget, bool TryThisNo
   if (TryThisNode && pWidget->GetWantKeyboardFocus())
     return pWidget;
   
-  nuiContainer* pContainer = dynamic_cast<nuiContainer*>(pWidget); // Is this a container?
+  nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pWidget); // Is this a container?
   if (pContainer)
   {
-    std::auto_ptr<nuiContainer::Iterator> pIt(pContainer->GetFirstChild(true));
+    std::auto_ptr<nuiWidget::Iterator> pIt(pContainer->GetFirstChild(true));
     while (pIt->IsValid())
     {
       nuiWidget* pItem = pIt->GetWidget();
@@ -920,10 +920,10 @@ nuiWidgetPtr DeepSearchNextFocussableWidget(nuiWidgetPtr pWidget, bool TryThisNo
 
 nuiWidgetPtr GetNextFocussableSibling(nuiWidgetPtr pWidget)
 {
-  nuiContainer* pParent = pWidget->GetParent();
+  nuiWidget* pParent = pWidget->GetParent();
   if (pParent)
   {
-    std::auto_ptr<nuiContainer::Iterator> pIt(pParent->GetChildIterator(pWidget));
+    std::auto_ptr<nuiWidget::Iterator> pIt(pParent->GetChildIterator(pWidget));
     pParent->GetNextChild(pIt.get());
     
     while (pIt->IsValid())
@@ -969,10 +969,10 @@ nuiWidgetPtr GetNextFocussableWidget(nuiWidgetPtr pWidget)
 
 nuiWidgetPtr DeepSearchPreviousFocussableWidget(nuiWidgetPtr pWidget, bool TryThisNode)
 {
-  nuiContainer* pContainer = dynamic_cast<nuiContainer*>(pWidget); // Is this a container?
+  nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pWidget); // Is this a container?
   if (pContainer)
   {
-    std::auto_ptr<nuiContainer::Iterator> pIt(pContainer->GetLastChild());
+    std::auto_ptr<nuiWidget::Iterator> pIt(pContainer->GetLastChild());
     while (pIt->IsValid())
     {
       nuiWidget* pItem = pIt->GetWidget();
@@ -994,10 +994,10 @@ nuiWidgetPtr DeepSearchPreviousFocussableWidget(nuiWidgetPtr pWidget, bool TryTh
 nuiWidgetPtr GetPreviousFocussableWidget(nuiWidgetPtr pWidget)
 {
   nuiWidget* pItem = NULL;
-  nuiContainer* pParent = pWidget->GetParent();
+  nuiWidget* pParent = pWidget->GetParent();
   if (pParent)
   {
-    std::auto_ptr<nuiContainer::Iterator> pIt(pParent->GetChildIterator(pWidget));
+    std::auto_ptr<nuiWidget::Iterator> pIt(pParent->GetChildIterator(pWidget));
     pParent->GetPreviousChild(pIt.get());
     while (pIt->IsValid())
     {
@@ -1134,8 +1134,8 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] BEGIN\n"), rInfo.TouchId) );
   {
     NGL_TOUCHES_DEBUG( NGL_OUT(_T("  destination %p %s %s\n"), pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
     WidgetBranchGuard guard(pGrab);
-    std::vector<nuiContainerPtr> containers;
-    nuiContainerPtr pParent = pGrab->GetParent();
+    std::vector<nuiWidgetPtr> containers;
+    nuiWidgetPtr pParent = pGrab->GetParent();
     while (pParent)
     {
       containers.push_back(pParent);
@@ -1147,7 +1147,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] BEGIN\n"), rInfo.TouchId) );
     {
       nglMouseInfo info(rInfo);
       containers[i]->GlobalToLocal(info.X, info.Y);
-      hook = containers[i]->PreMouseClicked(info);
+      hook = containers[i]->CallPreMouseClicked(info);
     }    
 		
     bool res = hook;
@@ -1284,8 +1284,8 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] BEGIN\n"), rInfo.TouchId) )
     NGL_ASSERT(!pGrab->IsTrashed(true));
     pGrab->Acquire();
 
-    std::vector<nuiContainerPtr> containers;
-    nuiContainerPtr pParent = pGrab->GetParent();
+    std::vector<nuiWidgetPtr> containers;
+    nuiWidgetPtr pParent = pGrab->GetParent();
     while (pParent)
     {
       containers.push_back(pParent);
@@ -1297,7 +1297,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] BEGIN\n"), rInfo.TouchId) )
     {
       nglMouseInfo info(rInfo);
       containers[i]->GlobalToLocal(info.X, info.Y);
-      hook = containers[i]->PreMouseUnclicked(info);
+      hook = containers[i]->CallPreMouseUnclicked(info);
     }
 
 		bool res = hook;
@@ -1469,8 +1469,8 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   {
     NGL_TOUCHES_DEBUG( NGL_OUT(_T("  destination %p %s %s\n"), pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
     WidgetBranchGuard guard(pGrab);
-    std::vector<nuiContainerPtr> containers;
-    nuiContainerPtr pParent = pGrab->GetParent();
+    std::vector<nuiWidgetPtr> containers;
+    nuiWidgetPtr pParent = pGrab->GetParent();
     while (pParent)
     {
       containers.push_back(pParent);
@@ -1482,7 +1482,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
     {
       nglMouseInfo info(rInfo);
       containers[i]->GlobalToLocal(info.X, info.Y);
-      hook = containers[i]->PreMouseMoved(info);
+      hook = containers[i]->CallPreMouseMoved(info);
       if (hook)
         pHandled = containers[i];
     }
@@ -1623,8 +1623,8 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
   if (pGrab)
   {
     WidgetBranchGuard guard(pGrab);
-    std::vector<nuiContainerPtr> containers;
-    nuiContainerPtr pParent = pGrab->GetParent();
+    std::vector<nuiWidgetPtr> containers;
+    nuiWidgetPtr pParent = pGrab->GetParent();
     while (pParent)
     {
       containers.push_back(pParent);
@@ -1636,7 +1636,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
     {
       nglMouseInfo info(rInfo);
       containers[i]->GlobalToLocal(info.X, info.Y);
-      hook = containers[i]->PreMouseWheelMoved(info);
+      hook = containers[i]->CallPreMouseWheelMoved(info);
       if (hook)
         pHandled = containers[i];
     }
@@ -2413,7 +2413,7 @@ void nuiTopLevel::PrepareWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 Ma
   if (!Recursive)
     return;
   
-  nuiContainer* pContainer = dynamic_cast<nuiContainer*>(pWidget);
+  nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pWidget);
   if (pContainer)
   {
     IteratorPtr pIt;
@@ -2436,7 +2436,7 @@ void nuiTopLevel::ApplyWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 Matc
 
   if (Recursive)
   {
-    nuiContainer* pContainer = dynamic_cast<nuiContainer*>(pWidget);
+    nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pWidget);
     if (pContainer)
     {
       IteratorPtr pIt;

@@ -28,7 +28,7 @@ void nuiDialogSelectFile::Init(nuiMainWindow* pParent, const nglString& rTitle, 
   mPath = rPath;
   mRootPath = rRootPath;
 
-  nuiContainer* pEditContainer = new nuiContainer();
+  nuiWidget* pEditContainer = new nuiWidget();
   pEditContainer->SetBorder(16,16,10,0);
   
   mpEditLine = new nuiEditLine();
@@ -38,7 +38,7 @@ void nuiDialogSelectFile::Init(nuiMainWindow* pParent, const nglString& rTitle, 
   mpEditLine->SetColor(eSelectedTextFg, nuiColor(64,64,64));
   pEditContainer->AddChild(mpEditLine);
 	
-  mpContainer = new nuiContainer();
+  mpContainer = new nuiWidget();
   
   
   mpSelector = new nuiFileSelector(rPath, rRootPath, rFilters, mpEditLine);
@@ -68,7 +68,7 @@ void nuiDialogSelectFile::Init(nuiMainWindow* pParent, const nglString& rTitle, 
 //  pTitle->SetObjectName(_T("nuiDialogSelectFile::Title"));
 //  pTitle->SetObjectClass(_T("nuiDialogSelectFile::Title"));
   
-  nuiContainer* pLayoutPane = new nuiContainer();
+  nuiWidget* pLayoutPane = new nuiWidget();
   pLayoutPane->SetObjectClass(_T("nuiDialog::Pane"));
   pLayoutPane->SetObjectName(_T("nuiDialog::Pane"));
   pLayoutPane->SetColor(eNormalTextFg, nuiColor(0,0,0));
@@ -127,7 +127,7 @@ void nuiDialogSelectFile::OnSelectorOK(const nuiEvent& rEvent)
 void nuiDialogSelectFile::OnCreateNewFolder(const nuiEvent& rEvent)
 {
   mpCreateDialog = new nuiDialog(mpParent);
-  nuiContainer* pContainer = new nuiContainer();
+  nuiWidget* pContainer = new nuiWidget();
   pContainer->SetUserSize(400, 80);
   
   mpCreateEditLine = new nuiEditLine();

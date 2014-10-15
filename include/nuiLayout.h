@@ -83,7 +83,7 @@ protected:
   float mSize;
 };
 
-class nuiLayout : public nuiContainer
+class nuiLayout : public nuiWidget
 {
 public:
   nuiLayout();

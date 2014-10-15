@@ -8,7 +8,7 @@
 #include "nui.h"
 
 nuiPane::nuiPane(const nuiColor& rFillColor, const nuiColor& rStrokeColor, nuiShapeMode ShapeMode, nuiBlendFunc BlendFunc)
- : nuiContainer()
+ : nuiWidget()
 {
   if (SetObjectClass(_T("nuiPane")))
   {

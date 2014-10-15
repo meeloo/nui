@@ -18,7 +18,7 @@
 
 
 /// Basic slider with range support.
-class nuiKnob : public nuiContainer
+class nuiKnob : public nuiWidget
 {
 public:
   nuiKnob(const nuiRange& rRange = nuiRange());

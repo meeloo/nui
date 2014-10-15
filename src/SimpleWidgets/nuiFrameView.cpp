@@ -9,9 +9,9 @@
 
 
 ////////////////// nuiFrameView
-//class nuiFrameView : public nuiContainer
+//class nuiFrameView : public nuiWidget
 nuiFrameView::nuiFrameView(nuiFrame* pFrame)
-: nuiContainer()
+: nuiWidget()
 {
   mpFrame = pFrame;
 }
@@ -25,14 +25,14 @@ nuiRect nuiFrameView::CalcIdealSize()
 {
   if (mpFrame)
   {
-    nuiRect ideal = nuiContainer::CalcIdealSize();
+    nuiRect ideal = nuiWidget::CalcIdealSize();
     ideal.Grow(mpFrame->GetBorder(nuiFillHorizontal, this) * 0.5, mpFrame->GetBorder(nuiFillVertical, this) * 0.5);
     ideal.MoveTo(0, 0);
     ideal.RoundToNearest();
     return ideal;
   }
 
-  return nuiContainer::CalcIdealSize();
+  return nuiWidget::CalcIdealSize();
 }
 
 bool nuiFrameView::SetRect(const nuiRect& rRect)

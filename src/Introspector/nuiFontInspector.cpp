@@ -153,7 +153,7 @@ bool nuiFontInspector::SetRect(const nuiRect& rRect)
 {
   UpdatingFonts++;
 
-  bool res = nuiContainer::SetRect(rRect);
+  bool res = nuiWidget::SetRect(rRect);
   
   UpdatingFonts--;
   
@@ -164,7 +164,7 @@ bool nuiFontInspector::Draw(nuiDrawContext* pContext)
 {
   UpdatingFonts++;
   
-  bool res = nuiContainer::Draw(pContext);
+  bool res = nuiWidget::Draw(pContext);
   
   UpdatingFonts--;
   
@@ -175,7 +175,7 @@ nuiRect nuiFontInspector::CalcIdealSize()
 {
   UpdatingFonts++;
   
-  nuiRect res = nuiContainer::CalcIdealSize();
+  nuiRect res = nuiWidget::CalcIdealSize();
   
   UpdatingFonts--;
   

@@ -9,7 +9,7 @@
 #define __nuiUserArea_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiEvent.h"
 #include "nuiMouseEvent.h"
 

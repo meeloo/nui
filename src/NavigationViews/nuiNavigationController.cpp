@@ -26,7 +26,7 @@ std::vector<float> nuiNavigationController::mDurations;
 // Constructor
 //
 nuiNavigationController::nuiNavigationController()
-: nuiContainer(), mEventSink(this)
+: nuiWidget(), mEventSink(this)
 {
   if (SetObjectClass(_T("nuiNavigationController")))
     InitAttributes();

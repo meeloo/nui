@@ -174,8 +174,6 @@ typedef double nuiSize;
   #include "nuiDefaultDecoration.h"
   #include "nuiMouseEvent.h"
   #include "nuiWidget.h"
-  #include "nuiContainer.h"
-  #include "nuiContainer.h"
   #include "nuiTopLevel.h"
   #include "nuiGestureRecognizer.h"
   #include "nuiLayout.h"

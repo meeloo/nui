@@ -3,9 +3,9 @@
 
 #include "nui.h"
 
-//class nuiEditTest2 : nuiContainer
+//class nuiEditTest2 : nuiWidget
 nuiEditText::nuiEditText(const nglString& rText)
-: nuiContainer(),
+: nuiWidget(),
   mCursorPos(0),
   mAnchorPos(0),
   mCompositionPos(-1),
@@ -140,7 +140,7 @@ bool nuiEditText::Draw(nuiDrawContext* pContext)
     }
   }
 
-  return nuiContainer::DrawChildren(pContext);
+  return nuiWidget::DrawChildren(pContext);
 }
 
 nuiRect nuiEditText::CalcIdealSize()

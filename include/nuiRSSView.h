@@ -9,12 +9,12 @@
 
 #include "nui.h"
 #include "nuiHyperLink.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiRSS.h"
 
 class nuiVBox;
 
-class nuiRSSView : public nuiContainer
+class nuiRSSView : public nuiWidget
 {
 public:
   nuiRSSView(const nglString& rURL = nglString::Empty, int32 SecondsBetweenUpdates = (30*60), nglIStream* pOriginalStream = NULL, bool ForceNoHTML = false);

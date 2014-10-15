@@ -18,7 +18,7 @@ nuiSize nuiSlider::mDefaultFineSensitivityRatio = 10;
 nglKeyCode nuiSlider::mDefaultFineSensitivityKey = NK_LSHIFT;
 
 nuiSlider::nuiSlider(nuiOrientation orientation, const nuiRange& rRange)
-: nuiContainer(),
+: nuiWidget(),
 mRange(rRange),
 mSliderSink(this)
 {
@@ -379,7 +379,7 @@ bool nuiSlider::AddChild(nuiWidgetPtr pChild)
   }
 
 
-  return nuiContainer::AddChild(pChild);
+  return nuiWidget::AddChild(pChild);
 }
 
 bool nuiSlider::DelChild(nuiWidgetPtr pChild)
@@ -393,7 +393,7 @@ bool nuiSlider::DelChild(nuiWidgetPtr pChild)
     mpHandle = nullptr;
   }
 
-  return nuiContainer::DelChild(pChild);
+  return nuiWidget::DelChild(pChild);
 }
 
 

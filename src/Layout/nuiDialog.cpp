@@ -6,7 +6,7 @@
 */
 #include "nui.h"
 
-nuiDialog::nuiDialog(nuiContainer* pParent)
+nuiDialog::nuiDialog(nuiWidget* pParent)
   : nuiModalContainer(pParent), mSink(this),  
   mpLayoutContainer(NULL), mpGlobalGrid(NULL), mpButtonsGrid(NULL),  
   mResult(eDialogAccepted), mpButtonOk(NULL), mpButtonCancel(NULL), mpButtonApply(NULL), mpPane(NULL), mpDefaultButton(NULL)
@@ -19,7 +19,7 @@ nuiDialog::nuiDialog(nuiContainer* pParent)
 
 
 
-void nuiDialog::InitDialog(nuiContainer* pLayoutContainer, uint32 buttons)
+void nuiDialog::InitDialog(nuiWidget* pLayoutContainer, uint32 buttons)
 {
   if (pLayoutContainer)
     SetLayoutContainer(pLayoutContainer);
@@ -42,7 +42,7 @@ void nuiDialog::InitDialog(nuiContainer* pLayoutContainer, uint32 buttons)
   mSink.Connect( GetHotKeyEvent(_T("AcceptDialogAlt")), &nuiDialog::OnAccept );  
 }
 
-void nuiDialog::InitDialog(const nglString& rMessage, nuiContainer* pLayoutContainer, uint32 buttons)
+void nuiDialog::InitDialog(const nglString& rMessage, nuiWidget* pLayoutContainer, uint32 buttons)
 {
   nuiLabel* pLabel = new nuiLabel(rMessage);
   
@@ -51,7 +51,7 @@ void nuiDialog::InitDialog(const nglString& rMessage, nuiContainer* pLayoutConta
   InitDialog(pLabel, pLayoutContainer, buttons);
 }
 
-void nuiDialog::InitDialog(nuiLabel* pLabel, nuiContainer* pLayoutContainer, uint32 buttons)
+void nuiDialog::InitDialog(nuiLabel* pLabel, nuiWidget* pLayoutContainer, uint32 buttons)
 {
   pLabel->SetObjectClass(_T("nuiDialog::Title"));
   pLabel->SetObjectName(_T("nuiDialog::Title"));
@@ -293,9 +293,9 @@ void nuiDialog::SetDefaultAnimations()
   AddAnimation(_T("TRASH"), pMetaAnim);
 }
 
-nuiContainer* nuiDialog::CreateDefaultLayout()
+nuiWidget* nuiDialog::CreateDefaultLayout()
 {
-  mpPane = new nuiContainer();
+  mpPane = new nuiWidget();
   mpPane->SetObjectClass(_T("nuiDialog::Pane"));
   mpPane->SetObjectName(_T("nuiDialog::Pane"));
   mpPane->SetColor(eNormalTextFg, nuiColor(0,0,0));
@@ -327,12 +327,12 @@ void nuiDialog::SetUserPos(nuiSize X, nuiSize Y)
   mpLayoutContainer->SetUserPos(x, y);
 }
 
-nuiContainer* nuiDialog::GetLayoutContainer()
+nuiWidget* nuiDialog::GetLayoutContainer()
 {
   return mpLayoutContainer;
 }
 
-void nuiDialog::SetLayoutContainer(nuiContainer* pContainer, bool saveChilds)
+void nuiDialog::SetLayoutContainer(nuiWidget* pContainer, bool saveChilds)
 {
   std::list<nuiWidget*> pChilds;
   NGL_ASSERT(pContainer);

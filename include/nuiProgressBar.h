@@ -10,7 +10,7 @@
 
 //#include "nui.h"
 #include "nuiWidget.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 class nuiProgressBar : public nuiWidget
 {

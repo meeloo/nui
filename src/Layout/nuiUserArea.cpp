@@ -26,7 +26,7 @@ nuiUserArea::~nuiUserArea()
 bool nuiUserArea::Draw(nuiDrawContext* pContext)
 {
   GLint OldRect[4];
-  nuiContainerPtr pRoot = GetRoot();
+  nuiWidgetPtr pRoot = GetRoot();
   if (!pRoot)
     return false;
 

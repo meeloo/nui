@@ -309,10 +309,10 @@ nuiLabel* SearchLabel(nuiWidgetPtr pParent)
   if (pLabel)
     return pLabel;
 
-  nuiContainer* pContainer = dynamic_cast<nuiContainer*>(pParent);
+  nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pParent);
   if (pContainer)
   {
-    nuiContainer::IteratorPtr pIt;
+    nuiWidget::IteratorPtr pIt;
     for (pIt = pContainer->GetFirstChild(); pIt && pIt->IsValid(); pContainer->GetNextChild(pIt))
     {
       pLabel = SearchLabel(pIt->GetWidget());
@@ -549,7 +549,7 @@ bool nuiColumnTreeView::KeyUp (const nglKeyEvent& rEvent)
 
 bool nuiColumnTreeView::DispatchMouseClick(const nglMouseInfo& rInfo)
 {
-  return nuiContainer::DispatchMouseClick(rInfo);
+  return nuiWidget::DispatchMouseClick(rInfo);
 }
 
 bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
@@ -962,7 +962,7 @@ nuiWidgetPtr nuiColumnTreeView::GetPreview() const
 
 // Standard preview widget:
 nuiColumnTreeViewPreview::nuiColumnTreeViewPreview(nuiColumnTreeView* pParent)
-: nuiContainer(),
+: nuiWidget(),
   mPreviewSink(this)
 {
   mPreviewSink.Connect(pParent->SelectionChanged, &nuiColumnTreeViewPreview::OnUpdatePreview);

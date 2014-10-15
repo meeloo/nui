@@ -16,7 +16,7 @@ static const int DEFAULT_ACTIVATION_OFFSET = 0;
 #endif
 
 nuiButton::nuiButton()
-: nuiContainer(),
+: nuiWidget(),
   mEventSink(this)
 {
   if (SetObjectClass(_T("nuiButton")))
@@ -46,7 +46,7 @@ nuiButton::nuiButton()
 }
 
 nuiButton::nuiButton(const nglString& rText)
-  : nuiContainer(), mEventSink(this)
+  : nuiWidget(), mEventSink(this)
 {
   if (SetObjectClass(_T("nuiButton")))
   {
@@ -77,7 +77,7 @@ nuiButton::nuiButton(const nglString& rText)
 }
 
 nuiButton::nuiButton(const nglImage& rImage)
-  : nuiContainer(), mEventSink(this)
+  : nuiWidget(), mEventSink(this)
 {
   if (SetObjectClass(_T("nuiButton")))
   {
@@ -109,7 +109,7 @@ nuiButton::nuiButton(const nglImage& rImage)
 }
 
 nuiButton::nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired)
-: nuiContainer(), mEventSink(this)
+: nuiWidget(), mEventSink(this)
 {
   if (SetObjectClass(_T("nuiButton")))
   {

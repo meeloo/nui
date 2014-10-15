@@ -29,7 +29,6 @@ nuiBuilder::~nuiBuilder()
 void nuiBuilder::Init()
 {
   NUI_ADD_WIDGET_CREATOR(nuiWidget, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiContainer, "Container");
   NUI_ADD_WIDGET_CREATOR(nuiSplitter,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiPopupMenu,"Container");
   NUI_ADD_WIDGET_CREATOR(nuiList,"Container");
@@ -296,7 +295,7 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
     pWidget->SetObjectName(objectname);
   
   nuiTabView* pTabView = dynamic_cast<nuiTabView*> (pWidget);
-  nuiContainer* pContainer = dynamic_cast<nuiContainer*> (pWidget);
+  nuiWidget* pContainer = dynamic_cast<nuiWidget*> (pWidget);
   nuiBox* pBox = dynamic_cast<nuiBox*> (pWidget);
   nuiGrid* pGrid = dynamic_cast<nuiGrid*> (pWidget);
   

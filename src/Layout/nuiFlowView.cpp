@@ -123,7 +123,7 @@ bool nuiFlowView::SetRect(const nuiRect& rRect)
 
 bool nuiFlowView::Draw(nuiDrawContext* pContext)
 {
-  nuiContainer::Draw(pContext);
+  nuiWidget::Draw(pContext);
   if (mIdealWidth > 0 && mIdealWidth != mCurrentIdealWidth)
   {
     InvalidateLayout();

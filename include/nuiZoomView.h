@@ -10,13 +10,13 @@
 
 //#include "nui.h"
 #include "nuiWidget.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiScrollBar.h"
 #include "nuiSlider.h"
 #include "nuiRange.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
-class nuiZoomView : public nuiContainer
+class nuiZoomView : public nuiWidget
 {
 public:
   nuiZoomView(nuiScrollBar *pHorizontalScrollbar = NULL, nuiScrollBar *pVerticalScrollbar = NULL, nuiSlider * pHorizontalSlider = NULL, nuiSlider * pVerticalSlider = NULL, bool calcWidthFromIdealSize = true, bool calcHeightFromIdealSize = true);

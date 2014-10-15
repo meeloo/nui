@@ -64,7 +64,7 @@ bool nuiRadioButton::KeyDown(const nglKeyEvent& rEvent)
     {
       if (mpParent && !mpGroupManager)
       {
-        nuiContainer::IteratorPtr pIt = mpParent->GetFirstChild();
+        nuiWidget::IteratorPtr pIt = mpParent->GetFirstChild();
         while (pIt->IsValid())
         {
           nuiRadioButton* pRadio = dynamic_cast<nuiRadioButton*>(pIt->GetWidget());
@@ -138,7 +138,7 @@ bool nuiRadioButton::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags 
       {
         if (mpParent && !mpGroupManager)
         {
-          nuiContainer::IteratorPtr pIt = mpParent->GetFirstChild();
+          nuiWidget::IteratorPtr pIt = mpParent->GetFirstChild();
           while (pIt->IsValid())
           {
             nuiRadioButton* pRadio = dynamic_cast<nuiRadioButton*>(pIt->GetWidget());
@@ -215,13 +215,13 @@ nglString nuiRadioButton::GetGroup() const
 }
 
 
-bool nuiRadioButton::SetParent(nuiContainerPtr pParent)
+bool nuiRadioButton::SetParent(nuiWidgetPtr pParent)
 {
   bool res = nuiToggleButton::SetParent(pParent);
 
   if (mpParent && mPressed)
   {
-    nuiContainer::IteratorPtr pIt = mpParent->GetFirstChild();
+    nuiWidget::IteratorPtr pIt = mpParent->GetFirstChild();
     while (pIt->IsValid())
     {
       nuiRadioButton* pRadio = dynamic_cast<nuiRadioButton*>(pIt->GetWidget());

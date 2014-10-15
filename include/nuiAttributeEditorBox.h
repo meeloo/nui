@@ -11,19 +11,19 @@
 #include "nuiVBox.h"
 #include "nuiHBox.h"
 
-class nuiAttributeEditorBox : public nuiContainer
+class nuiAttributeEditorBox : public nuiWidget
 {
 public:
 
   nuiAttributeEditorBox(const nglString& rFolderName, const std::vector<nuiAttribBase>& rAttributes, nuiOrientation orientation)
-  : nuiContainer()
+  : nuiWidget()
   {
     SetObjectClass("nuiAttributeEditorBox");
     Init(rFolderName, rAttributes, orientation);
   }
 
   nuiAttributeEditorBox(const nglString& rFolderName, nuiObject* pObject, const std::vector<nglString>& rAttributeNames, nuiOrientation orientation)
-  : nuiContainer()
+  : nuiWidget()
   {
     SetObjectClass("nuiAttributeEditorBox");
     std::vector<nuiAttribBase> attribs;
@@ -33,7 +33,7 @@ public:
   }
 
   nuiAttributeEditorBox(const nglString& rFolderName, nuiObject* pObject, const char* pAttributeNames[] = NULL, nuiOrientation orientation = nuiVertical)
-  : nuiContainer()
+  : nuiWidget()
   {
     SetObjectClass("nuiAttributeEditorBox");
     std::vector<nuiAttribBase> attribs;
@@ -61,7 +61,7 @@ public:
   }
 
   nuiAttributeEditorBox(nuiObject* pObject, nuiOrientation orientation = nuiHorizontal)
-  : nuiContainer()
+  : nuiWidget()
   {
     SetObjectClass("nuiAttributeEditorBox");
     std::vector<nuiAttribBase> attribs;

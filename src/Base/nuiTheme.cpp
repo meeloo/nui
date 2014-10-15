@@ -239,7 +239,7 @@ void nuiTheme::DrawMenuItem(nuiDrawContext* pContext, const nuiRect& rRect, bool
   pContext->SetBlendFunc(blendfunc);
 }
 
-nuiDialog*  nuiTheme::CreateDefaultDialog(nuiContainer* pParent)
+nuiDialog*  nuiTheme::CreateDefaultDialog(nuiWidget* pParent)
 {
   return new nuiDialog(pParent);
 }

@@ -52,8 +52,8 @@ public:
   static const Button ButtonYes;
   static const Button ButtonNo;
   
-  nuiMessageBox(nuiContainer * pParent, const nglString& rTitle, const nglString& rMessage, nuiMessageBoxType type, bool showIcon = true);
-  nuiMessageBox(nuiContainer * pParent, const nglString& rTitle, nuiWidget* pContents, nuiMessageBoxType type, bool showIcon = true);
+  nuiMessageBox(nuiWidget * pParent, const nglString& rTitle, const nglString& rMessage, nuiMessageBoxType type, bool showIcon = true);
+  nuiMessageBox(nuiWidget * pParent, const nglString& rTitle, nuiWidget* pContents, nuiMessageBoxType type, bool showIcon = true);
   virtual ~nuiMessageBox();
   
 
@@ -67,7 +67,7 @@ public:
   virtual bool KeyUp(const nglKeyEvent& rEvent);
   virtual bool KeyDown(const nglKeyEvent& rEvent);
   
-  static Button Do(nuiContainer * pParent, const nglString& rTitle, const nglString& rMessage, nuiMessageBoxType type);
+  static Button Do(nuiWidget * pParent, const nglString& rTitle, const nglString& rMessage, nuiMessageBoxType type);
 private:
 
   void Init(const nglString& rTitle, nuiWidget* pContents, nuiMessageBoxType type, bool showIcon);

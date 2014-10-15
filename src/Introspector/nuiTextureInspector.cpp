@@ -77,7 +77,7 @@ void nuiTextureInspector::UpdateTextures()
   
   pScrollView2->AddChild(mpAttributeGrid);
 
-  nuiContainer* pCont = new nuiContainer();
+  nuiWidget* pCont = new nuiWidget();
   nuiColorDecoration* pColDec = new nuiColorDecoration(_T("TextureInspectorBg"), nuiColor(128, 128, 128), 0, nuiColor(0, 0, 0), eFillShape, nuiBlendTransp, nuiRect(0,0,0,0));
   pCont->SetDecoration(pColDec);
   pSplitter->AddChild(pCont);

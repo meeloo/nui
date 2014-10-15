@@ -36,7 +36,7 @@ private:
   
   
   nuiMainWindow* mpParent;
-  nuiContainer* mpContainer;
+  nuiWidget* mpContainer;
   nuiFileSelector* mpSelector;
   
   nuiDialog* mpCreateDialog;

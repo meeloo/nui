@@ -9,7 +9,7 @@
 
 
 nuiViewController::nuiViewController(bool DefaultNavigationBar)
-: nuiContainer()
+: nuiWidget()
 {
   SetObjectClass(_T("nuiViewController"));
   mAnimated = false;

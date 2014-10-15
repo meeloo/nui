@@ -3,7 +3,7 @@
 
 #include "nui.h"
 
-class nuiDrawerView : public nuiContainer
+class nuiDrawerView : public nuiWidget
 {
 public:
   nuiDrawerView();

@@ -8,10 +8,10 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiFrame.h"
 
-class nuiFrameView : public nuiContainer
+class nuiFrameView : public nuiWidget
 {
 public:
   nuiFrameView(nuiFrame* pFrame = NULL);

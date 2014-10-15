@@ -8,7 +8,7 @@
 #ifndef __nuiScrollBar_h__
 #define __nuiScrollBar_h__
 
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiEvent.h"
 #include "nuiTimer.h"
 #include "nuiRange.h"
@@ -17,7 +17,7 @@
 #define SBMINTHUMB 20.f // Min Thumb size
 
 /// Basic scroll bar with range support. Used in too many compound widgets to name :).
-class nuiScrollBar : public nuiContainer
+class nuiScrollBar : public nuiWidget
 {
 public:
   nuiScrollBar(nuiOrientation orientation = nuiHorizontal, const nuiRange& rRange = nuiRange(), nuiWidgetPtr pThumb = NULL);

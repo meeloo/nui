@@ -566,6 +566,9 @@ void nuiWidget::Init()
   EnableRenderCache(true);
   
   // Events:
+  NUI_ADD_EVENT(ChildAdded);
+  NUI_ADD_EVENT(ChildDeleted);
+
   NUI_ADD_EVENT(Trashed);
   NUI_ADD_EVENT(Destroyed);
   NUI_ADD_EVENT(ParentChanged);
@@ -688,6 +691,24 @@ nuiWidget::~nuiWidget()
   // Event Actions:
   for (auto pAction : mEventActions)
     pAction->Disconnect(this);
+
+
+  // Delete all children:
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem)
+    {
+      //      if (!pItem->IsTrashed(false) && pItem->Release())
+      //        pItem->SetParent(NULL);
+      if (!pItem->IsTrashed(false))
+        pItem->SetParent(NULL);
+      pItem->Release();
+
+    }
+  }
+  delete pIt;
 }
 
 void nuiWidget::Built()
@@ -705,7 +726,7 @@ bool nuiWidget::IsTrashed(bool combined) const
   return mTrashed;
 }
 
-nuiContainerPtr nuiWidget::GetParent() const
+nuiWidgetPtr nuiWidget::GetParent() const
 {
   return mpParent;
 }
@@ -721,16 +742,7 @@ nuiTopLevel* nuiWidget::GetTopLevel() const
 }
 
 
-nuiContainerPtr nuiWidget::GetRoot() const
-{
-  CheckValid();
-  if (mpParent)
-    return mpParent->GetRoot();
-  else
-    return NULL;
-}
-
-bool nuiWidget::SetParent(nuiContainerPtr pParent)
+bool nuiWidget::SetParent(nuiWidgetPtr pParent)
 {
   CheckValid();
   NGL_ASSERT(!IsTrashed(false));
@@ -1238,12 +1250,6 @@ void nuiWidget::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOn
   mNeedLayout = true;
 
   DebugRefreshInfo();
-}
-
-bool nuiWidget::Draw(nuiDrawContext* pContext)
-{
-  CheckValid();
-  return true;
 }
 
 bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _self, const nuiRect& _self_and_decorations, bool ApplyMatrix)
@@ -1835,181 +1841,6 @@ const std::map<nglTouchId, nglMouseInfo>& nuiWidget::GetMouseStates() const
 
 
 ////// Private event management:
-bool nuiWidget::DispatchMouseClick(const nglMouseInfo& rInfo)
-{
-  CheckValid();
-  nuiAutoRef;
-  if (!mMouseEventEnabled || mTrashed)
-    return false;
-
-  bool hasgrab = HasGrab(rInfo.TouchId);
-  if (IsDisabled() && !hasgrab)
-    return false;
-
-  float X = rInfo.X;
-  float Y = rInfo.Y;
-
-  if (IsInsideFromRoot(X,Y) || hasgrab)
-  {
-    GlobalToLocal(X,Y);
-    nglMouseInfo info(rInfo);
-    info.X = X;
-    info.Y = Y;
-
-    bool res = PreClicked(info);
-    if (!res)
-    {
-      NGL_DEBUG(if (GetDebug()) NGL_LOG("widget", NGL_LOG_INFO, "%p MouseClicked (%d,%d)\n", this, rInfo.X, rInfo.Y); );
-      res = MouseClicked(info);
-      res |= Clicked(info);
-    }
-
-    res = res | (!mClickThru);
-    if (res)
-      Grab();
-    return res;
-  }
-  return false;
-}
-
-bool nuiWidget::DispatchMouseUnclick(const nglMouseInfo& rInfo)
-{
-  CheckValid();
-  nuiAutoRef;
-  if (!mMouseEventEnabled || mTrashed)
-    return false;
-
-  bool hasgrab = HasGrab(rInfo.TouchId);
-  if (IsDisabled() && !hasgrab)
-    return false;
-
-  float X = rInfo.X;
-  float Y = rInfo.Y;
-
-  if (IsInsideFromRoot(X,Y) || hasgrab)
-  {
-    GlobalToLocal(X,Y);
-    nglMouseInfo info(rInfo);
-    info.X = X;
-    info.Y = Y;
-    
-    bool res = PreUnclicked(info);
-    if (!res)
-    {
-      NGL_DEBUG(if (GetDebug()) NGL_LOG("widget", NGL_LOG_INFO, "%p MouseUnclicked (%d,%d)\n", this, rInfo.X, rInfo.Y); );
-      res = MouseUnclicked(info);
-      res |= Unclicked(info);
-    }
-
-    res = res | (!mClickThru);
-    if (res)
-      Ungrab();
-    return res;
-  }
-  return false;
-}
-
-bool nuiWidget::DispatchMouseCanceled(nuiWidgetPtr pThief, const nglMouseInfo& rInfo)
-{
-  CheckValid();
-  if (pThief == this)
-    return false;
-
-  nuiAutoRef;
-  if (mTrashed)
-    return false;
-
-  bool inside = false;
-  bool res = false;
-  bool hasgrab = HasGrab(rInfo.TouchId);
-  float X = rInfo.X;
-  float Y = rInfo.Y;
-
-  if (IsInsideFromRoot(X, Y))
-  {
-    inside = true;
-  }
-
-  GlobalToLocal(X, Y);
-  nglMouseInfo info(rInfo);
-  info.X = X;
-  info.Y = Y;
-
-  PreClickCanceled(info);
-  NGL_DEBUG(if (GetDebug()) NGL_LOG("widget", NGL_LOG_INFO, "%p MouseCanceled (%d,%d)\n", this, rInfo.X, rInfo.Y); );
-  res = MouseCanceled(info);
-  res |= ClickCanceled(info) | (!mClickThru);
-  return res;
-}
-
-nuiWidgetPtr nuiWidget::DispatchMouseMove(const nglMouseInfo& rInfo)
-{
-  CheckValid();
-  nuiAutoRef;
-  if (!mMouseEventEnabled || mTrashed)
-    return NULL;
-
-  bool inside = false;
-  bool res = false;
-  bool hasgrab = HasGrab(rInfo.TouchId);
-  float X = rInfo.X;
-  float Y = rInfo.Y;
-
-  if (IsDisabled() && !hasgrab)
-    return NULL;
-    
-  if (IsInsideFromRoot(X, Y))
-  {
-    inside = true;
-  }
-
-  GlobalToLocal(X, Y);
-  nglMouseInfo info(rInfo);
-  info.X = X;
-  info.Y = Y;
-  
-  if (PreMouseMoved(info))
-    return this;
-  NGL_DEBUG(if (GetDebug()) NGL_LOG("widget", NGL_LOG_INFO, "%p MouseMoved (%d,%d)\n", this, rInfo.X, rInfo.Y); );
-  res = MouseMoved(info);
-  res |= MovedMouse(info) | (!mClickThru);
-  return (res && inside) ? this : NULL;
-}
-
-nuiWidgetPtr nuiWidget::DispatchMouseWheelMove(const nglMouseInfo& rInfo)
-{
-  CheckValid();
-  nuiAutoRef;
-  if (!mMouseEventEnabled || mTrashed)
-    return NULL;
-
-  bool inside = false;
-  bool res = false;
-  bool hasgrab = HasGrab(rInfo.TouchId);
-  float X = rInfo.X;
-  float Y = rInfo.Y;
-
-  if (IsDisabled() && !hasgrab)
-    return NULL;
-
-  if (IsInsideFromRoot(X, Y))
-  {
-    inside = true;
-  }
-
-  GlobalToLocal(X, Y);
-  nglMouseInfo info(rInfo);
-  info.X = X;
-  info.Y = Y;
-
-  if (PreMouseWheelMoved(info))
-    return this;
-  NGL_DEBUG(if (GetDebug()) NGL_LOG("widget", NGL_LOG_INFO, "%p MouseWheelMoved (%d,%d)\n", this, rInfo.X, rInfo.Y); );
-  res = MouseWheelMoved(info);
-  res |= WheelMovedMouse(info) | (!mClickThru);
-  return (res && inside) ? this : NULL;
-}
-
 
 bool nuiWidget::DispatchGrab(nuiWidgetPtr pWidget)
 {
@@ -2185,41 +2016,6 @@ float nuiWidget::GetAlpha() const
   return mAlpha; // No transparency by default
 }
 
-void nuiWidget::SetAlpha(float Alpha)
-{
-  CheckValid();
-  const float a = nuiClamp(Alpha, 0.0f, 1.0f);
-  if (mAlpha == a)
-    return;
-  mAlpha = a;
-  Invalidate();
-  DebugRefreshInfo();
-}
-
-void nuiWidget::CallOnTrash()
-{
-  CheckValid();
-  mTrashed = true;
-
-  while (!mHotKeyEvents.empty())
-  {
-    DelHotKey(mHotKeyEvents.begin()->first);
-  }
-
-  nuiTopLevel* pRoot = GetTopLevel();
-  if (pRoot)
-  {
-    //NGL_OUT(_T("nuiWidget OnTrash [0x%x '%s']\n"), this, GetObjectClass().GetChars());
-    pRoot->AdviseObjectDeath(this);
-  }
-  else
-  {
-    //NGL_OUT(_T("nuiWidget OnTrash NO ROOT! [0x%x '%s']\n"), this, GetObjectClass().GetChars());
-  }
-  
-  OnTrash();
-}
-
 void nuiWidget::OnTrash()
 {
   CheckValid();
@@ -2228,6 +2024,7 @@ void nuiWidget::OnTrash()
 bool nuiWidget::Trash()
 {
   CheckValid();
+  nuiAutoRef;
 
   if (!mTrashed)
   {
@@ -2304,7 +2101,7 @@ bool nuiWidget::HasFocus() const
 nuiDrawContext* nuiWidget::GetDrawContext()
 {
   CheckValid();
-  nuiContainerPtr pRoot=GetRoot();
+  nuiWidgetPtr pRoot=GetRoot();
   if (pRoot && pRoot!=this)
     return pRoot->GetDrawContext();
   else
@@ -2373,68 +2170,6 @@ bool nuiWidget::IsSelected(bool combined) const
   return mSelected;
 }
 
-void nuiWidget::SetEnabled(bool set)
-{
-  CheckValid();
-  if (mEnabled == set)
-    return;
-  
-  mEnabled = set;
-  
-  if (mEnabled)
-  {
-    Enabled();
-    StartAnimation(_T("ENABLED"));
-  }
-  else
-  {
-    Disabled();
-    StartAnimation(_T("DISABLED"));
-  }
-  
-  StateChanged();
-  ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-  Invalidate();
-}
-
-void nuiWidget::SetSelected(bool set)
-{
-  CheckValid();
-  if (mSelected == set)
-    return;
-  
-  mSelected = set;
-  
-  if (mSelected)
-  {
-    if (mSelectionExclusive && mpParent)
-    {
-      nuiContainer::IteratorPtr pIt = mpParent->GetFirstChild(true);
-      do
-      {
-        nuiWidgetPtr pItem = pIt->GetWidget();
-        if (pItem && pItem != this)
-        {
-          pItem->SetSelected(false);
-        }
-      } while (mpParent->GetNextChild(pIt));
-      delete pIt;
-    }
-    
-    Selected();
-    StartAnimation(_T("SELECT"));
-  }
-  else
-  {
-    Deselected();
-    StartAnimation(_T("DESELECT"));
-  }
-  
-	StateChanged();
-  ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-  Invalidate();
-}
-
 void nuiWidget::SetPosition(nuiPosition mode)
 {
   CheckValid();
@@ -2484,223 +2219,6 @@ void nuiWidget::UnlockState()
 }
 
 
-void nuiWidget::SetVisible(bool Visible)
-{
-  CheckValid();
-  //NGL_OUT(_T("(%p) nuiWidget::SetVisible(%s) '%s' / '%s'\n"), this, TRUEFALSE(Visible), GetObjectClass().GetChars(), GetObjectName().GetChars());
-
-  if (IsVisible(false) == Visible)
-    return;
-
-  nuiAnimation* pHideAnim = GetAnimation(_T("HIDE"));
-  nuiAnimation* pShowAnim = GetAnimation(_T("SHOW"));
-  
-  if (Visible)
-  {
-    // Show
-    if (pHideAnim && pHideAnim->IsPlaying())
-    {
-      // Stop hiding anim
-      pHideAnim->Stop();
-      // Start Show Anim if there is one
-      if (pShowAnim)
-      {
-        Invalidate();
-        mVisible = true;
-        InvalidateLayout();
-        VisibilityChanged();
-        //pShowAnim->SetTime(0, eAnimFromStart);
-        StartAnimation(_T("SHOW"));
-        //        pShowAnim->SilentSetTime(0, eAnimFromStart);
-        //        pShowAnim->Play();
-        DebugRefreshInfo();
-        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-      }
-      else // otherwise set visible = true
-      {
-        Invalidate();
-        mVisible = true;
-        InvalidateLayout();
-        VisibilityChanged();
-        DebugRefreshInfo();
-        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-      }
-    }
-    else if (pShowAnim && pShowAnim->IsPlaying())
-    {
-      //  Do nothing (return)
-      NGL_ASSERT(mVisible == true);
-      return;
-    }
-    else if (mVisible)
-    {
-      // Do nothing (return)
-      NGL_ASSERT(mVisible == true);
-      return;
-    }
-    else // !mVisible
-    {
-      // Start Show Anim if there is one
-      if (pShowAnim)
-      {
-        Invalidate();
-        mVisible = true;
-        InvalidateLayout();
-        VisibilityChanged();
-        //pShowAnim->SetTime(0, eAnimFromStart);
-        StartAnimation(_T("SHOW"));
-        //        pShowAnim->SilentSetTime(0, eAnimFromStart);
-        //        pShowAnim->Play();
-        DebugRefreshInfo();
-        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-      }
-      else // otherwise set visible = true
-      {
-        Invalidate();
-        mVisible = true;
-        InvalidateLayout();
-        VisibilityChanged();
-        DebugRefreshInfo();
-        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-      }
-    }
-  }
-  else // !Visible
-  {
-    if (pHideAnim && pHideAnim->IsPlaying())
-    {
-      // Do nothing
-      return;
-    }
-    else if (pShowAnim && pShowAnim->IsPlaying())
-    {
-      // Stop Showing
-      pShowAnim->Stop();
-      // Start Hiding anim if there is one
-      if (pHideAnim)
-      {
-        Invalidate();
-        mVisible = true;
-        InvalidateLayout();
-        VisibilityChanged();
-        //        pHideAnim->SetTime(0, eAnimFromStart);
-        StartAnimation(_T("HIDE"));
-        //        pHideAnim->SilentSetTime(0, eAnimFromStart);
-        //        pHideAnim->Play();
-        DebugRefreshInfo();
-        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-      }
-      else // Otherwise set visible = false
-      {
-        Invalidate();
-        mVisible = false;
-        InvalidateLayout();
-        VisibilityChanged();
-        DebugRefreshInfo();
-        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-      }
-    }
-    else if (mVisible)
-    {
-      // Start Hiding anim if there is one
-      if (pHideAnim)
-      {
-        Invalidate();
-        mVisible = true;
-        InvalidateLayout();
-        VisibilityChanged();
-        //        pHideAnim->SetTime(0, eAnimFromStart);
-        StartAnimation(_T("HIDE"));
-        //pHideAnim->SilentSetTime(0, eAnimFromStart);
-        //       pHideAnim->Play();
-        DebugRefreshInfo();
-        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-      }
-      else // Otherwise set visible = false
-      {
-        Invalidate();
-        mVisible = false;
-        InvalidateLayout();
-        VisibilityChanged();
-        DebugRefreshInfo();
-        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-      }
-    }
-    else // !mVisible
-    {
-      // Do nothing
-      NGL_ASSERT(mVisible == false);
-      return;
-    }
-  }
-  
-#if 0
-  if (Visible == mVisible)
-  {
-    // Are we already in the process of being hidden?
-    if (!Visible)
-    {
-      if (!pHideAnim)
-      {
-        NGL_OUT(_T("(%p) nuiWidget::SetVisible(%s) '%s' / '%s' RETURN1\n"), this, TRUEFALSE(Visible), GetObjectClass().GetChars(), GetObjectName().GetChars());
-        return; // No
-      }
-      else if (!pHideAnim->IsPlaying())
-      {
-        NGL_OUT(_T("(%p) nuiWidget::SetVisible(%s) '%s' / '%s' RETURN2\n"), this, TRUEFALSE(Visible), GetObjectClass().GetChars(), GetObjectName().GetChars());
-        return; // No
-      }
-      
-      // Yes, let's continue as we'll handle this case later
-    }
-    else
-    {
-      if (!pHideAnim)
-      {
-        NGL_OUT(_T("(%p) nuiWidget::SetVisible(%s) '%s' / '%s' RETURN1\n"), this, TRUEFALSE(Visible), GetObjectClass().GetChars(), GetObjectName().GetChars());
-        return; // No
-      }
-      else if (!pHideAnim->IsPlaying())
-      {
-        NGL_OUT(_T("(%p) nuiWidget::SetVisible(%s) '%s' / '%s' RETURN2\n"), this, TRUEFALSE(Visible), GetObjectClass().GetChars(), GetObjectName().GetChars());
-        return; // No
-      }
-    }
-    
-  }
-  
-  if (pShowAnim && pHideAnim)
-  {
-    NGL_OUT(_T("(%p) nuiWidget::SetVisible(%s) '%s' / '%s'\n"), this, TRUEFALSE(Visible), GetObjectClass().GetChars(), GetObjectName().GetChars());
-  }
-  
-  if (pHideAnim)
-    pHideAnim->SilentStop();
-  if (pShowAnim)
-    pShowAnim->SilentStop();
-  
-  if (pHideAnim && !Visible && (pHideAnim->GetPosition()==0 && pHideAnim->GetDuration()>0))
-  {
-    StartAnimation(_T("HIDE"));
-  }
-  else
-  {
-    Invalidate();
-    mVisible = Visible;
-    if (mVisible)
-    {
-      mNeedLayout = false; // Force relayout
-      mNeedSelfLayout = false; // Force relayout
-      ForcedInvalidateLayout();
-    }
-    VisibilityChanged();
-    DebugRefreshInfo();
-    ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-    if (Visible)
-      StartAnimation(_T("SHOW"));
-  }
-#endif
-}
 void nuiWidget::SilentSetVisible(bool Visible)
 {
   CheckValid();
@@ -2983,35 +2501,6 @@ bool nuiWidget::IsInSetRect() const
   if (mInSetRect)
     return true;
   return mpParent ? mpParent->IsInSetRect() : false;
-}
-
-bool nuiWidget::SetRect(const nuiRect& rRect)
-{
-  CheckValid();
-  #ifdef _DEBUG_LAYOUT
-  if (GetDebug())
-    NGL_OUT(_T("nuiWidget::SetRect on '%s' (%f, %f - %f, %f)\n"), GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
-  #endif
-  
-  bool inval = mNeedInvalidateOnSetRect;
-  if (!(mRect == rRect))
-    inval = true;
-
-  if (inval)
-    Invalidate();
-  if (mForceIdealSize) 
-    mRect.Set(rRect.Left(), rRect.Top(), mIdealRect.GetWidth(), mIdealRect.GetHeight());
-  else 
-    mRect = rRect;
-
-  if (!mOverrideVisibleRect)
-    mVisibleRect = GetOverDrawRect(true, true);
-  
-  if (inval)
-    Invalidate();
-
-  DebugRefreshInfo();
-  return true;
 }
 
 void nuiWidget::SetBorders(nuiSize XY)
@@ -3420,57 +2909,6 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect)
   DebugRefreshInfo();
 }
 
-void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged)
-{
-  CheckValid();
-#ifdef _DEBUG_
-  if (GetDebug())
-  {
-    //NGL_OUT(_T("InternalSetLayout\n"));
-  }
-#endif
-  
-  if (mNeedSelfLayout)
-  {
-    if (mInSetRect)
-      return;
-    mInSetRect = true;
-    SetRect(rect);
-    mInSetRect = false;
-    Invalidate();
-  }
-  else
-  {
-    // Is this case the widget has just been moved inside its parent. No need to re layout it, only change the rect...
-    mRect = rect;
-  }
-  
-  //#TEST
-#ifdef _DEBUG_
-  {
-    nuiContainer* pCont = dynamic_cast<nuiContainer*> (this);
-    if (pCont)
-    {
-      for (uint32 i = 0; i < pCont->GetChildrenCount(); i++)
-      {
-        nuiWidget* pChild = pCont->GetChild(i);
-        NGL_ASSERT(pChild);
-        NGL_ASSERT(!pChild->mNeedLayout);
-        NGL_ASSERT(!pChild->mNeedSelfLayout);
-      }
-    }
-  }
-#endif  
-}
-
-nuiRect nuiWidget::CalcIdealSize()
-{
-  CheckValid();
-  // Implement widget layout politics here
-  return mIdealRect;
-}
-
-
 void nuiWidget::SetUserWidth(nuiSize s)
 {
   CheckValid();
@@ -3720,18 +3158,6 @@ bool nuiWidget::GetRedrawOnHover() const
   CheckValid();
   return mRedrawOnHover;
 }
-
-nuiWidgetPtr nuiWidget::Find(const nglString& rName) 
-{ 
-  CheckValid();
-  int slash = rName.Find('/'); 
-
-  if (slash >= 0) 
-    return NULL; 
-  if (rName.IsEmpty())
-    return this; 
-  return NULL;
-} 
 
 /* Animation Support: */
 void nuiWidget::StartAutoDraw()
@@ -4339,12 +3765,6 @@ const nuiWidget::LayoutConstraint& nuiWidget::GetLayoutConstraint() const
 }
 
 
-nuiWidgetPtr nuiWidget::GetChild(nuiSize X, nuiSize Y)
-{
-  CheckValid();
-  return IsInsideFromParent(X,Y) ? this : NULL;
-}
-
 void nuiWidget::SetDebug(int32 DebugLevel)
 {
   CheckValid();
@@ -4939,38 +4359,9 @@ nuiDecoration* nuiWidget::GetFocusDecoration() const
 
 
 //////// TopLevel Management:
-void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
-{
-  CheckValid();
-  // Apply CSS, do default stuff, etc...
-  if (HasFocus())
-    pTopLevel->SetFocus(this);
-  pTopLevel->PrepareWidgetCSS(this, false, NUI_WIDGET_MATCHTAG_ALL);
-  ConnectTopLevel();
-
-  // cal delegate for default decoration, if the user has not set any decoration, and if there is a default decoration
-  int32 index = GetObjectClassNameIndex();
-  if (!GetDecoration() && mDecorationEnabled && (mDefaultDecorations.size() > index))
-  {
-    nuiDecorationDelegate dlg = mDefaultDecorations[index];
-    if (dlg)
-      dlg(this);
-  }
-  
-  StartAnimation(_T("SHOW"));
-}
 
 
 
-void nuiWidget::CallDisconnectTopLevel(nuiTopLevel* pTopLevel)
-{
-  CheckValid();
-  if (HasFocus())
-    UnFocus();
-  pTopLevel->DisconnectWidget(this);
-  DisconnectTopLevel();
-}
- 
 void nuiWidget::ConnectTopLevel()
 {
   CheckValid();
@@ -4998,13 +4389,6 @@ void nuiWidget::ResetCSSPass()
   CheckValid();
   InternalResetCSSPass();
 }
-
-void nuiWidget::InternalResetCSSPass()
-{
-  CheckValid();
-  mCSSPasses = 0;
-}
-
 
 void nuiWidget::IncrementCSSPass()
 {
@@ -5185,4 +4569,1898 @@ float nuiWidget::GetScaleInv() const
     return pTop->GetScaleInv();
   return nuiGetInvScaleFactor();
 }
+
+
+class nuiWidgetIterator : public nuiWidget::Iterator
+{
+public:
+  nuiWidgetIterator(nuiWidget* pSource, bool DoRefCounting);
+  nuiWidgetIterator(const nuiWidgetIterator& rIterator);
+  virtual ~nuiWidgetIterator();
+
+  virtual nuiWidgetPtr GetWidget() const;
+
+  nuiWidgetIterator& operator = (const nuiWidgetIterator& rIterator);
+
+  void Increment()
+  {
+    mIndex++;
+  }
+
+  void Decrement()
+  {
+    mIndex--;
+  }
+protected:
+  int32 mIndex;
+private:
+  friend class nuiWidget;
+  bool SetIndex(int32 index);
+  int32 GetIndex() const;
+};
+
+class nuiWidgetConstIterator : public nuiWidget::ConstIterator
+{
+public:
+  nuiWidgetConstIterator(const nuiWidget* pSource, bool DoRefCounting);
+  nuiWidgetConstIterator(const nuiWidgetConstIterator& rIterator);
+  virtual ~nuiWidgetConstIterator();
+
+  virtual nuiWidgetPtr GetWidget() const;
+
+  nuiWidgetConstIterator& operator = (const nuiWidgetConstIterator& rIterator);
+
+  void Increment()
+  {
+    mIndex++;
+  }
+
+  void Decrement()
+  {
+    mIndex--;
+  }
+protected:
+  int32 mIndex;
+private:
+  friend class nuiWidget;
+  bool SetIndex(int32 index);
+  int32 GetIndex() const;
+};
+
+typedef nuiWidgetIterator* nuiWidgetIteratorPtr;
+typedef nuiWidgetConstIterator* nuiWidgetConstIteratorPtr;
+
+
+bool nuiWidget::AddChild(nuiWidgetPtr pChild)
+{
+  CheckValid();
+  if (GetDebug())
+  {
+    NGL_OUT("[%s] Add Child %p <--- %p (%s / %s)\n", GetObjectClass().GetChars(), this, pChild, pChild->GetObjectClass().GetChars(), pChild->GetObjectName().GetChars());
+  }
+  pChild->Acquire();
+  nuiWidget* pParent = pChild->GetParent();
+  NGL_ASSERT(pParent != this);
+
+  int32 capacity = mpChildren.capacity();
+  int32 size = mpChildren.size();
+  if (size == capacity)
+  {
+    if (size < 128)
+    {
+      mpChildren.reserve(size * 2);
+    }
+    else
+    {
+      mpChildren.reserve(size + 128);
+    }
+  }
+
+  mpChildren.push_back(pChild);
+  if (pParent)
+    pParent->DelChild(pChild); // Remove from previous parent...
+
+  pChild->SetParent(this);
+  ChildAdded(this, pChild);
+  Invalidate();
+  InvalidateLayout();
+
+  DebugRefreshInfo();
+  return true;
+}
+
+bool nuiWidget::DelChild(nuiWidgetPtr pChild)
+{
+  CheckValid();
+  NGL_ASSERT(pChild->GetParent() == this)
+
+
+  if (GetDebug())
+  {
+    NGL_OUT("[%s] Del Child %p <--- %p (%s / %s)\n", GetObjectClass().GetChars(), this, pChild, pChild->GetObjectClass().GetChars(), pChild->GetObjectName().GetChars());
+  }
+
+  nuiWidgetList::iterator it  = mpChildren.begin();
+  nuiWidgetList::iterator end = mpChildren.end();
+  for ( ; it != end; ++it)
+  {
+    if (*it == pChild)
+    {
+      mpChildren.erase(it);
+      if (!pChild->IsTrashed())
+      {
+        nuiTopLevel* pRoot = GetTopLevel();
+        pChild->Trashed();
+        Invalidate();
+
+        if (pRoot)
+          pRoot->AdviseObjectDeath(pChild);
+        pChild->SetParent(NULL);
+      }
+      ChildDeleted(this, pChild);
+      InvalidateLayout();
+      DebugRefreshInfo();
+      pChild->Release();
+      return true;
+    }
+  }
+  DebugRefreshInfo();
+  return false;
+}
+
+int nuiWidget::GetChildrenCount() const
+{
+  CheckValid();
+  return mpChildren.size();
+}
+
+nuiWidgetPtr nuiWidget::GetChild(int index)
+{
+  CheckValid();
+  NGL_ASSERT(index >= 0);
+  NGL_ASSERT(index < mpChildren.size());
+  return mpChildren[index];
+}
+
+bool nuiWidget::Clear()
+{
+  CheckValid();
+  // start by trashing everybody
+  nuiWidget::ChildrenCallOnTrash();
+
+  // then, clear the container
+  int childCount = GetChildrenCount();
+  for (childCount--; childCount >= 0; childCount--)
+  {
+    nuiWidget* pWidget = GetChild(childCount);
+    if (pWidget)
+    {
+      DelChild(pWidget);
+    }
+  }
+  mpChildren.clear();
+  InvalidateLayout();
+  DebugRefreshInfo();
+  return true;
+}
+
+
+nuiWidget::Iterator* nuiWidget::GetFirstChild(bool DoRefCounting)
+{
+  CheckValid();
+  IteratorPtr pIt;
+  pIt = new nuiWidgetIterator(this, DoRefCounting);
+  bool valid = !mpChildren.empty();
+  pIt->SetValid(valid);
+  if (valid)
+    ((nuiWidgetIterator*)pIt)->SetIndex(0);
+  return pIt;
+}
+
+nuiWidget::ConstIterator* nuiWidget::GetFirstChild(bool DoRefCounting) const
+{
+  CheckValid();
+  nuiWidgetConstIteratorPtr pIt;
+  pIt = new nuiWidgetConstIterator(this, DoRefCounting);
+  bool valid = !mpChildren.empty();
+  pIt->SetValid(valid);
+  if (valid)
+    pIt->SetIndex(0);
+  return pIt;
+}
+
+nuiWidget::Iterator* nuiWidget::GetLastChild(bool DoRefCounting)
+{
+  CheckValid();
+  IteratorPtr pIt;
+  pIt = new nuiWidgetIterator(this, DoRefCounting);
+  if (!mpChildren.empty())
+  {
+    ((nuiWidgetIterator*)pIt)->SetIndex(mpChildren.size() - 1);
+    pIt->SetValid(true);
+  }
+  else
+  {
+    pIt->SetValid(false);
+  }
+  return pIt;
+}
+
+nuiWidget::ConstIterator* nuiWidget::GetLastChild(bool DoRefCounting) const
+{
+  CheckValid();
+  nuiWidgetConstIteratorPtr pIt;
+  pIt = new nuiWidgetConstIterator(this, DoRefCounting);
+  if (!mpChildren.empty())
+  {
+    pIt->SetIndex(mpChildren.size() - 1);
+    pIt->SetValid(true);
+  }
+  else
+  {
+    pIt->SetValid(false);
+  }
+  return pIt;
+}
+
+bool nuiWidget::GetNextChild(nuiWidget::IteratorPtr pIterator)
+{
+  CheckValid();
+  if (!pIterator)
+    return false;
+  if (!pIterator->IsValid())
+    return false;
+  ((nuiWidgetIterator*)pIterator)->Increment();
+  if (((nuiWidgetIterator*)pIterator)->GetIndex() >= mpChildren.size())
+  {
+    pIterator->SetValid(false);
+    return false;
+  }
+  pIterator->SetValid(true);
+  return true;
+}
+
+bool nuiWidget::GetNextChild(nuiWidget::ConstIteratorPtr pIterator) const
+{
+  CheckValid();
+  if (!pIterator)
+    return false;
+  if (!pIterator->IsValid())
+    return false;
+  ((nuiWidgetConstIterator*)pIterator)->Increment();
+  if (((nuiWidgetConstIterator*)pIterator)->GetIndex() >= mpChildren.size())
+  {
+    pIterator->SetValid(false);
+    return false;
+  }
+  pIterator->SetValid(true);
+  return true;
+}
+
+bool nuiWidget::GetPreviousChild(nuiWidget::IteratorPtr pIterator)
+{
+  CheckValid();
+  if (!pIterator)
+    return false;
+  if (!pIterator->IsValid())
+    return false;
+  if (((nuiWidgetIterator*)pIterator)->GetIndex() <= 0)
+  {
+    pIterator->SetValid(false);
+    return false;
+  }
+
+  ((nuiWidgetIterator*)pIterator)->Decrement();
+
+  pIterator->SetValid(true);
+  return true;
+}
+
+bool nuiWidget::GetPreviousChild(nuiWidget::ConstIteratorPtr pIterator) const
+{
+  CheckValid();
+  if (!pIterator)
+    return false;
+  if (!pIterator->IsValid())
+    return false;
+  if (((nuiWidgetConstIterator*)pIterator)->GetIndex() <= 0)
+  {
+    pIterator->SetValid(false);
+    return false;
+  }
+
+  ((nuiWidgetConstIterator*)pIterator)->Decrement();
+
+  pIterator->SetValid(true);
+  return true;
+}
+
+void nuiWidget::RaiseChild(nuiWidgetPtr pChild)
+{
+  CheckValid();
+
+  nuiWidgetList::iterator it = mpChildren.begin();
+  nuiWidgetList::iterator end = mpChildren.end();
+  for ( ; it != end; ++it)
+  {
+    nuiWidgetPtr pItem = *it;
+    if (pChild == pItem)
+    {
+      nuiWidgetList::iterator next = it;
+      ++next;
+      mpChildren.erase(it);
+      mpChildren.insert(next, pItem);
+      Invalidate();
+      DebugRefreshInfo();
+      return;
+    }
+  }
+  DebugRefreshInfo();
+}
+
+void nuiWidget::LowerChild(nuiWidgetPtr pChild)
+{
+  CheckValid();
+  nuiWidgetList::iterator it = mpChildren.begin();
+  nuiWidgetList::iterator end = mpChildren.end();
+  nuiWidgetList::iterator previous = it;
+  for ( ; it != end; ++it)
+  {
+    nuiWidgetPtr pItem = *it;
+    if (pChild == pItem)
+    {
+      if (previous != mpChildren.begin())
+      {
+        nuiWidgetPtr pPrevious = *previous;
+        mpChildren.erase(previous);
+        mpChildren.insert(it, pPrevious);
+        Invalidate();
+      }
+      DebugRefreshInfo();
+      return;
+    }
+    previous = it;
+  }
+  DebugRefreshInfo();
+}
+
+void nuiWidget::RaiseChildToFront(nuiWidgetPtr pChild)
+{
+  CheckValid();
+  nuiWidgetList::iterator it = mpChildren.begin();
+  nuiWidgetList::iterator end = mpChildren.end();
+  for ( ; it != end; ++it)
+  {
+    nuiWidgetPtr pItem = *it;
+    if (pChild == pItem)
+    {
+      mpChildren.erase(it);
+      mpChildren.push_back(pItem);
+      Invalidate();
+      DebugRefreshInfo();
+      return;
+    }
+  }
+  DebugRefreshInfo();
+}
+
+void nuiWidget::LowerChildToBack(nuiWidgetPtr pChild)
+{
+  CheckValid();
+  nuiWidgetList::iterator it = mpChildren.begin();
+  nuiWidgetList::iterator end = mpChildren.end();
+  for ( ; it != end; ++it)
+  {
+    nuiWidgetPtr pItem = *it;
+    if (pChild == pItem)
+    {
+      mpChildren.erase(it);
+      mpChildren.insert(mpChildren.begin(), pItem);
+      Invalidate();
+      DebugRefreshInfo();
+      return;
+    }
+  }
+  DebugRefreshInfo();
+}
+
+///////////////////////
+////// nuiWidget::Iterator
+
+nuiWidgetIterator::nuiWidgetIterator(nuiWidget* pSource, bool DoRefCounting)
+: nuiWidget::Iterator(pSource, DoRefCounting), mIndex(-1)
+{
+  mValid = false;
+}
+
+nuiWidgetConstIterator::nuiWidgetConstIterator(const nuiWidget* pSource, bool DoRefCounting)
+: nuiWidget::ConstIterator(pSource, DoRefCounting), mIndex(-1)
+{
+  mValid = false;
+}
+
+nuiWidgetIterator::nuiWidgetIterator(const nuiWidgetIterator& rIterator)
+: nuiWidget::Iterator(rIterator)
+{
+  mIndex = rIterator.mIndex;
+}
+
+nuiWidgetConstIterator::nuiWidgetConstIterator(const nuiWidgetConstIterator& rIterator)
+: nuiWidget::ConstIterator(rIterator)
+{
+  mIndex = rIterator.mIndex;
+}
+
+nuiWidgetIterator& nuiWidgetIterator::operator = (const nuiWidgetIterator& rIterator)
+{
+  *((nuiWidget::Iterator*)this) = rIterator;
+  mIndex = rIterator.mIndex;
+  return *this;
+}
+
+nuiWidgetConstIterator& nuiWidgetConstIterator::operator = (const nuiWidgetConstIterator& rIterator)
+{
+  *((nuiWidget::ConstIterator*)this) = rIterator;
+  mIndex = rIterator.mIndex;
+  return *this;
+}
+
+bool nuiWidgetIterator::SetIndex(int32 index)
+{
+  mIndex = index;
+  return true;
+}
+
+bool nuiWidgetConstIterator::SetIndex(int32 index)
+{
+  mIndex = index;
+  return true;
+}
+
+int32 nuiWidgetIterator::GetIndex() const
+{
+  return mIndex;
+}
+
+int32 nuiWidgetConstIterator::GetIndex() const
+{
+  return mIndex;
+}
+
+nuiWidgetIterator::~nuiWidgetIterator()
+{
+}
+
+nuiWidgetConstIterator::~nuiWidgetConstIterator()
+{
+}
+
+nuiWidgetPtr nuiWidgetIterator::GetWidget() const
+{
+  return IsValid() ? (nuiWidget*)mpSource->GetChild(mIndex) : NULL;
+}
+
+nuiWidgetPtr nuiWidgetConstIterator::GetWidget() const
+{
+  return IsValid() ? const_cast<nuiWidget*>((nuiWidget*)mpSource)->GetChild(mIndex) : NULL;
+}
+
+
+
+
+
+
+
+
+void nuiWidget::CallOnTrash()
+{
+  CheckValid();
+  ChildrenCallOnTrash();
+  mTrashed = true;
+
+  while (!mHotKeyEvents.empty())
+  {
+    DelHotKey(mHotKeyEvents.begin()->first);
+  }
+
+  nuiTopLevel* pRoot = GetTopLevel();
+  if (pRoot)
+  {
+    //NGL_OUT(_T("nuiWidget OnTrash [0x%x '%s']\n"), this, GetObjectClass().GetChars());
+    pRoot->AdviseObjectDeath(this);
+  }
+  else
+  {
+    //NGL_OUT(_T("nuiWidget OnTrash NO ROOT! [0x%x '%s']\n"), this, GetObjectClass().GetChars());
+  }
+
+  OnTrash();
+}
+
+
+void nuiWidget::ChildrenCallOnTrash()
+{
+  CheckValid();
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem)
+      pItem->CallOnTrash();
+  }
+  delete pIt;
+}
+
+nuiWidgetPtr nuiWidget::GetRoot() const
+{
+  CheckValid();
+  if (mpParent)
+    return mpParent->GetRoot();
+  else
+    return const_cast<nuiWidgetPtr>(this);
+}
+
+nuiWidgetPtr nuiWidget::GetChild(nuiSize X, nuiSize Y)
+{
+  CheckValid();
+  X -= mRect.mLeft;
+  Y -= mRect.mTop;
+
+  IteratorPtr pIt;
+  for (pIt = GetLastChild(); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem && pItem->IsInsideFromSelf(X,Y))
+    {
+      delete pIt;
+      nuiWidgetPtr pContainer = dynamic_cast<nuiWidgetPtr>(pItem);
+      if (pContainer)
+        return pContainer->GetChild(X,Y);
+      else
+        return pItem;
+    }
+  }
+  delete pIt;
+
+  return this;
+}
+
+void nuiWidget::GetChildren(nuiSize X, nuiSize Y, nuiWidgetList& rChildren, bool DeepSearch)
+{
+  CheckValid();
+  X -= mRect.mLeft;
+  Y -= mRect.mTop;
+
+  IteratorPtr pIt;
+  for (pIt = GetLastChild(); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem && pItem->IsInsideFromParent(X,Y))
+    {
+      if (DeepSearch)
+      {
+        nuiWidgetPtr pContainer = dynamic_cast<nuiWidgetPtr>(pItem);
+        if (pContainer)
+          pContainer->GetChildren(X, Y, rChildren, DeepSearch);
+      }
+      rChildren.push_back(pItem);
+    }
+  }
+  delete pIt;
+}
+
+
+
+nuiWidgetPtr nuiWidget::GetChildIf(nuiSize X, nuiSize Y, TestWidgetFunctor* pFunctor)
+{
+  CheckValid();
+  X -= mRect.mLeft;
+  Y -= mRect.mTop;
+
+  IteratorPtr pIt;
+  for (pIt = GetLastChild(); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem && pItem->IsInsideFromParent(X,Y))
+    {
+      nuiWidgetPtr pContainer = dynamic_cast<nuiWidgetPtr>(pItem);
+      if (pContainer)
+      {
+        nuiWidget* pWidget = pContainer->GetChildIf(X,Y, pFunctor);
+        if (pWidget)
+        {
+          delete pIt;
+          return pWidget;
+        }
+      }
+      else
+      {
+        if ((*pFunctor)(pItem))
+        {
+          delete pIt;
+          return pItem;
+        }
+      }
+    }
+  }
+  delete pIt;
+
+  if ((*pFunctor)(this))
+    return this;
+
+  return NULL;
+}
+
+
+nuiWidgetPtr nuiWidget::GetChild(const nglString& rName, bool ResolveNameAsPath)
+{
+  CheckValid();
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem->GetObjectName() == rName)
+    {
+      delete pIt;
+      return pItem;
+    }
+  }
+  delete pIt;
+
+  if (!ResolveNameAsPath) // Are we allowed to search the complete tree?
+    return NULL;
+
+  nuiWidgetPtr pNode = this;
+  nglString name = rName;
+
+  if (name[0] == '/')
+  {
+    // Get the root of the tree:
+    pNode = GetRoot();
+
+    name.DeleteLeft(1); // Remove the '/'
+  }
+
+  // Get all the nodes and remove the slashes:
+  std::vector<nglString> tokens;
+  name.Tokenize(tokens, _T('/'));
+
+  size_t i;
+  size_t count = tokens.size();
+  for (i = 0; i < count; i++)
+  {
+    nglString& rTok = tokens[i];
+    //Node* pOld = pNode;
+    if (rTok == _T(".."))
+      pNode = pNode->GetParent();
+    else
+      pNode = pNode->GetChild(rTok, false);
+
+    if (!pNode)
+    {
+      //NUI_OUT("Tried to find %s on %s", rTok.GetChars(), pOld->GetParamCString(ParamIds::Name));
+      return NULL;
+    }
+  }
+
+  return pNode;
+}
+
+nuiWidgetPtr nuiWidget::SearchForChild(const nglString& rName, bool recurse )
+{
+  CheckValid();
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem->GetObjectName() == rName)
+    {
+      delete pIt;
+      return pItem;
+    }
+  }
+  delete pIt;
+
+  if (!recurse) // Are we allowed to search the complete tree?
+    return NULL;
+
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    nuiWidgetPtr pContainer = NULL;
+    pContainer = dynamic_cast<nuiWidgetPtr>(pItem);
+    if (pContainer)
+    {
+      nuiWidgetPtr pWidget = pContainer->SearchForChild(rName,recurse);
+      if (pWidget)
+      {
+        delete pIt;
+        return pWidget;
+      }
+    }
+  }
+  delete pIt;
+
+  return NULL;
+}
+
+void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
+{
+  CheckValid();
+
+  // Apply CSS, do default stuff, etc...
+  if (HasFocus())
+    pTopLevel->SetFocus(this);
+  pTopLevel->PrepareWidgetCSS(this, false, NUI_WIDGET_MATCHTAG_ALL);
+  ConnectTopLevel();
+
+  // cal delegate for default decoration, if the user has not set any decoration, and if there is a default decoration
+  int32 index = GetObjectClassNameIndex();
+  if (!GetDecoration() && mDecorationEnabled && (mDefaultDecorations.size() > index))
+  {
+    nuiDecorationDelegate dlg = mDefaultDecorations[index];
+    if (dlg)
+      dlg(this);
+  }
+
+  StartAnimation(_T("SHOW"));
+
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(true); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    pIt->GetWidget()->CallConnectTopLevel(pTopLevel);
+  }
+  delete pIt;
+}
+
+void nuiWidget::CallDisconnectTopLevel(nuiTopLevel* pTopLevel)
+{
+  CheckValid();
+
+  if (HasFocus())
+    UnFocus();
+  pTopLevel->DisconnectWidget(this);
+  DisconnectTopLevel();
+
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(true); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    pIt->GetWidget()->CallDisconnectTopLevel(pTopLevel);
+  }
+  delete pIt;
+}
+
+void nuiWidget::InvalidateChildren(bool Recurse)
+{
+  CheckValid();
+  IteratorPtr pIt;
+  if (Recurse)
+  {
+    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      nuiWidgetPtr pCont = dynamic_cast<nuiWidgetPtr>(pItem);
+      if (pCont)
+        pCont->InvalidateChildren(Recurse);
+      pItem->Invalidate();
+    }
+  }
+  else
+  {
+    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      pItem->Invalidate();
+    }
+  }
+  delete pIt;
+}
+
+void nuiWidget::SilentInvalidateChildren(bool Recurse)
+{
+  CheckValid();
+  IteratorPtr pIt;
+  if (Recurse)
+  {
+    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      nuiWidgetPtr pCont = dynamic_cast<nuiWidgetPtr>(pItem);
+      if (pCont)
+        pCont->SilentInvalidateChildren(Recurse);
+      pItem->SilentInvalidate();
+    }
+  }
+  else
+  {
+    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      pItem->SilentInvalidate();
+    }
+  }
+  delete pIt;
+}
+
+bool nuiWidget::Draw(nuiDrawContext* pContext)
+{
+  CheckValid();
+  return DrawChildren(pContext);
+}
+
+bool nuiWidget::DrawChildren(nuiDrawContext* pContext)
+{
+  CheckValid();
+  IteratorPtr pIt;
+
+  if (mReverseRender)
+  {
+    for (pIt = GetLastChild(); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      if (pItem)
+        DrawChild(pContext, pItem);
+    }
+    delete pIt;
+  }
+  else
+  {
+    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      if (pItem)
+        DrawChild(pContext, pItem);
+    }
+    delete pIt;
+  }
+  return true;
+}
+
+void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
+{
+  CheckValid();
+  float x,y;
+
+  x = (float)pChild->GetRect().mLeft;
+  y = (float)pChild->GetRect().mTop;
+
+  bool matrixchanged = false;
+  if (x != 0 || y != 0)
+  {
+    pContext->PushMatrix();
+    pContext->Translate( x, y );
+    matrixchanged = true;
+  }
+
+  nuiPainter* pPainter = pContext->GetPainter();
+  if (mpSavedPainter)
+    pContext->SetPainter(mpSavedPainter);
+
+  pChild->DrawWidget(pContext);
+
+  if (mpSavedPainter)
+    pContext->SetPainter(pPainter);
+
+  if (IsDrawingInCache(true))
+  {
+    nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
+    if (pMetaPainter)
+      pMetaPainter->DrawChild(pContext, pChild);
+  }
+
+  if (matrixchanged)
+  {
+    pContext->PopMatrix();
+  }
+}
+
+////// Private event management:
+bool nuiWidget::DispatchMouseClick(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  nuiAutoRef;
+  if (!mMouseEventEnabled || mTrashed)
+    return false;
+
+  bool hasgrab = HasGrab(rInfo.TouchId);
+  if (IsDisabled() && !hasgrab)
+    return false;
+
+  nglMouseInfo info(rInfo);
+  GlobalToLocal(info.X, info.Y);
+
+  // Get a chance to preempt the mouse event before the children get it:
+  if (CallPreMouseClicked(info))
+  {
+    Grab();
+    return true;
+  }
+
+  if (IsInsideFromRoot(rInfo.X, rInfo.Y) || hasgrab)
+  {
+    if (!hasgrab)
+    {
+      IteratorPtr pIt;
+      for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        if (pItem)
+        {
+          if (IsEnabled() && !HasGrab(rInfo.TouchId))
+          {
+            if (pItem->DispatchMouseClick(rInfo))
+            {
+              delete pIt;
+              return true;
+            }
+          }
+        }
+      }
+      delete pIt;
+    }
+
+    nglMouseInfo info(rInfo);
+    GlobalToLocal(info.X, info.Y);
+    if (PreClicked(info))
+    {
+      Grab();
+      return true;
+    }
+    bool ret = MouseClicked(info);
+    ret |= Clicked(info);
+    ret = ret | (!mClickThru);
+    if (ret)
+      Grab();
+
+    return ret;
+  }
+  return false;
+}
+
+bool nuiWidget::DispatchMouseCanceled(nuiWidgetPtr pThief, const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  nuiAutoRef;
+  if (mTrashed)
+    return false;
+
+  bool hasgrab = HasGrab(rInfo.TouchId);
+
+  nglMouseInfo info(rInfo);
+  GlobalToLocal(info.X, info.Y);
+
+  // Get a chance to preempt the mouse event before the children get it:
+  PreClickCanceled(info);
+
+  IteratorPtr pIt;
+  for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem)
+    {
+      pItem->DispatchMouseCanceled(pThief, rInfo);
+    }
+  }
+  delete pIt;
+
+  if (pThief != this)
+  {
+    GlobalToLocal(info.X, info.Y);
+    PreClickCanceled(info);
+    bool ret = MouseCanceled(info);
+    ret |= ClickCanceled(info);
+    ret = ret | (!mClickThru);
+    return ret;
+  }
+
+  return false;
+}
+
+bool nuiWidget::DispatchMouseUnclick(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  nuiAutoRef;
+  if (!mMouseEventEnabled || mTrashed)
+    return false;
+
+  bool hasgrab = HasGrab(rInfo.TouchId);
+  if (IsDisabled() && !hasgrab)
+    return false;
+
+  nglMouseInfo info(rInfo);
+  GlobalToLocal(info.X, info.Y);
+  // Get a chance to preempt the mouse event before the children get it:
+  if (CallPreMouseUnclicked(info))
+  {
+    Ungrab();
+    return true;
+  }
+
+  if (IsInsideFromRoot(rInfo.X, rInfo.Y) || hasgrab)
+  {
+    if (!hasgrab)
+    {
+      IteratorPtr pIt;
+      for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        if (pItem)
+        {
+          if (IsEnabled())
+          {
+            if ((pItem)->DispatchMouseUnclick(rInfo))
+            {
+              delete pIt;
+              return true;
+            }
+          }
+        }
+      }
+      delete pIt;
+    }
+
+    bool res = PreUnclicked(info);
+    if (!res)
+    {
+      res = MouseUnclicked(info);
+      res |= Unclicked(info);
+    }
+
+    res = res | (!mClickThru);
+    if (res)
+      Ungrab();
+    return res;
+  }
+  return false;
+}
+
+nuiWidgetPtr nuiWidget::DispatchMouseMove(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  nuiAutoRef;
+  if (!mMouseEventEnabled || mTrashed)
+    return NULL;
+
+  nuiWidgetPtr pHandled=NULL;
+  bool inside=false,res=false;
+  bool hasgrab = HasGrab(rInfo.TouchId);
+
+  if (IsDisabled() && !hasgrab)
+    return NULL;
+
+  nglMouseInfo info(rInfo);
+  GlobalToLocal(info.X, info.Y);
+
+  // Get a chance to preempt the mouse event before the children get it:
+  if (CallPreMouseMoved(info))
+    return this;
+
+  if (IsInsideFromRoot(rInfo.X, rInfo.Y) || hasgrab)
+  {
+    inside = true;
+
+    // If the object has the grab we should not try to notify its children of mouse events!
+    if (!hasgrab)
+    {
+
+      IteratorPtr pIt;
+      for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        if (pItem)
+        {
+          if (pItem->IsVisible())
+          {
+            pHandled = pItem->DispatchMouseMove(rInfo);
+          }
+        }
+        if (pHandled)
+        {
+          // stop as soon as someone caught the event
+          delete pIt;
+          return pHandled;
+        }
+      }
+      delete pIt;
+    }
+
+    res = MouseMoved(info);
+    res |= MovedMouse(info);
+  }
+  else
+  {
+    if (GetHover())
+    {
+      res = MouseMoved(info);
+      res |= MovedMouse(info);
+    }
+  }
+
+  if (!pHandled && (res | (!mClickThru)) && inside)
+  {
+    nuiTopLevelPtr pRoot = GetTopLevel();
+    if (pRoot)
+      return this;
+  }
+
+  if (pHandled)
+    return pHandled;
+
+  return (res && inside) ? this : NULL;
+}
+
+nuiWidgetPtr nuiWidget::DispatchMouseWheelMove(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  nuiAutoRef;
+  if (!mMouseEventEnabled || mTrashed)
+    return NULL;
+
+  nuiWidgetPtr pHandled=NULL;
+  bool inside=false,res=false;
+  bool hasgrab = HasGrab(rInfo.TouchId);
+
+  if (IsDisabled() && !hasgrab)
+    return NULL;
+
+  nglMouseInfo info(rInfo);
+  GlobalToLocal(info.X, info.Y);
+
+  // Get a chance to preempt the mouse event before the children get it:
+  if (CallPreMouseWheelMoved(info))
+    return this;
+
+  if (IsInsideFromRoot(rInfo.X, rInfo.Y) || hasgrab)
+  {
+    inside = true;
+
+    // If the object has the grab we should not try to notify its children of mouse events!
+    if (!hasgrab)
+    {
+
+      IteratorPtr pIt;
+      for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        if (pItem)
+        {
+          if (pItem->IsVisible())
+          {
+            pHandled = pItem->DispatchMouseWheelMove(rInfo);
+          }
+        }
+        if (pHandled)
+        {
+          // stop as soon as someone caught the event
+          delete pIt;
+          return pHandled;
+        }
+      }
+      delete pIt;
+    }
+
+    res = MouseWheelMoved(info);
+    res |= WheelMovedMouse(info);
+  }
+  else
+  {
+    if (GetHover())
+    {
+      res = MouseWheelMoved(info);
+      res |= WheelMovedMouse(info);
+    }
+  }
+
+  if (!pHandled && (res | (!mClickThru)) && inside)
+  {
+    nuiTopLevelPtr pRoot = GetTopLevel();
+    if (pRoot)
+      return this;
+  }
+
+  if (pHandled)
+    return pHandled;
+
+  return (res && inside) ? this : NULL;
+}
+
+
+void nuiWidget::SetAlpha(float Alpha)
+{
+  CheckValid();
+  if (Alpha == mAlpha)
+    return;
+  const float a = nuiClamp(Alpha, 0.0f, 1.0f);
+  if (mAlpha == a)
+    return;
+  mAlpha = a;
+  Invalidate();
+  SilentInvalidateChildren(true);
+  DebugRefreshInfo();
+}
+
+void nuiWidget::SetEnabled(bool set)
+{
+  CheckValid();
+  if (set == mEnabled)
+    return;
+  if (mEnabled == set)
+    return;
+
+  mEnabled = set;
+
+  if (mEnabled)
+  {
+    Enabled();
+    StartAnimation(_T("ENABLED"));
+  }
+  else
+  {
+    Disabled();
+    StartAnimation(_T("DISABLED"));
+  }
+
+  StateChanged();
+  ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+  SilentInvalidateChildren(true);
+  Invalidate();
+  DebugRefreshInfo();
+}
+
+void nuiWidget::SetSelected(bool set)
+{
+  CheckValid();
+  if (mSelected == set)
+    return;
+  if (mSelected == set)
+    return;
+
+  mSelected = set;
+
+  if (mSelected)
+  {
+    if (mSelectionExclusive && mpParent)
+    {
+      nuiWidget::IteratorPtr pIt = mpParent->GetFirstChild(true);
+      do
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        if (pItem && pItem != this)
+        {
+          pItem->SetSelected(false);
+        }
+      } while (mpParent->GetNextChild(pIt));
+      delete pIt;
+    }
+
+    Selected();
+    StartAnimation(_T("SELECT"));
+  }
+  else
+  {
+    Deselected();
+    StartAnimation(_T("DESELECT"));
+  }
+
+  StateChanged();
+  ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+  SilentInvalidateChildren(true);
+  Invalidate();
+  DebugRefreshInfo();
+}
+
+void nuiWidget::SetVisible(bool Visible)
+{
+  CheckValid();
+  if (IsVisible(false) == Visible)
+    return;
+
+  if (IsVisible(false) == Visible)
+    return;
+
+  nuiAnimation* pHideAnim = GetAnimation(_T("HIDE"));
+  nuiAnimation* pShowAnim = GetAnimation(_T("SHOW"));
+
+  if (Visible)
+  {
+    // Show
+    if (pHideAnim && pHideAnim->IsPlaying())
+    {
+      // Stop hiding anim
+      pHideAnim->Stop();
+      // Start Show Anim if there is one
+      if (pShowAnim)
+      {
+        Invalidate();
+        mVisible = true;
+        InvalidateLayout();
+        VisibilityChanged();
+        //pShowAnim->SetTime(0, eAnimFromStart);
+        StartAnimation(_T("SHOW"));
+        //        pShowAnim->SilentSetTime(0, eAnimFromStart);
+        //        pShowAnim->Play();
+        DebugRefreshInfo();
+        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+      }
+      else // otherwise set visible = true
+      {
+        Invalidate();
+        mVisible = true;
+        InvalidateLayout();
+        VisibilityChanged();
+        DebugRefreshInfo();
+        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+      }
+    }
+    else if (pShowAnim && pShowAnim->IsPlaying())
+    {
+      //  Do nothing (return)
+      NGL_ASSERT(mVisible == true);
+    }
+    else if (mVisible)
+    {
+      // Do nothing (return)
+      NGL_ASSERT(mVisible == true);
+    }
+    else // !mVisible
+    {
+      // Start Show Anim if there is one
+      if (pShowAnim)
+      {
+        Invalidate();
+        mVisible = true;
+        InvalidateLayout();
+        VisibilityChanged();
+        //pShowAnim->SetTime(0, eAnimFromStart);
+        StartAnimation(_T("SHOW"));
+        //        pShowAnim->SilentSetTime(0, eAnimFromStart);
+        //        pShowAnim->Play();
+        DebugRefreshInfo();
+        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+      }
+      else // otherwise set visible = true
+      {
+        Invalidate();
+        mVisible = true;
+        InvalidateLayout();
+        VisibilityChanged();
+        DebugRefreshInfo();
+        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+      }
+    }
+  }
+  else // !Visible
+  {
+    if (pHideAnim && pHideAnim->IsPlaying())
+    {
+      // Do nothing
+    }
+    else if (pShowAnim && pShowAnim->IsPlaying())
+    {
+      // Stop Showing
+      pShowAnim->Stop();
+      // Start Hiding anim if there is one
+      if (pHideAnim)
+      {
+        Invalidate();
+        mVisible = true;
+        InvalidateLayout();
+        VisibilityChanged();
+        //        pHideAnim->SetTime(0, eAnimFromStart);
+        StartAnimation(_T("HIDE"));
+        //        pHideAnim->SilentSetTime(0, eAnimFromStart);
+        //        pHideAnim->Play();
+        DebugRefreshInfo();
+        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+      }
+      else // Otherwise set visible = false
+      {
+        Invalidate();
+        mVisible = false;
+        InvalidateLayout();
+        VisibilityChanged();
+        DebugRefreshInfo();
+        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+      }
+    }
+    else if (mVisible)
+    {
+      // Start Hiding anim if there is one
+      if (pHideAnim)
+      {
+        Invalidate();
+        mVisible = true;
+        InvalidateLayout();
+        VisibilityChanged();
+        //        pHideAnim->SetTime(0, eAnimFromStart);
+        StartAnimation(_T("HIDE"));
+        //pHideAnim->SilentSetTime(0, eAnimFromStart);
+        //       pHideAnim->Play();
+        DebugRefreshInfo();
+        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+      }
+      else // Otherwise set visible = false
+      {
+        Invalidate();
+        mVisible = false;
+        InvalidateLayout();
+        VisibilityChanged();
+        DebugRefreshInfo();
+        ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+      }
+    }
+    else // !mVisible
+    {
+      // Do nothing
+      NGL_ASSERT(mVisible == false);
+    }
+  }
+
+  if (mVisible)
+    BroadcastVisible();
+}
+
+void nuiWidget::BroadcastVisible()
+{
+  CheckValid();
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem->GetNeedSelfRedraw())
+    {
+      pItem->InvalidateRect(pItem->GetRect().Size());
+    }
+    nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pItem);
+    if (pContainer)
+    {
+      pContainer->BroadcastVisible();
+    }
+  }
+  delete pIt;
+}
+
+nuiRect nuiWidget::CalcIdealSize()
+{
+  CheckValid();
+  nuiRect temp;
+
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (mCanRespectConstraint)
+      pItem->SetLayoutConstraint(mConstraint);
+    nuiRect r(pItem->GetIdealRect()); // Dummy call. Only the side effect is important: the object recalculates its layout.
+    temp.Union(temp, r.Size());
+  }
+  delete pIt;
+
+  DebugRefreshInfo();
+  return temp.Size();
+}
+
+bool nuiWidget::SetRect(const nuiRect& rRect)
+{
+  CheckValid();
+#ifdef _DEBUG_LAYOUT
+  if (GetDebug())
+    NGL_OUT(_T("nuiWidget::SetRect on '%s' (%f, %f - %f, %f)\n"), GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
+#endif
+
+  bool inval = mNeedInvalidateOnSetRect;
+  if (!(mRect == rRect))
+    inval = true;
+
+  if (inval)
+    Invalidate();
+  if (mForceIdealSize)
+    mRect.Set(rRect.Left(), rRect.Top(), mIdealRect.GetWidth(), mIdealRect.GetHeight());
+  else
+    mRect = rRect;
+
+  if (!mOverrideVisibleRect)
+    mVisibleRect = GetOverDrawRect(true, true);
+
+  if (inval)
+    Invalidate();
+
+  nuiRect rect(rRect.Size());
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (mCanRespectConstraint)
+      pItem->SetLayoutConstraint(mConstraint);
+    pItem->GetIdealRect();
+    pItem->SetLayout(rect);
+  }
+  delete pIt;
+
+  DebugRefreshInfo();
+  return true;
+}
+
+void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged)
+{
+  CheckValid();
+
+  if (mNeedSelfLayout || SizeChanged)
+  {
+    mInSetRect = true;
+    SetRect(rect);
+    mInSetRect = false;
+    Invalidate();
+  }
+  else
+  {
+    // Is this case the widget have just been moved inside its parent. No need to re layout it, only change the rect...
+    mRect = rect;
+
+    if (mNeedLayout)
+    {
+      // The children need to be re layed out (at least one of them!).
+      nuiWidget::IteratorPtr pIt = GetFirstChild(false);
+      do
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        if (pItem)
+        {
+          // The rect of each child doesn't change BUT we still ask for its ideal rect.
+          nuiRect rect(pItem->GetBorderedRect());
+          nuiRect ideal(pItem->GetIdealRect());
+
+          if (pItem->HasUserPos())
+          {
+            rect = ideal;
+          }
+          else if (pItem->HasUserSize())
+          {
+            rect.SetSize(ideal.GetWidth(), ideal.GetHeight());
+          }
+          else
+          {
+            // Set the widget to the size of the parent
+          }
+
+          pItem->SetLayout(rect);
+        }
+      } while (GetNextChild(pIt));
+      delete pIt;
+
+    }
+  }
+
+  //#TEST:
+#ifdef NUI_CHECK_LAYOUTS
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem->IsVisible())
+    {
+      NGL_ASSERT(!pItem->GetNeedLayout());
+    }
+  }
+  delete pIt;
+  //#TEST end
+#endif
+}
+
+
+////// nuiWidget::Iterator
+
+nuiWidget::Iterator::Iterator(nuiWidget* pSource, bool DoRefCounting)
+: mpSource(pSource), mRefCounting(DoRefCounting)
+{
+  if (mRefCounting)
+  {
+    NGL_ASSERT(mpSource->GetRefCount() != 0);
+    mpSource->Acquire();
+
+  }
+  mValid = false;
+}
+
+nuiWidget::ConstIterator::ConstIterator(const nuiWidget* pSource, bool DoRefCounting)
+: mpSource(pSource), mRefCounting(DoRefCounting)
+{
+  if (mRefCounting)
+  {
+    NGL_ASSERT(mpSource->GetRefCount() != 0);
+    mpSource->Acquire();
+  }
+  mValid = false;
+}
+
+nuiWidget::Iterator::Iterator(const nuiWidget::Iterator& rIterator)
+: mpSource(rIterator.mpSource), mRefCounting(rIterator.mRefCounting), mValid(rIterator.mValid)
+{
+  if (mRefCounting)
+  {
+    NGL_ASSERT(mpSource->GetRefCount() != 0);
+    mpSource->Acquire();
+  }
+}
+
+nuiWidget::ConstIterator::ConstIterator(const nuiWidget::ConstIterator& rIterator)
+: mpSource(rIterator.mpSource), mRefCounting(rIterator.mRefCounting), mValid(rIterator.mValid)
+{
+  if (mRefCounting)
+  {
+    NGL_ASSERT(mpSource->GetRefCount() != 0);
+    mpSource->Acquire();
+  }
+}
+
+nuiWidget::Iterator& nuiWidget::Iterator::operator = (const nuiWidget::Iterator& rIterator)
+{
+  mRefCounting = rIterator.mRefCounting;
+  const nuiWidget* pOld = mpSource;
+  mpSource = rIterator.mpSource;
+  if (mRefCounting)
+  {
+    mpSource->Acquire();
+    pOld->Release();
+  }
+  mValid = rIterator.mValid;
+  return *this;
+}
+
+nuiWidget::ConstIterator& nuiWidget::ConstIterator::operator = (const nuiWidget::ConstIterator& rIterator)
+{
+  mRefCounting = rIterator.mRefCounting;
+  const nuiWidget* pOld = mpSource;
+  mpSource = rIterator.mpSource;
+  if (mRefCounting)
+  {
+    mpSource->Acquire();
+    pOld->Release();
+  }
+  mValid = rIterator.mValid;
+  return *this;
+}
+
+nuiWidget::Iterator::~Iterator()
+{
+  if (mRefCounting)
+    mpSource->Release();
+}
+
+nuiWidget::ConstIterator::~ConstIterator()
+{
+  if (mRefCounting)
+    mpSource->Release();
+}
+
+bool nuiWidget::Iterator::IsValid() const
+{
+  return mValid;
+}
+
+bool nuiWidget::ConstIterator::IsValid() const
+{
+  return mValid;
+}
+
+void nuiWidget::Iterator::SetValid(bool Valid)
+{
+  mValid = Valid;
+}
+
+void nuiWidget::ConstIterator::SetValid(bool Valid)
+{
+  mValid = Valid;
+}
+
+
+/////////////////////////////////////////////////////////////
+nuiWidgetPtr nuiWidget::Find(const nglString& rName)
+{
+  CheckValid();
+  int slash = rName.Find('/');
+
+  if (slash >= 0)
+  {
+    nglString path = rName.GetLeft(slash);
+    nglString rest = rName.Extract(slash + 1);
+    nuiWidgetPtr node = SearchForChild(path, false);
+
+    return node ? node->Find(rest) : NULL;
+  }
+  else
+    return SearchForChild(rName,false);
+}
+
+void nuiWidget::OnChildHotRectChanged(nuiWidget* pChild, const nuiRect& rChildHotRect)
+{
+  CheckValid();
+  SetHotRect(rChildHotRect);
+}
+
+void nuiWidget::InternalResetCSSPass()
+{
+  CheckValid();
+  mCSSPasses = 0;
+
+  IteratorPtr pIt = GetFirstChild(false);
+  for (; pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    pItem->ResetCSSPass();
+  }
+  delete pIt;
+}
+
+nuiWidget::IteratorPtr nuiWidget::GetChildIterator(nuiWidgetPtr pChild, bool DoRefCounting)
+{
+  CheckValid();
+  IteratorPtr pIt = GetFirstChild(DoRefCounting);
+  while (pIt->IsValid() && pIt->GetWidget() != pChild)
+    GetNextChild(pIt);
+  return pIt;
+}
+
+nuiWidget::ConstIteratorPtr nuiWidget::GetChildIterator(nuiWidgetPtr pChild, bool DoRefCounting) const
+{
+  CheckValid();
+  ConstIteratorPtr pIt = GetFirstChild(DoRefCounting);
+  while (pIt->IsValid() && pIt->GetWidget() != pChild)
+    GetNextChild(pIt);
+  return pIt;
+}
+
+nuiWidgetPtr nuiWidget::GetNextFocussableChild(nuiWidgetPtr pChild) const
+{
+  CheckValid();
+  ConstIteratorPtr pIt = pChild ? GetChildIterator(pChild) : GetFirstChild();
+  if (!pIt->IsValid())
+    return NULL;
+
+  if (pChild)
+    GetNextChild(pIt);
+
+  while (pIt->IsValid() && !pIt->GetWidget()->GetWantKeyboardFocus() && pIt->GetWidget())
+    GetNextChild(pIt);
+
+  if (pIt->IsValid())
+  {
+    nuiWidgetPtr pW = pIt->GetWidget();
+    delete pIt;
+    return pW;
+  }
+
+  delete pIt;
+  return NULL;
+}
+
+nuiWidgetPtr nuiWidget::GetPreviousFocussableChild(nuiWidgetPtr pChild) const
+{
+  CheckValid();
+  ConstIteratorPtr pIt = pChild ? GetChildIterator(pChild) : GetLastChild();
+  if (!pIt->IsValid())
+    return NULL;
+
+  if (pChild)
+    GetPreviousChild(pIt);
+
+  while (pIt->IsValid() && !pIt->GetWidget()->GetWantKeyboardFocus() && pIt->GetWidget())
+    GetPreviousChild(pIt);
+
+  if (pIt->IsValid())
+  {
+    nuiWidgetPtr pW = pIt->GetWidget();
+    delete pIt;
+    return pW;
+  }
+
+  delete pIt;
+  return NULL;
+}
+
+
+nuiWidgetPtr nuiWidget::GetNextSibling(nuiWidgetPtr pChild) const
+{
+  CheckValid();
+  ConstIteratorPtr pIt = pChild ? GetChildIterator(pChild) : GetFirstChild();
+  if (!pIt->IsValid())
+    return NULL;
+
+  if (pChild)
+    GetNextChild(pIt);
+
+  nuiWidgetPtr pW = NULL;
+  if (pIt->IsValid())
+    pW = pIt->GetWidget();
+
+  delete pIt;
+  return pW;
+}
+
+nuiWidgetPtr nuiWidget::GetPreviousSibling(nuiWidgetPtr pChild) const
+{
+  CheckValid();
+  ConstIteratorPtr pIt = pChild ? GetChildIterator(pChild) : GetFirstChild();
+  if (!pIt->IsValid())
+    return NULL;
+
+  if (pChild)
+    GetPreviousChild(pIt);
+
+  nuiWidgetPtr pW = NULL;
+  if (pIt->IsValid())
+    pW = pIt->GetWidget();
+
+  delete pIt;
+  return pW;
+}
+
+void nuiWidget::SetChildrenLayoutAnimationDuration(float duration)
+{
+  CheckValid();
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    pItem->SetLayoutAnimationDuration(duration);
+  }
+  delete pIt;
+}
+
+void nuiWidget::SetChildrenLayoutAnimationEasing(const nuiEasingMethod& rMethod)
+{
+  CheckValid();
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    pItem->SetLayoutAnimationEasing(rMethod);
+  }
+  delete pIt;
+}
+
+bool nuiWidget::CallPreMouseClicked(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  return false;
+}
+
+bool nuiWidget::CallPreMouseUnclicked(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  return false;
+}
+
+bool nuiWidget::CallPreMouseMoved(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  return false;
+}
+
+bool nuiWidget::CallPreMouseWheelMoved(const nglMouseInfo& rInfo)
+{
+  CheckValid();
+  return false;
+}
+
+
+void nuiWidget::GetHoverList(nuiSize X, nuiSize Y, std::set<nuiWidget*>& rHoverSet, std::list<nuiWidget*>& rHoverList) const
+{
+  CheckValid();
+  nuiWidget::ConstIteratorPtr pIt = NULL;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem->IsInsideFromRoot(X, Y))
+    {
+      rHoverList.push_back(pItem);
+      rHoverSet.insert(pItem);
+      nuiWidget* pChild = dynamic_cast<nuiWidget*>(pItem);
+      if (pChild)
+        pChild->GetHoverList(X, Y, rHoverSet, rHoverList);
+    }
+  }
+  delete pIt;
+}
+
 

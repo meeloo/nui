@@ -7,7 +7,7 @@
 
 #include "nui.h"
 
-class nuiMetaPainterInspector : public nuiContainer
+class nuiMetaPainterInspector : public nuiWidget
   {
   public:
     nuiMetaPainterInspector()
@@ -102,10 +102,10 @@ void nuiWidgetInspectorNode::Open(bool Opened)
   {
     Clear();
     
-    nuiContainer* pContainer = dynamic_cast<nuiContainer*>(mpTarget);
+    nuiWidget* pContainer = dynamic_cast<nuiWidget*>(mpTarget);
     if (pContainer)
     {
-      nuiContainer::IteratorPtr pIt = pContainer->GetFirstChild();
+      nuiWidget::IteratorPtr pIt = pContainer->GetFirstChild();
       
       while (pIt->IsValid())
       {
@@ -126,7 +126,7 @@ void nuiWidgetInspectorNode::Open(bool Opened)
 
 bool nuiWidgetInspectorNode::IsEmpty() const
 {
-  nuiContainer* pContainer = dynamic_cast<nuiContainer*>(mpTarget);
+  nuiWidget* pContainer = dynamic_cast<nuiWidget*>(mpTarget);
   if (pContainer && pContainer->GetChildrenCount())
     return false;
   
@@ -139,7 +139,7 @@ nuiWidget* nuiWidgetInspectorNode::GetTarget()
 }
 
 nuiWidgetInspector::nuiWidgetInspector(nuiWidget* pTarget)
-: nuiContainer(),
+: nuiWidget(),
 mInspectorSink(this)
 {
   SetObjectClass(_T("nuiWidgetInspector"));
@@ -247,7 +247,7 @@ class nuiWidgetProxy : public nuiWidget
   };
 
 nuiWidgetInfo::nuiWidgetInfo(nuiWidget* pTarget)
-: nuiContainer(),
+: nuiWidget(),
 mWISink(this)
 {
   mpTarget = NULL;
@@ -511,7 +511,7 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
 
 void nuiWidgetInfo::BuildInfo()
 {
-  mpDummy = new nuiContainer();
+  mpDummy = new nuiWidget();
   nuiVBox* pMainBox = new nuiVBox(3);
   mpInfos = pMainBox;
   //if (mpTarget)

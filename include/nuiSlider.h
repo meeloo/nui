@@ -15,10 +15,10 @@
 #include "nuiEvent.h"
 #include "nuiTimer.h"
 #include "nuiRange.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 /// Basic slider with range support.
-class nuiSlider : public nuiContainer
+class nuiSlider : public nuiWidget
 {
 public:
   nuiSlider(nuiOrientation orientation = nuiHorizontal, const nuiRange& rRange = nuiRange());

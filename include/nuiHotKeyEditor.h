@@ -13,7 +13,7 @@
 #include "nuiHBox.h"
 #include "nuiGrid.h"
 
-class nuiHotKeyEditor : public nuiContainer
+class nuiHotKeyEditor : public nuiWidget
 {
 public:
   nuiHotKeyEditor();

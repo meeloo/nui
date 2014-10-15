@@ -9,7 +9,7 @@
 #define __nuiRadioButton_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiEvent.h"
 #include "nuiToggleButton.h"
 #include "nuiImage.h"
@@ -37,7 +37,7 @@ public:
   bool KeyDown(const nglKeyEvent& rEvent);
   bool KeyUp(const nglKeyEvent& rEvent);
   
-  virtual bool SetParent(nuiContainerPtr pParent);
+  virtual bool SetParent(nuiWidgetPtr pParent);
 
   void                  SetGroupManager(nuiRadioButtonGroup* pGroup);
   nuiRadioButtonGroup*  GetGroupManager();

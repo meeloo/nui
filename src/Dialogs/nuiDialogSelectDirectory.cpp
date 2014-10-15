@@ -11,7 +11,7 @@
 nuiDialogSelectDirectory::nuiDialogSelectDirectory(nuiMainWindow* pParent, const nglString& rTitle, const nglPath& rPath, const nglPath& rRootPath, nuiSize Left, nuiSize Top, nuiSize Width, nuiSize Height)
 : nuiDialog(pParent), mpParent(pParent), mPath(rPath), mEventSink(this)
 {
-  mpContainer = new nuiContainer();
+  mpContainer = new nuiWidget();
 
   nuiSize userWidth = (Width == 0.f) ? mpParent->GetWidth() * .8 : Width;
   nuiSize userHeight = (Height == 0.f) ? mpParent->GetHeight() * .8 : Height;
@@ -87,7 +87,7 @@ const nglPath& nuiDialogSelectDirectory::GetRootPath()
 void nuiDialogSelectDirectory::OnCreateNewFolder(const nuiEvent& rEvent)
 {
   mpCreateDialog = new nuiDialog(mpParent);
-  nuiContainer* pContainer = new nuiContainer();
+  nuiWidget* pContainer = new nuiWidget();
   pContainer->SetUserSize(400, 80);
   
   mpCreateEditLine = new nuiEditLine();

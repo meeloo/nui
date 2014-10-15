@@ -8,7 +8,7 @@
 #ifndef __nuiTabView_h__
 #define __nuiTabView_h__
 
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 class nuiGradient;
 class nuiFont;
@@ -23,7 +23,7 @@ public:
 
 
 
-class nuiTabView : public nuiContainer
+class nuiTabView : public nuiWidget
 {
 private:
   class Tab;
@@ -92,7 +92,7 @@ protected:
   float mFoldRatio;
   
 private:
-  class Tab : public nuiContainer
+  class Tab : public nuiWidget
   {
   public:
     Tab(nuiWidget* pWidget);

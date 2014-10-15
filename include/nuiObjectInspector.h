@@ -8,12 +8,12 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 class nuiGrid;
 class nuiText;
 
-class nuiObjectInspector : public nuiContainer
+class nuiObjectInspector : public nuiWidget
 {
 public:
   nuiObjectInspector();

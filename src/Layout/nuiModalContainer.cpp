@@ -7,8 +7,8 @@
 
 #include "nui.h"
 
-nuiModalContainer::nuiModalContainer(nuiContainerPtr pParent)
-: nuiContainer(),
+nuiModalContainer::nuiModalContainer(nuiWidgetPtr pParent)
+: nuiWidget(),
   mIsModal(true),
   mInModalState(false),
   mModalEventSink(this)
@@ -21,7 +21,7 @@ nuiModalContainer::~nuiModalContainer()
 {
 }
 
-void nuiModalContainer::InitParent(nuiContainerPtr pParent)
+void nuiModalContainer::InitParent(nuiWidgetPtr pParent)
 {
   if (!pParent)
     return;
@@ -279,14 +279,14 @@ void nuiModalContainer::OnTrash()
   if (mpPreviousFocus)
     mpPreviousFocus->Focus();
   */
-  nuiContainer::OnTrash();
+  nuiWidget::OnTrash();
 }
 
 #include "nuiPane.h"
 #include "nuiLabel.h"
 #include "nuiButton.h"
 #include "nuiVBox.h"
-void nuiMessageBox(nuiContainer* pParent, const nglString& rTitle, const nglString& rMessage)
+void nuiMessageBox(nuiWidget* pParent, const nglString& rTitle, const nglString& rMessage)
 {
   nuiModalContainer* pModal = new nuiModalContainer(pParent);
   
@@ -333,7 +333,7 @@ void nuiModalContainer::GetHoverList(nuiSize X, nuiSize Y, std::set<nuiWidget*>&
     rHoverList.clear();
   }
   
-  nuiContainer::ConstIteratorPtr pIt = NULL;
+  nuiWidget::ConstIteratorPtr pIt = NULL;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
     nuiWidgetPtr pItem = pIt->GetWidget();
@@ -341,7 +341,7 @@ void nuiModalContainer::GetHoverList(nuiSize X, nuiSize Y, std::set<nuiWidget*>&
     {
       rHoverList.push_back(pItem);
       rHoverSet.insert(pItem);
-      nuiContainer* pChild = dynamic_cast<nuiContainer*>(pItem);
+      nuiWidget* pChild = dynamic_cast<nuiWidget*>(pItem);
       if (pChild)
         pChild->GetHoverList(X, Y, rHoverSet, rHoverList);
     }

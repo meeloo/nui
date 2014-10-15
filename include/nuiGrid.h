@@ -13,10 +13,10 @@
 #ifndef __nuiGrid_h__
 #define __nuiGrid_h__
 
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 /// This class is a simple placement grid that adjusts its columns and rows sizes according to contained nuiWidget objects
-class nuiGrid : public nuiContainer
+class nuiGrid : public nuiWidget
 {
 public:
   nuiGrid(uint32 nbcolumns = 0, uint32 nbrows = 0);

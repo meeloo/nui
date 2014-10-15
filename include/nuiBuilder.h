@@ -9,7 +9,7 @@
 
 //#include "nui.h"
 #include "nglString.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
 class nuiBuilder;
 class nuiEventActionHolder;

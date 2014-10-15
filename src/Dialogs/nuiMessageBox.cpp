@@ -13,7 +13,7 @@ const nuiMessageBox::Button nuiMessageBox::ButtonOK     = 1;
 const nuiMessageBox::Button nuiMessageBox::ButtonCancel = 0;
 const nuiMessageBox::Button nuiMessageBox::ButtonRetry  = 2;
 
-nuiMessageBox::nuiMessageBox(nuiContainer * pParent, const nglString& rTitle, const nglString& rMessage, nuiMessageBoxType type, bool showIcon)
+nuiMessageBox::nuiMessageBox(nuiWidget * pParent, const nglString& rTitle, const nglString& rMessage, nuiMessageBoxType type, bool showIcon)
 : nuiModalContainer(pParent), mpBtnBox(NULL), mSink(this)
 {
   nuiLabel* pMessage = new nuiLabel(rMessage);
@@ -22,7 +22,7 @@ nuiMessageBox::nuiMessageBox(nuiContainer * pParent, const nglString& rTitle, co
 }
 
 
-nuiMessageBox::nuiMessageBox(nuiContainer * pParent, const nglString& rTitle, nuiWidget* pContents, nuiMessageBoxType type, bool showIcon)
+nuiMessageBox::nuiMessageBox(nuiWidget * pParent, const nglString& rTitle, nuiWidget* pContents, nuiMessageBoxType type, bool showIcon)
 : nuiModalContainer(pParent), mpBtnBox(NULL), mSink(this)
 {
   Init(rTitle, pContents, type, showIcon);
@@ -56,7 +56,7 @@ void nuiMessageBox::Init(const nglString& rTitle, nuiWidget* pContents, nuiMessa
 
   if (showIcon)
   {
-    nuiContainer* pIcon = new nuiContainer();
+    nuiWidget* pIcon = new nuiWidget();
     nglString objectName;
     objectName.Format(_T("nuiMessageBox::Icon"), rTitle.GetChars());
     pIcon->SetObjectName(objectName);
@@ -124,7 +124,7 @@ nuiMessageBox::~nuiMessageBox()
 {
 }
 
-nuiMessageBox::Button nuiMessageBox::Do(nuiContainer * pParent, const nglString& rTitle, const nglString& rMessage, nuiMessageBoxType type)
+nuiMessageBox::Button nuiMessageBox::Do(nuiWidget * pParent, const nglString& rTitle, const nglString& rMessage, nuiMessageBoxType type)
 {
   nuiMessageBox* pBox = new nuiMessageBox(pParent, rTitle, rMessage, type);
   Button res = pBox->QueryUser();

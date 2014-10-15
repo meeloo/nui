@@ -31,21 +31,21 @@ public:
     eDialogButtonCustom = 8
   };
 
-  nuiDialog(nuiContainer* pParent); ///< beware, you must call InitDialog() after that
+  nuiDialog(nuiWidget* pParent); ///< beware, you must call InitDialog() after that
   virtual ~nuiDialog();
   
   virtual void SetDecoration(const nglString& rName); // inherited from nuiWidget, to give the decoration to the nuiDialog's internal pane
   virtual const nglString& GetDecorationName();
   
   void InitAttributes();
-  virtual void    InitDialog(nuiContainer* pLayoutContainer = NULL, uint32 buttons = 0);
-  virtual void    InitDialog(const nglString& rMessage, nuiContainer* pLayoutContainer = NULL, uint32 buttons = eDialogButtonOk);
-  virtual void    InitDialog(nuiLabel* pLabel, nuiContainer* pLayoutContainer = NULL, uint32 buttons = eDialogButtonOk);
+  virtual void    InitDialog(nuiWidget* pLayoutContainer = NULL, uint32 buttons = 0);
+  virtual void    InitDialog(const nglString& rMessage, nuiWidget* pLayoutContainer = NULL, uint32 buttons = eDialogButtonOk);
+  virtual void    InitDialog(nuiLabel* pLabel, nuiWidget* pLayoutContainer = NULL, uint32 buttons = eDialogButtonOk);
 
   void SetContents(nuiWidget* pWidget, nuiPosition Position = nuiFill);
   
-  nuiContainer* GetLayoutContainer(); ///< Get the decorative container that future child of the Dialog should be parented to
-  void SetLayoutContainer(nuiContainer* pContainer, bool saveChilds = false); ///< Set the decorative container that future child of the Dialog should be parented to
+  nuiWidget* GetLayoutContainer(); ///< Get the decorative container that future child of the Dialog should be parented to
+  void SetLayoutContainer(nuiWidget* pContainer, bool saveChilds = false); ///< Set the decorative container that future child of the Dialog should be parented to
   
   void SetDefaultButton(DialogButtonType button);
   
@@ -70,7 +70,7 @@ protected:
   void          CreateGrids(); ///< creates grids to display content and buttons
   void          SetDefaultButtons(uint32 buttons); ///< set default buttons by calling AddButton(const nglString&, nuiDialogButtonType) accordind to uint32 buttons representative bits. skips eDialogButtonCustom type
   
-  virtual nuiContainer* CreateDefaultLayout(); ///< creates a the default the decorative Container mpLayoutContainer, override it to change its look
+  virtual nuiWidget* CreateDefaultLayout(); ///< creates a the default the decorative Container mpLayoutContainer, override it to change its look
   
   virtual void  OnOk(const nuiEvent& rEvent);
   virtual void  OnCancel(const nuiEvent& rEvent);
@@ -78,10 +78,10 @@ protected:
   virtual void  OnAccept(const nuiEvent& rEvent);
 
 	nuiEventSink<nuiDialog> mSink;
-  nuiContainer*   mpLayoutContainer;
+  nuiWidget*   mpLayoutContainer;
   nuiGrid*        mpGlobalGrid;
   nuiGrid*        mpButtonsGrid;
-  nuiContainer* mpPane;
+  nuiWidget* mpPane;
 
   DialogResult    mResult;
   nuiButton*      mpButtonOk;

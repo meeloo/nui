@@ -9,7 +9,7 @@
 #define __nuiTopLevel_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiTimer.h"
 #include "nuiDrawContext.h"
 #include "nuiNotification.h"
@@ -22,7 +22,7 @@ class nuiLabel;
 class nuiCSS;
 class nuiToolTip;
 
-class nuiTopLevel : public nuiContainer
+class nuiTopLevel : public nuiWidget
 {
 public:
   /** @name Life */

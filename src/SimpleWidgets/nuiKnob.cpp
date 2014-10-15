@@ -16,7 +16,7 @@ nuiSize nuiKnob::mDefaultFineSensitivityRatio = 10;
 nglKeyCode nuiKnob::mDefaultFineSensitivityKey = NK_LSHIFT;
 
 nuiKnob::nuiKnob(const nuiRange& rRange)
-  : nuiContainer(),
+  : nuiWidget(),
     mKnobSink(this)
 {
   if (SetObjectClass(_T("nuiKnob")))
@@ -25,7 +25,7 @@ nuiKnob::nuiKnob(const nuiRange& rRange)
 }
 
 nuiKnob::nuiKnob(const nuiRange& rRange, nuiImageSequence* pImageSequence)
-: nuiContainer(),
+: nuiWidget(),
 mKnobSink(this)
 {
   if (SetObjectClass(_T("nuiKnob")))
@@ -393,7 +393,7 @@ nuiRect nuiKnob::CalcIdealSize()
   }
   else
   {
-    return nuiContainer::CalcIdealSize();
+    return nuiWidget::CalcIdealSize();
   }
 }
 
@@ -440,7 +440,7 @@ bool nuiKnob::Draw(nuiDrawContext* pContext)
     pContext->DrawLine(mx, my, mx + rr * sin(a), my + rr * cos(a));
   }
   
-  return nuiContainer::Draw(pContext);
+  return nuiWidget::Draw(pContext);
   
 }
 

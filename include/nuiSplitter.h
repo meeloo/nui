@@ -9,7 +9,7 @@
 #define __nuiSplitter_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 #include "nuiEvent.h"
 
 /// defines the way the splitter bar position is computed
@@ -20,7 +20,7 @@ enum nuiSplitterMode
 };
 
 
-class nuiSplitterHandle : public nuiContainer
+class nuiSplitterHandle : public nuiWidget
 {
 public:
   nuiSplitterHandle(nuiSplitter* pParent);
@@ -46,7 +46,7 @@ private:
 
 
 /// This is a split view widget. It divides its client area in two views (horizontaly or verticaly) which acts as two subcontainers. The user can change the proportional size of the area, but it is also possible to lock the split to prevent modification.
-class nuiSplitter : public nuiContainer
+class nuiSplitter : public nuiWidget
 {
   friend class nuiSplitterHandle;
 

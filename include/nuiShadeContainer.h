@@ -6,13 +6,13 @@
 #ifndef __nuiShadeContainer_h__
 #define __nuiShadeContainer_h__
 
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
-class nuiShadeContainer : public nuiContainer
+class nuiShadeContainer : public nuiWidget
 {
 public:
   nuiShadeContainer(nuiSize shadeSize)
-  : nuiContainer(), mShadeSize(shadeSize)
+  : nuiWidget(), mShadeSize(shadeSize)
   {
   }
   
@@ -22,7 +22,7 @@ public:
   
   nuiRect CalcIdealSize()
   {
-    nuiRect idealRect = nuiContainer::CalcIdealSize();
+    nuiRect idealRect = nuiWidget::CalcIdealSize();
     idealRect.SetSize(idealRect.GetWidth()+2*mShadeSize, idealRect.GetHeight()+mShadeSize);
     return idealRect; 
   }

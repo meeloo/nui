@@ -10,7 +10,7 @@
 #include "nui.h"
 
 
-class nuiFlowView : public nuiContainer
+class nuiFlowView : public nuiWidget
 {
 public:
   nuiFlowView(float IdealWidth = 0, float HSpace = 0.0f, float VSpace = 2.0f);

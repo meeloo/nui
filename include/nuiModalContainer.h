@@ -9,16 +9,16 @@
 #define __nuiModalConatiner_h__
 
 //#include "nui.h"
-#include "nuiContainer.h"
+#include "nuiWidget.h"
 
-class nuiModalContainer : public nuiContainer
+class nuiModalContainer : public nuiWidget
 {
   friend class nuiWidget;
 public:
-  nuiModalContainer(nuiContainerPtr pParent=NULL);
+  nuiModalContainer(nuiWidgetPtr pParent=NULL);
   virtual ~nuiModalContainer();
 
-  virtual void InitParent(nuiContainerPtr pParent); ///< retrieves nuiTopLevel from pParent, and adds this nuiModalContainer to its Children
+  virtual void InitParent(nuiWidgetPtr pParent); ///< retrieves nuiTopLevel from pParent, and adds this nuiModalContainer to its Children
 
   void SetModal(bool enable_modal = true);
 

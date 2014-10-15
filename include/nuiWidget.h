@@ -22,8 +22,9 @@
 #include "nuiRenderState.h"
 #include "nuiAnimation.h"
 #include "nuiMatrixNode.h"
+#include "nuiEvent.h"
+#include "nuiTreeEvent.h"
 
-class nuiContainer;
 class nuiDrawContext;
 class nuiWidget;
 class nuiMetaPainter;
@@ -44,13 +45,163 @@ class nuiEventActionHolder;
 typedef nuiWidget* nuiWidgetPtr;
 typedef std::vector<nuiWidgetPtr> nuiWidgetList;
 
-typedef nuiContainer* nuiContainerPtr;
-typedef std::vector<nuiContainerPtr> nuiContainerList;
+typedef nuiTreeEventSource<nuiChildAdded, nuiWidget> nuiWidgetAddedEventSource;
+typedef nuiTreeEventSource<nuiChildDeleted, nuiWidget> nuiWidgetDeletedEventSource;
+
 
 class nuiWidget : public nuiObject
 {
-  friend class nuiContainer;
+protected:
+  friend class nuiTopLevel;
+  class TestWidgetFunctor
+  {
+  public:
+    TestWidgetFunctor() {};
+    virtual ~TestWidgetFunctor() {};
+    virtual bool operator()(nuiWidgetPtr pWidget)
+    {
+      return false;
+    }
+  };
+
+
 public:
+
+  class Iterator
+  {
+  public:
+    Iterator(nuiWidget* pContainer, bool DoRefCounting = false);
+    Iterator(const Iterator& rIterator);
+    virtual Iterator& operator = (const Iterator& rIterator);
+    virtual ~Iterator();
+
+    bool IsValid() const;
+    void SetValid(bool set);
+    virtual nuiWidgetPtr GetWidget() const = 0;
+    nuiWidgetPtr operator*() const
+    {
+      return GetWidget();
+    }
+  protected:
+    nuiWidget* mpSource;
+    bool mValid;
+    bool mRefCounting;
+  };
+
+  class ConstIterator
+  {
+  public:
+    ConstIterator(const nuiWidget* pContainer, bool DoRefCounting = false);
+    ConstIterator(const ConstIterator& rIterator);
+    virtual ConstIterator& operator = (const ConstIterator& rIterator);
+    virtual ~ConstIterator();
+
+    bool IsValid() const;
+    void SetValid(bool set);
+    virtual nuiWidgetPtr GetWidget() const = 0;
+    nuiWidgetPtr operator*() const
+    {
+      return GetWidget();
+    }
+  protected:
+    const nuiWidget* mpSource;
+    bool mValid;
+    bool mRefCounting;
+  };
+
+  typedef Iterator* IteratorPtr;
+  typedef ConstIterator* ConstIteratorPtr;
+  
+  /** @name Widget Container */
+  //@{
+  virtual bool AddChild(nuiWidgetPtr pChild);
+  virtual bool DelChild(nuiWidgetPtr pChild); ///< Remove this child from the object. If Delete is true then the child will be deleted too. Returns true if success.
+  virtual int GetChildrenCount() const;
+  virtual nuiWidgetPtr GetChild(int index); ///< Returns the child which has the given index (first child = 0). Return NULL in case of faillure.
+  virtual nuiWidgetPtr GetChild(nuiSize X, nuiSize Y); ///< Returns the child which is under the pixel (X,Y) in this object or this if there is no such child. X and Y are given in the coordinate system of the parent object.
+  virtual nuiWidgetPtr GetChild(const nglString& rName, bool ResolveNameAsPath = true); ///< Find a child by its name property. Try to resolve path names like /window/fixed/toto or ../../tata if deepsearch is true
+  virtual bool Clear();///< Clear all children. By default the children are deleted unless Delete == false.
+
+  virtual nuiWidget::Iterator* GetFirstChild(bool DoRefCounting = false);
+  virtual nuiWidget::ConstIterator* GetFirstChild(bool DoRefCounting = false) const;
+  virtual nuiWidget::Iterator* GetLastChild(bool DoRefCounting = false);
+  virtual nuiWidget::ConstIterator* GetLastChild(bool DoRefCounting = false) const;
+  virtual bool GetNextChild(nuiWidget::IteratorPtr pIterator);
+  virtual bool GetNextChild(nuiWidget::ConstIteratorPtr pIterator) const;
+  virtual bool GetPreviousChild(nuiWidget::IteratorPtr pIterator);
+  virtual bool GetPreviousChild(nuiWidget::ConstIteratorPtr pIterator) const;
+
+  virtual void RaiseChild(nuiWidgetPtr pChild);
+  virtual void LowerChild(nuiWidgetPtr pChild);
+  virtual void RaiseChildToFront(nuiWidgetPtr pChild);
+  virtual void LowerChildToBack(nuiWidgetPtr pChild);
+
+
+  /** @name Object relation management */
+  //@{
+  virtual void GetChildren(nuiSize X, nuiSize Y, nuiWidgetList& rChildren, bool DeepSearch = false); /// Return all the children under the pixel (X, Y) in this container.
+
+  nuiWidgetPtr GetChildIf(nuiSize X, nuiSize Y, TestWidgetFunctor* pFunctor); ///< Returns the child that satisfies the given functor object and that is under the pixel (X,Y) in this object or this if there is no such child. X and Y are given in the coordinate system of the parent object. rFunctor is a std::unary_functor<nuiWidgetPtr, bool> object defined by the user.
+  nuiWidgetPtr SearchForChild(const nglString& rName, bool recurse = true);  ///< Find a child by its name property, recurse the search in the subchildren if asked politely.
+  nuiWidgetPtr Find (const nglString& rName); ///< Finds a node given its full path relative to the current node. Eg. Find("background/color/red").
+
+  virtual IteratorPtr GetChildIterator(nuiWidgetPtr pChild, bool DoRefCounting = false);
+  virtual ConstIteratorPtr GetChildIterator(nuiWidgetPtr pChild, bool DoRefCounting = false) const;
+  virtual nuiWidgetPtr GetNextFocussableChild(nuiWidgetPtr pChild) const;
+  virtual nuiWidgetPtr GetPreviousFocussableChild(nuiWidgetPtr pChild) const;
+  virtual nuiWidgetPtr GetNextSibling(nuiWidgetPtr pChild) const;
+  virtual nuiWidgetPtr GetPreviousSibling(nuiWidgetPtr pChild) const;
+  //@}
+
+  /** @name Outgoing events */
+  //@{
+  nuiWidgetAddedEventSource ChildAdded;
+  nuiWidgetDeletedEventSource ChildDeleted;
+  //@}
+
+  /** @name Inherited from nuiWidget: */
+  //@{
+  virtual void InvalidateChildren(bool Recurse);
+  virtual void SilentInvalidateChildren(bool Recurse);
+  virtual bool Draw(nuiDrawContext* pContext);
+  virtual nuiRect CalcIdealSize();
+  virtual bool SetRect(const nuiRect& rRect);
+  virtual void SetAlpha(float Alpha);
+  virtual void SetEnabled(bool set);
+  virtual void SetSelected(bool set);
+
+  virtual void OnChildHotRectChanged(nuiWidget* pChild, const nuiRect& rChildHotRect);
+  virtual void SetVisible(bool Visible); ///< Show or hide the widget
+                                         //@}
+
+  /** @name Private event management system (do not override unless you know what you're doing!!!) */
+  //@{
+  virtual bool CallPreMouseClicked(const nglMouseInfo& rInfo);
+  virtual bool CallPreMouseUnclicked(const nglMouseInfo& rInfo);
+  virtual bool CallPreMouseMoved(const nglMouseInfo& rInfo);
+  virtual bool CallPreMouseWheelMoved(const nglMouseInfo& rInfo);
+  //@}
+
+  /** @name Private event management system (do not override unless you know what you're doing!!!) */
+  //@{
+  /// Beware: these three methods receive the mouse coordinates in the repair of the root object!
+  virtual bool DispatchMouseClick(const nglMouseInfo& rInfo);
+  virtual bool DispatchMouseUnclick(const nglMouseInfo& rInfo);
+  virtual nuiWidgetPtr DispatchMouseMove(const nglMouseInfo& rInfo);
+  virtual nuiWidgetPtr DispatchMouseWheelMove(const nglMouseInfo& rInfo);
+  virtual bool DispatchMouseCanceled(nuiWidgetPtr pThief, const nglMouseInfo& rInfo);
+  //@}
+
+  /** @name Children Layout animations: */
+  //@{
+  void SetChildrenLayoutAnimationDuration(float duration);
+  void SetChildrenLayoutAnimationEasing(const nuiEasingMethod& rMethod);
+  //@}
+
+  virtual void GetHoverList(nuiSize X, nuiSize Y, std::set<nuiWidget*>& rHoverSet, std::list<nuiWidget*>& rHoverList) const;
+  //@}
+
+
   /** @name Life */
   //@{
   nuiWidget(); ///< Create an nuiObject
@@ -70,16 +221,14 @@ public:
 
   /** @name Object relation management */
   //@{
-  virtual nuiContainerPtr GetParent() const; ///< Return the parent of this object
-  virtual nuiContainerPtr GetRoot() const; ///< Return the top parent of this object. 
+  virtual nuiWidgetPtr GetParent() const; ///< Return the parent of this object
+  virtual nuiWidgetPtr GetRoot() const; ///< Return the top parent of this object.
   virtual nuiTopLevel* GetTopLevel() const; ///< Return the top level parent of this object if it exists.
-  virtual bool SetParent(nuiContainerPtr pParent); ///< Set the parent of this object. 
+  virtual bool SetParent(nuiWidgetPtr pParent); ///< Set the parent of this object.
   virtual bool IsParentActive() const; ///< Return true if this object main parent is an active window.
   virtual bool Trash(); ///< This method will try to destroy the nuiObject as soon as possible. Returns true if the destruction is ongoing, false if there was a problem. Use this method instead of the delete C++ keyword all the time!!!!
   bool HasInheritedProperty (const nglString& rName); ///< This method returns true if a widget or one of its parents has the given property.
   nglString GetInheritedProperty (const nglString& rName); ///< Returns the value of the given property. This method looks for the property in the object and in its parents recursively.
-  virtual nuiWidgetPtr Find (const nglString& rName);  ///< Finds a node given its full path relative to the current node. Eg. Find("background/color/red").
-  virtual nuiWidgetPtr GetChild(nuiSize X, nuiSize Y); ///< Returns the child which is under the pixel (X,Y) in this object or this if there is no such child. X and Y are given in the coordinate system of the parent object.
   virtual void OnTrash(); ///< This method is called whenever a Trash occurred on the widget tree branch
   //@}
 
@@ -98,8 +247,6 @@ public:
 
   /** @name Object size management */
   //@{
-  virtual nuiRect CalcIdealSize(); ///< This method asks the object to recalculate its layout freely. On return mIdealRect is modified to contain the bounding rectangle needed by the widget and returned to the caller. You will probably have to override this method if you create new widgets, how ever you are never supposed to call it directly and use GetIdealRect instead.
-  virtual bool SetRect(const nuiRect& rRect); ///< This method asks the object to recalculate its layout and to force using the given bounding rectangle. You will probably have to overridden this method if inherited widgets, you should then call the original nuiWidget::SetRect as soon as possible when entering the new method. Failure to do so will be prosecuted. 
   virtual void SetLayout(const nuiRect& rRect); ///< This method asks the object to recalculate its layout with the given nuiRect. It will NOT force a SetRect. SetRect will be called if the widget asked for a re-layout (InvalidateLayout()) or if the given rectangle is different than the current rectangle of the widget. Returns the value returned by the SetRect method or false.
   nuiRect GetLayoutForRect(const nuiRect& rRect); ///< This method returns the actual rectangle that this widget would occupy in its parent if SetLayout was called with the given rRect argument. 
   void SetBorders(nuiSize AllBorders); ///< Sets the empty space around the widget itself
@@ -204,7 +351,6 @@ public:
 
   /** @name Rendering */
   //@{
-  virtual bool Draw(nuiDrawContext* pContext); ///< This method asks the object to draw itself. It returns false in case of error. A container should directly call this method. Used DrawWidget instead.
   bool DrawWidget(nuiDrawContext* pContext); ///< This method asks the object to draw itself. It returns false in case of error. You must call Validate() once in this method if you decide to override it. You must not draw the widget if it is not visible (check the result of IsVisible() before drawing anything but after having called Validate()). All the actual rendering code should go in Draw() instead of DrawWidget wich mainly is there for rendering preparation. Most of the time the default behaviour will be enough and there are very few reasons to overload this method. Containers must use DrawWidget instead of directly calling Draw on their children.
   virtual void InvalidateRect(const nuiRect& rRect);
   virtual void Invalidate(); ///< Ask for a redraw of the object. Only the nuiMainWindow class should redefine this method.
@@ -215,7 +361,6 @@ public:
   virtual void SilentInvalidateLayout(); ///< Mark this widget as invalid with invalid layout. No event is broadcast. Most of the time you really want to use InvalidateLayout instead of SilentInvalidateLayout().
   float GetMixedAlpha() const; ///< Returns the current alpha transparency value of this object, mixed with the one of its parents if MixWithParent==true.
   float GetAlpha() const; ///< Returns the current alpha transparency value of this object.
-  virtual void SetAlpha(float Alpha); ///< The the alpha transparency value of this object. 
   virtual nuiDrawContext* GetDrawContext(); ///< Retrieve the draw context from the root object (the main window).
 
   void SetOverDraw(nuiSize Left, nuiSize Top, nuiSize Right, nuiSize Bottom); ///< Set the amount of over draw for each border of the widget.
@@ -308,8 +453,6 @@ public:
   //@{
   bool GetHover() const; ///< Return true if the widget is in hover state (most of the time it is when the mouse hovers over the widget)
   virtual void SetHover(bool Hover); ///< Set the hover state of the object and its children. Most application don't need to use this method directly. Will generate an invalidation of the rendering.
-  virtual void SetEnabled(bool set);
-  virtual void SetSelected(bool set);
   bool IsEnabled(bool combined = true) const;
 	bool AttrIsEnabled();
   
@@ -321,7 +464,6 @@ public:
   bool AttrIsSelected() const;
   virtual void LockState(); ///< Lock the state of the object. The state can't be changed until it is unlocked, also, the object will not combine its state with its parent's anymore.
   virtual void UnlockState(); ///< Unlock the object's state. See LockState() for for info. 
-  virtual void SetVisible(bool Visible); ///< Show or hide the widget
   void SilentSetVisible(bool Visible); ///< Change the visible flag of the widget but don't invalidate. This is useful if you are changing the visibility of a widget from a parent's SetRect method: you are already aware of the rendering and invalidation change.
   bool IsVisible(bool combined = true) const; ///< Return true if the object is visible. By default the returned state will be the state of the object combined with the states of its hierarchy recursively. If one of its parents is invisible the widget becomes invisible. If combine==false the returned value will be the local visible state of the object.
 	bool AttrIsVisible();
@@ -398,13 +540,6 @@ public:
 
   /** @name Private event management system (do not override unless you know what you're doing!!!) */
   //@{
-  /// Beware: these three methods receive the mouse coordinates in the repair of the root object!
-  virtual bool DispatchMouseClick(const nglMouseInfo& rInfo);
-  virtual bool DispatchMouseUnclick(const nglMouseInfo& rInfo);
-  virtual bool DispatchMouseCanceled(nuiWidgetPtr pThief, const nglMouseInfo& rInfo);
-  virtual nuiWidgetPtr DispatchMouseMove(const nglMouseInfo& rInfo);
-  virtual nuiWidgetPtr DispatchMouseWheelMove(const nglMouseInfo& rInfo);
-
   virtual bool DispatchGrab(nuiWidgetPtr pWidget);
   virtual bool DispatchUngrab(nuiWidgetPtr pWidget);
   virtual bool DispatchHasGrab(nuiWidgetPtr pWidget);
@@ -480,8 +615,6 @@ public:
   
   //@}
 
-  virtual nuiWidgetPtr GetChild(const nglString& rName, bool ResolveNameAsPath) { return NULL; } ///< Dummy implementation of the GetChild Method for easy widget/Container interaction.
-  virtual nuiWidgetPtr SearchForChild(const nglString& rName, bool DeepSearch) { return NULL; } ///< Dummy implementation of the GetChild Method for easy widget/Container interaction.
   virtual void ConnectTopLevel(); ///< This method is called when the widget is connected to the Top Level. Overload it to perform specific actions in a widget.
   virtual void DisconnectTopLevel(); ///< This method is called when the widget is disconnected from the Top Level. Overload it to perform specific actions in a widget.
 
@@ -616,7 +749,7 @@ protected:
 
   virtual void CallOnTrash(); ///< This method is called whenever a Trash occurred on the widget tree branch. It performs some clean up and then calls nuiWidget::OnTrash to enable the user to handle the trash.
 
-  nuiContainerPtr mpParent;
+  nuiWidgetPtr mpParent;
 
   float mAlpha; ///< Indicates the transparency level of the object. Optional. 
   nuiRect mRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
@@ -657,17 +790,6 @@ protected:
 
   nuiTheme* mpTheme;
   nuiPainter* mpSavedPainter;
-
-  class TestWidgetFunctor
-  {
-  public:
-    TestWidgetFunctor() {};
-    virtual ~TestWidgetFunctor() {};
-    virtual bool operator()(nuiWidgetPtr pWidget)
-    {
-      return false;
-    }
-  };
 
   LayoutConstraint mConstraint;
 
@@ -791,6 +913,15 @@ protected:
   
   int32 _GetDebug() const;
   void OnFinalize();
+
+  void DrawChild(nuiDrawContext* pContext, nuiWidget* pChild); /// Draw the given widget as a child of this widget.
+  bool DrawChildren(nuiDrawContext* pContext); ///< This helper method calls the DrawMethod on all the children of the nuiObject using the DrawChild method.
+  void BroadcastVisible();
+
+  void ChildrenCallOnTrash();
+
+  nuiWidgetList mpChildren;
+
 };
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }

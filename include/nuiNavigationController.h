@@ -26,7 +26,7 @@ enum TransitionType
 
 
 /// parent container for any nuiViewController object. Handles views switching and transitions
-class nuiNavigationController : public nuiContainer, public nuiNotificationObserver
+class nuiNavigationController : public nuiWidget, public nuiNotificationObserver
 {
   
 public:
