@@ -187,11 +187,6 @@ nuiWidgetPtr nuiContainer::GetChild(int index)
   return mpChildren[index];
 }
 
-nuiWidgetPtr nuiContainer::GetChild(nuiSize X, nuiSize Y)
-{
-  return nuiContainer::GetChild(X, Y);
-}
-
 bool nuiContainer::Clear()
 {
   CheckValid();
@@ -566,6 +561,31 @@ nuiContainerPtr nuiContainer::GetRoot() const
     return mpParent->GetRoot();
   else
     return (nuiContainerPtr)Self;
+}
+
+nuiWidgetPtr nuiContainer::GetChild(nuiSize X, nuiSize Y)
+{
+  CheckValid();
+  X -= mRect.mLeft;
+  Y -= mRect.mTop;
+
+  IteratorPtr pIt;
+  for (pIt = GetLastChild(); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem && pItem->IsInsideFromSelf(X,Y))
+    {
+      delete pIt;
+      nuiContainerPtr pContainer = dynamic_cast<nuiContainerPtr>(pItem);
+      if (pContainer)
+        return pContainer->GetChild(X,Y);
+      else 
+        return pItem;
+    }
+  }
+  delete pIt;
+
+  return this;
 }
 
 void nuiContainer::GetChildren(nuiSize X, nuiSize Y, nuiWidgetList& rChildren, bool DeepSearch)
