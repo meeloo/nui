@@ -42,7 +42,7 @@ public:
   bool KeyUp(const nglKeyEvent& rEvent);
   
   
-	virtual bool MouseUngrabbed();
+	virtual bool MouseUngrabbed(nglTouchId Id);
 	
   void SetDisplayAsCheckBox(bool set);
   void SetDisplayAsFrameBox(bool set);

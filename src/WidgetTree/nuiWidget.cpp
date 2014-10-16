@@ -1957,18 +1957,6 @@ bool nuiWidget::UnFocus()
 }
 
 
-bool nuiWidget::MouseGrabbed()
-{
-  CheckValid();
-  return false;
-}
-
-bool nuiWidget::MouseUngrabbed()
-{
-  CheckValid();
-  return false;
-}
-
 bool nuiWidget::IsParentActive() const
 {
   CheckValid();

@@ -165,7 +165,7 @@ bool nuiSwipeGestureRecognizer::MouseUnclicked(const nglMouseInfo& rInfo)
 // virtual 
 bool nuiSwipeGestureRecognizer::MouseMoved(const nglMouseInfo& rInfo)
 {
-  bool res = nuiGestureRecognizer::MouseMoved(rInfo.X, rInfo.Y);
+  bool res = nuiGestureRecognizer::MouseMoved(rInfo);
 
   if (!mClicked)
     return false;
@@ -464,15 +464,15 @@ void nuiPadGestureRecognizer::SetFriction(float set)
 
 
 // virtual 
-bool nuiPadGestureRecognizer::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiPadGestureRecognizer::MouseMoved(const nglMouseInfo& rInfo)
 {
-  bool res = nuiGestureRecognizer::MouseMoved(X, Y);
+  bool res = nuiGestureRecognizer::MouseMoved(rInfo);
   
   if (!mClicked)
     return false;
   
-	double diffx = mLastX - X;
-	double diffy = mLastY - Y;
+	double diffx = mLastX - rInfo.X;
+	double diffy = mLastY - rInfo.Y;
   double currentTime = nglTime();
   nuiVector v(diffx, diffy, 0);
 
@@ -487,8 +487,8 @@ bool nuiPadGestureRecognizer::MouseMoved(nuiSize X, nuiSize Y)
   nuiVector n = mForce;
   //printf("NEW norm: %f - angle: %f\n", GetStrength(), GetDegrees());
  
-  mLastX = X;
-  mLastY = Y;
+  mLastX = rInfo.X;
+  mLastY = rInfo.Y;
   
 
   UpdateDirection();

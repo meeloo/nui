@@ -230,9 +230,9 @@ bool nuiToggleButton::MouseMoved(const nglMouseInfo& rInfo)
   return false;
 }
 
-bool nuiToggleButton::MouseUngrabbed()
+bool nuiToggleButton::MouseUngrabbed(nglTouchId Id)
 {
-  nuiWidget::MouseUngrabbed();
+  nuiWidget::MouseUngrabbed(Id);
   if (mClicked)
   {
     mClicked = false;

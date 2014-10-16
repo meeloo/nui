@@ -323,7 +323,7 @@ bool nuiButton::MouseClicked(const nglMouseInfo& rInfo)
 bool nuiButton::MouseUnclicked(const nglMouseInfo& rInfo)
 {
 //  printf("unclicked\n");
-  if ( (rInfo.Button & nglMouseInfo::ButtonLeft) && mClicked)
+  if ( (rInfo.Buttons & nglMouseInfo::ButtonLeft) && mClicked)
   {
 //    printf("was clicked\n");
     mClicked = false;
@@ -361,9 +361,9 @@ bool nuiButton::MouseCanceled(const nglMouseInfo& rInfo)
   return false;
 }
 
-bool nuiButton::MouseUngrabbed()
+bool nuiButton::MouseUngrabbed(nglTouchId Id)
 {
-  nuiWidget::MouseUngrabbed();
+  nuiWidget::MouseUngrabbed(Id);
   if (mClicked)
   {
     mClicked = false;

@@ -748,7 +748,7 @@ bool nuiTreeView::MouseClicked(const nglMouseInfo& rInfo)
       nuiWidgetPtr pWidget = pNode->GetElement();
       if (IsDeSelectable() || ((pWidget && pWidget->GetRect().IsInside(rInfo.X, rInfo.Y)) && !pNode->IsSelected()))
       {
-        pNode->Select(nuiRect(rInfo.X, rInfo.Y,1.0f,1.0f), !pNode->IsSelected());
+        pNode->Select(nuiRect(rInfo.X, rInfo.Y, 1, 1), !pNode->IsSelected());
       }
       
       mpSelectedNode = pNode->IsSelected()? pNode : NULL;

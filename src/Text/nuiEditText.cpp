@@ -473,9 +473,9 @@ bool nuiEditText::MouseClicked(const nglMouseInfo& rInfo)
 {
   bool handled = false;
 
-  if (rInfo.Button & nglMouseInfo::ButtonLeft || rInfo.Button & nglMouseInfo::ButtonRight)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft || rInfo.Buttons & nglMouseInfo::ButtonRight)
   {
-    uint pos = GetPosFromCoords(rInfo.X, rInfo.Y, true);
+    uint pos = GetPosFromCoords((nuiSize)rInfo.X, (nuiSize)rInfo.Y, true);
     if ( mAnchorPos != mCursorPos && 
          MIN(mAnchorPos, mCursorPos) < pos && 
          pos < MAX(mAnchorPos, mCursorPos)  )
@@ -486,7 +486,7 @@ bool nuiEditText::MouseClicked(const nglMouseInfo& rInfo)
     }
 
     handled = true;
-    if (rInfo.Button & nglMouseInfo::ButtonDoubleClick)
+    if (rInfo.Buttons & nglMouseInfo::ButtonDoubleClick)
     {
       if (!mCommandStack.empty() && mCommandStack.back().first == eSelectWord)
         Do(eSelectAll, new nuiObject());
@@ -506,7 +506,7 @@ bool nuiEditText::MouseClicked(const nglMouseInfo& rInfo)
 bool nuiEditText::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   bool handled = false;
-  if (rInfo.Button & nglMouseInfo::ButtonLeft || rInfo.Button & nglMouseInfo::ButtonRight)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft || rInfo.Buttons & nglMouseInfo::ButtonRight)
   {
     if (mStartDragging)
       MoveCursorTo(rInfo.X, rInfo.Y);

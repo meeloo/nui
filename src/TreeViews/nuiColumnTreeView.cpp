@@ -555,15 +555,15 @@ bool nuiColumnTreeView::DispatchMouseClick(const nglMouseInfo& rInfo)
 bool nuiColumnTreeView::MouseClicked(const nglMouseInfo& rInfo)
 {
   bool shiftisdown = IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT);
-  if ((rInfo.Button & nglMouseInfo::ButtonLeft) || (rInfo.Button & nglMouseInfo::ButtonRight))
+  if ((rInfo.Buttons & nglMouseInfo::ButtonLeft) || (rInfo.Buttons & nglMouseInfo::ButtonRight))
   {
-    if ((rInfo.Button & nglMouseInfo::ButtonLeft) && (rInfo.Button & nglMouseInfo::ButtonDoubleClick))
+    if ((rInfo.Buttons & nglMouseInfo::ButtonLeft) && (rInfo.Buttons & nglMouseInfo::ButtonDoubleClick))
     {
       if (mpSelectedNode)
       {
         nuiRect r = mpSelectedNode->GetElement()->GetRect();
         r.SetSize(r.GetWidth() + mHandleSize, r.GetHeight() + mInterline);
-        if (r.IsInside(X,Y))
+        if (r.IsInside(rInfo.X, rInfo.Y))
         {
           mActivateOnUnclick = true;
           return true;
@@ -592,7 +592,7 @@ bool nuiColumnTreeView::MouseClicked(const nglMouseInfo& rInfo)
 
       Invalidate();
 
-      Clicked(rInfo.X, rInfo.Y, Button); ///< This event is called whenever an item is clicked.
+      Clicked(rInfo.X, rInfo.Y, rInfo.Buttons); ///< This event is called whenever an item is clicked.
       SelectionChanged();
 
       CalcHotRect();
@@ -601,23 +601,23 @@ bool nuiColumnTreeView::MouseClicked(const nglMouseInfo& rInfo)
 
     return false;
   }
-  else if (rInfo.Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelDown)
   {
     if (shiftisdown)
       return false;
     uint32 depth = 0;
-    while (depth < mpScrollBars.size() && (mpScrollBars[depth]->GetRect().Left() < X))
+    while (depth < mpScrollBars.size() && (mpScrollBars[depth]->GetRect().Left() < rInfo.X))
       depth++;
     if (depth < mpScrollBars.size())
       mpScrollBars[depth]->GetRange().Increment();
     return true;
   }
-  else if (rInfo.Button & nglMouseInfo::ButtonWheelUp)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelUp)
   {
     if (shiftisdown)
       return false;
     uint32 depth = 0;
-    while (depth < mpScrollBars.size() && (mpScrollBars[depth]->GetRect().Left() < X))
+    while (depth < mpScrollBars.size() && (mpScrollBars[depth]->GetRect().Left() < rInfo.X))
       depth++;
     if (depth < mpScrollBars.size())
       mpScrollBars[depth]->GetRange().Decrement();
@@ -635,10 +635,10 @@ bool nuiColumnTreeView::MouseUnclicked(const nglMouseInfo& rInfo)
     Activated();
   }
 
-  if (rInfo.Button & nglMouseInfo::ButtonRight)
+  if (rInfo.Buttons & nglMouseInfo::ButtonRight)
   {
     // Show up the context menu...
-    ContextMenuRequested(rInfo.X, rInfo.Y, Button);
+    ContextMenuRequested(rInfo.X, rInfo.Y, rInfo.Buttons);
   }
 
   return true;

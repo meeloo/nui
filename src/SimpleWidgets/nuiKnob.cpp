@@ -247,11 +247,11 @@ bool nuiKnob::MouseClicked(const nglMouseInfo& rInfo)
   mClickX = rInfo.X;
   mClickY = rInfo.Y;
 
-  if ((rInfo.Button & nglMouseInfo::ButtonLeft) && (rInfo.Button & nglMouseInfo::ButtonDoubleClick))
+  if ((rInfo.Buttons & nglMouseInfo::ButtonLeft) && (rInfo.Buttons & nglMouseInfo::ButtonDoubleClick))
   {
     return false;
   }
-  else if (rInfo.Button & nglMouseInfo::ButtonLeft)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
     Invalidate();
@@ -259,7 +259,7 @@ bool nuiKnob::MouseClicked(const nglMouseInfo& rInfo)
     
     return true;
   }
-  else if (rInfo.Button & nglMouseInfo::ButtonWheelUp)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelUp)
   {
     if (IsKeyDown(mFineSensitivityKey))
     {
@@ -273,7 +273,7 @@ bool nuiKnob::MouseClicked(const nglMouseInfo& rInfo)
     ActivateToolTip(this, true);
     return true;
   }
-  else if (rInfo.Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelDown)
   {
     if (IsKeyDown(mFineSensitivityKey))
     {
@@ -296,7 +296,7 @@ bool nuiKnob::MouseUnclicked(const nglMouseInfo& rInfo)
     ValueChanged();
   mInteractiveValueChanged = false;
   
-  if (rInfo.Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = false;
 

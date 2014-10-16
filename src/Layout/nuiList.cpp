@@ -697,9 +697,9 @@ bool nuiList::MouseClicked(const nglMouseInfo& rInfo)
 }            
 
 
-bool nuiList::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiList::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  if (mClicked && (Button & nglMouseInfo::ButtonLeft))
+  if (mClicked && (rInfo.Buttons & nglMouseInfo::ButtonLeft))
   {
     mpGrabedItem = NULL;
   }
@@ -715,7 +715,7 @@ bool nuiList::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   return false;
 }
 
-bool nuiList::MouseMoved  (nuiSize X, nuiSize Y)
+bool nuiList::MouseMoved  (const nglMouseInfo& rInfo)
 {
   if (!mClicked)
     return false;
@@ -723,7 +723,7 @@ bool nuiList::MouseMoved  (nuiSize X, nuiSize Y)
   if (!mCanMoveItems)
     return false;
   
-  nuiWidgetPtr pItem = GetIdealNextItem(X,Y);
+  nuiWidgetPtr pItem = GetIdealNextItem(rInfo.X, rInfo.Y);
   
   if ((pItem == mpLastItem) || (pItem == mpLastDestinationItem))
     return false;

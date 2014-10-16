@@ -47,7 +47,7 @@ public:
   virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
   virtual bool MouseCanceled(const nglMouseInfo& rInfo);
   virtual bool MouseMoved(const nglMouseInfo& rInfo);
-  virtual bool MouseUngrabbed();
+  virtual bool MouseUngrabbed(nglTouchId Id);
 
   void SetDefaultBorders(float pixels);
 

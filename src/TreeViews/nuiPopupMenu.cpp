@@ -852,10 +852,10 @@ void nuiPopupMenu::OnScrollTimer(const nuiEvent& rEvent)
   IncrementScrollBar(!mScrollUp);
 }
 
-bool nuiPopupMenu::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiPopupMenu::MouseMoved(const nglMouseInfo& rInfo)
 {
   bool IsInside;
-  int cpt = SearchRectIndex(X,Y);
+  int cpt = SearchRectIndex(rInfo.X, rInfo.Y);
   IsInside = cpt >= 0 ? true : false;
   if (IsInside)
   {
@@ -868,7 +868,7 @@ bool nuiPopupMenu::MouseMoved(nuiSize X, nuiSize Y)
       NGL_ASSERT(pSB);
       nuiRange& rRange(pSB->GetRange());
 
-      if (Y > mRect.Bottom() - AUTOSCROLL_HEIGHT)
+      if (rInfo.Y > mRect.Bottom() - AUTOSCROLL_HEIGHT)
       {
         // Scroll down
         if (rRange.GetValue() + rRange.GetPageSize() < rRange.GetMaximum())
@@ -880,7 +880,7 @@ bool nuiPopupMenu::MouseMoved(nuiSize X, nuiSize Y)
         }
       }
 
-      if (Y < AUTOSCROLL_HEIGHT)
+      if (rInfo.Y < AUTOSCROLL_HEIGHT)
       {
         // Scroll up
         if (rRange.GetValue() > rRange.GetMinimum())
@@ -896,7 +896,7 @@ bool nuiPopupMenu::MouseMoved(nuiSize X, nuiSize Y)
     if (mScrollTimer.IsRunning()) // Disable scroll timer if it was still running...
       mScrollTimer.Stop();
 
-    nuiTreeNodePtr pNode = SearchNode(X,Y,cpt);
+    nuiTreeNodePtr pNode = SearchNode(rInfo.X, rInfo.Y,cpt);
     if (pNode)
     {
       if (pNode->GetElement()->IsDisabled())
@@ -998,7 +998,7 @@ bool nuiPopupMenu::MouseMoved(nuiSize X, nuiSize Y)
   return false;
 }
 
-bool nuiPopupMenu::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiPopupMenu::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (mWheelMoved)
   {
@@ -1012,7 +1012,7 @@ bool nuiPopupMenu::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butt
   }
 
   bool IsInside;
-  int cpt = SearchRectIndex(X,Y);
+  int cpt = SearchRectIndex(rInfo.X, rInfo.Y);
   IsInside = cpt >= 0 ? true : false;
 
   if (!IsInside)
@@ -1030,7 +1030,7 @@ bool nuiPopupMenu::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butt
   }
   else 
   {
-    nuiTreeNodePtr pNode = SearchNode(X,Y,cpt);
+    nuiTreeNodePtr pNode = SearchNode(rInfo.X, rInfo.Y, cpt);
     if (pNode)
     {
       if (!pNode->IsSelectionEnabled() || pNode->GetElement()->IsDisabled())

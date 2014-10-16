@@ -70,7 +70,7 @@ nuiFolderPane::~nuiFolderPane()
 
 bool nuiFolderPane::MouseUnclicked  (const nglMouseInfo& rInfo)
 {
-  if (mClicked && rInfo.Button & nglMouseInfo::ButtonLeft)
+  if (mClicked && rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     nuiRect rect = GetTitle()->GetRect();
     rect.SetSize (GetRect().GetWidth(), rect.GetHeight());
@@ -93,7 +93,7 @@ bool nuiFolderPane::MouseUnclicked  (const nglMouseInfo& rInfo)
 
 bool nuiFolderPane::MouseClicked  (const nglMouseInfo& rInfo)
 {
-  if (rInfo.Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     nuiRect rect = GetTitle()->GetRect();
     rect.SetSize (GetRect().GetWidth(), rect.GetHeight());
