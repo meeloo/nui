@@ -153,7 +153,7 @@ bool nuiFontInspector::SetRect(const nuiRect& rRect)
 {
   UpdatingFonts++;
 
-  bool res = nuiWidget::SetRect(rRect);
+  bool res = nuiWidget::SetSelfRect(rRect);
   
   UpdatingFonts--;
   

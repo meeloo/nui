@@ -62,7 +62,7 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   mpNGLWindow = new NGLWindow(this, Width, Height, Fullscreen);
 
   nuiRect rect(0.0f, 0.0f, (nuiSize)Width, (nuiSize)Height);
-  //nuiWidget::SetRect(rect);
+  //nuiWidget::SetSelfRect(rect);
   if (SetObjectClass(_T("nuiMainWindow")))
     InitAttributes();
   mMaxFPS = 0.0f;
@@ -107,7 +107,7 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   mFullFrameRedraw = 2;
   mpNGLWindow = new NGLWindow(this, rContextInfo, rInfo, pShared);
   nuiRect rect(0.0f, 0.0f, (nuiSize)rInfo.Width, (nuiSize)rInfo.Height);
-  //nuiWidget::SetRect(rect);
+  //nuiWidget::SetSelfRect(rect);
   if (SetObjectClass(_T("nuiMainWindow")))
     InitAttributes();
 

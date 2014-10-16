@@ -281,7 +281,7 @@ bool nuiNavigationController::SetRect(const nuiRect& rRect)
   }
   else if (!mPushed && !mPoped)
   {
-    nuiWidget::SetRect(rRect);
+    nuiWidget::SetSelfRect(rRect);
     // Normal layout:
     IteratorPtr pIt;
     for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
@@ -319,7 +319,7 @@ bool nuiNavigationController::SetRect(const nuiRect& rRect)
     return true;
   }
   
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   
   nuiRect rect;
   rect.Set(mAnimPosition, 0.0, rRect.GetWidth(), rRect.GetHeight());

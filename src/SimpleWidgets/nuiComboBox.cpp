@@ -108,7 +108,7 @@ bool nuiComboBox::SetRect(const nuiRect& rRect)
 {
   nuiRect rect(rRect);
 
-  nuiWidget::SetRect(rect);
+  nuiWidget::SetSelfRect(rect);
   SetTreeRect(mpChoicesTree, nuiRect(0.f, 0.f, rect.GetWidth() - (mHandleWidth + mHandleOffset), rect.GetHeight()));
   return true;
 }

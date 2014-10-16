@@ -313,7 +313,7 @@ bool nuiToggleButton::SetRect(const nuiRect& rRect)
 {
   if (mDisplayAsFrameBox)
   {
-    nuiWidget::SetRect(rRect);
+    nuiWidget::SetSelfRect(rRect);
     nuiRect rect(rRect.Size());
     //rect.Grow(-2,-2);
 

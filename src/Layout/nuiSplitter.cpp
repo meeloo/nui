@@ -310,7 +310,7 @@ bool nuiSplitter::SetRect(const nuiRect& rRect)
   if (mPositions.empty())
     GetIdealRect();
 
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   if (mOrientation == nuiHorizontal)
     SetRectHorizontal(rRect);

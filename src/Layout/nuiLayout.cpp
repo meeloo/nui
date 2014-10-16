@@ -1044,7 +1044,7 @@ void nuiLayout::DoLayout(const nuiRect& rRect)
 
 bool nuiLayout::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   //NGL_OUT("nuiLayout::SetRect(%s)\n", rRect.GetValue().GetChars());
   

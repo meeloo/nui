@@ -40,7 +40,7 @@ bool nuiFrameView::SetRect(const nuiRect& rRect)
   nuiRect r(rRect.Size());
   if (mpFrame)
     mpFrame->GlobalToClientRect(r, this);
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   
   IteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))

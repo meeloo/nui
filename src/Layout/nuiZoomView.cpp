@@ -79,7 +79,7 @@ nuiRect nuiZoomView::CalcIdealSize()
 
 bool nuiZoomView::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   nuiSize XOffset = 0;
   nuiSize YOffset = 0;

@@ -35,7 +35,7 @@ nuiRect nuiFixed::CalcIdealSize()
 
 bool nuiFixed::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   IteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))

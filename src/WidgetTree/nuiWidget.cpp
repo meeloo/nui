@@ -2845,7 +2845,6 @@ void nuiWidget::SetLayout(const nuiRect& rRect)
 
     if (pAnim->IsPlaying() && !value_already_set)
     {
-      NGL_OUT("RESTART LAYOUT ANIM %p %s %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
       pAnim->Stop();
     }
 
@@ -2853,7 +2852,6 @@ void nuiWidget::SetLayout(const nuiRect& rRect)
     {
       pAnim->SetEndValue(rect);
       nuiDelayedPlayAnim(pAnim, eAnimFromStart, 0.0, 1, eAnimLoopForward);
-      NGL_OUT("START LAYOUT ANIM %p %s %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
     }
   }
   else
@@ -6013,7 +6011,7 @@ nuiRect nuiWidget::CalcIdealSize()
   return temp.Size();
 }
 
-bool nuiWidget::SetRect(const nuiRect& rRect)
+bool nuiWidget::SetSelfRect(const nuiRect& rRect)
 {
   CheckValid();
 #ifdef _DEBUG_LAYOUT
@@ -6038,6 +6036,12 @@ bool nuiWidget::SetRect(const nuiRect& rRect)
   if (inval)
     Invalidate();
 
+  DebugRefreshInfo();
+}
+
+bool nuiWidget::SetRect(const nuiRect& rRect)
+{
+  SetSelfRect(rRect);
   nuiRect rect(rRect.Size());
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))

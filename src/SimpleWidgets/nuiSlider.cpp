@@ -533,7 +533,7 @@ bool nuiSlider::GetAutoAdjustHandle()
 
 bool nuiSlider::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   AdjustHandle();
   
   if (mpHandle)

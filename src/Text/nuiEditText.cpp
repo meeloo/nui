@@ -161,7 +161,7 @@ nuiRect nuiEditText::CalcIdealSize()
 
 bool nuiEditText::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   nuiRect global;
   uint count = (uint)mpBlocks.size();
   nuiSize y = 0;

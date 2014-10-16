@@ -70,6 +70,7 @@ bool nuiInitBindings()
   nuiAddCtor(nuiCreateObject<nuiWidget>);
   nuiAddMethod(Trash, nuiWidget::Trash);
   nuiAddMethod(CalcIdealSize, nuiWidget::CalcIdealSize);
+  nuiAddMethod(SetSelfRect, nuiWidget::SetSelfRect);
   nuiAddMethod(SetRect, nuiWidget::SetRect);
   nuiAddMethod(SetAlpha, nuiWidget::SetAlpha);
   nuiAddMethod(SetEnabled, nuiWidget::SetEnabled);

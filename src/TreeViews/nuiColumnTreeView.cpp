@@ -177,7 +177,7 @@ nuiTreeNode* nuiColumnTreeView::CalcColumnSize(nuiRect& rRect, nuiTreeNode* pTre
 
 bool nuiColumnTreeView::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   CreateScrollBars();
   

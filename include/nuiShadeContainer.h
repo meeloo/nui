@@ -29,7 +29,7 @@ public:
 
   virtual bool SetRect(const nuiRect& rRect)
   {
-    nuiWidget::SetRect(rRect);
+    nuiWidget::SetSelfRect(rRect);
     
     nuiRect rect(rRect.Size());
     rect.mLeft    += mShadeSize;

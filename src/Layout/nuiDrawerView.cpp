@@ -128,7 +128,7 @@ void nuiDrawerView::ToggleRight()
 
 bool nuiDrawerView::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   //NGL_OUT("Set Rect with mOffset %f\n", mOffset);
   if (mpLeft)
   {

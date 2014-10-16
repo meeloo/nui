@@ -254,7 +254,7 @@ bool nuiHTMLView::SetRect(const nuiRect& rRect)
 //    printf(".");    
 //  }
   
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   if (mAutoIdealWidth && (mRect.GetWidth() > 0))
     SetIdealWidth(rRect.GetWidth());

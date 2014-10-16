@@ -71,7 +71,7 @@ nuiRect nuiTabView::CalcIdealSize()
 
 bool nuiTabView::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   nuiRect TabRect;
 

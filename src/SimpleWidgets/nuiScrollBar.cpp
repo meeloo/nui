@@ -81,7 +81,7 @@ nuiScrollBar::~nuiScrollBar()
 
 bool nuiScrollBar::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   mRangeRect = rRect.Size();
   SetThumbRect(mRangeRect);
 
@@ -561,7 +561,7 @@ void nuiCustomScrollBar::AddWidget(nuiWidget* pWidget, nuiPosition position)
   
 bool nuiCustomScrollBar::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   if (mOrientation == nuiHorizontal)
   {

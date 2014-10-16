@@ -165,6 +165,7 @@ public:
   virtual void SilentInvalidateChildren(bool Recurse);
   virtual bool Draw(nuiDrawContext* pContext);
   virtual nuiRect CalcIdealSize();
+  bool SetSelfRect(const nuiRect& rRect);
   virtual bool SetRect(const nuiRect& rRect);
   virtual void SetAlpha(float Alpha);
   virtual void SetEnabled(bool set);

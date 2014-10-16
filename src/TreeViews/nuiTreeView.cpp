@@ -495,7 +495,7 @@ void nuiTreeView::CalcTreeSize(nuiRect& rRect, uint32 Depth, nuiTreeNode* pTree)
 
 bool nuiTreeView::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   if (!mSubElements.empty())
   {

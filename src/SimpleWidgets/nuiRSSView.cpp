@@ -41,7 +41,7 @@ nuiRect nuiRSSView::CalcIdealSize()
 
 bool nuiRSSView::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   return true;
 }
 

@@ -115,7 +115,7 @@ nuiToolTip::~nuiToolTip()
 
 bool nuiToolTip::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   nuiRect r(rRect.Size());
  
   r.Grow(-NUI_TOOLTIP_MARGIN_X, -NUI_TOOLTIP_MARGIN_Y);
@@ -2096,7 +2096,7 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
     NGL_OUT("toplevel set rect %f %f %f %f\n", rRect.Left(), rRect.Top(), rRect.GetWidth(), rRect.GetHeight());
   #endif
   
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   nuiRect rectfull(mRect.Size());
   nuiRect rect(rectfull);

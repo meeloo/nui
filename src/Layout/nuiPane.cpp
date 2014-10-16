@@ -120,7 +120,7 @@ bool nuiPane::SetRect(const nuiRect& rRect)
   }
   delete pIt;
 
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   if (reload)
     SetCurve(mCurve);

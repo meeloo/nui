@@ -437,7 +437,7 @@ bool nuiGrid::SetRect(const nuiRect& rRect)
       rRect.GetHeight()!= mRect.GetHeight())
     mNeedIdealRect = true;
 
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   
 
   GetIdealRect(); // ensure IdealRect has happened

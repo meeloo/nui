@@ -369,7 +369,7 @@ bool nuiLabel::SetRect(const nuiRect& rRect)
   if (mUseEllipsis || mWrapping)
     needRecalcLayout = (rRect.GetWidth() != mRect.GetWidth());
     
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   nuiRect ideal(mIdealLayoutRect);
 

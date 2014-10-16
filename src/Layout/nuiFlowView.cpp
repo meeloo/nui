@@ -116,7 +116,7 @@ nuiRect nuiFlowView::Layout(bool setLayout, float IdealWidth)
 
 bool nuiFlowView::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   Layout(true, mCurrentIdealWidth);
   return true;
 }

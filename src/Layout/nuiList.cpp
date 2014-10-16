@@ -137,7 +137,7 @@ nuiRect nuiList::CalcIdealSize()
 
 bool nuiList::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   nuiSize Height = (nuiSize)rRect.GetHeight();
   nuiSize Width = (nuiSize)rRect.GetWidth();
   nuiSize pageincr = 0;

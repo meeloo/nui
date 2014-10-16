@@ -35,7 +35,7 @@ nuiPopupView::~nuiPopupView()
 
 bool nuiPopupView::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   
   nuiRect Rect(GetIdealRect());
   nuiRect ParentRect(mpParent->GetRect().Size());

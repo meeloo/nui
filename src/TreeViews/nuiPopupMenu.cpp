@@ -515,7 +515,7 @@ nuiSize nuiPopupMenu::AdjustPosToSize(nuiMenuRect* rPosRect)
 bool nuiPopupMenu::SetRect(const nuiRect& rRect)
 {
   nuiRect r = rRect;
-  nuiWidget::SetRect(r);
+  nuiWidget::SetSelfRect(r);
   mXdir = 1;
   mYdir = 1;
   nuiSize X, Y;

@@ -101,7 +101,7 @@ nuiRect nuiTabBar::CalcIdealSize()
 bool nuiTabBar::SetRect(const nuiRect& rRect)
 {
   nuiSize width = 0;
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
 
   IteratorPtr pIt;  
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))

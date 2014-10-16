@@ -229,7 +229,7 @@ nuiRect nuiButton::CalcIdealSize()
 
 bool nuiButton::SetRect(const nuiRect& rRect)
 {
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   nuiRect Rect = rRect.Size();
 
   IteratorPtr pIt;
