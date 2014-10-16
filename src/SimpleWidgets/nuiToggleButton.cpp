@@ -169,12 +169,12 @@ bool nuiToggleButton::KeyUp(const nglKeyEvent& rEvent)
 
 
 // Received Mouse events:
-bool nuiToggleButton::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiToggleButton::MouseClicked  (const nglMouseInfo& rInfo)
 {
   if (IsDisabled())
     return false;
 
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
     mWasPressed = IsPressed();
@@ -185,13 +185,13 @@ bool nuiToggleButton::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags B
   return false;
 }            
 
-bool nuiToggleButton::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiToggleButton::MouseUnclicked  (const nglMouseInfo& rInfo)
 {
-  if ( (Button & nglMouseInfo::ButtonLeft) && mClicked)
+  if ( (rInfo.Buttons & nglMouseInfo::ButtonLeft) && mClicked)
   {
     mClicked = false;
 
-    if (IsInsideFromSelf(X,Y, GetActivationOffset()))
+    if (IsInsideFromSelf(rInfo.X, rInfo.Y, GetActivationOffset()))
     {
       SetPressed(!mWasPressed);
       if (IsPressed())
@@ -210,14 +210,14 @@ bool nuiToggleButton::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags
   return false;
 }
 
-bool nuiToggleButton::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiToggleButton::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (IsDisabled())
     return false;
   
   if (mClicked)
   {
-    if (IsInsideFromSelf(X,Y, GetActivationOffset()))
+    if (IsInsideFromSelf(rInfo.X, rInfo.Y, GetActivationOffset()))
     {
       SetPressed(!mWasPressed);
     }

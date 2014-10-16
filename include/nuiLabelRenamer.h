@@ -78,9 +78,9 @@ public:
     mRejectName = true;
   }
   
-  virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+  virtual bool MouseClicked  (const nglMouseInfo& rInfo)
   {
-    if (!mpEditLine->IsInsideFromRoot(X,Y))
+    if (!mpEditLine->IsInsideFromRoot(rInfo.X, rInfo.Y))
     {
       nuiEvent e;
       OnEditLineSelected(e);

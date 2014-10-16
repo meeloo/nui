@@ -45,9 +45,9 @@ public:
   virtual nglString GetTextComposition() const;
   virtual void TextCompositionIndexToPoint(int32 CursorPosition, float& x, float& y) const;
   
-  virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseMoved    (nuiSize X, nuiSize Y);
+  virtual bool MouseClicked  (const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
+  virtual bool MouseMoved    (const nglMouseInfo& rInfo);
 
   virtual nglDropEffect OnCanDrop(nglDragAndDrop* pDragObject, nuiSize X, nuiSize Y);
   virtual void OnDropped(nglDragAndDrop* pDragObject, nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);

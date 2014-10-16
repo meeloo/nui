@@ -67,9 +67,9 @@ protected:
   virtual bool Draw(nuiDrawContext* pContext);
 
   //Received Events:
-  bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  bool MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  bool MouseMoved  (nuiSize X, nuiSize Y);
+  bool MouseClicked  (const nglMouseInfo& rInfo);
+  bool MouseUnclicked  (const nglMouseInfo& rInfo);
+  bool MouseMoved  (const nglMouseInfo& rInfo);
   
   void HandlePageDown(const nuiEvent& rEvent);
   void HandlePageUp(const nuiEvent& rEvent);

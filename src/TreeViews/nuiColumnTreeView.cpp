@@ -552,12 +552,12 @@ bool nuiColumnTreeView::DispatchMouseClick(const nglMouseInfo& rInfo)
   return nuiWidget::DispatchMouseClick(rInfo);
 }
 
-bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiColumnTreeView::MouseClicked(const nglMouseInfo& rInfo)
 {
   bool shiftisdown = IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT);
-  if ((Button & nglMouseInfo::ButtonLeft) || (Button & nglMouseInfo::ButtonRight))
+  if ((rInfo.Button & nglMouseInfo::ButtonLeft) || (rInfo.Button & nglMouseInfo::ButtonRight))
   {
-    if ((Button & nglMouseInfo::ButtonLeft) && (Button & nglMouseInfo::ButtonDoubleClick))
+    if ((rInfo.Button & nglMouseInfo::ButtonLeft) && (rInfo.Button & nglMouseInfo::ButtonDoubleClick))
     {
       if (mpSelectedNode)
       {
@@ -571,7 +571,7 @@ bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
       }
     }
 
-    nuiTreeNodePtr pNode = FindNode(X,Y);
+    nuiTreeNodePtr pNode = FindNode(rInfo.X, rInfo.Y);
     if (pNode && (pNode != mpSelectedNode))
     {
       nuiTreeNodePtr pParent = GetParentNode(mpTree, pNode);
@@ -592,7 +592,7 @@ bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
 
       Invalidate();
 
-      Clicked(X,Y, Button); ///< This event is called whenever an item is clicked.
+      Clicked(rInfo.X, rInfo.Y, Button); ///< This event is called whenever an item is clicked.
       SelectionChanged();
 
       CalcHotRect();
@@ -601,7 +601,7 @@ bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
 
     return false;
   }
-  else if (Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Button & nglMouseInfo::ButtonWheelDown)
   {
     if (shiftisdown)
       return false;
@@ -612,7 +612,7 @@ bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
       mpScrollBars[depth]->GetRange().Increment();
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelUp)
+  else if (rInfo.Button & nglMouseInfo::ButtonWheelUp)
   {
     if (shiftisdown)
       return false;
@@ -627,7 +627,7 @@ bool nuiColumnTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
   return false;
 }
 
-bool nuiColumnTreeView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiColumnTreeView::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (mActivateOnUnclick)
   {
@@ -635,16 +635,16 @@ bool nuiColumnTreeView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags
     Activated();
   }
 
-  if (Button & nglMouseInfo::ButtonRight)
+  if (rInfo.Button & nglMouseInfo::ButtonRight)
   {
     // Show up the context menu...
-    ContextMenuRequested(X, Y, Button);
+    ContextMenuRequested(rInfo.X, rInfo.Y, Button);
   }
 
   return true;
 }
 
-bool nuiColumnTreeView::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiColumnTreeView::MouseMoved(const nglMouseInfo& rInfo)
 {
   return false;
 }

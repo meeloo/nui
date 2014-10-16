@@ -142,11 +142,11 @@ void PrepareMenuTree(nuiTreeNode* pTree)
 }
 
 
-bool nuiComboBox::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiComboBox::MouseClicked(const nglMouseInfo& rInfo)
 {
   if (mpChoicesTree)
   {
-    if (Button & nglMouseInfo::ButtonLeft)
+    if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
     {
       mpOldSelected = mpSelected;
       mpSelected = NULL;

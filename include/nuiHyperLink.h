@@ -18,8 +18,8 @@ public:
   void SetURL(const nglString& rURL);
   const nglString& GetURL() const;
 
-  virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  virtual bool MouseClicked  (const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
   virtual void SetHover(bool Hover);
   
   nuiSimpleEventSource<0> Activated;

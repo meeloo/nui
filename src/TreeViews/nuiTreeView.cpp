@@ -688,14 +688,14 @@ void nuiTreeView::SetDragStopDelegate(const DragStopDelegate& rDelegate)
 ////// Interaction:
 
 
-bool nuiTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiTreeView::MouseClicked(const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
-    mNewX = mOldX = mClickX = X;
-    mNewY = mOldY = mClickY = Y;
+    mNewX = mOldX = mClickX = rInfo.X;
+    mNewY = mOldY = mClickY = rInfo.Y;
 
-    nuiTreeNodePtr pNode = FindNode(X,Y);
+    nuiTreeNodePtr pNode = FindNode(rInfo.X, rInfo.Y);
     mpClickedNode = pNode;
 
     if (pNode)
@@ -708,7 +708,7 @@ bool nuiTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
           nuiRect r = pWidget->GetRect();
           r.Move(-NUI_TREEVIEW_HANDLE_SIZE, 0);
           r.SetSize(NUI_TREEVIEW_HANDLE_SIZE, r.GetHeight());
-          if (r.IsInside(X,Y))
+          if (r.IsInside(rInfo.X, rInfo.Y))
           {
             pNode->Open(!pNode->IsOpened());
             if (IsKeyDown(NK_LMOD) || IsKeyDown(NK_RMOD))
@@ -734,7 +734,7 @@ bool nuiTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
           if (mpSelectedNode && mpSelectedNode != pNode)
           {            
             nuiWidgetPtr pWidget = pNode->GetElement();
-            if (!IsDeSelectable() && !pNode && pWidget && !pWidget->GetRect().IsInside(X,Y))
+            if (!IsDeSelectable() && !pNode && pWidget && !pWidget->GetRect().IsInside(rInfo.X, rInfo.Y))
             {
             }
             else
@@ -746,16 +746,16 @@ bool nuiTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
       }
 
       nuiWidgetPtr pWidget = pNode->GetElement();
-      if (IsDeSelectable() || ((pWidget && pWidget->GetRect().IsInside(X,Y)) && !pNode->IsSelected()))
+      if (IsDeSelectable() || ((pWidget && pWidget->GetRect().IsInside(rInfo.X, rInfo.Y)) && !pNode->IsSelected()))
       {
-        pNode->Select(nuiRect(X,Y,1.0f,1.0f), !pNode->IsSelected());
+        pNode->Select(nuiRect(rInfo.X, rInfo.Y,1.0f,1.0f), !pNode->IsSelected());
       }
       
       mpSelectedNode = pNode->IsSelected()? pNode : NULL;
-      if (Button & nglMouseInfo::ButtonDoubleClick)
+      if (rInfo.Buttons & nglMouseInfo::ButtonDoubleClick)
       {
         nuiWidgetPtr pWidget = pNode->GetElement();
-        if (pWidget && pWidget->GetRect().IsInside(X,Y))
+        if (pWidget && pWidget->GetRect().IsInside(rInfo.X, rInfo.Y))
           Selected(); ///< Double click => Selection Action!
         pNode->Activated();
       }
@@ -766,7 +766,7 @@ bool nuiTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 
       Invalidate();
 
-      Clicked(X,Y, Button); ///< This event is called whenever an item is clicked.
+      Clicked(rInfo.X, rInfo.Y, rInfo.Buttons); ///< This event is called whenever an item is clicked.
       SelectionChanged();
       return true;
     }
@@ -784,9 +784,9 @@ bool nuiTreeView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   return false;
 }
 
-bool nuiTreeView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiTreeView::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonLeft && mClicked)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft && mClicked)
   {
     mClicked = false;
     mDrawMarkee = false;
@@ -804,12 +804,12 @@ bool nuiTreeView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
   return false;
 }
 
-bool nuiTreeView::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiTreeView::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (mClicked)
   {
-    mNewX = X;
-    mNewY = Y;
+    mNewX = rInfo.X;
+    mNewY = rInfo.Y;
     Invalidate();
     SetHotRect(nuiRect(mNewX, mNewY, 16.0f, 16.0f));
 
@@ -825,8 +825,8 @@ bool nuiTreeView::MouseMoved(nuiSize X, nuiSize Y)
 
     else if (!mDragging)
     {
-      nuiSize offsetX = abs(X - mClickX);
-      nuiSize offsetY = abs(Y - mClickY);
+      nuiSize offsetX = abs(rInfo.X - mClickX);
+      nuiSize offsetY = abs(rInfo.Y - mClickY);
       if ((offsetX > 10) || (offsetY > 10))
       {
         if (mDragStartDelegate)

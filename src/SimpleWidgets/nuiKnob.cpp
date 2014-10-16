@@ -242,16 +242,16 @@ bool nuiKnob::KeyUp(const nglKeyEvent& rEvent)
 
 
 // Received Mouse events:
-bool nuiKnob::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiKnob::MouseClicked(const nglMouseInfo& rInfo)
 {
-  mClickX = X;
-  mClickY = Y;
+  mClickX = rInfo.X;
+  mClickY = rInfo.Y;
 
-  if ((Button & nglMouseInfo::ButtonLeft) && (Button & nglMouseInfo::ButtonDoubleClick))
+  if ((rInfo.Button & nglMouseInfo::ButtonLeft) && (rInfo.Button & nglMouseInfo::ButtonDoubleClick))
   {
     return false;
   }
-  else if (Button & nglMouseInfo::ButtonLeft)
+  else if (rInfo.Button & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
     Invalidate();
@@ -259,7 +259,7 @@ bool nuiKnob::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelUp)
+  else if (rInfo.Button & nglMouseInfo::ButtonWheelUp)
   {
     if (IsKeyDown(mFineSensitivityKey))
     {
@@ -273,7 +273,7 @@ bool nuiKnob::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     ActivateToolTip(this, true);
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Button & nglMouseInfo::ButtonWheelDown)
   {
     if (IsKeyDown(mFineSensitivityKey))
     {
@@ -290,13 +290,13 @@ bool nuiKnob::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   return false;
 }            
 
-bool nuiKnob::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiKnob::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (mInteractiveValueChanged)
     ValueChanged();
   mInteractiveValueChanged = false;
   
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Button & nglMouseInfo::ButtonLeft)
   {
     mClicked = false;
 
@@ -306,7 +306,7 @@ bool nuiKnob::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   return false;
 }
 
-bool nuiKnob::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiKnob::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (mClicked)
   {
@@ -318,8 +318,8 @@ bool nuiKnob::MouseMoved(nuiSize X, nuiSize Y)
 
     nuiSize x,y;
     nuiSize range = sqrtf(GetRect().GetWidth() * GetRect().GetHeight());
-    x = X - mClickX;
-    y = mClickY - Y;
+    x = rInfo.X - mClickX;
+    y = mClickY - rInfo.Y;
 
     //nuiSize length = range;
     nuiSize start = mClickValue;

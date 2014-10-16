@@ -37,12 +37,12 @@ bool nuiZoomBar::Draw(nuiDrawContext* pContext)
 }
 
 
-bool nuiZoomBar::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiZoomBar::MouseClicked(const nglMouseInfo& rInfo)
 {
-  mClickX = X;
-  mClickY = Y;
+  mClickX = rInfo.X;
+  mClickY = rInfo.Y;
   
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
     Invalidate();
@@ -52,22 +52,22 @@ bool nuiZoomBar::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     mPageDownClicked = false;
     if (mOrientation == nuiHorizontal)
     {
-      if (X < mThumbRect.Left()) // PageUp
+      if (rInfo.X < mThumbRect.Left()) // PageUp
       {
         mTimer.Start(true,true);
         mPageUpClicked = true;
       }
-      else if (X > mThumbRect.Right()) // PageDown
+      else if (rInfo.X > mThumbRect.Right()) // PageDown
       {
         mTimer.Start(true,true);
         mPageDownClicked = true;
       }
-      else if (X < mThumbRect.Left() + mThumbSideSize ) // Change Left
+      else if (rInfo.X < mThumbRect.Left() + mThumbSideSize ) // Change Left
       {
         mClickValue = mpRange->GetValue();
         mLeftSideClicked = true;
       }
-      else if ( X > mThumbRect.Right() - mThumbSideSize) // Change Right
+      else if ( rInfo.X > mThumbRect.Right() - mThumbSideSize) // Change Right
       {
         mClickValue = mpRange->GetValue();
         mRightSideClicked = true;
@@ -80,22 +80,22 @@ bool nuiZoomBar::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     }
     else
     {
-      if (Y < mThumbRect.Top()) // PageUp
+      if (rInfo.Y < mThumbRect.Top()) // PageUp
       {
         mTimer.Start(true,true);
         mPageUpClicked = true;
       }
-      else if (Y > mThumbRect.Bottom()) // PageDown
+      else if (rInfo.Y > mThumbRect.Bottom()) // PageDown
       {
         mTimer.Start(true,true);
         mPageDownClicked = true;
       }
-      else if (Y < mThumbRect.Top() + mThumbSideSize ) // Change Top
+      else if (rInfo.Y < mThumbRect.Top() + mThumbSideSize ) // Change Top
       {
         mClickValue = mpRange->GetValue();
         mRightSideClicked = true;
       }
-      else if ( Y > mThumbRect.Bottom() - mThumbSideSize) // Change Bottom
+      else if ( rInfo.Y > mThumbRect.Bottom() - mThumbSideSize) // Change Bottom
       {
         mClickValue = mpRange->GetValue();
         mLeftSideClicked = true;
@@ -109,12 +109,12 @@ bool nuiZoomBar::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     }
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelUp)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelUp)
   {
     mpRange->Decrement();
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelDown)
   {
     mpRange->Increment();
     return true;
@@ -123,9 +123,9 @@ bool nuiZoomBar::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 }
 
 
-bool nuiZoomBar::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiZoomBar::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = false;
     
@@ -152,25 +152,25 @@ bool nuiZoomBar::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button
 }
 
 
-bool nuiZoomBar::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiZoomBar::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (!mThumbClicked && !mLeftSideClicked && !mRightSideClicked)
   {
     if (mOrientation == nuiHorizontal)
     {
-      ChangeZoomCursor(X, mThumbRect.Left(), mThumbRect.Right());
+      ChangeZoomCursor(rInfo.X, mThumbRect.Left(), mThumbRect.Right());
     }
     else if (mOrientation == nuiVertical)
     {
-      ChangeZoomCursor(Y, mThumbRect.Bottom(), mThumbRect.Top());
+      ChangeZoomCursor(rInfo.Y, mThumbRect.Bottom(), mThumbRect.Top());
     }    
   }  
   
   
   
   nuiSize x,y;
-  x = X-mClickX;
-  y = Y-mClickY;
+  x = rInfo.X - mClickX;
+  y = rInfo.Y - mClickY;
   
   nuiSize length = mpRange->GetRange();
   nuiSize start=(mClickValue/length);
@@ -197,8 +197,8 @@ bool nuiZoomBar::MouseMoved(nuiSize X, nuiSize Y)
     {
       UpdateDownBound(x);
       
-      mClickX = X;
-      mClickY = Y;
+      mClickX = rInfo.X;
+      mClickY = rInfo.Y;
       return true;
     }
     
@@ -206,8 +206,8 @@ bool nuiZoomBar::MouseMoved(nuiSize X, nuiSize Y)
     {
       UpdateDownBound(y);
       
-      mClickX = X;
-      mClickY = Y;
+      mClickX = rInfo.X;
+      mClickY = rInfo.Y;
       return true;
     }
   }
@@ -217,8 +217,8 @@ bool nuiZoomBar::MouseMoved(nuiSize X, nuiSize Y)
     {
       UpdateUpBound(x);
       
-      mClickX = X;
-      mClickY = Y;
+      mClickX = rInfo.X;
+      mClickY = rInfo.Y;
       return true;
     }
     
@@ -226,8 +226,8 @@ bool nuiZoomBar::MouseMoved(nuiSize X, nuiSize Y)
     {
       UpdateUpBound(y);
       
-      mClickX = X;
-      mClickY = Y;
+      mClickX = rInfo.X;
+      mClickY = rInfo.Y;
       return true;
     }
   }

@@ -49,9 +49,9 @@ const nglString& nuiHyperLink::GetURL() const
   return mURL;
 }
 
-bool nuiHyperLink::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiHyperLink::MouseClicked(const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Button & nglMouseInfo::ButtonLeft)
   {
     mClicked++;
     return true;
@@ -59,9 +59,9 @@ bool nuiHyperLink::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button
   return false;
 }
 
-bool nuiHyperLink::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiHyperLink::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  if (mClicked && (Button & nglMouseInfo::ButtonLeft))
+  if (mClicked && (rInfo.Button & nglMouseInfo::ButtonLeft))
   {
     mClicked--;
     if (!Activated())

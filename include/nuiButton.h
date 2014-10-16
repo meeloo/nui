@@ -43,10 +43,10 @@ public:
   nuiSimpleEventSource<nuiWidgetActivated> Activated;
 
   // Received Mouse events:
-  virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  virtual bool MouseClicked(const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
   virtual bool MouseCanceled(const nglMouseInfo& rInfo);
-  virtual bool MouseMoved(nuiSize X, nuiSize Y);
+  virtual bool MouseMoved(const nglMouseInfo& rInfo);
   virtual bool MouseUngrabbed();
 
   void SetDefaultBorders(float pixels);

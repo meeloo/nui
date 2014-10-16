@@ -99,17 +99,17 @@ bool nuiUserArea::Draw(nuiDrawContext* pContext)
   return true;
 }
 
-bool nuiUserArea::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiUserArea::MouseClicked  (const nglMouseInfo& rInfo)
 {
   return mInterceptMouse;
 }
 
-bool nuiUserArea::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiUserArea::MouseUnclicked  (const nglMouseInfo& rInfo)
 {
   return mInterceptMouse;
 }
 
-bool nuiUserArea::MouseMoved  (nuiSize X, nuiSize Y)
+bool nuiUserArea::MouseMoved  (const nglMouseInfo& rInfo)
 {
   return mInterceptMouse;
 }

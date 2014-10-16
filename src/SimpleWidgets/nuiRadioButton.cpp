@@ -103,12 +103,12 @@ bool nuiRadioButton::KeyUp(const nglKeyEvent& rEvent)
 }
 
 
-bool nuiRadioButton::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiRadioButton::MouseClicked  (const nglMouseInfo& rInfo)
 {
   if (IsDisabled())
     return false;
 
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
     mWasPressed = IsPressed();
@@ -122,12 +122,12 @@ bool nuiRadioButton::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Bu
   return false;
 }            
 
-bool nuiRadioButton::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiRadioButton::MouseUnclicked  (const nglMouseInfo& rInfo)
 {
-  if ( (Button & nglMouseInfo::ButtonLeft) && mClicked)
+  if ( (rInfo.Buttons & nglMouseInfo::ButtonLeft) && mClicked)
   {
     mClicked = false;
-    if (IsInsideFromSelf(X,Y, GetActivationOffset()))
+    if (IsInsideFromSelf(rInfo.X, rInfo.Y, GetActivationOffset()))
     {
       if (mCanToggle)
         SetPressed(!mWasPressed);
@@ -156,7 +156,8 @@ bool nuiRadioButton::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags 
         }
         Activated();
       }
-      else if (!IsPressed() && mWasPressed) {
+      else if (!IsPressed() && mWasPressed)
+      {
         Deactivated();
       }
     }
@@ -171,14 +172,14 @@ bool nuiRadioButton::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags 
   return false;
 }
 
-bool nuiRadioButton::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiRadioButton::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (IsDisabled())
     return false;
   
   if (mClicked)
   {
-    if (IsInsideFromSelf(X,Y, GetActivationOffset()))
+    if (IsInsideFromSelf(rInfo.X, rInfo.Y, GetActivationOffset()))
     {
       if (mCanToggle)
         SetPressed(!mWasPressed);

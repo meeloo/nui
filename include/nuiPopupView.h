@@ -18,8 +18,8 @@ public:
   
   void SetPos(nuiSize X, nuiSize Y);
   
-  bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  bool MouseClicked(const nglMouseInfo& rInfo);
+  bool MouseUnclicked(const nglMouseInfo& rInfo);
 
   bool KeyUp(const nglKeyEvent& rEvent);
   bool KeyDown(const nglKeyEvent& rEvent);

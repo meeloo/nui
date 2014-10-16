@@ -469,13 +469,13 @@ void nuiEditText::MoveCursorTo(nuiSize X, nuiSize Y)
   MoveCursorTo(GetPosFromCoords(X, Y, true));
 }
 
-bool nuiEditText::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiEditText::MouseClicked(const nglMouseInfo& rInfo)
 {
   bool handled = false;
 
-  if (Button & nglMouseInfo::ButtonLeft || Button & nglMouseInfo::ButtonRight)
+  if (rInfo.Button & nglMouseInfo::ButtonLeft || rInfo.Button & nglMouseInfo::ButtonRight)
   {
-    uint pos = GetPosFromCoords(X, Y, true);
+    uint pos = GetPosFromCoords(rInfo.X, rInfo.Y, true);
     if ( mAnchorPos != mCursorPos && 
          MIN(mAnchorPos, mCursorPos) < pos && 
          pos < MAX(mAnchorPos, mCursorPos)  )
@@ -486,7 +486,7 @@ bool nuiEditText::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     }
 
     handled = true;
-    if (Button & nglMouseInfo::ButtonDoubleClick)
+    if (rInfo.Button & nglMouseInfo::ButtonDoubleClick)
     {
       if (!mCommandStack.empty() && mCommandStack.back().first == eSelectWord)
         Do(eSelectAll, new nuiObject());
@@ -495,7 +495,7 @@ bool nuiEditText::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     }
     else
     {
-      MoveCursorTo(X,Y);
+      MoveCursorTo(rInfo.X, rInfo.Y);
       mSelecting = true;
     }
   }
@@ -503,13 +503,13 @@ bool nuiEditText::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   return handled;
 }
 
-bool nuiEditText::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiEditText::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   bool handled = false;
-  if (Button & nglMouseInfo::ButtonLeft || Button & nglMouseInfo::ButtonRight)
+  if (rInfo.Button & nglMouseInfo::ButtonLeft || rInfo.Button & nglMouseInfo::ButtonRight)
   {
     if (mStartDragging)
-      MoveCursorTo(X,Y);
+      MoveCursorTo(rInfo.X, rInfo.Y);
     mStartDragging = false;
     mDragging = false;
     mSelecting = false;
@@ -518,7 +518,7 @@ bool nuiEditText::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
   return handled;
 }
 
-bool nuiEditText::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiEditText::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (mStartDragging && !mDragging)
   {
@@ -534,7 +534,7 @@ bool nuiEditText::MouseMoved(nuiSize X, nuiSize Y)
 
   if (mSelecting)
   {
-    MoveCursorTo(X,Y);
+    MoveCursorTo(rInfo.X, rInfo.Y);
     return true;
   }
   return false;

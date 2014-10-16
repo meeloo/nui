@@ -28,7 +28,7 @@ public:
   void Scrolled(const nuiEvent& rEvent);
   void Zoomed(const nuiEvent& rEvent);
 
-  virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  virtual bool MouseClicked(const nglMouseInfo& rInfo);
 
   virtual nuiRange* GetScrollbarRange(nuiOrientation Orientation);
   

@@ -33,9 +33,9 @@ public:
   virtual bool Draw(nuiDrawContext* pContext);
 
   // Received Mouse events:
-  virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseMoved(nuiSize X, nuiSize Y);
+  virtual bool MouseClicked  (const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked  (const nglMouseInfo& rInfo);
+  virtual bool MouseMoved(const nglMouseInfo& rInfo);
 
   // Keyboard events:
   bool KeyDown(const nglKeyEvent& rEvent);

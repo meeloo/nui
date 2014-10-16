@@ -217,9 +217,9 @@ void nuiZoomView::OnHotRectChanged(const nuiEvent& rEvent)
   }
 }
 
-bool nuiZoomView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiZoomView::MouseClicked(const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonWheelUp)
+  if (rInfo.Buttons & nglMouseInfo::ButtonWheelUp)
   {
     if (mpVerticalScrollbar)
     {
@@ -232,7 +232,7 @@ bool nuiZoomView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
       return true;
     }
   }
-  else if (Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelDown)
   {
     if (mpVerticalScrollbar)
     {

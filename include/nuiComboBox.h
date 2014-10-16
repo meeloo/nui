@@ -42,7 +42,7 @@ protected:
   virtual bool    Draw(nuiDrawContext* pContext);
   virtual bool    SetRect(const nuiRect& rRect);
 
-  virtual bool    MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  virtual bool    MouseClicked(const nglMouseInfo& rInfo);
 
   virtual bool    KeyDown(const nglKeyEvent& rEvent);
   virtual bool    KeyUp(const nglKeyEvent& rEvent);

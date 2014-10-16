@@ -139,9 +139,9 @@ public:
   virtual bool KeyDown(const nglKeyEvent& rEvent);
   virtual bool KeyUp(const nglKeyEvent& rEvent);
   
-  bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  bool MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  bool MouseMoved  (nuiSize X, nuiSize Y);
+  bool MouseClicked  (const nglMouseInfo& rInfo);
+  bool MouseUnclicked  (const nglMouseInfo& rInfo);
+  bool MouseMoved  (const nglMouseInfo& rInfo);
 
   bool DispatchMouseClick(const nglMouseInfo& rInfo);
 

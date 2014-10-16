@@ -42,11 +42,11 @@ nuiSplitter* nuiSplitterHandle::GetSplitter()
 }
 
 // virtual 
-bool nuiSplitterHandle::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiSplitterHandle::MouseClicked(const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
-    if (Button & nglMouseInfo::ButtonDoubleClick)
+    if (rInfo.Buttons & nglMouseInfo::ButtonDoubleClick)
     {
       nuiSize minDiff = mpParent->mHandlePos - mpParent->mHandlePosMin;
       nuiSize maxDiff = mpParent->mHandlePosMax - mpParent->mHandlePos;
@@ -59,7 +59,7 @@ bool nuiSplitterHandle::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
       return true;
     }
 
-    mClickPos = (mpParent->mOrientation == nuiVertical)? X : Y;
+    mClickPos = (mpParent->mOrientation == nuiVertical)? rInfo.X : rInfo.Y;
     mClicked = true;
 
     Invalidate();
@@ -69,9 +69,9 @@ bool nuiSplitterHandle::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags B
 }
 
 // virtual 
-bool nuiSplitterHandle::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiSplitterHandle::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  if (Button == nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons == nglMouseInfo::ButtonLeft)
   {
     if (mClicked)
     {
@@ -138,7 +138,7 @@ nuiWidgetPtr nuiSplitterHandle::DispatchMouseMove(const nglMouseInfo& rInfo)
 
 
 // virtual 
-bool nuiSplitterHandle::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiSplitterHandle::MouseMoved(const nglMouseInfo& rInfo)
 {
   nuiRect Rect = mpParent->mRect.Size();
 
@@ -154,14 +154,14 @@ bool nuiSplitterHandle::MouseMoved(nuiSize X, nuiSize Y)
     if (mpParent->mOrientation == nuiVertical)
     {
       if (mpParent->mMode == eModePercentage)
-        mpParent->SetHandlePos(100.0f * ((X - mClickPos) / mpParent->mRect.GetWidth()));
-      else mpParent->SetHandlePos(X);
+        mpParent->SetHandlePos(100.0f * ((rInfo.X - mClickPos) / mpParent->mRect.GetWidth()));
+      else mpParent->SetHandlePos(rInfo.X);
     }
     else
     {
       if (mpParent->mMode == eModePercentage)
-        mpParent->SetHandlePos(100.0f * ((Y - mClickPos) / mpParent->mRect.GetHeight()));
-      else mpParent->SetHandlePos(Y);
+        mpParent->SetHandlePos(100.0f * ((rInfo.Y - mClickPos) / mpParent->mRect.GetHeight()));
+      else mpParent->SetHandlePos(rInfo.Y);
     }
     
     mpParent->UpdateLayout();

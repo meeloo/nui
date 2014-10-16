@@ -1763,54 +1763,29 @@ bool nuiWidget::MouseEventsEnabled() const
   return mMouseEventEnabled;
 }
 
-bool nuiWidget::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
-{
-  CheckValid();
-  return false;
-}
-
-bool nuiWidget::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
-{
-  CheckValid();
-  return false;
-}
-
-bool nuiWidget::MouseCanceled (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
-{
-  CheckValid();
-  return mAutoAcceptMouseCancel;
-}
-
-
-bool nuiWidget::MouseMoved(nuiSize X, nuiSize Y)
-{
-  CheckValid();
-  return false;
-}
-
 // Multitouch events:
 bool nuiWidget::MouseClicked(const nglMouseInfo& rInfo)
 {
   CheckValid();
-  return MouseClicked(rInfo.X, rInfo.Y, rInfo.Buttons);
+  return false;
 }
 
 bool nuiWidget::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   CheckValid();
-  return MouseUnclicked(rInfo.X, rInfo.Y, rInfo.Buttons);
+  return false;
 }
 
 bool nuiWidget::MouseCanceled(const nglMouseInfo& rInfo)
 {
   CheckValid();
-  return MouseCanceled(rInfo.X, rInfo.Y, rInfo.Buttons);
+  return false;
 }
 
 bool nuiWidget::MouseMoved(const nglMouseInfo& rInfo)
 {
   CheckValid();
-  return MouseMoved(rInfo.X, rInfo.Y);
+  return false;
 }
 
 bool nuiWidget::MouseWheelMoved(const nglMouseInfo& rInfo)
@@ -1823,13 +1798,13 @@ bool nuiWidget::MouseWheelMoved(const nglMouseInfo& rInfo)
 bool nuiWidget::MouseGrabbed(nglTouchId id)
 {
   CheckValid();
-  return MouseGrabbed();
+  return true;
 }
 
 bool nuiWidget::MouseUngrabbed(nglTouchId id)
 {
   CheckValid();
-  return MouseUngrabbed();
+  return false;
 }
 
 const std::map<nglTouchId, nglMouseInfo>& nuiWidget::GetMouseStates() const

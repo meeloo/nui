@@ -206,13 +206,13 @@ nuiSize nuiScrollBar::GetIdealWidth() const
 }
 
 // Received Mouse events:
-bool nuiScrollBar::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiScrollBar::MouseClicked  (const nglMouseInfo& rInfo)
 {
-  mClickX = X;
-  mClickY = Y;
+  mClickX = rInfo.X;
+  mClickY = rInfo.Y;
 
   //NGL_OUT(_T("nuiScrollBar::MouseClicked\n"));
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
     Invalidate();
@@ -222,22 +222,22 @@ bool nuiScrollBar::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butt
     mPageDownClicked = false;
     if (mOrientation == nuiHorizontal)
     {
-      if (X < mThumbRect.Left()) // PageUp
+      if (rInfo.X < mThumbRect.Left()) // PageUp
       {
         mTimer.Start(true,true);
         mPageUpClicked = true;
       }
-      else if (X > mThumbRect.Right()) // PageDown
+      else if (rInfo.X > mThumbRect.Right()) // PageDown
       {
         mTimer.Start(true,true);
         mPageDownClicked = true;
       }
-      else if (X > mThumbRect.Right() - mThumbSideSize)
+      else if (rInfo.X > mThumbRect.Right() - mThumbSideSize)
       {
         mClickValue = mpRange->GetValue();
         mRightSideClicked = true;
       }
-      else if (X < mThumbRect.Left() + mThumbSideSize)
+      else if (rInfo.X < mThumbRect.Left() + mThumbSideSize)
       {
         mClickValue = mpRange->GetValue();
         mLeftSideClicked = true;
@@ -250,12 +250,12 @@ bool nuiScrollBar::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butt
     }
     else
     {
-      if (Y < mThumbRect.Top()) // PageUp
+      if (rInfo.Y < mThumbRect.Top()) // PageUp
       {
         mTimer.Start(true,true);
         mPageUpClicked = true;
       }
-      else if (Y > mThumbRect.Bottom()) // PageDown
+      else if (rInfo.Y > mThumbRect.Bottom()) // PageDown
       {
         mTimer.Start(true,true);
         mPageDownClicked = true;
@@ -269,12 +269,12 @@ bool nuiScrollBar::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butt
     }
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelUp)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelUp)
   {
     mpRange->Decrement();
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelDown)
   {
     mpRange->Increment();
     return true;
@@ -282,9 +282,9 @@ bool nuiScrollBar::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butt
   return false;
 }            
 
-bool nuiScrollBar::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiScrollBar::MouseUnclicked  (const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = false;
 
@@ -307,7 +307,7 @@ bool nuiScrollBar::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Bu
   return false;
 }
 
-bool nuiScrollBar::MouseMoved  (nuiSize X, nuiSize Y)
+bool nuiScrollBar::MouseMoved  (const nglMouseInfo& rInfo)
 {
   //NGL_OUT(_T("nuiScrollBar::MouseMoved\n"));
   NGL_ASSERT(mpRange);
@@ -315,8 +315,8 @@ bool nuiScrollBar::MouseMoved  (nuiSize X, nuiSize Y)
   if (mThumbClicked)
   {
     nuiSize x,y;
-    x = X-mClickX;
-    y = Y-mClickY;
+    x = rInfo.X - mClickX;
+    y = rInfo.Y - mClickY;
 
     nuiSize length = mpRange->GetRange();
     nuiSize start=(mClickValue/length);

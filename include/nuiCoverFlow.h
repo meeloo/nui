@@ -67,8 +67,8 @@ public:
   void SetBackgroundColor(const nuiColor& rColor);
   const nuiColor& GetBackgroundColor() const;
   
-  bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  bool MouseClicked(const nglMouseInfo& rInfo);
+  bool MouseUnclicked(const nglMouseInfo& rInfo);
   bool KeyDown(const nglKeyEvent& rEvent);
   bool KeyUp(const nglKeyEvent& rEvent);
   

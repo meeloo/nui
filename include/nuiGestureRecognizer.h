@@ -58,9 +58,9 @@ protected:
   
   void SetState(nuiGestureRecognizerState state);
   
-  virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseMoved(nuiSize X, nuiSize Y);
+  virtual bool MouseClicked(const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
+  virtual bool MouseMoved(const nglMouseInfo& rInfo);
 
 private:
   nuiGestureRecognizerState mState;
@@ -120,9 +120,9 @@ public:
   
 protected:
   
-  virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseMoved(nuiSize X, nuiSize Y);
+  virtual bool MouseClicked(const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
+  virtual bool MouseMoved(const nglMouseInfo& rInfo);
 
 private:
   
@@ -171,9 +171,9 @@ public:
 
 protected:
   
-  virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseMoved(nuiSize X, nuiSize Y);
+  virtual bool MouseClicked(const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
+  virtual bool MouseMoved(const nglMouseInfo& rInfo);
   
   void UpdateForces(const nuiEvent& rEvent);
   void UpdateDirection();

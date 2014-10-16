@@ -61,9 +61,9 @@ public:
   // Out going Events
   nuiDrawEventSource UserDraw;
 
-  virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseMoved(nuiSize X, nuiSize Y);
+  virtual bool MouseClicked(const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked (const nglMouseInfo& rInfo);
+  virtual bool MouseMoved(const nglMouseInfo& rInfo);
 
   virtual void SetInterceptMouse(bool intercept=false); ///< If intercept==true then all the mouse event will be intercepted by the UserArea. By default no event is intercepted.
   virtual bool GetInterceptMouse(); ///< Return the mouse event intercption state.

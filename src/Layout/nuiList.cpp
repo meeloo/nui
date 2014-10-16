@@ -644,21 +644,21 @@ int32 nuiList::GetItemNumber(nuiWidgetPtr pWidget)
 }
 
 
-bool nuiList::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiList::MouseClicked(const nglMouseInfo& rInfo)
 {
   if (IsDisabled())
     return false;
 
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
-    nuiWidgetPtr pItem = GetItem(X,Y);
+    nuiWidgetPtr pItem = GetItem(rInfo.X, rInfo.Y);
     if (pItem && pItem->IsEnabled(false))
     {
       mCursorLine = GetItemNumber(pItem);
       if (mMultiSelectable)
       {
         pItem->SetSelected(!pItem->IsSelected());
-        Clicked(X,Y,Button);
+        Clicked(rInfo.X, rInfo.Y, rInfo.Buttons);
       }
       else
       {
@@ -669,9 +669,9 @@ bool nuiList::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
         }
         else
         {
-          if (Button & nglMouseInfo::ButtonDoubleClick)
+          if (rInfo.Buttons & nglMouseInfo::ButtonDoubleClick)
           {
-            DoubleClicked(X,Y,Button);
+            DoubleClicked(rInfo.X, rInfo.Y, rInfo.Buttons);
             Activated();
             return true;
           }
@@ -679,7 +679,7 @@ bool nuiList::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
           {
             if (mUnselectable)
               pItem->SetSelected(false);
-            Clicked(X,Y,Button);
+            Clicked(rInfo.X, rInfo.Y, rInfo.Buttons);
           }
         }
         mpLastItem = pItem; 

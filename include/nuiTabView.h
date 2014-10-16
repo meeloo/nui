@@ -35,8 +35,8 @@ public:
   virtual bool SetRect(const nuiRect& rRect);
   virtual bool Draw(nuiDrawContext* pContext);
   
-  virtual bool MouseClicked   (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  virtual bool MouseClicked   (const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked (const nglMouseInfo& rInfo);
     
   void OnIconClicked(const nuiEvent& rEvent);
   void OnTabEnterDrag(const nuiEvent& rEvent);

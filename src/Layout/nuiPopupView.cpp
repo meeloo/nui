@@ -105,18 +105,18 @@ bool nuiPopupView::Draw(nuiDrawContext* pContext)
   return DrawChildren(pContext);
 }
 
-bool nuiPopupView::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiPopupView::MouseClicked(const nglMouseInfo& rInfo)
 {
-  if (!mChildrenRect.IsInside(X, Y) && !IsTrashed())
+  if (!mChildrenRect.IsInside(rInfo.X, rInfo.Y) && !IsTrashed())
   {
     Trash();
   }
   return true;
 }
 
-bool nuiPopupView::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiPopupView::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  if (!mChildrenRect.IsInside(X, Y) && !IsTrashed())
+  if (!mChildrenRect.IsInside(rInfo.X, rInfo.Y) && !IsTrashed())
   {
     Trash();
   }

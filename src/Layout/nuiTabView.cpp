@@ -268,18 +268,18 @@ bool nuiTabView::Draw(nuiDrawContext* pContext)
   return true;
 }
 
-bool nuiTabView::MouseClicked   (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiTabView::MouseClicked   (const nglMouseInfo& rInfo)
 {
   for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); ++it)
-    if ((*it)->GetRect().IsInside(X,Y))
+    if ((*it)->GetRect().IsInside(rInfo.X, rInfo.Y))
       return true;
   return false;
 }
 
-bool nuiTabView::MouseUnclicked (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiTabView::MouseUnclicked (const nglMouseInfo& rInfo)
 {
   for (std::vector<Tab*>::iterator it = mIcons.begin(); it != mIcons.end(); ++it)
-    if ((*it)->GetRect().IsInside(X,Y))
+    if ((*it)->GetRect().IsInside(rInfo.X, rInfo.Y))
       return true;
   return false;
 }

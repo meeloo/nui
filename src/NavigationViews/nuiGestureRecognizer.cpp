@@ -45,21 +45,21 @@ void nuiGestureRecognizer::SetState(nuiGestureRecognizerState state)
   
 
 // virtual 
-bool nuiGestureRecognizer::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiGestureRecognizer::MouseClicked(const nglMouseInfo& rInfo)
 {
   return false;
 }
 
 
 // virtual 
-bool nuiGestureRecognizer::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiGestureRecognizer::MouseUnclicked(const nglMouseInfo& rInfo)
 {
   return false;
 }
 
 
 // virtual 
-bool nuiGestureRecognizer::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiGestureRecognizer::MouseMoved(const nglMouseInfo& rInfo)
 {
   return false;
 }
@@ -129,26 +129,26 @@ void nuiSwipeGestureRecognizer::SetDirections(nuiGestureDirection direction)
 
 
 // virtual 
-bool nuiSwipeGestureRecognizer::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiSwipeGestureRecognizer::MouseClicked(const nglMouseInfo& rInfo)
 {
-  bool res = nuiGestureRecognizer::MouseClicked(X, Y, Button);
+  bool res = nuiGestureRecognizer::MouseClicked(rInfo);
  
   mRecognizedDirection = nuiGestureDirectionNull;
   
   mClicked = true;
   mTime = nglTime();
   mInitiatedTime = 0;
-  mStartX = X;
-  mStartY = Y;
+  mStartX = rInfo.X;
+  mStartY = rInfo.Y;
 
   return false;
 }
 
 
 // virtual 
-bool nuiSwipeGestureRecognizer::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiSwipeGestureRecognizer::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  bool res = nuiGestureRecognizer::MouseUnclicked(X, Y, Button);
+  bool res = nuiGestureRecognizer::MouseUnclicked(rInfo);
   
   mClicked = false;
   SetState(eGestureRecognizerStatePossible);
@@ -163,9 +163,9 @@ bool nuiSwipeGestureRecognizer::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInf
 
 
 // virtual 
-bool nuiSwipeGestureRecognizer::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiSwipeGestureRecognizer::MouseMoved(const nglMouseInfo& rInfo)
 {
-  bool res = nuiGestureRecognizer::MouseMoved(X, Y);
+  bool res = nuiGestureRecognizer::MouseMoved(rInfo.X, rInfo.Y);
 
   if (!mClicked)
     return false;
@@ -173,8 +173,8 @@ bool nuiSwipeGestureRecognizer::MouseMoved(nuiSize X, nuiSize Y)
   if (GetState() == eGestureRecognizerStateEnded)
     return false;
   
-	double diffx = mStartX - X;
-	double diffy = mStartY - Y;
+	double diffx = mStartX - rInfo.X;
+	double diffy = mStartY - rInfo.Y;
   double currentTime = nglTime();
   
   // has the swipe gesture been initiated?
@@ -186,7 +186,7 @@ bool nuiSwipeGestureRecognizer::MouseMoved(nuiSize X, nuiSize Y)
     // yes, it's been initiated.
     if (initiatedOnX || initiatedOnY)
     {
-      mRecognizedDirection = GetGestureDirection(initiatedOnX, initiatedOnY, mStartX, X, mStartY, Y);
+      mRecognizedDirection = GetGestureDirection(initiatedOnX, initiatedOnY, mStartX, rInfo.X, mStartY, rInfo.Y);
 
       // is this recognizer in charge of the detected gesture?
       if ((mRecognizedDirection & mDirection) 
@@ -199,8 +199,8 @@ bool nuiSwipeGestureRecognizer::MouseMoved(nuiSize X, nuiSize Y)
       // no, it's not. set data for the next call
       else
       {
-        mStartX = X;
-        mStartY = Y;
+        mStartX = rInfo.X;
+        mStartY = rInfo.Y;
         mTime = currentTime;
       }
     }
@@ -221,8 +221,8 @@ bool nuiSwipeGestureRecognizer::MouseMoved(nuiSize X, nuiSize Y)
     {
       mTime = nglTime();
       mInitiatedTime = 0;
-      mStartX = X;
-      mStartY = Y;
+      mStartX = rInfo.X;
+      mStartY = rInfo.Y;
       SetState(eGestureRecognizerStateFailed);
       mRecognizedDirection = nuiGestureDirectionNull;
       
@@ -368,24 +368,24 @@ nuiGestureDirection nuiPadGestureRecognizer::GetDirectionFromAngle(float angle) 
 
 
 // virtual 
-bool nuiPadGestureRecognizer::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiPadGestureRecognizer::MouseClicked(const nglMouseInfo& rInfo)
 {
-  bool res = nuiGestureRecognizer::MouseClicked(X, Y, Button);
+  bool res = nuiGestureRecognizer::MouseClicked(rInfo);
   
   mRecognizedDirection = nuiGestureDirectionNull;
   
   mClicked = true;
-  mLastX = X;
-  mLastY = Y;
+  mLastX = rInfo.X;
+  mLastY = rInfo.Y;
   
   return false;
 }
 
 
 // virtual 
-bool nuiPadGestureRecognizer::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiPadGestureRecognizer::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  bool res = nuiGestureRecognizer::MouseUnclicked(X, Y, Button);
+  bool res = nuiGestureRecognizer::MouseUnclicked(rInfo);
   
   mClicked = false;
   SetState(eGestureRecognizerStatePossible);

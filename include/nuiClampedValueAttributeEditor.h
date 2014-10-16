@@ -81,9 +81,9 @@ public:
   
 protected:
   
-  virtual bool MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+  virtual bool MouseClicked(const nglMouseInfo& rInfo)
   {
-    if ((Button & nglMouseInfo::ButtonLeft) && (Button & nglMouseInfo::ButtonDoubleClick))
+    if ((rInfo.Buttons & nglMouseInfo::ButtonLeft) && (rInfo.Buttons & nglMouseInfo::ButtonDoubleClick))
     {
       nuiPopupValueAttributeEditor* pEditor = new nuiPopupValueAttributeEditor(mAttribute, mRange);
       pEditor->SetPosition(nuiCenter);

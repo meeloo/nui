@@ -205,12 +205,12 @@ bool nuiSlider::KeyUp(const nglKeyEvent& rEvent)
 }
 
 // Received Mouse events:
-bool nuiSlider::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiSlider::MouseClicked(const nglMouseInfo& rInfo)
 {
-  mClickX = X;
-  mClickY = Y;
+  mClickX = rInfo.X;
+  mClickY = rInfo.Y;
   
-  if (Button == nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons == nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
     mThumbClicked = true;
@@ -221,7 +221,7 @@ bool nuiSlider::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
 
     return true;
   }
-  else if (Button == nglMouseInfo::ButtonWheelUp)
+  else if (rInfo.Buttons == nglMouseInfo::ButtonWheelUp)
   {
     mInteractiveValueChanged = false;
     
@@ -236,7 +236,7 @@ bool nuiSlider::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     ActivateToolTip(this, true);
     return true;
   }
-  else if (Button == nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Buttons == nglMouseInfo::ButtonWheelDown)
   {
     mInteractiveValueChanged = false;
     
@@ -254,9 +254,9 @@ bool nuiSlider::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   return false;
 }            
 
-bool nuiSlider::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiSlider::MouseUnclicked  (const nglMouseInfo& rInfo)
 {
-  if ((Button == nglMouseInfo::ButtonLeft) && mClicked)
+  if ((rInfo.Buttons == nglMouseInfo::ButtonLeft) && mClicked)
   {
     mInteractiveValueChanged = false;
     ValueChanged();
@@ -272,7 +272,7 @@ bool nuiSlider::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Butto
   return false;
 }
 
-bool nuiSlider::MouseMoved  (nuiSize X, nuiSize Y)
+bool nuiSlider::MouseMoved  (const nglMouseInfo& rInfo)
 {
   if (mThumbClicked)
   {
@@ -282,13 +282,13 @@ bool nuiSlider::MouseMoved  (nuiSize X, nuiSize Y)
       {
       case nuiHorizontal:
         {
-          if (abs(mClickX - X) < 16)
+          if (abs(mClickX - rInfo.X) < 16)
             mAutoAcceptMouseSteal = false;
         }
         break;
       case nuiVertical:
         {
-          if (abs(mClickY - Y) < 16)
+          if (abs(mClickY - rInfo.Y) < 16)
             mAutoAcceptMouseSteal = false;
         }
         break;
@@ -299,8 +299,8 @@ bool nuiSlider::MouseMoved  (nuiSize X, nuiSize Y)
     
     nuiSize x,y;
     nuiSize range = (nuiSize)fabs(mHandlePosMax - mHandlePosMin);
-    x = X - mClickX;
-    y = mClickY - Y;
+    x = rInfo.X - mClickX;
+    y = mClickY - rInfo.Y;
     
     //NGL_OUT(_T("MouseMoved : %.2f %.2f     %.2f %.2f\n"), X, Y,x,y);
     

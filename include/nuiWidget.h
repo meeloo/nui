@@ -402,12 +402,12 @@ public:
   // These three methods receive the mouse coordinates in this object referential
   void EnableMouseEvent(bool enable);
   bool MouseEventsEnabled() const;
-  virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseCanceled (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseMoved    (nuiSize X, nuiSize Y);
-  virtual bool MouseGrabbed();
-  virtual bool MouseUngrabbed();
+//  virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+//  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+//  virtual bool MouseCanceled (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+//  virtual bool MouseMoved    (nuiSize X, nuiSize Y);
+//  virtual bool MouseGrabbed();
+//  virtual bool MouseUngrabbed();
 
   // Multitouch interface:
   virtual bool MouseClicked(const nglMouseInfo& rInfo);

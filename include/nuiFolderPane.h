@@ -43,8 +43,8 @@ public:
   
 protected:
 
-  virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  virtual bool MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
+  virtual bool MouseClicked  (const nglMouseInfo& rInfo);
+  virtual bool MouseUnclicked  (const nglMouseInfo& rInfo);
   
   bool mIsOpened;
   bool mInteractiveCloseEnabled;

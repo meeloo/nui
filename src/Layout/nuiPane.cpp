@@ -71,21 +71,21 @@ bool nuiPane::Draw(nuiDrawContext* pContext)
   return true;
 }
 
-bool nuiPane::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiPane::MouseClicked  (const nglMouseInfo& rInfo)
 {
-  ClickedMouse(X,Y,Button);
+  ClickedMouse(rInfo.X, rInfo.Y, rInfo.Buttons);
   return mInterceptMouse;
 }
 
-bool nuiPane::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiPane::MouseUnclicked  (const nglMouseInfo& rInfo)
 {
-  UnclickedMouse(X,Y,Button);
+  UnclickedMouse(rInfo.X, rInfo.Y, rInfo.Buttons);
   return mInterceptMouse;
 }
 
-bool nuiPane::MouseMoved  (nuiSize X, nuiSize Y)
+bool nuiPane::MouseMoved  (const nglMouseInfo& rInfo)
 {
-  MovedMouse(X,Y);
+  MovedMouse(rInfo.X, rInfo.Y);
   return mInterceptMouse;
 }
 

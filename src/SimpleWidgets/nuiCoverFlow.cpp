@@ -474,14 +474,14 @@ bool nuiCoverFlow::KeyUp(const nglKeyEvent& rEvent)
   return false;
 }
 
-bool nuiCoverFlow::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiCoverFlow::MouseClicked(const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonWheelUp || Button & nglMouseInfo::ButtonWheelLeft)
+  if (rInfo.Button & nglMouseInfo::ButtonWheelUp || rInfo.Button & nglMouseInfo::ButtonWheelLeft)
   {    
     SelectImage(mSelectedImage - 1);
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelDown || Button & nglMouseInfo::ButtonWheelRight)
+  else if (rInfo.Button & nglMouseInfo::ButtonWheelDown || rInfo.Button & nglMouseInfo::ButtonWheelRight)
   {    
     SelectImage(mSelectedImage + 1);
     return true;
@@ -490,12 +490,12 @@ bool nuiCoverFlow::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button
   return true;
 }
 
-bool nuiCoverFlow::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiCoverFlow::MouseUnclicked(const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonWheelDown
-    || Button & nglMouseInfo::ButtonWheelLeft
-    || Button & nglMouseInfo::ButtonWheelDown
-    || Button & nglMouseInfo::ButtonWheelRight)
+  if (rInfo.Button & nglMouseInfo::ButtonWheelDown
+    || rInfo.Button & nglMouseInfo::ButtonWheelLeft
+    || rInfo.Button & nglMouseInfo::ButtonWheelDown
+    || rInfo.Button & nglMouseInfo::ButtonWheelRight)
     return true;
   
   return true;

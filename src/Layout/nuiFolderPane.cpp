@@ -68,15 +68,15 @@ nuiFolderPane::~nuiFolderPane()
 }
 
 
-bool nuiFolderPane::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiFolderPane::MouseUnclicked  (const nglMouseInfo& rInfo)
 {
-  if (mClicked && Button & nglMouseInfo::ButtonLeft)
+  if (mClicked && rInfo.Button & nglMouseInfo::ButtonLeft)
   {
     nuiRect rect = GetTitle()->GetRect();
     rect.SetSize (GetRect().GetWidth(), rect.GetHeight());
     rect.MoveTo (0, rect.Top());
     
-    if (rect.IsInside (X, Y))
+    if (rect.IsInside (rInfo.X, rInfo.Y))
     {
       if (!mInteractiveCloseEnabled)
         return false;
@@ -91,15 +91,15 @@ bool nuiFolderPane::MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags B
   return false;
 }
 
-bool nuiFolderPane::MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiFolderPane::MouseClicked  (const nglMouseInfo& rInfo)
 {
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Button & nglMouseInfo::ButtonLeft)
   {
     nuiRect rect = GetTitle()->GetRect();
     rect.SetSize (GetRect().GetWidth(), rect.GetHeight());
     rect.MoveTo (0, rect.Top());
     
-    if (rect.IsInside (X, Y))
+    if (rect.IsInside (rInfo.X, rInfo.Y))
     {
       mClicked = true;
     }

@@ -1099,17 +1099,17 @@ void nuiPopupMenu::IncrementScrollBar(bool increment)
   }
 }
 
-bool nuiPopupMenu::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiPopupMenu::MouseClicked(const nglMouseInfo& rInfo)
 {    
   mSelectionTimer.Stop();
 
-  if (Button & nglMouseInfo::ButtonWheelUp)
+  if (rInfo.Buttons & nglMouseInfo::ButtonWheelUp)
   {
     IncrementScrollBar(false);
     mWheelMoved = true;
     return true;
   }
-  else if (Button & nglMouseInfo::ButtonWheelDown)
+  else if (rInfo.Buttons & nglMouseInfo::ButtonWheelDown)
   {
     IncrementScrollBar(true);
     mWheelMoved = true;
@@ -1117,7 +1117,7 @@ bool nuiPopupMenu::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button
   }  
 
   bool IsInside;
-  int cpt = SearchRectIndex(X,Y);
+  int cpt = SearchRectIndex(rInfo.X, rInfo.Y);
   IsInside = cpt >= 0 ? true : false;
   if (!IsInside)
   { // Out of bounds, had to close menu
@@ -1134,7 +1134,7 @@ bool nuiPopupMenu::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button
   }
   else 
   { // Search the clicked node
-    nuiTreeNodePtr pNode = SearchNode(X,Y,cpt);
+    nuiTreeNodePtr pNode = SearchNode(rInfo.X, rInfo.Y,cpt);
     if (pNode)
     {
       if (pNode->GetElement()->IsDisabled())

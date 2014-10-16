@@ -59,9 +59,9 @@ public:
   bool KeyUp(const nglKeyEvent& rEvent);
   
   // Mouse Events:
-  bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  bool MouseUnclicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
-  bool MouseMoved  (nuiSize X, nuiSize Y);
+  bool MouseClicked  (const nglMouseInfo& rInfo);
+  bool MouseUnclicked  (const nglMouseInfo& rInfo);
+  bool MouseMoved  (const nglMouseInfo& rInfo);
 
   // Sent events:
   nuiSimpleEventSource<nuiValueChanged> InteractiveValueChanged; ///< This event is sent whenever the Slider's thumb position is changed (by the user or by the program).

@@ -290,11 +290,11 @@ bool nuiButton::KeyUp(const nglKeyEvent& rEvent)
 }
 
 // Received Mouse events:
-bool nuiButton::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiButton::MouseClicked(const nglMouseInfo& rInfo)
 {
   if (IsDisabled())
     return false;
-  if (Button & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
 //    printf("clicked\n");
     mClicked = true;
@@ -320,10 +320,10 @@ bool nuiButton::MouseClicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
   return false;
 }            
 
-bool nuiButton::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
+bool nuiButton::MouseUnclicked(const nglMouseInfo& rInfo)
 {
 //  printf("unclicked\n");
-  if ( (Button & nglMouseInfo::ButtonLeft) && mClicked)
+  if ( (rInfo.Button & nglMouseInfo::ButtonLeft) && mClicked)
   {
 //    printf("was clicked\n");
     mClicked = false;
@@ -331,7 +331,7 @@ bool nuiButton::MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button)
     Invalidate();
     if (!mAutoRepeat)
     {
-      if (IsInsideFromSelf(X,Y, GetActivationOffset()))
+      if (IsInsideFromSelf(rInfo.X,rInfo.Y, GetActivationOffset()))
       {
         //      printf("activated\n");
         Activated();
@@ -380,11 +380,11 @@ bool nuiButton::MouseUngrabbed()
   return false;
 }
 
-bool nuiButton::MouseMoved(nuiSize X, nuiSize Y)
+bool nuiButton::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (mClicked)
   {
-    if (IsInsideFromSelf(X,Y, GetActivationOffset()))
+    if (IsInsideFromSelf(rInfo.X, rInfo.Y, GetActivationOffset()))
     {
       SetPressed(true);
     }
