@@ -46,6 +46,9 @@ typedef double nuiSize;
 #include "nuiObject.h"
 #include "nuiInit.h"
 
+#include "nuiEvent.h"
+
+
 #include "nuiRect.h"
 #include "nuiColor.h"
 #include "nglMath.h"
@@ -173,6 +176,7 @@ typedef double nuiSize;
   #include "nuiHotKey.h"
   #include "nuiDefaultDecoration.h"
   #include "nuiMouseEvent.h"
+  #include "nuiLayoutManager.h"
   #include "nuiWidget.h"
   #include "nuiTopLevel.h"
   #include "nuiGestureRecognizer.h"

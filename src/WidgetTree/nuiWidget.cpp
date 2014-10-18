@@ -127,10 +127,6 @@ void nuiWidget::InitDefaultValues()
   mpDecoration = NULL;
   mpFocusDecoration = NULL;
   mShowFocus = true;
-  mPosition = nuiFill;
-  mFillRule = nuiFill;
-  mCSSPasses = 0;
-  mpMatrixNodes = NULL;
   mpParent = NULL;
   mpTheme = NULL;
   mDecorationEnabled = true;
@@ -142,15 +138,10 @@ void nuiWidget::InitDefaultValues()
   mDecorationMode = eDecorationOverdraw;
   mHotKeyMask = -1;
   mClickThru = true;
-  mInSetRect = false;
   mInTransition = 0;
-  mpLayoutAnimation = NULL;
-  mFixedAspectRatio = false;
   mAutoClip = true;
   mAutoDraw = false;
   mReverseRender = false;
-  mOverrideVisibleRect = false;
-  mAutoUpdateLayout = false;
   mAutoAcceptMouseCancel = true;
   mAutoAcceptMouseSteal = true;
 }
@@ -165,12 +156,6 @@ bool nuiWidget::AttrIsEnabled()
 
 
 
-bool nuiWidget::AttrIsVisible()
-{
-	return IsVisible();
-}
-
-
 void nuiWidget::InitAttributes()
 {
   AddAttribute(new nuiAttribute<bool>
@@ -179,97 +164,10 @@ void nuiWidget::InitAttributes()
      nuiMakeDelegate(this, &nuiWidget::SetEnabled)));
   
   AddAttribute(new nuiAttribute<bool>
-    (nglString("Visible"), nuiUnitBoolean,
-     nuiMakeDelegate(this, &nuiWidget::AttrIsVisible),
-     nuiMakeDelegate(this, &nuiWidget::SetVisible)));
-
-  AddAttribute(new nuiAttribute<bool>
     (nglString("Selected"), nuiUnitBoolean,
      nuiMakeDelegate(this, &nuiWidget::AttrIsSelected),
      nuiMakeDelegate(this, &nuiWidget::SetSelected)));
 
-  
-  
-  AddAttribute(new nuiAttribute<const nuiRect&>
-               (nglString("LayoutRect"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetRect),
-                nuiMakeDelegate(this, &nuiWidget::SetLayout)));
-  
-  AddAttribute(new nuiAttribute<const nuiRect&>
-               (nglString("LayoutRectUnsafe"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetRect),
-                nuiAttribute<const nuiRect&>::SetterDelegate(this, &nuiWidget::InternalSetLayout)));
-  
-  AddAttribute(new nuiAttribute<const nuiRect&>
-               (nglString("UserRect"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetUserRect),
-                nuiMakeDelegate(this, &nuiWidget::SetUserRect)));
-  
-  AddAttribute(new nuiAttribute<nuiPoint>
-               (nglString("UserPos"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetUserPos),
-                nuiAttribute<nuiPoint>::SetterDelegate(this, &nuiWidget::SetUserPos)));
-  
-  AddAttribute(new nuiAttribute<const nuiRect&>
-               (nglString("VisibleRect"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetVisibleRect),
-                nuiMakeDelegate(this, &nuiWidget::SetVisibleRect)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("UserWidth"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetUserWidth),
-                nuiMakeDelegate(this, &nuiWidget::SetUserWidth)));
-
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("UserHeight"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetUserHeight),
-                nuiMakeDelegate(this, &nuiWidget::SetUserHeight)));
-  
-  
-  
-  
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("MinIdealWidth"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetMinIdealWidth),
-                nuiMakeDelegate(this, &nuiWidget::SetMinIdealWidth)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("MinIdealHeight"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetMinIdealHeight),
-                nuiMakeDelegate(this, &nuiWidget::SetMinIdealHeight)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("MaxIdealWidth"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetMaxIdealWidth),
-                nuiMakeDelegate(this, &nuiWidget::SetMaxIdealWidth)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("MaxIdealHeight"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetMaxIdealHeight),
-                nuiMakeDelegate(this, &nuiWidget::SetMaxIdealHeight)));
-  
-
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("MinWidth"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetMinWidth),
-                nuiMakeDelegate(this, &nuiWidget::SetMinWidth)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("MinHeight"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetMinHeight),
-                nuiMakeDelegate(this, &nuiWidget::SetMinHeight)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("MaxWidth"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetMaxWidth),
-                nuiMakeDelegate(this, &nuiWidget::SetMaxWidth)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("MaxHeight"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiWidget::GetMaxHeight),
-                nuiMakeDelegate(this, &nuiWidget::SetMaxHeight)));
   
   
   
@@ -341,32 +239,6 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::SetFocusVisible)));
   
   
-  // nuiAttribute<nuiSize> <=> nuiAttribute<double>
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("Borders"), nuiUnitSize,
-                //nuiMakeDelegate(this, &nuiWidget::GetBorderLeft),
-                nuiMakeDelegate(this, &nuiWidget::SetBorders)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("BorderLeft"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetBorderLeft),
-                nuiMakeDelegate(this, &nuiWidget::SetBorderLeft)));
-
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("BorderTop"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetBorderTop),
-                nuiMakeDelegate(this, &nuiWidget::SetBorderTop)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("BorderRight"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetBorderRight),
-                nuiMakeDelegate(this, &nuiWidget::SetBorderRight)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("BorderBottom"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetBorderBottom),
-                nuiMakeDelegate(this, &nuiWidget::SetBorderBottom)));
-  
   AddAttribute(new nuiAttribute<nuiSize>
                (nglString("OverDrawLeft"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiWidget::GetOverDrawLeft),
@@ -387,35 +259,6 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetOverDrawBottom),
                 nuiMakeDelegate(this, &nuiWidget::SetOverDrawBottom)));
   
-  // nuiAttribute<nuiSize> <=> nuiAttribute<double>
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("ActualBorderLeft"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetActualBorderLeft)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("ActualBorderTop"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetActualBorderTop)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("ActualBorderRight"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetActualBorderRight)));
-  
-  AddAttribute(new nuiAttribute<nuiSize>
-               (nglString("ActualBorderBottom"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetActualBorderBottom)));
-  
-  nuiAttribute<nuiPosition>* AttributePosition = new nuiAttribute<nuiPosition>
-              (nglString("Position"), nuiUnitPosition,
-               nuiMakeDelegate(this, &nuiWidget::GetPosition), 
-               nuiMakeDelegate(this, &nuiWidget::SetPosition));
-  AddAttribute("Position", AttributePosition);
-  
-  nuiAttribute<nuiPosition>* AttributeFillRule = new nuiAttribute<nuiPosition>
-              (nglString("FillRule"), nuiUnitPosition,
-               nuiMakeDelegate(this, &nuiWidget::GetFillRule), 
-               nuiMakeDelegate(this, &nuiWidget::SetFillRule));
-  AddAttribute("FillRule", AttributeFillRule);
-
   AddAttribute(new nuiAttribute<nuiMouseCursor>
                (nglString("Cursor"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiWidget::GetMouseCursor),
@@ -442,11 +285,6 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetSurfaceMatrix),
                 nuiMakeDelegate(this, &nuiWidget::SetSurfaceMatrix)));
   
-  AddAttribute(new nuiAttribute<nuiMatrix>
-               (nglString("Matrix"), nuiUnitMatrix,
-                nuiMakeDelegate(this, &nuiWidget::_GetMatrix),
-                nuiMakeDelegate(this, &nuiWidget::_SetMatrix)));
-  
   AddAttribute(new nuiAttribute<nuiBlendFunc>
                (nglString("SurfaceBlendFunc"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiWidget::GetSurfaceBlendFunc),
@@ -462,12 +300,6 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::IsOverDrawInteractive),
                 nuiMakeDelegate(this, &nuiWidget::EnableInteractiveOverDraw)));
   
-  AddAttribute(new nuiAttribute<float>
-               (nglString("LayoutAnimationDuration"), nuiUnitSize,
-                nuiMakeDelegate(this, &nuiWidget::GetLayoutAnimationDuration),
-                nuiMakeDelegate(this, &nuiWidget::SetLayoutAnimationDuration)
-               ));
-
   nuiAttribute<float>* pAlphaAttrib = new nuiAttribute<float>
   (nglString("Alpha"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiWidget::GetAlpha),
@@ -483,19 +315,9 @@ void nuiWidget::InitAttributes()
                 nuiRange(0, 0, 100, 1, 10, 10, 0)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString("FixedAspectRatio"), nuiUnitOnOff,
-                nuiMakeDelegate(this, &nuiWidget::GetFixedAspectRatio), 
-                nuiMakeDelegate(this, &nuiWidget::SetFixedAspectRatio)));
-
-  AddAttribute(new nuiAttribute<bool>
                (nglString("ReverseRender"), nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetReverseRender),
                 nuiMakeDelegate(this, &nuiWidget::SetReverseRender)));
-
-  AddAttribute(new nuiAttribute<bool>
-               (nglString("AutoUpdateLayout"), nuiUnitOnOff,
-                nuiMakeDelegate(this, &nuiWidget::GetAutoUpdateLayout),
-                nuiMakeDelegate(this, &nuiWidget::SetAutoUpdateLayout)));
 
   AddAttribute(new nuiAttribute<bool>
                (nglString("AutoAcceptMouseCancel"), nuiUnitOnOff,
@@ -513,7 +335,6 @@ void nuiWidget::InitAttributes()
 void nuiWidget::Init()
 {
   mDebugLevel = 0; // No debug by default.
-  mCanRespectConstraint = false; ///< By default the widgets don't care about the constraints imposed by their parents. Only few ones care about this.
   mNeedInvalidateOnSetRect = true;
   mDrawingInCache = false;
   mpRenderCache = NULL;
@@ -526,43 +347,25 @@ void nuiWidget::Init()
   mMixAlpha = true;
   mInheritAlpha = true;
 
-  mAnimateLayout = false;
   mObjCursor = eCursorDoNotSet;
   mAlpha = 1.0f;
   mHasFocus = false;
   mNeedRender = true;
-  mNeedSelfLayout = true;
-  mNeedLayout = true;
-  mNeedIdealRect = true;
   mNeedSelfRedraw = true;
   mStateLocked = false;
   mHover = false;
-  mHasUserPos = false;
-  mHasUserSize = false;
-  mHasUserWidth = false;
-  mHasUserHeight = false;
-  mForceIdealSize = false;
   mSelectionExclusive = false;
 
   mMouseEventEnabled = true;
-
-  mBorderRight = mBorderLeft = 0.f;
-  mBorderTop = mBorderBottom = 0.f;
-
-  mMinIdealWidth = mMaxIdealWidth = mMinIdealHeight = mMaxIdealHeight = -1.0f;
-  mMinWidth = mMaxWidth = mMinHeight = mMaxHeight = -1.0f;
 
   mpSavedPainter = NULL;
 
 	mEnabled = true;
   mSelected = false;
-  mVisible = true;
   
   mWantKeyboardFocus = false;
   mMuteKeyboardFocusDispatch = false;
 
-  LoadIdentityMatrix();
-  
   EnableRenderCache(true);
   
   // Events:
@@ -577,10 +380,6 @@ void nuiWidget::Init()
   NUI_ADD_EVENT(Deselected);
   NUI_ADD_EVENT(Disabled);
   NUI_ADD_EVENT(StateChanged);
-
-  NUI_ADD_EVENT(Shown);
-  NUI_ADD_EVENT(Hiden);
-  NUI_ADD_EVENT(VisibilityChanged);
 
   NUI_ADD_EVENT(HoverOn);
   NUI_ADD_EVENT(HoverOff);
@@ -602,27 +401,6 @@ void nuiWidget::Init()
   NUI_ADD_EVENT(PreMouseMoved);
   NUI_ADD_EVENT(PreMouseWheelMoved);
 }
-
-bool nuiWidget::SetObjectClass(const nglString& rName)
-{
-  CheckValid();
-  
-  bool res = nuiObject::SetObjectClass(rName);
-  ResetCSSPass();
-  ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_ALL);
-  return res;
-}
-
-// virtual from nuiObject
-void nuiWidget::SetObjectName(const nglString& rName)
-{
-  CheckValid();
-  
-  nuiObject::SetObjectName(rName);
-  ResetCSSPass();
-  ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_ALL);
-}
-
 
 
 
