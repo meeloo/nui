@@ -76,7 +76,7 @@ static nuiWidgetCounter gWidgetCounter;
 #endif
 
 nuiWidget::nuiWidget()
-: nuiObject(), mGenericWidgetSink(this)
+: nuiLayoutBase(), mGenericWidgetSink(this)
 {
   InitDefaultValues();
   
@@ -97,7 +97,7 @@ nuiWidget::nuiWidget()
 
 
 nuiWidget::nuiWidget(const nglString& rObjectName)
-: nuiObject(rObjectName), mGenericWidgetSink(this)
+: nuiLayoutBase(rObjectName), mGenericWidgetSink(this)
 {
   InitDefaultValues();
   
