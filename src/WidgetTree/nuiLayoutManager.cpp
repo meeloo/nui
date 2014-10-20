@@ -24,6 +24,7 @@ nuiLayoutBase::nuiLayoutBase(const nglString& rObjectName)
 
 void nuiLayoutBase::Init()
 {
+  mpParentLayout = NULL;
   mPosition = nuiFill;
   mFillRule = nuiFill;
   mCSSPasses = 0;
@@ -354,8 +355,6 @@ void nuiLayoutBase::SilentInvalidateLayout()
   mNeedSelfLayout = true;
   mNeedLayout = true;
   mNeedIdealRect = true;
-  mNeedRender = true;
-  mNeedSelfRedraw = true;
   DebugRefreshInfo();
 }
 
@@ -366,7 +365,7 @@ void nuiLayoutBase::InvalidateLayout()
   if (mAutoUpdateLayout)
   {
     UpdateLayout();
-    Invalidate();
+    //Invalidate();  // UpdateLayout already calls Invalidate when needed
     return;
   }
 
@@ -379,10 +378,10 @@ void nuiLayoutBase::InvalidateLayout()
   bool broadcast = !mNeedLayout;
   SilentInvalidateLayout();
 
-  if (mpParent && broadcast)
+  if (mpParentLayout && broadcast)
   {
     //NGL_OUT("InvalidateLayout + Broadcast from %s\n", GetObjectClass().GetChars());
-    mpParent->BroadcastInvalidateLayout(this, false);
+    mpParentLayout->BroadcastInvalidateLayout(this, false);
   }
   DebugRefreshInfo();
 }
@@ -393,10 +392,10 @@ void nuiLayoutBase::ForcedInvalidateLayout()
   bool broadcast = !mNeedLayout;
   SilentInvalidateLayout();
 
-  if (mpParent && broadcast)
+  if (mpParentLayout && broadcast)
   {
     //NGL_OUT("InvalidateLayout + Broadcast from %s\n", GetObjectClass().GetChars());
-    mpParent->BroadcastInvalidateLayout(this, false);
+    mpParentLayout->BroadcastInvalidateLayout(this, false);
   }
   DebugRefreshInfo();
 }
@@ -421,9 +420,9 @@ void nuiLayoutBase::BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool Broad
     mNeedIdealRect = true;
   }
 
-  if (mpParent)
+  if (mpParentLayout)
   {
-    mpParent->BroadcastInvalidateLayout(pSender, BroadCastOnly);
+    mpParentLayout->BroadcastInvalidateLayout(pSender, BroadCastOnly);
     //    NGL_OUT("nuiLayoutBase::BroadcastInvalidateLayout %s / %s / 0x%x\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
   }
 
@@ -492,10 +491,10 @@ void nuiLayoutBase::SilentSetVisible(bool Visible)
 bool nuiLayoutBase::IsVisible(bool combined) const
 {
   CheckValid();
-  if (!combined || !mpParent)
+  if (!combined || !mpParentLayout)
     return mVisible;
   if (mVisible)
-    return mpParent->IsVisible(true);
+    return mpParentLayout->IsVisible(true);
   return mVisible;
 }
 
@@ -626,7 +625,7 @@ bool nuiLayoutBase::IsInSetRect() const
 {
   if (mInSetRect)
     return true;
-  return mpParent ? mpParent->IsInSetRect() : false;
+  return mpParentLayout ? mpParentLayout->IsInSetRect() : false;
 }
 
 void nuiLayoutBase::SetBorders(nuiSize XY)
@@ -1005,10 +1004,10 @@ void nuiLayoutBase::SetHotRect(const nuiRect& rRect)
   CheckValid();
   mHotRect = rRect;
   HotRectChanged();
-  if (mpParent)
+  if (mpParentLayout)
   {
     nuiRect r(rRect);
-    LocalToLocal(mpParent, r);
+    LocalToLocal(mpParentLayout, r);
     mpParent->OnChildHotRectChanged(this, r);
   }
   DebugRefreshInfo();

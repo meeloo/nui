@@ -4535,3 +4535,13 @@ void nuiWidget::GetHoverList(nuiSize X, nuiSize Y, std::set<nuiWidget*>& rHoverS
 }
 
 
+////////
+// From nuiLayoutBase
+void nuiWidget::SilentInvalidateLayout()
+{
+  CheckValid();
+  nuiLayoutBase::SilentInvalidateLayout();
+  mNeedRender = true;
+  mNeedSelfRedraw = true;
+  DebugRefreshInfo();
+}

@@ -525,7 +525,9 @@ public:
   static void SetFocusVisibleDefault(bool set);
   bool IsFocusVisible() const;
   //@}
-  
+
+  void SilentInvalidateLayout();
+
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
   NUI_GETSET(bool, AutoAcceptMouseSteal);

@@ -218,6 +218,7 @@ protected:
   void Init();
   void InitAttributes();
 
+  nuiLayoutBase* mpParentLayout;
   nuiRect mRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
   nuiRect mLayoutRect; ///< The rect given by the parent (may be different than mRect)
   nuiRect mVisibleRect; ///< The active bounding box of the nuiObject (in local coordinates).
@@ -237,7 +238,7 @@ protected:
   
   void AddEvent(const nglString& rName, nuiEventSource& rEvent);
   
-  virtual void BroadcastInvalidateLayout(nuiWidget* pSender, bool BroadCastOnly);
+  virtual void BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool BroadCastOnly);
   void ApplyCSSForStateChange(uint32 MatchersTag); ///< This method will match this widget's state with the CSS and apply the changes needed to display it correctly
   
   
