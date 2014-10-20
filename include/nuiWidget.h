@@ -536,6 +536,8 @@ public:
   static bool GetGlobalUseRenderCache();
 
 protected:
+  void BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool BroadCastOnly);
+
   virtual void BroadcastInvalidate(nuiWidgetPtr pSender);
   virtual void BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect);
   virtual void CallConnectTopLevel(nuiTopLevel* pTopLevel); ///< This method is called when the widget is connected to the Top Level. Overload it to perform specific actions in a widget.
@@ -615,8 +617,6 @@ protected:
 
 
   bool mClickThru: 1;
-
-  int32 mInTransition;
   
   void InitDefaultValues();
   void Init(); ///< Initialise the basic parameters of the class.

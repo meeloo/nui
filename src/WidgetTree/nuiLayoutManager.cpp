@@ -410,10 +410,6 @@ void nuiLayoutBase::BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool Broad
     return;
   }
 
-  mNeedRender = true;
-  if (mpSurface)
-    mNeedSelfRedraw = true;
-
   if (!BroadCastOnly)
   {
     mNeedSelfLayout = true;
@@ -540,21 +536,6 @@ bool nuiLayoutBase::IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset)
   CheckValid();
   if (!IsVisible(false))
     return false;
-
-  if (mInteractiveDecoration)
-  {
-    nuiRect r = mVisibleRect;
-    r.Intersect(mVisibleRect, GetOverDrawRect(true, true));
-    r.Grow(GrowOffset, GrowOffset);
-    return r.IsInside(X, Y);
-  }
-  if (mInteractiveOD)
-  {
-    nuiRect r = mVisibleRect;
-    r.Intersect(r, GetOverDrawRect(true, false));
-    r.Grow(GrowOffset, GrowOffset);
-    return r.IsInside(X, Y);
-  }
 
   nuiRect r(GetRect().Size());
   r.Grow(GrowOffset, GrowOffset);
@@ -1606,7 +1587,7 @@ void nuiLayoutBase::UpdateLayout()
   Invalidate();
 }
 
-void nuiWidget::ApplyCSSForStateChange(uint32 MatchersTag)
+void nuiLayoutBase::ApplyCSSForStateChange(uint32 MatchersTag)
 {
   CheckValid();
   // Apply CSS, do default stuff, etc...
@@ -1618,30 +1599,30 @@ void nuiWidget::ApplyCSSForStateChange(uint32 MatchersTag)
   }
 }
 
-void nuiWidget::ResetCSSPass()
+void nuiLayoutBase::ResetCSSPass()
 {
   CheckValid();
   InternalResetCSSPass();
 }
 
-void nuiWidget::IncrementCSSPass()
+void nuiLayoutBase::IncrementCSSPass()
 {
   CheckValid();
   mCSSPasses++;
 }
 
-uint32 nuiWidget::GetCSSPass() const
+uint32 nuiLayoutBase::GetCSSPass() const
 {
   CheckValid();
   return mCSSPasses;
 }
 
-void nuiWidget::AutoInvalidateLayout(const nuiEvent& rEvent)
+void nuiLayoutBase::AutoInvalidateLayout(const nuiEvent& rEvent)
 {
   InvalidateLayout();
 }
 
-void nuiWidget::SetVisible(bool Visible)
+void nuiLayoutBase::SetVisible(bool Visible)
 {
   CheckValid();
   if (IsVisible(false) == Visible)
@@ -1792,18 +1773,18 @@ void nuiWidget::SetVisible(bool Visible)
     BroadcastVisible();
 }
 
-void nuiWidget::BroadcastVisible()
+void nuiLayoutBase::BroadcastVisible()
 {
   CheckValid();
   IteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
+    nuiLayoutBase* pItem = pIt->GetWidget();
     if (pItem->GetNeedSelfRedraw())
     {
       pItem->InvalidateRect(pItem->GetRect().Size());
     }
-    nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pItem);
+    nuiLayoutBase* pContainer = dynamic_cast<nuiLayoutBase*>(pItem);
     if (pContainer)
     {
       pContainer->BroadcastVisible();
@@ -1812,7 +1793,7 @@ void nuiWidget::BroadcastVisible()
   delete pIt;
 }
 
-nuiRect nuiWidget::CalcIdealSize()
+nuiRect nuiLayoutBase::CalcIdealSize()
 {
   CheckValid();
   nuiRect temp;
@@ -1820,7 +1801,7 @@ nuiRect nuiWidget::CalcIdealSize()
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
+    nuiLayoutBase* pItem = pIt->GetWidget();
     if (mCanRespectConstraint)
       pItem->SetLayoutConstraint(mConstraint);
     nuiRect r(pItem->GetIdealRect()); // Dummy call. Only the side effect is important: the object recalculates its layout.
@@ -1832,12 +1813,12 @@ nuiRect nuiWidget::CalcIdealSize()
   return temp.Size();
 }
 
-bool nuiWidget::SetSelfRect(const nuiRect& rRect)
+bool nuiLayoutBase::SetSelfRect(const nuiRect& rRect)
 {
   CheckValid();
 #ifdef _DEBUG_LAYOUT
   if (GetDebug())
-    NGL_OUT("nuiWidget::SetRect on '%s' (%f, %f - %f, %f)\n", GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
+    NGL_OUT("nuiLayoutBase::SetRect on '%s' (%f, %f - %f, %f)\n", GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
 #endif
 
   bool inval = mNeedInvalidateOnSetRect;
@@ -1860,14 +1841,14 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
   DebugRefreshInfo();
 }
 
-bool nuiWidget::SetRect(const nuiRect& rRect)
+bool nuiLayoutBase::SetRect(const nuiRect& rRect)
 {
   SetSelfRect(rRect);
   nuiRect rect(rRect.Size());
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
+    nuiLayoutBase* pItem = pIt->GetWidget();
     if (mCanRespectConstraint)
       pItem->SetLayoutConstraint(mConstraint);
     pItem->GetIdealRect();
@@ -1879,7 +1860,7 @@ bool nuiWidget::SetRect(const nuiRect& rRect)
   return true;
 }
 
-void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged)
+void nuiLayoutBase::InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged)
 {
   CheckValid();
 
@@ -1898,10 +1879,10 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
     if (mNeedLayout)
     {
       // The children need to be re layed out (at least one of them!).
-      nuiWidget::IteratorPtr pIt = GetFirstChild(false);
+      nuiLayoutBase::IteratorPtr pIt = GetFirstChild(false);
       do
       {
-        nuiWidgetPtr pItem = pIt->GetWidget();
+        nuiLayoutBase* pItem = pIt->GetWidget();
         if (pItem)
         {
           // The rect of each child doesn't change BUT we still ask for its ideal rect.
@@ -1934,7 +1915,7 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
   IteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
+    nuiLayoutBase* pItem = pIt->GetWidget();
     if (pItem->IsVisible())
     {
       NGL_ASSERT(!pItem->GetNeedLayout());
@@ -1945,13 +1926,13 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
 #endif
 }
 
-void nuiWidget::OnChildHotRectChanged(nuiWidget* pChild, const nuiRect& rChildHotRect)
+void nuiLayoutBase::OnChildHotRectChanged(nuiLayoutBase* pChild, const nuiRect& rChildHotRect)
 {
   CheckValid();
   SetHotRect(rChildHotRect);
 }
 
-void nuiWidget::InternalResetCSSPass()
+void nuiLayoutBase::InternalResetCSSPass()
 {
   CheckValid();
   mCSSPasses = 0;
@@ -1959,31 +1940,31 @@ void nuiWidget::InternalResetCSSPass()
   IteratorPtr pIt = GetFirstChild(false);
   for (; pIt && pIt->IsValid(); GetNextChild(pIt))
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
+    nuiLayoutBase* pItem = pIt->GetWidget();
     pItem->ResetCSSPass();
   }
   delete pIt;
 }
 
-void nuiWidget::SetChildrenLayoutAnimationDuration(float duration)
+void nuiLayoutBase::SetChildrenLayoutAnimationDuration(float duration)
 {
   CheckValid();
   IteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
+    nuiLayoutBase* pItem = pIt->GetWidget();
     pItem->SetLayoutAnimationDuration(duration);
   }
   delete pIt;
 }
 
-void nuiWidget::SetChildrenLayoutAnimationEasing(const nuiEasingMethod& rMethod)
+void nuiLayoutBase::SetChildrenLayoutAnimationEasing(const nuiEasingMethod& rMethod)
 {
   CheckValid();
   IteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
+    nuiLayoutBase* pItem = pIt->GetWidget();
     pItem->SetLayoutAnimationEasing(rMethod);
   }
   delete pIt;

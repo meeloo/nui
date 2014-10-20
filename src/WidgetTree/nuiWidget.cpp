@@ -138,7 +138,6 @@ void nuiWidget::InitDefaultValues()
   mDecorationMode = eDecorationOverdraw;
   mHotKeyMask = -1;
   mClickThru = true;
-  mInTransition = 0;
   mAutoClip = true;
   mAutoDraw = false;
   mReverseRender = false;
@@ -4545,3 +4544,69 @@ void nuiWidget::SilentInvalidateLayout()
   mNeedSelfRedraw = true;
   DebugRefreshInfo();
 }
+
+void nuiWidget::BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool BroadCastOnly)
+{
+  CheckValid();
+  
+  if ((!mNeedSelfLayout && HasUserSize())) // A child can't change the ideal position of its parent so we can stop broadcasting if the parent has a fixed ideal size.
+  {
+    UpdateLayout();
+    return;
+  }
+  
+  mNeedRender = true;
+  if (mpSurface)
+    mNeedSelfRedraw = true;
+  
+  if (!BroadCastOnly)
+  {
+    mNeedSelfLayout = true;
+    mNeedIdealRect = true;
+  }
+  
+  if (mpParentLayout)
+  {
+    mpParentLayout->BroadcastInvalidateLayout(pSender, BroadCastOnly);
+    //    NGL_OUT("nuiLayoutBase::BroadcastInvalidateLayout %s / %s / 0x%x\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
+  }
+  
+#ifdef DEBUG
+  if (GetDebug() || pSender->GetDebug())
+  {
+    //NGL_OUT("nuiLayoutBase::BroadcastInvalidateLayout SKIP %s / %s / 0x%x\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
+  }
+#endif
+  
+  mNeedLayout = true;
+  
+  DebugRefreshInfo();
+}
+
+
+bool nuiWidget::IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset)
+{
+  CheckValid();
+  if (!IsVisible(false))
+    return false;
+  
+  if (mInteractiveDecoration)
+  {
+    nuiRect r = mVisibleRect;
+    r.Intersect(mVisibleRect, GetOverDrawRect(true, true));
+    r.Grow(GrowOffset, GrowOffset);
+    return r.IsInside(X, Y);
+  }
+  if (mInteractiveOD)
+  {
+    nuiRect r = mVisibleRect;
+    r.Intersect(r, GetOverDrawRect(true, false));
+    r.Grow(GrowOffset, GrowOffset);
+    return r.IsInside(X, Y);
+  }
+  
+  nuiRect r(GetRect().Size());
+  r.Grow(GrowOffset, GrowOffset);
+  return r.IsInside(X,Y);
+}
+

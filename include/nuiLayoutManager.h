@@ -19,13 +19,15 @@ class nuiWidget;
 class nuiLayoutBase : public nuiObject
 {
 public:
+  friend class nuiWidget;
+  
   nuiLayoutBase();
   nuiLayoutBase(const nglString& rObjectName);
   
   bool SetSelfRect(const nuiRect& rRect);
   virtual bool SetRect(const nuiRect& rRect);
   
-  virtual void OnChildHotRectChanged(nuiWidget* pChild, const nuiRect& rChildHotRect);
+  virtual void OnChildHotRectChanged(nuiLayoutBase* pChild, const nuiRect& rChildHotRect);
 
   /** @name Children Layout animations: */
   //@{
@@ -257,6 +259,8 @@ protected:
   bool mFixedAspectRatio: 1;
   bool mOverrideVisibleRect : 1;
   bool mAutoUpdateLayout : 1;
+
+  int32 mInTransition = 0;
 
   float mMaxIdealWidth;
   float mMaxIdealHeight;
