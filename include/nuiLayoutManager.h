@@ -303,4 +303,3 @@ protected:
 #endif
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }
-
