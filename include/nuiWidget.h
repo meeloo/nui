@@ -527,6 +527,8 @@ public:
   //@}
 
   void SilentInvalidateLayout();
+  bool IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset);
+
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
