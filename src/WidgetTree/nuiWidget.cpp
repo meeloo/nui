@@ -3503,6 +3503,36 @@ void nuiWidget::ChildrenCallOnTrash()
   delete pIt;
 }
 
+bool nuiWidget::IsInsideFromRoot(nuiSize X, nuiSize Y, nuiSize GrowOffset)
+{
+  CheckValid();
+  if (!IsVisible(false))
+    return false;
+  
+  GlobalToLocal(X, Y);
+  return IsInsideFromSelf(X,Y, GrowOffset);
+}
+
+bool nuiWidget::IsInsideFromParent(nuiSize X, nuiSize Y, nuiSize GrowOffset)
+{
+  CheckValid();
+  if (!IsVisible(false))
+    return false;
+  return IsInsideFromSelf(X - mRect.Left(), Y - mRect.Top(), GrowOffset);
+}
+
+bool nuiWidget::IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset)
+{
+  CheckValid();
+  if (!IsVisible(false))
+    return false;
+  
+  nuiRect r(GetRect().Size());
+  r.Grow(GrowOffset, GrowOffset);
+  return r.IsInside(X,Y);
+}
+
+
 nuiWidgetPtr nuiWidget::GetRoot() const
 {
   CheckValid();
@@ -3695,6 +3725,42 @@ nuiWidgetPtr nuiWidget::SearchForChild(const nglString& rName, bool recurse )
 
   return NULL;
 }
+
+const nuiRect& nuiWidget::GetRect() const
+{
+  CheckValid();
+  return mLayoutRect;
+}
+
+nuiRect nuiWidget::GetBorderedRect() const
+{
+  CheckValid();
+  return GetBorderedRect(GetRect());
+}
+
+nuiRect nuiWidget::GetBorderedRect(const nuiRect& rRect) const
+{
+  CheckValid();
+  nuiRect rect = rRect;
+  rect.Bottom() += GetActualBorderBottom();
+  rect.Top() -= GetActualBorderTop();
+  rect.Left() -= GetActualBorderLeft();
+  rect.Right() += GetActualBorderRight();
+  return rect;
+}
+
+nuiRect nuiWidget::GetBorderLessRect(const nuiRect& rRect) const
+{
+  CheckValid();
+  nuiRect rect = rRect;
+  rect.Bottom() -= GetActualBorderBottom();
+  rect.Top() += GetActualBorderTop();
+  rect.Left() += GetActualBorderLeft();
+  rect.Right() -= GetActualBorderRight();
+  return rect;
+}
+
+
 
 void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
 {

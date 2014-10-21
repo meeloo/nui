@@ -64,11 +64,12 @@ public:
   bool IsInTransition() const;
   bool IsInSetRect() const; ///< Returns true if this widget or one of its parents' SetRect method is currently being called.
   
+  virtual nuiRect CalcIdealSize();
   virtual const nuiRect& GetIdealRect(); ///< Return the ideal area used by this Object. If the layout of this object has changed CalIdealRect will be called and mIdealRect will contain the ideal rectangle. If the user specified a user size then mIdealRect will be overwritten with mUserRect.
-  virtual const nuiRect& GetRect() const; ///< Return the current area used by this Object.
-  virtual nuiRect GetBorderedRect() const; ///< Return the current area used by this Object including its border
-  nuiRect GetBorderedRect(const nuiRect& rRect) const;
-  nuiRect GetBorderLessRect(const nuiRect& rRect) const;
+  virtual const nuiRect& GetLayoutRect() const; ///< Return the current area used by this Object.
+  virtual nuiRect GetBorderedLayoutRect() const; ///< Return the current area used by this Object including its border
+  nuiRect GetBorderedLayoutRect(const nuiRect& rRect) const;
+  nuiRect GetBorderLessLayoutRect(const nuiRect& rRect) const;
   
   void SetUserWidth(nuiSize s);
   nuiSize GetUserWidth();
@@ -122,10 +123,6 @@ public:
   const nuiRect& GetHotRect() const; ///< Get the user focused rectangle in the widget. This rectangle is an indication only. The parent of this widget can choose to display it or to ignore the recommendation.
   void SetHotRect(const nuiRect& rRect); ///< Get the user focused rectangle in the widget. This rectangle is an indication only. The parent of this widget can choose to display it or to ignore the recommendation.
   bool HasLayoutChanged() const; ///< This method returns true if the layout of the object has changed since the last layout/redraw loop.
-  
-  bool IsInsideFromRoot(nuiSize X, nuiSize Y, nuiSize GrowOffset = 0); ///< Return true if the point (X,Y) (in the coordinates of the root object) is inside the object. This method call IsInsideLocal internally so you may not need to redefine it.
-  bool IsInsideFromParent(nuiSize X, nuiSize Y, nuiSize GrowOffset = 0); ///< Return true if the point (X,Y) (in the coordinates of the parent) is inside the object.
-  virtual bool IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset = 0); ///< Return true if the point (X,Y) (in the coordinates of the parent) is inside the object.
   //@}
   
   virtual void InvalidateLayout(); ///< Tell the system that this widget's geometry should be recalculated, unless it has a user rect.
@@ -145,6 +142,18 @@ public:
   virtual nuiPosition GetPosition() const; ///< Get the position where the widget will be layed out in the rectangle given by its parent container.
   virtual void SetFillRule(nuiPosition mode); ///< If the widget's position if nuiFill, this method sets the behaviour of the object when the drawing region doesn't respects the 1:1 ratio of the widget's ideal rect.
   virtual nuiPosition GetFillRule() const; ///< If the widget's position if nuiFill, this method gets the behaviour of the object when the drawing region doesn't respects the 1:1 ratio of the widget's ideal rect.
+  
+  
+  virtual void LocalToGlobal(int& x, int& y) const;
+  virtual void LocalToGlobal(nuiSize& x, nuiSize& y) const;
+  virtual void LocalToGlobal(nuiRect& rRect) const;
+  virtual void GlobalToLocal(int& x, int& y) const;
+  virtual void GlobalToLocal(nuiSize& x, nuiSize& y) const;
+  virtual void GlobalToLocal(nuiRect& rRect) const;
+  virtual void LocalToLocal(nuiLayoutBase* pWidget,int& x, int& y) const;
+  virtual void LocalToLocal(nuiLayoutBase* pWidget, nuiSize& x, nuiSize& y) const;
+  virtual void LocalToLocal(nuiLayoutBase* pWidget,nuiRect& rRect) const;
+
   
   nuiSimpleEventSource <nuiWidgetShown> Shown; ///< Send an event when the object is shown
   nuiSimpleEventSource <nuiWidgetHiden> Hiden; ///< Send an event when the object is hidden
@@ -221,8 +230,8 @@ protected:
   void InitAttributes();
 
   nuiLayoutBase* mpParentLayout;
-  nuiRect mRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
-  nuiRect mLayoutRect; ///< The rect given by the parent (may be different than mRect)
+  nuiRect mLayoutRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
+  nuiRect mLayoutRectFromParent; ///< The rect given by the parent (may be different than mLayoutRect)
   nuiRect mVisibleRect; ///< The active bounding box of the nuiObject (in local coordinates).
   nuiRect mIdealRect; ///< The ideal bounding box of the nuiObject (in coordinates of its parent) position should be at the origin.
   nuiRect mUserRect; ///< The bounding box of the nuiObject if set by the user (in coordinates of its parent).
