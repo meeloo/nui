@@ -147,7 +147,6 @@ public:
   virtual void InvalidateChildren(bool Recurse);
   virtual void SilentInvalidateChildren(bool Recurse);
   virtual bool Draw(nuiDrawContext* pContext);
-  virtual nuiRect CalcIdealSize();
   virtual void SetAlpha(float Alpha);
   virtual void SetEnabled(bool set);
   virtual void SetSelected(bool set);
@@ -206,6 +205,10 @@ public:
 
   /** @name Coordinates translation */
   //@{
+  bool IsInsideFromRoot(nuiSize X, nuiSize Y, nuiSize GrowOffset);
+  bool IsInsideFromParent(nuiSize X, nuiSize Y, nuiSize GrowOffset);
+  bool IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset);
+  
   void LocalToGlobal(int& x, int& y) const; ///< This method recursively calculate the coordinate of the given point if the system of the top parent. (x,y) will be translated from the client coordinates to the main window coordinates.
   void LocalToGlobal(nuiSize& x, nuiSize& y) const; ///< This method recursively calculate the coordinate of the given point if the system of the top parent. (x,y) will be translated from the client coordinates to the main window coordinates.
   void LocalToGlobal(nuiRect& rRect) const;
@@ -238,6 +241,11 @@ public:
   float GetAlpha() const; ///< Returns the current alpha transparency value of this object.
   virtual nuiDrawContext* GetDrawContext(); ///< Retrieve the draw context from the root object (the main window).
 
+  virtual const nuiRect& GetRect() const; ///< Return the current area used by this Object.
+  virtual nuiRect GetBorderedRect() const; ///< Return the current area used by this Object including its border
+  nuiRect GetBorderedRect(const nuiRect& rRect) const;
+  nuiRect GetBorderLessRect(const nuiRect& rRect) const;
+  
   void SetOverDraw(nuiSize Left, nuiSize Top, nuiSize Right, nuiSize Bottom); ///< Set the amount of over draw for each border of the widget.
   void ResetOverDraw(); ///< Reset the overdraw borders to 0. Equivalent to SetOverDraw(0, 0, 0, 0);
   void GetOverDraw(nuiSize& Left, nuiSize& Top, nuiSize& Right, nuiSize& Bottom, bool IncludeDecorations) const; ///< Fill the arguments with the amount of overdraw for each border of the widget
@@ -548,6 +556,7 @@ protected:
   virtual void CallOnTrash(); ///< This method is called whenever a Trash occurred on the widget tree branch. It performs some clean up and then calls nuiWidget::OnTrash to enable the user to handle the trash.
 
   nuiWidgetPtr mpParent;
+  nuiRect mRect;
 
   float mAlpha; ///< Indicates the transparency level of the object. Optional. 
   nuiSurface* mpSurface;
