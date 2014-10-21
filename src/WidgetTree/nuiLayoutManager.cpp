@@ -28,7 +28,6 @@ void nuiLayoutBase::Init()
   mPosition = nuiFill;
   mFillRule = nuiFill;
   mCSSPasses = 0;
-  mpMatrixNodes = NULL;
   mInSetRect = false;
   mpLayoutAnimation = NULL;
   mFixedAspectRatio = false;
@@ -55,55 +54,56 @@ void nuiLayoutBase::Init()
   
   mVisible = true;
 
-  LoadIdentityMatrix();
-  
   NUI_ADD_EVENT(Shown);
   NUI_ADD_EVENT(Hiden);
   NUI_ADD_EVENT(VisibilityChanged);
+  NUI_ADD_EVENT(UserRectChanged);
+  NUI_ADD_EVENT(HotRectChanged);
+
   
 
-  mLayoutRect;
-  mLayoutRectFromParent;
-  mVisibleRect;
-  mIdealRect;
-  mUserRect;
-  mHotRect;
-  mConstraint;
-  
-  mpMatrixNodes;
-  
-  mAnimateLayout;
-  mVisible;
-  mHasUserPos;
-  mHasUserSize;
-  mHasUserWidth;
-  mHasUserHeight;
-  mForceIdealSize;
-  mNeedSelfLayout;
-  mNeedLayout;
-  mNeedIdealRect;
-  mCanRespectConstraint;
-  mInSetRect;
-  mFixedAspectRatio;
-  mOverrideVisibleRect;
-  mAutoUpdateLayout;
-  
-   mMaxIdealWidth;
-   mMaxIdealHeight;
-   mMinIdealWidth;
-   mMinIdealHeight;
-  
-   mMaxWidth;
-   mMaxHeight;
-   mMinWidth;
-   mMinHeight;
-  
-  mPosition;
-  mFillRule;
-  mpLayoutAnimation;
-  
-  mCSSPasses;
-  
+//  mLayoutRect;
+//  mLayoutRectFromParent;
+//  mVisibleRect;
+//  mIdealRect;
+//  mUserRect;
+//  mHotRect;
+//  mConstraint;
+//  
+//  mpMatrixNodes;
+//  
+//  mAnimateLayout;
+//  mVisible;
+//  mHasUserPos;
+//  mHasUserSize;
+//  mHasUserWidth;
+//  mHasUserHeight;
+//  mForceIdealSize;
+//  mNeedSelfLayout;
+//  mNeedLayout;
+//  mNeedIdealRect;
+//  mCanRespectConstraint;
+//  mInSetRect;
+//  mFixedAspectRatio;
+//  mOverrideVisibleRect;
+//  mAutoUpdateLayout;
+//  
+//   mMaxIdealWidth;
+//   mMaxIdealHeight;
+//   mMinIdealWidth;
+//   mMinIdealHeight;
+//  
+//   mMaxWidth;
+//   mMaxHeight;
+//   mMinWidth;
+//   mMinHeight;
+//  
+//  mPosition;
+//  mFillRule;
+//  mpLayoutAnimation;
+//  
+//  mCSSPasses;
+
   if (SetObjectClass("nuiLayoutBase"))
   {
     InitAttributes();
@@ -278,11 +278,6 @@ void nuiLayoutBase::InitAttributes()
    nuiMakeDelegate(this, &nuiLayoutBase::GetFillRule),
    nuiMakeDelegate(this, &nuiLayoutBase::SetFillRule));
   AddAttribute("FillRule", AttributeFillRule);
-  
-  AddAttribute(new nuiAttribute<nuiMatrix>
-               (nglString("Matrix"), nuiUnitMatrix,
-                nuiMakeDelegate(this, &nuiLayoutBase::_GetMatrix),
-                nuiMakeDelegate(this, &nuiLayoutBase::_SetMatrix)));
   
   AddAttribute(new nuiAttribute<float>
                (nglString("LayoutAnimationDuration"), nuiUnitSize,
@@ -669,57 +664,25 @@ nuiSize nuiLayoutBase::GetBorderBottom() const
 nuiSize nuiLayoutBase::GetActualBorderLeft() const
 {
   CheckValid();
-  nuiSize Left = mBorderLeft;
-  if (mDecorationEnabled)
-  {
-    if (mpDecoration && mDecorationMode == eDecorationBorder)
-      Left = MAX(Left, mpDecoration->GetBorder(nuiLeft, this));
-  }
-  if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
-    Left = MAX(Left, mpFocusDecoration->GetBorder(nuiLeft, this));
-  return Left;
+  return GetBorderLeft();
 }
 
 nuiSize nuiLayoutBase::GetActualBorderTop() const
 {
   CheckValid();
-  nuiSize Top = mBorderTop;
-  if (mDecorationEnabled)
-  {
-    if (mpDecoration && mDecorationMode == eDecorationBorder)
-      Top = MAX(Top, mpDecoration->GetBorder(nuiTop, this));
-  }
-  if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
-    Top = MAX(Top, mpFocusDecoration->GetBorder(nuiTop, this));
-  return Top;
+  return GetBorderTop();
 }
 
 nuiSize nuiLayoutBase::GetActualBorderRight() const
 {
   CheckValid();
-  nuiSize Right = mBorderRight;
-  if (mDecorationEnabled)
-  {
-    if (mpDecoration && mDecorationMode == eDecorationBorder)
-      Right = MAX(Right, mpDecoration->GetBorder(nuiRight, this));
-  }
-  if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
-    Right = MAX(Right, mpFocusDecoration->GetBorder(nuiRight, this));
-  return Right;
+  return GetBorderRight();
 }
 
 nuiSize nuiLayoutBase::GetActualBorderBottom() const
 {
   CheckValid();
-  nuiSize Bottom = mBorderBottom;
-  if (mDecorationEnabled)
-  {
-    if (mpDecoration && mDecorationMode == eDecorationBorder)
-      Bottom = MAX(Bottom, mpDecoration->GetBorder(nuiBottom, this));
-  }
-  if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
-    Bottom = MAX(Bottom, mpFocusDecoration->GetBorder(nuiBottom, this));
-  return Bottom;
+  return GetBorderBottom();
 }
 
 void nuiLayoutBase::InternalSetLayout(const nuiRect& rect)
@@ -730,12 +693,6 @@ void nuiLayoutBase::InternalSetLayout(const nuiRect& rect)
   mNeedSelfLayout = mNeedSelfLayout || SizeChanged;
 
   InternalSetLayout(rect, PositionChanged, SizeChanged);
-
-  if (!mOverrideVisibleRect)
-    mVisibleRect = GetOverDrawRect(true, true);
-
-  if (PositionChanged && mpParent)
-    mpParent->Invalidate();
 
   mNeedSelfLayout = false;
   mNeedLayout = false;
@@ -806,8 +763,6 @@ void nuiLayoutBase::SetUserRect(const nuiRect& rRect)
         SetRect(rRect);
         mInSetRect = false;
       }
-      mpParent->Invalidate();
-      Invalidate();
     }
     else
     {
@@ -960,7 +915,7 @@ void nuiLayoutBase::SetHotRect(const nuiRect& rRect)
   {
     nuiRect r(rRect);
     LocalToLocal(mpParentLayout, r);
-    mpParent->OnChildHotRectChanged(this, r);
+    mpParentLayout->OnChildHotRectChanged(this, r);
   }
   DebugRefreshInfo();
 }
@@ -1221,146 +1176,6 @@ void nuiLayoutBase::SetLayoutAnimationEasing(const nuiEasingMethod& rMethod)
     pAnim->SetEasing(rMethod);
 }
 
-
-/// Matrix Operations:
-nuiMatrix nuiLayoutBase::mIdentityMatrix;
-
-void nuiLayoutBase::AddMatrixNode(nuiMatrixNode* pNode)
-{
-  CheckValid();
-  nuiLayoutBase::InvalidateRect(GetOverDrawRect(true, true));
-  SilentInvalidate();
-
-  if (!mpMatrixNodes)
-    mpMatrixNodes = new std::vector<nuiMatrixNode*>;
-
-  pNode->Acquire();
-  mpMatrixNodes->push_back(pNode);
-  mGenericWidgetSink.Connect(pNode->Changed, &nuiLayoutBase::AutoInvalidateLayout);
-
-  // Usual clean up needed for the partial redraw to work correctly
-  nuiLayoutBase::InvalidateRect(GetOverDrawRect(true, true));
-  SilentInvalidate();
-
-  if (mpParent)
-    mpParent->BroadcastInvalidate(this);
-  DebugRefreshInfo();
-}
-
-void nuiLayoutBase::DelMatrixNode(uint32 index)
-{
-  if (!mpMatrixNodes)
-    return;
-
-  CheckValid();
-  nuiLayoutBase::InvalidateRect(GetOverDrawRect(true, true));
-  SilentInvalidate();
-
-  mGenericWidgetSink.Disconnect(mpMatrixNodes->at(index)->Changed, &nuiLayoutBase::AutoInvalidateLayout);
-  mpMatrixNodes->at(index)->Release();
-  mpMatrixNodes->erase(mpMatrixNodes->begin() + index);
-
-  // Usual clean up needed for the partial redraw to work correctly
-  nuiLayoutBase::InvalidateRect(GetOverDrawRect(true, true));
-  SilentInvalidate();
-
-  if (mpParent)
-    mpParent->BroadcastInvalidate(this);
-  DebugRefreshInfo();
-}
-
-
-int32 nuiLayoutBase::GetMatrixNodeCount() const
-{
-  CheckValid();
-  if (!mpMatrixNodes)
-    return 0;
-  return mpMatrixNodes->size();
-}
-
-
-nuiMatrixNode* nuiLayoutBase::GetMatrixNode(uint32 index) const
-{
-  CheckValid();
-  if (mpMatrixNodes)
-    return mpMatrixNodes->at(index);
-  return nullptr;
-}
-
-
-void nuiLayoutBase::LoadIdentityMatrix()
-{
-  CheckValid();
-  Invalidate();
-
-  if (mpMatrixNodes)
-  {
-    for (uint32 i = 0; i < mpMatrixNodes->size(); i++)
-      mpMatrixNodes->at(i)->Release();
-    delete mpMatrixNodes;
-    mpMatrixNodes = NULL;
-  }
-
-  Invalidate();
-  DebugRefreshInfo();
-}
-
-bool nuiLayoutBase::IsMatrixIdentity() const
-{
-  return !mpMatrixNodes;
-}
-
-void nuiLayoutBase::GetMatrix(nuiMatrix& rMatrix) const
-{
-  CheckValid();
-  rMatrix.SetIdentity();
-  if (IsMatrixIdentity())
-    return;
-
-  for (uint32 i = 0; i < mpMatrixNodes->size(); i++)
-    mpMatrixNodes->at(i)->Apply(rMatrix);
-}
-
-nuiMatrix nuiLayoutBase::GetMatrix() const
-{
-  CheckValid();
-  nuiMatrix m;
-  GetMatrix(m);
-  return m;
-}
-
-nuiMatrix nuiLayoutBase::_GetMatrix() const
-{
-  CheckValid();
-  return GetMatrix();
-}
-
-void nuiLayoutBase::_SetMatrix(nuiMatrix Matrix)
-{
-  SetMatrix(Matrix);
-}
-
-void nuiLayoutBase::SetMatrix(const nuiMatrix& rMatrix)
-{
-  CheckValid();
-  nuiLayoutBase::InvalidateRect(GetOverDrawRect(true, true));
-  SilentInvalidate();
-
-  // Special case: we only need one simple static matrix node at max
-  LoadIdentityMatrix(); // So we load the identity matrix (i.e. clear any existing node)
-  if (!rMatrix.IsIdentity()) // If the user wasn't asking for the identity matrix
-  {
-    AddMatrixNode(new nuiMatrixNode(rMatrix));
-  }
-
-  // Usual clean up needed for the partial redraw to work correctly
-  nuiLayoutBase::InvalidateRect(GetOverDrawRect(true, true));
-  SilentInvalidate();
-
-  if (mpParent)
-    mpParent->BroadcastInvalidate(this);
-  DebugRefreshInfo();
-}
 
 bool nuiLayoutBase::SetLayoutConstraint(const nuiLayoutBase::LayoutConstraint& rConstraint)
 {

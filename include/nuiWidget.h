@@ -205,9 +205,9 @@ public:
 
   /** @name Coordinates translation */
   //@{
-  bool IsInsideFromRoot(nuiSize X, nuiSize Y, nuiSize GrowOffset);
-  bool IsInsideFromParent(nuiSize X, nuiSize Y, nuiSize GrowOffset);
-  bool IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset);
+  bool IsInsideFromRoot(nuiSize X, nuiSize Y, nuiSize GrowOffset = 0);
+  bool IsInsideFromParent(nuiSize X, nuiSize Y, nuiSize GrowOffset = 0);
+  bool IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset = 0);
   
   void LocalToGlobal(int& x, int& y) const; ///< This method recursively calculate the coordinate of the given point if the system of the top parent. (x,y) will be translated from the client coordinates to the main window coordinates.
   void LocalToGlobal(nuiSize& x, nuiSize& y) const; ///< This method recursively calculate the coordinate of the given point if the system of the top parent. (x,y) will be translated from the client coordinates to the main window coordinates.
@@ -230,6 +230,13 @@ public:
   nuiSize GetOverDrawTop() const;
   nuiSize GetOverDrawRight() const;
   nuiSize GetOverDrawBottom() const;
+
+  nuiSize GetActualBorderLeft() const;
+  nuiSize GetActualBorderTop() const;
+  nuiSize GetActualBorderRight() const;
+  nuiSize GetActualBorderBottom() const;
+
+  void InternalSetLayout(const nuiRect& rect);
 
   /** @name Rendering */
   //@{
@@ -385,9 +392,6 @@ public:
   nuiSimpleEventSource <nuiWidgetHoverOff    > HoverOff; ///< Send an event when the mouse stops hovering on the object.
   nuiSimpleEventSource <nuiWidgetHoverChanged> HoverChanged; ///< Send an event when the hovering state changes.
 
-  nuiSimpleEventSource <nuiMoved> UserRectChanged; ///< Send an event when the user preferred rectangle changes.
-  nuiSimpleEventSource <nuiMoved> HotRectChanged; ///< Send an event when the hot spot of the widget is moved.
-
   nuiSimpleEventSource <nuiFocus> FocusChanged; ///< Send an event when the focus has changed (gain or lost).
 
   nuiMouseClicked PreClicked; ///< Send an event when the widget is clicked. This event is fired before the MouseClicked method is called on the widget.
@@ -458,6 +462,25 @@ public:
   void SetSurfaceBlendFunc(nuiBlendFunc BlendFunc);
   
   //@}
+
+
+  /** @name Matrix Transformation Support */
+  //@{
+  void AddMatrixNode(nuiMatrixNode* pNode);
+  void DelMatrixNode(uint32 index);
+  int32 GetMatrixNodeCount() const;
+  nuiMatrixNode* GetMatrixNode(uint32 index) const;
+  //@}
+
+  /** @name Old (deprecated) Matrix Transformation Support */
+  //@{
+  void LoadIdentityMatrix();
+  bool IsMatrixIdentity() const;
+  void GetMatrix(nuiMatrix& rMatrix) const;
+  nuiMatrix GetMatrix() const;
+  void SetMatrix(const nuiMatrix& rMatrix);
+  //@}
+
 
   virtual void ConnectTopLevel(); ///< This method is called when the widget is connected to the Top Level. Overload it to perform specific actions in a widget.
   virtual void DisconnectTopLevel(); ///< This method is called when the widget is disconnected from the Top Level. Overload it to perform specific actions in a widget.
@@ -535,7 +558,7 @@ public:
   //@}
 
   void SilentInvalidateLayout();
-  bool IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset);
+  void SetUserRect(const nuiRect& rRect);
 
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
@@ -570,7 +593,11 @@ protected:
 
   std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor> mAnimations;
 
-  
+  std::vector<nuiMatrixNode*>* mpMatrixNodes;
+  nuiMatrix _GetMatrix() const;
+  void _SetMatrix(nuiMatrix Matrix);
+
+
   nuiMatrix mSurfaceMatrix;
   nuiColor mSurfaceColor;
   nuiBlendFunc mSurfaceBlendFunc;

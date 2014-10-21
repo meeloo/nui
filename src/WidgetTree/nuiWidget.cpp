@@ -132,6 +132,7 @@ void nuiWidget::InitDefaultValues()
   mDecorationEnabled = true;
   mNeedSurfaceRedraw = false;
   mSurfaceEnabled = false;
+  mpMatrixNodes = NULL;
   mpSurface = NULL;
   mSurfaceColor = nuiColor(255, 255, 255, 255);
   mSurfaceBlendFunc = nuiBlendTransp;  
@@ -328,6 +329,13 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetAutoAcceptMouseSteal),
                 nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseSteal)));
 
+  AddAttribute(new nuiAttribute<nuiMatrix>
+               (nglString("Matrix"), nuiUnitMatrix,
+                nuiMakeDelegate(this, &nuiWidget::_GetMatrix),
+                nuiMakeDelegate(this, &nuiWidget::_SetMatrix)));
+
+
+
 }
 
  
@@ -365,6 +373,8 @@ void nuiWidget::Init()
   mWantKeyboardFocus = false;
   mMuteKeyboardFocusDispatch = false;
 
+  LoadIdentityMatrix();
+
   EnableRenderCache(true);
   
   // Events:
@@ -383,9 +393,6 @@ void nuiWidget::Init()
   NUI_ADD_EVENT(HoverOn);
   NUI_ADD_EVENT(HoverOff);
   NUI_ADD_EVENT(HoverChanged);
-
-  NUI_ADD_EVENT(UserRectChanged);
-  NUI_ADD_EVENT(HotRectChanged);
 
   NUI_ADD_EVENT(Clicked);
   NUI_ADD_EVENT(Unclicked);
@@ -3526,7 +3533,22 @@ bool nuiWidget::IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset)
   CheckValid();
   if (!IsVisible(false))
     return false;
-  
+
+  if (mInteractiveDecoration)
+  {
+    nuiRect r = mVisibleRect;
+    r.Intersect(mVisibleRect, GetOverDrawRect(true, true));
+    r.Grow(GrowOffset, GrowOffset);
+    return r.IsInside(X, Y);
+  }
+  if (mInteractiveOD)
+  {
+    nuiRect r = mVisibleRect;
+    r.Intersect(r, GetOverDrawRect(true, false));
+    r.Grow(GrowOffset, GrowOffset);
+    return r.IsInside(X, Y);
+  }
+
   nuiRect r(GetRect().Size());
   r.Grow(GrowOffset, GrowOffset);
   return r.IsInside(X,Y);
@@ -4650,29 +4672,253 @@ void nuiWidget::BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool BroadCast
 }
 
 
-bool nuiWidget::IsInsideFromSelf(nuiSize X, nuiSize Y, nuiSize GrowOffset)
+nuiSize nuiWidget::GetActualBorderLeft() const
 {
   CheckValid();
-  if (!IsVisible(false))
-    return false;
-  
-  if (mInteractiveDecoration)
+  nuiSize Left = mBorderLeft;
+  if (mDecorationEnabled)
   {
-    nuiRect r = mVisibleRect;
-    r.Intersect(mVisibleRect, GetOverDrawRect(true, true));
-    r.Grow(GrowOffset, GrowOffset);
-    return r.IsInside(X, Y);
+    if (mpDecoration && mDecorationMode == eDecorationBorder)
+      Left = MAX(Left, mpDecoration->GetBorder(nuiLeft, this));
   }
-  if (mInteractiveOD)
-  {
-    nuiRect r = mVisibleRect;
-    r.Intersect(r, GetOverDrawRect(true, false));
-    r.Grow(GrowOffset, GrowOffset);
-    return r.IsInside(X, Y);
-  }
-  
-  nuiRect r(GetRect().Size());
-  r.Grow(GrowOffset, GrowOffset);
-  return r.IsInside(X,Y);
+  if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
+    Left = MAX(Left, mpFocusDecoration->GetBorder(nuiLeft, this));
+  return Left;
 }
+
+nuiSize nuiWidget::GetActualBorderTop() const
+{
+  CheckValid();
+  nuiSize Top = mBorderTop;
+  if (mDecorationEnabled)
+  {
+    if (mpDecoration && mDecorationMode == eDecorationBorder)
+      Top = MAX(Top, mpDecoration->GetBorder(nuiTop, this));
+  }
+  if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
+    Top = MAX(Top, mpFocusDecoration->GetBorder(nuiTop, this));
+  return Top;
+}
+
+nuiSize nuiWidget::GetActualBorderRight() const
+{
+  CheckValid();
+  nuiSize Right = mBorderRight;
+  if (mDecorationEnabled)
+  {
+    if (mpDecoration && mDecorationMode == eDecorationBorder)
+      Right = MAX(Right, mpDecoration->GetBorder(nuiRight, this));
+  }
+  if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
+    Right = MAX(Right, mpFocusDecoration->GetBorder(nuiRight, this));
+  return Right;
+}
+
+nuiSize nuiWidget::GetActualBorderBottom() const
+{
+  CheckValid();
+  nuiSize Bottom = mBorderBottom;
+  if (mDecorationEnabled)
+  {
+    if (mpDecoration && mDecorationMode == eDecorationBorder)
+      Bottom = MAX(Bottom, mpDecoration->GetBorder(nuiBottom, this));
+  }
+  if (mpFocusDecoration && mFocusDecorationMode == eDecorationBorder)
+    Bottom = MAX(Bottom, mpFocusDecoration->GetBorder(nuiBottom, this));
+  return Bottom;
+}
+
+void nuiWidget::InternalSetLayout(const nuiRect& rect)
+{
+  CheckValid();
+  bool PositionChanged = (rect.Left() != mLayoutRect.Left()) || (rect.Top() != mLayoutRect.Top());
+  bool SizeChanged = !rect.Size().IsEqual(mLayoutRect.Size());
+  mNeedSelfLayout = mNeedSelfLayout || SizeChanged;
+
+  nuiLayoutBase::InternalSetLayout(rect, PositionChanged, SizeChanged);
+
+  if (!mOverrideVisibleRect)
+    mVisibleRect = GetOverDrawRect(true, true);
+
+  if (PositionChanged && mpParent)
+    mpParent->Invalidate();
+
+  mNeedSelfLayout = false;
+  mNeedLayout = false;
+  DebugRefreshInfo();
+}
+
+/// Matrix Operations:
+void nuiWidget::AddMatrixNode(nuiMatrixNode* pNode)
+{
+  CheckValid();
+  InvalidateRect(GetOverDrawRect(true, true));
+  SilentInvalidate();
+
+  if (!mpMatrixNodes)
+    mpMatrixNodes = new std::vector<nuiMatrixNode*>;
+
+  pNode->Acquire();
+  mpMatrixNodes->push_back(pNode);
+  mGenericWidgetSink.Connect(pNode->Changed, &nuiWidget::AutoInvalidateLayout);
+
+  // Usual clean up needed for the partial redraw to work correctly
+  InvalidateRect(GetOverDrawRect(true, true));
+  SilentInvalidate();
+
+  if (mpParent)
+    mpParent->BroadcastInvalidate(this);
+  DebugRefreshInfo();
+}
+
+void nuiWidget::DelMatrixNode(uint32 index)
+{
+  if (!mpMatrixNodes)
+    return;
+
+  CheckValid();
+  InvalidateRect(GetOverDrawRect(true, true));
+  SilentInvalidate();
+
+  mGenericWidgetSink.Disconnect(mpMatrixNodes->at(index)->Changed, &nuiLayoutBase::AutoInvalidateLayout);
+  mpMatrixNodes->at(index)->Release();
+  mpMatrixNodes->erase(mpMatrixNodes->begin() + index);
+
+  // Usual clean up needed for the partial redraw to work correctly
+  nuiWidget::InvalidateRect(GetOverDrawRect(true, true));
+  SilentInvalidate();
+
+  if (mpParent)
+    mpParent->BroadcastInvalidate(this);
+  DebugRefreshInfo();
+}
+
+
+int32 nuiWidget::GetMatrixNodeCount() const
+{
+  CheckValid();
+  if (!mpMatrixNodes)
+    return 0;
+  return mpMatrixNodes->size();
+}
+
+
+nuiMatrixNode* nuiWidget::GetMatrixNode(uint32 index) const
+{
+  CheckValid();
+  if (mpMatrixNodes)
+    return mpMatrixNodes->at(index);
+  return nullptr;
+}
+
+
+void nuiWidget::LoadIdentityMatrix()
+{
+  CheckValid();
+  Invalidate();
+
+  if (mpMatrixNodes)
+  {
+    for (uint32 i = 0; i < mpMatrixNodes->size(); i++)
+      mpMatrixNodes->at(i)->Release();
+    delete mpMatrixNodes;
+    mpMatrixNodes = NULL;
+  }
+
+  Invalidate();
+  DebugRefreshInfo();
+}
+
+bool nuiWidget::IsMatrixIdentity() const
+{
+  return !mpMatrixNodes;
+}
+
+void nuiWidget::GetMatrix(nuiMatrix& rMatrix) const
+{
+  CheckValid();
+  rMatrix.SetIdentity();
+  if (IsMatrixIdentity())
+    return;
+
+  for (uint32 i = 0; i < mpMatrixNodes->size(); i++)
+    mpMatrixNodes->at(i)->Apply(rMatrix);
+}
+
+nuiMatrix nuiWidget::GetMatrix() const
+{
+  CheckValid();
+  nuiMatrix m;
+  GetMatrix(m);
+  return m;
+}
+
+nuiMatrix nuiWidget::_GetMatrix() const
+{
+  CheckValid();
+  return GetMatrix();
+}
+
+void nuiWidget::_SetMatrix(nuiMatrix Matrix)
+{
+  SetMatrix(Matrix);
+}
+
+void nuiWidget::SetMatrix(const nuiMatrix& rMatrix)
+{
+  CheckValid();
+  InvalidateRect(GetOverDrawRect(true, true));
+  SilentInvalidate();
+
+  // Special case: we only need one simple static matrix node at max
+  LoadIdentityMatrix(); // So we load the identity matrix (i.e. clear any existing node)
+  if (!rMatrix.IsIdentity()) // If the user wasn't asking for the identity matrix
+  {
+    AddMatrixNode(new nuiMatrixNode(rMatrix));
+  }
+
+  // Usual clean up needed for the partial redraw to work correctly
+  nuiWidget::InvalidateRect(GetOverDrawRect(true, true));
+  SilentInvalidate();
+
+  if (mpParent)
+    mpParent->BroadcastInvalidate(this);
+  DebugRefreshInfo();
+}
+
+void nuiWidget::SetUserRect(const nuiRect& rRect)
+{
+  CheckValid();
+  if (!(mUserRect == rRect) || !mHasUserPos || !mHasUserSize)
+  {
+    mUserRect = rRect;
+    bool SizeChanged = !mUserRect.Size().IsEqual(mLayoutRect.Size());
+    bool optim = HasUserRect() && !SizeChanged;
+    mHasUserSize = true;
+    mHasUserPos = true;
+    mHasUserWidth = true;
+    mHasUserHeight = true;
+    UserRectChanged();
+
+    mIdealRect = mUserRect;
+
+    if (optim)
+    {
+      if (!IsInSetRect())
+      {
+        mInSetRect = true;
+        SetRect(rRect);
+        mInSetRect = false;
+      }
+      mpParent->Invalidate();
+      Invalidate();
+    }
+    else
+    {
+      ForcedInvalidateLayout();
+    }
+    DebugRefreshInfo();
+  }
+}
+
 

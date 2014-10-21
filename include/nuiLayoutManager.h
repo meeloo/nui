@@ -49,10 +49,10 @@ public:
   nuiSize GetBorderTop() const;
   nuiSize GetBorderRight() const;
   nuiSize GetBorderBottom() const;
-  nuiSize GetActualBorderLeft() const;
-  nuiSize GetActualBorderTop() const;
-  nuiSize GetActualBorderRight() const;
-  nuiSize GetActualBorderBottom() const;
+  virtual nuiSize GetActualBorderLeft() const;
+  virtual nuiSize GetActualBorderTop() const;
+  virtual nuiSize GetActualBorderRight() const;
+  virtual nuiSize GetActualBorderBottom() const;
   
   virtual void SetVisibleRect(const nuiRect& rRect); ///< This sets the rectangle that will actually be displayed in the parent widget (for example in case this widget is inside a nuiScrollView, only a part of it may be visible at once). The rectangle is local to the widget rect.
   void SilentSetVisibleRect(const nuiRect& rRect); ///< This method change the visible rect of the widget without invalidating it. It is useful if you need to change the visible rect from a parent's SetRect method: you allready know that you will need to redraw it. See SetVisibleRect for more information.
@@ -158,29 +158,15 @@ public:
   nuiSimpleEventSource <nuiWidgetShown> Shown; ///< Send an event when the object is shown
   nuiSimpleEventSource <nuiWidgetHiden> Hiden; ///< Send an event when the object is hidden
   nuiSimpleEventSource <nuiWidgetVisibilityChanged> VisibilityChanged; ///< Send an event when the object is either hiden or shown.
-  
+  nuiSimpleEventSource <nuiMoved> UserRectChanged; ///< Send an event when the user preferred rectangle changes.
+  nuiSimpleEventSource <nuiMoved> HotRectChanged; ///< Send an event when the hot spot of the widget is moved.
+
+
   nuiRectAttributeAnimation* GetLayoutAnimation(bool CreateIfNotAvailable);
   void SetLayoutAnimationDuration(float duration);
   float GetLayoutAnimationDuration();
   void SetLayoutAnimationEasing(const nuiEasingMethod& rMethod);
 
-  /** @name Matrix Transformation Support */
-  //@{
-  void AddMatrixNode(nuiMatrixNode* pNode);
-  void DelMatrixNode(uint32 index);
-  int32 GetMatrixNodeCount() const;
-  nuiMatrixNode* GetMatrixNode(uint32 index) const;
-  //@}
-  
-  /** @name Old (deprecated) Matrix Transformation Support */
-  //@{
-  void LoadIdentityMatrix();
-  bool IsMatrixIdentity() const;
-  void GetMatrix(nuiMatrix& rMatrix) const;
-  nuiMatrix GetMatrix() const;
-  void SetMatrix(const nuiMatrix& rMatrix);
-  //@}
-  
   bool GetNeedLayout() const { return mNeedSelfLayout; }
   bool GetNeedIdealRect() const { return mNeedIdealRect; }
 
@@ -238,11 +224,6 @@ protected:
   nuiRect mHotRect; ///< The currently important interactive part of the widget. Containers try to keep this rect in view when possible. For exemple set it as the cursor rectangle in a text edit widget. Is you text edit is contained in a scroll view, the scroll view will try to follow the cursor.
   LayoutConstraint mConstraint;
   
-  
-  static nuiMatrix mIdentityMatrix;
-  std::vector<nuiMatrixNode*>* mpMatrixNodes;
-  nuiMatrix _GetMatrix() const;
-  void _SetMatrix(nuiMatrix Matrix);
   
   std::map<nglString, nuiEventSource*, nglString::LessFunctor> mEventMap;
   std::vector<nuiEventActionHolder*> mEventActions;
