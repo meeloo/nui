@@ -4897,6 +4897,8 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
   else
     mLayoutRect = rRect;
 
+  mRect = mLayoutRect;
+
   if (!mOverrideVisibleRect)
     mVisibleRect = GetOverDrawRect(true, true);
 
