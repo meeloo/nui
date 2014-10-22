@@ -753,18 +753,16 @@ bool nuiMainWindow::OnKeyDown(const nglKeyEvent& rEvent)
       mDebugSlowRedraw = !mDebugSlowRedraw;
       InvalidateLayout();
     }
-#if 0
+#if 1
 #ifndef _UIKIT_
     else if (rEvent.mKey == NK_S && 
              (IsKeyDown(NK_LCTRL) || IsKeyDown(NK_RCTRL)) && 
              (IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT))
              )
     {
-      nuiXMLNode* pNode = Serialize(NULL, true);
-      nglString dump(pNode->Dump(0));
-      nglMimeTextSource mimesrc(dump);
-      App->GetClipBoard().SetData(mimesrc);
-      
+      nglString str = Dump();
+      //App->GetClipBoard().SetData(str);
+      printf("Widget tree:\n%s", str.GetChars());
       //NGL_OUT(_T("Dumping this widget tree XML description:\n%s\n"), dump.GetChars());
     }
 #endif

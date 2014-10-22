@@ -11,6 +11,7 @@
 #pragma once
 
 //#include "nui.h"
+#include "nuiJson.h"
 
 class nuiDrawContext;
 class nuiWidget;
@@ -184,6 +185,7 @@ public:
   /** @name Serialization */
   //@{
   nglString Dump(); ///< serialize the object and dump the result in a output string
+  nuiJson::Value DumpJSON() const;
   //@}
 
 

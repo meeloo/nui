@@ -8,6 +8,7 @@
 
 
 #include "nui.h"
+#include "nuiJson.h"
 
 bool nuiWidget::mGlobalUseRenderCache = true;
 
@@ -400,19 +401,48 @@ void nuiWidget::Init()
 }
 
 
+nuiJson::Value nuiWidget::DumpJSON() const
+{
+  nuiJson::Value root;
+  
+//  root["Name"] = GetObjectName().GetStdString();
+//  root["Class"] = GetObjectClass().GetStdString();
+  nuiJson::Value& children(root["Children"] = nuiJson::Value(nuiJson::arrayValue));
+  
+  for (auto item : mpChildren)
+  {
+    children.append(item->DumpJSON());
+  }
+  
+  std::map<nglString, nuiAttribBase> attribs;
+  GetAttributes(attribs);
+  
+  for (auto attrib: attribs)
+  {
+    if (attrib.second.CanGet())
+    {
+      nglString val;
+      attrib.second.ToString(val);
+      root[attrib.first.GetStdString()] = val.GetStdString();
+    }
+  }
+
+  return root;
+}
 
 nglString nuiWidget::Dump()
 {
-  return nglString::Empty;
-//  CheckValid();
-//  nuiXML* xml = new nuiXML(GetObjectName());
-//  
-//  Serialize(xml, true);
-//  
-//  nglString dump = xml->Dump();
-//  
-//  delete xml;
-//  return dump;
+  nuiJson::Value root = DumpJSON();
+  
+  nuiJson::StyledWriter writer;
+  nglString str = writer.write(root);
+  
+  nglPath p(ePathUserDesktop);
+  p += "nuiTree.json";
+  nglOStream* pStream = p.OpenWrite();
+  pStream->Write(str.GetChars(), str.GetLength(), 1);
+  delete pStream;
+  return str;
 }
 
 
