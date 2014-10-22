@@ -4572,6 +4572,73 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect)
   DebugRefreshInfo();
 }
 
+void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged)
+{
+  CheckValid();
+
+  if (mNeedSelfLayout || SizeChanged)
+  {
+    mInSetRect = true;
+    SetRect(rect);
+    mInSetRect = false;
+    Invalidate();
+  }
+  else
+  {
+    // Is this case the widget have just been moved inside its parent. No need to re layout it, only change the rect...
+    mLayoutRect = rect;
+
+    if (mNeedLayout)
+    {
+      // The children need to be re layed out (at least one of them!).
+      nuiWidget::IteratorPtr pIt = GetFirstChild(false);
+      do
+      {
+        nuiLayoutBase* pItem = pIt->GetWidget();
+        if (pItem)
+        {
+          // The rect of each child doesn't change BUT we still ask for its ideal rect.
+          nuiRect rect(pItem->GetBorderedLayoutRect());
+          nuiRect ideal(pItem->GetIdealRect());
+
+          if (pItem->HasUserPos())
+          {
+            rect = ideal;
+          }
+          else if (pItem->HasUserSize())
+          {
+            rect.SetSize(ideal.GetWidth(), ideal.GetHeight());
+          }
+          else
+          {
+            // Set the widget to the size of the parent
+          }
+
+          pItem->SetLayout(rect);
+        }
+      } while (GetNextChild(pIt));
+      delete pIt;
+
+    }
+  }
+
+  //#TEST:
+#ifdef NUI_CHECK_LAYOUTS
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiLayoutBase* pItem = pIt->GetWidget();
+    if (pItem->IsVisible())
+    {
+      NGL_ASSERT(!pItem->GetNeedLayout());
+    }
+  }
+  delete pIt;
+  //#TEST end
+#endif
+}
+
+
 /// Matrix Operations:
 void nuiWidget::AddMatrixNode(nuiMatrixNode* pNode)
 {

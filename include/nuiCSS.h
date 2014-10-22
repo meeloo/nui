@@ -69,15 +69,15 @@ public:
   nuiCSSRule();
   virtual ~nuiCSSRule();
 
-  void AddMatcher(nuiWidgetMatcher* pMatcher);
-  bool Match(nuiWidget* pWidget, uint32 MatchersMask); /// Returns true if the widget is matched by this rule
+  void AddMatcher(nuiObjectMatcher* pMatcher);
+  bool Match(nuiObject* pWidget, uint32 MatchersMask); /// Returns true if the widget is matched by this rule
 
-  virtual void ApplyRule(nuiWidget* pWidget, uint32 MatchersTag);
+  virtual void ApplyRule(nuiObject* pWidget, uint32 MatchersTag);
   virtual void ApplyAction(nuiObject* pObject);
 
   uint32 GetMatchersTag() const;
 private:
-  std::vector<nuiWidgetMatcher*> mMatchers;
+  std::vector<nuiObjectMatcher*> mMatchers;
 
   uint32 mMatchersTag;
 };
@@ -158,8 +158,8 @@ public:
   bool Serialize(nglOStream& rStream);
   
   void AddRule(nuiCSSRule* pRule);
-  void ApplyRules(nuiWidget* pWidget, uint32 MatchersMask);
-  bool GetMatchingRules(nuiWidget* pWidget, std::vector<nuiCSSRule*>& rMatchingRules, uint32 MatchersMask); /// Returns true if the widget is matched by this rule
+  void ApplyRules(nuiObject* pWidget, uint32 MatchersMask);
+  bool GetMatchingRules(nuiObject* pWidget, std::vector<nuiCSSRule*>& rMatchingRules, uint32 MatchersMask); /// Returns true if the widget is matched by this rule
 
   virtual nuiObject* CreateObject(const nglString& rType, const nglString& rName);
   static nuiObject* CreateObject(const nglString& rDesc);

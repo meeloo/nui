@@ -1372,6 +1372,16 @@ void nuiLayoutBase::UpdateLayout()
   Invalidate();
 }
 
+nuiLayoutBase* nuiLayoutBase::GetRootLayout() const
+{
+  CheckValid();
+  if (mpParentLayout)
+    return mpParentLayout->GetRootLayout();
+  else
+    return const_cast<nuiLayoutBase*>(this);
+}
+
+
 nuiTopLevel* nuiLayoutBase::GetTopLevel() const
 {
   CheckValid();
@@ -1651,34 +1661,27 @@ void nuiLayoutBase::InternalSetLayout(const nuiRect& rect, bool PositionChanged,
     if (mNeedLayout)
     {
       // The children need to be re layed out (at least one of them!).
-      nuiLayoutBase::IteratorPtr pIt = GetFirstChild(false);
-      do
+      for (auto pItem : mpLayoutChildren)
       {
-        nuiLayoutBase* pItem = pIt->GetWidget();
-        if (pItem)
+        // The rect of each child doesn't change BUT we still ask for its ideal rect.
+        nuiRect rect(pItem->GetBorderedLayoutRect());
+        nuiRect ideal(pItem->GetIdealRect());
+
+        if (pItem->HasUserPos())
         {
-          // The rect of each child doesn't change BUT we still ask for its ideal rect.
-          nuiRect rect(pItem->GetBorderedRect());
-          nuiRect ideal(pItem->GetIdealRect());
-
-          if (pItem->HasUserPos())
-          {
-            rect = ideal;
-          }
-          else if (pItem->HasUserSize())
-          {
-            rect.SetSize(ideal.GetWidth(), ideal.GetHeight());
-          }
-          else
-          {
-            // Set the widget to the size of the parent
-          }
-
-          pItem->SetLayout(rect);
+          rect = ideal;
         }
-      } while (GetNextChild(pIt));
-      delete pIt;
+        else if (pItem->HasUserSize())
+        {
+          rect.SetSize(ideal.GetWidth(), ideal.GetHeight());
+        }
+        else
+        {
+          // Set the widget to the size of the parent
+        }
 
+        pItem->SetLayout(rect);
+      }
     }
   }
 
@@ -1709,170 +1712,97 @@ void nuiLayoutBase::InternalResetCSSPass()
   CheckValid();
   mCSSPasses = 0;
 
-  IteratorPtr pIt = GetFirstChild(false);
-  for (; pIt && pIt->IsValid(); GetNextChild(pIt))
+  for (auto pItem : mpLayoutChildren)
   {
-    nuiLayoutBase* pItem = pIt->GetWidget();
     pItem->ResetCSSPass();
   }
-  delete pIt;
 }
 
 void nuiLayoutBase::SetChildrenLayoutAnimationDuration(float duration)
 {
   CheckValid();
-  IteratorPtr pIt;
-  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  for (auto pItem : mpLayoutChildren)
   {
-    nuiLayoutBase* pItem = pIt->GetWidget();
     pItem->SetLayoutAnimationDuration(duration);
   }
-  delete pIt;
 }
 
 void nuiLayoutBase::SetChildrenLayoutAnimationEasing(const nuiEasingMethod& rMethod)
 {
   CheckValid();
-  IteratorPtr pIt;
-  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  for (auto pItem : mpLayoutChildren)
   {
-    nuiLayoutBase* pItem = pIt->GetWidget();
     pItem->SetLayoutAnimationEasing(rMethod);
   }
-  delete pIt;
 }
 
 ///////////////////////////
 ///
-#FIXME En cours de transposition du code de nuiWidget
 void nuiLayoutBase::LocalToGlobal(int& x, int& y) const
 {
   CheckValid();
-  if (!IsMatrixIdentity())
-  {
-    nuiVector vec((double)x,(double)y, 0);
-    vec = GetMatrix() * vec;
-    x = ToBelow(vec[0]);
-    y = ToBelow(vec[1]);
-  }
+
+  x += (int)mLayoutRect.mLeft;
+  y += (int)mLayoutRect.mTop;
   
-  x += (int)mRect.mLeft;
-  y += (int)mRect.mTop;
-  
-  if (mpParent)
-    mpParent->LocalToGlobal(x,y);
+  if (mpParentLayout)
+    mpParentLayout->LocalToGlobal(x,y);
 }
 
 void nuiLayoutBase::LocalToGlobal(nuiSize& x, nuiSize& y) const
 {
   CheckValid();
-  if (!IsMatrixIdentity())
-  {
-    nuiVector vec(x, y, 0);
-    vec = GetMatrix() * vec;
-    x = vec[0];
-    y = vec[1];
-  }
+
+  x += mLayoutRect.mLeft;
+  y += mLayoutRect.mTop;
   
-  x += mRect.mLeft;
-  y += mRect.mTop;
-  
-  if (mpParent)
-    mpParent->LocalToGlobal(x,y);
+  if (mpParentLayout)
+    mpParentLayout->LocalToGlobal(x,y);
 }
 
 void nuiLayoutBase::LocalToGlobal(nuiRect& rRect) const
 {
   CheckValid();
-  if (!IsMatrixIdentity())
-  {
-    nuiVector vec1(rRect.mLeft,rRect.mTop,0);
-    nuiVector vec2(rRect.mRight,rRect.mBottom,0);
-    vec1 = GetMatrix() * vec1;
-    vec2 = GetMatrix() * vec2;
-    rRect.mLeft   = vec1[0];
-    rRect.mTop    = vec1[1];
-    rRect.mRight  = vec2[0];
-    rRect.mBottom = vec2[1];
-  }
+  rRect.Move(mLayoutRect.mLeft, mLayoutRect.mTop);
   
-  rRect.Move(mRect.mLeft, mRect.mTop);
-  
-  if (mpParent)
+  if (mpParentLayout)
   {
-    mpParent->LocalToGlobal(rRect);
+    mpParentLayout->LocalToGlobal(rRect);
   }
 }
 
 void nuiLayoutBase::GlobalToLocal(int& x, int& y) const
 {
   CheckValid();
-  if (mpParent)
-    mpParent->GlobalToLocal(x,y);
-  x -= (int)mRect.mLeft;
-  y -= (int)mRect.mTop;
-  
-  if (!IsMatrixIdentity())
-  {
-    nuiVector vec((double)x,(double)y,0);
-    nuiMatrix mat;
-    GetMatrix(mat);
-    mat.InvertHomogenous();
-    vec = mat * vec;
-    x = ToBelow(vec[0]);
-    y = ToBelow(vec[1]);
-  }
+  if (mpParentLayout)
+    mpParentLayout->GlobalToLocal(x,y);
+  x -= (int)mLayoutRect.mLeft;
+  y -= (int)mLayoutRect.mTop;
 }
 
 void nuiLayoutBase::GlobalToLocal(nuiSize& x, nuiSize& y) const
 {
   CheckValid();
-  if (mpParent)
-    mpParent->GlobalToLocal(x,y);
-  x -= mRect.mLeft;
-  y -= mRect.mTop;
-  
-  if (!IsMatrixIdentity())
-  {
-    nuiVector vec(x,y,0);
-    nuiMatrix mat;
-    GetMatrix(mat);
-    mat.InvertHomogenous();
-    vec = mat * vec;
-    x = vec[0];
-    y = vec[1];
-  }
+  if (mpParentLayout)
+    mpParentLayout->GlobalToLocal(x,y);
+  x -= mLayoutRect.mLeft;
+  y -= mLayoutRect.mTop;
 }
 
 void nuiLayoutBase::GlobalToLocal(nuiRect& rRect) const
 {
   CheckValid();
-  if (mpParent)
+  if (mpParentLayout)
   {
-    mpParent->GlobalToLocal(rRect);
+    mpParentLayout->GlobalToLocal(rRect);
   }
-  rRect.Move(-mRect.mLeft, -mRect.mTop);
-  
-  if (!IsMatrixIdentity())
-  {
-    nuiMatrix mat;
-    GetMatrix(mat);
-    mat.InvertHomogenous();
-    nuiVector vec1(rRect.mLeft,rRect.mTop,0);
-    nuiVector vec2(rRect.mRight,rRect.mBottom,0);
-    vec1 = mat * vec1;
-    vec2 = mat * vec2;
-    rRect.mLeft   = vec1[0];
-    rRect.mTop    = vec1[1];
-    rRect.mRight  = vec2[0];
-    rRect.mBottom = vec2[1];
-  }
+  rRect.Move(-mLayoutRect.mLeft, -mLayoutRect.mTop);
 }
 
 void nuiLayoutBase::LocalToLocal(nuiLayoutBase* pWidget,int& x, int& y) const
 {
   CheckValid();
-  if (GetRoot() != pWidget->GetRoot())
+  if (GetRootLayout() != pWidget->GetRootLayout())
     return;
   
   LocalToGlobal(x,y);
@@ -1882,7 +1812,7 @@ void nuiLayoutBase::LocalToLocal(nuiLayoutBase* pWidget,int& x, int& y) const
 void nuiLayoutBase::LocalToLocal(nuiLayoutBase* pWidget, nuiSize& x, nuiSize& y) const
 {
   CheckValid();
-  if (GetRoot() != pWidget->GetRoot())
+  if (GetRootLayout() != pWidget->GetRootLayout())
     return;
   
   LocalToGlobal(x,y);
@@ -1892,7 +1822,7 @@ void nuiLayoutBase::LocalToLocal(nuiLayoutBase* pWidget, nuiSize& x, nuiSize& y)
 void nuiLayoutBase::LocalToLocal(nuiLayoutBase* pWidget,nuiRect& rRect) const
 {
   CheckValid();
-  if (GetRoot() != pWidget->GetRoot())
+  if (GetRootLayout() != pWidget->GetRootLayout())
     return;
   
   LocalToGlobal(rRect);
@@ -2087,4 +2017,10 @@ void nuiLayoutBase::Invalidate()
 void nuiLayoutBase::SilentInvalidate()
 {
 }
+
+nuiLayoutBase* nuiLayoutBase::GetParentLayout() const
+{
+  return mpParentLayout;
+}
+
 

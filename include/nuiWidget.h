@@ -236,7 +236,8 @@ public:
   nuiSize GetActualBorderRight() const;
   nuiSize GetActualBorderBottom() const;
 
-  void InternalSetLayout(const nuiRect& rect);
+  virtual void InternalSetLayout(const nuiRect& rect);
+  virtual void InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged);
 
   /** @name Rendering */
   //@{
@@ -573,8 +574,6 @@ protected:
   nuiMouseCursor mObjCursor;
 
   nuiEventSink<nuiWidget> mGenericWidgetSink;
-
-  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor> mAnimations;
 
   std::vector<nuiMatrixNode*>* mpMatrixNodes;
   nuiMatrix _GetMatrix() const;

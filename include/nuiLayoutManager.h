@@ -12,7 +12,6 @@
 
 class nuiRectAttributeAnimation;
 
-class nuiMatrixNode;
 class nuiEventActionHolder;
 class nuiWidget;
 
@@ -235,7 +234,10 @@ public:
   virtual void Invalidate();
   virtual void SilentInvalidate();
 
+  nuiLayoutBase* GetRootLayout() const;
   nuiTopLevel* GetTopLevel() const;
+
+  nuiLayoutBase* GetParentLayout() const;
 
 protected:
   void Init();
@@ -250,7 +252,7 @@ protected:
   nuiRect mUserRect; ///< The bounding box of the nuiObject if set by the user (in coordinates of its parent).
   nuiRect mHotRect; ///< The currently important interactive part of the widget. Containers try to keep this rect in view when possible. For exemple set it as the cursor rectangle in a text edit widget. Is you text edit is contained in a scroll view, the scroll view will try to follow the cursor.
   LayoutConstraint mConstraint;
-  
+  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor> mAnimations;
   
   std::map<nglString, nuiEventSource*, nglString::LessFunctor> mEventMap;
   std::vector<nuiEventActionHolder*> mEventActions;
@@ -291,7 +293,7 @@ protected:
   
   void AutoInvalidateLayout(const nuiEvent& rEvent); ///< This methods calls InvalidateLayout()
   
-  void InternalSetLayout(const nuiRect& rect);
+  virtual void InternalSetLayout(const nuiRect& rect);
   virtual void InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged);
   
   nuiPosition mPosition;

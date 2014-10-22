@@ -523,8 +523,8 @@ public:
   
   void Clear()
   {
-    std::vector<nuiWidgetMatcher*>::iterator mit = mMatchers.begin();
-    std::vector<nuiWidgetMatcher*>::iterator mend = mMatchers.end();
+    std::vector<nuiObjectMatcher*>::iterator mit = mMatchers.begin();
+    std::vector<nuiObjectMatcher*>::iterator mend = mMatchers.end();
     
     while (mit != mend)
     {
@@ -1539,7 +1539,7 @@ public:
     return pCreator;
   }
   
-  bool ReadMatchers(std::vector<nuiWidgetMatcher*>& rMatchers, nglChar EndChar)
+  bool ReadMatchers(std::vector<nuiObjectMatcher*>& rMatchers, nglChar EndChar)
   {
     //******************************************
     //
@@ -1547,7 +1547,7 @@ public:
     //        
     do
     {
-      nuiWidgetMatcher* pMatcher = ReadMatcher();
+      nuiObjectMatcher* pMatcher = ReadMatcher();
       if (!pMatcher)
       {
         Clear();
@@ -1580,9 +1580,9 @@ public:
     return true;
   }
   
-  nuiWidgetMatcher* ReadMatcher()
+  nuiObjectMatcher* ReadMatcher()
   {
-    nuiWidgetMatcher* pMatcher = NULL;
+    nuiObjectMatcher* pMatcher = NULL;
     
     if (!SkipBlank())
       return NULL;
@@ -1597,7 +1597,7 @@ public:
         return NULL;
       }
       
-      pMatcher = new nuiWidgetNameMatcher(str);
+      pMatcher = new nuiObjectNameMatcher(str);
     }
     else if (mChar == '$')
     {
@@ -1736,7 +1736,7 @@ public:
         }
         
         if (op == _T('=') || op == _T(':'))
-          pMatcher = new nuiWidgetAttributeMatcher(property, str, true, false);
+          pMatcher = new nuiObjectAttributeMatcher(property, str, true, false);
         else if (op == _T('$'))
           pMatcher = new nuiGlobalVariableMatcher(property, str);
         
@@ -1759,7 +1759,7 @@ public:
         SetError(_T("End of file while looking for a matcher expression"));
         return NULL;
       }
-      pMatcher = new nuiWidgetJokerMatcher();
+      pMatcher = new nuiObjectJokerMatcher();
     }
     else if (mChar == _T('.'))
     {
@@ -1769,7 +1769,7 @@ public:
         SetError(_T("End of file while looking for a matcher expression"));
         return NULL;
       }
-      pMatcher = new nuiWidgetParentMatcher();
+      pMatcher = new nuiObjectParentMatcher();
     }
     else if (mChar == _T('('))
     {
@@ -1783,11 +1783,11 @@ public:
       if (!SkipBlank())
         return NULL;
       
-      std::vector<nuiWidgetMatcher*> Matchers;
+      std::vector<nuiObjectMatcher*> Matchers;
       if (!ReadMatchers(Matchers, _T(')')))
         return NULL;
 
-      pMatcher = new nuiWidgetParentConditionMatcher(Matchers);
+      pMatcher = new nuiObjectParentConditionMatcher(Matchers);
 
       if (mChar != _T(')'))
       {
@@ -1812,7 +1812,7 @@ public:
         SetError(_T("End of file while looking for a matcher expression"));
         return NULL;
       }
-      pMatcher = new nuiWidgetStaticMatcher();
+      pMatcher = new nuiObjectStaticMatcher();
     }
     else
     {
@@ -1823,7 +1823,7 @@ public:
         SetError(_T("Error while looking for a widget class name"));
         return NULL;
       }
-      pMatcher = new nuiWidgetClassMatcher(str);
+      pMatcher = new nuiObjectClassMatcher(str);
     }
     
     return pMatcher;
@@ -2079,7 +2079,7 @@ public:
   }
   
   
-  std::vector<nuiWidgetMatcher*> mMatchers;
+  std::vector<nuiObjectMatcher*> mMatchers;
   std::vector<nuiCSSAction*> mActions;
   std::vector<nglChar> mAccumulator;
 };
@@ -2149,8 +2149,8 @@ nuiCSSRule::nuiCSSRule()
 nuiCSSRule::~nuiCSSRule()
 {
   {
-    std::vector<nuiWidgetMatcher*>::iterator it = mMatchers.begin();
-    std::vector<nuiWidgetMatcher*>::iterator end = mMatchers.end();
+    std::vector<nuiObjectMatcher*>::iterator it = mMatchers.begin();
+    std::vector<nuiObjectMatcher*>::iterator end = mMatchers.end();
     while (it != end)
     {
       delete *it;
@@ -2159,22 +2159,22 @@ nuiCSSRule::~nuiCSSRule()
   }
 }
 
-void nuiCSSRule::AddMatcher(nuiWidgetMatcher* pMatcher)
+void nuiCSSRule::AddMatcher(nuiObjectMatcher* pMatcher)
 {
   mMatchers.push_back(pMatcher);
   mMatchersTag |= pMatcher->GetTag();
 }
 
-bool nuiCSSRule::Match(nuiWidget* pWidget, uint32 MatchersMask)
+bool nuiCSSRule::Match(nuiObject* pWidget, uint32 MatchersMask)
 {
   if (!(MatchersMask & GetMatchersTag()))
     return false;
 
-  std::vector<nuiWidgetMatcher*>::iterator it = mMatchers.begin();
-  std::vector<nuiWidgetMatcher*>::iterator end = mMatchers.end();
+  std::vector<nuiObjectMatcher*>::iterator it = mMatchers.begin();
+  std::vector<nuiObjectMatcher*>::iterator end = mMatchers.end();
   while (it != end && pWidget)
   {
-    nuiWidgetMatcher* pMatcher = *it;
+    nuiObjectMatcher* pMatcher = *it;
     if (!pMatcher->Match(pWidget))
       return false;
     ++it;
@@ -2182,7 +2182,7 @@ bool nuiCSSRule::Match(nuiWidget* pWidget, uint32 MatchersMask)
   return pWidget != NULL;
 }
 
-void nuiCSSRule::ApplyRule(nuiWidget* pWidget, uint32 MatchersTag)
+void nuiCSSRule::ApplyRule(nuiObject* pWidget, uint32 MatchersTag)
 {
   if (!Match(pWidget, MatchersTag))
     return;
@@ -2294,18 +2294,20 @@ bool nuiCSS::Serialize(nglOStream& rStream)
   return false;
 }
 
-void nuiCSS::ApplyRules(nuiWidget* pWidget, uint32 MatchersTag)
+void nuiCSS::ApplyRules(nuiObject* pObject, uint32 MatchersTag)
 {
   int32 count = (int32)mRules.size();
   for (int32 i = 0; i < count; i++)
   {
     nuiCSSRule* pRule = mRules[i];
-    pRule->ApplyRule(pWidget, MatchersTag);
+    pRule->ApplyRule(pObject, MatchersTag);
   }
-  pWidget->IncrementCSSPass();
+  nuiLayoutBase* pLayout = dynamic_cast<nuiLayoutBase*>(pObject);
+  if (pLayout)
+    pLayout->IncrementCSSPass();
 }
 
-bool nuiCSS::GetMatchingRules(nuiWidget* pWidget, std::vector<nuiCSSRule*>& rMatchingRules, uint32 MatchersTag)
+bool nuiCSS::GetMatchingRules(nuiObject* pWidget, std::vector<nuiCSSRule*>& rMatchingRules, uint32 MatchersTag)
 {
   rMatchingRules.clear();
   for (int32 i = 0; i < (int32)mRules.size(); i++)

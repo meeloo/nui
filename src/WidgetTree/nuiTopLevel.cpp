@@ -2453,12 +2453,12 @@ void nuiTopLevel::ApplyWidgetCSS(nuiObject* pWidget, bool Recursive, uint32 Matc
 void nuiTopLevel::UpdateWidgetsCSS()
 {
   CheckValid();
-  std::map<nuiWidgetPtr, uint32>::iterator it = mCSSWidgets.begin();
-  std::map<nuiWidgetPtr, uint32>::iterator end = mCSSWidgets.end();
+  auto it = mCSSWidgets.begin();
+  auto end = mCSSWidgets.end();
   
   while (it != end)
   {
-    nuiWidget* pWidget = it->first;
+    nuiObject* pWidget = it->first;
     uint32 MatchersTag = it->second;
     
     ApplyWidgetCSS(pWidget, false, MatchersTag);

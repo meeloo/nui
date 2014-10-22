@@ -9,44 +9,44 @@
 
 #include "nui.h"
 
-#define NUI_WIDGET_MATCHER_PARENT 0
-#define NUI_WIDGET_MATCHER_PARENTCONDITION 0
-#define NUI_WIDGET_MATCHER_JOKER 0
-#define NUI_WIDGET_MATCHER_STATIC 0
-#define NUI_WIDGET_MATCHER_CLASS 2
-#define NUI_WIDGET_MATCHER_NAME 3
-#define NUI_WIDGET_MATCHER_STATE 4
-#define NUI_WIDGET_MATCHER_ATTRIBUTE 5
+#define NUI_OBJECT_MATCHER_PARENT 0
+#define NUI_OBJECT_MATCHER_PARENTCONDITION 0
+#define NUI_OBJECT_MATCHER_JOKER 0
+#define NUI_OBJECT_MATCHER_STATIC 0
+#define NUI_OBJECT_MATCHER_CLASS 2
+#define NUI_OBJECT_MATCHER_NAME 3
+#define NUI_OBJECT_MATCHER_STATE 4
+#define NUI_OBJECT_MATCHER_ATTRIBUTE 5
 
 #define NUI_WIDGET_MATCHTAG_NONE 0
 #define NUI_WIDGET_MATCHTAG_BLOCK 0
 #define NUI_WIDGET_MATCHTAG_ALL ((uint32)-1)
-#define NUI_WIDGET_MATCHTAG_PARENT              (1 < NUI_WIDGET_MATCHER_PARENT)
-#define NUI_WIDGET_MATCHTAG_PARENTCONDITION     (1 < NUI_WIDGET_MATCHER_PARENTCONDITION)
-#define NUI_WIDGET_MATCHTAG_JOKER               (1 < NUI_WIDGET_MATCHER_JOKER)
-#define NUI_WIDGET_MATCHTAG_STATE               (1 < NUI_WIDGET_MATCHER_STATE)
-#define NUI_WIDGET_MATCHTAG_CLASS               (1 < NUI_WIDGET_MATCHER_CLASS)
-#define NUI_WIDGET_MATCHTAG_NAME                (1 < NUI_WIDGET_MATCHER_NAME)
-#define NUI_WIDGET_MATCHTAG_ATTRIBUTE           (1 < NUI_WIDGET_MATCHER_ATTRIBUTE)
+#define NUI_WIDGET_MATCHTAG_PARENT              (1 < NUI_OBJECT_MATCHER_PARENT)
+#define NUI_WIDGET_MATCHTAG_PARENTCONDITION     (1 < NUI_OBJECT_MATCHER_PARENTCONDITION)
+#define NUI_WIDGET_MATCHTAG_JOKER               (1 < NUI_OBJECT_MATCHER_JOKER)
+#define NUI_WIDGET_MATCHTAG_STATE               (1 < NUI_OBJECT_MATCHER_STATE)
+#define NUI_WIDGET_MATCHTAG_CLASS               (1 < NUI_OBJECT_MATCHER_CLASS)
+#define NUI_WIDGET_MATCHTAG_NAME                (1 < NUI_OBJECT_MATCHER_NAME)
+#define NUI_WIDGET_MATCHTAG_ATTRIBUTE           (1 < NUI_OBJECT_MATCHER_ATTRIBUTE)
 
 /**
  This is a very simple parent class for all widget matchers: there is only one virtual method (Match) that returns true if
  the argument matches the given widget
  **/
-class nuiWidgetMatcher
+class nuiObjectMatcher
 {
 public:
-  nuiWidgetMatcher(bool StateMatcher)
+  nuiObjectMatcher(bool StateMatcher)
   : mStateMatcher(StateMatcher)
   {
     mPriority = 0; // By default we don't permit to skip and optimize any matcher, just to be safe
   }
   
-  virtual ~nuiWidgetMatcher()
+  virtual ~nuiObjectMatcher()
   {
   }
   
-  virtual bool Match(nuiWidget*& pWidget) = 0;
+  virtual bool Match(nuiObject*& pWidget) = 0;
   
   bool IsStateMatcher() const
   {
@@ -67,55 +67,59 @@ protected:
   int32 mPriority;
 };
 
-class nuiWidgetJokerMatcher : public nuiWidgetMatcher // Match all the widgets
+class nuiObjectJokerMatcher : public nuiObjectMatcher // Match all the widgets
 {
 public:
-  nuiWidgetJokerMatcher()
-  : nuiWidgetMatcher(false)
+  nuiObjectJokerMatcher()
+  : nuiObjectMatcher(false)
   {
-    mPriority = NUI_WIDGET_MATCHER_JOKER;
+    mPriority = NUI_OBJECT_MATCHER_JOKER;
   }
   
-  bool Match(nuiWidget*& pWidget)
+  bool Match(nuiObject*& pWidget)
   {
     return true;
   }
 };
 
-class nuiWidgetParentMatcher : public nuiWidgetMatcher // Change the reference widget to its parent
+class nuiObjectParentMatcher : public nuiObjectMatcher // Change the reference widget to its parent
 {
 public:
-  nuiWidgetParentMatcher()
-  : nuiWidgetMatcher(false)
+  nuiObjectParentMatcher()
+  : nuiObjectMatcher(false)
   {
-    mPriority = NUI_WIDGET_MATCHER_PARENT;
+    mPriority = NUI_OBJECT_MATCHER_PARENT;
   }
   
-  bool Match(nuiWidget*& pWidget)
+  bool Match(nuiObject*& pObject)
   {
-    pWidget = pWidget->GetParent();
+    nuiLayoutBase* pWidget = dynamic_cast<nuiLayoutBase*>(pObject);
+    if (pWidget)
+    {
+      pWidget = pWidget->GetParentLayout();
+    }
     return pWidget != NULL;
   }
 };
 
-class nuiWidgetParentConditionMatcher : public nuiWidgetMatcher // Change the reference widget to its parent
+class nuiObjectParentConditionMatcher : public nuiObjectMatcher // Change the reference widget to its parent
 {
 public:
-  nuiWidgetParentConditionMatcher(nuiWidgetMatcher* pCondition)
-  : nuiWidgetMatcher(false)
+  nuiObjectParentConditionMatcher(nuiObjectMatcher* pCondition)
+  : nuiObjectMatcher(false)
   {
-    mPriority = NUI_WIDGET_MATCHER_PARENTCONDITION;
+    mPriority = NUI_OBJECT_MATCHER_PARENTCONDITION;
     mpCondition.push_back(pCondition);
   }
   
-  nuiWidgetParentConditionMatcher(const std::vector<nuiWidgetMatcher*> rMatchers)
-  : nuiWidgetMatcher(false),
+  nuiObjectParentConditionMatcher(const std::vector<nuiObjectMatcher*> rMatchers)
+  : nuiObjectMatcher(false),
     mpCondition(rMatchers)
   {
-    mPriority = NUI_WIDGET_MATCHER_PARENTCONDITION;
+    mPriority = NUI_OBJECT_MATCHER_PARENTCONDITION;
   }
 
-  bool Match(nuiWidget*& pWidget)
+  bool Match(nuiObject*& pWidget)
   {
     int32 i = (int32)mpCondition.size() - 1;
     while (i >= 0)
@@ -129,34 +133,42 @@ public:
   }
   
 protected:
-  bool MatchOne(nuiWidgetMatcher* pCondition, nuiWidget*& pWidget)
+  bool MatchOne(nuiObjectMatcher* pCondition, nuiObject*& pObject)
   {    
-    while (pWidget)
+    while (pObject)
     {
-      if (pCondition->Match(pWidget))
+      if (pCondition->Match(pObject))
         return true;
-      
-      pWidget = pWidget->GetParent();
+
+      nuiLayoutBase* pWidget = dynamic_cast<nuiWidget*>(pObject);
+      if (pWidget)
+      {
+        pObject = pWidget->GetParentLayout();
+      }
+      else
+      {
+        pObject = nullptr;
+      }
     }
     
-    pWidget = NULL;
+    pObject = nullptr;
     return false;
   }
   
-  std::vector<nuiWidgetMatcher*> mpCondition;
+  std::vector<nuiObjectMatcher*> mpCondition;
 };
 
-class nuiWidgetClassMatcher : public nuiWidgetMatcher
+class nuiObjectClassMatcher : public nuiObjectMatcher
 {
 public:
-  nuiWidgetClassMatcher(const nglString& rClass)
-  : nuiWidgetMatcher(false), mClass(rClass)
+  nuiObjectClassMatcher(const nglString& rClass)
+  : nuiObjectMatcher(false), mClass(rClass)
   {
-    mPriority = NUI_WIDGET_MATCHER_CLASS;
+    mPriority = NUI_OBJECT_MATCHER_CLASS;
     mClassIndex = nuiObject::GetClassNameIndex(rClass);
   }
   
-  virtual bool Match(nuiWidget*& pWidget)
+  virtual bool Match(nuiObject*& pWidget)
   {
     return pWidget->IsOfClass(mClassIndex);
   }
@@ -166,16 +178,16 @@ protected:
   uint32 mClassIndex;
 };
 
-class nuiWidgetNameMatcher : public nuiWidgetMatcher
+class nuiObjectNameMatcher : public nuiObjectMatcher
 {
 public:
-  nuiWidgetNameMatcher(const nglString& rName)
-  : nuiWidgetMatcher(false), mName(rName)
+  nuiObjectNameMatcher(const nglString& rName)
+  : nuiObjectMatcher(false), mName(rName)
   {
-    mPriority = NUI_WIDGET_MATCHER_NAME;
+    mPriority = NUI_OBJECT_MATCHER_NAME;
   }
   
-  virtual bool Match(nuiWidget*& pWidget)
+  virtual bool Match(nuiObject*& pWidget)
   {
     return pWidget->GetObjectName() == mName;
   }
@@ -184,102 +196,71 @@ protected:
   nglString mName;
 };
 
-class nuiWidgetAttributeMatcher : public nuiWidgetMatcher
-  {
-  public:
-    nuiWidgetAttributeMatcher(const nglString& rAttribute, const nglString& rValue, bool CaseSensitive, bool PartialMatch)
-    : nuiWidgetMatcher(true), mAttribute(rAttribute), mValue(rValue), mCaseSensitive(CaseSensitive), mPartialMatch(PartialMatch)
-    {
-      mPriority = NUI_WIDGET_MATCHER_ATTRIBUTE;
-    }
-    
-    virtual bool Match(nuiWidget*& pWidget)
-    {
-      const nuiAttribBase Attribute = pWidget->GetAttribute(mAttribute);
-      if (!Attribute.IsValid())
-        return false;
-      
-      nglString value;
-      Attribute.ToString(value);
-      if (value.IsNull())
-        return false;
-      
-      if (mPartialMatch)
-      {
-        return value.Contains(mValue, mCaseSensitive) != 0;
-      }
-      
-      return value.Compare(mValue, mCaseSensitive) == 0;
-    }
-    
-  protected:
-    nglString mAttribute;
-    nglString mValue;
-    bool mCaseSensitive;
-    bool mPartialMatch;
-  };
-
-
-class nuiWidgetStateMatcher : public nuiWidgetMatcher
+class nuiObjectAttributeMatcher : public nuiObjectMatcher
 {
 public:
-  enum StateKinds
+  nuiObjectAttributeMatcher(const nglString& rAttribute, const nglString& rValue, bool CaseSensitive, bool PartialMatch)
+  : nuiObjectMatcher(true), mAttribute(rAttribute), mValue(rValue), mCaseSensitive(CaseSensitive), mPartialMatch(PartialMatch)
   {
-    eEnabled,
-    eVisible,
-    eSelected,
-    eHovered,
-    eFocussed,
-    eGrabbed,
-    eDebugged
-  };
-  
-  nuiWidgetStateMatcher(StateKinds states, bool State)
-  : nuiWidgetMatcher(true), mState(states), mStateValue(State)
-  {
-    mPriority = NUI_WIDGET_MATCHER_STATE;
+    mPriority = NUI_OBJECT_MATCHER_ATTRIBUTE;
   }
   
-  virtual bool Match(nuiWidget*& pWidget)
+  virtual bool Match(nuiObject*& pWidget)
   {
-    return false;
+    const nuiAttribBase Attribute = pWidget->GetAttribute(mAttribute);
+    if (!Attribute.IsValid())
+      return false;
+    
+    nglString value;
+    Attribute.ToString(value);
+    if (value.IsNull())
+      return false;
+    
+    if (mPartialMatch)
+    {
+      return value.Contains(mValue, mCaseSensitive) != 0;
+    }
+    
+    return value.Compare(mValue, mCaseSensitive) == 0;
   }
   
 protected:
-  StateKinds mState;
-  bool mStateValue;
+  nglString mAttribute;
+  nglString mValue;
   bool mCaseSensitive;
   bool mPartialMatch;
 };
 
-
-class nuiWidgetStaticMatcher : public nuiWidgetMatcher // Match all the widgets that have never been thru the CSS engine
+class nuiObjectStaticMatcher : public nuiObjectMatcher // Match all the Objects that have never been thru the CSS engine
 {
 public:
-  nuiWidgetStaticMatcher()
-  : nuiWidgetMatcher(false)
+  nuiObjectStaticMatcher()
+  : nuiObjectMatcher(false)
   {
-    mPriority = NUI_WIDGET_MATCHER_STATIC;
+    mPriority = NUI_OBJECT_MATCHER_STATIC;
   }
   
-  bool Match(nuiWidget*& pWidget)
+  bool Match(nuiObject*& pObject)
   {
-    return pWidget->GetCSSPass() == 0;
+    nuiLayoutBase* pWidget = dynamic_cast<nuiLayoutBase*>(pObject);
+    if (pWidget)
+      return pWidget->GetCSSPass() == 0;
+    return true;
   }
 };
 
-class nuiGlobalVariableMatcher : public nuiWidgetMatcher // Match if the global variable has the given value
+class nuiGlobalVariableMatcher : public nuiObjectMatcher // Match if the global variable has the given value
 {
 public:
   nuiGlobalVariableMatcher(const nglString& rVariable, const nglString& rValue)
-  : nuiWidgetMatcher(false),
+  : nuiObjectMatcher(false),
     mVariable(rVariable),
     mValue(rValue)
   {
-    mPriority = NUI_WIDGET_MATCHER_STATE;
+    mPriority = NUI_OBJECT_MATCHER_STATE;
   }
   
-  bool Match(nuiWidget*& pWidget)
+  bool Match(nuiObject*& pWidget)
   {
     return nuiObject::GetGlobalProperty(mVariable) == mValue;
   }
