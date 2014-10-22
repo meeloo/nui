@@ -1372,6 +1372,18 @@ void nuiLayoutBase::UpdateLayout()
   Invalidate();
 }
 
+nuiTopLevel* nuiLayoutBase::GetTopLevel() const
+{
+  CheckValid();
+  NGL_ASSERT(mpParentLayout != this);
+  if (mpParentLayout)
+    return mpParentLayout->GetTopLevel();
+  else
+    return NULL;
+}
+
+
+
 void nuiLayoutBase::ApplyCSSForStateChange(uint32 MatchersTag)
 {
   CheckValid();
@@ -1561,21 +1573,11 @@ void nuiLayoutBase::SetVisible(bool Visible)
 void nuiLayoutBase::BroadcastVisible()
 {
   CheckValid();
-  IteratorPtr pIt;
-  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+
+  for (auto pItem : mpLayoutChildren)
   {
-    nuiLayoutBase* pItem = pIt->GetWidget();
-    if (pItem->GetNeedSelfRedraw())
-    {
-      pItem->InvalidateRect(pItem->GetLayoutRect().Size());
-    }
-    nuiLayoutBase* pContainer = dynamic_cast<nuiLayoutBase*>(pItem);
-    if (pContainer)
-    {
-      pContainer->BroadcastVisible();
-    }
+    pItem->BroadcastVisible();
   }
-  delete pIt;
 }
 
 nuiRect nuiLayoutBase::CalcIdealSize()
@@ -1583,16 +1585,13 @@ nuiRect nuiLayoutBase::CalcIdealSize()
   CheckValid();
   nuiRect temp;
 
-  IteratorPtr pIt;
-  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  for (auto pItem : mpLayoutChildren)
   {
-    nuiLayoutBase* pItem = pIt->GetWidget();
     if (mCanRespectConstraint)
       pItem->SetLayoutConstraint(mConstraint);
     nuiRect r(pItem->GetIdealRect()); // Dummy call. Only the side effect is important: the object recalculates its layout.
     temp.Union(temp, r.Size());
   }
-  delete pIt;
 
   DebugRefreshInfo();
   return temp.Size();
@@ -1606,22 +1605,13 @@ bool nuiLayoutBase::SetSelfRect(const nuiRect& rRect)
     NGL_OUT("nuiLayoutBase::SetRect on '%s' (%f, %f - %f, %f)\n", GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
 #endif
 
-  bool inval = mNeedInvalidateOnSetRect;
-  if (!(mLayoutRect == rRect))
-    inval = true;
-
-  if (inval)
-    Invalidate();
   if (mForceIdealSize)
     mLayoutRect.Set(rRect.Left(), rRect.Top(), mIdealRect.GetWidth(), mIdealRect.GetHeight());
   else
     mLayoutRect = rRect;
 
   if (!mOverrideVisibleRect)
-    mVisibleRect = GetOverDrawRect(true, true);
-
-  if (inval)
-    Invalidate();
+    mVisibleRect = GetBorderedLayoutRect();
 
   DebugRefreshInfo();
 }
@@ -1630,16 +1620,13 @@ bool nuiLayoutBase::SetRect(const nuiRect& rRect)
 {
   SetSelfRect(rRect);
   nuiRect rect(rRect.Size());
-  IteratorPtr pIt;
-  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  for (auto pItem : mpLayoutChildren)
   {
-    nuiLayoutBase* pItem = pIt->GetWidget();
     if (mCanRespectConstraint)
       pItem->SetLayoutConstraint(mConstraint);
     pItem->GetIdealRect();
     pItem->SetLayout(rect);
   }
-  delete pIt;
 
   DebugRefreshInfo();
   return true;
@@ -2079,5 +2066,25 @@ bool nuiLayoutBase::IsTrashed(bool combined) const
   if (!mTrashed)
     return mpParent->IsTrashed(true);
   return mTrashed;
+}
+
+void nuiLayoutBase::InvalidateRect(const nuiRect& rRect)
+{
+  if (IsVisible(true))
+  {
+    nuiRect tmp(rRect);
+    tmp.RoundToBiggest();
+    BroadcastInvalidateRect(this, tmp);
+  }
+}
+
+void nuiLayoutBase::Invalidate()
+{
+  if (mpParentLayout)
+    mpParentLayout->BroadcastInvalidate();
+}
+
+void nuiLayoutBase::SilentInvalidate()
+{
 }
 

@@ -538,6 +538,10 @@ public:
 
   void SilentInvalidateLayout();
   void SetUserRect(const nuiRect& rRect);
+  nuiRect CalcIdealSize();
+
+  bool SetRect(const nuiRect& rRect);
+  virtual bool SetSelfRect(const nuiRect& rRect);
 
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());

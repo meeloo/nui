@@ -2401,10 +2401,10 @@ void nuiTopLevel::SetWatchedWidget(nuiWidget* pWatchedWidget)
 }
 
 //// CSS Stuff:
-void nuiTopLevel::PrepareWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 MatchersTag)
+void nuiTopLevel::PrepareWidgetCSS(nuiObject* pWidget, bool Recursive, uint32 MatchersTag)
 {
   CheckValid();
-  std::map<nuiWidgetPtr, uint32>::iterator it = mCSSWidgets.find(pWidget);
+  auto it = mCSSWidgets.find(pWidget);
   if (it != mCSSWidgets.end())
     mCSSWidgets[pWidget] |= MatchersTag;
   else
@@ -2426,7 +2426,7 @@ void nuiTopLevel::PrepareWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 Ma
   }
 }
 
-void nuiTopLevel::ApplyWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 MatchersTag)
+void nuiTopLevel::ApplyWidgetCSS(nuiObject* pWidget, bool Recursive, uint32 MatchersTag)
 {
   CheckValid();
   if (!mpCSS)

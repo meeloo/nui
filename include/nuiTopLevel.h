@@ -145,8 +145,8 @@ public:
   void SetWatchedWidget(nuiWidget* pWatchedWidget);
   
   // CSS Stuff:
-  void PrepareWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 MatchersTag);
-  void ApplyWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 MatchersTag);
+  void PrepareWidgetCSS(nuiObject* pWidget, bool Recursive, uint32 MatchersTag);
+  void ApplyWidgetCSS(nuiObject* pWidget, bool Recursive, uint32 MatchersTag);
   void SetCSS(nuiCSS* pCSS);
   nuiCSS* GetCSS() const;
   bool LoadCSS(const nglPath& rPath);
@@ -239,7 +239,7 @@ protected:
   std::map<nglString, nuiHotKey*> mHotKeys;
   
   std::set<nuiWidgetPtr> mHoveredWidgets;
-  std::map<nuiWidgetPtr, uint32> mCSSWidgets;
+  std::map<nuiObject*, uint32> mCSSWidgets;
   
   nuiCSS* mpCSS;
   

@@ -4745,4 +4745,87 @@ void nuiWidget::SetUserRect(const nuiRect& rRect)
   }
 }
 
+void nuiWidget::BroadcastVisible()
+{
+  CheckValid();
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidget* pItem = pIt->GetWidget();
+    if (pItem->GetNeedSelfRedraw())
+    {
+      pItem->InvalidateRect(pItem->GetLayoutRect().Size());
+    }
+    pItem->BroadcastVisible();
+  }
+  delete pIt;
+}
+
+nuiRect nuiWidget::CalcIdealSize()
+{
+  CheckValid();
+  nuiRect temp;
+
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiLayoutBase* pItem = pIt->GetWidget();
+    if (mCanRespectConstraint)
+      pItem->SetLayoutConstraint(mConstraint);
+    nuiRect r(pItem->GetIdealRect()); // Dummy call. Only the side effect is important: the object recalculates its layout.
+    temp.Union(temp, r.Size());
+  }
+  delete pIt;
+
+  DebugRefreshInfo();
+  return temp.Size();
+}
+
+bool nuiWidget::SetSelfRect(const nuiRect& rRect)
+{
+  CheckValid();
+#ifdef _DEBUG_LAYOUT
+  if (GetDebug())
+    NGL_OUT("nuiLayoutBase::SetRect on '%s' (%f, %f - %f, %f)\n", GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
+#endif
+
+  bool inval = mNeedInvalidateOnSetRect;
+  if (!(mLayoutRect == rRect))
+    inval = true;
+
+  if (inval)
+    Invalidate();
+  if (mForceIdealSize)
+    mLayoutRect.Set(rRect.Left(), rRect.Top(), mIdealRect.GetWidth(), mIdealRect.GetHeight());
+  else
+    mLayoutRect = rRect;
+
+  if (!mOverrideVisibleRect)
+    mVisibleRect = GetOverDrawRect(true, true);
+
+  if (inval)
+    Invalidate();
+
+  DebugRefreshInfo();
+}
+
+bool nuiWidget::SetRect(const nuiRect& rRect)
+{
+  SetSelfRect(rRect);
+  nuiRect rect(rRect.Size());
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiLayoutBase* pItem = pIt->GetWidget();
+    if (mCanRespectConstraint)
+      pItem->SetLayoutConstraint(mConstraint);
+    pItem->GetIdealRect();
+    pItem->SetLayout(rect);
+  }
+  delete pIt;
+
+  DebugRefreshInfo();
+  return true;
+}
+
 

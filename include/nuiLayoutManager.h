@@ -24,7 +24,7 @@ public:
   nuiLayoutBase();
   nuiLayoutBase(const nglString& rObjectName);
   
-  bool SetSelfRect(const nuiRect& rRect);
+  virtual bool SetSelfRect(const nuiRect& rRect);
   virtual bool SetRect(const nuiRect& rRect);
   
   virtual void OnChildHotRectChanged(nuiLayoutBase* pChild, const nuiRect& rChildHotRect);
@@ -230,11 +230,18 @@ public:
   
   void AutoStartTransition(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
   void AutoStopTransition(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
-  
+
+  virtual void InvalidateRect(const nuiRect& rRect);
+  virtual void Invalidate();
+  virtual void SilentInvalidate();
+
+  nuiTopLevel* GetTopLevel() const;
+
 protected:
   void Init();
   void InitAttributes();
 
+  std::vector<nuiLayoutBase*> mpLayoutChildren;
   nuiLayoutBase* mpParentLayout;
   nuiRect mLayoutRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
   nuiRect mLayoutRectFromParent; ///< The rect given by the parent (may be different than mLayoutRect)
@@ -296,25 +303,9 @@ protected:
   
   uint32 mCSSPasses;
   virtual void InternalResetCSSPass();
+  void BroadcastVisible();
+
 };
 
-#if 0
-class nuiLayoutManager : public nuiObject
-{
-public:
-  nuiLayoutManager();
-  virtual ~nuiLayoutManager();
-  
-  void AddChild(nuiLayoutManager* pManager);
-  void AddChild(nuiWidget* pWidget);
-  void DelChild(nuiLayoutManager* pManager);
-  void DelChild(nuiWidget* pWidget);
-  
-  
-protected:
-  std::vector<nuiLayoutManager*> mpLayouts;
-  std::vector<nuiLayoutManager*> mpWidgets;
-};
-#endif
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }
