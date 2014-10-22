@@ -21,7 +21,7 @@ bool nuiWidget::GetGlobalUseRenderCache()
   return mGlobalUseRenderCache;
 }
 
-//#define NUI_LOG_GETIDEALRECT
+#define NUI_LOG_GETIDEALRECT
 
 
 #ifdef NUI_WIDGET_STATS

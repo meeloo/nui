@@ -17,7 +17,7 @@
 nuiLayoutBase::nuiLayoutBase()
 : mGenericLayouttSink(this)
 {
-  
+  Init();
 }
 
 nuiLayoutBase::nuiLayoutBase(const nglString& rObjectName)
@@ -28,7 +28,6 @@ nuiLayoutBase::nuiLayoutBase(const nglString& rObjectName)
 
 void nuiLayoutBase::Init()
 {
-  mpParentLayout = NULL;
   mPosition = nuiFill;
   mFillRule = nuiFill;
   mCSSPasses = 0;

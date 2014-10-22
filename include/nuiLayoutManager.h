@@ -245,7 +245,7 @@ protected:
   void InitAttributes();
 
   std::vector<nuiLayoutBase*> mpLayoutChildren;
-  nuiLayoutBase* mpParentLayout;
+  nuiLayoutBase* mpParentLayout = nullptr;
   nuiRect mLayoutRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
   nuiRect mLayoutRectFromParent; ///< The rect given by the parent (may be different than mLayoutRect)
   nuiRect mVisibleRect; ///< The active bounding box of the nuiObject (in local coordinates).
