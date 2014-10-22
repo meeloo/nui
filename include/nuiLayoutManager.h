@@ -210,6 +210,26 @@ public:
   bool SetObjectClass(const nglString& rName);
   void SetObjectName(const nglString& rName);
   
+  /** @name Behavioral Animation Support */
+  //@{
+  nuiAnimation* GetAnimation(const nglString& rName); ///< Return a pointer to the animation with the given name
+  void GetAnimations(std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>& rAnims); ///< Fill \param rAnims with the list of name/anim pairs of this widget.
+  uint32 GetAnimCount(); ///< Return the number of animations supported by this widget.
+  void AddAnimation(const nglString& rName, nuiAnimation* pAnim, bool TransitionAnimation = false); ///< Add an animation to this widget and associate the given name to it. Any existing animation associated with that name in this widget will be destroyed.
+  void DelAnimation(const nglString& rName); ///< Delete the animation associated with the given name from this widget.
+  void ClearAnimations(); ///< Remove all animations from this widget and delete them.
+  void AnimateAll(bool Run = true, bool Reset = true); ///< Run/Stop all animations in parallel. If \param Reset is true then every animation will be reset to the first frame.
+  void ResetAnimation(const nglString& rName); ///< Set the given animation to it's first frame.
+  void StartAnimation(const nglString& rName, double Time = 0.0); ///< Start playing the given animation from the given time.
+  void StartAnimation(const nglString& rName, int32 count, nuiAnimLoop loopmode = eAnimLoopForward , double Time = 0.0); ///< Start playing the given animation from the given time.
+  void StopAnimation(const nglString& rName); ///< Stop playing the given animation if it exists.
+  //@}
+  
+  void AutoDestroy(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
+  bool IsTrashed(bool combined = true) const;
+  
+  void AutoStartTransition(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
+  void AutoStopTransition(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
   
 protected:
   void Init();

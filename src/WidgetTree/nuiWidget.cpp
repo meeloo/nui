@@ -23,13 +23,6 @@ bool nuiWidget::GetGlobalUseRenderCache()
 
 //#define NUI_LOG_GETIDEALRECT
 
-// Use like this:  nuiAnimation::RunOnAnimationTick(nuiMakeTask(nuiDelayedPlayAnim, eAnimFromStart, Time, count, loopmode));
-void nuiDelayedPlayAnim(nuiAnimation* pAnim, nuiAnimWhence Whence, double Time, int32 count, nuiAnimLoop loopmode)
-{
-  pAnim->Play(count, loopmode);
-  pAnim->SetTime(Time, Whence);
-}
-
 
 #ifdef NUI_WIDGET_STATS
 static uint wcount = 0;
@@ -493,16 +486,6 @@ nuiWidget::~nuiWidget()
     }
   }
   delete pIt;
-}
-
-bool nuiWidget::IsTrashed(bool combined) const
-{ 
-  CheckValid();
-  if (!combined || !mpParent)
-    return mTrashed;
-  if (!mTrashed)
-    return mpParent->IsTrashed(true);
-  return mTrashed;
 }
 
 nuiWidgetPtr nuiWidget::GetParent() const
@@ -2043,140 +2026,6 @@ void nuiWidget::Animate(const nuiEvent& rEvent)
   }
 }
 
-nuiAnimation* nuiWidget::GetAnimation(const nglString& rName)
-{
-  CheckValid();
-  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator it = mAnimations.find(rName);
-
-  if (it == mAnimations.end())
-    return NULL;
-
-  return (*it).second;
-}
-
-void nuiWidget::GetAnimations(std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>& rAnims)
-{
-  CheckValid();
-  rAnims = mAnimations;
-}
-
-uint32 nuiWidget::GetAnimCount()
-{
-  CheckValid();
-  return (uint32)mAnimations.size();
-}
-
-void nuiWidget::AddAnimation(const nglString& rName, nuiAnimation* pAnim, bool TransitionAnimation)
-{
-  CheckValid();
-  nuiAnimation* pOldAnim = GetAnimation(rName);
-  if (pOldAnim)
-    delete pOldAnim;
-
-  mAnimations[rName] = pAnim;
-  pAnim->SetDeleteOnStop(false); /// Cancel anim delete on stop or we'll crash as soon as the widget is destroyed or the user starts to play the anim once more.
-  if (rName == "TRASH")
-    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiWidget::AutoDestroy);
-  if (rName == "HIDE")
-    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiWidget::AutoHide);
-  
-  if (TransitionAnimation)
-  {
-    mGenericWidgetSink.Connect(pAnim->AnimStart, &nuiWidget::AutoStartTransition);
-    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiWidget::AutoStopTransition);
-  }
-  
-  DebugRefreshInfo();
-}
-
-void nuiWidget::DelAnimation(const nglString& rName)
-{
-  CheckValid();
-  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator it = mAnimations.find(rName);
-
-  if (it == mAnimations.end())
-    return;
-
-  mAnimations.erase(it);
-  DebugRefreshInfo();
-}
-
-void nuiWidget::ClearAnimations()
-{
-  CheckValid();
-  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator it = mAnimations.begin();
-  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator end = mAnimations.end();
-
-  for ( ; it != end; ++it)
-    delete (*it).second;
-
-  mAnimations.clear();
-  DebugRefreshInfo();
-}
-
-void nuiWidget::AnimateAll(bool Set, bool Reset)
-{
-  CheckValid();
-  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator it = mAnimations.begin();
-  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator end = mAnimations.end();
-
-  for ( ; it != end; ++it)
-  {
-    if (Reset)
-      (*it).second->SetTime(0);
-
-    if (Set)
-      (*it).second->Play();
-    else
-      (*it).second->Stop();
-  }
-  DebugRefreshInfo();
-}
-
-
-void nuiWidget::ResetAnimation(const nglString& rName)
-{
-  CheckValid();
-  nuiAnimation* pAnim = GetAnimation(rName);
-  if (pAnim)
-    pAnim->SetTime(0);
-  DebugRefreshInfo();
-}
-
-void nuiWidget::StartAnimation(const nglString& rName, double Time)
-{
-  CheckValid();
-  nuiAnimation* pAnim = GetAnimation(rName);
-  if (pAnim)
-  {
-    nuiDelayedPlayAnim(pAnim, eAnimFromStart, Time, 1, eAnimLoopForward);
-  }
-  DebugRefreshInfo();
-}
-
-void nuiWidget::StartAnimation(const nglString& rName, int32 count, nuiAnimLoop loopmode , double Time)
-{
-  CheckValid();
-  nuiAnimation* pAnim = GetAnimation(rName);
-  if (pAnim)
-  {
-    nuiDelayedPlayAnim(pAnim, eAnimFromStart, Time, count, loopmode);
-  }
-  DebugRefreshInfo();
-}
-
-
-void nuiWidget::StopAnimation(const nglString& rName)
-{
-  CheckValid();
-  nuiAnimation* pAnim = GetAnimation(rName);
-  if (pAnim)
-    pAnim->Stop();
-  DebugRefreshInfo();
-}
-
-#define LAYOUT_ANIM_NAME "LAYOUT_ANIM"
-
 void nuiWidget::EnableRenderCache(bool set)
 {
   CheckValid();
@@ -2322,31 +2171,6 @@ nuiTheme* nuiWidget::GetTheme()
   return nuiTheme::GetTheme();
 }
 
-void nuiWidget::AutoDestroy(const nuiEvent& rEvent)
-{
-  CheckValid();
-  NGL_ASSERT(mpParent!= nullptr);
-  mpParent->DelChild(this);
-}
-
-void nuiWidget::AutoHide(const nuiEvent& rEvent)
-{
-  CheckValid();
-  SilentSetVisible(false);
-}
-
-void nuiWidget::AutoStartTransition(const nuiEvent& rEvent)
-{
-  CheckValid();
-  StartTransition();
-}
-               
-void nuiWidget::AutoStopTransition(const nuiEvent& rEvent)
-{
-  CheckValid();
-  StopTransition();
-}
-               
 
 bool nuiWidget::IsDrawingInCache(bool Recurse) 
 { 

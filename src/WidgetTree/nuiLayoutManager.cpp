@@ -10,6 +10,9 @@
 
 #include "nui.h"
 
+#define LAYOUT_ANIM_NAME "LAYOUT_ANIM"
+
+
 //class nuiLayoutBase : nuiObject
 nuiLayoutBase::nuiLayoutBase()
 {
@@ -1911,3 +1914,170 @@ void nuiLayoutBase::LocalToLocal(nuiLayoutBase* pWidget,nuiRect& rRect) const
 
 
 ///
+nuiAnimation* nuiLayoutBase::GetAnimation(const nglString& rName)
+{
+  CheckValid();
+  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator it = mAnimations.find(rName);
+  
+  if (it == mAnimations.end())
+    return NULL;
+  
+  return (*it).second;
+}
+
+void nuiLayoutBase::GetAnimations(std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>& rAnims)
+{
+  CheckValid();
+  rAnims = mAnimations;
+}
+
+uint32 nuiLayoutBase::GetAnimCount()
+{
+  CheckValid();
+  return (uint32)mAnimations.size();
+}
+
+void nuiLayoutBase::AddAnimation(const nglString& rName, nuiAnimation* pAnim, bool TransitionAnimation)
+{
+  CheckValid();
+  nuiAnimation* pOldAnim = GetAnimation(rName);
+  if (pOldAnim)
+    delete pOldAnim;
+  
+  mAnimations[rName] = pAnim;
+  pAnim->SetDeleteOnStop(false); /// Cancel anim delete on stop or we'll crash as soon as the widget is destroyed or the user starts to play the anim once more.
+  if (rName == "TRASH")
+    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoDestroy);
+  if (rName == "HIDE")
+    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoHide);
+  
+  if (TransitionAnimation)
+  {
+    mGenericWidgetSink.Connect(pAnim->AnimStart, &nuiLayoutBase::AutoStartTransition);
+    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoStopTransition);
+  }
+  
+  DebugRefreshInfo();
+}
+
+void nuiLayoutBase::DelAnimation(const nglString& rName)
+{
+  CheckValid();
+  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator it = mAnimations.find(rName);
+  
+  if (it == mAnimations.end())
+    return;
+  
+  mAnimations.erase(it);
+  DebugRefreshInfo();
+}
+
+void nuiLayoutBase::ClearAnimations()
+{
+  CheckValid();
+  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator it = mAnimations.begin();
+  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator end = mAnimations.end();
+  
+  for ( ; it != end; ++it)
+    delete (*it).second;
+  
+  mAnimations.clear();
+  DebugRefreshInfo();
+}
+
+void nuiLayoutBase::AnimateAll(bool Set, bool Reset)
+{
+  CheckValid();
+  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator it = mAnimations.begin();
+  std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator end = mAnimations.end();
+  
+  for ( ; it != end; ++it)
+  {
+    if (Reset)
+      (*it).second->SetTime(0);
+    
+    if (Set)
+      (*it).second->Play();
+    else
+      (*it).second->Stop();
+  }
+  DebugRefreshInfo();
+}
+
+
+void nuiLayoutBase::ResetAnimation(const nglString& rName)
+{
+  CheckValid();
+  nuiAnimation* pAnim = GetAnimation(rName);
+  if (pAnim)
+    pAnim->SetTime(0);
+  DebugRefreshInfo();
+}
+
+void nuiLayoutBase::StartAnimation(const nglString& rName, double Time)
+{
+  CheckValid();
+  nuiAnimation* pAnim = GetAnimation(rName);
+  if (pAnim)
+  {
+    nuiDelayedPlayAnim(pAnim, eAnimFromStart, Time, 1, eAnimLoopForward);
+  }
+  DebugRefreshInfo();
+}
+
+void nuiLayoutBase::StartAnimation(const nglString& rName, int32 count, nuiAnimLoop loopmode , double Time)
+{
+  CheckValid();
+  nuiAnimation* pAnim = GetAnimation(rName);
+  if (pAnim)
+  {
+    nuiDelayedPlayAnim(pAnim, eAnimFromStart, Time, count, loopmode);
+  }
+  DebugRefreshInfo();
+}
+
+
+void nuiLayoutBase::StopAnimation(const nglString& rName)
+{
+  CheckValid();
+  nuiAnimation* pAnim = GetAnimation(rName);
+  if (pAnim)
+    pAnim->Stop();
+  DebugRefreshInfo();
+}
+
+void nuiLayoutBase::AutoDestroy(const nuiEvent& rEvent)
+{
+  CheckValid();
+  NGL_ASSERT(mpParent!= nullptr);
+  mpParent->DelChild(this);
+}
+
+void nuiLayoutBase::AutoHide(const nuiEvent& rEvent)
+{
+  CheckValid();
+  SilentSetVisible(false);
+}
+
+void nuiLayoutBase::AutoStartTransition(const nuiEvent& rEvent)
+{
+  CheckValid();
+  StartTransition();
+}
+
+void nuiLayoutBase::AutoStopTransition(const nuiEvent& rEvent)
+{
+  CheckValid();
+  StopTransition();
+}
+
+bool nuiLayoutBase::IsTrashed(bool combined) const
+{
+  CheckValid();
+  if (!combined || !mpParent)
+    return mTrashed;
+  if (!mTrashed)
+    return mpParent->IsTrashed(true);
+  return mTrashed;
+}
+

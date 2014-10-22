@@ -823,3 +823,12 @@ void nuiAnimationSequence::OnAnimStopped(const nuiEvent& rEvent)
     }
   }
 }
+
+// Use like this:  nuiAnimation::RunOnAnimationTick(nuiMakeTask(nuiDelayedPlayAnim, eAnimFromStart, Time, count, loopmode));
+void nuiDelayedPlayAnim(nuiAnimation* pAnim, nuiAnimWhence Whence, double Time, int32 count, nuiAnimLoop loopmode)
+{
+  pAnim->Play(count, loopmode);
+  pAnim->SetTime(Time, Whence);
+}
+
+

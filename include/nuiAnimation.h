@@ -267,4 +267,8 @@ protected:
   nuiEventSink<nuiAnimationSequence> mAnimSequenceSink;
 };
 
+// Use like this:  nuiAnimation::RunOnAnimationTick(nuiMakeTask(nuiDelayedPlayAnim, eAnimFromStart, Time, count, loopmode));
+void nuiDelayedPlayAnim(nuiAnimation* pAnim, nuiAnimWhence Whence, double Time, int32 count, nuiAnimLoop loopmode);
+
+
 #endif // __nuiAnimation_h__
