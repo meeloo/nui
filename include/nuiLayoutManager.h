@@ -225,6 +225,7 @@ public:
   //@}
   
   void AutoDestroy(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
+  void AutoHide(const nuiEvent& rEvent); ///< This methods calls SetVisible(false) right after the HIDE animation stopped
   bool IsTrashed(bool combined = true) const;
   
   void AutoStartTransition(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
@@ -256,10 +257,14 @@ protected:
   
   std::map<nglString, nuiEventSource*, nglString::LessFunctor> mEventMap;
   std::vector<nuiEventActionHolder*> mEventActions;
-  
+  nuiEventSink<nuiLayoutBase> mGenericLayouttSink;
+
+
   void AddEvent(const nglString& rName, nuiEventSource& rEvent);
   
   virtual void BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool BroadCastOnly);
+  virtual void BroadcastInvalidate(nuiWidget* pSender);
+  virtual void BroadcastInvalidateRect(nuiWidget* pSender, const nuiRect& rRect);
   void ApplyCSSForStateChange(uint32 MatchersTag); ///< This method will match this widget's state with the CSS and apply the changes needed to display it correctly
   
   
@@ -278,6 +283,9 @@ protected:
   bool mFixedAspectRatio: 1;
   bool mOverrideVisibleRect : 1;
   bool mAutoUpdateLayout : 1;
+  bool mTrashed: 1;
+  bool mDoneTrashed: 1;
+
 
   int32 mInTransition = 0;
 

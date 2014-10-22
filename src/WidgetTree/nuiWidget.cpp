@@ -340,8 +340,6 @@ void nuiWidget::Init()
   mpRenderCache = NULL;
 	mUseRenderCache = false;
 
-  mTrashed = false;
-  mDoneTrashed = false;
   mRedrawOnHover = false;
 
   mMixAlpha = true;
@@ -711,7 +709,7 @@ void nuiWidget::InvalidateRect(const nuiRect& rRect)
   DebugRefreshInfo();
 }
 
-void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect)
+void nuiWidget::BroadcastInvalidateRect(nuiWidget* pSender, const nuiRect& rRect)
 {
   CheckValid();
   nuiRect r = rRect;
@@ -867,9 +865,11 @@ void nuiWidget::SilentInvalidate()
   DebugRefreshInfo();
 }
 
-void nuiWidget::BroadcastInvalidate(nuiWidgetPtr pSender)
+void nuiWidget::BroadcastInvalidate(nuiWidget* pSender)
 {
   CheckValid();
+  if (!pSender)
+    pSender = this;
   if (mpParent && !mNeedRender)
   {
     mpParent->BroadcastInvalidate(pSender);

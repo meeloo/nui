@@ -553,10 +553,10 @@ public:
   static bool GetGlobalUseRenderCache();
 
 protected:
-  void BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool BroadCastOnly);
+  virtual void BroadcastInvalidateLayout(nuiLayoutBase* pSender, bool BroadCastOnly);
 
-  virtual void BroadcastInvalidate(nuiWidgetPtr pSender);
-  virtual void BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect);
+  virtual void BroadcastInvalidate(nuiWidget* pSender);
+  virtual void BroadcastInvalidateRect(nuiWidget* pSender, const nuiRect& rRect);
   virtual void CallConnectTopLevel(nuiTopLevel* pTopLevel); ///< This method is called when the widget is connected to the Top Level. Overload it to perform specific actions in a widget.
   virtual void CallDisconnectTopLevel(nuiTopLevel* pTopLevel); ///< This method is called when the widget is disconnected from the Top Level. Overload it to perform specific actions in a widget.
   bool InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _self, const nuiRect& _self_and_decorations, bool ApplyMatrix);
@@ -626,8 +626,6 @@ protected:
   bool mMouseEventEnabled: 1;
   bool mWantKeyboardFocus: 1;
   bool mMuteKeyboardFocusDispatch: 1;
-  bool mTrashed: 1;
-  bool mDoneTrashed: 1;
   bool mAutoClip: 1;
   bool mAutoDraw: 1;
   bool mReverseRender: 1;
@@ -667,7 +665,6 @@ protected:
 
 
 
-  void AutoHide(const nuiEvent& rEvent); ///< This methods calls SetVisible(false) right after the HIDE animation stopped
   void AutoInvalidate(const nuiEvent& rEvent); ///< This methods calls Invalidate()
   
   std::vector<nuiRect> mDirtyRects;

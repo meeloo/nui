@@ -15,12 +15,13 @@
 
 //class nuiLayoutBase : nuiObject
 nuiLayoutBase::nuiLayoutBase()
+: mGenericLayouttSink(this)
 {
   
 }
 
 nuiLayoutBase::nuiLayoutBase(const nglString& rObjectName)
-: nuiObject(rObjectName)
+: nuiObject(rObjectName), mGenericLayouttSink(this)
 {
   Init();
 }
@@ -39,6 +40,8 @@ void nuiLayoutBase::Init()
 
   mCanRespectConstraint = false; ///< By default the widgets don't care about the constraints imposed by their parents. Only few ones care about this.
 
+  mTrashed = false;
+  mDoneTrashed = false;
   mAnimateLayout = false;
   mNeedSelfLayout = true;
   mNeedLayout = true;
@@ -1864,14 +1867,14 @@ void nuiLayoutBase::AddAnimation(const nglString& rName, nuiAnimation* pAnim, bo
   mAnimations[rName] = pAnim;
   pAnim->SetDeleteOnStop(false); /// Cancel anim delete on stop or we'll crash as soon as the widget is destroyed or the user starts to play the anim once more.
   if (rName == "TRASH")
-    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoDestroy);
+    mGenericLayouttSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoDestroy);
   if (rName == "HIDE")
-    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoHide);
+    mGenericLayouttSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoHide);
   
   if (TransitionAnimation)
   {
-    mGenericWidgetSink.Connect(pAnim->AnimStart, &nuiLayoutBase::AutoStartTransition);
-    mGenericWidgetSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoStopTransition);
+    mGenericLayouttSink.Connect(pAnim->AnimStart, &nuiLayoutBase::AutoStartTransition);
+    mGenericLayouttSink.Connect(pAnim->AnimStop, &nuiLayoutBase::AutoStopTransition);
   }
   
   DebugRefreshInfo();
@@ -1966,8 +1969,9 @@ void nuiLayoutBase::StopAnimation(const nglString& rName)
 void nuiLayoutBase::AutoDestroy(const nuiEvent& rEvent)
 {
   CheckValid();
-  NGL_ASSERT(mpParent!= nullptr);
-  mpParent->DelChild(this);
+  NGL_ASSERT(mpParentLayout != nullptr);
+  //#FIXME !!!!!!!!!!!!!!!
+  //  mpParentLayout->DelChild(this);
 }
 
 void nuiLayoutBase::AutoHide(const nuiEvent& rEvent)
@@ -1991,10 +1995,10 @@ void nuiLayoutBase::AutoStopTransition(const nuiEvent& rEvent)
 bool nuiLayoutBase::IsTrashed(bool combined) const
 {
   CheckValid();
-  if (!combined || !mpParent)
+  if (!combined || !mpParentLayout)
     return mTrashed;
   if (!mTrashed)
-    return mpParent->IsTrashed(true);
+    return mpParentLayout->IsTrashed(true);
   return mTrashed;
 }
 
@@ -2004,14 +2008,43 @@ void nuiLayoutBase::InvalidateRect(const nuiRect& rRect)
   {
     nuiRect tmp(rRect);
     tmp.RoundToBiggest();
-    BroadcastInvalidateRect(this, tmp);
+    BroadcastInvalidateRect(NULL, tmp);
   }
 }
+
+void nuiLayoutBase::BroadcastInvalidate(nuiWidget* pSender)
+{
+  CheckValid();
+  if (mpParentLayout)
+  {
+    mpParentLayout->BroadcastInvalidate(pSender);
+  }
+
+  DebugRefreshInfo();
+}
+
+void nuiLayoutBase::BroadcastInvalidateRect(nuiWidget* pSender, const nuiRect& rRect)
+{
+  CheckValid();
+  nuiRect r = rRect;
+  nuiRect rect = GetLayoutRect();
+
+  r.Move(rect.Left(), rect.Top());
+
+  if (mpParentLayout)
+  {
+    mpParentLayout->CheckValid();
+    mpParentLayout->BroadcastInvalidateRect(pSender, r);
+  }
+  DebugRefreshInfo();
+}
+
+
 
 void nuiLayoutBase::Invalidate()
 {
   if (mpParentLayout)
-    mpParentLayout->BroadcastInvalidate();
+    mpParentLayout->BroadcastInvalidate(NULL);
 }
 
 void nuiLayoutBase::SilentInvalidate()
@@ -2024,3 +2057,4 @@ nuiLayoutBase* nuiLayoutBase::GetParentLayout() const
 }
 
 
+void AutoHide(const nuiEvent& rEvent); ///< This methods calls SetVisible(false) right after the HIDE animation stopped
