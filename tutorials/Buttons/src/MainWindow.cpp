@@ -12,7 +12,7 @@
 #include "nuiRadioButtonGroup.h"
 #include "nuiHBox.h"
 #include "nuiVBox.h"
-#include "nuiBackgroundPane.h"
+#include "nuiPane.h"
 
 #include "nuiColorDecoration.h"
 #include "nuiGradientDecoration.h"
@@ -54,7 +54,7 @@ void MainWindow::OnCreation()
   AddChild(pMainBox);
 
   // create a label width background for information display
-  nuiBackgroundPane* pPane = new nuiBackgroundPane(eInnerBackground);
+  nuiPane* pPane = new nuiPane();
   pPane->SetBorder(20,20);
   pMainBox->AddCell(pPane, nuiFillHorizontal);
   mpLabel = new nuiLabel();
