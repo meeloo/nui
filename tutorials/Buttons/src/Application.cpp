@@ -49,7 +49,12 @@ void Application::OnInit()
   bool DebugInfo = false;
   bool ShowFPS = false;
 //  nuiRenderer Renderer = eDirect3D;
+
+#if TARGET_OS_IPHONE
+  nuiRenderer Renderer = eOpenGL2;
+#else
   nuiRenderer Renderer = eOpenGL;
+#endif
 //  nuiRenderer Renderer = eSoftware;
 
   // Accept NGL default options
@@ -102,18 +107,20 @@ void Application::OnInit()
 
   if (!HasSize)
   {
+    nglVideoMode current_mode;
+
     if (IsFullScreen)
     {
-      nglVideoMode current_mode;
-
       Width = current_mode.GetWidth();
       Height = current_mode.GetHeight();
     }
     else
     {
 #ifdef _UIKIT_
-      Width = 320;
-      Height = 480;
+//      Width = 320;
+//      Height = 480;
+      Width = current_mode.GetWidth();
+      Height = current_mode.GetHeight();
 #else
       Width = 800;
       Height = 600;

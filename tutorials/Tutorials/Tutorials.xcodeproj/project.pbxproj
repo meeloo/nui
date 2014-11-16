@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		61B380281A180BBF004EA14B /* libnuiPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F36D185CBB1800D97CA6 /* libnuiPhone.a */; };
+		61B380291A180CC2004EA14B /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E55E77E9185CBAA8005F01B1 /* Application.cpp */; };
+		61B3802A1A180CC2004EA14B /* MainWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E55E77EB185CBAA8005F01B1 /* MainWindow.cpp */; };
+		61B3802E1A180D74004EA14B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61B3802D1A180D74004EA14B /* Accelerate.framework */; };
+		61B380301A180D7F004EA14B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61B3802F1A180D7F004EA14B /* CoreFoundation.framework */; };
+		61B380321A180D8A004EA14B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61B380311A180D8A004EA14B /* Foundation.framework */; };
+		61B380341A180D99004EA14B /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61B380331A180D99004EA14B /* OpenGLES.framework */; };
+		61B380361A180DA5004EA14B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61B380351A180DA5004EA14B /* UIKit.framework */; };
+		61FD87321A1811E9001118DA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87311A1811E9001118DA /* CFNetwork.framework */; };
+		61FD87341A181218001118DA /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87331A181218001118DA /* GLKit.framework */; };
+		61FD87361A18211A001118DA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87351A18211A001118DA /* CoreGraphics.framework */; };
+		61FD87381A182151001118DA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87371A182151001118DA /* QuartzCore.framework */; };
 		E516F376185CBB2E00D97CA6 /* libnuiCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F36B185CBB1800D97CA6 /* libnuiCocoa.a */; };
 		E516F378185CBB3600D97CA6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F377185CBB3600D97CA6 /* OpenGL.framework */; };
 		E516F37E185CBB5700D97CA6 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F379185CBB5700D97CA6 /* CoreAudio.framework */; };
@@ -447,6 +459,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		61B3802B1A180CD8004EA14B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E516F35F185CBB1800D97CA6 /* nui3.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 73F0841812E9BA0700656E84;
+			remoteInfo = nuiPhone;
+		};
 		E516F368185CBB1800D97CA6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E516F35F185CBB1800D97CA6 /* nui3.xcodeproj */;
@@ -590,6 +609,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		61B37FE61A180AF0004EA14B /* Buttons copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Buttons copy2-Info.plist"; path = "/Users/vince/Work/nui_test/nui3/tutorials/Tutorials/Buttons copy2-Info.plist"; sourceTree = "<absolute>"; };
+		61B37FF01A180B3D004EA14B /* Buttons_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Buttons_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		61B3802D1A180D74004EA14B /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
+		61B3802F1A180D7F004EA14B /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		61B380311A180D8A004EA14B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		61B380331A180D99004EA14B /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
+		61B380351A180DA5004EA14B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		61FD87311A1811E9001118DA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
+		61FD87331A181218001118DA /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
+		61FD87351A18211A001118DA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		61FD87371A182151001118DA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		E516F35F185CBB1800D97CA6 /* nui3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = nui3.xcodeproj; path = ../../nui3.xcodeproj; sourceTree = "<group>"; };
 		E516F377185CBB3600D97CA6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		E516F379185CBB5700D97CA6 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -888,6 +918,23 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		61B37FED1A180B3D004EA14B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61FD87381A182151001118DA /* QuartzCore.framework in Frameworks */,
+				61FD87361A18211A001118DA /* CoreGraphics.framework in Frameworks */,
+				61FD87341A181218001118DA /* GLKit.framework in Frameworks */,
+				61FD87321A1811E9001118DA /* CFNetwork.framework in Frameworks */,
+				61B380361A180DA5004EA14B /* UIKit.framework in Frameworks */,
+				61B380341A180D99004EA14B /* OpenGLES.framework in Frameworks */,
+				61B380321A180D8A004EA14B /* Foundation.framework in Frameworks */,
+				61B380301A180D7F004EA14B /* CoreFoundation.framework in Frameworks */,
+				61B3802E1A180D74004EA14B /* Accelerate.framework in Frameworks */,
+				61B380281A180BBF004EA14B /* libnuiPhone.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E516F389185CBC1200D97CA6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1858,6 +1905,7 @@
 				E516F615185D159100D97CA6 /* Commands copy-Info.plist */,
 				E516F62B185D159A00D97CA6 /* CoverFlow copy-Info.plist */,
 				E516F641185D15A500D97CA6 /* CSSFontSelection copy-Info.plist */,
+				61B37FE61A180AF0004EA14B /* Buttons copy2-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1878,6 +1926,7 @@
 				E516F614185D159100D97CA6 /* Commands copy.app */,
 				E516F62A185D159A00D97CA6 /* CoverFlow copy.app */,
 				E516F640185D15A500D97CA6 /* CSSFontSelection copy.app */,
+				61B37FF01A180B3D004EA14B /* Buttons_iOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1885,6 +1934,15 @@
 		E55E77A1185BBC62005F01B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				61FD87371A182151001118DA /* QuartzCore.framework */,
+				61FD87351A18211A001118DA /* CoreGraphics.framework */,
+				61FD87331A181218001118DA /* GLKit.framework */,
+				61FD87311A1811E9001118DA /* CFNetwork.framework */,
+				61B380351A180DA5004EA14B /* UIKit.framework */,
+				61B380331A180D99004EA14B /* OpenGLES.framework */,
+				61B380311A180D8A004EA14B /* Foundation.framework */,
+				61B3802F1A180D7F004EA14B /* CoreFoundation.framework */,
+				61B3802D1A180D74004EA14B /* Accelerate.framework */,
 				E516F5B8185CDB2F00D97CA6 /* AudioToolbox.framework */,
 				E516F379185CBB5700D97CA6 /* CoreAudio.framework */,
 				E516F37A185CBB5700D97CA6 /* CoreAudioKit.framework */,
@@ -2002,6 +2060,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		61B37FEF1A180B3D004EA14B /* Buttons_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61B380131A180B3D004EA14B /* Build configuration list for PBXNativeTarget "Buttons_iOS" */;
+			buildPhases = (
+				61B37FEC1A180B3D004EA14B /* Sources */,
+				61B37FED1A180B3D004EA14B /* Frameworks */,
+				61B37FEE1A180B3D004EA14B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				61B3802C1A180CD8004EA14B /* PBXTargetDependency */,
+			);
+			name = Buttons_iOS;
+			productName = Buttons_iOS;
+			productReference = 61B37FF01A180B3D004EA14B /* Buttons_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
 		E516F383185CBC1200D97CA6 /* Additive */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E516F3A3185CBC1200D97CA6 /* Build configuration list for PBXNativeTarget "Additive" */;
@@ -2275,6 +2351,11 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = libnui;
+				TargetAttributes = {
+					61B37FEF1A180B3D004EA14B = {
+						CreatedOnToolsVersion = 6.1;
+					};
+				};
 			};
 			buildConfigurationList = E55E779A185BBC62005F01B1 /* Build configuration list for PBXProject "Tutorials" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2309,6 +2390,7 @@
 				E516F600185D159100D97CA6 /* CoverFlow */,
 				E516F616185D159A00D97CA6 /* CSSFontSelection */,
 				E516F62C185D15A500D97CA6 /* BLEH */,
+				61B37FEF1A180B3D004EA14B /* Buttons_iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -2359,6 +2441,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		61B37FEE1A180B3D004EA14B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E516F392185CBC1200D97CA6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2913,6 +3002,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		61B37FEC1A180B3D004EA14B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61B380291A180CC2004EA14B /* Application.cpp in Sources */,
+				61B3802A1A180CC2004EA14B /* MainWindow.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E516F386185CBC1200D97CA6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3047,6 +3145,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		61B3802C1A180CD8004EA14B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = nuiPhone;
+			targetProxy = 61B3802B1A180CD8004EA14B /* PBXContainerItemProxy */;
+		};
 		E516F375185CBB2100D97CA6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = nuiCocoa;
@@ -3131,6 +3234,47 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		61B380141A180B3D004EA14B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/../Buttons/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		61B380151A180B3D004EA14B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/../Buttons/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		E516F3A4185CBC1200D97CA6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3568,6 +3712,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		61B380131A180B3D004EA14B /* Build configuration list for PBXNativeTarget "Buttons_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61B380141A180B3D004EA14B /* Debug */,
+				61B380151A180B3D004EA14B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E516F3A3185CBC1200D97CA6 /* Build configuration list for PBXNativeTarget "Additive" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

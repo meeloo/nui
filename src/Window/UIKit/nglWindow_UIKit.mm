@@ -280,6 +280,21 @@ const nglChar* gpWindowErrorTable[] =
   }
 }
 
+//! From GLKViewControllerDelegate
+- (void)glkViewControllerUpdate:(GLKViewController *)controller
+{
+//  if (gNeedInvalidate)
+//  {
+//    mpNGLWindow->OnInvalidate();
+//    gNeedInvalidate=false;
+//  }
+  
+  GLKViewController* ctrl = (GLKViewController*)self.rootViewController;
+  double lap = ctrl.timeSinceLastDraw;
+  mpTimer->OnTick(lap);
+}
+
+//! From GLKViewDelegate
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
   if (!CGRectEqualToRect(oldrect, rect))
@@ -287,19 +302,14 @@ const nglChar* gpWindowErrorTable[] =
     mpNGLWindow->SetSize(CGRectGetWidth(rect), CGRectGetHeight(rect));
     oldrect = rect;
   }
-
+  
   [self Paint];
 }
 
 - (void)Paint
 {
   [self InitNGLWindow];
-
-  {
-    GLKViewController* ctrl = (GLKViewController*)self.rootViewController;
-    double lap = ctrl.timeSinceLastDraw;
-    mpTimer->OnTick(lap);
-  }
+  mpNGLWindow->OnPaint();
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

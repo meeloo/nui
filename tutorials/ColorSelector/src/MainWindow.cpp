@@ -9,7 +9,6 @@
 #include "MainWindow.h"
 #include "Application.h"
 #include "nuiLabel.h"
-#include "nuiBackgroundPane.h"
 #include "nuiColorSelector.h"
 
 
@@ -29,7 +28,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnCreation()
 {
-  nuiBackgroundPane* pPane = new nuiBackgroundPane();  
+  nuiWidget* pPane = new nuiWidget();
   pPane->SetPosition(nuiCenter);
   AddChild(pPane);
   

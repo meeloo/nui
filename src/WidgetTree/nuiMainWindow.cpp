@@ -180,14 +180,29 @@ void nuiMainWindow::InitAttributes()
 void nuiMainWindow::OnPaint()
 {
   mLastEventTime = nglTime();
-  mInvalidatePosted = true;
-  Paint();
+  
+  LazyPaint();
+  
+  nglTime now;
+  mFPSCount++;
+  if (now - mFPSDelay > 1.0)
+  {
+    double v = (now - mFPSDelay);
+    double c = mFPSCount;
+    mFPS = c / v;
+    NGL_LOG(_T("fps"), NGL_LOG_DEBUG, _T("FPS: %f (%f seconds - %d frames)\n"), mFPS, v, ToNearest(c));
+    
+    mFPSCount = 0;
+    mFPSDelay = now;
+  }
+  mLastPaint = now;
 }
 
 void nuiMainWindow::LazyPaint()
 {
   if (mInvalidatePosted || GetNeedRender() || GetNeedSelfRedraw() || GetNeedLayout() || GetNeedIdealRect())
   {
+    mInvalidatePosted = true;
     Paint();
   }
 }
@@ -201,6 +216,9 @@ static float Gx = 0;
 
 void nuiMainWindow::Paint()
 {
+  if (!App->IsActive()) // Only repaint if the application is active!
+    return;
+
   if (!IsPaintEnabled())
     return;
   
