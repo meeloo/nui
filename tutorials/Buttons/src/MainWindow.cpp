@@ -20,6 +20,193 @@
 #include "nuiCSS.h"
 
 /*
+ * Testing panel
+ */
+
+class SidePanel : public nuiWidget
+{
+public:
+  SidePanel(nuiPosition Position)
+  : nuiWidget(),
+    mPanelPosition(Position),
+    mViewSink(this)
+  {
+    SetClickThru(false);
+//  nuiRectAttributeAnimation* pAnim = new nuiRectAttributeAnimation();
+//  pAnim->SetDuration(1);
+//  pAnim->SetTargetObject(this);
+//  pAnim->SetTargetAttribute(_T("LayoutRectUnsafe"));
+//  pAnim->SetCaptureStartOnPlay(true);
+//  AddAnimation("TRASH", pAnim);
+//
+//  nuiRectAttributeAnimation* pAnim = new nuiRectAttributeAnimation();
+//  pAnim->SetTargetObject(this);
+//  pAnim->SetTargetAttribute("LayoutRectUnsafe");
+//  pAnim->SetEasing(nuiEasingSlowStartRev);
+//  pAnim->SetDuration(1);
+//  pAnim->SetWidthAnim(false);
+//  pAnim->SetHeightAnim(false);
+//  pAnim->SetCaptureStartOnPlay(false);
+//  pAnim->SetCaptureEndOnPlay(false);
+//  AddAnimation(_T("TRASH"), pAnim, true);
+    
+    nuiScrollView* pSView = new nuiScrollView(false, true);
+    AddChild(pSView);
+    pSView->SetPosition(nuiFill);
+    pSView->SetUserWidth(256);
+
+    nuiVBox* pVBox = new nuiVBox();
+    pSView->AddChild(pVBox);
+    nuiButton* pButton;
+    
+    for (int i = 0; i < 64; i++)
+    {
+      nglString str;
+      str.CFormat("Button %d", i);
+      pButton = new nuiButton(str);
+      pVBox->AddCell(pButton);
+    }
+  }
+  
+  
+  nuiRect CalcIdealSize()
+  {
+    return nuiWidget::CalcIdealSize();
+  }
+  
+  bool SetRect(const nuiRect& rRect)
+  {
+    nuiWidget::SetRect(rRect);
+    nuiWidget* pChild = GetChild(0);
+    
+    nuiRect idealRect = pChild->GetIdealRect();
+    //  printf("SidePanel::SetRect asking child ideal [width %.1f] [height %.1f] in [%.1fX%.1f]\n", idealRect.GetWidth(), idealRect.GetHeight(), rRect.GetWidth(), rRect.GetHeight());
+    if (idealRect.GetHeight() > rRect.GetHeight())
+      idealRect.SetHeight(rRect.GetHeight());
+    if (idealRect.GetWidth() > rRect.GetWidth())
+      idealRect.SetWidth(rRect.GetWidth());
+    
+    switch (mPanelPosition)
+    {
+      case nuiLeft:
+        break;
+      case nuiTop:
+        break;
+      case nuiBottom:
+        break;
+      case nuiRight:
+      default:
+      {
+        idealRect.SetHeight(rRect.GetHeight());
+        idealRect.MoveTo(rRect.GetWidth()-idealRect.GetWidth(),0);
+      } break;
+    }
+    //  nuiSize X=rRect.GetWidth()/2-idealRect.GetWidth()/2,Y=rRect.GetHeight()/2-idealRect.GetHeight()/2;
+    //  idealRect = pChild->GetBorderedRect(idealRect);
+    //  if (idealRect.Right() > rRect.Right())
+    //    X = MAX(0, rRect.Right()-idealRect.GetWidth());
+    //  if (Y+idealRect.Bottom()>rRect.Bottom())
+    //    Y = MAX(0, rRect.Bottom() - idealRect.GetHeight());
+    //  X += pChild->GetActualBorderLeft();
+    //  Y += pChild->GetActualBorderTop();
+    
+    pChild->SetLayout(idealRect);
+    return true;
+  }
+  
+  //bool SidePanel::AddChild(nuiWidgetPtr pChild)
+  //{
+  //  bool added = nuiSimpleContainer::AddChild(pChild);
+  //
+  ////  pChild->SetLayoutAnimationDuration(0.1);
+  ////  pChild->SetLayoutAnimationEasing(nuiEas);
+  //
+  //
+  //  return added;
+  //}
+  
+  
+  void PushTopLevel(nuiTopLevel* pTopLevel)
+  {
+    SetWantKeyboardFocus(true);
+    pTopLevel->AddChild(this);
+    pTopLevel->Invalidate();
+    //  if (mAutoClose)
+    GetTopLevel()->CancelGrab();
+    SetFocusVisible(false);
+    Focus();
+    
+    nuiRect endRect = pTopLevel->GetRect().Size();
+    nuiRect startRect = endRect;
+    nuiRect idealRect = GetIdealRect();
+    switch (mPanelPosition)
+    {
+      case nuiLeft:
+        startRect.Move(-idealRect.GetWidth(), (nuiSize)0);
+        break;
+      case nuiTop:
+        startRect.Move((nuiSize)0, -idealRect.GetHeight());
+        break;
+      case nuiBottom:
+        startRect.Move((nuiSize)0, idealRect.GetHeight());
+        break;
+      case nuiRight:
+      default:
+      {
+        startRect.Move(idealRect.GetWidth(), (nuiSize)0);
+      } break;
+    }
+//      SetRect(startRect);
+//      SetLayoutAnimationDuration(1);
+//      SetLayoutAnimationEasing(nuiEasingSlowStartRev);
+//    
+//      nuiRectAttributeAnimation* pAnim;
+//    
+//      pAnim = new nuiRectAttributeAnimation();
+//      pAnim->SetTargetObject(this);
+//      pAnim->SetTargetAttribute("LayoutRectUnsafe");
+//      pAnim->SetEasing(nuiEasingSlowStartRev);
+//      pAnim->SetDuration(0.5);
+//      pAnim->SetWidthAnim(false);
+//      pAnim->SetHeightAnim(false);
+//      pAnim->SetCaptureStartOnPlay(false);
+//      pAnim->SetCaptureEndOnPlay(false);
+//      pAnim->SetStartValue(endRect);
+//      pAnim->SetEndValue(startRect);
+//    //  AddAnimation(_T("TRASH"), pAnim, true);
+//    
+//      pAnim = new nuiRectAttributeAnimation();
+//      pAnim->SetTargetObject(this);
+//      pAnim->SetTargetAttribute("LayoutRectUnsafe");
+//      pAnim->SetEasing(nuiEasingSlowStartRev);
+//      pAnim->SetDuration(0.5);
+//      pAnim->SetWidthAnim(false);
+//      pAnim->SetHeightAnim(false);
+//      pAnim->SetCaptureStartOnPlay(false);
+//      pAnim->SetCaptureEndOnPlay(false);
+//      pAnim->SetStartValue(startRect);
+//      pAnim->SetEndValue(endRect);
+//    //  AddAnimation(_T("SHOW"), pAnim, true);
+    
+  }
+  
+  bool MouseClicked(const nglMouseInfo& rInfo)
+  {
+    //  Trash();
+    return false;
+  }
+  bool MouseUnclicked(const nglMouseInfo& rInfo)
+  {
+    Trash();
+    return false;
+  }
+  
+private:
+  nuiPosition mPanelPosition;
+  nuiEventSink<SidePanel> mViewSink;
+};
+
+/*
  * MainWindow
  */
 
@@ -270,6 +457,9 @@ void MainWindow::OnButtonPressed(const nuiEvent& rEvent)
   }
 
   mpLabel->SetText(msg);
+
+  SidePanel* pPanel = new SidePanel(nuiFillRight);
+  pPanel->PushTopLevel(GetTopLevel());
 
   rEvent.Cancel();
 }

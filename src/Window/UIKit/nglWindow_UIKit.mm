@@ -147,6 +147,7 @@ const nglChar* gpWindowErrorTable[] =
   NGLViewController* ctrl = [[NGLViewController alloc] initWithNGLWindow:mpNGLWindow];
   ctrl.view = mpGLKView;
   ctrl.preferredFramesPerSecond = 60;
+  ctrl.delegate = self;
 
   [self setRootViewController:ctrl];
 

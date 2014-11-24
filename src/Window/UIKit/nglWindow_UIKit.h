@@ -27,7 +27,7 @@
 /*
 ** nglUIWindow
 */
-@interface nglUIWindow : UIWindow<UITextFieldDelegate, GLKViewDelegate>
+@interface nglUIWindow : UIWindow<UITextFieldDelegate, GLKViewDelegate, GLKViewControllerDelegate>
 {
   nglWindow*    mpNGLWindow;
   nglContextInfo* mpContextInfo;
