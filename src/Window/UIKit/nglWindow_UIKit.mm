@@ -42,57 +42,118 @@ const nglChar* gpWindowErrorTable[] =
 
 //#define _DEBUG_WINDOW_
 
-@interface RetainedEAGLLayer : CAEAGLLayer
-@end
 
-@implementation RetainedEAGLLayer
-- (void)setDrawableProperties:(NSDictionary *)drawableProperties
-{
-  // Copy the dictionary and add/modify the retained property
-  NSMutableDictionary *mutableDictionary = [[NSMutableDictionary alloc] initWithCapacity:drawableProperties.count + 1];
-  [drawableProperties enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop)
-  {
-    // Copy all keys except the retained backing
-    if (![key isKindOfClass:[NSString class]] || ![(NSString *)key isEqualToString:kEAGLDrawablePropertyRetainedBacking])
-    {
-      [mutableDictionary setObject:object forKey:key];
-    }
-  }];
-  // Add the retained backing setting
-  [mutableDictionary setObject:@(YES) forKey:kEAGLDrawablePropertyRetainedBacking];
-  // Continue
-  [super setDrawableProperties:mutableDictionary];
-  [mutableDictionary release];
-}
-@end
+////////////////////////////////////////////////////////////////////////////////
+// CAEAGLLayer /////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark RetainedEAGLLayer
 
-@interface RetainedGLKView : GLKView
-@end
+//@interface RetainedEAGLLayer : CAEAGLLayer
+//@end
+//
+//@implementation RetainedEAGLLayer
+//- (void)setDrawableProperties:(NSDictionary *)drawableProperties
+//{
+//  self.opaque = YES;
+//
+//  // Copy the dictionary and add/modify the retained property
+//  NSMutableDictionary *mutableDictionary = [[NSMutableDictionary alloc] initWithCapacity:drawableProperties.count + 1];
+//  [drawableProperties enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop)
+//  {
+//    // Copy all keys except the retained backing
+//    if (![key isKindOfClass:[NSString class]] || ![(NSString *)key isEqualToString:kEAGLDrawablePropertyRetainedBacking])
+//    {
+//      [mutableDictionary setObject:object forKey:key];
+//    }
+//  }];
+//  // Add the retained backing setting
+//  [mutableDictionary setObject:@(YES) forKey:kEAGLDrawablePropertyRetainedBacking];
+//  // Continue
+//  [super setDrawableProperties:mutableDictionary];
+//  [mutableDictionary release];
+//}
+//@end
 
-@implementation RetainedGLKView
+
+////////////////////////////////////////////////////////////////////////////////
+// nglUIView ///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglUIView
+
+@implementation nglUIView
+
 + (Class)layerClass
 {
-  return [RetainedEAGLLayer class];
+  return [CAEAGLLayer class];
 }
-@end
-
-
-@implementation NGLViewController
 
 - (id) initWithNGLWindow: (nglWindow*) pNGLWindow
 {
-  if (self =  [self initWithNibName:nil bundle:nil])
+  self = [super init];
+  if (self)
   {
     mpNGLWindow = pNGLWindow;
-    return self;
-  }
+    CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
+    eaglLayer.opaque = YES;
+    eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking,
+                                    kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
+                                    nil];
+    
+    self.contentScaleFactor = [[UIScreen mainScreen] scale];
+    self.multipleTouchEnabled = YES;
 
-  return nil;
+  }
+  return self;
+}
+- (void) dealloc
+{
+  [super dealloc];
+}
+
+- (void) layoutSubviews
+{
+  CGRect frame = [self frame];
+//  NGL_OUT("layoutSubviews with frame %d - %d\n", (uint)frame.size.width, (uint)frame.size.height);
+  mpNGLWindow->UpdateLayer();
+  mpNGLWindow->SetSize((uint)frame.size.width, (uint)frame.size.height);
+  [super layoutSubviews];
+}
+
+@end
+
+
+////////////////////////////////////////////////////////////////////////////////
+// nglUIViewController /////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglUIViewController
+
+@implementation nglUIViewController
+
+- (id) initWithNGLWindow: (nglWindow*) pNGLWindow
+{
+  self = [super initWithNibName:nil bundle:nil];
+  if (self)
+  {
+    mpNGLWindow = pNGLWindow;
+  }
+  return self;
+}
+
+- (void) dealloc
+{
+  [super dealloc];
+}
+
+- (void)loadView
+{
+  nglUIView* pView = [[[nglUIView alloc] initWithNGLWindow:mpNGLWindow] autorelease];
+  self.view = pView;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-  return YES; //(interfaceOrientation == UIInterfaceOrientationLandscapeRight) || (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+  return YES;
 }
 
 -(BOOL)shouldAutorotate
@@ -104,9 +165,14 @@ const nglChar* gpWindowErrorTable[] =
 {
   NSInteger mask = UIInterfaceOrientationMaskAll;
   return mask;
-
 }
 @end
+
+
+////////////////////////////////////////////////////////////////////////////////
+// nglUIWindow /////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglUIWindow
 
 @implementation nglUIWindow
 
@@ -115,19 +181,8 @@ const nglChar* gpWindowErrorTable[] =
 	return self->mpNGLWindow;
 }
 
-+ (Class) layerClass
+- (id) initWithNGLWindow: (nglWindow*) pNGLWindow
 {
-	return [CAEAGLLayer class];
-}
-
-
-- (id) initWithNGLWindow: (nglWindow*) pNGLWindow andContextInfo: (nglContextInfo*)pContextInfo
-{
-  mpContextInfo = pContextInfo;
-	mInited = false;
-
-	mInvalidationTimer = nil;
-	mDisplayLink = nil;
   if ( (self = [super initWithFrame:[[UIScreen mainScreen] bounds]]) )
   {
     mpNGLWindow = pNGLWindow;
@@ -137,79 +192,41 @@ const nglChar* gpWindowErrorTable[] =
     NGL_ASSERT(!"initWithFrame: Could not initialize UIWindow");
   }
 
-  EAGLContext * context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-  mpGLKView = [[RetainedGLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds] context:context];
-//  mpGLKView = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds] context:context];
-  mpGLKView.delegate = self;
-  mpGLKView.multipleTouchEnabled = YES;
-  mpGLKView.enableSetNeedsDisplay = NO;
-
-  NGLViewController* ctrl = [[NGLViewController alloc] initWithNGLWindow:mpNGLWindow];
-  ctrl.view = mpGLKView;
-  ctrl.preferredFramesPerSecond = 60;
-  ctrl.delegate = self;
-
-  [self setRootViewController:ctrl];
-
-  [mpGLKView bindDrawable];
-  //NGL_OUT(_T("[nglUIWindow initWithFrame]\n"));
-
-
-  int frameInterval = 1;
-  //  NSString* sysVersion = [[UIDevice currentDevice] systemVersion];
-  //  if ([sysVersion compare:@"3.1" options:NSNumericSearch] != NSOrderedAscending) ///< CADisplayLink requires version 3.1 or greater
-  //  {
-  //    mDisplayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(Paint)];
-  //    [mDisplayLink setFrameInterval:frameInterval];
-  //    [mDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-  //  }
-  //  else ///< NSTimer is used as fallback
-  //  {
-  //    mInvalidationTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / NGL_WINDOW_FPS) target:self selector:@selector(Paint) userInfo:nil repeats:YES];
-  //  }
-
-  mpNGLWindow->CallOnRescale(nuiGetScaleFactor());
-  mpTimer = nuiAnimation::AcquireTimer();
-  mpTimer->Stop();
-
 	[self initializeKeyboard];
-
-  [self makeKeyAndVisible];
 
   return self;
 }
 
 - (void) dealloc
 {
-  delete mpContextInfo;
+  [self stopDisplayLink];
   [super dealloc];
 }
 
-- (void) disconnect
+- (void) startDisplayLink
 {
-  
-  //NGL_OUT(_T("[nglUIWindow dealloc]\n"));
-  if (mpNGLWindow)
+  if (mDisplayLink == nil)
   {
-    nuiAnimation::ReleaseTimer();
-    mpNGLWindow->CallOnDestruction();
-    mpNGLWindow = NULL;
+    mDisplayLink = [[[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(displayTicked)] retain];
+    [mDisplayLink setFrameInterval:1];
+    [mDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
   }
-  
-  if (mInvalidationTimer != nil)
-  {
-    [mInvalidationTimer invalidate];
-    mInvalidationTimer = nil;
-  }
+}
+
+- (void) stopDisplayLink
+{
   if (mDisplayLink != nil)
   {
     [mDisplayLink invalidate];
+    [mDisplayLink release];
     mDisplayLink = nil;
   }
-  
-  UIWindow* next = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
-  if (next != nil)
-    [next makeKeyAndVisible];
+}
+
+- (void) displayTicked
+{
+  NGL_ASSERT(mpNGLWindow);
+  mpNGLWindow->DisplayTicked();
 }
 
 - (void) UpdateKeyboard
@@ -219,24 +236,6 @@ const nglChar* gpWindowErrorTable[] =
 
   [self hideKeyboard];
   [self showKeyboard];
-}
-
-- (void) InitNGLWindow
-{  
-  if (!mInited)
-  {
-    mInited = true;
-    mpNGLWindow->CallOnCreation();
-  }
-
-  static int32 counter = 0;
-  if (counter)
-  {
-    counter--;
-    return;
-  }
-  
-  counter = 60;
 }
 
 - (void) dumpTouch: (UITouch*) pTouch
@@ -279,38 +278,6 @@ const nglChar* gpWindowErrorTable[] =
     UITouch* pTouch = *it;
     [self dumpTouch: pTouch];
   }
-}
-
-//! From GLKViewControllerDelegate
-- (void)glkViewControllerUpdate:(GLKViewController *)controller
-{
-//  if (gNeedInvalidate)
-//  {
-//    mpNGLWindow->OnInvalidate();
-//    gNeedInvalidate=false;
-//  }
-  
-  GLKViewController* ctrl = (GLKViewController*)self.rootViewController;
-  double lap = ctrl.timeSinceLastDraw;
-  mpTimer->OnTick(lap);
-}
-
-//! From GLKViewDelegate
-- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
-{
-  if (!CGRectEqualToRect(oldrect, rect))
-  {
-    mpNGLWindow->SetSize(CGRectGetWidth(rect), CGRectGetHeight(rect));
-    oldrect = rect;
-  }
-  
-  [self Paint];
-}
-
-- (void)Paint
-{
-  [self InitNGLWindow];
-  mpNGLWindow->OnPaint();
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -526,29 +493,14 @@ const nglChar* gpWindowErrorTable[] =
 	return NO;
 }
 
-- (void) MakeCurrent
-{
-  BOOL res = [EAGLContext setCurrentContext:(EAGLContext*) mpGLKView.context];
-}
-
-- (void) BeginSession
-{
-  [mpGLKView bindDrawable];
-}
-
-- (void) EndSession
-{
-  //[glView EndSession];
-}
-
-
 @end///< nglUIWindow
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////// NGL WINDOW:
-
-
+////////////////////////////////////////////////////////////////////////////////
+// nglWindow ///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglWindow
 
 /*
  * OS specific info
@@ -566,21 +518,23 @@ nglWindow::OSInfo::OSInfo()
 nglWindow::nglWindow (uint Width, uint Height, bool IsFullScreen)
 {
   Register();
-  mpUIWindow = NULL;
   nglContextInfo context; // Get default context
   nglWindowInfo info(Width, Height, IsFullScreen);
-  InternalInit (context, info, NULL); 
+  InternalInit (context, info, nullptr);
 }
 
 nglWindow::nglWindow (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
 {
   Register();
-  mpUIWindow = NULL;
   InternalInit (rContext, rInfo, pShared);
 }
 
 void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
 {
+  mFramebuffer = 0;
+  mRenderbuffer= 0;
+  mInited = false;
+
   mState = eHide;
   mAngle = 0;
 
@@ -588,21 +542,23 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   SetEventMask(nglWindow::AllEvents);
 
   mAutoRotate = true;
-  
   mAngle = rInfo.Rotate;
 
-  // Create the actual window
-  nglUIWindow* pUIWindow = [[nglUIWindow alloc] initWithNGLWindow: this andContextInfo: new nglContextInfo(rContext)];
-  mOSInfo.mpUIWindow = pUIWindow;
-  mpUIWindow = pUIWindow;
-
-  // Build
+  nglUIWindow* _window = [[nglUIWindow alloc] initWithNGLWindow: this];
+  mpUIWindow = _window;
+  mOSInfo.mpUIWindow = _window;
+  [_window setMultipleTouchEnabled: YES];
+  [_window makeKeyAndVisible];
   
-  // Enable multitouch
-  [pUIWindow setMultipleTouchEnabled: YES];
-  
-  [pUIWindow makeKeyAndVisible];
+  nglUIViewController* _viewctrl = [[nglUIViewController alloc] initWithNGLWindow: this];
+  mpUIViewCtrl = _viewctrl;
 
+  [_window setRootViewController: _viewctrl];
+
+  NGL_ASSERT(_viewctrl.view);
+  nglUIView* _view = (nglUIView*)_viewctrl.view;
+  mpUIView = _view;
+  mpCALayer = _view.layer;
 
   NGL_LOG(_T("window"), NGL_LOG_INFO, _T("trying to create GLES context"));
   rContext.Dump(NGL_LOG_INFO);
@@ -615,14 +571,18 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     return;
   }
 	
-	Build(rContext);
-  CGRect rect = pUIWindow.frame;
+
+  mpEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+  MakeCurrent();
+  UpdateLayer();
+  Build(rContext);
+  
 	CGRect r = [(nglUIWindow*)mpUIWindow frame];
 	NSLog(@"currentFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
 	r = [UIScreen mainScreen].applicationFrame;
 	NSLog(@"applicationFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
 
-  float w, h;
+//  CallOnCreation();
   mWidth = 0;
   mHeight = 0;
 
@@ -642,47 +602,111 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
       mAngle = 270;
       break;
   }
-  if (mAngle == 270 || mAngle == 90)
-  {
-    w = rect.size.height;
-    h = rect.size.width;
-  }
-  else
-  {
-    w = rect.size.width;
-    h = rect.size.height;
-  }
+//  if (mAngle == 270 || mAngle == 90)
+//  {
+//    w = rect.size.height;
+//    h = rect.size.width;
+//  }
+//  else
+//  {
+//    w = rect.size.width;
+//    h = rect.size.height;
+//  }
+  
 
-	SetSize(w, h);
-	
-/* Ultra basic UIKit view integration on top of nuiWidgets
-  UIWebView* pWebView = [[UIWebView alloc] initWithFrame: CGRectMake(50, 50, 200, 200)];
-	[pUIWindow addSubview: pWebView];
-	pWebView.hidden = NO;
-  NSURL* pURL = [[NSURL alloc] initWithString: @"http://libnui.net"];
-  NSURLRequest* pReq = [[NSURLRequest alloc] initWithURL: pURL];
-  [pWebView loadRequest: pReq];
- */
+  CallOnRescale(nuiGetScaleFactor());
+	SetSize((uint)r.size.width, (uint)r.size.height);
+
+
+  mpAnimationTimer = nuiAnimation::AcquireTimer();
+  mpAnimationTimer->Stop();
+  [_window startDisplayLink];
 }
 
 nglWindow::~nglWindow()
 {
+  CallOnDestruction();
+
+  if (mpEAGLContext)
+  {
+    if (mpEAGLContext == [EAGLContext currentContext])
+      [EAGLContext setCurrentContext:nil];
+    
+    [(EAGLContext*)mpEAGLContext release];
+    mpEAGLContext = nullptr;
+  }
+
   if (mpUIWindow)
   {
+    nglUIWindow* win = (nglUIWindow*)mpUIWindow;
+    [win stopDisplayLink];
 
-    UIWindow* win = (UIWindow*)mpUIWindow;
-    [win disconnect];
     UIWindow* oldwin = [[UIApplication sharedApplication].windows objectAtIndex:0];
     if (win != oldwin)
     {
       [oldwin makeKeyWindow];
     }
-    //[win removeFromSuperview];
     [win release];
   }
   Unregister();
 }
 
+void nglWindow::UpdateLayer()
+{
+  NGL_ASSERT(mpEAGLContext);
+  [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext];
+
+  if (mFramebuffer)
+  {
+    if (mFramebuffer) {
+      glDeleteFramebuffers(1, &mFramebuffer);
+      mFramebuffer = 0;
+    }
+    if (mRenderbuffer) {
+      glDeleteRenderbuffers(1, &mRenderbuffer);
+      mRenderbuffer = 0;
+    }
+  }
+
+  NGL_ASSERT(mpEAGLContext);
+  NGL_ASSERT(mpCALayer);
+  EAGLContext* _context = (EAGLContext*)mpEAGLContext;
+  CAEAGLLayer* _layer = (CAEAGLLayer*)mpCALayer;
+
+// Create default framebuffer object.
+  glGenFramebuffers(1, &mFramebuffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+// Create color render buffer and allocate storage for CAEAGLLayer
+  glGenRenderbuffers(1, &mRenderbuffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+  [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:_layer];
+  GLint renderbufferWidth, renderbufferHeight;
+  glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &renderbufferWidth);
+  glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &renderbufferHeight);
+//  NGL_ASSERT(mWidth == renderbufferWidth && mHeight == renderbufferHeight);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+  {
+    NGL_LOG(_T("window"), NGL_LOG_ERROR, _T("Failed to make complete framebuffer object\n"));
+    NGL_ASSERT(0);
+  }
+
+  [EAGLContext setCurrentContext: nil];
+}
+
+void nglWindow::DisplayTicked()
+{
+  if (!mInited)
+  {
+    mInited = true;
+    CallOnCreation();
+  }
+  
+  nglTime now;
+  mpAnimationTimer->OnTick(now - mLastTick);
+  mLastTick = now;
+  OnPaint();
+}
 
 
 /*
@@ -743,10 +767,15 @@ uint nglWindow::GetHeight () const
 bool nglWindow::SetSize (uint Width, uint Height)
 {
   //NGL_OUT(_T("nglWindow::SetSize(%d, %d)\n"), Width, Height);
+  if (mWidth == (GLint)Width &&
+      mHeight == (GLint)Height)
+    return false;
+
   mWidth  = Width;
   mHeight = Height;
+
   CallOnResize(Width, Height);
-  return false;
+  return true;
 }
 
 void nglWindow::GetPosition (int& rXPos, int& rYPos) const
@@ -788,9 +817,10 @@ void nglWindow::BeginSession()
 #ifdef _DEBUG_WINDOW_
   NGL_LOG(_T("window"), NGL_LOG_INFO, _T("BeginSession\n"));
 #endif
-  //  MakeCurrent();
-  NGL_ASSERT(mpUIWindow);
-  [mpUIWindow BeginSession];
+  NGL_ASSERT(mpEAGLContext);
+  [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext];
+  NGL_ASSERT(mFramebuffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 }
 
 void nglWindow::EndSession()
@@ -801,16 +831,29 @@ void nglWindow::EndSession()
   NGL_LOG(_T("window"), NGL_LOG_INFO, _T("EndSession\n"));
 #endif
 	
-  NGL_ASSERT(mpUIWindow);
-  [mpUIWindow EndSession];
+  NGL_ASSERT(mpEAGLContext);
+  EAGLContext* _context = (EAGLContext*)mpEAGLContext;
+  NGL_ASSERT(_context == [EAGLContext currentContext]);
+
+  NGL_ASSERT(mRenderbuffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+
+  BOOL success = [_context presentRenderbuffer:GL_RENDERBUFFER];
+  NGL_ASSERT(success == YES);
+
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+  glFlush();
+  [EAGLContext setCurrentContext:nil];
+
 #endif
 }
 
 bool nglWindow::MakeCurrent() const
 {
-  NGL_ASSERT(mpUIWindow);
-  [mpUIWindow MakeCurrent];
-
+  NGL_ASSERT(mpEAGLContext);
+  [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext];
   return true;
 }
 

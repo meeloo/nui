@@ -91,7 +91,7 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   mLastInteractiveEventTime = 0;
   nuiDefaultDecoration::MainWindow(this);
   
-  mMainWinSink.Connect(nuiAnimation::AcquireTimer()->Tick, &nuiMainWindow::InvalidateTimer);
+//  mMainWinSink.Connect(nuiAnimation::AcquireTimer()->Tick, &nuiMainWindow::InvalidateTimer);
 
   GetDrawContext();
 }

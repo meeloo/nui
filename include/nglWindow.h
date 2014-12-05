@@ -17,6 +17,11 @@ This class is not available if the _NOGFX_ symbol is defined.
 #ifndef __nglWindow_h__
 #define __nglWindow_h__
 
+#ifdef _UIKIT_
+#import <OpenGLES/ES2/gl.h>
+#import <OpenGLES/ES2/glext.h>
+#endif
+
 //#include "nui.h"
 
 #ifndef _NOGFX_
@@ -899,14 +904,25 @@ private:
 
 #ifdef _UIKIT_
 private:
-  uint32 mWidth, mHeight;
+  bool mInited;
   void InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo,
                     const nglContext* pShared);
 
   void* mpUIWindow;
-  GLuint mRenderBuffer;
-  GLuint mFrameBuffer;
-  GLuint mDepthBuffer;
+  void* mpUIViewCtrl;
+  void* mpUIView;
+  void* mpCALayer;
+  void* mpEAGLContext;
+
+
+  GLuint mFramebuffer;
+  GLuint mRenderbuffer;
+  GLint mWidth;
+  GLint mHeight;
+
+  nglTime mLastTick;
+  nglTimer* mpAnimationTimer;
+
   nglContextInfo mContextInfo;
   StateChange mState;
   bool mDragging;
@@ -914,6 +930,9 @@ private:
 public:
   bool IsDragging() { return mDragging; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
+
+  void DisplayTicked();
+  void UpdateLayer();
 #endif
 
 #ifdef _COCOA_

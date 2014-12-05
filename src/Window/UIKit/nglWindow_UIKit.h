@@ -3,23 +3,33 @@
 
 #include <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import <OpenGLES/ES1/gl.h>
-#import <OpenGLES/ES1/glext.h>
+#import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
-#import <GLKit/GLKit.h>
 
 
 /*
- ** GLKViewController
+ ** nglUIView
  */
 
-@interface NGLViewController : GLKViewController
+@interface nglUIView : UIView
 {
 @private
   nglWindow* mpNGLWindow;
 }
+- (id)  initWithNGLWindow: (nglWindow*) pNGLWindow;
 
-- (id) initWithNGLWindow: (nglWindow*) pNGLWindow;
+@end
+
+
+/*
+ ** nglUIViewController
+ */
+@interface nglUIViewController : UIViewController
+{
+@private
+  nglWindow* mpNGLWindow;
+}
+- (id)  initWithNGLWindow: (nglWindow*) pNGLWindow;
 
 @end
 
@@ -27,33 +37,22 @@
 /*
 ** nglUIWindow
 */
-@interface nglUIWindow : UIWindow<UITextFieldDelegate, GLKViewDelegate, GLKViewControllerDelegate>
+@interface nglUIWindow : UIWindow<UITextFieldDelegate>
 {
-  nglWindow*    mpNGLWindow;
-  nglContextInfo* mpContextInfo;
-  nglTime       mLastEventTime;
-  bool          mInited;
-  id            mDisplayLink;
-  NSTimer*      mInvalidationTimer;
-	UITextField*  mpTextField;
-	BOOL          mKeyboardVisible;
-
-  GLKView* mpGLKView;
-  nuiTimer*     mpTimer;
-
-  CGRect oldrect;
+  nglWindow*      mpNGLWindow;
+  CADisplayLink*  mDisplayLink;
+	UITextField*    mpTextField;
+	BOOL            mKeyboardVisible;
 }
 
 - (id) initWithNGLWindow: (nglWindow*) pNGLWindow;
-- (void) setContext: (void*) pContext renderBuffer: (GLint) buffer;
 - (void) dealloc;
-- (void) invalidate;
-- (void) sendEvent: (UIEvent*) pEvent;
-
+- (void) startDisplayLink;
+- (void) stopDisplayLink;
+- (void) displayTicked;
 - (void) dumpTouch: (UITouch*) pTouch;
 - (void) dumpTouches: (UIEvent*) pEvent;
 - (nglWindow *) getNGLWindow;
-- (void) disconnect;
 
 - (void)showKeyboard;
 - (void)hideKeyboard;

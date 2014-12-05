@@ -1103,7 +1103,6 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   
   if (rContext.TargetAPI != eTargetAPI_OpenGL && rContext.TargetAPI != eTargetAPI_OpenGL2)
   {
-    // UIKit Implementation only supports OpenGLES renderer so far
     NGL_LOG(_T("window"), NGL_LOG_INFO, _T("bad renderer"));
     NGL_ASSERT(0);
     return;
