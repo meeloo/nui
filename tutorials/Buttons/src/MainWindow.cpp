@@ -46,8 +46,6 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  printf("nuiObject: %d\nnuiWidget: %d, ptr: %d, nglString: %d\n", sizeof(nuiObject), sizeof(nuiWidget), sizeof(void*), sizeof(nglString));
-  
   nuiScrollView* pSView = new nuiScrollView(false, true);
   AddChild(pSView);
   pSView->SetPosition(nuiFill);

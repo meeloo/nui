@@ -462,12 +462,17 @@ bool nuiTopLevel::DispatchHasGrab(nuiWidgetPtr pWidget, nglTouchId TouchId)
 
 bool nuiTopLevel::Grab(nuiWidgetPtr pWidget)
 {
+  return Grab(pWidget, mMouseInfo);
+}
+
+bool nuiTopLevel::Grab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
+{
   nuiAutoRef;
   CheckValid();
   NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::Grab 0x%x\n"), pWidget) );
 
 ///< some widgets acquire the grab on creation, which is pretty unpleasant (this hack is quite bad)
-  nglTouchId touchId = mMouseInfo.TouchId;
+  nglTouchId touchId = rInfo.TouchId;
   if (touchId < 0)
   {
     return false;
@@ -491,7 +496,7 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget)
             pWidget->GetObjectName().GetChars(), pWidget->GetObjectClass().GetChars()) );
   }
 
-  nuiWidgetPtr pGrab = GetGrab();
+  nuiWidgetPtr pGrab = GetGrab(touchId);
   
   if (pGrab)
   {
@@ -521,6 +526,11 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget)
 
 bool nuiTopLevel::Ungrab(nuiWidgetPtr pWidget)
 {
+  return Ungrab(pWidget, mMouseInfo);
+}
+
+bool nuiTopLevel::Ungrab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
+{
   nuiAutoRef;
   CheckValid();
   NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::Ungrab 0x%x\n"), pWidget) );
@@ -531,7 +541,7 @@ bool nuiTopLevel::Ungrab(nuiWidgetPtr pWidget)
   }
 
 #ifndef DISABLE_TOOLTIP
-  nuiWidgetPtr pGrab = GetGrab();
+  nuiWidgetPtr pGrab = GetGrab(rInfo.TouchId);
   if (pGrab && pGrab->GetProperty("ToolTipOnGrab") == _T("true"))
   {
     mpToolTipSource = NULL;
@@ -578,14 +588,14 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CancelGrab()\n")) );
 bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
 {
   NGL_ASSERT(pWidget);
-
+  
   auto acquired = mpGrabAcquired.find(rInfo.TouchId);
   if (acquired != mpGrabAcquired.end() && acquired->second == true)
   {
     //NGL_OUT("Refused Grab requested by %s %s\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars());
     return false;
   }
-
+  
   nuiWidgetPtr oldgrab = GetGrab(rInfo.TouchId);
   if (oldgrab)
   {
@@ -595,24 +605,44 @@ bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInf
     }
   }
   
-//  if (oldgrab && oldgrab != pWidget)
-//  {
-//    NGL_TOUCHES_DEBUG( NGL_OUT("cancel touch on oldgrab = %p\n", oldgrab));
-//    oldgrab->MouseCanceled(rInfo);
-//  }
-  if (!DispatchMouseCanceled(pWidget, rInfo))
-    return false;
-
-  NGL_TOUCHES_DEBUG( NGL_OUT("Accepted Grab requested by %s %s (%p)\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pWidget));
-//  pWidget->DispatchMouseCanceled(pWidget, rInfo);
   pWidget->MouseClicked(rInfo);
-
-  mpGrab[rInfo.TouchId] = pWidget;
-  mpGrabAcquired[rInfo.TouchId] = true;
-  NGL_TOUCHES_DEBUG( NGL_OUT("Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
-  UpdateWidgetsCSS();
-  DumpGrabMap(__LINE__);
+  Grab(pWidget, rInfo);
   return true;
+
+//  auto acquired = mpGrabAcquired.find(rInfo.TouchId);
+//  if (acquired != mpGrabAcquired.end() && acquired->second == true)
+//  {
+//    //NGL_OUT("Refused Grab requested by %s %s\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars());
+//    return false;
+//  }
+//
+//  nuiWidgetPtr oldgrab = GetGrab(rInfo.TouchId);
+//  if (oldgrab)
+//  {
+//    if (!oldgrab->RequestStolenMouse(rInfo))
+//    {
+//      return false;
+//    }
+//  }
+//  
+////  if (oldgrab && oldgrab != pWidget)
+////  {
+////    NGL_TOUCHES_DEBUG( NGL_OUT("cancel touch on oldgrab = %p\n", oldgrab));
+////    oldgrab->MouseCanceled(rInfo);
+////  }
+//  if (!DispatchMouseCanceled(pWidget, rInfo))
+//    return false;
+//
+//  NGL_TOUCHES_DEBUG( NGL_OUT("Accepted Grab requested by %s %s (%p)\n", pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pWidget));
+////  pWidget->DispatchMouseCanceled(pWidget, rInfo);
+//  pWidget->MouseClicked(rInfo);
+//
+//  mpGrab[rInfo.TouchId] = pWidget;
+//  mpGrabAcquired[rInfo.TouchId] = true;
+//  NGL_TOUCHES_DEBUG( NGL_OUT("Grabs %d - %d\n", (uint32)mpGrabAcquired.size(), (uint32)mpGrab.size()));
+//  UpdateWidgetsCSS();
+//  DumpGrabMap(__LINE__);
+//  return true;
 }
 
 

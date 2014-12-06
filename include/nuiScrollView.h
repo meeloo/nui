@@ -159,9 +159,9 @@ protected:
   nuiTimer* mpHideTimer;
   nglTime mLastTime;
   
-  bool PreMouseClicked(const nglMouseInfo& rInfo);
-  bool PreMouseUnclicked(const nglMouseInfo& rInfo);
-  bool PreMouseMoved(const nglMouseInfo& rInfo);
+  bool CallPreMouseClicked(const nglMouseInfo& rInfo);
+  bool CallPreMouseUnclicked(const nglMouseInfo& rInfo);
+  bool CallPreMouseMoved(const nglMouseInfo& rInfo);
   
   nglMouseInfo mTouch;
   bool mTouched;

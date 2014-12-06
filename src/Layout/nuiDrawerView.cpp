@@ -237,7 +237,7 @@ nuiWidgetPtr nuiDrawerView::GetRight()
   return mpRight;
 }
 
-bool nuiDrawerView::PreMouseClicked(const nglMouseInfo& rInfo)
+bool nuiDrawerView::CallPreMouseClicked(const nglMouseInfo& rInfo)
 {
   if (!mInteractive)
     return false;
@@ -252,7 +252,7 @@ bool nuiDrawerView::PreMouseClicked(const nglMouseInfo& rInfo)
   return false;
 }
 
-bool nuiDrawerView::PreMouseUnclicked(const nglMouseInfo& rInfo)
+bool nuiDrawerView::CallPreMouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (!mInteractive)
     return false;
@@ -287,7 +287,7 @@ bool nuiDrawerView::PreMouseUnclicked(const nglMouseInfo& rInfo)
   return false;
 }
 
-bool nuiDrawerView::PreMouseMoved(const nglMouseInfo& rInfo)
+bool nuiDrawerView::CallPreMouseMoved(const nglMouseInfo& rInfo)
 {
   if (!mInteractive)
     return false;

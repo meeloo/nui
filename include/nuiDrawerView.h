@@ -28,9 +28,9 @@ public:
   bool MouseMoved(const nglMouseInfo& rInfo);
   bool MouseCanceled(const nglMouseInfo& rInfo);
 
-  bool PreMouseClicked(const nglMouseInfo& rInfo);
-  bool PreMouseUnclicked(const nglMouseInfo& rInfo);
-  bool PreMouseMoved(const nglMouseInfo& rInfo);
+  bool CallPreMouseClicked(const nglMouseInfo& rInfo);
+  bool CallPreMouseUnclicked(const nglMouseInfo& rInfo);
+  bool CallPreMouseMoved(const nglMouseInfo& rInfo);
 
   NUI_GETSET(bool, Interactive);
   NUI_GETSET(float, AnimRatio);

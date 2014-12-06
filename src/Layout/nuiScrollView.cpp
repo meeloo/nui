@@ -1361,7 +1361,7 @@ bool nuiScrollView::IsVerticalHotRectActive() const
   return mVerticalHotRectActive;
 }
 
-bool nuiScrollView::PreMouseClicked(const nglMouseInfo& rInfo)
+bool nuiScrollView::CallPreMouseClicked(const nglMouseInfo& rInfo)
 {
   if (!mDragEnabled)
     return false;
@@ -1395,7 +1395,7 @@ bool nuiScrollView::PreMouseClicked(const nglMouseInfo& rInfo)
   return false;
 }
 
-bool nuiScrollView::PreMouseUnclicked(const nglMouseInfo& rInfo)
+bool nuiScrollView::CallPreMouseUnclicked(const nglMouseInfo& rInfo)
 {
   if (!mDragEnabled)
     return false;
@@ -1407,7 +1407,7 @@ bool nuiScrollView::PreMouseUnclicked(const nglMouseInfo& rInfo)
   return false;
 }
 
-bool nuiScrollView::PreMouseMoved(const nglMouseInfo& rInfo)
+bool nuiScrollView::CallPreMouseMoved(const nglMouseInfo& rInfo)
 {
   if (!mDragEnabled)
     return false;
