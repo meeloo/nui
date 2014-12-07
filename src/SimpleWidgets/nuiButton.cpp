@@ -350,14 +350,14 @@ bool nuiButton::MouseUnclicked(const nglMouseInfo& rInfo)
 
 bool nuiButton::MouseCanceled(const nglMouseInfo& rInfo)
 {
-  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
-  {
-    mClicked = false;
-    mPressed = false;
-    Invalidate();
-    ButtonDePressedInactive();
-    return true;
-  }
+//  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+//  {
+//    mClicked = false;
+//    mPressed = false;
+//    Invalidate();
+//    ButtonDePressedInactive();
+//    return true;
+//  }
   return false;
 }
 
