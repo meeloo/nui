@@ -97,7 +97,7 @@ protected:
   
   void OnChildAdded(const nuiEvent& rEvent);
   void OnChildRemoved(const nuiEvent& rEvent);
-  void OnHotRectChanged(const nuiEvent& rEvent);
+  virtual void OnHotRectChanged(const nuiEvent& rEvent);
   bool mHorizontalHotRectActive;
   bool mVerticalHotRectActive;
   

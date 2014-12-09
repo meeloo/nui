@@ -6016,7 +6016,7 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
   CheckValid();
 #ifdef _DEBUG_LAYOUT
   if (GetDebug())
-    NGL_OUT("nuiWidget::SetRect on '%s' (%f, %f - %f, %f)\n", GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
+    NGL_OUT("nuiWidget::SetSelfRect on '%s' (%f, %f - %f, %f)\n", GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
 #endif
 
   bool inval = mNeedInvalidateOnSetRect;

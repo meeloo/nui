@@ -19,6 +19,89 @@
 #include "nuiFrame.h"
 #include "nuiCSS.h"
 
+////////////////////////////////////////////////////////////////////////////////
+#include "nuiTableView.h"
+
+class ButtonCellSource : public CellSource
+{
+public:
+  ButtonCellSource() : CellSource() {}
+  
+  nuiWidget* CreateCell()
+  {
+    nuiButton* pButton = new nuiButton("Button 0");
+    return pButton;
+  }
+  
+  void UpdateCell(int32 index, nuiWidget* pItem)
+  {
+    nuiButton* pButton = (nuiButton*)pItem;
+    nglString label;
+    label.CFormat("Button %d", index+1);
+    ((nuiLabel*)pButton->GetChild(0))->SetText(label);
+  }
+  
+  uint32 GetNumberOfCells()
+  {
+    return 512;
+  }
+};
+
+
+class ComplexCellSource : public CellSource
+{
+public:
+  ComplexCellSource() : CellSource() {}
+  
+  nuiWidget* CreateCell()
+  {
+    nuiHBox* pBox = new nuiHBox(0);
+    pBox->SetExpand(nuiExpandShrinkAndGrow);
+
+    // a simple togglebutton
+    nuiToggleButton* pBtn = new nuiToggleButton(_T("toggleButton"));
+    pBtn->SetObjectName(_T("MyButton"));
+    pBox->AddCell(pBtn);
+    
+    pBtn = new nuiToggleButton(_T("toggleButton"));
+    pBtn->SetObjectName(_T("MyButton"));
+    pBox->AddCell(pBtn);
+
+    pBtn = new nuiToggleButton(_T("toggleButton"));
+    pBtn->SetObjectName(_T("MyButton"));
+    pBox->AddCell(pBtn);
+
+    pBtn = new nuiToggleButton(_T("toggleButton"));
+    pBtn->SetObjectName(_T("MyButton"));
+    pBox->AddCell(pBtn);
+
+    pBtn = new nuiToggleButton(_T("toggleButton"));
+    pBtn->SetObjectName(_T("MyButton"));
+    pBox->AddCell(pBtn);
+
+    pBtn = new nuiToggleButton();
+    pBtn->SetObjectName(_T("MyButton"));
+    pBox->AddCell(pBtn, nuiCenter);
+    return pBox;
+  }
+  
+  void UpdateCell(int32 index, nuiWidget* pCell)
+  {
+    nuiHBox* pBox = (nuiHBox*)pCell;
+    nglString label;
+    label.CFormat("Button %d", index+1);
+    ((nuiLabel*)pBox->GetChild(0)->GetChild(0))->SetText(label);
+  }
+  
+  uint32 GetNumberOfCells()
+  {
+    return 21;
+  }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 
 /*
  * MainWindow
@@ -46,59 +129,62 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  printf("\nsizeof(nuiWidget)=%ld\nsizeof(nuiWidget)=%ld\n",sizeof(nuiWidget), sizeof(nuiMouseClicked));
+  ButtonCellSource* pSource = new ButtonCellSource();
+//  ComplexCellSource* pSource = new ComplexCellSource();
+  nuiTableView* pListView = new nuiTableView(pSource);
+  AddChild(pListView);
 
-  nuiScrollView* pSView = new nuiScrollView(false, true);
-  AddChild(pSView);
-  pSView->SetPosition(nuiFill);
-  pSView->SetUserWidth(256);
-  
-  nuiVBox* pVBox = new nuiVBox();
-  pVBox->SetExpand(nuiExpandShrinkAndGrow);
-  pSView->AddChild(pVBox);
-  nuiButton* pButton;
-  
-  for (int i = 0; i < 32; i++)
-  {
-    nglString str;
-    str.CFormat("Button %d", i);
-    pButton = new nuiButton(str);
-    pButton->SetUserHeight(42);
-    pVBox->AddCell(pButton);
-  }
-
-// create a vertical box for the layout
-  nuiVBox* pMainBox = new nuiVBox(0);
-  pMainBox->SetExpand(nuiExpandShrinkAndGrow);
-  pMainBox->SetPosition(nuiFillVertical);
-  AddChild(pMainBox);
-
-  // create a label width background for information display
-  nuiPane* pPane = new nuiPane();
-  pPane->SetBorder(20,20);
-  pMainBox->AddCell(pPane, nuiFillHorizontal);
-  mpLabel = new nuiLabel();
-  pPane->AddChild(mpLabel);
-  pPane->SetUserHeight(40);
-
-  nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
-  pMainBox->AddCell(pLabel, nuiLeft);
-  pMainBox->AddCell(Tutorial_Buttons());
-
-  pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
-  pMainBox->AddCell(pLabel, nuiLeft);
-  pMainBox->AddCell(Tutorial_ToggleButtons());
-
-  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-  pMainBox->AddCell(pLabel, nuiLeft);
-  pMainBox->AddCell(Tutorial_RadioButtons1());
-
-  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-  pMainBox->AddCell(pLabel, nuiLeft);
-  pMainBox->AddCell(Tutorial_RadioButtons2());
-
-  // make the mainbox's layout fill the entire user size (c.f. line #33)
-  pMainBox->SetAllCellsExpand(nuiExpandShrinkAndGrow);
+//  nuiScrollView* pSView = new nuiScrollView(false, true);
+//  AddChild(pSView);
+//  pSView->SetPosition(nuiFill);
+//  pSView->SetUserWidth(256);
+//  
+//  nuiVBox* pVBox = new nuiVBox();
+//  pVBox->SetExpand(nuiExpandShrinkAndGrow);
+//  pSView->AddChild(pVBox);
+//  nuiButton* pButton;
+//  
+//  for (int i = 0; i < 32; i++)
+//  {
+//    nglString str;
+//    str.CFormat("Button %d", i);
+//    pButton = new nuiButton(str);
+//    pButton->SetUserHeight(42);
+//    pVBox->AddCell(pButton);
+//  }
+//
+//// create a vertical box for the layout
+//  nuiVBox* pMainBox = new nuiVBox(0);
+//  pMainBox->SetExpand(nuiExpandShrinkAndGrow);
+//  pMainBox->SetPosition(nuiFillVertical);
+//  AddChild(pMainBox);
+//
+//  // create a label width background for information display
+//  nuiPane* pPane = new nuiPane();
+//  pPane->SetBorder(20,20);
+//  pMainBox->AddCell(pPane, nuiFillHorizontal);
+//  mpLabel = new nuiLabel();
+//  pPane->AddChild(mpLabel);
+//  pPane->SetUserHeight(40);
+//
+//  nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
+//  pMainBox->AddCell(pLabel, nuiLeft);
+//  pMainBox->AddCell(Tutorial_Buttons());
+//
+//  pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
+//  pMainBox->AddCell(pLabel, nuiLeft);
+//  pMainBox->AddCell(Tutorial_ToggleButtons());
+//
+//  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
+//  pMainBox->AddCell(pLabel, nuiLeft);
+//  pMainBox->AddCell(Tutorial_RadioButtons1());
+//
+//  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
+//  pMainBox->AddCell(pLabel, nuiLeft);
+//  pMainBox->AddCell(Tutorial_RadioButtons2());
+//
+//  // make the mainbox's layout fill the entire user size (c.f. line #33)
+//  pMainBox->SetAllCellsExpand(nuiExpandShrinkAndGrow);
 }
 
 

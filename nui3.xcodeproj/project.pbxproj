@@ -99,6 +99,10 @@
 		56AFF75B0D74522D003A6AF3 /* nuiHTTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 56AFF7570D74522D003A6AF3 /* nuiHTTP.h */; };
 		56AFF7610D745886003A6AF3 /* nuiHTTP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56AFF75F0D745886003A6AF3 /* nuiHTTP.cpp */; };
 		56CEA8B70ECB2E8A009F6CF4 /* nuiAudioDevice_CoreAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 56CEA8B50ECB2E8A009F6CF4 /* nuiAudioDevice_CoreAudio.h */; };
+		613DF38E1A34E52D00BD7656 /* nuiTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 613DF38D1A34E52D00BD7656 /* nuiTableView.h */; };
+		613DF38F1A34E52D00BD7656 /* nuiTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 613DF38D1A34E52D00BD7656 /* nuiTableView.h */; };
+		613DF3911A34E54C00BD7656 /* nuiTableView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 613DF3901A34E54C00BD7656 /* nuiTableView.cpp */; };
+		613DF3921A34E54C00BD7656 /* nuiTableView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 613DF3901A34E54C00BD7656 /* nuiTableView.cpp */; };
 		61D085120EAFAA3F00B73835 /* nuiSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61D085100EAFAA3F00B73835 /* nuiSurface.cpp */; };
 		61D085150EAFAA5400B73835 /* nuiSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 61D085130EAFAA5400B73835 /* nuiSurface.h */; };
 		73F0841C12E9BA0700656E84 /* nuiShape.h in Headers */ = {isa = PBXBuildFile; fileRef = E5816CFE0C3CECAB00902DFE /* nuiShape.h */; };
@@ -3791,6 +3795,8 @@
 		56AFF7570D74522D003A6AF3 /* nuiHTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiHTTP.h; path = ../../include/nuiHTTP.h; sourceTree = "<group>"; };
 		56AFF75F0D745886003A6AF3 /* nuiHTTP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiHTTP.cpp; sourceTree = "<group>"; };
 		56CEA8B50ECB2E8A009F6CF4 /* nuiAudioDevice_CoreAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiAudioDevice_CoreAudio.h; path = include/nuiAudioDevice_CoreAudio.h; sourceTree = SOURCE_ROOT; };
+		613DF38D1A34E52D00BD7656 /* nuiTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiTableView.h; path = include/nuiTableView.h; sourceTree = SOURCE_ROOT; };
+		613DF3901A34E54C00BD7656 /* nuiTableView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiTableView.cpp; sourceTree = "<group>"; };
 		61D085100EAFAA3F00B73835 /* nuiSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiSurface.cpp; sourceTree = "<group>"; };
 		61D085130EAFAA5400B73835 /* nuiSurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiSurface.h; path = include/nuiSurface.h; sourceTree = SOURCE_ROOT; };
 		73F086E612E9BA0700656E84 /* libnuiPhone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnuiPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5853,13 +5859,13 @@
 			children = (
 				E52417F711CB86C40025CA71 /* ngl_uikit.h */,
 				E52417F811CB86C40025CA71 /* nglApplication_UIKit.mm */,
+				E52417FF11CB86C40025CA71 /* nglApplication_UIKit.h */,
 				E52417F911CB86C40025CA71 /* nglClipBoard_UIKit.mm */,
 				E52417FA11CB86C40025CA71 /* nglConsole_Darwin.mm */,
 				E52417FB11CB86C40025CA71 /* nglDataObjects_UIKit.mm */,
 				E52417FC11CB86C40025CA71 /* nglKernel_UIKit.mm */,
 				E52417FD11CB86C40025CA71 /* nglModule_UIKit.mm */,
 				E52417FE11CB86C40025CA71 /* nglPlugin_UIKit.mm */,
-				E52417FF11CB86C40025CA71 /* nglApplication_UIKit.h */,
 				E524180011CB86C40025CA71 /* nglDragAndDrop_UIKit.h */,
 			);
 			name = iOS;
@@ -7383,6 +7389,8 @@
 				E5816CFB0C3CECAB00902DFE /* nuiShadeContainer.h */,
 				E5816D9C0C3CECAB00902DFE /* nuiSplitter.cpp */,
 				E5816D040C3CECAB00902DFE /* nuiSplitter.h */,
+				613DF3901A34E54C00BD7656 /* nuiTableView.cpp */,
+				613DF38D1A34E52D00BD7656 /* nuiTableView.h */,
 				E5816D9E0C3CECAB00902DFE /* nuiTabView.cpp */,
 				E5816D0B0C3CECAB00902DFE /* nuiTabView.h */,
 				E5A16F120C902AD5005DC748 /* nuiTitledPane.cpp */,
@@ -8374,6 +8382,7 @@
 				73F0849F12E9BA0700656E84 /* nuiSpline.h in Headers */,
 				73F084A012E9BA0700656E84 /* nuiFileList.h in Headers */,
 				73F084A112E9BA0700656E84 /* nuiSplitter.h in Headers */,
+				613DF38F1A34E52D00BD7656 /* nuiTableView.h in Headers */,
 				73F084A212E9BA0700656E84 /* nglVideoMode.h in Headers */,
 				73F084A312E9BA0700656E84 /* nuiMainWindow.h in Headers */,
 				73F084A412E9BA0700656E84 /* nuiTexture.h in Headers */,
@@ -9693,6 +9702,7 @@
 				E553C13312A55987009DDD22 /* ngl_config.uikit.h in Headers */,
 				E553C13412A55987009DDD22 /* ngl_config.mac.h in Headers */,
 				E553C13512A55987009DDD22 /* ngl_config.cocoa.h in Headers */,
+				613DF38E1A34E52D00BD7656 /* nuiTableView.h in Headers */,
 				406F78BD12DC9F2900DBAC43 /* nuiAudioDb.h in Headers */,
 				406F78BE12DC9F2900DBAC43 /* nuiAudioEngine.h in Headers */,
 				406F78D012DC9F3C00DBAC43 /* nuiSound.h in Headers */,
@@ -10756,6 +10766,7 @@
 				73F086BD12E9BA0700656E84 /* nglApplication_UIKit.mm in Sources */,
 				73F086BE12E9BA0700656E84 /* nglClipBoard_UIKit.mm in Sources */,
 				73F086BF12E9BA0700656E84 /* nglConsole_Darwin.mm in Sources */,
+				613DF3921A34E54C00BD7656 /* nuiTableView.cpp in Sources */,
 				73F086C012E9BA0700656E84 /* nglDataObjects_UIKit.mm in Sources */,
 				73F086C112E9BA0700656E84 /* nglKernel_UIKit.mm in Sources */,
 				73F086C212E9BA0700656E84 /* nglModule_UIKit.mm in Sources */,
@@ -11616,6 +11627,7 @@
 				E5D643411209AB9C009C26A9 /* nuiHTMLItem.cpp in Sources */,
 				E5D643421209AB9C009C26A9 /* nuiHTMLBox.cpp in Sources */,
 				E5D643431209AB9C009C26A9 /* nuiHTMLText.cpp in Sources */,
+				613DF3911A34E54C00BD7656 /* nuiTableView.cpp in Sources */,
 				E5D643441209AB9C009C26A9 /* nuiHTMLImage.cpp in Sources */,
 				E5D643451209AB9C009C26A9 /* nuiHTMLFont.cpp in Sources */,
 				E5D643461209AB9C009C26A9 /* nuiHTMLHeader.cpp in Sources */,

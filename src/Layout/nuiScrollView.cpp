@@ -270,7 +270,7 @@ bool nuiScrollView::SetRect(const nuiRect& rRect)
   }
 #endif
   
-  nuiWidget::SetRect(rRect);
+  nuiWidget::SetSelfRect(rRect);
   
   if (!mpHorizontal || !mpVertical)
     return false;
