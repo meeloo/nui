@@ -43,9 +43,15 @@ const nglChar* gpWindowErrorTable[] =
 # define NGL_TOUCHES_OUT {}
 #endif//!_MULTI_TOUCHES_
 
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreFoundation/CFRunLoop.h>
 
-////////// Keyboard:
-nglKeyCode ngl_scode_table[0x80] = 
+////////////////////////////////////////////////////////////////////////////////
+// Keycodes ////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Keycodes
+
+nglKeyCode ngl_scode_table[0x80] =
 {
   /*  0 */ NK_A, NK_S, NK_D, NK_F, NK_H, NK_G, NK_Z, NK_X, NK_C, NK_V,
   /* 10 */ NK_GRAVE, NK_B, NK_Q, NK_W, NK_E, NK_R, NK_Y, NK_T, NK_1, NK_2,
@@ -157,42 +163,10 @@ nglKeyCode CocoaToNGLKeyCode(unichar c, uint16 scanCode)
 }
 
 
-//#define _DEBUG_WINDOW_
-
-@interface customGLView : NSView<NSWindowDelegate>
-{
-	NSOpenGLContext *oglContext;
-}
-
-- (NSOpenGLContext*) getContext;
-
-@end
-// ---------
-
-
-@implementation customGLView
-
-- (NSOpenGLContext*) getContext
-{
-  return oglContext;
-}
-
-- (void) windowDidResize: (NSNotification *)notification
-{
-  //printf("windowWillResize %f x %f\n", size.width, size.height);
-  // inform the context that the view has been resized
-  NSWindow* win = [notification object];
-  NSRect rect = {0};
-  rect = [win frame];
-  [win resize: [win contentRectForFrameRect: rect].size];
-}
-
--(void)windowWillClose:(NSNotification *)note
-{
-  //[[NSApplication sharedApplication] terminate:self];
-  [super windowWillClose:note];
-  //mpNGLWindow->CallOnDestruction();
-}
+////////////////////////////////////////////////////////////////////////////////
+// Scaling /////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Scaling
 
 static float gScaleFactor = 0.0f;
 static float gInvScaleFactor = 0.0f;
@@ -203,7 +177,6 @@ float nuiGetScaleFactor()
   {
     gScaleFactor = [[NSScreen mainScreen] backingScaleFactor];
   }
-  //gScaleFactor = 1;
   return gScaleFactor;
 }
 
@@ -213,57 +186,66 @@ float nuiGetInvScaleFactor()
   {
     gInvScaleFactor = 1.0f / nuiGetScaleFactor();
   }
-
+  
   return gInvScaleFactor;
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// CVDisplayLink callback //////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark CVDisplayLink callback
 
-/* default initializer for descendents of NSView */
-- (id)initWithFrame:(NSRect)frame andSharedContext:(NSOpenGLContext*)contextToShare
+CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* pNGLWindow)
 {
-  self = [super initWithFrame:frame];
+///< Add threaded rendering callbacks here
+  return kCVReturnSuccess;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// nglNSView ///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglNSView
+
+@implementation nglNSView
+- (id)initWithNGLWindow:(nglWindow*)pNGLWindow
+{
+  self = [super init];
   if(self == nil)
     return nil;
-
-  if ( [self respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:) ] )
-  {
-    [self setWantsBestResolutionOpenGLSurface: YES];
-  }
-
-  // create and activate the context object which maintains the OpenGL state
-  NSOpenGLPixelFormatAttribute attribs[] =
-  {
-    NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
-    NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16,
-    NSOpenGLPFAAccelerated,
-    NSOpenGLPFABackingStore,
-
-    NSOpenGLPFAMultisample,
-    NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
-    NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)4,
-    //NSOpenGLPFAWindow,
-    (NSOpenGLPixelFormatAttribute)0
-  };
-  NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
   
-  oglContext = [[NSOpenGLContext alloc] initWithFormat: format shareContext: contextToShare];
-  [format release];
-  GLint v = 1;
-  [oglContext setValues:&v forParameter:NSOpenGLCPSwapInterval];
-  [oglContext setView:self];
-  [oglContext makeCurrentContext];
+  mpNGLWindow = pNGLWindow;
 
   [self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
 
   return self;
 }
 
+-(void) dealloc
+{
+  [super dealloc];
+}
 
+
+- (void) windowDidResize: (NSNotification *)notification
+{
+  NSWindow* win = [notification object];
+  NSRect rect = {0};
+  rect = [win frame];
+  [win resize: [win contentRectForFrameRect: rect].size];
+}
+
+-(void)windowWillClose:(NSNotification *)note
+{
+  //[[NSApplication sharedApplication] terminate:self];
+  [super windowWillClose:note];
+  mpNGLWindow->CallOnDestruction();
+}
 
 - (void)lockFocus
 {
-  NSOpenGLContext* context = oglContext;
+  NSOpenGLContext* context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
   
   // make sure we are ready to draw
   [super lockFocus];
@@ -275,6 +257,12 @@ float nuiGetInvScaleFactor()
     [context setView:self];
   }
   
+  if (!mInitiated)
+  {
+    mInitiated = true;
+    mpNGLWindow->CallOnCreation();
+  }
+
   // make us the current OpenGL context
   [context makeCurrentContext];
 }
@@ -282,19 +270,15 @@ float nuiGetInvScaleFactor()
 // this is called whenever the view changes (is unhidden or resized)
 - (void)drawRect:(NSRect)frameRect
 {
-  [oglContext update];
-  [(nglNSWindow*)[self window] doPaint];
+  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
+  [_context update];
+  mpNGLWindow->CallOnPaint();
 }
 
 // this tells the window manager that nothing behind our view is visible
 -(BOOL) isOpaque
 {
   return YES;
-}
-
--(void) dealloc
-{
-  [super dealloc];
 }
 
 - (void)keyDown:(NSEvent *)theEvent
@@ -318,8 +302,7 @@ float nuiGetInvScaleFactor()
 - (void)viewDidChangeBackingProperties
 {
   [super viewDidChangeBackingProperties];
-  nglNSWindow* wnd = (nglNSWindow*)[self window];
-  [wnd getNGLWindow]->CallOnRescale([wnd backingScaleFactor]);
+  mpNGLWindow->CallOnRescale([[self window] backingScaleFactor]);
 }
 
 NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
@@ -352,128 +335,44 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   return [(nglNSWindow*)[self window] performDragOperation:sender];
 }
 
-
-
-
 @end
 
 
+////////////////////////////////////////////////////////////////////////////////
+// nglNSWindow /////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglNSWindow
+
 @implementation nglNSWindow
 
-- (nglWindow *) getNGLWindow
+- (id) initWithFrame: (NSRect) rect andNGLWindow: (nglWindow*) pNGLWindow
 {
-	return self->mpNGLWindow;
-}
+  BOOL deffering = YES;
+  uint32 styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
+  NSBackingStoreType buffering = NSBackingStoreBuffered;
 
-//+ (Class) layerClass
-//{
-//	return [CANSGLLayer class];
-//}
+  self = [self initWithContentRect:rect styleMask:styleMask backing:buffering defer:deffering];
+  
+  if (!self)
+  {
+    NGL_ASSERT(0);
+    return nil;
+  }
 
-
-- (id) initWithFrame: (NSRect) rect andNGLWindow: (nglWindow*) pNGLWindow andSharedContext:(NSOpenGLContext*)sharedContext
-{
+  mpNGLWindow = pNGLWindow;
   mModifiers = 0;
   mpDropObject = NULL;
 
-	mInited = false;
-	mInvalidated = true;
-
-	mInvalidationTimer = nil;
-	mDisplayLink = nil;
-
-  mLastPaintTime = 0;
-
-  BOOL deffering = NO;
-  uint32 styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
-  NSBackingStoreType buffering = NSBackingStoreBuffered;
-    
-  if ( (self = [self initWithContentRect:rect styleMask:styleMask backing:buffering defer:deffering]) )
-  {
-    mpNGLWindow = pNGLWindow;
-  }
-  else
-  {
-    NGL_ASSERT(!"initWithFrame: Could not initialize NSWindow");
-  }
-
   [self setAcceptsMouseMovedEvents:TRUE];
-  
-  NSRect glrect = {0};
-  glrect.size.width = 320;
-  glrect.size.height = 240;
-  
-  customGLView* pView = [[[customGLView alloc] initWithFrame: glrect andSharedContext:sharedContext] autorelease];
-  [self setContentView: pView];
-  [self setDelegate: pView];
-  
-  mpNGLWindow->CallOnRescale([self backingScaleFactor]);
-
-  //[self makeKeyAndOrderFront:nil];
-  
-//NGL_OUT(_T("[nglNSWindow initWithFrame]\n"));
-
-
-  int frameInterval = 1;
-//  NSString* sysVersion = [[UIDevice currentDevice] systemVersion];
-//  if ([sysVersion compare:@"3.1" options:NSNumericSearch] != NSOrderedAscending) ///< CADisplayLink requires version 3.1 or greater
-//  {
-//    mDisplayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(Paint)];
-//    [mDisplayLink setFrameInterval:frameInterval];
-//    [mDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-//  }
-//  else ///< NSTimer is used as fallback
-  {
-    mInvalidationTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / NGL_WINDOW_FPS) target:self selector:@selector(Paint) userInfo:nil repeats:YES];
-  }
-  
-  mpTimer = nuiAnimation::AcquireTimer();
-  mpTimer->Stop();
 
   return self;
 }
 
 - (void) dealloc
 {
-  //NGL_OUT(_T("[nglNSWindow dealloc]\n"));
   mpNGLWindow->CallOnDestruction();
 
-  nuiAnimation::ReleaseTimer();
-  if (mInvalidationTimer != nil)
-  {
-    [mInvalidationTimer invalidate];
-    //    [mInvalidationTimer release]; ///< should be auto released
-    mInvalidationTimer = nil;
-  }
-  if (mDisplayLink != nil)
-  {
-    [mDisplayLink invalidate];
-    //    [mDisplayLink release]; ///< should be auto released
-    mDisplayLink = nil;
-  }
-  
   [super dealloc];
-}
-
-
-- (void) InitNGLWindow
-{  
-  if (!mInited)
-  {
-    mInited = true;
-    mpNGLWindow->CallOnCreation();
-//    mpNGLWindow->Invalidate();
-//    mpNGLWindow->CallOnPaint();
-  }
-
-  static int32 counter = 0;
-  if (counter)
-  {
-    counter--;
-    return;
-  }
-  
-  counter = 60;
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -741,63 +640,11 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 {
   //printf("resize %f x %f\n", size.width, size.height);
   mpNGLWindow->CallOnResize(size.width, size.height);
-  mInvalidated = true;
 }
 
 - (BOOL)acceptsMouseMovedEvents
 {
   return YES;
-}
-
-- (void)Paint
-{
-  [self InitNGLWindow];
-  nglTime now;
-  double lap = now - mLastPaintTime;
-  if (mLastPaintTime == 0)
-    lap = 0;
-  mLastPaintTime = now;
-  mpTimer->OnTick(lap);
-
-  if (mInvalidated)
-  {
-    mInvalidated = false;
-    [self display];
-    //mpNGLWindow->CallOnPaint();
-  }
-}
-
-- (void)doPaint
-{
-  //printf("doPaint 0x%x\n", mpNGLWindow);
-  
-  mpNGLWindow->CallOnPaint();
-}
-
-- (void) invalidate
-{
-  //printf("invalidate\n");
-  mInvalidated = true;
-}
-
-
-- (void) MakeCurrent
-{
-  //printf("MakeCurrent\n");
-  [[[self contentView] getContext] makeCurrentContext];
-}
-
-- (void) BeginSession
-{
-  //printf("BeginSession\n");
-  [[[self contentView] getContext] makeCurrentContext];
-}
-
-- (void) EndSession
-{
-  //printf("EndSession\n");
-  glFlush();
-  //[[[self contentView] getContext] flushBuffer];
 }
 
 // Drag and drop:
@@ -807,7 +654,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   /*------------------------------------------------------
    method called whenever a drag enters our drop zone
    --------------------------------------------------------*/
-  customGLView* pView = [self contentView];
+  nglNSView* pView = [self contentView];
 
   mpDropObject = new nglDragAndDrop(eDropEffectCopy, NULL, 0, 0);
 
@@ -986,30 +833,69 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   mpDropObject = NULL;
   return YES;
 }
-
-
 @end///< nglNSWindow
 
 
+////////////////////////////////////////////////////////////////////////////////
+// nglNSWindowController ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglNSWindowController
 
+@implementation nglNSWindowController
 
-/////////////////////////////////////////////////////////////////////////////////////////////////// NGL WINDOW:
-
-nglCocoaDragAndDrop::nglCocoaDragAndDrop(nglWindow* pWin)
+- (id)initWithNGLWindow:(nglWindow *)pNGLWindow;
 {
-  mpWin = pWin;
+  self = [super initWithWindow:nil];
+  
+  if (self)
+  {
+    mpNGLWindow = pNGLWindow;
+  }
+  else
+  {
+    NGL_ASSERT(0);
+  }
+  
+  return self;
 }
 
-nglCocoaDragAndDrop::~nglCocoaDragAndDrop()
+- (void) keyDown:(NSEvent *)event
 {
-  mpWin = NULL;
+  //  unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
+  //
+  //  switch (c)
+  //  {
+  //      // Handle [ESC] key
+  //    case 27:
+  //      if(fullscreenWindow != nil)
+  //      {
+  //        [self goWindow];
+  //      }
+  //      return;
+  //      // Have f key toggle fullscreen
+  //    case 'f':
+  //      if(fullscreenWindow == nil)
+  //      {
+  //        [self goFullscreen];
+  //      }
+  //      else
+  //      {
+  //        [self goWindow];
+  //      }
+  //      return;
+  //  }
+  //
+  // Allow other character to be handled (or not and beep)
+  [super keyDown:event];
 }
 
-bool nglCocoaDragAndDrop::Drag(nglDragAndDrop* pDragObject)
-{
-  return false;
-}
+@end
 
+
+////////////////////////////////////////////////////////////////////////////////
+// nglWindow ///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglWindow
 
 /*
  * OS specific info
@@ -1027,7 +913,6 @@ nglWindow::OSInfo::OSInfo()
 nglWindow::nglWindow (uint Width, uint Height, bool IsFullScreen)
 {
   Register();
-  mpNSWindow = NULL;
   nglContextInfo context; // Get default context
   nglWindowInfo info(Width, Height, IsFullScreen);
   InternalInit (context, info, NULL); 
@@ -1036,10 +921,19 @@ nglWindow::nglWindow (uint Width, uint Height, bool IsFullScreen)
 nglWindow::nglWindow (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
 {
   Register();
-  mpNSWindow = NULL;
   InternalInit (rContext, rInfo, pShared);
 }
 
+
+void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData)
+{
+  nglWindow* pWindow = (nglWindow*)pUserData;
+  NGL_ASSERT(pWindow);
+  nglTime now;
+  pWindow->mpAnimationTimer->OnTick(now - pWindow->mLastTick);
+  pWindow->mLastTick = now;
+  pWindow->CallOnPaint();
+}
 
 
 void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
@@ -1082,24 +976,52 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
       break;
   }
   
-  NSOpenGLContext* ctx = nil;
+  NSOpenGLContext* _shared_ctx = nil;
   if (pShared)
   {
-    nglNSWindow* pSharedWindow = (nglNSWindow*)((nglWindow*)pShared)->mpNSWindow;
-    ctx = [[pSharedWindow contentView] getContext];
+    _shared_ctx = (NSOpenGLContext*)((nglWindow*)pShared)->mpNSGLContext;
   }
-  // Create the actual window
-  nglNSWindow* pNSWindow = [[nglNSWindow alloc] initWithFrame:rect andNGLWindow: this andSharedContext:ctx];
 
-  mOSInfo.mpNSWindow = pNSWindow;
-  mpNSWindow = pNSWindow;
+  
+  nglNSWindow* _window = [[nglNSWindow alloc] initWithFrame:rect andNGLWindow: this];
+  mOSInfo.mpNSWindow = _window;
+  mpNSWindow = _window;
 
   SetTitle(rInfo.Title);
 
+  nglNSView* _view = [[nglNSView alloc] initWithNGLWindow:this];
+  mpNSView = _view;
+  [_window setContentView: _view];
+  [_window setDelegate: _view];
+  
+  if ([_view respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)])
+    [_view setWantsBestResolutionOpenGLSurface: YES];
+  
+  NSOpenGLPixelFormatAttribute attribs[] =
+  {
+    NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
+    NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16,
+    NSOpenGLPFAAccelerated,
+    NSOpenGLPFABackingStore,
+    NSOpenGLPFAMultisample,
+    NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
+    NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)4,
+    //NSOpenGLPFAWindow,
+    (NSOpenGLPixelFormatAttribute)0
+  };
+  NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+  NSOpenGLContext* _context = [[NSOpenGLContext alloc] initWithFormat: format shareContext: _shared_ctx];
+
+  GLint v = 1;
+  [_context setValues:&v forParameter:NSOpenGLCPSwapInterval];
+  [_context setView: _view];
+  [_context makeCurrentContext];
+  mpNSGLContext = _context;
+
+  CallOnRescale([_window backingScaleFactor]);
+
   //[pNSWindow makeKeyAndVisible];
   
-  NGL_LOG(_T("window"), NGL_LOG_INFO, _T("trying to create GLES context"));
-  rContext.Dump(NGL_LOG_INFO);
   
   if (rContext.TargetAPI != eTargetAPI_OpenGL && rContext.TargetAPI != eTargetAPI_OpenGL2)
   {
@@ -1107,37 +1029,60 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     NGL_ASSERT(0);
     return;
   }
-	
-	NSRect r = [(nglNSWindow*)mpNSWindow frame];
-	//printf("currentFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
-	r = [NSScreen mainScreen].visibleFrame;
-	//printf("applicationFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
-	
-  Build(rContext);
 
   mWidth = rect.size.width;
   mHeight = rect.size.height;
+	
+  Build(rContext);
 
-//  [pNSWindow UpdateOrientation];
+
   
-/* Ultra basic UIKit view integration on top of nuiWidgets
-  UIWebView* pWebView = [[UIWebView alloc] initWithFrame: CGRectMake(50, 50, 200, 200)];
-	[pNSWindow addSubview: pWebView];
-	pWebView.hidden = NO;
-  NSURL* pURL = [[NSURL alloc] initWithString: @"http://libnui.net"];
-  NSURLRequest* pReq = [[NSURLRequest alloc] initWithURL: pURL];
-  [pWebView loadRequest: pReq];
- */
+  mpAnimationTimer = nuiAnimation::AcquireTimer();
+  mpAnimationTimer->Stop();
 
+  CFRunLoopTimerContext _timer_ctx;
+  _timer_ctx.version = 0;
+  _timer_ctx.info = (void*)this;
+  _timer_ctx.retain = NULL;
+  _timer_ctx.release = NULL;
+  _timer_ctx.copyDescription = NULL;
+  
+  CFAbsoluteTime absTime = CFAbsoluteTimeGetCurrent() + (1.0/60.0);
+//CFAllocatorRef allocator, CFAbsoluteTime fireDate, CFTimeInterval interval, CFOptionFlags flags, CFIndex order, CFRunLoopTimerCallBack callout, CFRunLoopTimerContext *context)
+  mpCFRunLoopTimer = CFRunLoopTimerCreate( kCFAllocatorDefault,
+                                           absTime,
+                                           1.0/60.0,
+                                           0,// option flags, not implemented so far
+                                           0,// timer order, not implemented so far
+                                           &OnCFRunLoopTicked,
+                                           &_timer_ctx);
 
+  if (!mpCFRunLoopTimer)
+  {
+    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("Couldn't start runloop timer"));
+    NGL_ASSERT(0);
+  }
+  
+  mLastTick = nglTime();
+  CFRunLoopAddTimer(CFRunLoopGetCurrent(), mpCFRunLoopTimer, kCFRunLoopCommonModes);
 }
+
+
+
 
 nglWindow::~nglWindow()
 {
+  NGL_ASSERT(mpCFRunLoopTimer);
+  CFRunLoopRef currentRunLoop = CFRunLoopGetCurrent();
+  CFRunLoopRemoveTimer(currentRunLoop, mpCFRunLoopTimer, kCFRunLoopCommonModes);
+  if (mpCFRunLoopTimer)
+    CFRelease(mpCFRunLoopTimer);
+  mpCFRunLoopTimer = NULL;
+  nuiAnimation::ReleaseTimer();
+
   [(id)mpNSWindow Unregister];
   Unregister();
 }
-
 
 /*
  * All services
@@ -1274,14 +1219,63 @@ const nglWindow::OSInfo* nglWindow::GetOSInfo() const
   return &mOSInfo;
 }
 
+
+#pragma mark CVDisplayLink setup
+
+void nglWindow::AcquireDisplayLink()
+{
+  mpAnimationTimer = nuiAnimation::AcquireTimer();
+  mpAnimationTimer->Stop();
+  
+  if (kCVReturnSuccess != CVDisplayLinkCreateWithActiveCGDisplays(&mDisplayLink))
+  {
+    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkCreateWithActiveCGDisplays returned an error"));
+    NGL_ASSERT(0);
+  }
+  if (kCVReturnSuccess != CVDisplayLinkSetOutputCallback(mDisplayLink, &CVDisplayLinkCallback, this))
+  {
+    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkSetOutputCallback returned an error"));
+    NGL_ASSERT(0);
+  }
+
+  NSOpenGLContext* _context = (NSOpenGLContext*)mpNSGLContext;
+  CGLPixelFormatObj cglPixelFormat = [[_context pixelFormat] CGLPixelFormatObj];
+  CGLContextObj cglContext = [_context CGLContextObj];
+
+  if (kCVReturnSuccess != CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat))
+  {
+    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext returned an error"));
+    NGL_ASSERT(0);
+  }
+
+  if (kCVReturnSuccess != CVDisplayLinkStart(mDisplayLink))
+  {
+    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkStart returned an error"));
+    NGL_ASSERT(0);
+  }
+}
+
+void nglWindow::ReleaseDisplayLink()
+{
+  if (mDisplayLink != nil)
+  {
+    CVDisplayLinkStop(mDisplayLink);
+    CVDisplayLinkRelease(mDisplayLink);
+    mDisplayLink = nil;
+  }
+  nuiAnimation::ReleaseTimer();
+}
+
+
+#pragma mark GL Context handling
+
 void nglWindow::BeginSession()
 {
 #ifdef _DEBUG_WINDOW_
   NGL_LOG(_T("window"), NGL_LOG_INFO, _T("BeginSession\n"));
 #endif
-  //  MakeCurrent();
-  NGL_ASSERT(mpNSWindow);
-  [(id)mpNSWindow BeginSession];
+  NGL_ASSERT(mpNSGLContext);
+  [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
 }
 
 void nglWindow::EndSession()
@@ -1291,17 +1285,18 @@ void nglWindow::EndSession()
 #ifdef _DEBUG_WINDOW_
   NGL_LOG(_T("window"), NGL_LOG_INFO, _T("EndSession\n"));
 #endif
-	
-  NGL_ASSERT(mpNSWindow);
-  [(id)mpNSWindow EndSession];
+
+  NGL_ASSERT(mpNSGLContext);
+glFlush();
+//  [(NSOpenGLContext*)mpNSGLContext flushBuffer];
+  [NSOpenGLContext clearCurrentContext];
 #endif
 }
 
 bool nglWindow::MakeCurrent() const
 {
-  NGL_ASSERT(mpNSWindow);
-  [(id)mpNSWindow MakeCurrent];
-
+  NGL_ASSERT(mpNSGLContext);
+  [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
   return true;
 }
 
@@ -1423,6 +1418,12 @@ bool nglWindow::IsEnteringText() const
   return false;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Drag and drop ///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Drag and drop
+
 /// Drag and Drop:
 bool nglWindow::Drag(nglDragAndDrop* pDragObject)
 {
@@ -1459,3 +1460,17 @@ int nglWindow::GetStatusBarSize() const
   return 0;
 }
 
+nglCocoaDragAndDrop::nglCocoaDragAndDrop(nglWindow* pWin)
+{
+  mpWin = pWin;
+}
+
+nglCocoaDragAndDrop::~nglCocoaDragAndDrop()
+{
+  mpWin = NULL;
+}
+
+bool nglCocoaDragAndDrop::Drag(nglDragAndDrop* pDragObject)
+{
+  return false;
+}

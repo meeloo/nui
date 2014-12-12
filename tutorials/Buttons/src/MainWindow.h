@@ -25,7 +25,11 @@ protected:
   nuiWidget* Tutorial_ToggleButtons();
   nuiWidget* Tutorial_RadioButtons1();
   nuiWidget* Tutorial_RadioButtons2();
-
+  
+  nuiWidget* CreateTestDelChildren();
+  void OnCreateView(const nuiEvent& rEvent);
+  
+  
   void OnButtonPressed(const nuiEvent& rEvent);
   void OnTogglePressed(const nuiEvent& rEvent);
   void OnRadioPressed(const nuiEvent& rEvent);

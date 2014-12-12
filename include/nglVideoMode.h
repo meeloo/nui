@@ -26,6 +26,9 @@ This class is not available if the _NOGFX_ symbol is defined.
 #include <X11/Xlib.h>
 #endif // _X11_
 
+#ifdef _COCOA_
+#include <CoreVideo/CVDisplayLink.h>
+#endif
 
 //! Video mode management
 /*!

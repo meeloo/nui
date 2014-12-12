@@ -29,21 +29,35 @@ public:
   
   nuiWidget* CreateCell()
   {
-    nuiButton* pButton = new nuiButton("Button 0");
-    return pButton;
+//    nuiButton* pButton = new nuiButton("Button 0");
+//    return pButton;
+    nuiHBox* pHBox = new nuiHBox();
+    pHBox->SetExpand(nuiExpandShrinkAndGrow);
+    pHBox->SetEqualizeCells(true);
+
+    for (int i = 0; i < 8; ++i)
+    {
+      nuiButton* pButton = new nuiButton("0");
+      pHBox->AddCell(pButton);
+    }
+    return pHBox;
   }
   
-  void UpdateCell(int32 index, nuiWidget* pItem)
+  void UpdateCell(int32 index, nuiWidget* pCell)
   {
-    nuiButton* pButton = (nuiButton*)pItem;
-    nglString label;
-    label.CFormat("Button %d", index+1);
-    ((nuiLabel*)pButton->GetChild(0))->SetText(label);
+    nuiHBox* pHBox = (nuiHBox*)pCell;
+    for (int i = 0; i < 8; ++i)
+    {
+      nuiButton* pButton = (nuiButton*)pHBox->GetCell(i);
+      nglString label;
+      label.CFormat("%d", index+1);
+      ((nuiLabel*)pButton->GetChild(0))->SetText(label);
+    }
   }
   
   uint32 GetNumberOfCells()
   {
-    return 512;
+    return 4096;
   }
 };
 
@@ -133,6 +147,8 @@ void MainWindow::OnCreation()
 //  ComplexCellSource* pSource = new ComplexCellSource();
   nuiTableView* pListView = new nuiTableView(pSource);
   AddChild(pListView);
+  
+//  AddChild(CreateTestDelChildren());
 
 //  nuiScrollView* pSView = new nuiScrollView(false, true);
 //  AddChild(pSView);
@@ -140,11 +156,12 @@ void MainWindow::OnCreation()
 //  pSView->SetUserWidth(256);
 //  
 //  nuiVBox* pVBox = new nuiVBox();
+//  pVBox->SetBorderRight(42);
 //  pVBox->SetExpand(nuiExpandShrinkAndGrow);
 //  pSView->AddChild(pVBox);
 //  nuiButton* pButton;
 //  
-//  for (int i = 0; i < 32; i++)
+//  for (int i = 0; i < 128; i++)
 //  {
 //    nglString str;
 //    str.CFormat("Button %d", i);
@@ -152,7 +169,7 @@ void MainWindow::OnCreation()
 //    pButton->SetUserHeight(42);
 //    pVBox->AddCell(pButton);
 //  }
-//
+
 //// create a vertical box for the layout
 //  nuiVBox* pMainBox = new nuiVBox(0);
 //  pMainBox->SetExpand(nuiExpandShrinkAndGrow);
@@ -336,9 +353,44 @@ nuiWidget* MainWindow::Tutorial_RadioButtons2()
 
 }
 
+nuiWidget* MainWindow::CreateTestDelChildren()
+{
+  nuiWidget* pWidget = new nuiWidget();
+  
+  nuiButton* pButton = new nuiButton("Recreate view");
+  pButton->SetUserHeight(48);
+  pButton->SetPosition(nuiFillTop);
+  mEventSink.Connect(pButton->Activated, &MainWindow::OnCreateView, pWidget);
+
+  pWidget->AddChild(pButton);
+  return pWidget;
+}
 
 
-
+void MainWindow::OnCreateView(const nuiEvent& rEvent)
+{
+  nuiWidget* pWidget = (nuiWidget*)rEvent.mpUser;
+  if (pWidget->GetChildrenCount()>1)
+  {
+    pWidget->DelChild(pWidget->GetChild(1));
+  }
+  else
+  {
+    nuiVBox* pVBox = new nuiVBox();
+    pVBox->SetBorderTop(48);
+    pVBox->SetPosition(nuiFill);
+    pVBox->SetExpand(nuiExpandShrinkAndGrow);
+    for (int i = 0; i < 256; ++i)
+    {
+      nuiButton* pButton = new nuiButton("1");
+      nglString name;
+      name.SetCInt(i);
+      ((nuiLabel*)pButton->GetChild(0))->SetText(name);
+      pVBox->AddCell(pButton);
+    }
+    pWidget->AddChild(pVBox);
+  }
+}
 
 
 
@@ -351,6 +403,7 @@ nuiWidget* MainWindow::Tutorial_RadioButtons2()
 // events receivers
 //
 //
+
 
 void MainWindow::OnButtonPressed(const nuiEvent& rEvent)
 {

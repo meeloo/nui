@@ -675,6 +675,11 @@ nuiWidget::~nuiWidget()
     mpDecoration->Release();
   }
 
+  if (mpFocusDecoration)
+  {
+    mpFocusDecoration->Release();
+  }
+
   if (mpSurface)
   {
     mpSurface->Release();

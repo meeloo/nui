@@ -22,7 +22,8 @@ This class is not available if the _NOGFX_ symbol is defined.
 #import <OpenGLES/ES2/glext.h>
 #endif
 
-//#include "nui.h"
+//#ifdef _COCOA_
+//#endif
 
 #ifndef _NOGFX_
 
@@ -31,6 +32,7 @@ This class is not available if the _NOGFX_ symbol is defined.
 #include "nglString.h"
 #include "nglContext.h"
 #include "nglVideoMode.h"
+#include "nglTimer.h"
 #include "nuiMouseCursor.h"
 
 #include "nglDragAndDropObjects.h"
@@ -936,18 +938,34 @@ public:
 #endif
 
 #ifdef _COCOA_
-private:
-  uint32 mWidth, mHeight;
-  void InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo,
-                    const nglContext* pShared);
-  
-  void* mpNSWindow;
-  nglContextInfo mContextInfo;
-  StateChange mState;
-  nglDragAndDrop* mpDragged;
 public:
   void SetDraggedObject(nglDragAndDrop* pDragged) { mpDragged = pDragged; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
+  void* mpNSGLContext;
+//  void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData);
+
+private:
+  void InternalInit(const nglContextInfo& rContext,
+                    const nglWindowInfo& rInfo,
+                    const nglContext* pShared);
+
+  void AcquireDisplayLink();
+  void ReleaseDisplayLink();
+  CVDisplayLinkRef mDisplayLink;
+
+  uint32 mWidth, mHeight;
+  void* mpNSWindow;
+  void* mpNSWindowCtrl;
+  void* mpNSView;
+
+  nglContextInfo mContextInfo;
+  StateChange mState;
+  nglDragAndDrop* mpDragged;
+  CFRunLoopTimerRef mpCFRunLoopTimer;
+  nglTimer* mpAnimationTimer;
+  nglTime mLastTick;
+  
+  friend void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData);
 #endif
   
 #ifdef _WIN32_

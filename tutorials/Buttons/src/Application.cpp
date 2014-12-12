@@ -53,7 +53,7 @@ void Application::OnInit()
 #if TARGET_OS_IPHONE
   nuiRenderer Renderer = eOpenGL2;
 #else
-  nuiRenderer Renderer = eOpenGL;
+  nuiRenderer Renderer = eOpenGL2;
 #endif
 //  nuiRenderer Renderer = eSoftware;
 
