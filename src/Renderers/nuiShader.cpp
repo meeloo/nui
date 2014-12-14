@@ -570,7 +570,10 @@ bool nuiShader::Load()
   // Create the shader object
   mShader = glCreateShader((GLenum)mKind);
   if (mShader == 0)
+  {
+    nuiCheckForGLErrorsReal();
     return false;
+  }
   // Load the shader source
   const char* src = mSource.GetChars();
   glShaderSource(mShader, 1, &src, NULL);

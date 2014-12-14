@@ -573,8 +573,9 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 	
 
   mpEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-  MakeCurrent();
   UpdateLayer();
+  bool currentOk = MakeCurrent();
+  NGL_ASSERT(currentOk);
   Build(rContext);
   
 	CGRect r = [(nglUIWindow*)mpUIWindow frame];
@@ -679,7 +680,8 @@ void nglWindow::UpdateLayer()
 // Create color render buffer and allocate storage for CAEAGLLayer
   glGenRenderbuffers(1, &mRenderbuffer);
   glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
-  [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:_layer];
+  bool res = [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:_layer] == YES;
+  NGL_ASSERT(res);
   GLint renderbufferWidth, renderbufferHeight;
   glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &renderbufferWidth);
   glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &renderbufferHeight);
@@ -691,7 +693,7 @@ void nglWindow::UpdateLayer()
     NGL_ASSERT(0);
   }
 
-  [EAGLContext setCurrentContext: nil];
+//  [EAGLContext setCurrentContext: nil];
 }
 
 void nglWindow::DisplayTicked()
@@ -845,7 +847,7 @@ void nglWindow::EndSession()
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   glFlush();
-  [EAGLContext setCurrentContext:nil];
+//  [EAGLContext setCurrentContext:nil];
 
 #endif
 }
@@ -853,8 +855,7 @@ void nglWindow::EndSession()
 bool nglWindow::MakeCurrent() const
 {
   NGL_ASSERT(mpEAGLContext);
-  [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext];
-  return true;
+  return [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext] == YES;
 }
 
 void nglWindow::Invalidate()
