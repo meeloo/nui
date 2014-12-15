@@ -12,9 +12,12 @@
 #include "nuiWidget.h"
 #include "nuiTimer.h"
 #include "nuiDrawContext.h"
+#include "nuiRenderThread.h"
 #include "nuiNotification.h"
 
 #if defined _ANDROID_ || defined _UIKIT_
+#define DISABLE_TOOLTIP
+#else
 #define DISABLE_TOOLTIP
 #endif
 
@@ -49,9 +52,11 @@ public:
   /** @name Renderer choice: */
   //@{
   nuiDrawContext* GetDrawContext();
+  nuiRenderThread* GetRenderThread();
   static void SetRenderer(nuiRenderer Renderer = eOpenGL);
   static nuiRenderer GetRenderer();
   virtual nglContext* GetNGLContext() const = 0;
+  void OnRenderingDone(nuiRenderThread* pThread, bool Result);
   //@}
 
   nuiTopLevel* GetTopLevel() const;
@@ -225,6 +230,7 @@ protected:
   //@}
 
   nuiDrawContext* mpDrawContext;
+  nuiRenderThread* mpRenderThread;
 
   static nuiRenderer mRenderer;
 

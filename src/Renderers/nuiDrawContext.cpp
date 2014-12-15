@@ -1596,7 +1596,6 @@ nuiDrawContext *nuiDrawContext::CreateDrawContext(const nuiRect& rRect, nuiRende
   return pC;
 }
 
-
 int nuiDrawContext::GetWidth() const
 {
   return (int)mWidth;

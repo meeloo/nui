@@ -33,6 +33,7 @@
 #include "nuiRenderState.h"
 
 #include "nuiPainter.h"
+#include "nuiRenderThread.h"
 
 class nuiTexture;
 class nuiShaderProgram;

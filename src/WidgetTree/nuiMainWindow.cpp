@@ -12,6 +12,7 @@
 using namespace std;
 
 #define NUI_MULTISAMPLES 0
+#define NUI_USE_RENDER_THREAD 1
 
 nuiContextInfo::nuiContextInfo(Type type)
 {
@@ -212,6 +213,117 @@ nuiSize nuiMainWindow::GetStatusBarSize() const
   return mpNGLWindow->GetStatusBarSize();
 }
 
+
+#ifdef NUI_USE_RENDER_THREAD
+void nuiMainWindow::Paint()
+{
+  if (!App->IsActive()) // Only repaint if the application is active!
+    return;
+  
+  if (!IsPaintEnabled())
+    return;
+  
+  mLastEventTime = nglTime();
+  //nuiStopWatch watch(_T("nuiMainWindow::Paint"));
+  //  do
+  //  {
+  GetIdealRect();
+  SetLayout(nuiRect(0, 0, mpNGLWindow->GetWidth(), mpNGLWindow->GetHeight()));
+  
+  //  } while (IsTrashFull());
+  
+  if (!(mInvalidatePosted  || GetNeedRender() || GetNeedSelfRedraw() || GetNeedLayout() || GetNeedIdealRect()))
+  {
+    return;
+  }
+  
+  //watch.AddIntermediate(_T("After FillTrash()"));
+  
+  nuiDrawContext* pContext = GetDrawContext();
+  nuiRenderThread* pRenderThread = GetRenderThread();
+  NGL_ASSERT(pRenderThread);
+  if (pRenderThread->GetState() != nglThread::Running)
+  {
+    pRenderThread->Start();
+  }
+
+#ifdef _UIKIT_
+  pContext->GetPainter()->SetAngle(mpNGLWindow->GetRotation());
+#endif
+#ifndef __NUI_NO_SOFTWARE__
+  nuiSoftwarePainter* pCTX = dynamic_cast<nuiSoftwarePainter*>(pContext->GetPainter());
+#endif
+
+//  pContext->GetPainter()->ResetStats();
+//  mpNGLWindow->BeginSession();
+  
+  nuiMetaPainter* pFrame = new nuiMetaPainter();
+  pFrame->Acquire();
+  nuiPainter* pPainter = pContext->GetPainter();
+
+  pContext->SetPainter(pFrame);
+  pContext->StartRendering();
+  
+  pContext->Set2DProjectionMatrix(GetRect().Size());
+  bool DrawFullFrame = !mInvalidatePosted || (mFullFrameRedraw > 0);
+  bool RestorePartial = IsPartialRedrawEnabled();
+  mInvalidatePosted = false;
+  if (DrawFullFrame && RestorePartial)
+    EnablePartialRedraw(false);
+  
+  std::vector<nuiRect> RedrawList(mDirtyRects);
+  
+  //  static int counter = 0;
+  //NGL_OUT(_T("%d OnPaint %d - %d\n"), counter++, DrawFullFrame, RestorePartial);
+  
+  if (!IsMatrixIdentity())
+    pContext->MultMatrix(GetMatrix());
+  mLastRendering = nglTime();
+
+  DrawTree(pContext);
+  
+  if (mDisplayMouseOverObject)
+    DBG_DisplayMouseOverObject();
+  
+  if (mDisplayMouseOverInfo)
+    DBG_DisplayMouseOverInfo();
+  
+  if (DrawFullFrame && RestorePartial)
+    EnablePartialRedraw(true);
+
+  pContext->StopRendering();
+  
+  if (mDrawDirtyRects)
+  {
+    pContext->SetFillColor(nuiColor(255, 255, 255, 100));
+    pContext->SetStrokeColor(nuiColor(255, 255, 255, 182));
+    pContext->EnableBlending(true);
+    for (uint i = 0; i < RedrawList.size(); i++)
+      pContext->DrawRect(RedrawList[i], eStrokeAndFillShape);
+  }
+
+  pContext->SetPainter(pPainter);
+  pRenderThread->RenderFrame(pFrame);
+
+  
+  if (mFullFrameRedraw)
+    mFullFrameRedraw--;
+  
+//  uint32 rops = pContext->GetPainter()->GetRenderOperations();
+//  uint32 verts = pContext->GetPainter()->GetVertices();
+//  uint32 batches = pContext->GetPainter()->GetBatches();
+  //printf("Frame stats | RenderOps: %d | Vertices %d | Batches %d\n", rops, verts, batches);
+  
+  //Invalidate();
+  
+  if (mDebugSlowRedraw)
+  {
+    nglThread::Sleep(1);
+  }
+}
+
+
+#else
 static float Gx = 0;
 
 void nuiMainWindow::Paint()
@@ -239,6 +351,10 @@ void nuiMainWindow::Paint()
   //watch.AddIntermediate(_T("After FillTrash()"));
   
   nuiDrawContext* pContext = GetDrawContext();
+  if (pContext->GetRenderThread() && (pContext->GetRenderThread()->GetState() != nglThread::Running))
+  {
+    pContext->GetRenderThread()->Start();
+  }
   
   pContext->GetPainter()->ResetStats();
 
@@ -387,6 +503,8 @@ void nuiMainWindow::Paint()
     nglThread::Sleep(1);
   }
 }
+#endif
+
 
 void nuiMainWindow::OnResize(uint Width, uint Height)
 {

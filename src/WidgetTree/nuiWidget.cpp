@@ -1369,8 +1369,6 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
  
 #endif
 
-
-
 bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 {
   CheckValid();
@@ -1495,9 +1493,9 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
           pContext->PushMatrix();
           pContext->MultMatrix(GetMatrix());
         }
-        
+
         mpRenderCache->ReDraw(pContext);
-        
+
         if (!IsMatrixIdentity())
           pContext->PopMatrix();
       }
@@ -2072,6 +2070,16 @@ nuiDrawContext* nuiWidget::GetDrawContext()
   nuiWidgetPtr pRoot=GetRoot();
   if (pRoot && pRoot!=this)
     return pRoot->GetDrawContext();
+  else
+    return NULL;
+}
+
+nuiRenderThread* nuiWidget::GetRenderThread()
+{
+  CheckValid();
+  nuiWidgetPtr pRoot=GetRoot();
+  if (pRoot && pRoot!=this)
+    return pRoot->GetRenderThread();
   else
     return NULL;
 }

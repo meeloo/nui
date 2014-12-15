@@ -7,9 +7,10 @@
 //
 
 #include "nui.h"
+#include "nuiMetaPainter.h"
 
-nuiRenderThread::nuiRenderThread(nuiDrawContext* pContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
-: mpContext(pContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
+nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
+: mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
 {
 }
 
@@ -48,6 +49,10 @@ void nuiRenderThread::SetRootWidget(nuiWidget* pRoot)
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetRootWidget, pRoot));
 }
 
+void nuiRenderThread::RenderFrame(nuiMetaPainter* pFrame)
+{
+  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_RenderFrame, pFrame));
+}
 
 void nuiRenderThread::RenderingDone(bool result)
 {
@@ -69,7 +74,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     return;
   }
 
-  pRootPainter->ReDraw(mpContext);
+  pRootPainter->ReDraw(mpDrawContext);
 
   RenderingDone(true);
 }
@@ -104,4 +109,18 @@ void nuiRenderThread::_SetRootWidget(nuiWidget* pRoot)
 {
   mpRoot = pRoot;
 }
+
+void nuiRenderThread::_RenderFrame(nuiMetaPainter* pFrame)
+{
+  mpPainter->ResetStats();
+  mpContext->BeginSession();
+  mpPainter->BeginSession();
+  
+  pFrame->ReDraw(mpDrawContext);
+  pFrame->Release();
+  
+  mpPainter->EndSession();
+  mpContext->EndSession();
+}
+
 

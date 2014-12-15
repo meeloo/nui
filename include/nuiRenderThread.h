@@ -8,13 +8,14 @@
 
 #pragma once
 
+class nuiMetaPainter;
 
 class nuiRenderThread : public nglThread
 {
 public:
   typedef nuiFastDelegate2<nuiRenderThread*, bool> RenderingDoneDelegate; ///< Beware! This delegate is called on the Render Thread! Not on the main thread!
 
-  nuiRenderThread(nuiDrawContext* pContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& RenderingDone);
+  nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& RenderingDone);
   virtual ~nuiRenderThread();
 
   // Public API:
@@ -22,7 +23,7 @@ public:
   void Exit();
   void SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void SetRootWidget(nuiWidget* pRoot);
-
+  void RenderFrame(nuiMetaPainter* pFrame);
 
 
 
@@ -30,8 +31,9 @@ private:
   nuiTaskQueue mQueue;
   nuiWidget* mpRoot = nullptr;
   std::map<nuiWidget*, nuiMetaPainter*> mPainters;
+  nglContext* mpContext = nullptr;
+  nuiDrawContext* mpDrawContext = nullptr;
   nuiPainter* mpPainter = nullptr;
-  nuiDrawContext* mpContext = nullptr;
   RenderingDoneDelegate mRenderingDone;
   bool mContinue = true;
 
@@ -39,6 +41,7 @@ private:
   void _Exit();
   void _SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void _SetRootWidget(nuiWidget* pWidget);
+  void _RenderFrame(nuiMetaPainter* pFrame);
 
   virtual void OnStart();
 

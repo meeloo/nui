@@ -363,6 +363,7 @@ public:
   float GetMixedAlpha() const; ///< Returns the current alpha transparency value of this object, mixed with the one of its parents if MixWithParent==true.
   float GetAlpha() const; ///< Returns the current alpha transparency value of this object.
   virtual nuiDrawContext* GetDrawContext(); ///< Retrieve the draw context from the root object (the main window).
+  virtual nuiRenderThread* GetRenderThread(); ///< Retrieve the render thread from the root object (the main window).
 
   void SetOverDraw(nuiSize Left, nuiSize Top, nuiSize Right, nuiSize Bottom); ///< Set the amount of over draw for each border of the widget.
   void ResetOverDraw(); ///< Reset the overdraw borders to 0. Equivalent to SetOverDraw(0, 0, 0, 0);

@@ -180,12 +180,11 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
     mpWatchedWidget(NULL),
     mFillTrash(false),
     mpDrawContext(NULL),
+    mpRenderThread(NULL),
     mTopLevelSink(this),
     mIsDrawing(false),
     mpCSS(NULL)
 {
-  
-  //EnableRenderCache(false);
   mReleased = false;
   mNeedInvalidateOnSetRect = true;
   mClearBackground = true;
@@ -219,7 +218,7 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   mLastClickedButton = nglMouseInfo::ButtonNone;
 
   EnablePartialRedraw(PARTIAL_REDRAW_DEFAULT);
-  EnableRenderCache(false);
+  EnableRenderCache(true);
 
   SetWantKeyboardFocus(true);
   SetFocusVisible(false);
@@ -398,11 +397,32 @@ nuiDrawContext* nuiTopLevel::GetDrawContext()
   CheckValid();
   if (mpDrawContext)
     return mpDrawContext;
-
+  
   nuiRect rect = GetRect().Size();
   mpDrawContext = nuiDrawContext::CreateDrawContext(rect, mRenderer, GetNGLContext());
-
+  
   return mpDrawContext;
+}
+
+nuiRenderThread* nuiTopLevel::GetRenderThread()
+{
+  CheckValid();
+  if (mpRenderThread)
+    return mpRenderThread;
+  
+  nglContext* pContext = GetNGLContext();
+  nuiPainter* pPainter = pContext->GetPainter();
+
+  nuiRect rect = GetRect().Size();
+  nuiDrawContext* pDrawContext = nuiDrawContext::CreateDrawContext(rect, mRenderer, GetNGLContext());
+
+  mpRenderThread = new nuiRenderThread(pContext, pDrawContext, pPainter, nuiMakeDelegate(this, &nuiTopLevel::OnRenderingDone));
+  return mpRenderThread;
+}
+
+void nuiTopLevel::OnRenderingDone(nuiRenderThread* pThread, bool Result)
+{
+  NGL_ASSERT(mpRenderThread == pThread);
 }
 
 void nuiTopLevel::SetDrawContext(nuiDrawContext* pDrawContext)
@@ -1908,39 +1928,37 @@ bool nuiTopLevel::Draw(class nuiDrawContext *pContext)
   return true;
 }
 
-bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
+bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
 {
   mIsDrawing = true;
-
+  
   CheckValid();
   //nuiStopWatch watch(_T("nuiTopLevel::DrawTree"));
   UpdateWidgetsCSS();
-
+  
   uint32 clipWidth, clipHeight;
   {
     clipWidth=pContext->GetWidth();
     clipHeight=pContext->GetHeight();
   }
-
-//  if (0)
   if (mPartialRedraw && !DISPLAY_PARTIAL_RECTS)
   {
     //nuiStopWatch watch(_T("nuiTopLevel::DrawTree / PartialReDraw"));
     // Prepare the layout changes:
     pContext->ResetState();
-
+    
     int count = mDirtyRects.size();
-
-//    NGL_OUT("drawing %d partial rects\n", count);
-
+    
+    //    NGL_OUT("drawing %d partial rects\n", count);
+    
     for (int i = 0; i < count; i++)
     {
-//      NGL_OUT("\tDirty Rect: %d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
+      //      NGL_OUT("\tDirty Rect: %d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
       pContext->ResetState();
       pContext->ResetClipRect();
       pContext->Clip(mDirtyRects[i]);
       pContext->EnableClipping(true);
-
+      
       nuiColor clearColor(GetColor(eActiveWindowBg));
       //pContext->SetClearColor(clearColor);
       if (mClearBackground)
@@ -1954,21 +1972,21 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
         // Force the initial render state anyway!
         pContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
       }
-
+      
       pContext->SetStrokeColor(nuiColor(1.0f, 0.0f, 0.0f, 0.0f));
       pContext->SetFillColor(nuiColor(1.0f, 0.0f, 0.0f, 0.5f));
-
+      
       DrawWidget(pContext);
 
     }
-
+    
   }
   else
   {
     //nuiStopWatch watch(_T("nuiTopLevel::DrawTree / FullDraw"));
     pContext->ResetState();
     pContext->ResetClipRect();
-
+    
     pContext->SetClearColor(GetColor(eActiveWindowBg));
     if (mClearBackground)
     {
@@ -1979,9 +1997,9 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
       // Force the initial render state anyway!
       pContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
     }
-
+    
     DrawWidget(pContext);
-
+    
     if (DISPLAY_PARTIAL_RECTS)
     {
       int count = mDirtyRects.size();
@@ -1995,13 +2013,13 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
       {
         pContext->DrawRect(mDirtyRects[i], eStrokeAndFillShape);
       }
-      pContext->ResetState();    
+      pContext->ResetState();
     }
     
   }
-
+  
   mDirtyRects.clear();
-
+  
   if (mpWatchedWidget)
   {
     nuiRect r(mpWatchedWidget->GetRect());
@@ -2026,10 +2044,132 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
   }
   
   mIsDrawing = false;
-
+  
   return true;
 }
-                     
+
+//bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
+//{
+//  mIsDrawing = true;
+//
+//  CheckValid();
+//  //nuiStopWatch watch(_T("nuiTopLevel::DrawTree"));
+//  UpdateWidgetsCSS();
+//
+//  uint32 clipWidth, clipHeight;
+//  {
+//    clipWidth=pContext->GetWidth();
+//    clipHeight=pContext->GetHeight();
+//  }
+//
+////  if (0)
+//  if (mPartialRedraw && !DISPLAY_PARTIAL_RECTS)
+//  {
+//    //nuiStopWatch watch(_T("nuiTopLevel::DrawTree / PartialReDraw"));
+//    // Prepare the layout changes:
+//    pContext->ResetState();
+//
+//    int count = mDirtyRects.size();
+//
+////    NGL_OUT("drawing %d partial rects\n", count);
+//
+//    for (int i = 0; i < count; i++)
+//    {
+////      NGL_OUT("\tDirty Rect: %d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
+//      pContext->ResetState();
+//      pContext->ResetClipRect();
+//      pContext->Clip(mDirtyRects[i]);
+//      pContext->EnableClipping(true);
+//
+//      nuiColor clearColor(GetColor(eActiveWindowBg));
+//      //pContext->SetClearColor(clearColor);
+//      if (mClearBackground)
+//      {
+//        //pContext->Clear();
+//        pContext->SetFillColor(clearColor);
+//        pContext->DrawRect(mDirtyRects[i], eFillShape);
+//      }
+//      else
+//      {
+//        // Force the initial render state anyway!
+//        pContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
+//      }
+//
+//      pContext->SetStrokeColor(nuiColor(1.0f, 0.0f, 0.0f, 0.0f));
+//      pContext->SetFillColor(nuiColor(1.0f, 0.0f, 0.0f, 0.5f));
+//
+//      DrawWidget(pContext);
+//
+//    }
+//
+//  }
+//  else
+//  {
+//    //nuiStopWatch watch(_T("nuiTopLevel::DrawTree / FullDraw"));
+//    pContext->ResetState();
+//    pContext->ResetClipRect();
+//
+//    pContext->SetClearColor(GetColor(eActiveWindowBg));
+//    if (mClearBackground)
+//    {
+//      pContext->Clear();
+//    }
+//    else
+//    {
+//      // Force the initial render state anyway!
+//      pContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
+//    }
+//
+//    DrawWidget(pContext);
+//
+//    if (DISPLAY_PARTIAL_RECTS)
+//    {
+//      int count = mDirtyRects.size();
+//      pContext->ResetState();
+//      pContext->ResetClipRect();
+//      pContext->SetStrokeColor(nuiColor(1.0f,0.0f,0.0f,0.0f));
+//      pContext->SetFillColor(nuiColor(1.0f,0.0f,0.0f,.5f));
+//      pContext->EnableBlending(true);
+//      pContext->SetBlendFunc(nuiBlendTransp);
+//      for (int i=0; i < count; i++)
+//      {
+//        pContext->DrawRect(mDirtyRects[i], eStrokeAndFillShape);
+//      }
+//      pContext->ResetState();    
+//    }
+//    
+//  }
+//
+//  mDirtyRects.clear();
+//
+//  if (mpWatchedWidget)
+//  {
+//    nuiRect r(mpWatchedWidget->GetRect());
+//    nuiRect r2(mpWatchedWidget->GetBorderedRect().Size());
+//    nuiRect r3(mpWatchedWidget->GetOverDrawRect(true, true).Size());
+//    if (IsKeyDown(NK_ALT))
+//      r = r2;
+//    else if (IsKeyDown(NK_META))
+//      r = r3;
+//    
+//    if (mpWatchedWidget->GetParent())
+//      mpWatchedWidget->GetParent()->LocalToGlobal(r);
+//    
+//    pContext->ResetState();
+//    pContext->ResetClipRect();
+//    pContext->SetStrokeColor(nuiColor(0.0f,0.0f,1.0f,0.5f));
+//    pContext->SetFillColor(nuiColor(0.0f,0.0f,1.0f,.25f));
+//    pContext->EnableBlending(true);
+//    pContext->SetBlendFunc(nuiBlendTransp);
+//    pContext->DrawRect(r, eStrokeAndFillShape);
+//    pContext->ResetState();
+//  }
+//  
+//  mIsDrawing = false;
+//
+//  return true;
+//}
+
 void nuiTopLevel::GetMouseInfo(nglMouseInfo& rMouseInfo) const
 {
   CheckValid();
