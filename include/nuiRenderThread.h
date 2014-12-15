@@ -12,7 +12,7 @@
 class nuiRenderThread : public nglThread
 {
 public:
-  typedef nuiFastDelegate2<nuiRenderThread*, bool> RenderingDoneDelegate;
+  typedef nuiFastDelegate2<nuiRenderThread*, bool> RenderingDoneDelegate; ///< Beware! This delegate is called on the Render Thread! Not on the main thread!
 
   nuiRenderThread(nuiDrawContext* pContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& RenderingDone);
   virtual ~nuiRenderThread();
