@@ -1248,7 +1248,6 @@
 		73F09AA812E9D09E00656E84 /* sweep.c in Sources */ = {isa = PBXBuildFile; fileRef = E524190711CB9CE90025CA71 /* sweep.c */; };
 		73F09AA912E9D09E00656E84 /* tess.c in Sources */ = {isa = PBXBuildFile; fileRef = E524190911CB9CE90025CA71 /* tess.c */; };
 		73F09AAA12E9D09E00656E84 /* tessmono.c in Sources */ = {isa = PBXBuildFile; fileRef = E524190B11CB9CE90025CA71 /* tessmono.c */; };
-		73F09AB912E9D09E00656E84 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E58172B90C3CED8800902DFE /* AGL.framework */; };
 		73F09ABA12E9D09E00656E84 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E58172BB0C3CED8800902DFE /* OpenGL.framework */; };
 		73F09ABB12E9D09E00656E84 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7F80CDAAAE100B1C729 /* AudioUnit.framework */; };
 		73F09ABC12E9D09E00656E84 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7F90CDAAAE100B1C729 /* CoreAudio.framework */; };
@@ -3317,8 +3316,6 @@
 		E5DD33DE12E09CA800F1EF4E /* select_properties.c in Sources */ = {isa = PBXBuildFile; fileRef = E5A8BF6011C277A400ECE5FF /* select_properties.c */; };
 		E5DD33DF12E09CA800F1EF4E /* errors.c in Sources */ = {isa = PBXBuildFile; fileRef = E5A8BF6211C277A400ECE5FF /* errors.c */; };
 		E5DD33E012E09CA800F1EF4E /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = E5A8BF6411C277A400ECE5FF /* utils.c */; };
-		E5DD340612E09CA800F1EF4E /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E58172B90C3CED8800902DFE /* AGL.framework */; };
-		E5DD340712E09CA800F1EF4E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E58172BA0C3CED8800902DFE /* Carbon.framework */; };
 		E5DD340812E09CA800F1EF4E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E58172BB0C3CED8800902DFE /* OpenGL.framework */; };
 		E5DD340912E09CA800F1EF4E /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7F80CDAAAE100B1C729 /* AudioUnit.framework */; };
 		E5DD340A12E09CA800F1EF4E /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7F90CDAAAE100B1C729 /* CoreAudio.framework */; };
@@ -3795,6 +3792,15 @@
 		56AFF7570D74522D003A6AF3 /* nuiHTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiHTTP.h; path = ../../include/nuiHTTP.h; sourceTree = "<group>"; };
 		56AFF75F0D745886003A6AF3 /* nuiHTTP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiHTTP.cpp; sourceTree = "<group>"; };
 		56CEA8B50ECB2E8A009F6CF4 /* nuiAudioDevice_CoreAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiAudioDevice_CoreAudio.h; path = include/nuiAudioDevice_CoreAudio.h; sourceTree = SOURCE_ROOT; };
+		612094911A39AE4D006CACE7 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		612094941A39B4EC006CACE7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		612094961A39B4F6006CACE7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		612094981A39B59A006CACE7 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		6120949A1A39B5B7006CACE7 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
+		6120949B1A39B5B8006CACE7 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		6120949C1A39B5B8006CACE7 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
+		612094A01A39B5CB006CACE7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		612094A21A39B5D1006CACE7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		613DF38D1A34E52D00BD7656 /* nuiTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiTableView.h; path = include/nuiTableView.h; sourceTree = SOURCE_ROOT; };
 		613DF3901A34E54C00BD7656 /* nuiTableView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiTableView.cpp; sourceTree = "<group>"; };
 		61D085100EAFAA3F00B73835 /* nuiSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiSurface.cpp; sourceTree = "<group>"; };
@@ -5164,8 +5170,6 @@
 		E5816E2D0C3CECAB00902DFE /* nglKeyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nglKeyboard.cpp; path = src/Window/nglKeyboard.cpp; sourceTree = SOURCE_ROOT; };
 		E5816E2F0C3CECAB00902DFE /* nglVideoMode.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nglVideoMode.cpp; path = src/Window/nglVideoMode.cpp; sourceTree = SOURCE_ROOT; };
 		E5816E300C3CECAB00902DFE /* nglWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nglWindow.cpp; path = src/Window/nglWindow.cpp; sourceTree = SOURCE_ROOT; };
-		E58172B90C3CED8800902DFE /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
-		E58172BA0C3CED8800902DFE /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		E58172BB0C3CED8800902DFE /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E58178100C3D16BA00902DFE /* psmodule.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = psmodule.c; path = deps/freetype2/src/psnames/psmodule.c; sourceTree = SOURCE_ROOT; };
 		E58411C71077451500E0CB45 /* nuiBindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiBindings.h; path = include/nuiBindings.h; sourceTree = SOURCE_ROOT; };
@@ -5408,7 +5412,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E537A289183707C200A40F04 /* MobileCoreServices.framework in Frameworks */,
-				73F09AB912E9D09E00656E84 /* AGL.framework in Frameworks */,
 				73F09ABA12E9D09E00656E84 /* OpenGL.framework in Frameworks */,
 				73F09ABB12E9D09E00656E84 /* AudioUnit.framework in Frameworks */,
 				73F09ABC12E9D09E00656E84 /* CoreAudio.framework in Frameworks */,
@@ -5439,8 +5442,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5DD340612E09CA800F1EF4E /* AGL.framework in Frameworks */,
-				E5DD340712E09CA800F1EF4E /* Carbon.framework in Frameworks */,
 				E5DD340812E09CA800F1EF4E /* OpenGL.framework in Frameworks */,
 				E5DD340912E09CA800F1EF4E /* AudioUnit.framework in Frameworks */,
 				E5DD340A12E09CA800F1EF4E /* CoreAudio.framework in Frameworks */,
@@ -6430,6 +6431,14 @@
 		E581672D0C3CEBF100902DFE = {
 			isa = PBXGroup;
 			children = (
+				612094A21A39B5D1006CACE7 /* AVFoundation.framework */,
+				612094A01A39B5CB006CACE7 /* Foundation.framework */,
+				6120949A1A39B5B7006CACE7 /* QTKit.framework */,
+				6120949B1A39B5B8006CACE7 /* Quartz.framework */,
+				6120949C1A39B5B8006CACE7 /* QuickTime.framework */,
+				612094981A39B59A006CACE7 /* QuartzCore.framework */,
+				612094961A39B4F6006CACE7 /* Accelerate.framework */,
+				612094941A39B4EC006CACE7 /* CoreFoundation.framework */,
 				E58167440C3CECA700902DFE /* deps */,
 				E5816D200C3CECAB00902DFE /* src */,
 				E58167400C3CEC1300902DFE /* Products */,
@@ -6455,11 +6464,12 @@
 				E52FD3A0184D499D0015935E /* clipper */,
 				E573205B14BF2142008D488E /* premake4.lua */,
 				E537A288183707C200A40F04 /* MobileCoreServices.framework */,
-				E58172B90C3CED8800902DFE /* AGL.framework */,
+				E58172BB0C3CED8800902DFE /* OpenGL.framework */,
+				408D9C88109764A000AEE78A /* QTKit.framework */,
+				612094911A39AE4D006CACE7 /* CoreVideo.framework */,
 				E5D435961004DC5300388BF5 /* ApplicationServices.framework */,
 				E59DF6CC1196396000E46CF8 /* AudioToolbox.framework */,
 				E59CD7F80CDAAAE100B1C729 /* AudioUnit.framework */,
-				E58172BA0C3CED8800902DFE /* Carbon.framework */,
 				E592C0620EFE8AEB00340B35 /* Cocoa.framework */,
 				E59CD7F90CDAAAE100B1C729 /* CoreAudio.framework */,
 				E59CD7FA0CDAAAE100B1C729 /* CoreAudioKit.framework */,
@@ -6470,8 +6480,6 @@
 				E5C1E21F11B7172A000B9C56 /* libcss */,
 				E5816A400C3CECA900902DFE /* libjpeg */,
 				E5816AD50C3CECAA00902DFE /* libpng */,
-				E58172BB0C3CED8800902DFE /* OpenGL.framework */,
-				408D9C88109764A000AEE78A /* QTKit.framework */,
 				E50DB7750D75D894005B9316 /* tidyhtml */,
 				E52CBD7B11750ADF0031DFA8 /* tracemonkey */,
 				E5D13BD21100AF3F000F46C4 /* ucdata */,
@@ -12462,10 +12470,7 @@
 				);
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-				);
+				OTHER_LDFLAGS = "";
 				PRELINK_LIBS = "-liconv";
 				PRODUCT_NAME = thirdparty_OSX;
 				ZERO_LINK = NO;
@@ -12551,10 +12556,7 @@
 				);
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Carbon,
-				);
+				OTHER_LDFLAGS = "";
 				PRELINK_LIBS = "-liconv";
 				PRODUCT_NAME = thirdparty_OSX;
 				ZERO_LINK = NO;
