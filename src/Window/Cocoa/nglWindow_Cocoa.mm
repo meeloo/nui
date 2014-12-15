@@ -192,18 +192,6 @@ float nuiGetInvScaleFactor()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// CVDisplayLink callback //////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark CVDisplayLink callback
-
-CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* pNGLWindow)
-{
-///< Add threaded rendering callbacks here
-  return kCVReturnSuccess;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 // nglNSView ///////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark nglNSView
@@ -272,7 +260,7 @@ CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* 
 {
   NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
   [_context update];
-  mpNGLWindow->CallOnPaint();
+//  mpNGLWindow->CallOnPaint();
 }
 
 // this tells the window manager that nothing behind our view is visible
@@ -924,20 +912,9 @@ nglWindow::nglWindow (const nglContextInfo& rContext, const nglWindowInfo& rInfo
   InternalInit (rContext, rInfo, pShared);
 }
 
-
-void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData)
-{
-  nglWindow* pWindow = (nglWindow*)pUserData;
-  NGL_ASSERT(pWindow);
-  nglTime now;
-  pWindow->mpAnimationTimer->OnTick(now - pWindow->mLastTick);
-  pWindow->mLastTick = now;
-  pWindow->CallOnPaint();
-}
-
-
 void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)
 {
+  mIsReady = false;
   //[self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
   App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypeText, nglDataTextObject::Create);
   App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypePlainText, nglDataTextObject::Create);
@@ -1010,6 +987,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     (NSOpenGLPixelFormatAttribute)0
   };
   NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+  mpNSPixelFormat = format;
   NSOpenGLContext* _context = [[NSOpenGLContext alloc] initWithFormat: format shareContext: _shared_ctx];
 
   GLint v = 1;
@@ -1035,36 +1013,8 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 	
   Build(rContext);
 
-
-  
-  mpAnimationTimer = nuiAnimation::AcquireTimer();
-  mpAnimationTimer->Stop();
-
-  CFRunLoopTimerContext _timer_ctx;
-  _timer_ctx.version = 0;
-  _timer_ctx.info = (void*)this;
-  _timer_ctx.retain = NULL;
-  _timer_ctx.release = NULL;
-  _timer_ctx.copyDescription = NULL;
-  
-  CFAbsoluteTime absTime = CFAbsoluteTimeGetCurrent() + (1.0/60.0);
-//CFAllocatorRef allocator, CFAbsoluteTime fireDate, CFTimeInterval interval, CFOptionFlags flags, CFIndex order, CFRunLoopTimerCallBack callout, CFRunLoopTimerContext *context)
-  mpCFRunLoopTimer = CFRunLoopTimerCreate( kCFAllocatorDefault,
-                                           absTime,
-                                           1.0/60.0,
-                                           0,// option flags, not implemented so far
-                                           0,// timer order, not implemented so far
-                                           &OnCFRunLoopTicked,
-                                           &_timer_ctx);
-
-  if (!mpCFRunLoopTimer)
-  {
-    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("Couldn't start runloop timer"));
-    NGL_ASSERT(0);
-  }
-  
   mLastTick = nglTime();
-  CFRunLoopAddTimer(CFRunLoopGetCurrent(), mpCFRunLoopTimer, kCFRunLoopCommonModes);
+  AcquireTimer();
 }
 
 
@@ -1072,14 +1022,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
 nglWindow::~nglWindow()
 {
-  NGL_ASSERT(mpCFRunLoopTimer);
-  CFRunLoopRef currentRunLoop = CFRunLoopGetCurrent();
-  CFRunLoopRemoveTimer(currentRunLoop, mpCFRunLoopTimer, kCFRunLoopCommonModes);
-  if (mpCFRunLoopTimer)
-    CFRelease(mpCFRunLoopTimer);
-  mpCFRunLoopTimer = NULL;
-  nuiAnimation::ReleaseTimer();
-
+  ReleaseTimer();
   [(id)mpNSWindow Unregister];
   Unregister();
 }
@@ -1220,7 +1163,92 @@ const nglWindow::OSInfo* nglWindow::GetOSInfo() const
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// CFTimer /////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark CFTimer setup
+
+void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData)
+{
+  nglWindow* pWindow = (nglWindow*)pUserData;
+  NGL_ASSERT(pWindow);
+  nglTime now;
+  pWindow->mpAnimationTimer->OnTick(now - pWindow->mLastTick);
+  pWindow->mLastTick = now;
+  pWindow->CallOnPaint();
+}
+
+void nglWindow::AcquireTimer()
+{
+  mpAnimationTimer = nuiAnimation::AcquireTimer();
+  mpAnimationTimer->Stop();
+
+  CFRunLoopTimerContext _timer_ctx;
+  _timer_ctx.version = 0;
+  _timer_ctx.info = (void*)this;
+  _timer_ctx.retain = NULL;
+  _timer_ctx.release = NULL;
+  _timer_ctx.copyDescription = NULL;
+
+  CFAbsoluteTime absTime = CFAbsoluteTimeGetCurrent() + (1.0/60.0);
+//CFAllocatorRef allocator, CFAbsoluteTime fireDate, CFTimeInterval interval, CFOptionFlags flags, CFIndex order, CFRunLoopTimerCallBack callout, CFRunLoopTimerContext *context)
+  mpCFRunLoopTimer = CFRunLoopTimerCreate( kCFAllocatorDefault,
+                                           absTime,
+                                           1.0/60.0,
+                                           0,// option flags, not implemented so far
+                                           0,// timer order, not implemented so far
+                                           &OnCFRunLoopTicked,
+                                           &_timer_ctx);
+
+  if (!mpCFRunLoopTimer)
+  {
+    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("Couldn't start runloop timer"));
+    NGL_ASSERT(0);
+  }
+
+  mLastTick = nglTime();
+  CFRunLoopAddTimer(CFRunLoopGetCurrent(), mpCFRunLoopTimer, kCFRunLoopCommonModes);
+}
+void nglWindow::ReleaseTimer()
+{
+  NGL_ASSERT(mpCFRunLoopTimer);
+  CFRunLoopRef currentRunLoop = CFRunLoopGetCurrent();
+  CFRunLoopRemoveTimer(currentRunLoop, mpCFRunLoopTimer, kCFRunLoopCommonModes);
+  if (mpCFRunLoopTimer)
+    CFRelease(mpCFRunLoopTimer);
+  mpCFRunLoopTimer = NULL;
+  nuiAnimation::ReleaseTimer();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// CVDisplayLink ///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark CVDisplayLink setup
+
+CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* pNGLWindow)
+{
+  ///< Add threaded rendering callbacks here
+  nglWindow* pWindow = (nglWindow*)pNGLWindow;
+  NGL_ASSERT(pWindow);
+  if (pWindow->mIsReady)
+  {
+    nglTime _now;
+    pWindow->mpAnimationTimer->OnTick(_now - pWindow->mLastTick);
+    pWindow->mLastTick = _now;
+    pWindow->CallOnPaint();
+  }
+  else
+  {
+    nglTime _now;
+    if (_now - pWindow->mLastTick > 10.0)
+    {
+      pWindow->mIsReady = true;
+    }
+  }
+  
+  return kCVReturnSuccess;
+}
 
 void nglWindow::AcquireDisplayLink()
 {
@@ -1239,8 +1267,9 @@ void nglWindow::AcquireDisplayLink()
   }
 
   NSOpenGLContext* _context = (NSOpenGLContext*)mpNSGLContext;
-  CGLPixelFormatObj cglPixelFormat = [[_context pixelFormat] CGLPixelFormatObj];
+  NSOpenGLPixelFormat* _pixelFormat = (NSOpenGLPixelFormat*)mpNSPixelFormat;
   CGLContextObj cglContext = [_context CGLContextObj];
+  CGLPixelFormatObj cglPixelFormat = [_pixelFormat CGLPixelFormatObj];
 
   if (kCVReturnSuccess != CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat))
   {

@@ -942,16 +942,13 @@ public:
   void SetDraggedObject(nglDragAndDrop* pDragged) { mpDragged = pDragged; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
   void* mpNSGLContext;
-//  void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData);
-
+  void* mpNSPixelFormat;
+  bool mIsReady;
 private:
   void InternalInit(const nglContextInfo& rContext,
                     const nglWindowInfo& rInfo,
                     const nglContext* pShared);
 
-  void AcquireDisplayLink();
-  void ReleaseDisplayLink();
-  CVDisplayLinkRef mDisplayLink;
 
   uint32 mWidth, mHeight;
   void* mpNSWindow;
@@ -961,11 +958,18 @@ private:
   nglContextInfo mContextInfo;
   StateChange mState;
   nglDragAndDrop* mpDragged;
-  CFRunLoopTimerRef mpCFRunLoopTimer;
   nglTimer* mpAnimationTimer;
   nglTime mLastTick;
-  
+
+  CFRunLoopTimerRef mpCFRunLoopTimer;
+  void AcquireTimer();
+  void ReleaseTimer();
   friend void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData);
+
+  CVDisplayLinkRef mDisplayLink;
+  void AcquireDisplayLink();
+  void ReleaseDisplayLink();
+  friend CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* pNGLWindow);
 #endif
   
 #ifdef _WIN32_
