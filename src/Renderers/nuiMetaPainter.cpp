@@ -410,9 +410,9 @@ void nuiMetaPainter::AddBreakPoint()
   StoreOpCode(eBreak);
 }
 
-void nuiMetaPainter::ReDraw(nuiDrawContext* pContext)
+void nuiMetaPainter::ReDraw(nuiDrawContext* pContext, const DrawChildDelegate& rDrawChildDelegate)
 {
-  PartialReDraw(pContext, 0, mNbOperations);
+  PartialReDraw(pContext, 0, mNbOperations, rDrawChildDelegate);
 }
 
 void nuiMetaPainter::Reset(nuiPainter const * pFrom)
@@ -458,7 +458,7 @@ int32 nuiMetaPainter::GetNbOperations() const
   return mNbOperations;
 }
 
-void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last) const
+void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last, const DrawChildDelegate& rDrawChildDelegate) const
 {
   nuiPainter* pPainter = pContext->GetPainter();
   mOperationPos = 0;
@@ -534,7 +534,10 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
         if (draw)
         {
           nuiWidget* pChild = (nuiWidget*)FetchPointer();
-          pChild->DrawWidget(pContext);
+          if (rDrawChildDelegate)
+            rDrawChildDelegate(pContext, pChild);
+          else
+            pChild->DrawWidget(pContext);
         }
         break;
       case eLoadMatrix:
@@ -977,3 +980,4 @@ void nuiMetaPainter::DBGSetReferenceObject(const nuiObject* pRef)
   }
 }
 #endif
+

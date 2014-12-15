@@ -181,7 +181,7 @@ public:
   virtual bool CallPreMouseUnclicked(const nglMouseInfo& rInfo);
   virtual bool CallPreMouseMoved(const nglMouseInfo& rInfo);
   virtual bool CallPreMouseWheelMoved(const nglMouseInfo& rInfo);
-  //@}
+  //@} 
 
   /** @name Private event management system (do not override unless you know what you're doing!!!) */
   //@{

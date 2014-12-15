@@ -21,6 +21,8 @@ typedef std::vector<uint8> nuiRenderCache;
 class nuiMetaPainter : public nuiPainter
 {
 public:
+  typedef nuiFastDelegate2<nuiDrawContext*, nuiWidget*> DrawChildDelegate;
+  
   nuiMetaPainter(nglContext* pContext = NULL);
   virtual ~nuiMetaPainter();
 
@@ -60,13 +62,13 @@ public:
   }
   //@}
 
-  void ReDraw(nuiDrawContext* pContext);
+  void ReDraw(nuiDrawContext* pContext, const DrawChildDelegate& rDrawChildDelegate = DrawChildDelegate());
   void Reset(nuiPainter const * pFrom);
 
   // Debugging and profiling
   virtual void AddBreakPoint();
   int32 GetNbOperations() const;
-  void PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last) const;
+  void PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last, const DrawChildDelegate& rDrawChildDelegate = DrawChildDelegate()) const;
   nglString GetOperationDescription(int32 OperationIndex) const;
   nglString GetNextDescription() const;
   void SetName(const nglString& rName);
