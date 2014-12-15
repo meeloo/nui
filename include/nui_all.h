@@ -315,6 +315,8 @@ typedef double nuiSize;
   #include "nuiVideoDecoder.h"
   #include "nuiAVIwriter.h"
 
+  #include "nuiRenderThread.h"
+
 #endif
 
 

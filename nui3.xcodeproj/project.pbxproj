@@ -1990,6 +1990,12 @@
 		E58615D618AD9085005B0D12 /* nuiDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = E58615D518AD9085005B0D12 /* nuiDrawerView.h */; };
 		E58615D718AD9085005B0D12 /* nuiDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = E58615D518AD9085005B0D12 /* nuiDrawerView.h */; };
 		E58615D818AD9085005B0D12 /* nuiDrawerView.h in Headers */ = {isa = PBXBuildFile; fileRef = E58615D518AD9085005B0D12 /* nuiDrawerView.h */; };
+		E587420B1A3E0F2B00016A80 /* nuiRenderThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E58742091A3E0F2B00016A80 /* nuiRenderThread.cpp */; };
+		E587420C1A3E0F2B00016A80 /* nuiRenderThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E58742091A3E0F2B00016A80 /* nuiRenderThread.cpp */; };
+		E587420D1A3E0F2B00016A80 /* nuiRenderThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E58742091A3E0F2B00016A80 /* nuiRenderThread.cpp */; };
+		E58742121A3E0F7500016A80 /* nuiRenderThread.h in Headers */ = {isa = PBXBuildFile; fileRef = E58742111A3E0F7500016A80 /* nuiRenderThread.h */; };
+		E58742131A3E0F7500016A80 /* nuiRenderThread.h in Headers */ = {isa = PBXBuildFile; fileRef = E58742111A3E0F7500016A80 /* nuiRenderThread.h */; };
+		E58742141A3E0F7500016A80 /* nuiRenderThread.h in Headers */ = {isa = PBXBuildFile; fileRef = E58742111A3E0F7500016A80 /* nuiRenderThread.h */; };
 		E58DF2731268842E007E63DE /* nuiMatrixNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E58DF2711268842E007E63DE /* nuiMatrixNode.cpp */; };
 		E58DF2771268842E007E63DE /* nuiMatrixNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E58DF2711268842E007E63DE /* nuiMatrixNode.cpp */; };
 		E58DF27D1268844C007E63DE /* nuiMatrixNode.h in Headers */ = {isa = PBXBuildFile; fileRef = E58DF2781268844C007E63DE /* nuiMatrixNode.h */; };
@@ -5171,6 +5177,8 @@
 		E58411C71077451500E0CB45 /* nuiBindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiBindings.h; path = include/nuiBindings.h; sourceTree = SOURCE_ROOT; };
 		E58615D118AD8FD9005B0D12 /* nuiDrawerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiDrawerView.cpp; sourceTree = "<group>"; };
 		E58615D518AD9085005B0D12 /* nuiDrawerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDrawerView.h; path = include/nuiDrawerView.h; sourceTree = SOURCE_ROOT; };
+		E58742091A3E0F2B00016A80 /* nuiRenderThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiRenderThread.cpp; sourceTree = "<group>"; };
+		E58742111A3E0F7500016A80 /* nuiRenderThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiRenderThread.h; path = include/nuiRenderThread.h; sourceTree = SOURCE_ROOT; };
 		E587B7260C56BF440076200A /* nuiFontManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiFontManager.h; path = include/nuiFontManager.h; sourceTree = SOURCE_ROOT; };
 		E58DF2711268842E007E63DE /* nuiMatrixNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiMatrixNode.cpp; sourceTree = "<group>"; };
 		E58DF2781268844C007E63DE /* nuiMatrixNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiMatrixNode.h; path = include/nuiMatrixNode.h; sourceTree = SOURCE_ROOT; };
@@ -7445,6 +7453,8 @@
 				E5DD1A781096111200BBB0EA /* Painters */,
 				E5DD1A791096113400BBB0EA /* Shapes & Contours */,
 				E55DEDF90D350FE3002DA5BD /* SoftwareRasterizer */,
+				E58742091A3E0F2B00016A80 /* nuiRenderThread.cpp */,
+				E58742111A3E0F7500016A80 /* nuiRenderThread.h */,
 			);
 			name = Renderers;
 			path = src/Renderers;
@@ -8282,6 +8292,7 @@
 				73F0842B12E9BA0700656E84 /* nuiTree.h in Headers */,
 				73F0842C12E9BA0700656E84 /* nuiRadioButtonGroup.h in Headers */,
 				73F0842E12E9BA0700656E84 /* nuiNotification.h in Headers */,
+				E58742141A3E0F7500016A80 /* nuiRenderThread.h in Headers */,
 				73F0842F12E9BA0700656E84 /* nglWindow.h in Headers */,
 				73F0843112E9BA0700656E84 /* nuiRadioButton.h in Headers */,
 				73F0843212E9BA0700656E84 /* nuiShadeContainer.h in Headers */,
@@ -9280,6 +9291,7 @@
 				E591C0540FF17BE0005E5E3D /* nuiHTMLFont.h in Headers */,
 				E51E565F0FF248AB00FDF3BE /* nuiHTMLHeader.h in Headers */,
 				E5C6CE1F0FF6DC38003E6002 /* nuiHTMLStyle.h in Headers */,
+				E58742121A3E0F7500016A80 /* nuiRenderThread.h in Headers */,
 				E52C831A0FFB9DA800B7779C /* nuiWebCSS.h in Headers */,
 				E52D655510322B64005BF301 /* nuiHugeImage.h in Headers */,
 				E5901BED1043F2C200D3FD5F /* nuiToggleButton.h in Headers */,
@@ -9653,6 +9665,7 @@
 				E5D640F51209AB9C009C26A9 /* nuiHTMLStyle.h in Headers */,
 				E5D640F61209AB9C009C26A9 /* nuiWebCSS.h in Headers */,
 				E5D640F71209AB9C009C26A9 /* nuiHugeImage.h in Headers */,
+				E58742131A3E0F7500016A80 /* nuiRenderThread.h in Headers */,
 				E5D640F81209AB9C009C26A9 /* nuiToggleButton.h in Headers */,
 				E5D640F91209AB9C009C26A9 /* nuiClampedValueAttributeEditor.h in Headers */,
 				E5D640FA1209AB9C009C26A9 /* nuiPopupValueAttributeEditor.h in Headers */,
@@ -10540,6 +10553,7 @@
 				73F085B512E9BA0700656E84 /* nuiWidget.cpp in Sources */,
 				73F085B612E9BA0700656E84 /* nuiTessellator.cpp in Sources */,
 				73F085B712E9BA0700656E84 /* nuiCommand.cpp in Sources */,
+				E587420D1A3E0F2B00016A80 /* nuiRenderThread.cpp in Sources */,
 				73F085B812E9BA0700656E84 /* nuiMetaPainter.cpp in Sources */,
 				73F085BA12E9BA0700656E84 /* nuiColumnTreeView.cpp in Sources */,
 				73F085BB12E9BA0700656E84 /* nuiEvent.cpp in Sources */,
@@ -11314,6 +11328,7 @@
 				E52C83370FFBB2FD00B7779C /* nuiRegExp.cpp in Sources */,
 				E5F3E1101017DD2B00CEC731 /* nglTimer_CoreFoundation.cpp in Sources */,
 				E52D655110322B51005BF301 /* nuiHugeImage.cpp in Sources */,
+				E587420B1A3E0F2B00016A80 /* nuiRenderThread.cpp in Sources */,
 				E55A47AF10531ABD002AB5CA /* nuiPopupValueAttributeEditor.cpp in Sources */,
 				4024359510568E6F0089BA0B /* nuiStopWatch.cpp in Sources */,
 				40E96FBD106D20160099D015 /* nuiAudioDecoder_OSX.cpp in Sources */,
@@ -11573,6 +11588,7 @@
 				E5D643051209AB9C009C26A9 /* nglLightLock.cpp in Sources */,
 				E5D643061209AB9C009C26A9 /* nglLock.cpp in Sources */,
 				E5D643071209AB9C009C26A9 /* nuiBorderDecoration.cpp in Sources */,
+				E587420C1A3E0F2B00016A80 /* nuiRenderThread.cpp in Sources */,
 				E5D643081209AB9C009C26A9 /* nuiImageDecoration.cpp in Sources */,
 				E5D643091209AB9C009C26A9 /* nuiMemoryPool.cpp in Sources */,
 				E5D6430A1209AB9C009C26A9 /* nuiPopupMenu.cpp in Sources */,

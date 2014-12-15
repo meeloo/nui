@@ -64,7 +64,7 @@ public:
   bool mEnabled;
 };
 
-class nuiPainter
+class nuiPainter : public nuiRefCount
 {
 public:
   nuiPainter(nglContext* pContext = NULL);
