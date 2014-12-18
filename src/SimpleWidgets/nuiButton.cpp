@@ -25,7 +25,7 @@ nuiButton::nuiButton()
   }
   mClicked = false;
   mPressed = false;
-  SetRedrawOnHover(true);
+  SetRedrawOnHover(false);
   mAutoRepeat = false;
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
@@ -62,7 +62,7 @@ nuiButton::nuiButton(const nglString& rText)
   nuiLabel* pLabel = new nuiLabel(rText);
   AddChild(pLabel);
   pLabel->SetPosition(nuiCenter);
-  SetRedrawOnHover(true);
+  SetRedrawOnHover(false);
   EnableInteractiveDecoration(true);
   
   SetBorders(mDefaultBorders);
@@ -90,7 +90,7 @@ nuiButton::nuiButton(const nglImage& rImage)
   mRepeatMinDelay = 0.01;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
-  SetRedrawOnHover(true);
+  SetRedrawOnHover(false);
   EnableInteractiveDecoration(true);
 
   nuiImage* pImage = new nuiImage(rImage);
@@ -122,7 +122,7 @@ nuiButton::nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired)
   mRepeatMinDelay = 0.01;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
-  SetRedrawOnHover(true);
+  SetRedrawOnHover(false);
   EnableInteractiveDecoration(true);
   
   SetDecoration(pDeco, eDecorationOverdraw, AlreadyAcquired);

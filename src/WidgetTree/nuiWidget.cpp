@@ -1139,8 +1139,8 @@ void nuiWidget::SilentInvalidate()
   
   mNeedSelfRedraw = true;
   InvalidateSurface();
-  if (mpRenderCache)
-    mpRenderCache->Reset(NULL);
+//  if (mpRenderCache)
+//    mpRenderCache->Reset(NULL);
   DebugRefreshInfo();
 }
 
@@ -1369,16 +1369,95 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
  
 #endif
 
+#ifdef NUI_USE_RENDER_THREAD
+
 bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 {
   CheckValid();
+
   if (!IsVisible())
+  {
+///< This painter and it's children's may have changed, but are not to be redrawn by the render thread. (should we remove the painter?)
     return false;
+  }
 
   //NGL_ASSERT(!mNeedLayout);
   //if (mNeedLayout)
   // printf("need layout bug on 0x%X [%s - %s]\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
 
+  nuiRenderThread* pRenderThread = GetRenderThread();
+  
+  nuiRect clip;
+  pContext->GetClipRect(clip, true);
+  nuiRect _self = GetOverDrawRect(true, false);
+  nuiRect _self_and_decorations = GetOverDrawRect(true, true);
+  nuiRect inter;
+  
+  _self.Intersect(_self, mVisibleRect);
+  _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
+  if (!inter.Intersect(_self_and_decorations, clip)) // Only render at the last needed moment. As we are currently offscreen or clipped entirely we will redraw another day.
+  {
+///< This painter and it's children's may have changed, but are not to be redrawn by the render thread within this clip rect.
+    return false;
+  }
+
+  bool rendertest = mNeedRender;
+  NGL_ASSERT(mpRenderCache);
+  
+  if (mNeedSelfRedraw)
+  {
+    mpSavedPainter = pContext->GetPainter();
+    
+    mpRenderCache->Release();
+
+    mpRenderCache = new nuiMetaPainter();
+    mpRenderCache->Acquire();
+    mpRenderCache->Reset(mpSavedPainter);
+    pContext->SetPainter(mpRenderCache);
+    
+    mDrawingInCache = true;
+    
+    InternalDrawWidget(pContext, _self, _self_and_decorations, false);
+    
+    pContext->SetPainter(mpSavedPainter);
+    mNeedSelfRedraw = false;
+    
+    pRenderThread->SetWidgetPainter(this, mpRenderCache); ///< Let the render thread know about this new painter
+  }
+  else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
+  { ///< NB: The render thread cannot optimize already set painters that shouldn't redraw
+    IteratorPtr pIt;
+    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pChild = pIt->GetWidget();
+      if (pChild)
+        pChild->DrawWidget(pContext);
+    }
+  }
+  else
+  {
+///< This painter and it's children's haven't changed, but are to be redrawn by the render thread
+  }
+
+  mNeedRender = false;
+
+  DebugRefreshInfo();
+
+  return true;
+}
+
+#else
+
+bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
+{
+  CheckValid();
+  if (!IsVisible())
+    return false;
+  
+  //NGL_ASSERT(!mNeedLayout);
+  //if (mNeedLayout)
+  // printf("need layout bug on 0x%X [%s - %s]\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
+  
   if (mSurfaceEnabled)
   {
     bool drawingincache = mpParent ? mpParent->IsDrawingInCache(true) : false;
@@ -1395,7 +1474,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
       if (mNeedSelfRedraw)
       {
         UpdateSurface(_self_and_decorations.Size());
-
+        
         NGL_ASSERT(mpSurface);
         
         mNeedRender = false;
@@ -1404,7 +1483,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
         {
           mDirtyRects.push_back(nuiRect(mpSurface->GetWidth(), mpSurface->GetHeight()));
         }
-
+        
         int count = mDirtyRects.size();
         
         //printf("drawing %d partial rects\n", count);
@@ -1412,26 +1491,26 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
         for (int i = 0; i < count; i++)
         {
           //printf("\t%d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
-//          mpSurface->ResetState();
-//          mpSurface->ResetClipRect();
-//          mpSurface->SetStrokeColor(nuiColor(0.0f, 0.0f, 0.0f, 0.0f));
-//          mpSurface->SetFillColor(nuiColor(0.0f, 0.0f, 0.0f, 0.0f));
-//          mpSurface->LoadMatrix(nglMatrixf());
-//          mpSurface->Translate(_self_and_decorations.Left(), _self_and_decorations.Top());
-//          mpSurface->Set2DProjectionMatrix(nuiRect(mpSurface->GetWidth(), mpSurface->GetHeight()));
-//          mpSurface->Clip(mDirtyRects[i]);
-//          mpSurface->EnableClipping(true);
-//          
-//          // clear the surface with transparent black:
-//          mpSurface->PushState();
-//          mpSurface->SetClearColor(nuiColor(0.0f, 0.0f, 0.0f, 0.0f));
-//          mpSurface->Clear();  
-//          mpSurface->PopState();
-//          
-//          InternalDrawWidget(mpSurface, _self, _self_and_decorations, true);
-
+          //          mpSurface->ResetState();
+          //          mpSurface->ResetClipRect();
+          //          mpSurface->SetStrokeColor(nuiColor(0.0f, 0.0f, 0.0f, 0.0f));
+          //          mpSurface->SetFillColor(nuiColor(0.0f, 0.0f, 0.0f, 0.0f));
+          //          mpSurface->LoadMatrix(nglMatrixf());
+          //          mpSurface->Translate(_self_and_decorations.Left(), _self_and_decorations.Top());
+          //          mpSurface->Set2DProjectionMatrix(nuiRect(mpSurface->GetWidth(), mpSurface->GetHeight()));
+          //          mpSurface->Clip(mDirtyRects[i]);
+          //          mpSurface->EnableClipping(true);
+          //
+          //          // clear the surface with transparent black:
+          //          mpSurface->PushState();
+          //          mpSurface->SetClearColor(nuiColor(0.0f, 0.0f, 0.0f, 0.0f));
+          //          mpSurface->Clear();
+          //          mpSurface->PopState();
+          //
+          //          InternalDrawWidget(mpSurface, _self, _self_and_decorations, true);
+          
         }
-
+        
         mDirtyRects.clear();
         mNeedSelfRedraw = false;
       }
@@ -1461,8 +1540,8 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     
     _self.Intersect(_self, mVisibleRect);
     _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
-//    if (!inter.Intersect(_self_and_decorations, clip)) // Only render at the last needed moment. As we are currently offscreen or clipped entirely we will redraw another day.
-//      return false;
+    if (!inter.Intersect(_self_and_decorations, clip)) // Only render at the last needed moment. As we are currently offscreen or clipped entirely we will redraw another day.
+      return false;
     
     nuiDrawContext* pSavedCtx = pContext;
     
@@ -1493,9 +1572,9 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
           pContext->PushMatrix();
           pContext->MultMatrix(GetMatrix());
         }
-
+        
         mpRenderCache->ReDraw(pContext);
-
+        
         if (!IsMatrixIdentity())
           pContext->PopMatrix();
       }
@@ -1516,9 +1595,12 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     
     DebugRefreshInfo();
   }
-
+  
   return true;
 }
+
+#endif
+
 
 void nuiWidget::DrawSurface(nuiDrawContext* pContext)
 {
@@ -3522,15 +3604,15 @@ void nuiWidget::EnableRenderCache(bool set)
       if (!mpRenderCache)
       {
         mpRenderCache = new nuiMetaPainter();
+        mpRenderCache->Acquire();
 #ifdef _DEBUG_
         mpRenderCache->DBGSetReferenceObject(this);
 #endif
       }
-      mpRenderCache->Reset(NULL);
     }
     else
     {
-      delete mpRenderCache;
+      mpRenderCache->Release();
       mpRenderCache = NULL;
     }
     
@@ -5417,13 +5499,21 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
   }
 
   nuiPainter* pPainter = pContext->GetPainter();
+
+#ifndef NUI_USE_RENDER_THREAD
   if (mpSavedPainter)
     pContext->SetPainter(mpSavedPainter);
-
+#endif
   pChild->DrawWidget(pContext);
 
+#ifndef NUI_USE_RENDER_THREAD
   if (mpSavedPainter)
     pContext->SetPainter(pPainter);
+#endif
+
+#ifdef NUI_USE_RENDER_THREAD
+  NGL_ASSERT(IsDrawingInCache(true));
+#endif
 
   if (IsDrawingInCache(true))
   {

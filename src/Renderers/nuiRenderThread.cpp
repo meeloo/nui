@@ -34,6 +34,11 @@ void nuiRenderThread::StartRendering(uint32 x, uint32 y)
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_StartRendering, x, y));
 }
 
+void nuiRenderThread::SetRect(const nuiRect& rRect)
+{
+  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetRect, rRect));
+}
+
 void nuiRenderThread::Exit()
 {
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_Exit));
@@ -47,11 +52,6 @@ void nuiRenderThread::SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPain
 void nuiRenderThread::SetRootWidget(nuiWidget* pRoot)
 {
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetRootWidget, pRoot));
-}
-
-void nuiRenderThread::RenderFrame(nuiMetaPainter* pFrame)
-{
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_RenderFrame, pFrame));
 }
 
 void nuiRenderThread::RenderingDone(bool result)
@@ -74,9 +74,40 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     return;
   }
 
-  pRootPainter->ReDraw(mpDrawContext);
+  mpPainter->ResetStats();
+  mpContext->BeginSession();
+  mpPainter->BeginSession();
+
+  mpDrawContext->SetPainter(mpPainter);
+  mpDrawContext->StartRendering();
+  mpDrawContext->Set2DProjectionMatrix(mRect.Size());
+
+  mpDrawContext->ResetState();
+  mpDrawContext->ResetClipRect();
+
+  mpDrawContext->SetClearColor(nuiColor(255,255,255));
+//  if (mClearBackground)
+  {
+    mpDrawContext->Clear();
+  }
+//  else
+//  {
+//    // Force the initial render state anyway!
+//    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
+//  }
+
+  pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+
+  mpDrawContext->StopRendering();
+  mpPainter->EndSession();
+  mpContext->EndSession();
 
   RenderingDone(true);
+}
+
+void nuiRenderThread::_SetRect(const nuiRect& rRect)
+{
+  mRect = rRect;
 }
 
 void nuiRenderThread::_Exit()
@@ -110,17 +141,16 @@ void nuiRenderThread::_SetRootWidget(nuiWidget* pRoot)
   mpRoot = pRoot;
 }
 
-void nuiRenderThread::_RenderFrame(nuiMetaPainter* pFrame)
+void nuiRenderThread::DrawChild(nuiDrawContext* pContext, nuiWidget* pKey)
 {
-  mpPainter->ResetStats();
-  mpContext->BeginSession();
-  mpPainter->BeginSession();
-  
-  pFrame->ReDraw(mpDrawContext);
-  pFrame->Release();
-  
-  mpPainter->EndSession();
-  mpContext->EndSession();
+  auto it = mPainters.find(pKey);
+  if (it != mPainters.end())
+  {
+    nuiMetaPainter* pPainter = it->second;
+    NGL_ASSERT(pPainter);
+    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+  }
 }
+
 
 

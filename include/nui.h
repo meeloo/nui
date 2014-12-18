@@ -39,6 +39,8 @@ This file includes all nui needed headers to ease the creation of precompiled he
 //#include <crtdbg.h>
 #endif // _WIN32_
 
+#define NUI_USE_RENDER_THREAD
+
 //#define _TU_USE_STL 1
 
 #define NUI_FONTDB_PATH _T("nuiFonts.db5")

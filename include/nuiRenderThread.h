@@ -20,15 +20,17 @@ public:
 
   // Public API:
   void StartRendering(uint32 x, uint32 y);
+  void SetRect(const nuiRect& rRect);
+//  void AddClipRect(const nuiRect& rRect);
   void Exit();
   void SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void SetRootWidget(nuiWidget* pRoot);
-  void RenderFrame(nuiMetaPainter* pFrame);
-
 
 
 private:
   nuiTaskQueue mQueue;
+  nuiRect mRect;
+  std::vector<nuiRect> mPartialRects;
   nuiWidget* mpRoot = nullptr;
   std::map<nuiWidget*, nuiMetaPainter*> mPainters;
   nglContext* mpContext = nullptr;
@@ -38,10 +40,13 @@ private:
   bool mContinue = true;
 
   void _StartRendering(uint32 x, uint32 y);
+  void _SetRect(const nuiRect& rRect);
   void _Exit();
   void _SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void _SetRootWidget(nuiWidget* pWidget);
   void _RenderFrame(nuiMetaPainter* pFrame);
+
+  void DrawChild(nuiDrawContext* pContext, nuiWidget* pKey);
 
   virtual void OnStart();
 

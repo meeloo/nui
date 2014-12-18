@@ -166,6 +166,7 @@ void MainWindow::OnCreation()
     nglString str;
     str.CFormat("Button %d", i);
     pButton = new nuiButton(str);
+    pButton->SetObjectName(str);
     pButton->SetUserHeight(42);
     pVBox->AddCell(pButton);
   }

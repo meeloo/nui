@@ -352,7 +352,8 @@ public:
 
   /** @name Rendering */
   //@{
-  bool DrawWidget(nuiDrawContext* pContext); ///< This method asks the object to draw itself. It returns false in case of error. You must call Validate() once in this method if you decide to override it. You must not draw the widget if it is not visible (check the result of IsVisible() before drawing anything but after having called Validate()). All the actual rendering code should go in Draw() instead of DrawWidget wich mainly is there for rendering preparation. Most of the time the default behaviour will be enough and there are very few reasons to overload this method. Containers must use DrawWidget instead of directly calling Draw on their children.
+
+  virtual bool DrawWidget(nuiDrawContext* pContext); ///< This method asks the object to draw itself. It returns false in case of error. You must call Validate() once in this method if you decide to override it. You must not draw the widget if it is not visible (check the result of IsVisible() before drawing anything but after having called Validate()). All the actual rendering code should go in Draw() instead of DrawWidget wich mainly is there for rendering preparation. Most of the time the default behaviour will be enough and there are very few reasons to overload this method. Containers must use DrawWidget instead of directly calling Draw on their children.
   virtual void InvalidateRect(const nuiRect& rRect);
   virtual void Invalidate(); ///< Ask for a redraw of the object. Only the nuiMainWindow class should redefine this method.
   virtual void SilentInvalidate(); ///< Mark this widget as invalid (= need to be redrawn) but don't broadcast the event in the hierarchy. Most of the time you really want to use Invalidate() instead of SilentInvalidate().

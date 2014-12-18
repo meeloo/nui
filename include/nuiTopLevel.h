@@ -45,6 +45,7 @@ public:
   /** @name Rendering: */
   //@{
   bool DrawTree(class nuiDrawContext *pContext);
+//  bool DrawWidget(nuiDrawContext* pContext);
   bool Draw(class nuiDrawContext *pContext);
   bool SetRect(const nuiRect& rRect);
   //@}
@@ -237,6 +238,8 @@ protected:
   nuiEventSink<nuiTopLevel> mTopLevelSink;
   bool mPartialRedraw;
   bool mIsDrawing;
+  bool mIsRendering;
+
 #ifndef DISABLE_TOOLTIP
   void SetToolTipRect();
 #endif
