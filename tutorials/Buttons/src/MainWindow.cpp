@@ -35,22 +35,23 @@ public:
     pHBox->SetExpand(nuiExpandShrinkAndGrow);
     pHBox->SetEqualizeCells(true);
 
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 1; ++i)
     {
-      nuiButton* pButton = new nuiButton("0");
+      nuiButton* pButton = new nuiButton("Button ");
       pHBox->AddCell(pButton);
     }
+
     return pHBox;
   }
   
   void UpdateCell(int32 index, nuiWidget* pCell)
   {
     nuiHBox* pHBox = (nuiHBox*)pCell;
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 1; ++i)
     {
       nuiButton* pButton = (nuiButton*)pHBox->GetCell(i);
       nglString label;
-      label.CFormat("%d", index+1);
+      label.CFormat("Button %d-%d", index, i);
       ((nuiLabel*)pButton->GetChild(0))->SetText(label);
     }
   }

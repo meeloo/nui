@@ -153,6 +153,8 @@ static uint32 total = 0;
 nuiGLPainter::nuiGLPainter(nglContext* pContext)
 : nuiPainter(pContext)
 {
+  gpPainters.insert(this);
+
   nuiCheckForGLErrors();
   mCanRectangleTexture = 0;
   mTextureTarget = 0;
@@ -237,6 +239,8 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
 
 nuiGLPainter::~nuiGLPainter()
 {
+  gpPainters.erase(this);
+
   mActiveContexts--;
   if (mActiveContexts == 0)
     glAAExit();

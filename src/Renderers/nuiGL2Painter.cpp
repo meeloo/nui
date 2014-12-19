@@ -226,6 +226,8 @@ static uint32 total = 0;
 nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
 : nuiGLPainter(pContext)
 {
+  gpPainters.insert(this);
+
   nuiCheckForGLErrors();
   mUseShaders = true;
 
@@ -315,6 +317,8 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
 
 nuiGL2Painter::~nuiGL2Painter()
 {
+  gpPainters.erase(this);
+
   mpShader_TextureVertexColor->Release();
   mpShader_TextureDifuseColor->Release();
   mpShader_TextureAlphaVertexColor->Release();

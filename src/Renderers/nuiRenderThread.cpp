@@ -76,6 +76,9 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     return;
   }
 
+  
+  mpContext->GetLock().Lock();
+
   mpPainter->ResetStats();
   mpContext->BeginSession();
   mpPainter->BeginSession();
@@ -104,6 +107,8 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   mpPainter->EndSession();
   mpContext->EndSession();
 
+  mpContext->GetLock().Unlock();
+
   RenderingDone(true);
 }
 
@@ -124,7 +129,10 @@ void nuiRenderThread::_SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPai
   {
     nuiMetaPainter* pOld = it->second;
     NGL_ASSERT(pOld);
+
+    mpContext->GetLock().Lock();
     pOld->Release();
+    mpContext->GetLock().Unlock();
 
     if (pPainter)
     {

@@ -14,7 +14,6 @@ std::set<nuiPainter*> nuiPainter::gpPainters;
 
 nuiPainter::nuiPainter(nglContext* pContext)
 {
-  gpPainters.insert(this);
   ResetStats();
   mWidth = 0;
   mHeight = 0;
@@ -34,7 +33,6 @@ nuiPainter::~nuiPainter()
 {
   // Empty the clip stack:
   mpClippingStack = std::stack<nuiClipper>();
-  gpPainters.erase(this);
 }
 
 void nuiPainter::StartRendering()

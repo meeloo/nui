@@ -654,6 +654,8 @@ nglWindow::~nglWindow()
 
 void nglWindow::UpdateLayer()
 {
+  GetLock().Lock();
+
   NGL_ASSERT(mpEAGLContext);
   [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext];
 
@@ -694,6 +696,8 @@ void nglWindow::UpdateLayer()
   }
 
 //  [EAGLContext setCurrentContext: nil];
+
+  GetLock().Unlock();
 }
 
 void nglWindow::DisplayTicked()

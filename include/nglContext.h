@@ -220,6 +220,8 @@ if (HasExtension(_T("GL_ARB_texture_compression")))
   float GetScale() const;
   float GetScaleInv() const;
 
+  nglLock& GetLock() noexcept { return mLock; }
+
 protected:
   void CallOnRescale(float NewScale);
   float mScale;
@@ -236,6 +238,8 @@ protected:
 
   bool mValidBackBufferRequestedNotGranted;
   nuiPainter* mpPainter;
+  nglCriticalSection mLock;
+
 private:
   typedef void (*GLExtFunc)(void);
 

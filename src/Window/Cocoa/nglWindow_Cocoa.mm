@@ -218,10 +218,15 @@ float nuiGetInvScaleFactor()
 
 - (void) windowDidResize: (NSNotification *)notification
 {
+  mpNGLWindow->GetLock().Lock();
+
   NSWindow* win = [notification object];
   NSRect rect = {0};
   rect = [win frame];
   [win resize: [win contentRectForFrameRect: rect].size];
+
+  mpNGLWindow->GetLock().Unlock();
+
 }
 
 -(void)windowWillClose:(NSNotification *)note
@@ -258,8 +263,10 @@ float nuiGetInvScaleFactor()
 // this is called whenever the view changes (is unhidden or resized)
 - (void)drawRect:(NSRect)frameRect
 {
+  mpNGLWindow->GetLock().Lock();
   NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
   [_context update];
+  mpNGLWindow->GetLock().Unlock();
 //  mpNGLWindow->CallOnPaint();
 }
 

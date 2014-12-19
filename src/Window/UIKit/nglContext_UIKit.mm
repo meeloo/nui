@@ -126,6 +126,7 @@ const nglChar* gpEAGLErrorTable[] =
  */
 
 nglContext::nglContext()
+: mLock(false)
 {
   mpPainter = NULL;
   mScale = 1.0f;
