@@ -415,7 +415,8 @@ nuiRenderThread* nuiTopLevel::GetRenderThread()
   nuiPainter* pPainter = pContext->GetPainter();
 
   nuiRect rect = GetRect().Size();
-  nuiDrawContext* pDrawContext = GetDrawContext();
+  nuiDrawContext* pDrawContext = nuiDrawContext::CreateDrawContext(rect, mRenderer, GetNGLContext());
+//  nuiDrawContext* pDrawContext = GetDrawContext();
 
   mpRenderThread = new nuiRenderThread(pContext, pDrawContext, pPainter, nuiMakeDelegate(this, &nuiTopLevel::OnRenderingDone));
   return mpRenderThread;

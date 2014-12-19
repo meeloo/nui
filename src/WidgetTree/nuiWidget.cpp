@@ -1392,20 +1392,22 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   nuiRect _self = GetOverDrawRect(true, false);
   nuiRect _self_and_decorations = GetOverDrawRect(true, true);
   nuiRect inter;
-  
-  _self.Intersect(_self, mVisibleRect);
-  _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
-  if (!inter.Intersect(_self_and_decorations, clip)) // Only render at the last needed moment. As we are currently offscreen or clipped entirely we will redraw another day.
-  {
-///< This painter and it's children's may have changed, but are not to be redrawn by the render thread within this clip rect.
-    return false;
-  }
+
+//  _self.Intersect(_self, mVisibleRect);
+//  _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
+//  if (!inter.Intersect(_self_and_decorations, clip)) // Only render at the last needed moment. As we are currently offscreen or clipped entirely we will redraw another day.
+//  {
+/////< This painter and it's children's may have changed, but are not to be redrawn by the render thread within this clip rect.
+//    return false;
+//  }
+
 
   bool rendertest = mNeedRender;
   NGL_ASSERT(mpRenderCache);
   
   if (mNeedSelfRedraw)
   {
+//    printf("nuiWidget::DrawWidget[%s][%s] -> SelfRendering\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
     mpSavedPainter = pContext->GetPainter();
     
     mpRenderCache->Release();
@@ -1421,11 +1423,13 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     
     pContext->SetPainter(mpSavedPainter);
     mNeedSelfRedraw = false;
+    mNeedRender = false;
     
     pRenderThread->SetWidgetPainter(this, mpRenderCache); ///< Let the render thread know about this new painter
   }
   else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
   { ///< NB: The render thread cannot optimize already set painters that shouldn't redraw
+//    printf("nuiWidget::DrawWidget[%s][%s] -> Rendering children\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
     IteratorPtr pIt;
     for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
     {
@@ -1433,13 +1437,15 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
       if (pChild)
         pChild->DrawWidget(pContext);
     }
+    mNeedRender = false;
   }
   else
   {
 ///< This painter and it's children's haven't changed, but are to be redrawn by the render thread
+//    printf("-> Skip Rendering\n");
+
   }
 
-  mNeedRender = false;
 
   DebugRefreshInfo();
 
@@ -2159,8 +2165,8 @@ nuiDrawContext* nuiWidget::GetDrawContext()
 nuiRenderThread* nuiWidget::GetRenderThread()
 {
   CheckValid();
-  nuiWidgetPtr pRoot=GetRoot();
-  if (pRoot && pRoot!=this)
+  nuiWidgetPtr pRoot=GetTopLevel();
+  if (pRoot)
     return pRoot->GetRenderThread();
   else
     return NULL;
@@ -4740,6 +4746,11 @@ bool nuiWidget::DelChild(nuiWidgetPtr pChild)
   CheckValid();
   NGL_ASSERT(pChild->GetParent() == this)
 
+  nuiRenderThread* pRenderThread = GetRenderThread();
+  if (pRenderThread)
+  {
+    pRenderThread->SetWidgetPainter(pChild, nullptr);
+  }
 
   if (GetDebug())
   {

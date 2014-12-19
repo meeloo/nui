@@ -46,6 +46,8 @@ void nuiRenderThread::Exit()
 
 void nuiRenderThread::SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
 {
+  if (pPainter)
+    pPainter->Acquire();
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetPainter, pWidget, pPainter));
 }
 
@@ -118,22 +120,26 @@ void nuiRenderThread::_Exit()
 void nuiRenderThread::_SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
 {
   auto it = mPainters.find(pWidget);
-  if (pPainter)
-    pPainter->Acquire();
-
   if (it != mPainters.end())
   {
     nuiMetaPainter* pOld = it->second;
+    NGL_ASSERT(pOld);
     pOld->Release();
+
     if (pPainter)
+    {
       it->second = pPainter;
+    }
     else
+    {
       mPainters.erase(it);
+    }
     return;
   }
-
-  if (pPainter)
+  else if (pPainter)
+  {
     mPainters[pWidget] = pPainter;
+  }
 }
 
 void nuiRenderThread::_SetRootWidget(nuiWidget* pRoot)
