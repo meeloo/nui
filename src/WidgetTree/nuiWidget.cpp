@@ -685,6 +685,10 @@ nuiWidget::~nuiWidget()
     mpSurface->Release();
   }
   
+#ifdef NUI_USE_RENDER_THREAD
+  NGL_ASSERT(!mpRenderCache);
+#endif
+
   if (mpRenderCache)
   {
     mpRenderCache->Release();
@@ -1409,19 +1413,17 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 
 
   bool rendertest = mNeedRender;
-  NGL_ASSERT(mpRenderCache);
+  NGL_ASSERT(!mpRenderCache);
   
   if (mNeedSelfRedraw)
   {
 //    printf("nuiWidget::DrawWidget[%s][%s] -> SelfRendering\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
     mpSavedPainter = pContext->GetPainter();
-    
-    mpRenderCache->Release();
-
-    mpRenderCache = new nuiMetaPainter();
-    mpRenderCache->Acquire();
-    mpRenderCache->Reset(mpSavedPainter);
-    pContext->SetPainter(mpRenderCache);
+//    mpRenderCache->Release();
+    nuiMetaPainter* pRenderCache = new nuiMetaPainter();
+//    mpRenderCache->Acquire();
+    pRenderCache->Reset(mpSavedPainter);
+    pContext->SetPainter(pRenderCache);
     
     mDrawingInCache = true;
     
@@ -1431,7 +1433,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     mNeedSelfRedraw = false;
     mNeedRender = false;
     
-    pRenderThread->SetWidgetPainter(this, mpRenderCache); ///< Let the render thread know about this new painter
+    pRenderThread->SetWidgetPainter(this, pRenderCache); ///< Let the render thread know about this new painter
   }
   else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
   { ///< NB: The render thread cannot optimize already set painters that shouldn't redraw
@@ -1443,6 +1445,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
       if (pChild)
         pChild->DrawWidget(pContext);
     }
+    delete pIt;
     mNeedRender = false;
   }
   else
@@ -3611,6 +3614,7 @@ void nuiWidget::EnableRenderCache(bool set)
   if (mUseRenderCache != set)
   {
     mUseRenderCache = set;
+#ifndef NUI_USE_RENDER_THREAD
     if (mUseRenderCache)
     {
       if (!mpRenderCache)
@@ -3630,6 +3634,7 @@ void nuiWidget::EnableRenderCache(bool set)
     
     Invalidate();
     DebugRefreshInfo();
+#endif
   }
 }
 
