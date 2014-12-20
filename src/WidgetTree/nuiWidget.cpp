@@ -684,7 +684,13 @@ nuiWidget::~nuiWidget()
   {
     mpSurface->Release();
   }
-  delete mpRenderCache;
+  
+  if (mpRenderCache)
+  {
+    mpRenderCache->Release();
+    mpRenderCache = nullptr;
+  }
+
   if (mpMatrixNodes)
   {
     for (uint32 i = 0; i < mpMatrixNodes->size(); i++)
