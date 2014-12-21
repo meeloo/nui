@@ -9,6 +9,10 @@
 #include "nui.h"
 #include "nuiMetaPainter.h"
 
+#if (defined _UIKIT_) || (defined _COCOA_)
+# import <Foundation/NSAutoreleasePool.h>
+#endif
+
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
 : mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
 {
@@ -22,10 +26,19 @@ nuiRenderThread::~nuiRenderThread()
 void nuiRenderThread::OnStart()
 {
   nuiTask* pTask = nullptr;
+
+#if (defined _UIKIT_) || (defined _COCOA_)
+  NSAutoreleasePool* pPool = [[NSAutoreleasePool alloc] init];
+#endif
+
   while (mContinue && (pTask = mQueue.Get(60000)))
   {
     pTask->Run();
   }
+
+#if (defined _UIKIT_) || (defined _COCOA_)
+  [pPool release];
+#endif
 }
 
 // Public API:

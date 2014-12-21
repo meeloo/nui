@@ -234,7 +234,8 @@ void nglApplication::Quit (int Code)
 
 int nglApplication::Main(int argc, const char** argv)
 {
-  NSAutoreleasePool *pPool = [NSAutoreleasePool new];
+  //  NSAutoreleasePool *pPool = [NSAutoreleasePool new];
+  NSAutoreleasePool* pPool = [[NSAutoreleasePool alloc] init];  
   {
     //App->TimedPrint("nglApplication::Main Init");
 

@@ -989,6 +989,104 @@ bool nuiScrollView::MouseCanceled(const nglMouseInfo& rInfo)
   //  NGL_OUT("nuiScrollView::MouseCanceled LeftClick: %d\n", mLeftClick);
 }
 
+bool nuiScrollView::CallPreMouseClicked(const nglMouseInfo& rInfo)
+{
+  if (!mDragEnabled)
+    return false;
+  
+  if (mLeftClick)
+    return false;
+  
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+  {
+    mTouch = rInfo;
+    mTouched = true;
+    if (mSpeedX != 0 || mSpeedY != 0)
+    {
+      if (StealMouseEvent(rInfo))
+      {
+        mTimerOn = false;
+        mSpeedX = 0;
+        mSpeedY = 0;
+        
+        mTouched = false;
+        SetXPos(mXOffset);
+        SetYPos(mYOffset);
+        mClickValueH = mXOffset;
+        mClickValueV = mYOffset;
+        
+        mLastTime = nglTime();
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool nuiScrollView::CallPreMouseUnclicked(const nglMouseInfo& rInfo)
+{
+  if (!mDragEnabled)
+    return false;
+  
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+  {
+    mTouched = false;
+  }
+  return false;
+}
+
+bool nuiScrollView::CallPreMouseMoved(const nglMouseInfo& rInfo)
+{
+  if (!mDragEnabled)
+    return false;
+  
+  if (mTouched && !mLeftClick)
+  {
+    float x = 0;
+    if (GetEnableHorizontalScroll())
+      x = mTouch.X - rInfo.X;
+    float y = 0;
+    if (GetEnableVerticalScroll())
+      y = mTouch.Y - rInfo.Y;
+    
+    float dist = sqrt(x * x + y * y);
+    
+    if (dist > 10 && StealMouseEvent(rInfo))
+    {
+      mTouched = false;
+      mXOffset = GetXPos();
+      mYOffset = GetYPos();
+      mClickValueH = mXOffset;
+      mClickValueV = mYOffset;
+      NGL_ASSERT(rInfo.Counterpart);
+      rInfo.Counterpart->X = rInfo.X;
+      rInfo.Counterpart->Y = rInfo.Y;
+      mLastTime = nglTime();
+      return true;
+    }
+  }
+  return false;
+}
+
+bool nuiScrollView::MouseGrabbed(nglTouchId Id)
+{
+  mLeftClick++;
+  return true;
+}
+
+bool nuiScrollView::MouseUngrabbed(nglTouchId Id)
+{
+  if (!HasGrab(Id))
+    return false;
+  NGL_ASSERT(mLeftClick > 0);
+  mLeftClick--;
+  if (!mLeftClick)
+  {
+    
+  }
+  
+  return true;
+}
 
 nuiScrollBar* nuiScrollView::GetScrollBar(nuiOrientation Orientation)
 {
@@ -1361,99 +1459,4 @@ bool nuiScrollView::IsVerticalHotRectActive() const
   return mVerticalHotRectActive;
 }
 
-bool nuiScrollView::CallPreMouseClicked(const nglMouseInfo& rInfo)
-{
-  if (!mDragEnabled)
-    return false;
-  
-  if (mLeftClick)
-    return false;
-  
-  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
-  {
-    mTouch = rInfo;
-    mTouched = true;
-    if (mSpeedX != 0 || mSpeedY != 0)
-    {
-      if (StealMouseEvent(rInfo))
-      {
-        mTimerOn = false;
-        mSpeedX = 0;
-        mSpeedY = 0;
-        
-        mTouched = false;
-        SetXPos(mXOffset);
-        SetYPos(mYOffset);
-        mClickValueH = mXOffset;
-        mClickValueV = mYOffset;
-        
-        mLastTime = nglTime();
-        return true;
-      }
-    }
-  }
-  return false;
-}
 
-bool nuiScrollView::CallPreMouseUnclicked(const nglMouseInfo& rInfo)
-{
-  if (!mDragEnabled)
-    return false;
-  
-  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
-  {
-    mTouched = false;
-  }
-  return false;
-}
-
-bool nuiScrollView::CallPreMouseMoved(const nglMouseInfo& rInfo)
-{
-  if (!mDragEnabled)
-    return false;
-  
-  if (mTouched && !mLeftClick)
-  {
-    float x = 0;
-    if (GetEnableHorizontalScroll())
-      x = mTouch.X - rInfo.X;
-    float y = 0;
-    if (GetEnableVerticalScroll())
-      y = mTouch.Y - rInfo.Y;
-    
-    float dist = sqrt(x * x + y * y);
-    
-    if (dist > 10 && StealMouseEvent(rInfo))
-    {
-      mTouched = false;
-      mXOffset = GetXPos();
-      mYOffset = GetYPos();
-      mClickValueH = mXOffset;
-      mClickValueV = mYOffset;
-      
-      mLastTime = nglTime();
-      return true;
-    }
-  }
-  return false;
-}
-
-bool nuiScrollView::MouseGrabbed(nglTouchId Id)
-{
-  mLeftClick++;
-  return true;
-}
-
-bool nuiScrollView::MouseUngrabbed(nglTouchId Id)
-{
-  if (!HasGrab(Id))
-    return false;
-  NGL_ASSERT(mLeftClick > 0);
-  mLeftClick--;
-  if (!mLeftClick)
-  {
-    
-  }
-  
-  return true;
-}
