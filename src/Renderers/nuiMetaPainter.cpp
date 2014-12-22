@@ -7,6 +7,8 @@
 
 #include "nui.h"
 
+int64 nuiMetaPainter::Count = 0;
+
 // nuiMetaPainter:
 nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
 : nuiPainter(pContext)
@@ -20,13 +22,19 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
   mDrawChildrenImmediat = false;
   mLastSize = -1;
 
+//  Count++;
+//  printf("[NEW] MetaPainter Count: %lld\n", Count);
 #ifdef _DEBUG_
   mpDebugObjectRef = NULL;
 #endif
+  
 }
 
 nuiMetaPainter::~nuiMetaPainter()
 {
+//  Count--;
+//  printf("[DEL] MetaPainter Count: %lld\n", Count);
+
   Reset(NULL);
 }
 
@@ -36,7 +44,7 @@ void nuiMetaPainter::DestroySurface(nuiSurface* pSurface)
 
 void nuiMetaPainter::DestroyRenderArray(nuiRenderArray* pArray)
 {
-//  NGL_ASSERT(0); //#TODO
+  NGL_ASSERT(0); //#TODO
 }
 
 

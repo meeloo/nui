@@ -36,6 +36,8 @@ enum nuiSerializeMode
 class nuiObject : virtual public nuiRefCount
 {
 public:
+  static int64 ObjectCount;
+
   /** @name Life */
   //@{
   nuiObject(); ///< Create an nuiObject

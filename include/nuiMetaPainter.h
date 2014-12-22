@@ -21,6 +21,7 @@ typedef std::vector<uint8> nuiRenderCache;
 class nuiMetaPainter : public nuiPainter
 {
 public:
+  static int64 Count;
   typedef nuiFastDelegate2<nuiDrawContext*, nuiWidget*> DrawChildDelegate;
   
   nuiMetaPainter(nglContext* pContext = NULL);

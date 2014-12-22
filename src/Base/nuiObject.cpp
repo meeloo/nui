@@ -12,18 +12,27 @@
 
 using namespace std;
 
+int64 nuiObject::ObjectCount = 0;
+
 nuiObject::nuiObject()
 : mpTrace(NULL)
 {
   nglString name;
   name.CFormat("%d", this);
   Init(name);
+  
+//  ObjectCount++;
+//  printf("[NEW] Object Count [%lld]\n", ObjectCount);
+
 }
 
 nuiObject::nuiObject(const nglString& rObjectName)
 : mpTrace(NULL)
 {
   Init(rObjectName);
+//  ObjectCount++;
+//  printf("[NEW] Object Count [%lld]\n", ObjectCount);
+
 }
 
 
@@ -97,6 +106,9 @@ nuiObject::~nuiObject()
 #ifdef _NUI_DEBUG_OBJECTS_
   NGL_LOG("nuiObject", NGL_LOG_DEBUG, "Deleting object '%s' (class='%s')\n", GetObjectName().GetChars(), GetObjectClass().GetChars());
 #endif
+
+//  ObjectCount--;
+//  printf("[DEL] Object Count [%lld]\n", ObjectCount);
 
   ClearLinkedObjects();
   

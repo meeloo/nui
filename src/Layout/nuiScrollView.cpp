@@ -90,6 +90,7 @@ void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVert
   mDragEnabled = false;
   mHideScrollBars = false;
   
+  mTouched = false;
   mLeftClick = 0;
   //  NGL_OUT("nuiScrollView::Init LeftClick: %d\n", mLeftClick);
   

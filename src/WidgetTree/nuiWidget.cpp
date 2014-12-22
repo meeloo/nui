@@ -760,7 +760,7 @@ nuiTopLevel* nuiWidget::GetTopLevel() const
 bool nuiWidget::SetParent(nuiWidgetPtr pParent)
 {
   CheckValid();
-  NGL_ASSERT(!IsTrashed(false));
+//  NGL_ASSERT(!IsTrashed(false));
   bool res = true;
 
   nuiTopLevel* pRoot = GetTopLevel();
@@ -4752,39 +4752,29 @@ bool nuiWidget::AddChild(nuiWidgetPtr pChild)
   return true;
 }
 
+
 bool nuiWidget::DelChild(nuiWidgetPtr pChild)
 {
   CheckValid();
   NGL_ASSERT(pChild->GetParent() == this)
-
-  nuiRenderThread* pRenderThread = GetRenderThread();
-  if (pRenderThread)
-  {
-    pRenderThread->SetWidgetPainter(pChild, nullptr);
-  }
-
+  
   if (GetDebug())
   {
     NGL_OUT("[%s] Del Child %p <--- %p (%s / %s)\n", GetObjectClass().GetChars(), this, pChild, pChild->GetObjectClass().GetChars(), pChild->GetObjectName().GetChars());
   }
-
+  
   nuiWidgetList::iterator it  = mpChildren.begin();
   nuiWidgetList::iterator end = mpChildren.end();
   for ( ; it != end; ++it)
   {
     if (*it == pChild)
     {
-      mpChildren.erase(it);
-      if (!pChild->IsTrashed())
+      if (!pChild->IsTrashed(false)) ///< DelChild was called directly
       {
-        nuiTopLevel* pRoot = GetTopLevel();
-        pChild->Trashed();
-        Invalidate();
-
-        if (pRoot)
-          pRoot->AdviseObjectDeath(pChild);
-        pChild->SetParent(NULL);
+        return pChild->Trash(); ///< This will call this->DelChild(pChild) again, but with pChild as Trashed.
       }
+      mpChildren.erase(it);
+      pChild->SetParent(NULL);
       ChildDeleted(this, pChild);
       InvalidateLayout();
       DebugRefreshInfo();
@@ -4795,6 +4785,45 @@ bool nuiWidget::DelChild(nuiWidgetPtr pChild)
   DebugRefreshInfo();
   return false;
 }
+
+//bool nuiWidget::DelChild(nuiWidgetPtr pChild)
+//{
+//  CheckValid();
+//  NGL_ASSERT(pChild->GetParent() == this)
+//
+//  if (GetDebug())
+//  {
+//    NGL_OUT("[%s] Del Child %p <--- %p (%s / %s)\n", GetObjectClass().GetChars(), this, pChild, pChild->GetObjectClass().GetChars(), pChild->GetObjectName().GetChars());
+//  }
+//
+//  nuiWidgetList::iterator it  = mpChildren.begin();
+//  nuiWidgetList::iterator end = mpChildren.end();
+//  for ( ; it != end; ++it)
+//  {
+//    if (*it == pChild)
+//    {
+//      mpChildren.erase(it);
+//      
+//      if (!pChild->IsTrashed())
+//      {
+//        nuiTopLevel* pRoot = GetTopLevel();
+//        pChild->Trashed();
+//        Invalidate();
+//
+//        if (pRoot)
+//          pRoot->AdviseObjectDeath(pChild);
+//        pChild->SetParent(NULL);
+//      }
+//      ChildDeleted(this, pChild);
+//      InvalidateLayout();
+//      DebugRefreshInfo();
+//      pChild->Release();
+//      return true;
+//    }
+//  }
+//  DebugRefreshInfo();
+//  return false;
+//}
 
 int nuiWidget::GetChildrenCount() const
 {
@@ -5145,6 +5174,13 @@ void nuiWidget::CallOnTrash()
   CheckValid();
   ChildrenCallOnTrash();
   mTrashed = true;
+
+  nuiRenderThread* pRenderThread = GetRenderThread();
+  if (pRenderThread)
+  {
+    pRenderThread->SetWidgetPainter(this, nullptr);
+  }
+  
 
   while (!mHotKeyEvents.empty())
   {
