@@ -19,7 +19,6 @@ class nuiRenderArray : public nuiRefCount
 public:
   nuiRenderArray(uint32 mode, bool Static = false, bool _3dmesh = false, bool _shape = false);
   nuiRenderArray(const nuiRenderArray& rArray);
-  virtual ~nuiRenderArray();
 
   struct Vertex
   {
@@ -199,6 +198,10 @@ public:
 
   void SetDebug(bool set) { mDebug = set; }
   bool GetDebug() const { return mDebug; }
+  
+protected:
+  virtual ~nuiRenderArray();
+
 private:
   GLenum mMode;
   bool mEnabled[4];

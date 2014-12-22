@@ -3316,7 +3316,7 @@ void nuiWidget::AddAnimation(const nglString& rName, nuiAnimation* pAnim, bool T
   CheckValid();
   nuiAnimation* pOldAnim = GetAnimation(rName);
   if (pOldAnim)
-    delete pOldAnim;
+    pOldAnim->Release();
 
   mAnimations[rName] = pAnim;
   pAnim->SetDeleteOnStop(false); /// Cancel anim delete on stop or we'll crash as soon as the widget is destroyed or the user starts to play the anim once more.
@@ -3353,7 +3353,7 @@ void nuiWidget::ClearAnimations()
   std::map<nglString, nuiAnimation*, nglString::NaturalLessFunctor>::iterator end = mAnimations.end();
 
   for ( ; it != end; ++it)
-    delete (*it).second;
+    (*it).second->Release();
 
   mAnimations.clear();
   DebugRefreshInfo();
@@ -4317,7 +4317,7 @@ void nuiWidget::SetDecoration(const nglString& rName)
       nuiObject* pObj = nuiCSS::CreateObject(rName);
       pDecoration = dynamic_cast<nuiDecoration*> (pObj);
       if (!pDecoration)
-        delete pObj;
+        pObj->Release();
     }
   }
   SetDecoration(pDecoration, mDecorationMode, true);

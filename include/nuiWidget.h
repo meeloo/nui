@@ -208,7 +208,6 @@ public:
   nuiWidget(); ///< Create an nuiObject
   nuiWidget(const nglString& rObjectName); ///< constructor with an objectName by default
 	void InitAttributes();
-  virtual ~nuiWidget(); 
   //@}
 
   /** @name Serialization */
@@ -738,6 +737,8 @@ public:
   static bool GetGlobalUseRenderCache();
 
 protected:
+  virtual ~nuiWidget();
+
   std::map<nglString, nuiEventSource*, nglString::LessFunctor> mEventMap;
   std::vector<nuiEventActionHolder*> mEventActions;
 

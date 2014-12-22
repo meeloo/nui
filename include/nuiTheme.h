@@ -33,7 +33,6 @@ public:
   static void SetTheme(nuiTheme* pTheme); ///< Replace the default theme with the given one. The old theme is released (and will die gracefully if not acquired by another object).
 
   nuiTheme();
-  virtual ~nuiTheme();
 
   enum FontStyle
   {
@@ -79,6 +78,7 @@ public:
   virtual nuiLabel *CreateTreeNodeLabel(const nglString &text);
 
 protected:
+  virtual ~nuiTheme();
   friend class nuiDrawContext;
 
   void LoadDefaults(); ///< Load the default color & geometry values.

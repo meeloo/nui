@@ -113,7 +113,7 @@ void nuiNotificationManager::BroadcastQueuedNotifications()
   while ((pNotification = mQueue.Get(0)))
   {
     BroadcastNotification(*pNotification);
-    delete pNotification;
+    pNotification->Release();
   }
 }
 
@@ -122,7 +122,7 @@ void nuiNotificationManager::Clear()
   nuiNotification* pNotification = NULL;
   while ((pNotification = mQueue.Get(0)))
   {
-    delete pNotification;
+    pNotification->Release();
   }
 }
 

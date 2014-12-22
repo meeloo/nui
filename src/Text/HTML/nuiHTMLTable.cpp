@@ -70,7 +70,7 @@ nuiHTMLTable::~nuiHTMLTable()
     for (uint32 j = 0; j < GetColCount(); j++)
     {
       nuiHTMLItem* pItem = GetCell(j, i).mpItem;
-      delete pItem;
+      pItem->Release();
     }
   }
 }
@@ -492,7 +492,8 @@ nuiHTMLTable::Cell::~Cell()
 void nuiHTMLTable::Cell::SetContents(nuiHTMLNode* pNode, nuiHTMLItem* pItem)
 {
   mpNode = pNode;
-  delete mpItem;
+  if (mpItem)
+    mpItem->Release();
   mpItem = pItem;
   
   nuiHTMLAttrib* pAttrib = NULL;

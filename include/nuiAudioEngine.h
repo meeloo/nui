@@ -34,7 +34,6 @@ public:
   };
   
   nuiAudioEngine(double SampleRate, int32 BufferSize, ChannelConfig inputConfig = eNone);
-  virtual ~nuiAudioEngine();
   
   double GetSampleRate() const;
   int32 GetBufferSize() const;
@@ -73,6 +72,7 @@ public:
   
     
 protected:
+  virtual ~nuiAudioEngine();
   void ProcessAudioOutput(const std::vector<const float*>& rInput, const std::vector<float*>& rOutput, int32 SampleFrames);
   void ProcessAudioInput(const std::vector<const float*>& rInput, const std::vector<float*>& rOutput, int32 SampleFrames);
   bool AudioInit(ChannelConfig config);

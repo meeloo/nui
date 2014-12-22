@@ -79,12 +79,13 @@ void nuiNavigationBar::SetTitle(const nglString& rTitle)
 {
   nuiLabel* pLabel = new nuiLabel(rTitle);
   
-  nuiFontRequest Request;
+  nuiFontRequest* pRequest = new nuiFontRequest();
 //  Request.SetName(_T("Helvetica"), 1.f);
-  Request.SetGenericName(_T("sans-serif"), 1.f);
-  Request.MustHaveSize(14, 1.f);
-  Request.SetBold(true, 1.f);
-  pLabel->SetFont(nuiFontManager::GetManager().GetFont(Request));
+  pRequest->SetGenericName(_T("sans-serif"), 1.f);
+  pRequest->MustHaveSize(14, 1.f);
+  pRequest->SetBold(true, 1.f);
+  pLabel->SetFont(nuiFontManager::GetManager().GetFont(*pRequest));
+  pRequest->Release();
   pLabel->SetPosition(nuiCenter);
   pLabel->SetTextColor(nuiColor(255,255,255));
   SetTopNavigationItem(pLabel);

@@ -86,11 +86,14 @@ public:
   {
   }
   
+  virtual double Map(double val) = 0;
+  
+protected:
   virtual ~nuiEasing()
   {
   }
   
-  virtual double Map(double val) = 0;
+
 };
 
 class nuiEasingFunction : public nuiEasing
@@ -120,7 +123,6 @@ class nuiAnimation : public nuiObject
 {
 public:
   nuiAnimation();
-  virtual ~nuiAnimation();
 
   bool SetTime(double Time, nuiAnimWhence Whence = eAnimFromStart); ///< Set the time to display. Returns false if Time is out of range (but the current time will be capped on the nearest boundary).
   double GetTime() const; ///< Return the currently displayed time in the animation.
@@ -162,6 +164,7 @@ public:
   bool GetDeleteOnStop() const; ///< If DeleteOnStop is set, the animation will be deleted as soon as it is stopped by calling Stop or by reaching the end of the loop counter.
   
 protected:
+  virtual ~nuiAnimation();
   void CallOnFrame();
   bool UpdateTime(); ///< This method returns the number time elapsed since the last call to UpdateTime.
   void OnTick(const nuiEvent& rEvent);

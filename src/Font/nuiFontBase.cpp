@@ -1970,9 +1970,10 @@ void nuiFontBase::SetAlphaTest(float Threshold)
 
 void nuiFontBase::Print(nuiDrawContext *pContext, float X, float Y, const nglString& rText, bool AlignGlyphPixels)
 {
-  nuiTextLayout layout(this);
-  layout.Layout(rText);
-  layout.Print(pContext, X, Y, AlignGlyphPixels);
+  nuiTextLayout* layout = new nuiTextLayout(this);
+  layout->Layout(rText);
+  layout->Print(pContext, X, Y, AlignGlyphPixels);
+  layout->Release();
 }
 
 bool nuiFontBase::PrepareGlyph(float X, float Y, nuiTextGlyph& rGlyph)

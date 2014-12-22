@@ -24,7 +24,7 @@ private:
   float mSize;
   nuiColor mTextFgColor;
   bool mUseColor;
-  nuiFontRequest mBackup;
+  nuiFontRequest* mpBackup = nullptr;
   nuiColor mBackupTextFgColor;
 };
 

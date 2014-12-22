@@ -693,7 +693,7 @@ void nuiMetaAnimation::Clear()
   std::list<nuiAnimation*>::iterator end = mpAnimations.end();
 
   for (; it != end; ++it)
-    delete *it;
+    (*it)->Release();
 
   mpAnimations.clear();
 }
@@ -777,7 +777,7 @@ void nuiAnimationSequence::Clear()
   std::list<nuiAnimation*>::iterator end = mpAnimations.end();
 
   for (; it != end; ++it)
-    delete *it;
+    (*it)->Release();
 
   mpAnimations.clear();
 }

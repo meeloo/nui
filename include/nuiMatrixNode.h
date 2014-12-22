@@ -17,7 +17,6 @@ class nuiMatrixNode : public nuiObject
 public:
   nuiMatrixNode();
   nuiMatrixNode(const nuiMatrix& rMatrix);
-  virtual ~nuiMatrixNode();
   
   virtual void Apply(nuiMatrix& rMatrix) const; ///< Override this method to create your own matrix node operations
   virtual void Update() const; ///< Override this method to update the local mMatrix from your own params.
@@ -27,6 +26,7 @@ public:
 
   nuiSimpleEventSource<0> Changed;
 protected:
+  virtual ~nuiMatrixNode();
   mutable nuiMatrix mMatrix;
   mutable bool mChanged;
   void SetChanged();

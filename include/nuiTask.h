@@ -51,10 +51,6 @@ public:
   {
   }
   
-  virtual ~nuiTask()
-  {
-  }
-  
   void Cancel()
   {
     mCanceled = true;
@@ -73,6 +69,10 @@ public:
   }
   
 protected:
+  virtual ~nuiTask()
+  {
+  }
+  
   virtual void Execute() const = 0;
   bool mCanceled;
 };

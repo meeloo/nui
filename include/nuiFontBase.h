@@ -206,9 +206,6 @@ public:
    
    \e Note : this copy constructor is lightweight due to the cache infrastructure.
    */
-  virtual ~nuiFontBase();
-  /*!< Release the font ressource
-   */
   //@}
   
   bool IsValid() const;
@@ -442,7 +439,11 @@ public:
   bool PrepareGlyph(float X, float Y, nuiTextGlyph& rGlyph);
   
   void Shape(nuiTextRun* pRun);
+
 protected:
+  virtual ~nuiFontBase();
+  /*!< Release the font ressource
+   */
   GLclampf mAlphaTest;  ///< Alpha test threshold as set by SetAlphaTest()
   
   bool  SetSize (float Size, nuiFontUnit Unit = eFontUnitPixel);

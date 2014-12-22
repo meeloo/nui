@@ -244,7 +244,8 @@ void nuiIntrospector::InitDecorations()
   // grids' cell
   //  new nuiColorDecoration(INTROSPECTOR_DECO_GRID_CELL, nuiRect(2,2,0,0), nuiColor(250,250,250), 1, nuiColor(180,180,180), eStrokeAndFillShape);
   
-  nuiFontRequest rFontRequest;
+  nuiFontRequest* pFontRequest = new nuiFontRequest();
+  nuiFontRequest& rFontRequest(*pFontRequest);
   rFontRequest.SetGenericName(_T("sans-serif"), 1.0f);
   rFontRequest.SetBold(false, 1.0); 
   rFontRequest.SetItalic(false, 1.0);
@@ -255,5 +256,6 @@ void nuiIntrospector::InitDecorations()
   rFontRequest.SetItalic(false, 1.0);
   rFontRequest.MustHaveSize(10, 1.0);
   nuiFontManager::GetManager().GetFont(rFontRequest, _T("INTROSPECTOR_FONT_BOLD"));
+  pFontRequest->Release();
 }
 

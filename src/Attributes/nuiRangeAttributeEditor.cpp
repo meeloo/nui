@@ -49,12 +49,14 @@ void nuiRangeAttributeEditor::Update()
   AddChild(mpMainBox);
   
   // font
-  nuiFontRequest rFontRequest;
+  nuiFontRequest* pFontRequest = new nuiFontRequest();
+  nuiFontRequest& rFontRequest(*pFontRequest);
   rFontRequest.SetGenericName(_T("sans-serif"), 1.0f);
   rFontRequest.SetBold(false, 1.0); 
   rFontRequest.MustHaveSize(10, 1.0);
   nuiFont* pFont = nuiFontManager::GetManager().GetFont(rFontRequest);
-
+  pFontRequest->Release();
+  
   // display the attribute's value
   nglString str;
   str.SetCDouble(mRange.GetValue());

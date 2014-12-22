@@ -18,7 +18,7 @@ nuiContour::~nuiContour()
   std::list<nuiPathGenerator*>::iterator end = mpElements.end();
   for (it = mpElements.begin(); it != end; ++it)
     if (*it)
-      delete *it;
+      (*it)->Release();
 }
 
 void nuiContour::AddLines(const nuiPath& rVertices)

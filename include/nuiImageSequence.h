@@ -17,7 +17,6 @@ public:
   nuiImageSequence(uint32 nbFrames, nglImage* pImage, nuiOrientation orientation = nuiVertical);
   nuiImageSequence(uint32 nbFrames, const nglPath& rTexturePath, bool framesInSingleFile = true, nuiOrientation orientation = nuiVertical); // all frames in a single file, or stored in separated png files
   void InitAttributes();
-  virtual ~nuiImageSequence();
   
   virtual nuiRect CalcIdealSize();  
   virtual bool Draw(nuiDrawContext* pContext);
@@ -43,7 +42,10 @@ public:
   
   void SetAlpha(float alpha);
   float GetAlpha() const;
-  
+
+protected:
+  virtual ~nuiImageSequence();
+
 private:
   
   bool CreateTextures(); // return true if the textures have been properly created

@@ -56,7 +56,7 @@ nuiNavigationController::~nuiNavigationController()
 {
   std::list<nuiAnimation*>::iterator it;
   for (it = mCurrentAnims.begin(); it != mCurrentAnims.end(); ++it)
-    delete *it;
+    (*it)->Release();
   
   std::vector<nuiViewController*>::iterator itv;
   for (itv = mViewControllers.begin(); itv != mViewControllers.end(); ++itv)

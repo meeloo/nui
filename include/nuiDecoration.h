@@ -20,8 +20,6 @@ public:
   nuiDecoration(const nglString& rName);
   void InitAttributes();
 
-  virtual ~nuiDecoration();
-
   void SetObjectName(const nglString& rName);
   
   void UseWidgetAlpha(bool use);
@@ -68,7 +66,8 @@ public:
   static void InitDecorationEngine();
   static void ExitDecorationEngine();
 protected:
-
+  virtual ~nuiDecoration();
+  
   bool mUseWidgetAlpha : 1;
   bool mBorderEnabled : 1;
   bool mRedrawOnHover : 1;

@@ -134,9 +134,10 @@ bool nuiTextLayout::Layout(const nglString& rString)
       // If the requested font doesn't work, try to find one that does:
       if (!pFont)
       {
-        nuiFontRequest request(pFontBase);
-        request.MustHaveGlyphs(charset, 500, false);
-        pFont = nuiFontManager::GetManager().GetFont(request);
+        nuiFontRequest* request = new nuiFontRequest(pFontBase);
+        request->MustHaveGlyphs(charset, 500, false);
+        pFont = nuiFontManager::GetManager().GetFont(*request);
+        request->Release();
       }
       
       FontSet[std::make_pair(pFontBase, it->first)] = pFont;

@@ -597,7 +597,7 @@ void nuiEditText::ClearCommandStack()
 void nuiEditText::CropCommandStack()
 {
   for (uint i = mCommandStackPos; i < mCommandStack.size(); i++)
-    delete mCommandStack[i].second;
+    mCommandStack[i].second->Release();
   mCommandStack.resize(mCommandStackPos);
 }
 
@@ -1928,7 +1928,7 @@ nuiEditText::TextBlock::TextBlock(nuiFont* pFont, const nglString& rString, uint
 
 nuiEditText::TextBlock::~TextBlock()
 {
-  delete mpLayout;
+  mpLayout->Release();
   mpFont->Release();
 }
 
@@ -2209,7 +2209,8 @@ void nuiEditText::TextBlock::Layout()
   if (mLayoutOK)
     return;
 
-  delete mpLayout;
+  if (mpLayout)
+    mpLayout->Release();
   mpLayout = NULL;
 
   nuiFontInfo fontinfo;

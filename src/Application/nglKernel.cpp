@@ -432,7 +432,7 @@ void nglKernel::ProcessMessages(const nuiEvent& rEvent)
     nuiGetTokenValue<nuiCommand*>(pNotif->GetToken(), pCommand);
     if (pCommand)
       pCommand->Do();
-    delete pNotif;
+    pNotif->Release();
   }
 
   mpNotificationManager->BroadcastQueuedNotifications();

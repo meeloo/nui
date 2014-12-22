@@ -20,7 +20,6 @@ class nuiTextLayout : public nuiRefCount
 public:
   nuiTextLayout(const nuiTextStyle& rStyle, nuiOrientation Orientation = nuiHorizontal);
   nuiTextLayout(nuiFontBase* pFont, nuiOrientation Orientation = nuiHorizontal);
-  virtual ~nuiTextLayout();
 
   bool Layout(const nglString& rString);
   void Print(nuiDrawContext* pContext, float X, float Y, bool AlignGlyphPixels) const;
@@ -83,7 +82,10 @@ public:
   void DelStyleChanges(int32 StringPosition);
   const std::map<int32, nuiTextStyle>& GetStyleChanges() const;
   void ClearStyleChanges();
-  
+
+protected:
+  virtual ~nuiTextLayout();
+
 private:
   bool PrintGlyphs(nuiDrawContext *pContext, float X, float Y, const std::map<nuiTexture*, std::vector<nuiTextGlyph*> >& rGlyphs, bool AlignGlyphPixels) const;
   void SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const nuiTextStyle& style, int32& pos, int32 len);

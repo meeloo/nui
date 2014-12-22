@@ -14,11 +14,11 @@ class nuiHTMLStyleValueBase : public nuiObject
 {
 public:
   nuiHTMLStyleValueBase(bool use = false);
-  virtual ~nuiHTMLStyleValueBase();
   bool Use() const;
   void Use(bool set);
   
 protected:
+  virtual ~nuiHTMLStyleValueBase();
   bool mUse;
 };
 
@@ -74,7 +74,6 @@ class nuiHTMLStyle : public nuiObject
 public:
   nuiHTMLStyle();
   nuiHTMLStyle(const nuiHTMLStyle& rStyle);
-  virtual ~nuiHTMLStyle();
   
   void CopyFrom(const nuiHTMLStyle& rStyle);
   nuiHTMLStyle& operator=(const nuiHTMLStyle& rStyle);
@@ -94,7 +93,10 @@ public:
   nuiHTMLStyleValue<nglString> mFontFamilyName;
   nuiHTMLStyleValue<nglString> mFontGenericName;
   nuiHTMLStyleValue<nglString> mFontStyle;
-  
+
+protected:
+  virtual ~nuiHTMLStyle();
+
 private:
   void Init();
 };

@@ -45,7 +45,7 @@ public:
   void Cancel();
   
   void SetFont(nuiFont* pFont, bool AlreadyAcquired);
-  void SetFont(nuiFontRequest& rFontRequest);
+  void SetFont(nuiFontRequest* pFontRequest);
   void SetFont(const nglString& rFontSymbol);
   void _SetFont(const nglString& rFontSymbol);
   const nglString& _GetFont() const;

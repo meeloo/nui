@@ -19,7 +19,6 @@ class nglVolume : public nuiRefCount
 {
 public:
   nglVolume(const nglString& rVolumeName, const nglPath& rPath, const nglString& rComment, nglPathVolume::VolumeFlags Flags, nglPathVolume::MediaType rType);
-  virtual ~nglVolume();
   
   bool IsValid() const;
   const nglString& GetName() const;
@@ -60,4 +59,7 @@ protected:
   typedef std::map<nglString, nglVolume*> VolumeMap;
   static VolumeMap mVolumes;  
   static nglCriticalSection mCS;
+
+  virtual ~nglVolume();
+
 };

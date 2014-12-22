@@ -148,16 +148,22 @@ void nuiHTMLView::SetFont(nuiFont* pFont, bool AlreadyAcquired)
     pFont = nuiFont::GetFont(14.0f);
   }
   
-  mpContext->mFont = nuiFontRequest(pFont, false);
+  if (mpContext->mpFontRequest)
+    mpContext->mpFontRequest->Release();
+  mpContext->mpFontRequest = new nuiFontRequest(pFont, false);
   if (AlreadyAcquired)
     pFont->Release();
   
   InvalidateLayout();
 }
 
-void nuiHTMLView::SetFont(nuiFontRequest& rFontRequest)
+void nuiHTMLView::SetFont(nuiFontRequest* pFontRequest)
 {
-  mpContext->mFont = rFontRequest;
+  if (pFontRequest)
+    pFontRequest->Acquire();
+  if (mpContext->mpFontRequest)
+    mpContext->mpFontRequest->Release();
+  mpContext->mpFontRequest = pFontRequest;
   InvalidateLayout();
 }
 
@@ -176,7 +182,7 @@ void nuiHTMLView::_SetFont(const nglString& rFontSymbol)
 
 const nglString& nuiHTMLView::_GetFont() const
 {
-  return mpContext->mFont.mName.mElement;
+  return mpContext->mpFontRequest->mName.mElement;
 }
 
 const nuiColor& nuiHTMLView::GetTextColor() const

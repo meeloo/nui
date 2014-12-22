@@ -18,8 +18,6 @@ typedef nuiFastDelegate4<nuiMidiInPort*, const uint8*, int32, double> nuiMidiPro
 class nuiMidiPort : public nuiRefCount
 {
 public:
-  virtual ~nuiMidiPort();
-  
   virtual bool Close() = 0;
   
   const nglString& GetName() const; ///< Return the name of this port.
@@ -31,6 +29,7 @@ public:
   
 protected:
   nuiMidiPort();
+  virtual ~nuiMidiPort();
   
   nglString mName;
   nglString mDeviceName;

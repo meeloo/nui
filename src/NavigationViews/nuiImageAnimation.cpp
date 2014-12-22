@@ -16,7 +16,7 @@ nuiImageAnimation::nuiImageAnimation(uint32 nbFrames, const nglPath& rTexturePat
 
 nuiImageAnimation::~nuiImageAnimation()
 {
-  delete mpSequence;
+  mpSequence->Release();
   mpSequence = NULL;
 }
   

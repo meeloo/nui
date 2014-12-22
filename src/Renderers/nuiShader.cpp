@@ -520,7 +520,6 @@ class nuiShader : public nuiRefCount
 public:
   nuiShader(nuiShaderKind kind, const nglString& rSource, const nglString& rPrefix);
   nuiShader(nuiShaderKind kind, nglIStream& rSource, const nglString& rPrefix);
-  virtual ~nuiShader();
 
   bool Load();
   void Delete();
@@ -528,6 +527,10 @@ public:
   GLuint GetShader() const;
   bool IsValid() const;
   const nglString& GetError() const;
+
+protected:
+  virtual ~nuiShader();
+
 private:
   nuiShaderKind mKind;
   nglString mSource;
@@ -682,7 +685,7 @@ nuiShaderProgram::~nuiShaderProgram()
   std::map<GLenum, nuiShader*>::iterator end = mShaders.end();
   while (it != end)
   {
-    delete it->second;
+    it->second->Release();
     ++it;
   }
 
@@ -716,7 +719,7 @@ void nuiShaderProgram::AddShader(nuiShaderKind shaderType, nglIStream& rStream)
 {
   nuiShader* pShader = new nuiShader(shaderType, rStream, mPrefix);
   if (mShaders[shaderType] != NULL)
-    delete mShaders[shaderType];
+    mShaders[shaderType]->Release();
   mShaders[shaderType] = pShader;
 }
 

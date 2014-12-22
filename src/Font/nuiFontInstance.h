@@ -29,7 +29,6 @@ public:
   nuiFontInstance(const nglPath& rPath, uint Face);
   nuiFontInstance(const FT_Byte* pBase, FT_Long Size, uint Face, bool StaticBuffer);
   nuiFontInstance(const nuiFontInstance& rInstance);
-  ~nuiFontInstance();
   
   nglPath  GetPath() const;
   uint     GetFace() const;
@@ -41,6 +40,9 @@ public:
   static void             OnExit();
   static void             Dump();
   friend void nglDumpFontInstances();
+
+protected:
+  ~nuiFontInstance();
 
 private:
   typedef std::set<nuiFontInstance*> FontListType;

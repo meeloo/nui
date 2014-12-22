@@ -66,7 +66,6 @@ class nuiSpriteDef : public nuiObject
 public:
   nuiSpriteDef(const nglString& rObjectName);
   nuiSpriteDef(const nglPath& rObjectPath);
-  virtual ~nuiSpriteDef();
   
   void AddAnimation(nuiSpriteAnimation* pAnim);
   int32 GetAnimationCount() const;
@@ -76,6 +75,7 @@ public:
   static nuiSpriteDef* GetSprite(const nglString& rSpriteDefName);
   
 protected:
+  virtual ~nuiSpriteDef();
   static std::map<nglString, nuiSpriteDef*> mSpriteMap;
   void Init();
   static void Uninit();
@@ -90,7 +90,6 @@ public:
   nuiSprite(const nglString& rSpriteDefName);
   nuiSprite(const nglPath& rSpriteDefPath, bool forceReplace);
   nuiSprite(nuiSpriteDef* pSpriteDef);
-  virtual ~nuiSprite();
 
   const nuiSpriteDef* GetDefinition() const;
 
@@ -163,8 +162,10 @@ public:
   nuiSimpleEventSource<0> AnimEnd;
   
   void GetSpritesAtPoint(float x, float y, std::vector<nuiSprite*>& rSprites);
+
 protected:
-              
+  virtual ~nuiSprite();
+  
   void Init();
   void InitAttributes();
 

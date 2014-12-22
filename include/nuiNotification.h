@@ -20,6 +20,8 @@ public:
   
   const nglString& GetName() const;
 
+protected:
+  ~nuiNotification() {}
 };
 
 class nuiNotificationObserver
@@ -42,7 +44,6 @@ class nuiNotificationManager : public nuiRefCount
 {
 public:
   nuiNotificationManager();
-  virtual ~nuiNotificationManager();
   
   void PostNotification(nuiNotification* pNotification); ///< Put this notification in a queue in order to broadcast when the system feels like it.
   void BroadcastNotification(const nuiNotification& rNotification); ///< Send this notification now to all registered observers.
@@ -50,6 +51,9 @@ public:
   void RegisterObserver(const nglString& rNotificationName, nuiNotificationObserver* pObserver); ///< Register an observer for the given notification type. If the type is nglString::Empty, all the notifications will be sent to the observer.
   void UnregisterObserver(nuiNotificationObserver* pObserver, const nglString& rNotificationName = nglString::Null); ///< Unregister pObserver so that it doesn't receive the given notification. By default it is removed from all notification types (nglString::Null).
   void Clear();
+
+protected:
+  virtual ~nuiNotificationManager();
 
 private:
   std::map<nglString, std::set<nuiNotificationObserver*> > mObservers;

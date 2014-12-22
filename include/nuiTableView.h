@@ -16,7 +16,6 @@ public:
   typedef nuiSimpleEventSource<0> CellSourceEvent;
   
   CellSource() : nuiObject(), mNeedsRefresh(false) {}
-  virtual ~CellSource() {};
   
   virtual nuiWidget* CreateCell() = 0;
   virtual void UpdateCell(int32 index, nuiWidget* pItem) = 0;
@@ -26,7 +25,10 @@ public:
   virtual void SetNeedsRefresh(bool refresh) { mNeedsRefresh = refresh; }
   
   CellSourceEvent DataChanged;
-  
+
+protected:
+  virtual ~CellSource() {};
+
 private:
   bool mNeedsRefresh;
 };

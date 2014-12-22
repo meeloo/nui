@@ -23,7 +23,6 @@ class nuiSerializeContext : public nuiObject
 public:
   nuiSerializeContext(nuiXMLNode* pNode, nuiSerializeOperation mode, bool recursive = true);
   nuiSerializeContext(const nuiSerializeContext& rContext);
-  virtual ~nuiSerializeContext();
   
   nuiXMLNode* operator->() const;
   operator nuiXMLNode*() const;
@@ -43,6 +42,10 @@ public:
   
   void AddErrorComment(const nglString& error);
   const nglString& GetErrorComments() const;
+
+protected:
+  virtual ~nuiSerializeContext();
+
 private:
   nuiXMLNode* mpNode;
   bool mRecursive;

@@ -19,7 +19,6 @@ class nuiPathGenerator : public nuiRefCount
 {
 public:
   nuiPathGenerator();
-  virtual ~nuiPathGenerator();
 
   virtual bool Tessellate(nuiPath& rVertices, float Quality = 0.5f) const = 0;
 
@@ -29,6 +28,10 @@ public:
   virtual nuiRect GetRect();
 
   //nuiSimpleEventSource<nuiChanged> Changed; ///< This event is fired each time the ContourElement is changed.
+
+protected:
+  virtual ~nuiPathGenerator();
+
 };
 
 #endif

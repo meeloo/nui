@@ -27,7 +27,6 @@ public:
   };
 
   nuiTreeBase();
-  virtual ~nuiTreeBase();
 
   bool AddChild(nuiTreePtr pChild);
   bool InsertChild(uint32 Index, nuiTreePtr pChild);
@@ -62,6 +61,7 @@ public:
   nuiTreeBase* GetParent() const;
 
 protected:
+  virtual ~nuiTreeBase();
   void OnChildChanged(const nuiEvent& rEvent);
   void OnChildAdded(const nuiEvent& rEvent);
   void OnChildRemoved(const nuiEvent& rEvent);
@@ -103,7 +103,7 @@ public:
   {
     if (mOwnElement)
     {
-      delete mpElement;
+      mpElement->Release();
     }
   }
 
@@ -115,7 +115,7 @@ public:
   virtual void SetElement(T* pNewElement, bool DeletePrevious = true, bool OwnNewElement = true) ///< Beware what you are doing if you decide to use this method!
   {
     if (mOwnElement && DeletePrevious)
-      delete mpElement;
+      mpElement->Release();
     mpElement = pNewElement;
     mOwnElement = OwnNewElement;
   }

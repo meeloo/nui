@@ -68,7 +68,6 @@ class nuiPainter : public nuiRefCount
 {
 public:
   nuiPainter(nglContext* pContext = NULL);
-  virtual ~nuiPainter();
 
   virtual void SetSize(uint32 sizex, uint32 sizey) = 0;
   virtual void StartRendering();
@@ -137,6 +136,7 @@ public:
   virtual void DestroyRenderArray(nuiRenderArray* pSurface) = 0;
 
 protected:
+  virtual ~nuiPainter();
   nuiSurface* mpSurface;
   std::stack<nuiSurface*> mpSurfaceStack;
 

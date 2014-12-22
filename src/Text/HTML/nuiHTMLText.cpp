@@ -19,8 +19,10 @@ nuiHTMLText::~nuiHTMLText()
 {
   if (mpFont)
     mpFont->Release();
-  delete mpLayout;
-  delete mpCompositeLayout;
+  if (mpLayout)
+    mpLayout->Release();
+  if (mpCompositeLayout)
+    mpCompositeLayout->Release();
   mpNextInRun = NULL;
 }
 
@@ -61,7 +63,8 @@ void nuiHTMLText::Draw(nuiDrawContext* pContext)
 
 void nuiHTMLText::Layout(nuiHTMLContext& rContext)
 {
-  delete mpLayout;
+  if (mpLayout)
+    mpLayout->Release();
   if (mpFont)
     mpFont->Release();
   mpFont = rContext.mpFont;
@@ -82,7 +85,7 @@ void nuiHTMLText::Layout(nuiHTMLContext& rContext)
   mTextBgColor = rContext.mTextBgColor;
   //printf("text layout done (%s)\n", mIdealRect.GetValue().GetChars());
   
-  delete mpCompositeLayout;
+  mpCompositeLayout->Release();
   mpCompositeLayout = NULL;
 }
 

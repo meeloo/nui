@@ -10,13 +10,8 @@
 class nuiRefCount
 {
 public:
-  nuiRefCount() : mTrace(false), mRefCount(0), mPermanent(false)
+  nuiRefCount() : mTrace(false), mRefCount(1), mPermanent(false)
   {
-  }
-
-  virtual ~nuiRefCount()           
-  { 
-    //NGL_ASSERT(mRefCount == 0);
   }
 
   inline uint32 Acquire() const
@@ -102,9 +97,15 @@ public:
 
 protected:
   mutable bool mTrace;
+  virtual ~nuiRefCount()
+  {
+    //NGL_ASSERT(mRefCount == 0);
+  }
+  
 private:
   mutable uint32 mRefCount;
   bool mPermanent;
+
 };
 
 class nuiRefGuard : nuiNonCopyable

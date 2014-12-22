@@ -562,10 +562,11 @@ public:
 
     if (!pObj && (rType == _T("nuiFont") || rType.Compare(_T("font"), false) == 0))
     {
-      nuiFontRequest fontrequest;
-      ApplyActionsToObject(&fontrequest);
-      nuiFont* pFont = nuiFontManager::GetManager().GetFont(fontrequest, rName);
+      nuiFontRequest* fontrequest = new nuiFontRequest();
+      ApplyActionsToObject(fontrequest);
+      nuiFont* pFont = nuiFontManager::GetManager().GetFont(*fontrequest, rName);
       Clear();
+      fontrequest->Release();
       return pFont;
     }
     

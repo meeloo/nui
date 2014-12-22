@@ -40,7 +40,7 @@ nuiDrawContext::~nuiDrawContext()
   if (mpAATexture)
     mpAATexture->Release();
 
-  delete mpPainter;
+  mpPainter->Release();
   mpPainter = NULL;
   mpMainPainter = NULL;
   mpSavedPainter = NULL;

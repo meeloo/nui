@@ -33,7 +33,6 @@ class nuiShaderState : public nuiRefCount
 public:
   nuiShaderState(nuiShaderProgram* pProgram, std::map<GLuint, int32>& rIndexMap);
   nuiShaderState(const nuiShaderState& rOriginal);
-  virtual ~nuiShaderState();
 
   void InitWithProgram(nuiShaderProgram* pProgram, std::map<GLuint, int32>& rIndexMap);
 
@@ -102,6 +101,9 @@ public:
 
   void Dump() const;
 
+protected:
+  virtual ~nuiShaderState();
+
 private:
   friend class nuiShaderProgram;
   void Apply() const;
@@ -127,7 +129,6 @@ public:
   static nuiShaderProgram* GetProgram(const nglString& rName);
 
   nuiShaderProgram(const nglString& rName);
-  virtual ~nuiShaderProgram();
 
   void SetPrefix(const nglString& rPrefix);
   static void SetDefaultPrefix(const nglString& rDefaultPrefix);
@@ -157,6 +158,9 @@ public:
 
   static void ClearAll();
 protected:
+
+  virtual ~nuiShaderProgram();
+
   // Receive Uniform variables:
   void       GetUniformfv(const char* varname, GLfloat* values); //!< Receive value of uniform variable. \param varname The name of the uniform variable.
   void       GetUniformiv(const char* varname, GLint* values); //!< Receive value of uniform variable. \param varname The name of the uniform variable.

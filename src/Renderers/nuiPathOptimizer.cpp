@@ -20,7 +20,7 @@ nuiPathOptimizer::nuiPathOptimizer(nuiPathGenerator* pPath, float AngleThreshold
 
 nuiPathOptimizer::~nuiPathOptimizer()
 {
-  delete mpPath;
+  mpPath->Release();
 }
 
 bool nuiPathOptimizer::Tessellate(nuiPath& rVertices, float Quality) const

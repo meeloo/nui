@@ -53,7 +53,7 @@ nuiHTMLBox::~nuiHTMLBox()
 {
   for (uint32 i = 0 ; i < mItems.size(); i++)
   {
-    delete mItems[i];
+    mItems[i]->Release();
   }
 }
 

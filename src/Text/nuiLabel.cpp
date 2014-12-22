@@ -90,8 +90,8 @@ void nuiLabel::InitDefaultValues()
 nuiLabel::~nuiLabel()
 {
   //printf("~nuiLabel: '%s'\n", mText.GetChars());
-  delete mpLayout;
-  delete mpIdealLayout;
+  mpLayout->Release();
+  mpIdealLayout->Release();
   if (mpFont)
     mpFont->Release();
 }
@@ -290,8 +290,10 @@ void nuiLabel::CalcLayout()
   {
     if (mTextChanged || mFontChanged || !mpLayout)
     {
-      delete mpLayout;
-      delete mpIdealLayout;
+      if (mpLayout)
+        mpLayout->Release();
+      if (mpIdealLayout)
+        mpIdealLayout->Release();
       mpLayout = NULL;
       mpIdealLayout = NULL;
       mpLayout = new nuiTextLayout(mpFont, mOrientation);
@@ -388,7 +390,7 @@ bool nuiLabel::SetRect(const nuiRect& rRect)
         text.DeleteRight(MIN(NbLetterToRemove, len));
         text.Append(_T("..."));
       }
-      delete mpLayout;
+      mpLayout->Release();
       mpLayout = new nuiTextLayout(mpFont);
       mpLayout->SetWrapX(0);
       mpLayout->SetTextLayoutMode(mTextLayoutMode);
@@ -400,9 +402,9 @@ bool nuiLabel::SetRect(const nuiRect& rRect)
     else if (mWrapping)
     {
       CalcLayout();
-      delete mpLayout;
+      mpLayout->Release();
       mpLayout = new nuiTextLayout(mpFont, mOrientation);
-      delete mpIdealLayout;
+      mpIdealLayout->Release();
       mpIdealLayout = new nuiTextLayout(mpFont, mOrientation);
       mpLayout->SetWrapX(mRect.GetWidth() - mBorderLeft - mBorderRight);
       mpIdealLayout->SetWrapX(mRect.GetWidth() - mBorderLeft - mBorderRight);

@@ -48,11 +48,13 @@ void nuiHTMLFont::Layout(nuiHTMLContext& rContext)
 {
   if (!IsEndTag())
   {
-    mBackup = rContext.mFont;
+    if (mpBackup)
+      mpBackup->Release();
+    mpBackup = new nuiFontRequest(*rContext.mpFontRequest);
     if (!mFamilyName.IsEmpty())
-      rContext.mFont.SetName(mFamilyName, 1.0f);
+      rContext.mpFontRequest->SetName(mFamilyName, 1.0f);
     if (mSize > 0)
-      rContext.mFont.MustHaveSize(mSize, 1.0f);
+      rContext.mpFontRequest->MustHaveSize(mSize, 1.0f);
     if (mUseColor)
     {
       mBackupTextFgColor = rContext.mTextFgColor;
@@ -61,7 +63,11 @@ void nuiHTMLFont::Layout(nuiHTMLContext& rContext)
   }
   else
   {
-    rContext.mFont = mBackup;
+    if (rContext.mpFontRequest)
+      rContext.mpFontRequest->Release();
+    rContext.mpFontRequest = mpBackup;
+    mpBackup = nullptr;
+    
     if (mUseColor)
       rContext.mTextFgColor = mBackupTextFgColor;
   }

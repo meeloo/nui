@@ -42,7 +42,6 @@ public:
   //@{
   nuiObject(); ///< Create an nuiObject
   nuiObject(const nglString& rObjectName); ///< constructor with an object name by default
-  virtual ~nuiObject(); 
   //@}
 
   /** @name Serialization */
@@ -125,6 +124,7 @@ public:
 #endif
 
 protected:
+  virtual ~nuiObject();
   void CheckValidInternal() const;
   static std::vector<int32> mInheritanceMap;
   virtual bool SetObjectClass(const nglString& rClass); ///< does a SetProperty("Class"...). Returns true if this is the first time an object of this class is registered.

@@ -14,7 +14,6 @@ class nuiScriptEngine : public nuiRefCount
 {
 public:
   nuiScriptEngine(const nglString& rName, const nglString& rLanguage);
-  virtual ~nuiScriptEngine();
   
   const nglString& GetName() const;
   const nglString& GetLanguage() const;
@@ -31,6 +30,7 @@ public:
   virtual bool CompileString(const nglString& rSourceName, const nglString& rProgram) = 0;
 
 protected:
+  virtual ~nuiScriptEngine();
   nglString mName;
   nglString mLanguage;
   SourceGetterDelegate mSourceGetterDelegate;

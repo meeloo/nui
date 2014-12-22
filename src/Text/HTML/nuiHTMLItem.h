@@ -18,7 +18,6 @@ class nuiHTMLItem : public nuiObject
 {
 public:
   nuiHTMLItem(nuiHTMLNode* pNode, nuiHTMLNode* pAnchor, bool Inline);
-  virtual ~nuiHTMLItem();
   
   enum Unit
   {
@@ -75,6 +74,7 @@ public:
   nuiCSSStyle& GetStyle();
   
 protected:
+  virtual ~nuiHTMLItem();
   void Invalidate();
   void InvalidateLayout();
   
