@@ -828,6 +828,11 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   mpDropObject = NULL;
   return YES;
 }
+
+
+  
+  
+  
 @end///< nglNSWindow
 
 
@@ -1339,7 +1344,8 @@ bool nglWindow::MakeCurrent() const
 void nglWindow::Invalidate()
 {
   //printf("nglWindow::Invalidate()\n");
-  [(nglNSWindow*)mpNSWindow invalidate];
+//  [(nglNSWindow*)mpNSWindow invalidate];
+  [(NSView*)this->mpNSView setNeedsDisplay: YES];
 }
 
 bool nglWindow::SetCursor(nuiMouseCursor Cursor)
