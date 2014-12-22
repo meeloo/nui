@@ -12442,6 +12442,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_FAST_MATH = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				INSTALL_PATH = /usr/local/lib;
 				PRELINK_LIBS = "-liconv -lz";
@@ -12528,7 +12529,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_FAST_MATH = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				INSTALL_PATH = /usr/local/lib;
 				PRELINK_LIBS = "-liconv -lz";
 				PRODUCT_NAME = nuiCocoa;
