@@ -34,6 +34,7 @@ void nuiRenderThread::OnStart()
   while (mContinue && (pTask = mQueue.Get(60000)))
   {
     pTask->Run();
+    pTask->Release();
   }
 
 #if (defined _UIKIT_) || (defined _COCOA_)
