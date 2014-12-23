@@ -17,7 +17,6 @@ class nuiHotKeyEditor : public nuiWidget
 {
 public:
   nuiHotKeyEditor();
-  virtual ~nuiHotKeyEditor();
   virtual void ConnectTopLevel(); /// When connecting to the toplevel, retrieve the hotkeys stored in that toplevel in order to initialize the display with current hotkeys.
 
   void FillHotKeysGrid(); // clears current grid, and redraw it using toplevel's registered hotkeys, but with the user selected shortcuts rather than the ones registered if there are unsaved modifications in the editor
@@ -37,7 +36,8 @@ public:
   bool SaveToStream(nglOStream* pOutput) const;
       
 protected:
-  
+  virtual ~nuiHotKeyEditor();
+
   nuiTopLevel* mpTopLevel;
   
   nuiEventSink<nuiHotKeyEditor> mEventSink;

@@ -87,7 +87,6 @@ class nuiLayout : public nuiWidget
 {
 public:
   nuiLayout();
-  virtual ~nuiLayout();
 
   void SetVerticalAnchor(const nglString& rName, float position, nuiAnchorType Type);
   void SetHorizontalAnchor(const nglString& rName, float position, nuiAnchorType Type);
@@ -131,6 +130,9 @@ public:
   virtual bool MouseClicked(const nglMouseInfo& rInfo);
   virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
   virtual bool MouseMoved(const nglMouseInfo& rInfo);
+
+protected:
+  virtual ~nuiLayout();
 
 private:
   void ComputeConstraint(const nuiLayoutConstraint& rC, float& ActualStart, float& ActualStop, float Start, float Stop, float IdealSize, int32 AnchorIndex);

@@ -7,7 +7,6 @@ class nuiDrawerView : public nuiWidget
 {
 public:
   nuiDrawerView();
-  virtual ~nuiDrawerView();
 
   bool SetRect(const nuiRect& rRect);
   nuiRect CalcIdealSize();
@@ -49,6 +48,7 @@ public:
   nuiSimpleEventSource<0> Opened;
   nuiSimpleEventSource<0> Closed;
 protected:
+  virtual ~nuiDrawerView();
   nuiWidgetPtr mpLeft;
   nuiWidgetPtr mpMain;
   nuiWidgetPtr mpRight;

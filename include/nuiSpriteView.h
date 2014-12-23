@@ -203,8 +203,7 @@ class nuiSpriteView : public nuiWidget
 {
 public:
   nuiSpriteView();
-  virtual ~nuiSpriteView();
-  
+
   void AddSprite(nuiSprite* pSprite);
   void DelSprite(nuiSprite* pSprite);
 
@@ -221,6 +220,8 @@ public:
   bool MouseMoved(const nglMouseInfo& rEvent);
   
 protected:
+  virtual ~nuiSpriteView();
+
   std::vector<nuiSprite*> mpSprites;
   double mLastTime;
 };

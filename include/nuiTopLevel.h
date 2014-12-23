@@ -31,7 +31,6 @@ public:
   /** @name Life */
   //@{
   nuiTopLevel(const nglPath& rPath); ///< Create an nuiTopLevel.
-  virtual ~nuiTopLevel(); 
   //@}
 
   /* @name Trash management */
@@ -179,6 +178,8 @@ public:
   virtual float GetScaleInv() const;
 
 protected:
+  virtual ~nuiTopLevel();
+
   void Exit();
   void SetDrawContext(nuiDrawContext* pDrawContext);
   virtual void BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect);

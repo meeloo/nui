@@ -20,7 +20,6 @@ class nuiList : public nuiWidget
 {
 public:
   nuiList(nuiOrientation orientation = nuiVertical);
-  virtual ~nuiList();
 
   void InitProperties();
 
@@ -91,6 +90,8 @@ public:
   void Sort(const nuiFastDelegate2<nuiWidget*, nuiWidget*, bool>& rSortDelegate);
   
 protected:
+  virtual ~nuiList();
+
   nuiOrientation mOrientation; /// mHorizontal is true if the containers' layout if horizontal, false if vertical.
   float           mBorderSize;
 

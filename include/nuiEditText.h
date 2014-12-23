@@ -25,7 +25,6 @@ protected:
 
 public:
   nuiEditText(const nglString& rText = nglString::Empty);
-  virtual ~nuiEditText();
 
   void InitProperties();
 
@@ -153,7 +152,8 @@ public:
   virtual void OnSetFocus(nuiWidgetPtr pWidget);
   
 protected:
-  
+  virtual ~nuiEditText();
+
   void InitAttributes();
     
   void _SetFont(const nglString& rFontSymbol);

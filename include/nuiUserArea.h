@@ -54,7 +54,6 @@ class nuiUserArea : public nuiWidget
 {
 public:
   nuiUserArea();
-  virtual ~nuiUserArea();
 
   virtual bool Draw(nuiDrawContext* pContext);
 
@@ -72,6 +71,8 @@ public:
   bool IsGLInitEnabled(); ///< See EnableGLInit.
 
 protected:
+  virtual ~nuiUserArea();
+
   bool mInterceptMouse;
   bool mPrepareGLContext;
 };

@@ -33,8 +33,7 @@ class nuiScrollBox : public nuiWidget
 public:
   nuiScrollBox(nuiWidget* pBackward, nuiWidget* pForward, nuiOrientation Orientation, nuiWidget* pScrolledWidget);
   nuiScrollBox(const nglPath& rBackwardIconPath, const nglPath& rForwardIconPath, nuiOrientation Orientation, nuiWidget* pScrolledWidget);
-  virtual ~nuiScrollBox();
-  
+
   nuiOrientation GetOrientation() const;
   nuiBox* GetMainBox();
   nuiButton* GetBackwardButton();
@@ -65,6 +64,8 @@ public:
   void OnScrollViewChanged(const nuiEvent& rEvent);
   
 protected:
+  virtual ~nuiScrollBox();
+
   bool mShowDisabledButtons;
   nuiOrientation mOrientation;
   nuiBox* mpMainBox;

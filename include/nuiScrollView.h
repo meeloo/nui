@@ -18,8 +18,7 @@ class nuiScrollView : public nuiWidget
 public:
   nuiScrollView(bool Horizontal = true, bool Vertical = true);
   nuiScrollView(nuiScrollBar* pHorizontalScrollbar, nuiScrollBar* pVerticalScrollbar );
-  virtual ~nuiScrollView();
-  
+
   virtual nuiRect CalcIdealSize();
   virtual bool SetRect(const nuiRect& rRect);
   virtual bool Draw(nuiDrawContext* pContext);
@@ -92,6 +91,8 @@ public:
   bool IsHorizontalHotRectActive() const;
   
 protected:
+  virtual ~nuiScrollView();
+
   void InitAttributes();
   void Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVerticalScrollBar, bool Horizontal, bool Vertical);
   

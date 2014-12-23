@@ -25,7 +25,6 @@ public:
   nuiButton(const nglString& rText); ///< Create a simple button with a nuiLabel as a child filling the client area.
   nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired=false); ///< Create a simple button with a Decoration.
   nuiButton(const nglImage& rImage); ///< Create a simple button with a nuiImage as a child filling the client area.
-  virtual ~nuiButton();
 
   void InitAttributes();
 
@@ -69,6 +68,7 @@ public:
   bool KeyDown(const nglKeyEvent& rEvent);
   bool KeyUp(const nglKeyEvent& rEvent);
 protected:
+  virtual ~nuiButton();
   bool mClicked;
   bool mPressed;
   bool mAutoRepeat;

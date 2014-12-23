@@ -17,7 +17,6 @@ class nuiProgressBar : public nuiWidget
 public:
   nuiProgressBar(float Progress);
   nuiProgressBar();
-  virtual ~nuiProgressBar();
 
   virtual nuiRect CalcIdealSize();
   virtual bool Draw(nuiDrawContext* pContext);
@@ -32,7 +31,8 @@ public:
   void SetEndless(bool endless);
 
 protected:
-  
+  virtual ~nuiProgressBar();
+
   void InitAttributes();
   
   void SetFGColor(const nuiColor& Color);

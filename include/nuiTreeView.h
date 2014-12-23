@@ -128,7 +128,6 @@ class nuiTreeView : public nuiWidget
 {
 public:
   nuiTreeView(nuiTreeNode* pTree = NULL, bool displayRoot=true);
-  virtual ~nuiTreeView();
 
   virtual bool Draw(nuiDrawContext* pContext);
 
@@ -195,6 +194,8 @@ public:
   void SetDragStopDelegate(const DragStopDelegate& rDelegate);
   
 protected:
+  virtual ~nuiTreeView();
+
   virtual bool DrawTree(nuiDrawContext* pContext, uint32 Depth, nuiTreeNode* pTree);
   virtual void CalcTreeSize(nuiRect& rRect, uint32 Depth, nuiTreeNode* pTree);
   virtual void SetTreeRect(nuiSize& Y, uint32 Depth, nuiTreeNode* pTree);

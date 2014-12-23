@@ -19,13 +19,16 @@ class nuiFontBrowser : public nuiWidget
 {
 public:
   nuiFontBrowser();
-  virtual ~nuiFontBrowser();
 
   nuiFontDesc* GetCurrentFontDesc() const;
   uint32 GetFontSize() const;
   void SetFont(const nglString& rFontName, const nglString& rFontStyle, uint32 FontSize);
   
   nuiSimpleEventSource<0> FontChanged;
+
+protected:
+  virtual ~nuiFontBrowser();
+
 private:
   nuiEventSink<nuiFontBrowser> mSink;
   void OnFontChanged(const nuiEvent& rEvent);

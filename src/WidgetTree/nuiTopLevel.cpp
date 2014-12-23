@@ -71,7 +71,6 @@ class nuiToolTip : public nuiWidget
 {
 public:
   nuiToolTip();
-  virtual ~nuiToolTip();
 
   virtual bool SetRect(const nuiRect& rRect);
   virtual nuiRect CalcIdealSize();
@@ -91,6 +90,7 @@ public:
   }
 
 protected:
+  virtual ~nuiToolTip();
   nuiLabel* mpLabel;
 };
 

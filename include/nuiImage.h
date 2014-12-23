@@ -37,8 +37,6 @@ public:
   const nuiRect& GetTextureRect() const;
   void ResetTextureRect();
   
-  virtual ~nuiImage();
-
   virtual void ForceReload(); ///< This method deletes the texture associated with the nuiImage thus forcing its recreation at the next rendertime.
   virtual bool Draw(nuiDrawContext* pContext);
   virtual nuiRect CalcIdealSize();
@@ -55,6 +53,8 @@ public:
   const nuiColor& GetColor() const;
   
 protected:
+  virtual ~nuiImage();
+
   nuiTexture* mpTexture;
   nuiRect mTextureRect;
   nglPath mTexturePath;

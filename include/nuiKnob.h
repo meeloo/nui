@@ -27,8 +27,6 @@ public:
   void InitAttributes();
 
   
-  virtual ~nuiKnob();
-  
   void SetImageSequence(nuiImageSequence* pImageSequence);
   nuiImageSequence* GetImageSequence() const;
   
@@ -62,6 +60,7 @@ public:
   bool KeyUp(const nglKeyEvent& rEvent);
   
 protected:
+  virtual ~nuiKnob();
 
   virtual bool SetRect(const nuiRect& rRect);
   virtual bool Draw(nuiDrawContext* pContext);

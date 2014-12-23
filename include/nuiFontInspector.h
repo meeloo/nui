@@ -15,7 +15,6 @@ class nuiFontInspector : public nuiWidget
 {
 public:
   nuiFontInspector();
-  virtual ~nuiFontInspector();
 
 
   virtual bool SetRect(const nuiRect& rRect);
@@ -23,6 +22,7 @@ public:
   virtual nuiRect CalcIdealSize();
 
 protected:
+  virtual ~nuiFontInspector();
   nuiEventSink<nuiFontInspector> mSink;
   
   void OnFontsChanged(const nuiEvent& rEvent);

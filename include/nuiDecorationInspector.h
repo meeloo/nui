@@ -17,9 +17,9 @@ class nuiDecorationInspector : public nuiWidget
 {
 public:
   nuiDecorationInspector();
-  virtual ~nuiDecorationInspector();
-  
+
 protected:
+  virtual ~nuiDecorationInspector();
   nuiEventSink<nuiDecorationInspector> mSink;
   
   void OnDecosChanged(const nuiEvent& rEvent);

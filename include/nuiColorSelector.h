@@ -28,7 +28,6 @@ class nuiColorSelector : public nuiWidget
 {
 public:
   nuiColorSelector(const nuiColor& rInitialColor = nuiColor(1.f, 1.f, 1.f, 1.f), const std::vector<nuiColor>& rInitialColorList = std::vector<nuiColor>(), ColorSelectorMode mode = eModeRGB);
-  virtual ~nuiColorSelector();
 
   void SetColorList(const std::vector<nuiColor>& rColorList);
   void SetNumColors(uint NumColors);
@@ -43,7 +42,10 @@ public:
   nuiSimpleEventSource<0> HSVColorChanged; // sent if the color has been changed with the RGB sliders
   nuiSimpleEventSource<0> SwatchColorChanged; // sent if the color has been changed through the Swatches selector
   
-  
+
+protected:
+  virtual ~nuiColorSelector();
+
 private:
   
   nuiWidget* Tab_RGB();

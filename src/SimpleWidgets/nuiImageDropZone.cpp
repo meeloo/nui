@@ -98,7 +98,7 @@ void nuiImageDropZone::OnDropped(nglDragAndDrop* pDragObject, nuiSize X, nuiSize
   if (pImage == NULL)
   {
     printf("error while loading the image\n");
-    delete pImage;
+    pImage->Release();
     return;
   }
 		

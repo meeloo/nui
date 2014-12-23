@@ -15,12 +15,14 @@ class nuiFrameView : public nuiWidget
 {
 public:
   nuiFrameView(nuiFrame* pFrame = NULL);
-  virtual ~nuiFrameView();
 
   virtual nuiRect CalcIdealSize();
   virtual bool SetRect(const nuiRect& rRect);
   virtual bool Draw(nuiDrawContext* pContext);
-  
+
+protected:
+  virtual ~nuiFrameView();
+
 private:
     nuiFrame* mpFrame;
 };

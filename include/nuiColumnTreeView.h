@@ -106,11 +106,11 @@ class nuiColumnTreeViewPreview : public nuiWidget
 {
 public:
   nuiColumnTreeViewPreview(nuiColumnTreeView* pParent);
-  virtual ~nuiColumnTreeViewPreview();
 
   virtual bool UpdatePreview(nuiColumnTreeView* pTree, nuiTreeNodePtr pSelectedNode); ///< This method is called when the currently selected item has changed in the parent ColumnTreeView. The user is responsible for changing the representation of the preview widget by overridding it. Return false if the preview should not be displayed, true otherwise.
 
 protected:
+  virtual ~nuiColumnTreeViewPreview();
   virtual void OnUpdatePreview(const nuiEvent& rEvent);
   nuiEventSink<nuiColumnTreeViewPreview> mPreviewSink;
 };

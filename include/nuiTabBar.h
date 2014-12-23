@@ -59,7 +59,6 @@ class nuiTabBar : public nuiWidget
 {
 public:
   nuiTabBar(); ///< Create a tab bar
-  virtual ~nuiTabBar();
 
   virtual int AddTab(nuiTab * pNewTab);
   virtual int InsertTab(nuiTab * pNewTab, int index = -1);
@@ -80,6 +79,7 @@ public:
   nuiTabsSelected TabsSelected;
 
 protected:
+  virtual ~nuiTabBar();
   virtual void OnTabSelected(const nuiEvent& rEvent);
 
 protected:

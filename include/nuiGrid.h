@@ -24,8 +24,6 @@ public:
   void InitAttributes();
   void Reset(uint32 nbcolumns, uint32 nbrows, bool clear=true);
   
-  virtual ~nuiGrid();
-
   void DisplayGridBorder(bool enable, nuiSize gridBorderSize = 1.f); ///< Allow to display the grid border
   void DisplayWidgetBoundingRect(bool enable); ///< Allow to display widget's bounding rect
   void PlaceInvisibleWidgets(bool enable);
@@ -125,6 +123,7 @@ public:
   bool GetEqualizeRows() const;
 
 protected:
+  virtual ~nuiGrid();
 
   uint32 GetDimensionRange(uint32 dimension) const;
   uint32 GetColumnDimensionRange(uint32 dimension) const;

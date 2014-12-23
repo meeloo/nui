@@ -21,7 +21,6 @@ class nuiScrollBar : public nuiWidget
 {
 public:
   nuiScrollBar(nuiOrientation orientation = nuiHorizontal, const nuiRange& rRange = nuiRange(), nuiWidgetPtr pThumb = NULL);
-  virtual ~nuiScrollBar();
 
   virtual bool SetRect(const nuiRect& rRect);
   
@@ -79,6 +78,8 @@ public:
   nuiSimpleEventSource<0> ThumbDepressed;
   
 protected:
+  virtual ~nuiScrollBar();
+
   void DoInvalidate(const nuiEvent& rEvent);
   void DoInvalidateLayout(const nuiEvent& rEvent);
 

@@ -15,6 +15,8 @@ class nuiAttributeEditor : public nuiWidget
 public:
 
   nuiAttributeEditor();
+
+protected:
   virtual ~nuiAttributeEditor();
 
 };

@@ -58,12 +58,12 @@ class nuiFileSelectorBase : public nuiWidget
 public:
   
   nuiFileSelectorBase();
-  virtual ~nuiFileSelectorBase();
-  
+
   virtual nuiTreeNode* GetNewNode(const nglPath& rPath);
 
 protected:
-  
+  virtual ~nuiFileSelectorBase();
+
   // attributes
   const std::list<nglString>& GetFilters();
   void SetFilters(const std::list<nglString>& rFilters);

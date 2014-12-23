@@ -14,8 +14,7 @@ class nuiPopupView : public nuiWidget
 {
 public:
   nuiPopupView(nuiWidget* pWidget, nuiSize X, nuiSize Y);
-  virtual ~nuiPopupView();
-  
+
   void SetPos(nuiSize X, nuiSize Y);
   
   bool MouseClicked(const nglMouseInfo& rInfo);
@@ -36,6 +35,8 @@ public:
 
   void ConnectTopLevel();
 protected:
+  virtual ~nuiPopupView();
+
   //#TODO Add some way to give focus back to the previous focussed widget
   nuiSize mX, mY;
   nuiRect mChildrenRect;

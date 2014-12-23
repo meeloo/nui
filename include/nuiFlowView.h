@@ -14,8 +14,7 @@ class nuiFlowView : public nuiWidget
 {
 public:
   nuiFlowView(float IdealWidth = 0, float HSpace = 0.0f, float VSpace = 2.0f);
-  ~nuiFlowView();
-  
+
   virtual nuiRect CalcIdealSize();
   virtual bool SetRect(const nuiRect& rRect);
   virtual bool Draw(nuiDrawContext* pContext);
@@ -28,6 +27,7 @@ public:
   void SetHSpace(float InterWidget);
   
 protected:
+  ~nuiFlowView();
   nuiRect Layout(bool setLayout, float IdealWidth);
   void LayoutLine(nuiWidgetList& line, float& x, float &y, float& w, float& h, float& HSpace, float &VSpace, bool setLayout);
   float mIdealWidth;

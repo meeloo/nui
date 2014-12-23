@@ -19,13 +19,13 @@ class nuiImageAnimation : public nuiWidget
 {
 public:
   nuiImageAnimation(uint32 nbFrames, const nglPath& rTexturePath, bool framesInSingleFile = true, nuiOrientation orientation = nuiVertical); // all frames in a single file, or stored in separated png files
-  virtual ~nuiImageAnimation();
-  
+
   uint32 GetFrameIndex() const;
   void SetFrameIndex(uint32 index);
 
 protected:
-  
+  virtual ~nuiImageAnimation();
+
   virtual nuiRect CalcIdealSize();
   virtual bool Draw(nuiDrawContext* pContext);
   

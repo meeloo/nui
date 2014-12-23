@@ -16,10 +16,6 @@ public:
   {
   }
   
-  virtual ~nuiShadeContainer()
-  {
-  }
-  
   nuiRect CalcIdealSize()
   {
     nuiRect idealRect = nuiWidget::CalcIdealSize();
@@ -69,6 +65,10 @@ public:
   }
 
 protected:
+  virtual ~nuiShadeContainer()
+  {
+  }
+
   nuiSize mShadeSize;
 };
 

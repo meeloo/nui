@@ -29,6 +29,7 @@ public:
 protected:
   nuiRect mSource;
   nuiRect mDestination;
+  ~nuiMoveRectAnim() {}
 };
 
 class nuiMoveToRectAnim : public nuiMoveRectAnim
@@ -84,6 +85,7 @@ public:
   virtual void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
   virtual void OnFrame();
 protected:
+  ~nuiScaleMatrixWidgetAnim() {}
   float mSourceRatio;
   float mDestinationRatio;
   nuiPosition mPosition;
@@ -113,6 +115,7 @@ public:
   virtual void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
   virtual void OnFrame();
 protected:
+  ~nuiFadeWidgetAnim() {}
   float mSourceAlpha;
   float mDestinationAlpha;
   nuiPosition mPosition;

@@ -16,8 +16,7 @@ class nuiImageDropZone : public nuiWidget
 public:
 	nuiImageDropZone(const nglPath& rImagePath);
 	nuiImageDropZone(const nglPath& rPath, nuiTexture* pTex);
-  virtual ~nuiImageDropZone();
-	
+
 	const nglPath& GetPath() const;
 	nuiImage* GetImage();
 
@@ -34,6 +33,7 @@ public:
 	bool SetImage(const nglPath& rPath);
 
 protected:
+  virtual ~nuiImageDropZone();
 
 	bool mDrawDndFrame;
 	nglPath mPath;

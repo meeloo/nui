@@ -20,7 +20,6 @@ class nuiZoomView : public nuiWidget
 {
 public:
   nuiZoomView(nuiScrollBar *pHorizontalScrollbar = NULL, nuiScrollBar *pVerticalScrollbar = NULL, nuiSlider * pHorizontalSlider = NULL, nuiSlider * pVerticalSlider = NULL, bool calcWidthFromIdealSize = true, bool calcHeightFromIdealSize = true);
-  virtual ~nuiZoomView();
 
   virtual nuiRect CalcIdealSize();
   virtual bool SetRect(const nuiRect& rRect);
@@ -36,6 +35,9 @@ public:
   void GetZoom(float& rHZoom, float& rVZoom) { rHZoom = mHorizontalZoomLevel; rVZoom = mVerticalZoomLevel; }
 
   void SetAlwaysVisibleScrollbars(bool h=false, bool v=false);
+
+protected:
+  virtual ~nuiZoomView();
 
 private:
 

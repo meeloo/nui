@@ -19,7 +19,6 @@ class nuiShapeView : public nuiWidget
 {
 public:
   nuiShapeView(nuiShape* pShape);
-  virtual ~nuiShapeView();
 
   nuiRect CalcIdealSize();
   bool Draw(nuiDrawContext* pContext);
@@ -32,6 +31,8 @@ public:
   nuiSize GetLineWidth() const;
 
 protected:
+  virtual ~nuiShapeView();
+
   nuiShape* mpShape;
   nuiShapeMode mShapeMode;
   bool mAntialiasing;

@@ -15,8 +15,7 @@ class nuiCoverFlow : public nuiWidget
 {
 public:
   nuiCoverFlow();
-  virtual ~nuiCoverFlow();
-  
+
   bool Draw(nuiDrawContext* pContext);
   bool SetRect(const nuiRect& rRect);
   nuiRect CalcIdealSize();
@@ -75,6 +74,7 @@ public:
   nuiSimpleEventSource<0> SelectionChanged;
   
 protected:
+  virtual ~nuiCoverFlow();
   void DrawCard(nuiDrawContext* pContext, int32 index, float start, float end);
   void OnUpdateTime(const nuiEvent& rEvent);
   

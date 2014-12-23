@@ -17,9 +17,9 @@ class nuiTextureInspector : public nuiWidget
 {
 public:
   nuiTextureInspector();
-  virtual ~nuiTextureInspector();
-  
+
 protected:
+  virtual ~nuiTextureInspector();
   nuiEventSink<nuiTextureInspector> mSink;
   
   void OnTexturesChanged(const nuiEvent& rEvent);

@@ -36,6 +36,7 @@ class nuiMetaPainterInspector : public nuiWidget
     }
     
   private:
+    ~nuiMetaPainterInspector() {};
     nuiMetaPainter* mpPainter;
     nuiVBox* mpBox;
   };
@@ -203,11 +204,7 @@ class nuiWidgetProxy : public nuiWidget
       SetObjectClass(_T("nuiWidgetProxy"));
       mpTarget = pTarget;
     }
-    
-    virtual ~nuiWidgetProxy()
-    {
-    }
-    
+
     virtual nuiRect CalcIdealSize()
     {
       if (mpTarget)
@@ -242,6 +239,10 @@ class nuiWidgetProxy : public nuiWidget
       InvalidateLayout();
     }
     
+  protected:
+    virtual ~nuiWidgetProxy()
+    {
+    }
   private:
     nuiWidget* mpTarget;
   };

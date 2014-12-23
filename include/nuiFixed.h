@@ -16,10 +16,13 @@ class nuiFixed : public nuiWidget
 {
 public:
   nuiFixed();
-  virtual ~nuiFixed();
 
   virtual nuiRect CalcIdealSize();
   virtual bool SetRect(const nuiRect& rRect);
+
+protected:
+  virtual ~nuiFixed();
+
 };
 
 #endif // __nuiFixed_h__

@@ -25,8 +25,7 @@ class nuiHTMLView : public nuiWidget
 {
 public:
   nuiHTMLView(float IdealWidth = 800);
-  virtual ~nuiHTMLView();
-  
+
   virtual nuiRect CalcIdealSize();
   virtual bool SetRect(const nuiRect& rRect);
   virtual bool Draw(nuiDrawContext* pContext);
@@ -76,8 +75,10 @@ public:
   
   void SetMargins(float margins);
   float GetMargins() const;
+
 protected:
-  
+  virtual ~nuiHTMLView();
+
   void ParseTree(nuiHTMLNode* pNode, nuiHTMLBox* pBox);
   void ParseHTML(nuiHTMLNode* pNode, nuiHTMLBox* pBox);
   void ParseHead(nuiHTMLNode* pNode, nuiHTMLBox* pBox);

@@ -24,12 +24,14 @@ class nuiSplitterHandle : public nuiWidget
 {
 public:
   nuiSplitterHandle(nuiSplitter* pParent);
-  virtual ~nuiSplitterHandle();
-  
+
   nuiSplitter* GetSplitter();
   
   bool mClicked;
-  
+
+protected:
+  virtual ~nuiSplitterHandle();
+
 private:
   
   // Received Mouse events:
@@ -53,8 +55,6 @@ class nuiSplitter : public nuiWidget
 public:
   nuiSplitter(nuiOrientation orientation = nuiHorizontal, nuiSplitterMode mode=eModePercentage);
 
-  virtual ~nuiSplitter();
-  
   virtual void SetDecoration(nuiDecoration* pDecoration, nuiDecorationMode Mode);
  
 
@@ -99,7 +99,8 @@ public:
   nuiSimpleEventSource<0> GoToHandlePosAnimDone;
 
 protected:
-//  void StepHandlePos(const nuiEvent& rEvent);  
+  virtual ~nuiSplitter();
+//  void StepHandlePos(const nuiEvent& rEvent);
   nuiOrientation mOrientation; /// mHorizontal is true if the containers' layout if horizontal, false if vertical.
   nuiSplitterMode mMode;
   std::list<nuiRect> mPositions;

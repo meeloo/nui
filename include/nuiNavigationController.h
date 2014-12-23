@@ -31,8 +31,7 @@ class nuiNavigationController : public nuiWidget, public nuiNotificationObserver
   
 public:
   nuiNavigationController();
-  virtual ~nuiNavigationController();
-  
+
   /// Push a view container to the top of the controller stack
   /// \p pViewController
   /// \p animated: true if the "push" action has to be animated. if false, it's immediate.
@@ -69,7 +68,8 @@ public:
   void PopPendingOperation();
 
 protected:
-  
+  virtual ~nuiNavigationController();
+
   void OnViewPushStop(const nuiEvent& rEvent);
   void OnViewPopStop(const nuiEvent& rEvent);
   

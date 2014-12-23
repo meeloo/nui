@@ -20,7 +20,6 @@ class nuiPopupMenu : public nuiWidget
 {
 public:
   nuiPopupMenu(nuiWidget* pParent = NULL, nuiTreeNode* pTree = NULL, const nuiRect& rRect = nuiRect(), bool OwnTree = true);
-  virtual ~nuiPopupMenu();
 
   virtual bool Draw(nuiDrawContext* pContext);
 
@@ -56,6 +55,8 @@ public:
   //  nuiSimpleEventSource<nuiNodeDClicked> NodeDClicked;
 
 protected:
+  virtual ~nuiPopupMenu();
+
   virtual bool DrawTree(nuiDrawContext* pContext, nuiTreeNode* pTree, uint depth);
   virtual void CalcTreeSize(nuiRect& rRect, nuiTreeNode* pTree, uint32& cpt);
   virtual void SetTreeRect(uint depth, nuiSize X, nuiSize Y, nuiTreeNode* pTree);

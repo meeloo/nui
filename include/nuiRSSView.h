@@ -18,8 +18,7 @@ class nuiRSSView : public nuiWidget
 {
 public:
   nuiRSSView(const nglString& rURL = nglString::Empty, int32 SecondsBetweenUpdates = (30*60), nglIStream* pOriginalStream = NULL, bool ForceNoHTML = false);
-  virtual ~nuiRSSView();
-  
+
   virtual nuiRect CalcIdealSize();
   virtual bool SetRect(const nuiRect& rRect);
   
@@ -45,7 +44,8 @@ public:
   void SetRefreshRate(int32 SecondsBetweenUpdates);
   int32 GetRefreshRate() const;
 protected:
-  
+  virtual ~nuiRSSView();
+
   void Update(const nuiEvent& rEvent);
   
   nuiRSS* mpRSS;

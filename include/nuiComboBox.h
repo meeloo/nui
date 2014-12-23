@@ -18,8 +18,7 @@ class nuiComboBox : public nuiWidget
 public:
   nuiComboBox();
   nuiComboBox(nuiTreeNode* pChoicesTree, bool ownTree = false);
-  virtual ~nuiComboBox();
-  
+
   
   nuiSimpleEventSource<0> ValueChanged;
 
@@ -37,6 +36,7 @@ public:
   nuiSimpleEventSource<nuiWidgetSelected> SelectionChanged; ///< This event is called whenever selection of the items of the list have changed. 
 
 protected:
+  virtual ~nuiComboBox();
 
   virtual nuiRect CalcIdealSize();
   virtual bool    Draw(nuiDrawContext* pContext);

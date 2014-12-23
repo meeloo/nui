@@ -13,8 +13,9 @@ class nuiThreadInspector : public nuiWidget
 {
 public:
   nuiThreadInspector();
-  virtual ~nuiThreadInspector();
 
+protected:
+  virtual ~nuiThreadInspector();
 
 private:
 

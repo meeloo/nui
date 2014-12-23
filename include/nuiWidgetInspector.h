@@ -38,11 +38,11 @@ class nuiWidgetInfo : public nuiWidget
 {
 public:
   nuiWidgetInfo(nuiWidget* pTarget);
-  virtual ~nuiWidgetInfo();
 
   void SetTarget(nuiWidget* pWidget);
   void RebuildInfo(bool Reconstruct);
 protected:
+  virtual ~nuiWidgetInfo();
   void OnTimerTick(const nuiEvent& rEvent);
   void OnDebugUpdate(const nuiEvent& rEvent);
   void OnTrashed(const nuiEvent& rEvent);
@@ -81,9 +81,9 @@ class nuiWidgetInspector : public nuiWidget
 {
 public:
   nuiWidgetInspector(nuiWidget* pTarget);
-  virtual ~nuiWidgetInspector();
 
 protected:
+  virtual ~nuiWidgetInspector();
   nuiEventSink<nuiWidgetInspector> mInspectorSink;
   nuiWidget* mpTarget;
   nuiTreeNode* mpTree;

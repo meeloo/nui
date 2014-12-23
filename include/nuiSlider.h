@@ -22,7 +22,6 @@ class nuiSlider : public nuiWidget
 {
 public:
   nuiSlider(nuiOrientation orientation = nuiHorizontal, const nuiRange& rRange = nuiRange());
-  virtual ~nuiSlider();
 
   virtual bool Draw(nuiDrawContext* pContext);
 
@@ -84,6 +83,8 @@ public:
   virtual void DrawForeground(nuiDrawContext* pContext);
 
 protected:
+  virtual ~nuiSlider();
+
   void InitAttributes();
   void DoInvalidate(const nuiEvent& rEvent);
   void HandleClicked(const nuiEvent& rEvent);

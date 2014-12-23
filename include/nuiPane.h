@@ -20,7 +20,6 @@ class nuiPane : public nuiWidget
 {
 public:
   nuiPane(const nuiColor& rFillColor = nuiColor(.75f,.75f,.75f,.75f), const nuiColor& rStrokeColor = nuiColor(.5f,.5f,.5f,.75f), nuiShapeMode ShapeMode = eStrokeAndFillShape, nuiBlendFunc BlendFunc = nuiBlendTransp);
-  virtual ~nuiPane();
 
   virtual bool Draw(nuiDrawContext* pContext);
 
@@ -49,6 +48,8 @@ public:
   virtual nuiRect CalcIdealSize();
 
 protected:
+  virtual ~nuiPane();
+
   bool mInterceptMouse;
   nuiColor mFillColor;
   nuiColor mStrokeColor;

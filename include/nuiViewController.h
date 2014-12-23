@@ -20,14 +20,14 @@ class nuiViewController : public nuiWidget
   
 public:
   nuiViewController(bool DefaultNavigationBar = true);
-  virtual ~nuiViewController();
-  
+
   void SetTitle(const nglString& rTitle);
   
   nuiNavigationBar* GetNavigationBar();
   
 protected:
-  
+  virtual ~nuiViewController();
+
   virtual void ViewDidLoad();
   virtual void ViewWillAppear();
   virtual void ViewWillDisappear();

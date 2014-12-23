@@ -48,14 +48,14 @@ class nuiGestureRecognizer : public nuiWidget
 {
 public:
   nuiGestureRecognizer();
-  virtual ~nuiGestureRecognizer();
 
   nuiSignal1<nuiGestureRecognizerState> SignalStateChanged;
   nuiGestureRecognizerState GetState() const;
   
   
 protected:
-  
+  virtual ~nuiGestureRecognizer();
+
   void SetState(nuiGestureRecognizerState state);
   
   virtual bool MouseClicked(const nglMouseInfo& rInfo);

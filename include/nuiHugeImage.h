@@ -15,8 +15,7 @@ class nuiHugeImage : public nuiWidget
 {
 public:
   nuiHugeImage(const nglPath& rImagePath);
-  virtual ~nuiHugeImage();
-  
+
   virtual nuiRect CalcIdealSize();
   virtual bool Draw(nuiDrawContext* pContext);
   
@@ -36,7 +35,10 @@ public:
   void SetMaxZoom(float set);
 
   void Pan(nuiPosition dir); ///< Pan (in response to a clic on a cursor button). 
-  
+
+protected:
+  virtual ~nuiHugeImage();
+
 private:
   void InitAttributes();
   std::vector<std::vector<nuiTexture*> > mTextures;

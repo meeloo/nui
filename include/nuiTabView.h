@@ -29,7 +29,6 @@ private:
   class Tab;
 public:
   nuiTabView(nuiPosition tabPosition = nuiTop, bool decoratedBackground = true);
-  virtual ~nuiTabView();
 
   virtual nuiRect CalcIdealSize();
   virtual bool SetRect(const nuiRect& rRect);
@@ -75,6 +74,8 @@ public:
   nuiEventSink<nuiTabView> mTabViewEvents;
   nuiSimpleEventSource<0> TabSelect;
 protected:
+  virtual ~nuiTabView();
+
   int32 mCurrentTabIndex;
   nuiPosition mTabPosition;
 
@@ -98,6 +99,9 @@ private:
     Tab(nuiWidget* pWidget);
     virtual nglDropEffect OnCanDrop(nglDragAndDrop* pDragObject, nuiSize X, nuiSize Y);
     nuiSimpleEventSource<0> EnterDrag;
+
+  protected:
+    ~Tab() {}
   };
 };
 

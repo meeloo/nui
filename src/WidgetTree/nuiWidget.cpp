@@ -4659,7 +4659,6 @@ class nuiWidgetIterator : public nuiWidget::Iterator
 public:
   nuiWidgetIterator(nuiWidget* pSource, bool DoRefCounting);
   nuiWidgetIterator(const nuiWidgetIterator& rIterator);
-  virtual ~nuiWidgetIterator();
 
   virtual nuiWidgetPtr GetWidget() const;
 
@@ -4675,6 +4674,7 @@ public:
     mIndex--;
   }
 protected:
+  virtual ~nuiWidgetIterator();
   int32 mIndex;
 private:
   friend class nuiWidget;
@@ -4687,7 +4687,6 @@ class nuiWidgetConstIterator : public nuiWidget::ConstIterator
 public:
   nuiWidgetConstIterator(const nuiWidget* pSource, bool DoRefCounting);
   nuiWidgetConstIterator(const nuiWidgetConstIterator& rIterator);
-  virtual ~nuiWidgetConstIterator();
 
   virtual nuiWidgetPtr GetWidget() const;
 
@@ -4703,6 +4702,7 @@ public:
     mIndex--;
   }
 protected:
+  virtual ~nuiWidgetConstIterator();
   int32 mIndex;
 private:
   friend class nuiWidget;

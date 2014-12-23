@@ -23,7 +23,6 @@ public:
   nuiLabel(const nglString& Text = nglString::Empty, nuiTheme::FontStyle FontStyle=nuiTheme::Default);
   nuiLabel(const nglString& Text, const nglString& rObjectName, nuiTheme::FontStyle FontStyle=nuiTheme::Default);
   nuiLabel(const nglString& Text, nuiFont* pFont, bool AlreadyAcquired = false);
-  virtual ~nuiLabel();
 
   void InitAttributes();
   void InitProperties();
@@ -76,6 +75,8 @@ public:
 
   NUI_GETSETDO(nuiTextLayoutMode, TextLayoutMode, InvalidateLayout());
 protected:
+  virtual ~nuiLabel();
+
   void CalcLayout();
   void OnTextChanged(const nuiEvent& rEvent);
 

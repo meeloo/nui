@@ -17,9 +17,10 @@ class nuiObjectInspector : public nuiWidget
 {
 public:
   nuiObjectInspector();
-  virtual ~nuiObjectInspector();
-  
+
 protected:
+  virtual ~nuiObjectInspector();
+
   nuiEventSink<nuiObjectInspector> mSink;
   
   void OnObjectsChanged(const nuiEvent& rEvent);

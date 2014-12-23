@@ -16,7 +16,6 @@ class nuiModalContainer : public nuiWidget
   friend class nuiWidget;
 public:
   nuiModalContainer(nuiWidgetPtr pParent=NULL);
-  virtual ~nuiModalContainer();
 
   virtual void InitParent(nuiWidgetPtr pParent); ///< retrieves nuiTopLevel from pParent, and adds this nuiModalContainer to its Children
 
@@ -33,7 +32,10 @@ public:
   void DoModal();
   void ExitModal();
   virtual void OnTrash();
-  
+
+protected:
+  virtual ~nuiModalContainer();
+
 private:
   virtual void GetHoverList(nuiSize X, nuiSize Y, std::set<nuiWidget*>& rHoverSet, std::list<nuiWidget*>& rHoverList) const;
   bool mIsModal;

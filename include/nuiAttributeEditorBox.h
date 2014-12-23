@@ -81,12 +81,12 @@ public:
   }
   
 
+protected:
   virtual ~nuiAttributeEditorBox()
   {
-    
+
   }
 
-protected:
   void Init(const nglString& rFolderName, const std::vector<nuiAttribBase>& rAttributes, nuiOrientation orientation)
   {
     nuiVBox* pPane = new nuiVBox();
