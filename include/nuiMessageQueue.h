@@ -35,7 +35,6 @@ public :
   bool Post(Message* message)
   {
     nglCriticalSectionGuard guard(mQueueCS);
-    message->Acquire();
     mQueue.push(message);
 
     // unlock thread waiting to read the message
@@ -58,7 +57,7 @@ public :
     }
     Message* message = mQueue.front();
     mQueue.pop();
-
+    
     // no more messages. next call to Get will block 'til another message is posted.
     if (mQueue.empty())
       mSyncEvent.Reset();
