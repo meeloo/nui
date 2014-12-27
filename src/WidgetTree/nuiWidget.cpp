@@ -1414,14 +1414,12 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 
   bool rendertest = mNeedRender;
   NGL_ASSERT(!mpRenderCache);
-  
+
   if (mNeedSelfRedraw)
   {
 //    printf("nuiWidget::DrawWidget[%s][%s] -> SelfRendering\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
     mpSavedPainter = pContext->GetPainter();
-//    mpRenderCache->Release();
     nuiMetaPainter* pRenderCache = new nuiMetaPainter();
-//    mpRenderCache->Acquire();
     pRenderCache->Reset(mpSavedPainter);
     pContext->SetPainter(pRenderCache);
     
@@ -2299,6 +2297,14 @@ void nuiWidget::SilentSetVisible(bool Visible)
     return;
   
   mVisible = Visible;
+  if (!mVisible)
+  {
+    nuiRenderThread* pRenderThread = GetRenderThread();
+    if (pRenderThread)
+    {
+      pRenderThread->SetWidgetPainter(this, nullptr);
+    }
+  }
 }
 
 
@@ -6093,6 +6099,12 @@ void nuiWidget::SetVisible(bool Visible)
         VisibilityChanged();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+
+        nuiRenderThread* pRenderThread = GetRenderThread();
+        if (pRenderThread)
+        {///< May need iteration of children
+          pRenderThread->SetWidgetPainter(this, nullptr);
+        }
       }
     }
     else if (mVisible)
@@ -6119,6 +6131,12 @@ void nuiWidget::SetVisible(bool Visible)
         VisibilityChanged();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+
+        nuiRenderThread* pRenderThread = GetRenderThread();
+        if (pRenderThread)
+        {///< May need iteration of children
+          pRenderThread->SetWidgetPainter(this, nullptr);
+        }
       }
     }
     else // !mVisible

@@ -60,8 +60,6 @@ void nuiRenderThread::Exit()
 
 void nuiRenderThread::SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
 {
-  if (pPainter)
-    pPainter->Acquire();
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetPainter, pWidget, pPainter));
 }
 
