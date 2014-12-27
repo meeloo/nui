@@ -7,11 +7,9 @@
 
 #include "nui.h"
 
-
 /// class nuiRenderArray
 nuiRenderArray::nuiRenderArray(uint32 mode, bool Static, bool _3dmesh, bool _shape)
 {
-  Acquire();
   mDebug = false;
 
   for (uint i = 0; i < 4; i++)
@@ -46,7 +44,6 @@ nuiRenderArray::nuiRenderArray(uint32 mode, bool Static, bool _3dmesh, bool _sha
 nuiRenderArray::nuiRenderArray(const nuiRenderArray& rArray)
 : mVertices(rArray.mVertices)
 {
-  Acquire();
   mDebug = false;
 
   for (uint i = 0; i < 5; i++)
