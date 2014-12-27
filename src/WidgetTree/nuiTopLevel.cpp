@@ -102,7 +102,6 @@ nuiToolTip::nuiToolTip()
   mpLabel = new nuiLabel(nglString::Empty);
   mpLabel->SetWrapping(true);
   mpLabel->SetObjectName(_T("ToolTipLabel"));
-  mpLabel->Acquire();
   AddChild(mpLabel);
 }
 
@@ -200,7 +199,6 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   mDisplayToolTip = false;
   mpToolTipSource = NULL;
   mpToolTipLabel = new nuiToolTip();
-  mpToolTipLabel->Acquire();
   AddChild(mpToolTipLabel);
 
   mTopLevelSink.Connect(mToolTipTimerOn.Tick, &nuiTopLevel::ToolTipOn);

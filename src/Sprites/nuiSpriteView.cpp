@@ -24,13 +24,15 @@ nuiSpriteFrame::~nuiSpriteFrame()
 bool nuiSpriteFrame::SetTexture(nuiTexture* pTexture, const nuiRect& rRect)
 {
   //printf("nuiSpriteFrame::SetTexture1 %p %s\n", pTexture, pTexture->GetSource().GetChars());
+  if (pTexture)
+  {
+    pTexture->CheckValid();
+    pTexture->Acquire();
+  }
+
   if (mpTexture)
     mpTexture->Release();
-  if (pTexture)
-    pTexture->CheckValid();
   mpTexture = pTexture;
-  if (mpTexture)
-    mpTexture->Acquire();
   mRect = rRect;
   return true;
 }
@@ -319,7 +321,6 @@ nuiSprite::nuiSprite(const nglPath& rSpriteDefPath, bool forceReplace)
   if (!mpSpriteDef || forceReplace)
   {
     mpSpriteDef = new nuiSpriteDef(rSpriteDefPath);
-    mpSpriteDef->Acquire();
   }
 
   NGL_ASSERT(mpSpriteDef);

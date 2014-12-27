@@ -501,7 +501,10 @@ nuiTheme* nuiTheme::GetTheme()
   {
     mpTheme = new nuiTheme();
   }
-  mpTheme->Acquire();
+  else
+  {
+    mpTheme->Acquire();
+  }
   return mpTheme;
 }
 

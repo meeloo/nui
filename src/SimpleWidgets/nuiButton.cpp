@@ -256,7 +256,6 @@ void nuiButton::Activate()
     mpTask = NULL;
   }
   mpTask = nuiMakeTask(this, &nuiButton::SetPressed, false);
-  mpTask->Acquire();
   nuiAnimation::RunOnAnimationTick(mpTask, 4);
 }
 

@@ -33,8 +33,6 @@ nuiTexture* nuiTexture::GetTexture (nglIStream* pInput, nglImageCodec* pCodec)
 {
   nuiTexture* pTexture = NULL;
   pTexture = new nuiTexture(pInput, pCodec);
-  if (pTexture)
-    pTexture->Acquire();
   LOG_GETTEXTURE(pTexture);
   return pTexture;
 }
@@ -46,9 +44,10 @@ nuiTexture* nuiTexture::GetTexture (const nglPath& rPath, nglImageCodec* pCodec)
   if (it == mpTextures.end())
     pTexture = new nuiTexture(rPath, pCodec);
   else
+  {
     pTexture = it->second;
-  if (pTexture)
     pTexture->Acquire();
+  }
   LOG_GETTEXTURE(pTexture);
   return pTexture;
 }
@@ -66,10 +65,11 @@ nuiTexture* nuiTexture::GetTexture (nglImageInfo& rInfo, bool Clone)
     if (it == mpTextures.end())
       pTexture = new nuiTexture(rInfo,Clone);
     else
+    {
       pTexture = it->second;
+      pTexture->Acquire();
+    }
   }
-  if (pTexture)
-    pTexture->Acquire();
   LOG_GETTEXTURE(pTexture);
   return pTexture;
 }
@@ -83,9 +83,10 @@ nuiTexture* nuiTexture::GetTexture (const nglImage& rImage)
   if (it == mpTextures.end())
     pTexture = new nuiTexture(rImage);
   else
+  {
     pTexture = it->second;
-  if (pTexture)
     pTexture->Acquire();
+  }
   LOG_GETTEXTURE(pTexture);
   return pTexture;
 }
@@ -99,9 +100,10 @@ nuiTexture* nuiTexture::GetTexture (nglImage* pImage, bool OwnImage)
   if (it == mpTextures.end())
     pTexture = new nuiTexture(pImage,OwnImage);
   else
+  {
     pTexture = it->second;
-  if (pTexture)
     pTexture->Acquire();
+  }
   LOG_GETTEXTURE(pTexture);
   return pTexture;
 }
@@ -117,7 +119,10 @@ nuiTexture* nuiTexture::GetTexture(nuiSurface* pSurface)
     if (it == mpTextures.end())
       pTexture = new nuiTexture(pSurface);    
     else
+    {
       pTexture = it->second;
+      pTexture->Acquire();
+    }
   }
   
   LOG_GETTEXTURE(pTexture);
@@ -131,8 +136,7 @@ nuiTexture* nuiTexture::GetTexture(const nglString& rName)
   if (it == mpTextures.end())
     return NULL;
   pTexture = it->second;
-  if (pTexture)
-    pTexture->Acquire();
+  pTexture->Acquire();
   LOG_GETTEXTURE(pTexture);
   return pTexture;
 }
@@ -168,11 +172,13 @@ nuiTexture* nuiTexture::CreateTextureProxy(const nglString& rName, const nglStri
   if (it == mpTextures.end())
     pTexture = new nuiTexture(rName, rSourceTextureID, rProxyRect, RotateRight);
   else
+  {
     pTexture = it->second;
+    pTexture->Acquire();
+  }
   
   LOG_GETTEXTURE(pTexture);
-  pTexture->Acquire();
-  return pTexture;  
+  return pTexture;
 }
 
 class AtlasElem
@@ -393,10 +399,9 @@ nuiTexture* nuiTexture::GetAATexture()
   else
   {
     pTexture = it->second;
+    pTexture->Acquire();
   }
   
-  if (pTexture)
-    pTexture->Acquire();
 #endif
   return pTexture;
 }

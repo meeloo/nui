@@ -307,6 +307,7 @@ void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const
                 // this is the first special char, let's create a run for the previous range:
                 nuiTextRun* pRun = new nuiTextRun(*this, runstart, localpos - runstart, mSpaceWidth * (float)spaces + mTabWidth * (float)tabs, 0.0f, style);
                 pLine->AddRun(pRun);
+                pRun->Release();
                 runstart = localpos;
                 tabs = 0;
                 spaces = 0;
@@ -323,6 +324,7 @@ void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const
                 // this is the first non special char, let's create a run for the previous range:
                 nuiTextRun* pRun = new nuiTextRun(*this, range.mScript, runstart, localpos - runstart, style);
                 pLine->AddRun(pRun);
+                pRun->Release();
                 runstart = localpos;
               }
 
@@ -343,12 +345,14 @@ void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const
             // space & special chars
             nuiTextRun* pRun = new nuiTextRun(*this, runstart, localpos - runstart, mSpaceWidth * (float)spaces + mTabWidth * (float)tabs, 0.0f, style);
             pLine->AddRun(pRun);
+            pRun->Release();
           }
           else if (!lastisspace && localpos != runstart)
           {
             // normal text:
             nuiTextRun* pRun = new nuiTextRun(*this, range.mScript, runstart, localpos - runstart, style);
             pLine->AddRun(pRun);
+            pRun->Release();
           }
         }
 

@@ -20,14 +20,16 @@ nuiMidiInPort_CoreMidi* nuiMidiInPort_CoreMidi::GetPort(MIDIClientRef pClient, i
   nuiMidiInPort_CoreMidi* pPort = NULL;
   std::map<int32, nuiMidiInPort_CoreMidi*>::iterator it = mPorts.find(id);
   if (it != mPorts.end())
+  {
     pPort = it->second;
+    pPort->Acquire();
+  }
   else
   {
     pPort = new nuiMidiInPort_CoreMidi(pClient, id);
     mPorts[id] = pPort;
   }
   
-  pPort->Acquire();
   return pPort;
 }
 
@@ -36,14 +38,16 @@ nuiMidiOutPort_CoreMidi* nuiMidiOutPort_CoreMidi::GetPort(MIDIClientRef pClient,
   nuiMidiOutPort_CoreMidi* pPort = NULL;
   std::map<int32, nuiMidiOutPort_CoreMidi*>::iterator it = mPorts.find(id);
   if (it != mPorts.end())
+  {
     pPort = it->second;
+    pPort->Acquire();
+  }
   else
   {
     pPort = new nuiMidiOutPort_CoreMidi(pClient, id);
     mPorts[id] = pPort;
   }
   
-  pPort->Acquire();
   return pPort;
 }
 

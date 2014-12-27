@@ -235,7 +235,6 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
   if (!mpShader_TextureVertexColor)
   {
     mpShader_TextureVertexColor = new nuiShaderProgram("TextureVertexColor");
-    mpShader_TextureVertexColor->Acquire();
     mpShader_TextureVertexColor->AddShader(eVertexShader, TextureVertexColor_VTX);
     mpShader_TextureVertexColor->AddShader(eFragmentShader, TextureVertexColor_FGT);
     mpShader_TextureVertexColor->Link();
@@ -248,7 +247,6 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
   if (!mpShader_TextureAlphaVertexColor)
   {
     mpShader_TextureAlphaVertexColor = new nuiShaderProgram("TextureAlphaVertexColor");
-    mpShader_TextureAlphaVertexColor->Acquire();
     mpShader_TextureAlphaVertexColor->AddShader(eVertexShader, TextureAlphaVertexColor_VTX);
     mpShader_TextureAlphaVertexColor->AddShader(eFragmentShader, TextureAlphaVertexColor_FGT);
     mpShader_TextureAlphaVertexColor->Link();
@@ -261,7 +259,6 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
   if (!mpShader_TextureDifuseColor)
   {
     mpShader_TextureDifuseColor = new nuiShaderProgram("TextureDiffuseColor");
-    mpShader_TextureDifuseColor->Acquire();
     mpShader_TextureDifuseColor->AddShader(eVertexShader, TextureDifuseColor_VTX);
     mpShader_TextureDifuseColor->AddShader(eFragmentShader, TextureDifuseColor_FGT);
     mpShader_TextureDifuseColor->Link();
@@ -275,7 +272,6 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
   if (!mpShader_TextureAlphaDifuseColor)
   {
     mpShader_TextureAlphaDifuseColor = new nuiShaderProgram("TextureAlphaDifuseColor");
-    mpShader_TextureAlphaDifuseColor->Acquire();
     mpShader_TextureAlphaDifuseColor->AddShader(eVertexShader, TextureAlphaDifuseColor_VTX);
     mpShader_TextureAlphaDifuseColor->AddShader(eFragmentShader, TextureAlphaDifuseColor_FGT);
     mpShader_TextureAlphaDifuseColor->Link();
@@ -289,7 +285,6 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
   if (!mpShader_VertexColor)
   {
     mpShader_VertexColor = new nuiShaderProgram("VertexColor");
-    mpShader_VertexColor->Acquire();
     mpShader_VertexColor->AddShader(eVertexShader, VertexColor_VTX);
     mpShader_VertexColor->AddShader(eFragmentShader, VertexColor_FGT);
     mpShader_VertexColor->Link();
@@ -301,7 +296,6 @@ nuiGL2Painter::nuiGL2Painter(nglContext* pContext)
   if (!mpShader_DifuseColor)
   {
     mpShader_DifuseColor = new nuiShaderProgram("DifuseColor");
-    mpShader_DifuseColor->Acquire();
     mpShader_DifuseColor->AddShader(eVertexShader, DifuseColor_VTX);
     mpShader_DifuseColor->AddShader(eFragmentShader, DifuseColor_FGT);
     mpShader_DifuseColor->Link();

@@ -325,7 +325,6 @@ nuiVoice* nuiAudioEngine::PlaySound(nuiSound* pSound)
   nuiVoice* pVoice = pSound->GetVoice();
   
   nglCriticalSectionGuard guard(mCs);
-  pVoice->Acquire();
   mAddVoicesQueue.push_back(pVoice);
   return pVoice;
 }

@@ -87,6 +87,9 @@ public:
   
   void SetFontInstance(nuiFontInstance* pFontInstance)
   {
+    NGL_ASSERT(pFontInstance != nullptr);
+    NGL_ASSERT(mpFontInstance != nullptr);
+
     pFontInstance->Acquire();
     mpFontInstance->Release();
     mpFontInstance = pFontInstance;

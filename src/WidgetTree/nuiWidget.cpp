@@ -3626,7 +3626,6 @@ void nuiWidget::EnableRenderCache(bool set)
       if (!mpRenderCache)
       {
         mpRenderCache = new nuiMetaPainter();
-        mpRenderCache->Acquire();
 #ifdef _DEBUG_
         mpRenderCache->DBGSetReferenceObject(this);
 #endif
@@ -4322,7 +4321,7 @@ void nuiWidget::SetDecoration(const nglString& rName)
     {
       nuiObject* pObj = nuiCSS::CreateObject(rName);
       pDecoration = dynamic_cast<nuiDecoration*> (pObj);
-      if (!pDecoration)
+      if (!pDecoration && pObj)
         pObj->Release();
     }
   }

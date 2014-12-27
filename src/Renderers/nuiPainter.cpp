@@ -258,6 +258,7 @@ void nuiPainter::DelNeedTextureBackingStore()
 
 void nuiPainter::SetSurface(nuiSurface* pSurface)
 {
+  //#TODO Verify the acquire/release scheme here, seems overly complex
   NGL_OUT("nuiPainter::SetSurface %p\n", pSurface);
   if (pSurface)
   {

@@ -754,7 +754,6 @@ nuiShaderState* nuiShaderProgram::GetCurrentState() const
 nuiShaderState* nuiShaderProgram::CopyCurrentState() const
 {
   nuiShaderState* pState = new nuiShaderState(*mpCurrentState);
-  pState->Acquire();
   return pState;
 }
 
@@ -863,7 +862,6 @@ bool nuiShaderProgram::Link()
 
   // Enumerate Uniforms:
   mpCurrentState = new nuiShaderState(this, mUniformMap);
-  mpCurrentState->Acquire();
 
   // Enumerate Vertex Attributes:
   {

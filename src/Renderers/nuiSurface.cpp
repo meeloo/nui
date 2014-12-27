@@ -32,7 +32,6 @@ nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int3
   }
 
   pSurface = new nuiSurface(rName, Width, Height, PixelFormat);
-  pSurface->Acquire();
   mpSurfaces[rName] = pSurface;
 
 //  NGL_OUT(_T("nuiSurface CreateSurface [0x%x] NAME: [%s] COUNT [%d]\n"), pSurface, rName.GetChars(), mpSurfaces.size());
@@ -62,7 +61,6 @@ nuiSurface::nuiSurface(const nglString& rName, int32 Width, int32 Height, nglIma
   mDirty = true;
   
   mpTexture = nuiTexture::GetTexture(this);
-  mpTexture->Acquire();
   
   //NGL_OUT(_T("nuiSurface CTOR [0x%x] SIZE[%dx%d]\n"), this, Width, Height);
   //SetTrace(true);

@@ -40,7 +40,10 @@ nuiFont* nuiFont::GetFont(const nglPath& rPath, nuiSize size, int face, const ng
 
   }
   else
+  {
     pFont = mpFonts[id];
+    pFont->Acquire();
+  }
 
   if (!pFont)
   {
@@ -49,7 +52,6 @@ nuiFont* nuiFont::GetFont(const nglPath& rPath, nuiSize size, int face, const ng
     // Acquire is already called in this GetFont
   }
 
-  pFont->Acquire();
   return pFont;
 }
 
@@ -78,10 +80,12 @@ nuiFont* nuiFont::GetFont(const nglString& rName, uint8* pBuffer, uint BufferSiz
     }
   }
   else
+  {
     pFont = mpFonts[id];
+    pFont->Acquire();
+  }
 
   NGL_ASSERT(pFont);
-  pFont->Acquire();
   return pFont;
 }
 
@@ -112,16 +116,15 @@ nuiFont* nuiFont::GetFont(nuiXMLNode* pNode, const nglString& rID)
   else
   {
     pFont = mpFonts[id];
+    pFont->Acquire();
   }
 
   if (pFont)
   {
-    pFont->Acquire();
     return pFont;
   }
 
   // there was an error loading the font...
-  delete pFont;
   float s = 10;
   if (pNode->HasAttribute(_T("Size")))
     s = pNode->GetAttribute(_T("Size")).GetCFloat();
@@ -171,11 +174,11 @@ nuiFont* nuiFont::GetFont(nuiSize size, const nglString& rID)
     }
   }
   else
+  {
     pFont = mpFonts[id];
-
-  if (pFont)
     pFont->Acquire();
-  
+  }
+
   NGL_ASSERT(pFont);
   return pFont;
 }

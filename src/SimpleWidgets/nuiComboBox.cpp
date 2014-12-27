@@ -348,6 +348,9 @@ void nuiComboBox::SetTree(nuiTreeNode* pTree)
 //  if (mpOldSelected)
 //    mpOldSelected->Release();
 
+  if (pTree)
+    pTree->Acquire();
+
   if (mpChoicesTree)
     mpChoicesTree->Release();
 
@@ -355,8 +358,6 @@ void nuiComboBox::SetTree(nuiTreeNode* pTree)
   mpOldSelected = NULL;
   
   mpChoicesTree = pTree;
-  if (mpChoicesTree)
-    mpChoicesTree->Acquire();
 
   ReparentTree(mpChoicesTree);
   InvalidateLayout();
