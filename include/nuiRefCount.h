@@ -15,7 +15,7 @@ public:
   }
 
   inline uint32 Acquire() const
-  { 
+  {
     mRefCount++;
     if (mTrace)
     {
@@ -25,7 +25,7 @@ public:
   }
 
   inline uint32 Release() const
-  { 
+  {
     if (mRefCount < 1)
     {
       printf("Hmmm\n");

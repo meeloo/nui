@@ -149,7 +149,9 @@ void MainWindow::OnCreation()
 //  nuiTableView* pListView = new nuiTableView(pSource);
 //  AddChild(pListView);
   
-  AddChild(CreateTestDelChildren());
+  nuiWidget* pChild = CreateTestDelChildren();
+  AddChild(pChild);
+  pChild->Release();
 
 //  nuiScrollView* pSView = new nuiScrollView(false, true);
 //  AddChild(pSView);
@@ -365,6 +367,7 @@ nuiWidget* MainWindow::CreateTestDelChildren()
   mEventSink.Connect(pButton->Activated, &MainWindow::OnCreateView, pWidget);
 
   pWidget->AddChild(pButton);
+  pButton->Release();
   return pWidget;
 }
 
@@ -385,13 +388,15 @@ void MainWindow::OnCreateView(const nuiEvent& rEvent)
     for (int i = 0; i < 256; ++i)
     {
       nuiButton* pButton = new nuiButton();
-      //      nuiButton* pButton = new nuiButton("1");
+//      nuiButton* pButton = new nuiButton("1");
 //      nglString name;
 //      name.SetCInt(i);
 //      ((nuiLabel*)pButton->GetChild(0))->SetText(name);
       pVBox->AddCell(pButton);
+      pButton->Release();
     }
     pWidget->AddChild(pVBox);
+    pVBox->Release();
   }
 }
 
