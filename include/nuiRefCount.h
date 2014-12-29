@@ -7,11 +7,14 @@
 
 #pragma once
 
+
 class nuiRefCount
 {
 public:
   nuiRefCount() : mTrace(false), mRefCount(1), mPermanent(false)
   {
+//    static int64 refCreated = 1;
+//    printf("REF CREATED\t[%lld]\n", refCreated++);
   }
 
   inline uint32 Acquire() const
@@ -97,8 +100,11 @@ public:
 
 protected:
   mutable bool mTrace;
+
   virtual ~nuiRefCount()
   {
+//    static int64 refDeleted = 1;
+//    printf("REF DELETED\t[%lld]\n", refDeleted++);
     //NGL_ASSERT(mRefCount == 0);
   }
   
@@ -132,7 +138,6 @@ public:
 private:
   const nuiRefCount* mpRef;
 };
-
 
 #define nuiAutoRef nuiRefGuard nui_local_auto_ref(this);
 

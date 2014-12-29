@@ -399,7 +399,8 @@ nuiDrawContext* nuiTopLevel::GetDrawContext()
   
   nuiRect rect = GetRect().Size();
   mpDrawContext = nuiDrawContext::CreateDrawContext(rect, mRenderer, GetNGLContext());
-  
+  nuiMetaPainter* pMeta = new nuiMetaPainter();
+  mpDrawContext->SetPainter(pMeta);
   return mpDrawContext;
 }
 

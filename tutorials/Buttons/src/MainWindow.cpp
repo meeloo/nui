@@ -39,6 +39,7 @@ public:
     {
       nuiButton* pButton = new nuiButton("Button ");
       pHBox->AddCell(pButton);
+      pButton->Release();
     }
 
     return pHBox;
@@ -144,14 +145,14 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-//  ButtonCellSource* pSource = new ButtonCellSource();
-////  ComplexCellSource* pSource = new ComplexCellSource();
-//  nuiTableView* pListView = new nuiTableView(pSource);
-//  AddChild(pListView);
+  ButtonCellSource* pSource = new ButtonCellSource();
+//  ComplexCellSource* pSource = new ComplexCellSource();
+  nuiTableView* pListView = new nuiTableView(pSource);
+  AddChild(pListView);
   
-  nuiWidget* pChild = CreateTestDelChildren();
-  AddChild(pChild);
-  pChild->Release();
+//  nuiWidget* pChild = CreateTestDelChildren();
+//  AddChild(pChild);
+//  pChild->Release();
 
 //  nuiScrollView* pSView = new nuiScrollView(false, true);
 //  AddChild(pSView);

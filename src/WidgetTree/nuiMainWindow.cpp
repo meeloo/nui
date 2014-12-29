@@ -254,16 +254,16 @@ void nuiMainWindow::Paint()
     pRenderThread->Start();
   }
 
-#ifdef _UIKIT_
-  pContext->GetPainter()->SetAngle(mpNGLWindow->GetRotation());
-#endif
-#ifndef __NUI_NO_SOFTWARE__
-  nuiSoftwarePainter* pCTX = dynamic_cast<nuiSoftwarePainter*>(pContext->GetPainter());
-#endif
+//#ifdef _UIKIT_
+//  pContext->GetPainter()->SetAngle(mpNGLWindow->GetRotation());
+//#endif
+//#ifndef __NUI_NO_SOFTWARE__
+//  nuiSoftwarePainter* pCTX = dynamic_cast<nuiSoftwarePainter*>(pContext->GetPainter());
+//#endif
 
 
   pRenderThread->SetRect(GetRect().Size());
-  
+
   bool DrawFullFrame = !mInvalidatePosted || (mFullFrameRedraw > 0);
   bool RestorePartial = IsPartialRedrawEnabled();
   mInvalidatePosted = false;

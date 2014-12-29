@@ -61,6 +61,7 @@ nuiButton::nuiButton(const nglString& rText)
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
   nuiLabel* pLabel = new nuiLabel(rText);
   AddChild(pLabel);
+  pLabel->Release();
   pLabel->SetPosition(nuiCenter);
   SetRedrawOnHover(false);
   EnableInteractiveDecoration(true);
@@ -95,6 +96,7 @@ nuiButton::nuiButton(const nglImage& rImage)
 
   nuiImage* pImage = new nuiImage(rImage);
   AddChild(pImage);
+  pImage->Release();
   pImage->SetPosition(nuiCenter);
   
   SetBorders(mDefaultBorders);
