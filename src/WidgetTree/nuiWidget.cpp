@@ -118,6 +118,7 @@ nuiWidget::nuiWidget(const nglString& rObjectName)
 
 void nuiWidget::InitDefaultValues()
 {
+  AutoRelease();
   mODLeft = 0;
   mODRight = 0;
   mODTop = 0;

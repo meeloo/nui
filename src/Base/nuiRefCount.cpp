@@ -9,3 +9,8 @@
 #include "nui.h"
 
 pthread_key_t nuiRefCount::key;
+
+void nuiRefCount::DumpInfos() const
+{
+  nuiObject::DumpObjectInfos((nuiObject*)(void*)this);
+}

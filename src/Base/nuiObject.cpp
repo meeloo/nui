@@ -18,7 +18,7 @@ nuiObject::nuiObject()
 : mpTrace(NULL)
 {
   nglString name;
-  name.CFormat("%d", this);
+  name.CFormat("%p", this);
   Init(name);
   
 //  ObjectCount++;
@@ -653,24 +653,57 @@ bool nuiObject::IsObject(void* pointer)
   std::map<nuiObject*, Trace>::const_iterator it = mObjects.find((nuiObject*)pointer);
   return it != mObjects.end();
 }
+
+void nuiObject::DumpObjectInfos(const nuiObject* pointer)
+{
+  nglString str;
+  {
+    nglCriticalSectionGuard g(gObjectTraceCS);
+    std::map<nuiObject*, Trace>::const_iterator it = mObjects.find(const_cast<nuiObject*>(pointer));
+    if (it == mObjects.end())
+    {
+      str.CFormat("Operating on an invalid Object! 0x%x was never created.\n", pointer);
+    }
+    else if (!it->second.mAlive)
+    {
+      str.CFormat("Operating on a deleted Object! 0x%x (%s - %s).\n", pointer, it->second.mClass.GetChars(), it->second.mName.GetChars());
+    }
+    else
+    {
+      str.CFormat("Valid Object! 0x%x (%s - %s).\n", pointer, it->second.mClass.GetChars(), it->second.mName.GetChars());
+    }
+  }
+
+  if (!str.IsEmpty())
+  {
+    NGL_LOG("nuiObject", 0, "%s", str.GetChars());
+  }
+}
 #endif
 
 void nuiObject::CheckValidInternal() const
 {
 #ifdef _NUI_DEBUG_OBJECTS_
-  nglCriticalSectionGuard g(gObjectTraceCS);
-  std::map<nuiObject*, Trace>::const_iterator it = mObjects.find(const_cast<nuiObject*>(this));
-  if (it == mObjects.end())
+  nglString str;
   {
-    NGL_LOG(_T("nuiObject"), 0, _T("Operating on an invalid Object! 0x%x was never created.\n"), this);
+    nglCriticalSectionGuard g(gObjectTraceCS);
+    std::map<nuiObject*, Trace>::const_iterator it = mObjects.find(const_cast<nuiObject*>(this));
+    if (it == mObjects.end())
+    {
+      str.CFormat("Operating on an invalid Object! 0x%x was never created.\n", this);
+    }
+    else if (!it->second.mAlive)
+    {
+      str.CFormat("Operating on an invalid Object! 0x%x (%s - %s).\n", this, it->second.mClass.GetChars(), it->second.mName.GetChars());
+    }
+    NGL_ASSERT(it != mObjects.end());
+    const Trace& rTrace(it->second);
+    NGL_ASSERT(rTrace.mAlive);
   }
-  else if (!it->second.mAlive)
+  if (!str.IsEmpty())
   {
-    NGL_LOG(_T("nuiObject"), 0, _T("Operating on an invalid Object! 0x%x (%s - %s).\n"), this, it->second.mClass.GetChars(), it->second.mName.GetChars());
+    NGL_LOG("nuiObject", 0, "%s", str.GetChars());
   }
-  NGL_ASSERT(it != mObjects.end());
-  const Trace& rTrace(it->second);
-  NGL_ASSERT(rTrace.mAlive);
 #endif
 }
 
@@ -705,3 +738,7 @@ void nuiObject::ClearLinkedObjects()
   mpLinkedObjects.clear();
 }
 
+void nuiObject::DumpInfos() const
+{
+  DumpObjectInfos(this);
+}

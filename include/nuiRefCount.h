@@ -29,8 +29,10 @@ public:
     if (mRefCount < 1)
     {
       printf("Hmmm\n");
+      DumpInfos();
     }
     NGL_ASSERTR(mRefCount > 0, mRefCount);
+
     mRefCount--;
 
     if (mTrace)
@@ -47,6 +49,13 @@ public:
       
       
       const_cast<nuiRefCount*>(this)->OnFinalize();
+
+      if (mTrace)
+      {
+        DumpInfos();
+        NGL_OUT("delete ref counted object: %p %s / %d\n", this, typeid(this).name(), typeid(this).hash_code());
+      }
+
       delete this;
       return 0;
     }
@@ -99,6 +108,8 @@ public:
   {
     if (!mAutoReleased)
     {
+//      printf("Autorelease %p\n:", this);
+//      DumpInfos();
       get_tls_pool().push_back(this);
       mAutoReleased = true;
     }
@@ -106,12 +117,13 @@ public:
 
   static void PurgeAutoReleasePoolForCurrentThread()
   {
-    for (auto item : get_tls_pool())
+    std::vector<nuiRefCount*>& pool(get_tls_pool());
+    for (auto item : pool)
     {
       item->Release();
     }
 
-    get_tls_pool().clear();
+    pool.clear();
   }
 protected:
   mutable bool mTrace = false;
@@ -154,6 +166,8 @@ private:
     NGL_ASSERT(pPool != nullptr);
     return *pPool;
   }
+
+  virtual void DumpInfos() const;
 };
 
 class nuiRefGuard : nuiNonCopyable
