@@ -436,6 +436,8 @@ void nglKernel::ProcessMessages(const nuiEvent& rEvent)
   }
 
   mpNotificationManager->BroadcastQueuedNotifications();
+
+  nuiRefCount::PurgeAutoReleasePoolForCurrentThread();
 }
 
 void nglKernel::PostNotification(nuiNotification* pNotification)

@@ -343,8 +343,6 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
           NGL_ASSERT(0);
           break;
       }
-
-      pChild->Release();
     }
     else
     {

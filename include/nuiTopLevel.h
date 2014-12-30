@@ -228,7 +228,6 @@ protected:
   /* @name Trash management */
   //@{
   bool mFillTrash;
-  bool mReleased;
   //@}
 
   nuiDrawContext* mpDrawContext;

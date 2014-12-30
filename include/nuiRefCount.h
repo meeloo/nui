@@ -11,7 +11,7 @@
 class nuiRefCount
 {
 public:
-  nuiRefCount() : mTrace(false), mRefCount(1), mPermanent(false)
+  nuiRefCount()
   {
 //    static int64 refCreated = 1;
 //    printf("REF CREATED\t[%lld]\n", refCreated++);
@@ -32,8 +32,10 @@ public:
     if (mRefCount < 1)
     {
       printf("Hmmm\n");
+      DumpInfos();
     }
     NGL_ASSERTR(mRefCount > 0, mRefCount);
+
     mRefCount--;
 
     if (mTrace)
@@ -50,6 +52,13 @@ public:
       
       
       const_cast<nuiRefCount*>(this)->OnFinalize();
+
+      if (mTrace)
+      {
+        DumpInfos();
+        NGL_OUT("delete ref counted object: %p %s / %d\n", this, typeid(this).name(), typeid(this).hash_code());
+      }
+
       delete this;
       return 0;
     }
@@ -98,8 +107,29 @@ public:
   {
   }
 
+  void AutoRelease()
+  {
+    if (!mAutoReleased)
+    {
+//      printf("Autorelease %p\n:", this);
+//      DumpInfos();
+      get_tls_pool().push_back(this);
+      mAutoReleased = true;
+    }
+  }
+
+  static void PurgeAutoReleasePoolForCurrentThread()
+  {
+    std::vector<nuiRefCount*>& pool(get_tls_pool());
+    for (auto item : pool)
+    {
+      item->Release();
+    }
+
+    pool.clear();
+  }
 protected:
-  mutable bool mTrace;
+  mutable bool mTrace = false;
 
   virtual ~nuiRefCount()
   {
@@ -109,9 +139,41 @@ protected:
   }
   
 private:
-  mutable uint32 mRefCount;
-  bool mPermanent;
+  mutable uint32 mRefCount = 1;
+  bool mPermanent = false;
+  bool mAutoReleased = false;
 
+  static pthread_key_t key;
+
+  static void destroy_pool(void* p)
+  {
+    std::vector<nuiRefCount*>* pPool = (std::vector<nuiRefCount*>*)p;
+    delete pPool;
+  }
+
+  static void create_key()
+  {
+    pthread_key_create(&key, destroy_pool);
+  }
+
+  static std::vector<nuiRefCount*>& get_tls_pool()
+  {
+    static pthread_once_t key_once = PTHREAD_ONCE_INIT;
+
+    pthread_once(&key_once, create_key);
+
+    std::vector<nuiRefCount*>* pPool = nullptr;
+    if ((pPool = (std::vector<nuiRefCount*>*)pthread_getspecific(key)) == nullptr)
+    {
+      pPool = new std::vector<nuiRefCount*>;
+      pthread_setspecific(key, pPool);
+    }
+
+    NGL_ASSERT(pPool != nullptr);
+    return *pPool;
+  }
+
+  virtual void DumpInfos() const;
 };
 
 class nuiRefGuard : nuiNonCopyable
@@ -138,6 +200,14 @@ public:
 private:
   const nuiRefCount* mpRef;
 };
+
+template <class T>
+T* nuiAutoRelease(T* pObj)
+{
+  pObj->AutoRelease();
+  return pObj;
+}
+
 
 #define nuiAutoRef nuiRefGuard nui_local_auto_ref(this);
 

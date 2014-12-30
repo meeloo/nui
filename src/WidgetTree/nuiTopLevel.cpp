@@ -185,7 +185,6 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
     mIsRendering(false),
     mpCSS(NULL)
 {
-  mReleased = false;
   mNeedInvalidateOnSetRect = true;
   mClearBackground = true;
   SetObjectClass(_T("nuiTopLevel"));
@@ -233,9 +232,7 @@ nuiTopLevel::~nuiTopLevel()
 void nuiTopLevel::Exit()
 {
   CheckValid();
-  if (mReleased)
-    return;
-  
+
 //   mTopLevelSink.Disconnect(&nuiMainWindow::ToolTipOn);
 //   mTopLevelSink.Disconnect(&nuiMainWindow::ToolTipOff);
   mTopLevelSink.DisconnectAll();
@@ -273,8 +270,6 @@ void nuiTopLevel::Exit()
   pTheme->Release(); // Release once because of the Acquire in nuiTheme::GetTheme()
                      //pTheme->Release(); // Release twice to balance the nuiTheme::InitTheme(..).       
   
-  mReleased = true;
-
   std::map<nglString, nuiHotKey*>::iterator it = mHotKeys.begin();
   std::map<nglString, nuiHotKey*>::iterator end = mHotKeys.end();
 

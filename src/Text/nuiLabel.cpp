@@ -90,8 +90,10 @@ void nuiLabel::InitDefaultValues()
 nuiLabel::~nuiLabel()
 {
   //printf("~nuiLabel: '%s'\n", mText.GetChars());
-  mpLayout->Release();
-  mpIdealLayout->Release();
+  if (mpLayout)
+    mpLayout->Release();
+  if (mpIdealLayout)
+    mpIdealLayout->Release();
   if (mpFont)
     mpFont->Release();
 }

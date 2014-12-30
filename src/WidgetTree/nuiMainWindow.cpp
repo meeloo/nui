@@ -944,6 +944,7 @@ bool nuiMainWindow::ShowWidgetInspector()
     Info.Height = 600;
 
     mpInspectorWindow = new nuiMainWindow(nuiContextInfo(nuiContextInfo::StandardContext2D), Info, GetNGLContext(), ResPath);
+    mpInspectorWindow->Acquire();
     mpInspectorWindow->SetQuitOnClose(false);
     mpInspectorWindow->AddChild(new nuiIntrospector(this));
     mpInspectorWindow->SetState(nglWindow::eShow);

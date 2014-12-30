@@ -121,6 +121,8 @@ public:
 
 #ifdef _NUI_DEBUG_OBJECTS_
   static bool IsObject(void* pointer);
+  static void DumpObjectInfos(const nuiObject* pointer);
+  virtual void DumpInfos() const;
 #endif
 
 protected:
