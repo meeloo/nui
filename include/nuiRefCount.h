@@ -7,15 +7,18 @@
 
 #pragma once
 
+
 class nuiRefCount
 {
 public:
   nuiRefCount()
   {
+//    static int64 refCreated = 1;
+//    printf("REF CREATED\t[%lld]\n", refCreated++);
   }
 
   inline uint32 Acquire() const
-  { 
+  {
     mRefCount++;
     if (mTrace)
     {
@@ -25,7 +28,7 @@ public:
   }
 
   inline uint32 Release() const
-  { 
+  {
     if (mRefCount < 1)
     {
       printf("Hmmm\n");
@@ -127,8 +130,11 @@ public:
   }
 protected:
   mutable bool mTrace = false;
+
   virtual ~nuiRefCount()
   {
+//    static int64 refDeleted = 1;
+//    printf("REF DELETED\t[%lld]\n", refDeleted++);
     //NGL_ASSERT(mRefCount == 0);
   }
   

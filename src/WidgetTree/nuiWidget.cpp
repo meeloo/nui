@@ -708,7 +708,6 @@ nuiWidget::~nuiWidget()
   for (auto pAction : mEventActions)
     pAction->Disconnect(this);
 
-
   // Delete all children:
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
@@ -2112,6 +2111,7 @@ bool nuiWidget::Trash()
     DebugRefreshInfo();
     if (mpParent)
       mpParent->DelChild(this);
+    
     return true;
   }
 
