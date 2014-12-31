@@ -39,7 +39,6 @@ public:
     {
       nuiButton* pButton = new nuiButton("Button ");
       pHBox->AddCell(pButton);
-      pButton->Release();
     }
 
     return pHBox;
@@ -145,14 +144,13 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-//  ButtonCellSource* pSource = new ButtonCellSource();
-////  ComplexCellSource* pSource = new ComplexCellSource();
-//  nuiTableView* pListView = new nuiTableView(pSource);
-//  AddChild(pListView);
+  ButtonCellSource* pSource = new ButtonCellSource();
+//  ComplexCellSource* pSource = new ComplexCellSource();
+  nuiTableView* pListView = new nuiTableView(pSource);
+  AddChild(pListView);
   
-  nuiWidget* pChild = CreateTestDelChildren();
-  AddChild(pChild);
-  pChild->Release();
+//  nuiWidget* pChild = CreateTestDelChildren();
+//  AddChild(pChild);
 
 //  nuiScrollView* pSView = new nuiScrollView(false, true);
 //  AddChild(pSView);
@@ -368,7 +366,6 @@ nuiWidget* MainWindow::CreateTestDelChildren()
   mEventSink.Connect(pButton->Activated, &MainWindow::OnCreateView, pWidget);
 
   pWidget->AddChild(pButton);
-  pButton->Release();
   return pWidget;
 }
 
@@ -388,16 +385,13 @@ void MainWindow::OnCreateView(const nuiEvent& rEvent)
     pVBox->SetExpand(nuiExpandShrinkAndGrow);
     for (int i = 0; i < 256; ++i)
     {
-      nuiButton* pButton = new nuiButton();
-//      nuiButton* pButton = new nuiButton("1");
-//      nglString name;
-//      name.SetCInt(i);
-//      ((nuiLabel*)pButton->GetChild(0))->SetText(name);
+      nuiButton* pButton = new nuiButton("1");
+      nglString name;
+      name.SetCInt(i);
+      ((nuiLabel*)pButton->GetChild(0))->SetText(name);
       pVBox->AddCell(pButton);
-      pButton->Release();
     }
     pWidget->AddChild(pVBox);
-    pVBox->Release();
   }
 }
 
