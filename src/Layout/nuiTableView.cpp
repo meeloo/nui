@@ -182,7 +182,6 @@ void nuiTableView::CreateCells(nuiSize Height)
       mVisibleCells.push_back(pWidget);
       mpSource->UpdateCell(cell, pWidget);
       AddChild(pWidget);
-      pWidget->Release();
   //    pTop->ApplyWidgetCSS(pWidget, true, NUI_WIDGET_MATCHTAG_ALL);
     }
   }
