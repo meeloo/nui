@@ -17,33 +17,34 @@ public:
 //    printf("REF CREATED\t[%lld]\n", refCreated++);
   }
 
-  inline uint32 Acquire() const
+  inline nglAtomic Acquire() const
   {
-    mRefCount++;
+    nglAtomic val = ngl_atomic_inc(mRefCount);
     if (mTrace)
     {
-      NGL_OUT(_T("Acquire object %p (%d)\n"), this, mRefCount);
+      NGL_OUT(_T("Acquire object %p (%d)\n"), this, val);
     }
-    return mRefCount;
+    return val;
   }
 
-  inline uint32 Release() const
+  inline nglAtomic Release() const
   {
-    if (mRefCount < 1)
+    uint64 val = ngl_atomic_read(mRefCount);
+    if (val < 1)
     {
       printf("Hmmm\n");
       DumpInfos();
     }
-    NGL_ASSERTR(mRefCount > 0, mRefCount);
+    NGL_ASSERTR(val > 0, val);
 
-    mRefCount--;
+    val = ngl_atomic_dec(mRefCount);
 
     if (mTrace)
     {
-      NGL_OUT(_T("Release object %p (%d)\n"), this, mRefCount);
+      NGL_OUT(_T("Release object %p (%d)\n"), this, val);
     }
 
-    if (mRefCount == 0)
+    if (val == 0)
     {
       if (mTrace)
       {
@@ -62,7 +63,7 @@ public:
       delete this;
       return 0;
     }
-    return mRefCount;
+    return val;
   }
 
   void SetTrace(bool set)
@@ -75,9 +76,9 @@ public:
     return mTrace;
   }
   
-  uint32 GetRefCount() const
+  nglAtomic GetRefCount() const
   {
-    return mRefCount;
+    return ngl_atomic_read(mRefCount);
   }
 
   void SetPermanent(bool Permanent = true)
@@ -135,11 +136,11 @@ protected:
   {
 //    static int64 refDeleted = 1;
 //    printf("REF DELETED\t[%lld]\n", refDeleted++);
-    //NGL_ASSERT(mRefCount == 0);
+    NGL_ASSERT(ngl_atomic_read(mRefCount) == 0);
   }
   
 private:
-  mutable uint32 mRefCount = 1;
+  mutable nglAtomic mRefCount = 1;
   bool mPermanent = false;
   bool mAutoReleased = false;
 
