@@ -158,18 +158,6 @@ nuiMainWindow::~nuiMainWindow()
   Unregister();
 }
 
-double GetUsedMemory()
-{
-  vm_statistics_data_t vmStats;
-  mach_msg_type_number_t infoCount = HOST_VM_INFO_COUNT;
-  kern_return_t kernReturn = host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t)&vmStats, &infoCount);
-  
-  if (kernReturn != KERN_SUCCESS)
-    return -1.0;
-  
-  return ((vm_page_size * vmStats.active_count) / 1024.0) / 1024.0;
-}
-
 void nuiMainWindow::InitAttributes()
 {
   AddAttribute(new nuiAttribute<nuiRect>
@@ -207,14 +195,6 @@ void nuiMainWindow::OnPaint()
     mFPSDelay = now;
   }
   
-//  static double stats = 0;
-//  stats += (now - mLastPaint);
-//  if (stats > 2)
-//  {
-//    double mem = GetUsedMemory();
-//    printf("USED MEM: %.4f\n", mem);
-//    stats = 0;
-//  }
   mLastPaint = now;
 }
 

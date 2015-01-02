@@ -738,7 +738,9 @@ void nuiObject::ClearLinkedObjects()
   mpLinkedObjects.clear();
 }
 
+#ifdef _NUI_DEBUG_OBJECTS_
 void nuiObject::DumpInfos() const
 {
   DumpObjectInfos(this);
 }
+#endif

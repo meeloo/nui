@@ -662,9 +662,12 @@ nuiWidget::~nuiWidget()
   StopAutoDraw();
   ClearAnimations();
 
-  nuiTopLevel* pRoot = GetTopLevel();
-  if (pRoot)
-    pRoot->AdviseObjectDeath(this);
+  if (!mTrashed)
+  {
+    nuiTopLevel* pRoot = GetTopLevel();
+    if (pRoot)
+      pRoot->AdviseObjectDeath(this);
+  }
 
   //NGL_ASSERT(!pRoot || IsTrashed());
 
