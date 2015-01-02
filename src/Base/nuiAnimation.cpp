@@ -427,7 +427,7 @@ void nuiAnimation::InternalStop()
   mCurrentPosition = 0;
 
   if (mDeleteOnStop)
-    delete this;
+    Release();
 }
 
 void nuiAnimation::InternalPause()

@@ -35,27 +35,27 @@ inline void ngl_atomic_set(nglAtomic32& value, uint32 newValue)
 }
 
 // add integer to atomic variable
-inline void ngl_atomic_add(nglAtomic32& value, uint32 addValue)
+inline uint32 ngl_atomic_add(nglAtomic32& value, uint32 addValue)
 {
-  InterlockedExchangeAdd((volatile LONG*)&value, addValue);
+  return InterlockedExchangeAdd((volatile LONG*)&value, addValue);
 }
 
 // subtract the atomic variable
-inline void ngl_atomic_sub(nglAtomic32& value, uint32 subValue)
+inline uint32 ngl_atomic_sub(nglAtomic32& value, uint32 subValue)
 {
-  InterlockedExchangeAdd((volatile LONG*)&value, (uint32)-(int32)subValue);
+  return InterlockedExchangeAdd((volatile LONG*)&value, (uint32)-(int32)subValue);
 }
 
 // increment atomic variable
-inline void ngl_atomic_inc(nglAtomic32 &value)
+inline uint32 ngl_atomic_inc(nglAtomic32 &value)
 {
-  InterlockedIncrement((volatile LONG*)&value);
+  return InterlockedIncrement((volatile LONG*)&value);
 }
 
 // decrement atomic variable
-inline void ngl_atomic_dec(nglAtomic32 &value)
+inline uint32 ngl_atomic_dec(nglAtomic32 &value)
 {
-  InterlockedDecrement((volatile LONG*)&value);
+  return InterlockedDecrement((volatile LONG*)&value);
 }
 
 
@@ -113,11 +113,10 @@ inline void ngl_atomic_set(nglAtomic64& value, uint64 newValue)
     val = value;
   }
   while (!ngl_atomic_compare_and_swap(value, val, newValue));
-  //value = newValue;
 }
 
 // add integer to atomic variable
-inline void ngl_atomic_add(nglAtomic64& value, uint64 addValue)
+inline uint64 ngl_atomic_add(nglAtomic64& value, uint64 addValue)
 {
   uint64 val;
   do
@@ -125,11 +124,11 @@ inline void ngl_atomic_add(nglAtomic64& value, uint64 addValue)
     val = value;
   }
   while (!ngl_atomic_compare_and_swap(value, val, val + addValue));
-  //value += addValue;
+  return val + addValue;
 }
 
 // subtract the atomic variable
-inline void ngl_atomic_sub(nglAtomic64& value, uint64 subValue)
+inline uint64 ngl_atomic_sub(nglAtomic64& value, uint64 subValue)
 {
   uint64 val;
   do
@@ -137,21 +136,19 @@ inline void ngl_atomic_sub(nglAtomic64& value, uint64 subValue)
     val = value;
   }
   while (!ngl_atomic_compare_and_swap(value, val, val - subValue));
-  //value -= subValue;
+  return val - subValue;
 }
 
 // increment atomic variable
-inline void ngl_atomic_inc(nglAtomic64 &value)
+inline uint64 ngl_atomic_inc(nglAtomic64 &value)
 {
-  ngl_atomic_add(value, 1);
-  //value++;
+  return ngl_atomic_add(value, 1);
 }
 
 // decrement atomic variable
-inline void ngl_atomic_dec(nglAtomic64 &value)
+inline uint64 ngl_atomic_dec(nglAtomic64 &value)
 {
-  ngl_atomic_sub(value, 1);
-  //value--;
+  return ngl_atomic_sub(value, 1);
 }
 #endif // 64bit
 
@@ -191,33 +188,27 @@ inline void ngl_atomic_set(nglAtomic32& value, uint32 newValue)
 }
 
 // add integer to atomic variable
-inline void ngl_atomic_add(nglAtomic32& value, uint32 addValue)
+inline uint32 ngl_atomic_add(nglAtomic32& value, uint32 addValue)
 {
-  OSAtomicAdd32(addValue, (int32_t*)&value);
-  //value += addValue;
+  return OSAtomicAdd32(addValue, (int32_t*)&value);
 }
 
 // subtract the atomic variable
-inline void ngl_atomic_sub(nglAtomic32& value, uint32 subValue)
+inline uint32 ngl_atomic_sub(nglAtomic32& value, uint32 subValue)
 {
-  OSAtomicAdd32(-subValue, (int32_t*)&value);
-  //value -= subValue;
+  return OSAtomicAdd32(-subValue, (int32_t*)&value);
 }
 
 // increment atomic variable
-inline void ngl_atomic_inc(nglAtomic32 &value)
+inline uint32 ngl_atomic_inc(nglAtomic32 &value)
 {
-  OSAtomicAdd32(1, (int32_t*)&value);
-  //OSIncrementAtomic(&value);
-  //value++;
+  return OSAtomicAdd32(1, (int32_t*)&value);
 }
 
 // decrement atomic variable
-inline void ngl_atomic_dec(nglAtomic32 &value)
+inline uint32 ngl_atomic_dec(nglAtomic32 &value)
 {
-  OSAtomicAdd32(-1, (int32_t*)&value);
-  //OSDecrementAtomic(&value);
-  //value--;
+  return OSAtomicAdd32(-1, (int32_t*)&value);
 }
 
 
@@ -251,33 +242,27 @@ inline void ngl_atomic_set(nglAtomic64& value, uint64 newValue)
 }
 
 // add integer to atomic variable
-inline void ngl_atomic_add(nglAtomic64& value, uint64 addValue)
+inline uint64 ngl_atomic_add(nglAtomic64& value, uint64 addValue)
 {
-  OSAtomicAdd64(addValue, (int64_t*)&value);
-  //value += addValue;
+  return OSAtomicAdd64(addValue, (int64_t*)&value);
 }
 
 // subtract the atomic variable
-inline void ngl_atomic_sub(nglAtomic64& value, uint64 subValue)
+inline uint64 ngl_atomic_sub(nglAtomic64& value, uint64 subValue)
 {
-  OSAtomicAdd64(-subValue, (int64_t*)&value);
-  //value -= subValue;
+  return OSAtomicAdd64(-subValue, (int64_t*)&value);
 }
 
 // increment atomic variable
-inline void ngl_atomic_inc(nglAtomic64 &value)
+inline uint64 ngl_atomic_inc(nglAtomic64 &value)
 {
-  OSAtomicAdd64(1, (int64_t*)&value);
-  //OSIncrementAtomic(&value);
-  //value++;
+  return OSAtomicAdd64(1, (int64_t*)&value);
 }
 
 // decrement atomic variable
-inline void ngl_atomic_dec(nglAtomic64 &value)
+inline nglAtomic64 ngl_atomic_dec(nglAtomic64 &value)
 {
-  OSAtomicAdd64(-1, (int64_t*)&value);
-  //OSDecrementAtomic(&value);
-  //value--;
+  return OSAtomicAdd64(-1, (int64_t*)&value);
 }
 #endif // 64bits
 
