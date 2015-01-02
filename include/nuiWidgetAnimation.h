@@ -16,8 +16,8 @@ class nuiWidgetAnimation : public nuiAnimation
 {
 public:
   nuiWidgetAnimation(nuiWidgetPtr pTarget, double DurationInSeconds);
-  virtual ~nuiWidgetAnimation();
 protected:
+  virtual ~nuiWidgetAnimation();
   nuiWidgetPtr mpTarget;
 };
 

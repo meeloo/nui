@@ -338,10 +338,10 @@ nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin L
   nuiPath outline;
   Outliner.Tessellate(outline, 1.0);
 
-  nuiPolyLine polyline(outline);
-  nuiTessellator tesselator(&polyline);
+  nuiPolyLine* polyline = new nuiPolyLine(outline);
+  nuiTessellator tesselator(polyline);
   nuiRenderObject* pObject = tesselator.Generate();
-
+  polyline->Release();
   return pObject;
 
 }

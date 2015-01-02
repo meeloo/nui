@@ -4496,6 +4496,9 @@ uint32 nuiWidget::GetCSSPass() const
 
 void nuiWidget::DrawFocus(nuiDrawContext* pContext, bool FrontOrBack)
 {
+///< FIXME
+  return;
+
   CheckValid();
 
   if (!IsFocusVisible())
