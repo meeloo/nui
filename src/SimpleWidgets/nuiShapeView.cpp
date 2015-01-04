@@ -14,6 +14,7 @@ nuiShapeView::nuiShapeView(nuiShape* pShape)
 {
   SetObjectClass(_T("nuiShapeView"));
   mpShape = pShape;
+  pShape->Acquire();
   mShapeMode = eStrokeShape;
   mAntialiasing = true;
   mLineWidth = 1.0f;
@@ -21,7 +22,7 @@ nuiShapeView::nuiShapeView(nuiShape* pShape)
 
 nuiShapeView::~nuiShapeView()
 {
-  delete mpShape;
+  mpShape->Release();
 }
 
 nuiRect nuiShapeView::CalcIdealSize()

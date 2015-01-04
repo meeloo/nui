@@ -17,7 +17,6 @@ class nuiOutliner : public nuiPathGenerator
 {
 public:
   nuiOutliner(nuiPathGenerator* pPath, float linewidth = 1.0f);
-  virtual ~nuiOutliner();
 
   virtual bool Tessellate(nuiPath& rPoints, float Quality) const;
   virtual bool TessellateObj(nuiRenderObject& rObject, float Quality) const;
@@ -33,6 +32,7 @@ public:
 
   void SetPath(nuiPathGenerator* pPath);
 private:
+  virtual ~nuiOutliner();
   void Tessellate(nuiPath& rPoints, const nuiPath& rVertices, uint offset, int count, float Quality) const;
   void AddJoin(const nuiPoint& Point0, const nuiPoint& Point1, const nuiPoint& Point2, const nuiPoint& Point3, nuiPath& rPoints) const;
   void AddCap(const nuiPoint& rFirstPoint, const nuiPoint& rLastPoint, nuiPath& rPoints) const;

@@ -29,7 +29,6 @@ class nuiShape : public nuiPathGenerator
 {
 public:
   nuiShape();
-  virtual ~nuiShape();
 
   void Clear();
 
@@ -88,6 +87,7 @@ public:
   float GetDistanceFromPoint(float X, float Y, float Quality = 0.5f) const;
   
 private:
+  virtual ~nuiShape();
   std::vector<nuiContour*> mpContours;
   nuiShape(const nuiShape& rShape);
   nuiShape& operator=(const nuiShape& rShape);

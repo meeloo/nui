@@ -498,12 +498,12 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
     mpProxy->SetTarget(mpTarget);
     mpPainterInspector->SetTarget(mpTarget);
     
-    mpDummy->SetVisible(false);
+//    mpDummy->SetVisible(false);
     mpInfos->SetVisible(true);
   }
   else
   {
-    mpDummy->SetVisible(true);
+//    mpDummy->SetVisible(true);
     mpInfos->SetVisible(false);
   }
   
@@ -512,12 +512,12 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
 
 void nuiWidgetInfo::BuildInfo()
 {
-  mpDummy = new nuiWidget();
+//  mpDummy = new nuiWidget();
   nuiVBox* pMainBox = new nuiVBox(3);
   mpInfos = pMainBox;
   //if (mpTarget)
   {
-    mpDummy->SetVisible(false);
+//    mpDummy->SetVisible(false);
     mpInfos->SetVisible(true);
     
     nuiScrollView* pMainScroll = new nuiScrollView(false, true);
@@ -735,10 +735,10 @@ void nuiWidgetInfo::BuildInfo()
   {    
     nuiLabel* pLabel = new nuiLabel(_T("No widget Selected"));
     pLabel->SetPosition(nuiCenter);
-    mpDummy->AddChild(pLabel);
+//    mpDummy->AddChild(pLabel);
   }
   
-  mpDummy->SetVisible(true);
+//  mpDummy->SetVisible(true);
   mpInfos->SetVisible(false);
   
   mNeedUpdate = false;

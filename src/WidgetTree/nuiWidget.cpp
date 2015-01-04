@@ -4530,10 +4530,11 @@ void nuiWidget::DrawFocus(nuiDrawContext* pContext, bool FrontOrBack)
       //pContext->EnableTexturing(false);
       pContext->SetStrokeColor(nuiColor(64, 64, 255, ToBelow(128 * GetMixedAlpha())));
       
-      nuiShape shp;
-      shp.AddRect(rect);
+      nuiShape* shp = new nuiShape();
+      shp->AddRect(rect);
       
-      pContext->DrawShape(&shp, eStrokeShape);
+      pContext->DrawShape(shp, eStrokeShape);
+      shp->Release();
     }
   }
 }
