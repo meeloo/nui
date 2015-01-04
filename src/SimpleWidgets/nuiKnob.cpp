@@ -419,7 +419,7 @@ bool nuiKnob::Draw(nuiDrawContext* pContext)
     
     pContext->SetStrokeColor(nuiColor(0.3, 0.3, 0.5, GetMixedAlpha()));
     
-    nuiShape* shp;
+    nuiShape* shp = new nuiShape();
     float mx = R.GetWidth() / 2;
     float my = R.GetHeight() / 2;
     float r = (MIN(mx, my) - linewidth *.5) * .9;
