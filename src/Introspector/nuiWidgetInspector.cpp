@@ -95,6 +95,7 @@ void nuiWidgetInspectorNode::UpdateInfos(const nuiEvent& rEvent)
 
 nuiWidgetInspectorNode::~nuiWidgetInspectorNode()
 {
+//  NGL_OUT("nuiWidgetInspectorNode::~nuiWidgetInspectorNode() %p\n", this);
 }
 
 void nuiWidgetInspectorNode::Open(bool Opened)
@@ -111,7 +112,7 @@ void nuiWidgetInspectorNode::Open(bool Opened)
       while (pIt->IsValid())
       {
         nuiWidget* pTarget = pIt->GetWidget();
-        nuiWidgetInspectorNode* pINode = new nuiWidgetInspectorNode(pTarget);
+        nuiWidgetInspectorNode* pINode = nuiAutoRelease(new nuiWidgetInspectorNode(pTarget));
 				
         AddChild(pINode);
         
@@ -156,7 +157,7 @@ mInspectorSink(this)
   nuiSplitter* pSplitter = new nuiSplitter(nuiVertical);
   AddChild(pSplitter);
   
-  mpTree = new nuiWidgetInspectorNode(pTarget);
+  mpTree = nuiAutoRelease(new nuiWidgetInspectorNode(pTarget));
   //nuiColumnTreeView* pTree = new nuiColumnTreeView(new nuiScrollView(pSplitter, true, false), mpTree);
   nuiScrollView* pScrollView = new nuiScrollView(true, true);
   pSplitter->AddChild(pScrollView);

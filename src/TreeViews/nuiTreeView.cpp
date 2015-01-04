@@ -56,20 +56,12 @@ nuiTreeNode::nuiTreeNode(const nglString& rLabelName, bool Opened, bool Selected
 
 nuiTreeNode::~nuiTreeNode()
 {
-  if (mpElement)
-    mpElement->Release();
-  mOwnElement = false;
   //NGL_OUT(_T("nuiTreeNode::~nuiTreeNode() [0x%x]\n"), this);
 }
 
-void nuiTreeNode::SetElement(nuiWidget* pNewElement, bool DeletePrevious, bool OwnNewElement)
+void nuiTreeNode::SetElement(nuiWidget* pNewElement)
 {
-  if (pNewElement)
-    pNewElement->Acquire();
-  if (mpElement)
-    mpElement->Release();
-  mpElement = pNewElement;
-  mOwnElement = true;
+  nuiTree<nuiWidget>::SetElement(pNewElement);
   Changed();
   ChildAdded(this, this);
 }
@@ -592,7 +584,6 @@ void nuiTreeView::OnTreeChildAdded(const nuiEvent& rEvent)
     {
       //NGL_OUT(_T("Adding TreeNode widget 0x%x\n"), pWidget);
       AddChild(pWidget);
-      pNode->SetOwnElement(false);
     }
     
     for (uint32 i = 0; i < mSubElements.size(); i++)
@@ -633,14 +624,17 @@ void nuiTreeView::ReparentTree(nuiTreeNode* pTree)
   nuiWidgetPtr pWidget = pTree->GetElement();
   if (pWidget && pWidget->GetParent() != this)
   {
+//    pWidget->SetTrace(true);
     AddChild(pWidget);
-    pTree->SetOwnElement(false);
   }
   for (uint32 i = 0; i < mSubElements.size(); i++)
   {
     nuiWidgetPtr pWidget = pTree->GetSubElement(i);
     if (pWidget)
+    {
+//      pWidget->SetTrace(true);
       AddChild(pWidget);
+    }
   }
 
   if (pTree->IsSelected())
@@ -961,12 +955,12 @@ void nuiTreeView::SetDeSelectable(bool Set)
   mDeSelectable = Set;
 }
 
-void nuiTreeView::SetTree(nuiTreeNodePtr pTree, bool DeleteOldTree)
+void nuiTreeView::SetTree(nuiTreeNodePtr pTree)
 {
   if (pTree)
     pTree->Acquire();
   
-  if (DeleteOldTree && mpTree)
+  if (mpTree)
     mpTree->Release();
 
   mpTree = pTree;

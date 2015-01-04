@@ -22,7 +22,7 @@ public:
   nuiTreeNode(const nglString& rLabelName, bool Opened = false, bool Selected = false, bool DrawTreeHandle = true, bool alwaysDisplayTreeHandle=false);
   virtual ~nuiTreeNode();
 
-  virtual void SetElement(nuiWidget* pNewElement, bool DeletePrevious = true, bool OwnNewElement = true); ///< Beware what you are doing if you decide to use this method!
+  virtual void SetElement(nuiWidget* pNewElement); ///< Beware what you are doing if you decide to use this method!
 
   bool IsOpened() const;
   virtual void Open(bool Opened);
@@ -164,7 +164,7 @@ public:
   void StopMultiSelection();
   bool IsMultiSelecting() const;
 
-  virtual void SetTree(nuiTreeNodePtr pTree, bool DeleteOldTree = true); ///< Change the tree to be displayed in the widget.
+  virtual void SetTree(nuiTreeNodePtr pTree); ///< Change the tree to be displayed in the widget.
   nuiTreeNodePtr GetTree(); ///< Return the tree model used by this widget.
   void GetSelected(std::list<nuiTreeNodePtr>& rSelected, bool IncludeInvisibleItem = false); ///< Return the currently selected nodes (by default only return the visible ones).
   const nuiTreeNode* GetSelectedNode() const;

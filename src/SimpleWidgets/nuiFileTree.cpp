@@ -221,7 +221,7 @@ bool nuiFileTree::SetRootPath(const nglPath& rPath)
   {
     mpFileBox->SetCell(0, NULL);
     
-    nuiTreeNodePtr pRoot = new nuiTreeNode(ROOTPATH_ALLVOLUMES);
+    nuiTreeNodePtr pRoot = nuiAutoRelease(new nuiTreeNode(ROOTPATH_ALLVOLUMES));
     pRoot->Open(true);
 
     mpTreeView = new nuiTreeView(pRoot, false);
@@ -282,7 +282,7 @@ bool nuiFileTree::SetRootPath(const nglPath& rPath)
   
   if (pNode)
   {
-    nuiTreeNodePtr pRoot = new nuiTreeNode(_T("HiddenRoot"));
+    nuiTreeNodePtr pRoot = nuiAutoRelease(new nuiTreeNode(_T("HiddenRoot")));
     pRoot->AddChild(pNode);
     pRoot->Open(true);
     pNode->Open(true);

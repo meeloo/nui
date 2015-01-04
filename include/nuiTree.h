@@ -95,13 +95,13 @@ template <class T> class nuiTree : public nuiTreeBase
 public:
   nuiTree(T* pElement, bool OwnElement = true)
   {
-    mpElement = pElement;
-    mOwnElement = OwnElement;
+    mpElement = nullptr;
+    SetElement(mpElement);
   }
 
   virtual ~nuiTree()
   {
-    if (mOwnElement)
+    if (mpElement)
     {
       mpElement->Release();
     }
@@ -112,12 +112,13 @@ public:
     return mpElement;
   }
 
-  virtual void SetElement(T* pNewElement, bool DeletePrevious = true, bool OwnNewElement = true) ///< Beware what you are doing if you decide to use this method!
+  virtual void SetElement(T* pNewElement) ///< Beware what you are doing if you decide to use this method!
   {
-    if (mOwnElement && DeletePrevious)
+    if (pNewElement)
+      pNewElement->Acquire();
+    if (mpElement)
       mpElement->Release();
     mpElement = pNewElement;
-    mOwnElement = OwnNewElement;
   }
   
   const T* GetElement() const
@@ -125,18 +126,7 @@ public:
     return mpElement;
   }
 
-  bool IsElementOwned() const
-  {
-    return mOwnElement;
-  }
-
-  void SetOwnElement(bool OwnElement)
-  {
-    mOwnElement = OwnElement;
-  }
-
 protected:
-  bool mOwnElement;
   T* mpElement;
 };
 
