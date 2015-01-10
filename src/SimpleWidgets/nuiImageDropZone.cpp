@@ -145,11 +145,12 @@ bool nuiImageDropZone::Draw(nuiDrawContext* pContext)
   {
     nuiRect r(GetRect().Size());
     r.Grow(-2, -2);
-    nuiShape shp;
-    shp.AddRect(r);
+    nuiShape* shp = new nuiShape();
+    shp->AddRect(r);
     pContext->SetLineWidth(4);
     pContext->SetStrokeColor(nuiColor(230, 230, 255));
-    pContext->DrawShape(&shp, eStrokeShape);
+    pContext->DrawShape(shp, eStrokeShape);
+    shp->Release();
   }
 
   nuiWidget::Draw(pContext);

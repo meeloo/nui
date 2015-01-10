@@ -16,7 +16,6 @@ class nuiContour : public nuiPathGenerator
 {
 public:
   nuiContour();
-  virtual ~nuiContour();
 
   void AddArc(const nuiPoint& rStartVertex, const nuiPoint& rStopVertex, float XRadius, float YRadius, float Angle, bool LargeArc, bool Sweep); ///< Add an arc to the contour in the SVG fashion (start/stop points).
   void AddArc(float cX, float cY, float rX, float rY, float Theta1InDegree, float Theta2InDegree, float Phi); ///< Add an arc to the contour in a center/angle fashion.
@@ -40,6 +39,7 @@ public:
   nuiRect GetRect();
 
 private:
+  virtual ~nuiContour();
   std::list<nuiPathGenerator*> mpElements;
   nuiContour(const nuiContour& rContour);
 };

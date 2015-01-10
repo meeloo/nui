@@ -83,7 +83,7 @@ void nuiTreeHandleDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget,
   
   bool IsOpened = pWidget->IsSelected();
 
-  nuiShape Shape;
+  nuiShape* Shape = new nuiShape();
 
   nuiSize x,y;
   x = rRect.mLeft + mBorder.Left();
@@ -105,15 +105,15 @@ void nuiTreeHandleDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget,
     pContour->LineTo(nuiPoint(x, y, 0));
   }
 
-  Shape.AddContour(pContour);
+  Shape->AddContour(pContour);
 
   pContext->EnableBlending(true);
   pContext->SetBlendFunc(nuiBlendTransp);
   pContext->EnableTexturing(false);
 
   pContext->SetFillColor(mHandleColor);
-  pContext->DrawShape(&Shape, eFillShape);
-
+  pContext->DrawShape(Shape, eFillShape);
+  Shape->Release();
   pContext->PopState();
 }
 

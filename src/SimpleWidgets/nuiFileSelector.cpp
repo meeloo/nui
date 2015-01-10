@@ -439,7 +439,7 @@ void nuiFileSelector::InitSelector (const nglPath& rPath, const nglPath& rRootPa
   }
   
   
-  nuiTreeNode* pTree = new nuiTreeNode(new nuiLabel(_T("Loading...")));
+  nuiTreeNode* pTree = nuiAutoRelease(new nuiTreeNode(new nuiLabel(_T("Loading..."))));
   switch (mode)
   {
     case eTree:
@@ -747,7 +747,7 @@ void nuiFileSelector::SetDisplayMode(nuiFileSelector::DisplayMode mode)
   
   mDisplayMode = mode;
   nuiTreeNodePtr pTree = mpTreeView->GetTree();
-  mpTreeView->SetTree(new nuiTreeNode(_T("Changing view mode...")), false);
+  mpTreeView->SetTree(nuiAutoRelease(new nuiTreeNode(_T("Changing view mode..."))));
   
   Clear();
   

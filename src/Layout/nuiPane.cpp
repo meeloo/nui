@@ -43,7 +43,8 @@ nuiPane::nuiPane(const nuiColor& rFillColor, const nuiColor& rStrokeColor, nuiSh
 
 nuiPane::~nuiPane()
 {
-  delete mpShape;
+  if (mpShape)
+    mpShape->Release();
 }
 
 bool nuiPane::Draw(nuiDrawContext* pContext)
@@ -131,7 +132,8 @@ bool nuiPane::SetRect(const nuiRect& rRect)
 void nuiPane::SetCurve(float curve)
 {
   mCurve = curve;
-  delete mpShape;
+  if (mpShape)
+    mpShape->Release();
 
   if (curve != 0) 
   {

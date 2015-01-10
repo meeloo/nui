@@ -691,8 +691,6 @@ void nuiPopupMenu::OnTreeChildAdded(const nuiEvent& rEvent)
     if (pWidget)
     {
       AddChild(pWidget);
-      if (mOwnTree)
-        pNode->SetOwnElement(false);
     }
   }
 }
@@ -718,8 +716,6 @@ void nuiPopupMenu::ReparentTree(nuiTreeNode* pTree)
   nuiWidgetPtr pWidget = pTree->GetElement();
   NGL_ASSERT(pWidget);
   AddChild(pWidget);
-  if (mOwnTree)
-    pTree->SetOwnElement(false);
   uint32 count = pTree->GetChildrenCount();
   for (uint32 i = 0; i < count; i++)
   {

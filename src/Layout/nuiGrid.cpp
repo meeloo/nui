@@ -1252,7 +1252,7 @@ bool nuiGrid::Draw(nuiDrawContext *pContext)
 
   if (mDisplayGridBorder)
   {
-    nuiShape shape;
+    nuiShape* shape = new nuiShape();
     pContext->SetLineWidth(mGridBorderSize);
     pContext->SetStrokeColor(GetColor(eBorder));
     nuiSize widthSoFar = 0.f;
@@ -1274,7 +1274,7 @@ bool nuiGrid::Draw(nuiDrawContext *pContext)
 
         nuiSize height = mHeights[j];
         nuiRect rect(widthSoFar, heightSoFar, width + mGridBorderSize, height + mGridBorderSize);
-        shape.AddRect(rect);
+        shape->AddRect(rect);
 
         heightSoFar += height;
         heightSoFar += mHGaps[j] + mGridBorderSize;
@@ -1282,7 +1282,8 @@ bool nuiGrid::Draw(nuiDrawContext *pContext)
       widthSoFar += width;
       widthSoFar += mVGaps[i] + mGridBorderSize;
     }
-    pContext->DrawShape(&shape, eStrokeShape);
+    pContext->DrawShape(shape, eStrokeShape);
+    shape->Release();
   }
 
   delete pIt;

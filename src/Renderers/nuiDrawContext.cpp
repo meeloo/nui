@@ -1025,21 +1025,23 @@ void nuiDrawContext::DrawLine(float x1, float y1, float x2, float y2)
   }
   else
   {
-    nuiShape shp;
-    shp.LineTo(nuiPoint(x1, y1));
-    shp.LineTo(nuiPoint(x2, y2));
-    DrawShape(&shp, eStrokeShape);
+    nuiShape* shp = new nuiShape();
+    shp->LineTo(nuiPoint(x1, y1));
+    shp->LineTo(nuiPoint(x2, y2));
+    DrawShape(shp, eStrokeShape);
+    shp->Release();
   }
 }
 
 void nuiDrawContext::DrawPoint(float x, float y)
 {
-  nuiShape shp;
-  shp.AddCircle(x, y, mCurrentState.mLineWidth);
+  nuiShape* shp = new nuiShape();
+  shp->AddCircle(x, y, mCurrentState.mLineWidth);
   nuiColor col(mCurrentState.mFillColor);
   SetFillColor(mCurrentState.mStrokeColor);
-  DrawShape(&shp, eFillShape);
+  DrawShape(shp, eFillShape);
   SetFillColor(col);
+  shp->Release();
 }
 
 void nuiDrawContext::DrawPoint(const nuiVector2& rPoint)

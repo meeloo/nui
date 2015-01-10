@@ -218,7 +218,7 @@ void nuiThreadInspector::BuildThreadTree()
   std::map<nglThread::ID, std::list<nglThreadState> >::iterator it;
   nglThreadChecker::GetStates(states);
   
-  mpTree = new nuiTreeNode(_T("Threads"));
+  mpTree = nuiAutoRelease(new nuiTreeNode(_T("Threads")));
   
   nuiTreeView* pTree = new nuiTreeView(mpTree);
   mpMainBox->SetCell(1, pTree);

@@ -38,7 +38,7 @@ void nuiShape::Clear()
   std::vector<nuiContour*>::const_iterator end = mpContours.end();
 
   for (it = mpContours.begin(); it != end; ++it)
-    delete (*it);
+    (*it)->Release();
 
   EmptyCaches();
 
@@ -330,13 +330,14 @@ nuiRenderObject* nuiShape::Fill(float Quality)
 
 nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
 {
-  nuiOutliner Outliner(this, LineWidth);
-  Outliner.SetLineJoin(LineJoin);
-  Outliner.SetLineCap(LineCap);
-  Outliner.SetMiterLimit(MiterLimit);
+  nuiOutliner* Outliner = new nuiOutliner(this, LineWidth);
+  Outliner->SetLineJoin(LineJoin);
+  Outliner->SetLineCap(LineCap);
+  Outliner->SetMiterLimit(MiterLimit);
 
   nuiPath outline;
-  Outliner.Tessellate(outline, 1.0);
+  Outliner->Tessellate(outline, 1.0);
+  Outliner->Release();
 
   nuiPolyLine* polyline = new nuiPolyLine(outline);
   nuiTessellator tesselator(polyline);

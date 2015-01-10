@@ -821,7 +821,7 @@ void nuiColumnTreeView::CreateScrollBars()
       path.AddVertex(nuiPoint(3.5f, 6.f));
       path.AddVertex(nuiPoint(7.f, 0.f));
       path.AddVertex(nuiPoint(0.f, 0.f));
-      nuiShape* pShape = new nuiShape();
+      nuiShape* pShape = nuiAutoRelease(new nuiShape());
       pShape->AddLines(path);
 
       nuiShapeView* pShapeView = new nuiShapeView(pShape);
@@ -842,7 +842,7 @@ void nuiColumnTreeView::CreateScrollBars()
       path.AddVertex(nuiPoint(7.f, 6.f));
       path.AddVertex(nuiPoint(3.5f, 0.f));
       path.AddVertex(nuiPoint(0.f, 6.f));
-      pShape = new nuiShape();
+      pShape = nuiAutoRelease(new nuiShape());
       pShape->AddLines(path);
 
       pShapeView = new nuiShapeView(pShape);
