@@ -71,7 +71,7 @@ nglIOStream* nglNativeVolume::OpenWrite(const nglPath& rPath, bool OverWrite)
 }
 
 
-bool nglNativeVolume::GetChildren(const nglPath& rPath, std::list<nglPath>& rChildren)
+bool nglNativeVolume::GetChildren(const nglPath& rPath, std::vector<nglPath>& rChildren)
 {
   nglPath p(mInfos.mPath);
   nglPath volumeless(rPath.GetVolumeLessPath());
@@ -83,8 +83,8 @@ bool nglNativeVolume::GetChildren(const nglPath& rPath, std::list<nglPath>& rChi
     return false;
   
   // Post process the filename so that they stay in the volume tree and not the original native tree:
-  std::list<nglPath>::iterator it = rChildren.begin();
-  std::list<nglPath>::iterator end = rChildren.end();
+  std::vector<nglPath>::iterator it = rChildren.begin();
+  std::vector<nglPath>::iterator end = rChildren.end();
   
   while (it != end)
   {

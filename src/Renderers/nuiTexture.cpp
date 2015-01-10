@@ -193,11 +193,11 @@ static void GetAllImages(std::vector<AtlasElem>& rElements, const nglPath& rPath
   std::set<nglPath> childrenset;
   
   {
-    std::list<nglPath> children;
+    std::vector<nglPath> children;
     rPath.GetChildren(&children);
 
-    std::list<nglPath>::iterator it = children.begin();
-    std::list<nglPath>::iterator end = children.end();
+    std::vector<nglPath>::iterator it = children.begin();
+    std::vector<nglPath>::iterator end = children.end();
     while (it != end)
     {
       const nglPath& p(*it);

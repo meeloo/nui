@@ -564,7 +564,7 @@ bool nuiScrollView::Draw(nuiDrawContext* pContext)
   nuiSize scrollv = (mpVertical->IsVisible() && !mForceNoVertical && !mVerticalIsExternal)?mBarSize:0;
   nuiSize scrollh = (mpHorizontal->IsVisible() && !mForceNoHorizontal && !mHorizontalIsExternal)?mBarSize:0;
   nuiRect rect(0.0f,0.0f,mRect.GetWidth()-scrollv, mRect.GetHeight()-scrollh);
-  
+
   IteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
@@ -870,26 +870,15 @@ bool nuiScrollView::MouseMoved(const nglMouseInfo& rInfo)
 {
   if (!mLeftClick)
     return false;
-  
+
+  mMoved = true;
+
   nglTime now;
   double elapsed = now.GetValue() - mLastTime.GetValue();
   elapsed = MAX(0.01, elapsed);
-  //  float ratio = elapsed > 0.1 ? 0 : MIN(1, 1/elapsed);
-  //  mSpeedX *= ratio;
-  //  mSpeedY *= ratio;
   
   double vectX = mLastX - rInfo.X;
   double vectY = mLastY - rInfo.Y;
-  //  nuiSize module = sqrt(vectX * vectX + vectY * vectY);
-  //  module = 1;
-  //  elapsed = 1;
-  //  mSpeedX *= INITIAL_BRAKES;
-  //  mSpeedY *= INITIAL_BRAKES;
-  //  float tmpY = mSpeedY;
-  //  float addX = vectX  * INERTIA_SPEED / elapsed;
-  //  float addY = vectY * INERTIA_SPEED / elapsed;
-  //  mSpeedX += addX;
-  //  mSpeedY += addY;
   
   double oldSpeedX = mSpeedX;
   double oldSpeedY = mSpeedY;
@@ -1002,6 +991,7 @@ bool nuiScrollView::CallPreMouseClicked(const nglMouseInfo& rInfo)
   {
     mTouch = rInfo;
     mTouched = true;
+    mMoved = false;
     if (mSpeedX != 0 || mSpeedY != 0)
     {
       if (StealMouseEvent(rInfo))
@@ -1052,7 +1042,7 @@ bool nuiScrollView::CallPreMouseMoved(const nglMouseInfo& rInfo)
     
     float dist = sqrt(x * x + y * y);
     
-    if (dist > 10 && StealMouseEvent(rInfo))
+    if (dist > 10 && StealMouseEvent(rInfo) && (rInfo.Counterpart != nullptr))
     {
       mTouched = false;
       mXOffset = GetXPos();
@@ -1062,6 +1052,7 @@ bool nuiScrollView::CallPreMouseMoved(const nglMouseInfo& rInfo)
       NGL_ASSERT(rInfo.Counterpart);
       rInfo.Counterpart->X = rInfo.X;
       rInfo.Counterpart->Y = rInfo.Y;
+      LocalToGlobal(rInfo.Counterpart->X, rInfo.Counterpart->Y);
       mLastTime = nglTime();
       return true;
     }
@@ -1226,7 +1217,7 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     mYOffset = YOffset;
   }
   
-  //  UpdateLayout();
+//  UpdateLayout();
   SetRect(mRect);
   
   OffsetsChanged();
@@ -1387,12 +1378,12 @@ void nuiScrollView::SetHideScrollBars(bool hide)
     mpHorizontal->SetAlpha(mLeftClick ? 1 : 0);
     mpVertical->SetAlpha(mLeftClick ? 1 : 0);
   }
-  else
+  else if (!mpShowAnimH)
   {
-    delete mpShowAnimH;
-    delete mpShowAnimV;
-    delete mpHideAnimH;
-    delete mpHideAnimV;
+    mpShowAnimH->Release();
+    mpShowAnimV->Release();
+    mpHideAnimH->Release();
+    mpHideAnimV->Release();
     mpShowAnimH = NULL;
     mpShowAnimV = NULL;
     mpHideAnimH = NULL;

@@ -156,9 +156,9 @@ public:
   nglString GetParentName() const;  ///< Returns the parent path as a string (remove the last node)
 	nglPath   GetParent() const;      ///< Returns the parent path (remove the last node)
   void Split(std::vector<nglString>& rElements); ///< Split the elements of this path into its elements (folders and eventual file))
-	int32 GetChildren(std::list<nglPath>* pChildren) const; ///< deprecated
-	int32 GetChildren(std::list<nglPath>& pChildren) const; ///< that's the proper api
-	int32 GetChildrenTree(std::list<nglPath>& pChildren) const; ///< Get the children recursively to get a complete tree.
+	int32 GetChildren(std::vector<nglPath>* pChildren) const; ///< deprecated
+	int32 GetChildren(std::vector<nglPath>& pChildren) const; ///< that's the proper api
+	int32 GetChildrenTree(std::vector<nglPath>& pChildren) const; ///< Get the children recursively to get a complete tree.
  
 	/*!< Get node's children
 	\param pChildren if non-null, children will be appended to this list
@@ -200,7 +200,7 @@ public:
 	//@{
 	bool IsAbsolute() const;       ///< Returns whether the path is absolute or relative
 	nglPath     GetAbsolutePath() const;  ///< Returns the absolute path name (from file system or volume root)
-	static uint64  GetVolumes(std::list<nglPathVolume>& rVolumes, uint64 Flags);
+	static uint64  GetVolumes(std::vector<nglPathVolume>& rVolumes, uint64 Flags);
 	/*!< List physical 'volumes' and locate them on the file system
 	\param rVolumes volume descriptions will be appended to this list
 	\param Flags filter : only list volumes that have at least the bits from \a Flags set.
@@ -367,14 +367,14 @@ private:
 	friend class nglPath;
 	friend class nglKernel;
 	friend pascal OSStatus nglVolumeEventHandler (EventHandlerCallRef eventHandlerCallRef, EventRef eventRef, void* userData);
-	static void UpdateVolumes(std::list<nglPathVolume>& rVolumes);
-	static nglPathVolume AddVolume(std::list<nglPathVolume>& rVolumes, int32 volnum);
-	static nglPathVolume DelVolume(std::list<nglPathVolume>& rVolumes, int32 volnum);
+	static void UpdateVolumes(std::vector<nglPathVolume>& rVolumes);
+	static nglPathVolume AddVolume(std::vector<nglPathVolume>& rVolumes, int32 volnum);
+	static nglPathVolume DelVolume(std::vector<nglPathVolume>& rVolumes, int32 volnum);
 #endif // _CARBON_
   
 #ifdef _COCOA_
   friend class nglPath;
-  static void UpdateVolumes(std::list<nglPathVolume>& rVolumes);
+  static void UpdateVolumes(std::vector<nglPathVolume>& rVolumes);
 #endif // _COCOA_
 };
 

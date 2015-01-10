@@ -120,11 +120,11 @@ public:
     
     dir.Add("<a href=\"").Add(p.GetParent().GetChars()).Add("\">Parent Folder</a><br>\n");
 
-    std::list<nglPath> children;
+    std::vector<nglPath> children;
     p.GetChildren(children);
     
-    std::list<nglPath>::const_iterator it = children.begin();
-    std::list<nglPath>::const_iterator end = children.end();
+    std::vector<nglPath>::const_iterator it = children.begin();
+    std::vector<nglPath>::const_iterator end = children.end();
 
     int32 count = 0;
     while (it != end)

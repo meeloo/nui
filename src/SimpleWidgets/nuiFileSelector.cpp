@@ -208,11 +208,11 @@ void nuiFileSelectorNode::Open(bool Opened)
     
     nglPath p(GetProperty(_T("Path")));
     
-    std::list<nglPath> children;
+    std::vector<nglPath> children;
     p.GetChildren(&children);
     
-    std::list<nglPath>::iterator it = children.begin();
-    std::list<nglPath>::iterator end = children.end();
+    std::vector<nglPath>::iterator it = children.begin();
+    std::vector<nglPath>::iterator end = children.end();
     
     while (it != end)
     {
@@ -381,7 +381,7 @@ void nuiFileSelector::InitSelector (const nglPath& rPath, const nglPath& rRootPa
     mVolumes.clear();
     nglPath::GetVolumes(mVolumes, nglPathVolume::All);
     
-    std::list<nglPathVolume>::iterator it;
+    std::vector<nglPathVolume>::iterator it;
     for (it = mVolumes.begin(); it != mVolumes.end(); ++it)
     {
       nglPathVolume volume = *it;

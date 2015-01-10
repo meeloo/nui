@@ -763,11 +763,11 @@ void nuiFontManager::ScanFolders(bool rescanAllFolders /* = false */)
 
 bool nuiFontManager::ScanSubFolder(const nglPath& rBasePath)
 {
-  std::list<nglPath> children;
+  std::vector<nglPath> children;
   rBasePath.GetChildrenTree(children);
   
-  std::list<nglPath>::const_iterator cit = children.begin();
-  std::list<nglPath>::const_iterator cend = children.end();
+  std::vector<nglPath>::const_iterator cit = children.begin();
+  std::vector<nglPath>::const_iterator cend = children.end();
   
   while (cit != cend)
   {
@@ -1186,8 +1186,8 @@ bool nuiFontManager::Load(nglIStream& rStream, double lastscantime)
       const nglPath& pth = it->second;
       NGL_LOG("font", NGL_LOG_INFO, "scanning font folder '%s' '%s' for font files\n", str.GetChars(), pth.GetChars());
       
-      std::list<nglPath> children;
-      std::list<nglPath>::iterator itc;
+      std::vector<nglPath> children;
+      std::vector<nglPath>::iterator itc;
       pth.GetChildrenTree(children);
       
       for (itc = children.begin(); itc != children.end(); ++itc)
@@ -1301,8 +1301,8 @@ void nuiFontManager::UpdateFonts()
       const nglString& str = it->first;
       const nglPath& pth = it->second;
       
-      std::list<nglPath> children;
-      std::list<nglPath>::iterator itc;
+      std::vector<nglPath> children;
+      std::vector<nglPath>::iterator itc;
       pth.GetChildrenTree(children);
       
       for (itc = children.begin(); itc != children.end(); ++itc)

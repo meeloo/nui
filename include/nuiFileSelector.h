@@ -166,7 +166,7 @@ private:
   nuiList* mpFolderList;
   nglPath mSelection;
   bool mShowVolumes;
-  std::list<nglPathVolume> mVolumes;
+  std::vector<nglPathVolume> mVolumes;
 
   void OnClosed   (const nuiEvent& rEvent);
   void OnOK       (const nuiEvent& rEvent);

@@ -5926,8 +5926,6 @@ void nuiWidget::SetAlpha(float Alpha)
 void nuiWidget::SetEnabled(bool set)
 {
   CheckValid();
-  if (set == mEnabled)
-    return;
   if (mEnabled == set)
     return;
 
@@ -5954,8 +5952,6 @@ void nuiWidget::SetEnabled(bool set)
 void nuiWidget::SetSelected(bool set)
 {
   CheckValid();
-  if (mSelected == set)
-    return;
   if (mSelected == set)
     return;
 
@@ -5996,8 +5992,6 @@ void nuiWidget::SetSelected(bool set)
 void nuiWidget::SetVisible(bool Visible)
 {
   CheckValid();
-  if (IsVisible(false) == Visible)
-    return;
 
   if (IsVisible(false) == Visible)
     return;

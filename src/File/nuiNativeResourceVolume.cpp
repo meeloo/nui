@@ -141,7 +141,7 @@ nglIOStream* nuiNativeResourceVolume::OpenWrite(const nglPath& rPath, bool OverW
   return NULL;
 }
 
-bool nuiNativeResourceVolume::GetChildren(const nglPath& rPath, std::list<nglPath>& rChildren)
+bool nuiNativeResourceVolume::GetChildren(const nglPath& rPath, std::vector<nglPath>& rChildren)
 {
   nglString p(rPath.GetVolumeLessPath());
   p.TrimLeft(_T('/'));

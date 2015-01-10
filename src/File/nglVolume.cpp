@@ -98,7 +98,7 @@ nglVolume* nglVolume::GetVolume(const nglString& rName)
   return it->second;
 }
 
-void nglVolume::GetVolumes(std::list<nglPathVolume>& rVolumes, uint64 Flags)
+void nglVolume::GetVolumes(std::vector<nglPathVolume>& rVolumes, uint64 Flags)
 {
   nglCriticalSectionGuard guard(mCS);
   
@@ -120,7 +120,7 @@ nglVolume::VolumeMap nglVolume::mVolumes;
 nglCriticalSection nglVolume::mCS(_T("nglVolumeCS"));
 
 /// deprecated
-bool nglVolume::GetChildren(const nglPath& rPath, std::list<nglPath>* pChildren)
+bool nglVolume::GetChildren(const nglPath& rPath, std::vector<nglPath>* pChildren)
 {
   return GetChildren(rPath, *pChildren);
 }

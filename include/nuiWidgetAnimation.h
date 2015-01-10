@@ -37,6 +37,8 @@ class nuiMoveToRectAnim : public nuiMoveRectAnim
 public:
   nuiMoveToRectAnim (nuiWidgetPtr pTarget, double DurationInSeconds, const nuiRect& rDestination);
   void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
+protected:
+  ~nuiMoveToRectAnim() {}
 };
 
 class nuiMoveAnim : public nuiMoveRectAnim
@@ -48,6 +50,7 @@ public:
 protected:
   nuiSize mX1,mY1;
   nuiSize mX2,mY2;
+  ~nuiMoveAnim() {}
 };
 
 class nuiMoveToAnim : public nuiMoveAnim
@@ -55,6 +58,8 @@ class nuiMoveToAnim : public nuiMoveAnim
 public:
   nuiMoveToAnim (nuiWidgetPtr pTarget, double DurationInSeconds, nuiSize X, nuiSize Y);
   void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
+protected:
+  ~nuiMoveToAnim() {}
 };
 
 class nuiScaleToWidgetAnim : public nuiMoveRectAnim
@@ -65,6 +70,7 @@ public:
 protected:
   float mRatio;
   nuiPosition mPosition;
+  ~nuiScaleToWidgetAnim() {}
 };
 
 class nuiScaleFromWidgetAnim : public nuiMoveRectAnim
@@ -75,6 +81,7 @@ public:
 protected:
   float mRatio;
   nuiPosition mPosition;
+  ~nuiScaleFromWidgetAnim() {}
 };
 
 /////// WIDGET MATRIX ANIMATIONS:
@@ -98,6 +105,8 @@ class nuiScaleToMatrixWidgetAnim : public nuiScaleMatrixWidgetAnim
 public:
   nuiScaleToMatrixWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, float DestinationRatio, nuiPosition ScaleBarycenterPosition = nuiCenter);
   virtual void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
+protected:
+  ~nuiScaleToMatrixWidgetAnim() {}
 };
 
 class nuiScaleFromMatrixWidgetAnim : public nuiScaleMatrixWidgetAnim
@@ -105,6 +114,8 @@ class nuiScaleFromMatrixWidgetAnim : public nuiScaleMatrixWidgetAnim
 public:
   nuiScaleFromMatrixWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, float DestinationRatio, nuiPosition ScaleBarycenterPosition = nuiCenter);
   virtual void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
+protected:
+  ~nuiScaleFromMatrixWidgetAnim() {}
 };
 
 /////// WIDGET ALPHA ANIMATIONS:
@@ -127,7 +138,8 @@ public:
   nuiFadeInWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, bool StartFromCurrentAlpha);
   virtual void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
 
-private:
+protected:
+  ~nuiFadeInWidgetAnim() {}
   bool mStartFromCurrentAlpha;
 };
 
@@ -137,7 +149,8 @@ public:
   nuiFadeOutWidgetAnim (nuiWidgetPtr pTarget, double DurationInSeconds, bool StartFromCurrentAlpha);
   virtual void Play(int32 Count = 1, nuiAnimLoop LoopMode = eAnimLoopForward);
 
-private:
+protected:
+  ~nuiFadeOutWidgetAnim() {}
   bool mStartFromCurrentAlpha;
 };
 

@@ -32,17 +32,17 @@ public:
   virtual nglIOStream* OpenWrite(const nglPath& rPath, bool OverWrite) = 0;
 
   /// deprecated
-  bool GetChildren(const nglPath& rPath, std::list<nglPath>* pChildren);
+  bool GetChildren(const nglPath& rPath, std::vector<nglPath>* pChildren);
   
   // proper api
-  virtual bool GetChildren(const nglPath& rPath, std::list<nglPath>& pChildren) = 0;
+  virtual bool GetChildren(const nglPath& rPath, std::vector<nglPath>& pChildren) = 0;
   
   static void Mount(nglVolume* pVolume);
   static void Unmount(nglVolume* pVolume);
   static void UnmountAll();
   static nglVolume* GetVolume(const nglString& rName);
 
-  static void GetVolumes(std::list<nglPathVolume>& rVolumes, uint64 Flags);
+  static void GetVolumes(std::vector<nglPathVolume>& rVolumes, uint64 Flags);
 
 protected:
   friend class nglPath;

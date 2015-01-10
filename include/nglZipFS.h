@@ -36,8 +36,8 @@ public:
 
   virtual bool Delete(bool Recurse = false);
   virtual bool Create(bool Recurse = true);
-  virtual int  GetChildren(std::list<nglPath>* pChildren) const;
-  virtual int  GetChildren(std::list<nglZipPath>* pChildren) const;
+  virtual int  GetChildren(std::vector<nglPath>* pChildren) const;
+  virtual int  GetChildren(std::vector<nglZipPath>* pChildren) const;
   virtual bool GetInfo (nglPathInfo& rInfo) const;
   virtual bool Exists() const;
   virtual bool CanRead() const;
@@ -67,14 +67,14 @@ public:
   virtual bool Move(const nglPath& rSource, const nglPath& rPathTarget);
   virtual nglIStream* OpenRead(const nglPath& rPath);
   virtual nglIOStream* OpenWrite(const nglPath& rPath, bool OverWrite);
-  virtual bool GetChildren(const nglPath& rPath, std::list<nglPath>& pChildren);
+  virtual bool GetChildren(const nglPath& rPath, std::vector<nglPath>& pChildren);
 
   bool Open();
 
   bool CanWrite() const;
   bool CanRead() const;
   bool GetInfo (const nglZipPath& rPath, nglPathInfo& rInfo) const;
-  int  GetChildren(const nglZipPath& rPath, std::list<nglZipPath>& rList) const; ///< Populate the list with the children of the given path node in the zip.
+  int  GetChildren(const nglZipPath& rPath, std::vector<nglZipPath>& rList) const; ///< Populate the list with the children of the given path node in the zip.
 
   nglIZip* GetStream(const nglZipPath& rPath); ///< Return a stream that can read the file pointed to by rPath in the Zip FS.
 
@@ -90,7 +90,7 @@ private:
     bool AddChild(Node* pPath);
 
   private:
-    std::list<Node*> mpChildren;
+    std::vector<Node*> mpChildren;
     uint      mSize;
     uint      mPosInZipDirectory;  /* offset in zip file directory */
     uint      mNumOfFile;          /* # of file */

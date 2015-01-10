@@ -230,11 +230,11 @@ bool nuiFileTree::SetRootPath(const nglPath& rPath)
 
     mpScrollView->AddChild(mpTreeView);
 
-    std::list<nglPathVolume> volumes;
+    std::vector<nglPathVolume> volumes;
     nglPath::GetVolumes(volumes, nglPathVolume::All);
     
-    std::list<nglPathVolume>::iterator it = volumes.begin();
-    std::list<nglPathVolume>::iterator end = volumes.end();
+    std::vector<nglPathVolume>::iterator it = volumes.begin();
+    std::vector<nglPathVolume>::iterator end = volumes.end();
 
     while (it != end)
     {      

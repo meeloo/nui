@@ -166,6 +166,7 @@ protected:
   
   nglMouseInfo mTouch;
   bool mTouched;
+  bool mMoved;
   nuiEventSink<nuiScrollView> mSVSink;
 };
 

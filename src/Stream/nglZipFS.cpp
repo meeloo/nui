@@ -35,18 +35,18 @@ bool nglZipPath::Create(bool Recurse)
   return false;
 }
 
-int  nglZipPath::GetChildren(std::list<nglZipPath>* pChildren) const
+int  nglZipPath::GetChildren(std::vector<nglZipPath>* pChildren) const
 {
   return mpZipFS->GetChildren(*this, *pChildren);
 }
 
-int  nglZipPath::GetChildren(std::list<nglPath>* pChildren) const
+int  nglZipPath::GetChildren(std::vector<nglPath>* pChildren) const
 {
-  std::list<nglZipPath> Children;
+  std::vector<nglZipPath> Children;
   GetChildren(&Children);
 
-  std::list<nglZipPath>::iterator it;
-  std::list<nglZipPath>::iterator end = Children.end();
+  std::vector<nglZipPath>::iterator it;
+  std::vector<nglZipPath>::iterator end = Children.end();
 
   for (it = Children.begin(); it != end; ++it)
     pChildren->push_back(*it);
@@ -321,14 +321,14 @@ bool nglZipFS::GetInfo (const nglZipPath& rPath, nglPathInfo& rInfo) const
   return pChild != NULL;
 }
 
-int nglZipFS::GetChildren(const nglZipPath& rPath, std::list<nglZipPath>& rList) const
+int nglZipFS::GetChildren(const nglZipPath& rPath, std::vector<nglZipPath>& rList) const
 {
   Node* pNode = mRoot.Find(rPath);
   if (!pNode)
     return 0;
 
-  std::list<nglZipFS::Node*>::iterator it;
-  std::list<nglZipFS::Node*>::iterator end = pNode->mpChildren.end();
+  std::vector<nglZipFS::Node*>::iterator it;
+  std::vector<nglZipFS::Node*>::iterator end = pNode->mpChildren.end();
   for (it = pNode->mpChildren.begin(); it != end; ++it)
   {
     if (*it)
@@ -474,8 +474,8 @@ nglZipFS::Node::Node(const nglString& rPath, uint Size, uint Pos, uint Num, bool
 
 nglZipFS::Node::~Node()
 {
-  std::list<nglZipFS::Node*>::iterator it;
-  std::list<nglZipFS::Node*>::iterator end = mpChildren.end();
+  std::vector<nglZipFS::Node*>::iterator it;
+  std::vector<nglZipFS::Node*>::iterator end = mpChildren.end();
   for (it = mpChildren.begin(); it != end; ++it)
   {
     if (*it)
@@ -507,8 +507,8 @@ nglZipFS::Node* nglZipFS::Node::Find(const nglString& path) const
 {
   if (path == _T("") || path == _T(".")  || path == _T("/"))
     return (nglZipFS::Node*)this;
-  std::list<nglZipFS::Node*>::const_iterator it;
-  std::list<nglZipFS::Node*>::const_iterator end = mpChildren.end();
+  std::vector<nglZipFS::Node*>::const_iterator it;
+  std::vector<nglZipFS::Node*>::const_iterator end = mpChildren.end();
   for (it = mpChildren.begin(); it != end; ++it)
     if ((*it)->mName == path)
       return *it;
@@ -591,7 +591,7 @@ nglIOStream* nglZipFS::OpenWrite(const nglPath& rPath, bool OverWrite)
   return NULL;
 }
 
-bool nglZipFS::GetChildren(const nglPath& rPath, std::list<nglPath>& rChildren)
+bool nglZipFS::GetChildren(const nglPath& rPath, std::vector<nglPath>& rChildren)
 {
   nglString p(rPath.GetVolumeLessPath());
   p.TrimLeft(_T('/'));
@@ -600,9 +600,9 @@ bool nglZipFS::GetChildren(const nglPath& rPath, std::list<nglPath>& rChildren)
   Node* pNode = mRoot.Find(path);
   if (!pNode)
     return 0;
-
-  std::list<nglZipFS::Node*>::iterator it;
-  std::list<nglZipFS::Node*>::iterator end = pNode->mpChildren.end();
+  
+  std::vector<nglZipFS::Node*>::iterator it;
+  std::vector<nglZipFS::Node*>::iterator end = pNode->mpChildren.end();
   for (it = pNode->mpChildren.begin(); it != end; ++it)
   {
     if (*it)
@@ -610,12 +610,13 @@ bool nglZipFS::GetChildren(const nglPath& rPath, std::list<nglPath>& rChildren)
       nglZipPath path(this, rPath.GetPathName().IsEmpty()? (*it)->mName : rPath.GetPathName() );
       if (!rPath.GetPathName().IsEmpty())
         path += nglPath((*it)->mName);
-
+      
       rChildren.push_back(path);
     }
   }
   return rChildren.size();
 }
+
 
 ////////////
 // nuiZipWriter

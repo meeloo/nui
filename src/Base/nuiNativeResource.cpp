@@ -275,11 +275,11 @@ void RecurseChildren(std::vector<nglPath>& rResources, nglPath ResPath, nglPath 
     return;
   }
 
-  std::list<nglPath> children;
+  std::vector<nglPath> children;
   BasePath.GetChildren(&children);
 
-  std::list<nglPath>::const_iterator it = children.begin();
-  std::list<nglPath>::const_iterator end = children.end();
+  std::vector<nglPath>::const_iterator it = children.begin();
+  std::vector<nglPath>::const_iterator end = children.end();
 
   while (it != end)
   {

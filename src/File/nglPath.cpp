@@ -288,11 +288,11 @@ bool nglPath::Delete(bool Recurse) const
 
 	if (Recurse && info.Exists && !info.IsLeaf)
 	{
-		list<nglPath> children;
+		vector<nglPath> children;
 
 		if (GetChildren(&children) > 0)
 		{
-			list<nglPath>::iterator child;
+			vector<nglPath>::iterator child;
 
 			for (child = children.begin(); child != children.end(); ++child)
 			{
@@ -347,10 +347,10 @@ bool FindRec(const nglPath &path, nglPath &currentPath, const nglString &FileNam
 
 	if (!info.IsLeaf)
 	{
-		std::list<nglPath> list;
+		std::vector<nglPath> list;
 		path.GetChildren(&list);
-		std::list<nglPath>::const_iterator end = list.end();
-		for (std::list<nglPath>::const_iterator it = list.begin(); it != end; ++it)
+		std::vector<nglPath>::const_iterator end = list.end();
+		for (std::vector<nglPath>::const_iterator it = list.begin(); it != end; ++it)
 		{
 			const nglPath &child = *it;
 			bool res = FindRec(child, currentPath, FileName);
@@ -928,13 +928,13 @@ nglPath::operator const nglChar*() const
 	return mPathName.GetChars();
 }
 
-int32 nglPath::GetChildrenTree(std::list<nglPath>& pChildren) const
+int32 nglPath::GetChildrenTree(std::vector<nglPath>& pChildren) const
 {
-  std::list<nglPath> local;
+  std::vector<nglPath> local;
   uint32 count = GetChildren(local);
   
-  std::list<nglPath>::const_iterator it = local.begin();
-  std::list<nglPath>::const_iterator end = local.end();
+  std::vector<nglPath>::const_iterator it = local.begin();
+  std::vector<nglPath>::const_iterator end = local.end();
   
   while (it != end)
   {
@@ -1181,7 +1181,7 @@ bool nglPath::InternalSetPath(const nglChar* pPath)
 #ifdef _WIN32_
 
 /// deprecated
-int32 nglPath::GetChildren(list<nglPath>* pChildren) const
+int32 nglPath::GetChildren(vector<nglPath>* pChildren) const
 {
   if (!pChildren)
     return -1;
@@ -1189,7 +1189,7 @@ int32 nglPath::GetChildren(list<nglPath>* pChildren) const
   return GetChildren(*pChildren);
 }
 
-int32 nglPath::GetChildren(list<nglPath>& rChildren) const
+int32 nglPath::GetChildren(vector<nglPath>& rChildren) const
 {
   nglString volume = GetVolumeName();
   if (!volume.IsEmpty())
@@ -1265,7 +1265,7 @@ nglString nglPath::GetMimeType() const
 }
 
 #ifdef WINCE
-uint64 nglPath::GetVolumes(list<nglPathVolume>& rVolumes, uint64 Flags)
+uint64 nglPath::GetVolumes(vector<nglPathVolume>& rVolumes, uint64 Flags)
 {
 	nglPathVolume	pathvolume;
 	pathvolume.mPath = "/";
@@ -1353,7 +1353,7 @@ bool nglGetDriveInfo(nglChar* name, nglPathVolume& rVol)
 	return type != DRIVE_NO_ROOT_DIR;
 }
 
-uint64 nglPath::GetVolumes(list<nglPathVolume>& rVolumes, uint64 Flags)
+uint64 nglPath::GetVolumes(vector<nglPathVolume>& rVolumes, uint64 Flags)
 {
 	DWORD drives = GetLogicalDrives();
 

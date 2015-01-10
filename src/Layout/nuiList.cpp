@@ -876,12 +876,12 @@ void nuiList::SelectItemSilent(nuiWidgetPtr pItem)
 // nuiList path management helper:
 bool nuiList::PopulateFiles(const nglPath& rPath)
 {
-  list<nglPath> FileList;
+  vector<nglPath> FileList;
 
   rPath.GetChildren(&FileList);
 
-  list<nglPath>::iterator it;
-  list<nglPath>::iterator end = FileList.end();
+  vector<nglPath>::iterator it;
+  vector<nglPath>::iterator end = FileList.end();
 
   for (it = FileList.begin(); it != end; ++it)
   {
@@ -898,12 +898,12 @@ bool nuiList::PopulateFiles(const nglPath& rPath)
 
 bool nuiList::PopulateDirs(const nglPath& rPath)
 {
-  list<nglPath> FileList;
+  vector<nglPath> FileList;
 
   rPath.GetChildren(&FileList);
 
-  list<nglPath>::iterator it;
-  list<nglPath>::iterator end = FileList.end();
+  vector<nglPath>::iterator it;
+  vector<nglPath>::iterator end = FileList.end();
 
   for (it = FileList.begin(); it != end; ++it)
   {
@@ -921,12 +921,12 @@ bool nuiList::PopulateDirs(const nglPath& rPath)
 
 bool nuiList::Populate(const nglPath& rPath, bool Files, bool Dirs)
 {
-  list<nglPath> FileList;
+  vector<nglPath> FileList;
 
   rPath.GetChildren(&FileList);
 
-  list<nglPath>::iterator it;
-  list<nglPath>::iterator end = FileList.end();
+  vector<nglPath>::iterator it;
+  vector<nglPath>::iterator end = FileList.end();
 
   if (Dirs)
   {

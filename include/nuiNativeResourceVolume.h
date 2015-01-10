@@ -24,7 +24,7 @@ public:
   virtual bool Move(const nglPath& rSource, const nglPath& rPathTarget);
   virtual nglIStream* OpenRead(const nglPath& rPath);
   virtual nglIOStream* OpenWrite(const nglPath& rPath, bool OverWrite);
-  virtual bool GetChildren(const nglPath& rPath, std::list<nglPath>& pChildren);
+  virtual bool GetChildren(const nglPath& rPath, std::vector<nglPath>& pChildren);
   
 private:
   std::map<nglPath, std::set<nglString> > mItems;

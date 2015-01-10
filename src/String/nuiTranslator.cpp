@@ -22,11 +22,11 @@ bool nuiTranslator::LoadLanguages(const nglPath& rLanguageFilesFolder)
 {
   mFiles.clear();
   
-  std::list<nglPath> Children;
+  std::vector<nglPath> Children;
   rLanguageFilesFolder.GetChildren(&Children);
   
-  std::list<nglPath>::iterator it = Children.begin();
-  std::list<nglPath>::iterator end = Children.end();
+  std::vector<nglPath>::iterator it = Children.begin();
+  std::vector<nglPath>::iterator end = Children.end();
   
   while (it != end)
   {

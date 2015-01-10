@@ -101,11 +101,11 @@ nuiSpriteAnimation::nuiSpriteAnimation(const nglPath& rPath)
 : mFPS(10)
 {
   nglPath path(rPath);
-  std::list<nglPath> children;
+  std::vector<nglPath> children;
   path.GetChildren(&children);
-  children.sort(nglCompareNaturalPath);
-  std::list<nglPath>::const_iterator it = children.begin();
-  std::list<nglPath>::const_iterator end = children.end();
+  std::sort(children.begin(), children.end(), nglCompareNaturalPath);
+  std::vector<nglPath>::const_iterator it = children.begin();
+  std::vector<nglPath>::const_iterator end = children.end();
   for (; it != end; it++)
   {
     nglPath p = *it;
@@ -199,10 +199,10 @@ nuiSpriteDef::nuiSpriteDef(const nglPath& rSpriteDefPath)
   mSpriteMap[name] = this;
 
   {
-    std::list<nglPath> children;
+    std::vector<nglPath> children;
     rSpriteDefPath.GetChildren(&children);
-    std::list<nglPath>::const_iterator it = children.begin();
-    std::list<nglPath>::const_iterator end = children.end();
+    std::vector<nglPath>::const_iterator it = children.begin();
+    std::vector<nglPath>::const_iterator end = children.end();
     for (; it != end; it++)
     {
       nuiSpriteAnimation* pAnim = new nuiSpriteAnimation(*it);

@@ -38,7 +38,7 @@ bool nglPath::ResolveLink()
   return res;
 }
 
-void nglPathVolume::UpdateVolumes(std::list<nglPathVolume>& rVolumes)
+void nglPathVolume::UpdateVolumes(std::vector<nglPathVolume>& rVolumes)
 {
   OSErr    result;
   uint volumeIndex = 1;
@@ -200,11 +200,11 @@ static void nglSetPathVolumeFromRefNum(int32 volnum, nglPathVolume& rPath)
 
 
 
-nglPathVolume nglPathVolume::AddVolume(std::list<nglPathVolume>& rVolumes, int32 volnum)
+nglPathVolume nglPathVolume::AddVolume(std::vector<nglPathVolume>& rVolumes, int32 volnum)
 {
 
-  std::list<nglPathVolume>::iterator it = rVolumes.begin();
-  std::list<nglPathVolume>::iterator end = rVolumes.end();
+  std::vector<nglPathVolume>::iterator it = rVolumes.begin();
+  std::vector<nglPathVolume>::iterator end = rVolumes.end();
 
   while (it != end)
   {
@@ -227,10 +227,10 @@ nglPathVolume nglPathVolume::AddVolume(std::list<nglPathVolume>& rVolumes, int32
   return vol;
 }
 
-nglPathVolume nglPathVolume::DelVolume(std::list<nglPathVolume>& rVolumes, int32 volnum)
+nglPathVolume nglPathVolume::DelVolume(std::vector<nglPathVolume>& rVolumes, int32 volnum)
 {
-  std::list<nglPathVolume>::iterator it = rVolumes.begin();
-  std::list<nglPathVolume>::iterator end = rVolumes.end();
+  std::vector<nglPathVolume>::iterator it = rVolumes.begin();
+  std::vector<nglPathVolume>::iterator end = rVolumes.end();
 
   while (it != end)
   {
@@ -261,7 +261,7 @@ bool nglPath::ResolveLink()
 
 #ifdef _COCOA_
 #import <Cocoa/Cocoa.h>
-void nglPathVolume::UpdateVolumes(std::list<nglPathVolume>& rVolumes)
+void nglPathVolume::UpdateVolumes(std::vector<nglPathVolume>& rVolumes)
 {
   NSArray* keys = [NSArray arrayWithObjects:
                    NSURLVolumeNameKey,
@@ -316,14 +316,14 @@ void nglPathVolume::UpdateVolumes(std::list<nglPathVolume>& rVolumes)
 
 
 /// deprecated
-int nglPath::GetChildren (std::list<nglPath>* pChildren) const
+int nglPath::GetChildren (std::vector<nglPath>* pChildren) const
 {
   if (!pChildren)
     return -1;
   return GetChildren(*pChildren);
 }
 
-int nglPath::GetChildren (std::list<nglPath>& rChildren) const
+int nglPath::GetChildren (std::vector<nglPath>& rChildren) const
 {
   nglString volume = GetVolumeName();
   if (!volume.IsEmpty())
@@ -569,7 +569,7 @@ bool nglPath_SetVolume(nglPathVolume& rVolume,
   return true;
 }
 
-uint64 nglPath::GetVolumes(std::list<nglPathVolume>& rVolumes, uint64 Flags)
+uint64 nglPath::GetVolumes(std::vector<nglPathVolume>& rVolumes, uint64 Flags)
 {
 #if (defined _CARBON_ || defined _COCOA_)
   nglPathVolume::UpdateVolumes(rVolumes);
@@ -596,8 +596,10 @@ uint64 nglPath::GetVolumes(std::list<nglPathVolume>& rVolumes, uint64 Flags)
     if (tokens.size() < 4)
     	continue;
 
-	if (tokens.size() && nglPath_SetVolume(vol, tokens[1], tokens[0], tokens[2], tokens[3]))
-	  rVolumes.push_front(vol);
+    if (tokens.size() && nglPath_SetVolume(vol, tokens[1], tokens[0], tokens[2], tokens[3]))
+    {
+      rVolumes.insert(rVolumes.begin(), vol);
+    }
   }
 
   // Parse /proc/mounts to list all mounted items
@@ -608,7 +610,7 @@ uint64 nglPath::GetVolumes(std::list<nglPathVolume>& rVolumes, uint64 Flags)
   while (mounts.ReadLine(line))
   {
     std::vector<nglString> tokens;
-    std::list<nglPathVolume>::iterator i;
+    std::vector<nglPathVolume>::iterator i;
     nglPathVolume newvol;
     nglPathVolume* vol;
 
@@ -622,7 +624,7 @@ uint64 nglPath::GetVolumes(std::list<nglPathVolume>& rVolumes, uint64 Flags)
     {
       // Create new entry
       if (tokens.size() && nglPath_SetVolume(newvol, tokens[1], tokens[0], tokens[2], tokens[3]))
-        rVolumes.push_front(newvol);
+        rVolumes.insert(rVolumes.begin(), newvol);
       vol = &newvol;
     }
 

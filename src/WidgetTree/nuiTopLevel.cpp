@@ -1532,7 +1532,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   }
   else
   {
-//    return false; ///< easier debugging
+    return false; ///< easier debugging
     /// this is a mouse over event
     UpdateHoverList(rInfo);
     nuiSize x,y;
