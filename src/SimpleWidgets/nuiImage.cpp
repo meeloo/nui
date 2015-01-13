@@ -133,7 +133,10 @@ void nuiImage::SetTexturePath(const nglPath& rTexturePath)
 }
 
 void nuiImage::SetTexture(nuiTexture* pTex)
-{  
+{
+  if (mpTexture == pTex)
+    return;
+
   if (pTex)
     pTex->Acquire();
   if (mpTexture)

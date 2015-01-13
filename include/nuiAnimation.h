@@ -84,6 +84,7 @@ class nuiEasing : public nuiRefCount
 public:
   nuiEasing()
   {
+    AutoRelease();
   }
   
   virtual double Map(double val) = 0;

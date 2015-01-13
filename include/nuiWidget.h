@@ -635,8 +635,8 @@ public:
   void AutoDestroy(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
   bool IsTrashed(bool combined = true) const;
 
-  void AutoStartTransition(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called. 
-  void AutoStopTransition(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called. 
+  void AutoStartTransition(const nuiEvent& rEvent); ///< This method will increment the transition state of this widget.
+  void AutoStopTransition(const nuiEvent& rEvent);  ///< This method will decrement the transition state of this widget.
 
   bool IsDrawingInCache(bool Recurse);
 
