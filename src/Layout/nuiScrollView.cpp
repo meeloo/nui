@@ -1041,7 +1041,7 @@ bool nuiScrollView::CallPreMouseMoved(const nglMouseInfo& rInfo)
       y = mTouch.Y - rInfo.Y;
     
     float dist = sqrt(x * x + y * y);
-    
+
     if (dist > 10 && StealMouseEvent(rInfo) && (rInfo.Counterpart != nullptr))
     {
       mTouched = false;

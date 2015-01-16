@@ -34,8 +34,11 @@ nuiTableView::~nuiTableView()
 void nuiTableView::InitAttributes()
 {
   AddAttribute(new nuiAttribute<bool>(nglString(_T("EnableSelection")), nuiUnitBoolean,
-                                         nuiMakeDelegate(this, &nuiTableView::IsSelectionEnabled),
-                                         nuiMakeDelegate(this, &nuiTableView::EnableSelection)));
+                                      nuiMakeDelegate(this, &nuiTableView::IsSelectionEnabled),
+                                      nuiMakeDelegate(this, &nuiTableView::EnableSelection)));
+//  AddAttribute(new nuiAttribute<bool>(nglString(_T("EnableMultiSelection")), nuiUnitBoolean,
+//                                      nuiMakeDelegate(this, &nuiTableView::IsMultiSelectionEnabled),
+//                                      nuiMakeDelegate(this, &nuiTableView::EnableSelection)));
   AddAttribute(new nuiAttribute<nuiSize>(nglString(_T("CellHeight")), nuiUnitPixels,
                                          nuiMakeDelegate(this, &nuiTableView::GetCellHeight),
                                          nuiMakeDelegate(this, &nuiTableView::SetCellHeight)));
@@ -251,7 +254,9 @@ nuiWidget* nuiTableView::GetCell(const nglMouseInfo& rInfo)
 int32 nuiTableView::GetCellIndex(const nglMouseInfo& rInfo)
 {
   int32 index = (rInfo.Y + mYOffset) / mCellHeight;
-  return MIN(mpSource->GetNumberOfCells()-1, MAX(-1, index));
+  if (index >= mpSource->GetNumberOfCells())
+    return -1;
+  return MAX(-1, index);
 }
 
 
@@ -262,7 +267,9 @@ bool nuiTableView::MouseClicked(const nglMouseInfo& rInfo)
     int32 i = GetCellIndex(rInfo);
     mClickedIndex = i;
     if (i >= 0 && mSelection.size() > i)
-      SelectCell(i, !mSelection[i]);
+    {
+      SelectCell(i, !mSelection[i]); 
+    }
   }
   return nuiScrollView::MouseClicked(rInfo);
 }
@@ -279,13 +286,57 @@ bool nuiTableView::MouseUnclicked(const nglMouseInfo& rInfo)
 
 bool nuiTableView::MouseMoved(const nglMouseInfo& rInfo)
 {
-  if (!mMoved && !mSelection.empty() && mClickedIndex >= 0)
+  if (!mMoved && IsSelectionEnabled())
   {
-    SelectCell(mClickedIndex, !mSelection[mClickedIndex]);
-    mClickedIndex = -1;
+    if (!mLeftClick)
+      return false;
+    
+    if (!mSelection.empty() && mClickedIndex >= 0)
+    {
+      float x = mTouch.X - rInfo.X;
+      float y = mTouch.Y - rInfo.Y;
+      float dist = sqrt(x * x + y * y);
+      if (dist > 10)
+      {
+        mTouched = false;
+        mXOffset = GetXPos();
+        mYOffset = GetYPos();
+        mClickValueH = mXOffset;
+        mClickValueV = mYOffset;
+        NGL_ASSERT(rInfo.Counterpart);
+        rInfo.Counterpart->X = rInfo.X;
+        rInfo.Counterpart->Y = rInfo.Y;
+        LocalToGlobal(rInfo.Counterpart->X, rInfo.Counterpart->Y);
+        mLastTime = nglTime();
+
+        if (mStartDragDelegate && std::fabs(x) > std::fabs(y))
+        {
+          nglDragAndDrop* pObject = mStartDragDelegate(mpSource, mClickedIndex);
+          if (pObject) {
+//            mIsDragging = true;
+//            mClicked = false;
+//            mDoubleClicked = false;
+            Drag(pObject);
+          }
+
+        }
+
+        SelectCell(mClickedIndex, !mSelection[mClickedIndex]);
+        mClickedIndex = -1;
+        
+        return nuiScrollView::MouseMoved(rInfo);
+      }
+      else return true;
+    }
   }
 
+
   return nuiScrollView::MouseMoved(rInfo);
+}
+
+void nuiTableView::OnDragStop(bool canceled)
+{
+  
 }
 
 

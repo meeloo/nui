@@ -927,8 +927,8 @@ private:
 
   nglContextInfo mContextInfo;
   StateChange mState;
-  bool mDragging;
-  nglDragAndDrop* mpDragged;
+  bool mDragging=false;
+  nglDragAndDrop* mpDragged=nullptr;;
 public:
   bool IsDragging() { return mDragging; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }

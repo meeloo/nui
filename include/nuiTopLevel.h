@@ -201,7 +201,7 @@ protected:
 #endif
   nuiLabel* mpInfoLabel;
 
-  nuiWidget* mpDragFeedback;
+  nuiWidget* mpDraggedWidget;
 
   typedef std::map<nglTouchId, nuiWidgetPtr> nuiGrabMap;
   nuiGrabMap mpGrab;

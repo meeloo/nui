@@ -175,7 +175,7 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
     mToolTipTimerOn(0.5f),
     mToolTipTimerOff(5.0f),
 #endif
-    mpDragFeedback(NULL),
+    mpDraggedWidget(NULL),
     mpWatchedWidget(NULL),
     mFillTrash(false),
     mpDrawContext(NULL),
@@ -1791,14 +1791,14 @@ bool nuiTopLevel::CallMouseCancel(nuiWidgetPtr pThief, nglMouseInfo& rInfo)
 
 void nuiTopLevel::SetDragFeedbackRect(int X, int Y)
 {
-  if (!mpDragFeedback)
+  if (!mpDraggedWidget)
     return;
 
   CheckValid();
   
-  nuiRect r(mpDragFeedback->GetIdealRect());
+  nuiRect r(mpDraggedWidget->GetIdealRect());
   r.Move(X-r.GetWidth(), Y-r.GetHeight());
-  mpDragFeedback->SetLayout(r);
+  mpDraggedWidget->SetLayout(r);
   InvalidateRect(r);
   UpdateWidgetsCSS();
 }
@@ -1911,7 +1911,7 @@ bool nuiTopLevel::Draw(class nuiDrawContext *pContext)
 #ifndef DISABLE_TOOLTIP
         && pItem != mpToolTipLabel
 #endif
-        && pItem != mpDragFeedback
+        && pItem != mpDraggedWidget
         )
       DrawChild(pContext, pItem);
   }
@@ -1921,8 +1921,8 @@ bool nuiTopLevel::Draw(class nuiDrawContext *pContext)
   DisplayToolTips(pContext);
 #endif
 
-  if (mpDragFeedback)
-    DrawChild(pContext, mpDragFeedback);
+  if (mpDraggedWidget)
+    DrawChild(pContext, mpDraggedWidget);
 
   return true;
 }
@@ -2224,7 +2224,7 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
 #ifndef DISABLE_TOOLTIP
     if (pItem != mpToolTipLabel)
 #endif
-    if (pItem != mpDragFeedback)
+    if (pItem != mpDraggedWidget)
     {
       pItem->GetIdealRect();
       if (pItem->GetProperty("Layout").ToLower() == "fullscreen")
@@ -2238,12 +2238,6 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
 #ifndef DISABLE_TOOLTIP
   SetToolTipRect();
 #endif
-//  if (mpDragFeedback)
-//  {
-//    nglMouseInfo mouse;
-//    GetMouseInfo(mouse);
-//    SetDragFeedbackRect(mouse.X, mouse.Y);
-//  }
 
   return true;
 }

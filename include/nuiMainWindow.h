@@ -30,8 +30,6 @@ public:
   nuiContextInfo(Type type = StandardContext2D);
 };
 
-typedef nuiFastDelegate1<nglDragAndDrop*,nuiWidget*>  CreateDragFeedbackDelegate;
-
 /// This class implements the root nui object: the main window of any application.
 class nuiMainWindow :  public nuiTopLevel
 {
@@ -69,11 +67,6 @@ public:
 
   void SetDebugMode(bool Set);
 
-  void SetCreateDragFeedbackDelegate(const CreateDragFeedbackDelegate& rDelegate)
-  {
-    mCreateDragFeedbackDelegate = rDelegate;
-  }
-
   /** @name Redirected to nglWindow via nuiMainWindow::NGLWindow */
   //@{
   void BeginSession();
@@ -98,8 +91,9 @@ public:
 
   virtual void OnDragEnter();
   virtual void OnDragLeave();
+  virtual nuiWidget* CreateDraggedWidget(nuiWidget* pSource, nglDragAndDrop* pDragObject) { return nullptr; }
   virtual nglDropEffect OnCanDrop (nglDragAndDrop* pDragObject, int X, int Y, nglMouseInfo::Flags Button);
-
+  
   virtual void OnDropped (nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo::Flags Button);
   
   class WidgetCanDrop : public TestWidgetFunctor
@@ -289,8 +283,6 @@ private:
 
   bool mDrawDirtyRects = false;
   bool mDrawToSurface = false;
-
-  CreateDragFeedbackDelegate mCreateDragFeedbackDelegate;
 };
 
 #endif // __nuiMainWindow_h__

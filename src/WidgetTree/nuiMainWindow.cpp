@@ -1053,26 +1053,18 @@ void nuiMainWindow::OnDragLeave()
     mpWidgetCanDrop->OnDropLeave();
     mpWidgetCanDrop = NULL;
   }
-  if (mpDragFeedback) {
-    mpDragFeedback->Trash();
-    mpDragFeedback = NULL;
+  if (mpDraggedWidget) {
+    DelChild(mpDraggedWidget);
+    mpDraggedWidget = NULL;
   }
 }
 
 
 nglDropEffect nuiMainWindow::OnCanDrop (nglDragAndDrop* pDragObject, int X, int Y, nglMouseInfo::Flags Button)
 {
-  if (!mpDragFeedback &&
-      mCreateDragFeedbackDelegate)
-  {
-    mpDragFeedback = mCreateDragFeedbackDelegate(pDragObject);
-    AddChild(mpDragFeedback);
-  }
-  if (mpDragFeedback) {
+  if (mpDraggedWidget)
     SetDragFeedbackRect(X,Y);
-//    InvalidateLayout();
-//    Invalidate();
-  }
+
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
   
@@ -1121,12 +1113,17 @@ void nuiMainWindow::OnDropped (nglDragAndDrop* pDragObject, int X,int Y, nglMous
   pWidget->GlobalToLocal(x,y);
   pWidget->OnDropped(pDragObject, x, y, Button);
   mpWidgetCanDrop = NULL;
+  
+//  mpNGLWindow->OnDropped(pDragObject, X, Y, Button);
 }
 
 bool nuiMainWindow::Drag(nuiWidget* pDragSource, nglDragAndDrop* pDragObject) 
 { 
   nuiTopLevel::Ungrab(nuiTopLevel::GetGrab());
   mpDragSource = pDragSource;
+  mpDraggedWidget = CreateDraggedWidget(pDragSource, pDragObject);
+  if (mpDraggedWidget)
+    AddChild(mpDraggedWidget);
   return mpNGLWindow->Drag(pDragObject); 
 }
 
@@ -1147,9 +1144,11 @@ void nuiMainWindow::OnDragStop(bool canceled)
   {
     mpDragSource->OnDragStop(canceled); ///< advise drag source
   }
-  if (mpDragFeedback) {
-    mpDragFeedback->Trash();
-    mpDragFeedback = NULL;
+
+  if (mpDraggedWidget)
+  {
+    DelChild(mpDraggedWidget);
+    mpDraggedWidget = NULL;
   }
 }
 
@@ -1308,6 +1307,7 @@ void nuiMainWindow::NGLWindow::OnDragLeave()
 
 nglDropEffect nuiMainWindow::NGLWindow::OnCanDrop(nglDragAndDrop* pDragObject, int X, int Y, nglMouseInfo::Flags Button)
 {
+//  printf("NGLWindow:: OnCanDrop X:%d Y%d\n", X, Y);
   return mpMainWindow->OnCanDrop(pDragObject, X, Y, Button);
 }
 
@@ -1332,8 +1332,8 @@ void nuiMainWindow::NGLWindow::OnDragRequestData(nglDragAndDrop* pDragObject, co
 
 void nuiMainWindow::NGLWindow::OnDragStop(bool canceled)
 {
-  nglWindow::OnDragStop(canceled);
   mpMainWindow->OnDragStop(canceled);
+  nglWindow::OnDragStop(canceled);
 }
 
 void nuiMainWindow::SetQuitOnClose(bool Set)

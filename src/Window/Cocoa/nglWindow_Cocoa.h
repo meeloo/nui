@@ -24,6 +24,7 @@
   nglWindow*    mpNGLWindow;
   nglTime       mLastEventTime;
   uint32        mModifiers;
+  NSEvent*      mpLastMouseMoved;
   class nglDragAndDrop* mpDropObject;
 }
 

@@ -1,4 +1,4 @@
-#include "nui.h"
+	#include "nui.h"
 
 #include <QuartzCore/QuartzCore.h>
 
@@ -341,7 +341,15 @@ const nglChar* gpWindowErrorTable[] =
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
     //          info.Buttons |= nglMouseInfo::ButtonDoubleClick;
 
-    mpNGLWindow->CallOnMouseUnclick(info);
+    if (mpNGLWindow->IsDragging())
+    {
+      mpNGLWindow->OnDropped(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
+      mpNGLWindow->OnDragStop(false);
+    }
+    else
+    {
+      mpNGLWindow->CallOnMouseUnclick(info);
+    }
   }
 }
 
@@ -402,8 +410,15 @@ const nglChar* gpWindowErrorTable[] =
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
     //          info.Buttons |= nglMouseInfo::ButtonDoubleClick;
-
-    mpNGLWindow->CallOnMouseMove(info);
+    
+    if (mpNGLWindow->IsDragging())
+    {
+      mpNGLWindow->OnCanDrop(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
+    }
+    else
+    {
+      mpNGLWindow->CallOnMouseMove(info);
+    }
   }
 }
 
@@ -927,6 +942,8 @@ bool nglWindow::IsEnteringText() const
 /// Drag and Drop:
 bool nglWindow::Drag(nglDragAndDrop* pDragObject)
 {
+  mDragging = true;
+  mpDragged = pDragObject;
   return false;
 }
 
@@ -949,6 +966,9 @@ void nglWindow::OnDragRequestData(nglDragAndDrop* pDragObject, const nglString& 
 
 void nglWindow::OnDragStop(bool canceled)
 {
+  mDragging = false;
+  delete mpDragged;
+  mpDragged = nullptr;
 }
 
 void nglWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo::Flags Button)

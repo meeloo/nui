@@ -63,9 +63,12 @@ public:
   const nuiColor& GetSeparatorColor() const { return mSeparatorColor; }
 
   nuiSimpleEventSource<0> SelectionChanged;
-  typedef nuiFastDelegate2<uint32, nuiCellSource*> CellSelectedDelegate;
+  typedef nuiFastDelegate2<nuiCellSource, int32, bool> CellSelectedDelegate;
   void SetCellSelectedDelegate(const CellSelectedDelegate& rDelegate) { mSetCellSelectedDelegate = rDelegate; }
 
+  typedef nuiFastDelegate2<nuiCellSource*, int32, nglDragAndDrop*> StartDragDelegate;
+  void SetStartDragDelegate(const StartDragDelegate& rDelegate) { mStartDragDelegate = rDelegate; }
+  void OnDragStop(bool canceled);
 
 protected:
   void InitAttributes();
@@ -82,6 +85,7 @@ private:
   int32 mFirstVisibleCell;
   int32 mLastVisibleCell;
   CellSelectedDelegate mSetCellSelectedDelegate;
+  StartDragDelegate mStartDragDelegate;
   void CreateCells(nuiSize Height);
 
 ///< Selection
