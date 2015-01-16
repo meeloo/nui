@@ -1113,8 +1113,12 @@ void nuiMainWindow::OnDropped (nglDragAndDrop* pDragObject, int X,int Y, nglMous
   pWidget->GlobalToLocal(x,y);
   pWidget->OnDropped(pDragObject, x, y, Button);
   mpWidgetCanDrop = NULL;
-  
-//  mpNGLWindow->OnDropped(pDragObject, X, Y, Button);
+
+  if (mpDraggedWidget)
+  {
+    DelChild(mpDraggedWidget);
+    mpDraggedWidget = NULL;
+  }
 }
 
 bool nuiMainWindow::Drag(nuiWidget* pDragSource, nglDragAndDrop* pDragObject) 
@@ -1302,7 +1306,8 @@ void nuiMainWindow::NGLWindow::OnDragEnter()
 
 void nuiMainWindow::NGLWindow::OnDragLeave()
 {
-  nglWindow::OnDragLeave(); mpMainWindow->OnDragLeave();
+  nglWindow::OnDragLeave();
+  mpMainWindow->OnDragLeave();
 }
 
 nglDropEffect nuiMainWindow::NGLWindow::OnCanDrop(nglDragAndDrop* pDragObject, int X, int Y, nglMouseInfo::Flags Button)
@@ -1314,6 +1319,7 @@ nglDropEffect nuiMainWindow::NGLWindow::OnCanDrop(nglDragAndDrop* pDragObject, i
 void nuiMainWindow::NGLWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo::Flags Button)
 {
   mpMainWindow->OnDropped(pDragObject, X, Y, Button);
+  
 }
 
 // Dnd send
