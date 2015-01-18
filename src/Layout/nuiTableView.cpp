@@ -14,16 +14,26 @@
 nuiTableView::nuiTableView(nuiCellSource* pSource)
 : nuiScrollView(false, true),
   mpSource(pSource),
-  mCellHeight(48),
-  mFirstVisibleCell(0),
-  mLastVisibleCell(0)
+  mTableViewSink(this)
 {
   NGL_ASSERT(pSource);
   pSource->Acquire();
   mSelection.resize(pSource->GetNumberOfCells(), false);
 
+  mTableViewSink.Connect(pSource->DataChanged, &nuiTableView::OnSourceDataChanged);
+
   if (SetObjectClass("nuiTableView"))
     InitAttributes();
+}
+
+void nuiTableView::OnSourceDataChanged(const nuiEvent& rEvent)
+{
+  if (mpSource)
+  {
+    mNeedUpdateCells = true;
+    mSelection.resize(mpSource->GetNumberOfCells());
+    InvalidateLayout();
+  }
 }
 
 nuiTableView::~nuiTableView()
@@ -59,8 +69,10 @@ nuiRect nuiTableView::CalcIdealSize()
 
 bool nuiTableView::SetRect(const nuiRect& rRect)
 {
-  if (rRect.GetHeight() != mRect.GetHeight())
+  mNeedUpdateCells |= (rRect.GetHeight() != mRect.GetHeight());
+  if (mNeedUpdateCells)
   {
+    mNeedUpdateCells=false;
     CreateCells(rRect.GetHeight());
   }
   return nuiScrollView::SetRect(rRect);

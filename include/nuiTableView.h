@@ -75,18 +75,26 @@ protected:
   bool SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy, nuiSize scrollv, nuiSize scrollh);
   void OnHotRectChanged(const nuiEvent& rEvent);
 
+  nuiEventSink<nuiTableView> mTableViewSink;
+
 private:
-  nuiCellSource* mpSource;
+  nuiCellSource* mpSource = nullptr;
+  void OnSourceDataChanged(const nuiEvent& rEvent);
+  
   using Cells = std::list<nuiWidget*>;
-  nuiSize mCellHeight;
+  Cells mVisibleCells;
+  int32 mFirstVisibleCell = 0;
+  int32 mLastVisibleCell = 0;
+  nuiSize mCellHeight = 48;
+  bool mNeedUpdateCells = true;
+  void CreateCells(nuiSize Height);
+  
   bool mDrawSeparators = true;
   nuiColor mSeparatorColor = nuiColor(0,0,0,192);
-  Cells mVisibleCells;
-  int32 mFirstVisibleCell;
-  int32 mLastVisibleCell;
-  CellSelectedDelegate mSetCellSelectedDelegate;
+  
   StartDragDelegate mStartDragDelegate;
-  void CreateCells(nuiSize Height);
+
+
 
 ///< Selection
 public:
@@ -97,6 +105,7 @@ public:
   void ClearSelection();
   const Selection& GetSelection();
   int32 GetSelectedCell() const noexcept { return mSelectedCell; }
+  CellSelectedDelegate mSetCellSelectedDelegate;
 
 protected:
   bool mSelectionEnabled=false;
