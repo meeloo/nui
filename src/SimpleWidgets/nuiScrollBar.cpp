@@ -435,7 +435,7 @@ void nuiScrollBar::DisableDrawBackground(bool disabled)
 void nuiScrollBar::SetThumbWidget(nuiWidget* pThumb)
 {
   if (mpThumb)
-    mpThumb->Trash();
+    DelChild(mpThumb);
   
   mpThumb = pThumb;
   if (pThumb)
