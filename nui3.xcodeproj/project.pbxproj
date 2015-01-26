@@ -105,6 +105,18 @@
 		613DF3921A34E54C00BD7656 /* nuiTableView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 613DF3901A34E54C00BD7656 /* nuiTableView.cpp */; };
 		61D085120EAFAA3F00B73835 /* nuiSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61D085100EAFAA3F00B73835 /* nuiSurface.cpp */; };
 		61D085150EAFAA5400B73835 /* nuiSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 61D085130EAFAA5400B73835 /* nuiSurface.h */; };
+		61ED91A21A702716001AF911 /* nglStdStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 61ED91A11A702716001AF911 /* nglStdStream.h */; };
+		61ED91A31A702716001AF911 /* nglStdStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 61ED91A11A702716001AF911 /* nglStdStream.h */; };
+		61ED91A41A702716001AF911 /* nglStdStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 61ED91A11A702716001AF911 /* nglStdStream.h */; };
+		61ED91A51A702716001AF911 /* nglStdStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 61ED91A11A702716001AF911 /* nglStdStream.h */; };
+		61ED91A61A702716001AF911 /* nglStdStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 61ED91A11A702716001AF911 /* nglStdStream.h */; };
+		61ED91A71A702716001AF911 /* nglStdStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 61ED91A11A702716001AF911 /* nglStdStream.h */; };
+		61ED91AA1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
+		61ED91AB1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
+		61ED91AC1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
+		61ED91AD1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
+		61ED91AE1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
+		61ED91AF1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
 		73F0841C12E9BA0700656E84 /* nuiShape.h in Headers */ = {isa = PBXBuildFile; fileRef = E5816CFE0C3CECAB00902DFE /* nuiShape.h */; };
 		73F0841D12E9BA0700656E84 /* nglZipFS.h in Headers */ = {isa = PBXBuildFile; fileRef = E5816CAB0C3CECAB00902DFE /* nglZipFS.h */; };
 		73F0841E12E9BA0700656E84 /* nuiArc.h in Headers */ = {isa = PBXBuildFile; fileRef = E5816CB10C3CECAB00902DFE /* nuiArc.h */; };
@@ -3815,6 +3827,8 @@
 		613DF3901A34E54C00BD7656 /* nuiTableView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiTableView.cpp; sourceTree = "<group>"; };
 		61D085100EAFAA3F00B73835 /* nuiSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiSurface.cpp; sourceTree = "<group>"; };
 		61D085130EAFAA5400B73835 /* nuiSurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiSurface.h; path = include/nuiSurface.h; sourceTree = SOURCE_ROOT; };
+		61ED91A11A702716001AF911 /* nglStdStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nglStdStream.h; path = include/nglStdStream.h; sourceTree = SOURCE_ROOT; };
+		61ED91A81A70273E001AF911 /* nglStdStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nglStdStream.cpp; sourceTree = "<group>"; };
 		73F086E612E9BA0700656E84 /* libnuiPhone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnuiPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F09AC312E9D09E00656E84 /* libthirdparty_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libthirdparty_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		941A98CA0E8BF04700CAFC3A /* nuiScrollBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiScrollBox.cpp; path = src/Layout/nuiScrollBox.cpp; sourceTree = SOURCE_ROOT; };
@@ -7557,6 +7571,8 @@
 				E5816DED0C3CECAB00902DFE /* Zip */,
 				E540AB5C10DFAC5000791FBA /* nuiAsyncIStream.cpp */,
 				E540AB6010DFAC8F00791FBA /* nuiAsyncIStream.h */,
+				61ED91A81A70273E001AF911 /* nglStdStream.cpp */,
+				61ED91A11A702716001AF911 /* nglStdStream.h */,
 			);
 			name = Stream;
 			path = src/Stream;
@@ -8390,6 +8406,7 @@
 				73F0848812E9BA0700656E84 /* nuiRange.h in Headers */,
 				73F0848A12E9BA0700656E84 /* nglIStream.h in Headers */,
 				73F0848B12E9BA0700656E84 /* nglIOFile.h in Headers */,
+				61ED91A41A702716001AF911 /* nglStdStream.h in Headers */,
 				73F0848D12E9BA0700656E84 /* nuiScrollView.h in Headers */,
 				73F0848F12E9BA0700656E84 /* nuiBuilder.h in Headers */,
 				73F0849012E9BA0700656E84 /* nuiGLPainter.h in Headers */,
@@ -8691,6 +8708,7 @@
 				73F0980912E9D09E00656E84 /* svkern.h in Headers */,
 				73F0980A12E9D09E00656E84 /* sfnt.h in Headers */,
 				73F0980B12E9D09E00656E84 /* ftimage.h in Headers */,
+				61ED91A61A702716001AF911 /* nglStdStream.h in Headers */,
 				73F0980C12E9D09E00656E84 /* ftglyph.h in Headers */,
 				73F0980D12E9D09E00656E84 /* internal.h in Headers */,
 				73F0980E12E9D09E00656E84 /* ftmac.h in Headers */,
@@ -9061,6 +9079,7 @@
 				E5429FC60C3F0A5900225219 /* nuiTabBar.h in Headers */,
 				E5429FC70C3F0A5900225219 /* nuiRefCount.h in Headers */,
 				E5429FC80C3F0A5900225219 /* nglEndian.h in Headers */,
+				61ED91A21A702716001AF911 /* nglStdStream.h in Headers */,
 				E5429FC90C3F0A5900225219 /* nglCPUInfo.h in Headers */,
 				E5429FCA0C3F0A5900225219 /* nuiFixed.h in Headers */,
 				E5429FCB0C3F0A5900225219 /* nuiRect.h in Headers */,
@@ -9761,6 +9780,7 @@
 				E5C3FA3714BDC5CC00F4FB96 /* nuiHTTPServer.h in Headers */,
 				E52FA68514F686CF00992064 /* nuiStringTemplate.h in Headers */,
 				E50FE79A169108A300A9461A /* nuiGL2Painter.h in Headers */,
+				61ED91A31A702716001AF911 /* nglStdStream.h in Headers */,
 				E5AD0A56169F20EC00836BAA /* nuiShader.h in Headers */,
 				E548CEF516E4EA9500F98E45 /* nuiUniformDesc.h in Headers */,
 				E50F41FC16E7746D00519AF0 /* nuiVertexAttribDesc.h in Headers */,
@@ -10111,6 +10131,7 @@
 				E5DD312C12E09CA700F1EF4E /* NativeSparc.h in Headers */,
 				E5DD312D12E09CA700F1EF4E /* NativeX64.h in Headers */,
 				E5DD312E12E09CA700F1EF4E /* njconfig.h in Headers */,
+				61ED91A51A702716001AF911 /* nglStdStream.h in Headers */,
 				E5DD312F12E09CA700F1EF4E /* njcpudetect.h in Headers */,
 				E5DD313012E09CA700F1EF4E /* RegAlloc.h in Headers */,
 				E5DD313112E09CA700F1EF4E /* VMPI.h in Headers */,
@@ -10370,6 +10391,7 @@
 				E5FB9B73147D5CEE001A1829 /* ngl_config.uikit.h in Headers */,
 				E5FB9B74147D5CEE001A1829 /* ngl_config.mac.h in Headers */,
 				E5FB9B75147D5CEE001A1829 /* ngl_config.cocoa.h in Headers */,
+				61ED91A71A702716001AF911 /* nglStdStream.h in Headers */,
 				E5FB9B76147D5CEE001A1829 /* nglImageCGCodec.h in Headers */,
 				E5FB9B79147D5CEE001A1829 /* nuiAudioDb.h in Headers */,
 				E5FB9B7A147D5CEE001A1829 /* nuiAudioEngine.h in Headers */,
@@ -10547,6 +10569,7 @@
 				73F0859F12E9BA0700656E84 /* nuiGrid.cpp in Sources */,
 				73F085A012E9BA0700656E84 /* nuiHotKey.cpp in Sources */,
 				73F085A112E9BA0700656E84 /* nuiContour.cpp in Sources */,
+				61ED91AC1A70273E001AF911 /* nglStdStream.cpp in Sources */,
 				73F085A212E9BA0700656E84 /* nuiXML.cpp in Sources */,
 				73F085A312E9BA0700656E84 /* nuiComboBox.cpp in Sources */,
 				73F085A412E9BA0700656E84 /* nglZipFS.cpp in Sources */,
@@ -11067,6 +11090,7 @@
 				E511F7A21367149100DE93B0 /* hb-blob.cc in Sources */,
 				E511F7A51367149100DE93B0 /* hb-buffer.cc in Sources */,
 				E511F7A71367149100DE93B0 /* hb-common.cc in Sources */,
+				61ED91AE1A70273E001AF911 /* nglStdStream.cpp in Sources */,
 				E511F7AA1367149100DE93B0 /* hb-font.cc in Sources */,
 				E511F7AC1367149100DE93B0 /* hb-ft.cc in Sources */,
 				E511F7BC1367149100DE93B0 /* hb-ot-layout.cc in Sources */,
@@ -11208,6 +11232,7 @@
 				E542A18C0C3F0A5900225219 /* nuiEditText.cpp in Sources */,
 				E542A18D0C3F0A5900225219 /* nuiAnimation.cpp in Sources */,
 				E542A18E0C3F0A5900225219 /* nglOFile.cpp in Sources */,
+				61ED91AA1A70273E001AF911 /* nglStdStream.cpp in Sources */,
 				E542A1930C3F0A5900225219 /* nuiDrawContext.cpp in Sources */,
 				E542A1940C3F0A5900225219 /* nglImageJPEGCodec.cpp in Sources */,
 				E542A1950C3F0A5900225219 /* nuiPathGenerator.cpp in Sources */,
@@ -11661,6 +11686,7 @@
 				E5D643421209AB9C009C26A9 /* nuiHTMLBox.cpp in Sources */,
 				E5D643431209AB9C009C26A9 /* nuiHTMLText.cpp in Sources */,
 				613DF3911A34E54C00BD7656 /* nuiTableView.cpp in Sources */,
+				61ED91AB1A70273E001AF911 /* nglStdStream.cpp in Sources */,
 				E5D643441209AB9C009C26A9 /* nuiHTMLImage.cpp in Sources */,
 				E5D643451209AB9C009C26A9 /* nuiHTMLFont.cpp in Sources */,
 				E5D643461209AB9C009C26A9 /* nuiHTMLHeader.cpp in Sources */,
@@ -12017,6 +12043,7 @@
 				E511F76A1367149000DE93B0 /* hb-shape.cc in Sources */,
 				E511F76D1367149000DE93B0 /* hb-unicode.cc in Sources */,
 				E5AA571A13C70FA500245C10 /* hb-ot-shape-complex-misc.cc in Sources */,
+				61ED91AD1A70273E001AF911 /* nglStdStream.cpp in Sources */,
 				E57E571513CC8ED60021055F /* hb-ot-shape-complex-indic.cc in Sources */,
 				E5CB6A8713D9D374005C7B6F /* hb-ot-shape-normalize.cc in Sources */,
 				E501C11C13FD4561009FB677 /* hb-fallback-shape.cc in Sources */,
@@ -12109,6 +12136,7 @@
 				E5FB9C63147D5CEE001A1829 /* nuiMemoryPool.cpp in Sources */,
 				E5FB9C6B147D5CEE001A1829 /* nuiBindings.cpp in Sources */,
 				E5FB9C76147D5CEE001A1829 /* nuiTranslator.cpp in Sources */,
+				61ED91AF1A70273E001AF911 /* nglStdStream.cpp in Sources */,
 				E5FB9C77147D5CEE001A1829 /* nuiLocale.cpp in Sources */,
 				E5FB9C78147D5CEE001A1829 /* nuiSample.cpp in Sources */,
 				E5FB9C79147D5CEE001A1829 /* nuiSampleInfo.cpp in Sources */,
