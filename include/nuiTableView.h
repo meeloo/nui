@@ -13,6 +13,8 @@
 #pragma mark-
 #pragma mark CellSource
 
+class nuiTableView;
+
 class nuiCellSource : public nuiObject
 {
 public:
@@ -29,9 +31,10 @@ public:
 
   CellSourceEvent DataChanged;
 
+  void SetTableView(nuiTableView* pView) { mpTableView = pView; }
 protected:
   virtual ~nuiCellSource() {};
-
+  nuiTableView* mpTableView = nullptr;
 private:
   bool mNeedsRefresh;
 };

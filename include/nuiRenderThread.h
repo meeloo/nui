@@ -51,4 +51,7 @@ private:
   virtual void OnStart();
 
   void RenderingDone(bool result);
+
+  nglAtomic64 mRenderingTicks=0;
+
 };

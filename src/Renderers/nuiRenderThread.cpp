@@ -45,6 +45,7 @@ void nuiRenderThread::OnStart()
 // Public API:
 void nuiRenderThread::StartRendering(uint32 x, uint32 y)
 {
+  ngl_atomic_inc(mRenderingTicks);
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_StartRendering, x, y));
 }
 
@@ -75,6 +76,12 @@ void nuiRenderThread::RenderingDone(bool result)
 
 void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 {
+  if (ngl_atomic_dec(mRenderingTicks) > 0)
+  {
+    printf("[nuiRenderThread] skipping frame\n");
+    return;
+  }
+
   auto it = mPainters.find(mpRoot);
   if (it == mPainters.end())
   {

@@ -20,6 +20,7 @@ nuiTableView::nuiTableView(nuiCellSource* pSource)
   pSource->Acquire();
   mSelection.resize(pSource->GetNumberOfCells(), false);
 
+  mpSource->SetTableView(this);
   mTableViewSink.Connect(pSource->DataChanged, &nuiTableView::OnSourceDataChanged);
 
   if (SetObjectClass("nuiTableView"))
