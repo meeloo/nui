@@ -54,6 +54,6 @@ private:
 
   void RenderingDone(bool result);
 
-  nglAtomic64 mRenderingTicks=0;
+  nglAtomic mRenderingTicks=0;
 
 };
