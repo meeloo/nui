@@ -25,8 +25,10 @@ public:
   void Exit();
   void SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void SetRootWidget(nuiWidget* pRoot);
+  void RunTaskOnRenderThread(nuiTask* rTask);
 
-
+  nuiPainter* GetPainter() const;
+  nuiDrawContext* GetDrawContext() const;
 private:
   nuiTaskQueue mQueue;
   nuiRect mRect;

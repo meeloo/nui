@@ -425,20 +425,44 @@ void nglKernel::SetCrashReportEmail(const nglString& rEmail)
 
 void nglKernel::ProcessMessages(const nuiEvent& rEvent)
 {
-  nuiNotification* pNotif;
-  while ((pNotif = Get(0)))
   {
-    nuiCommand* pCommand = NULL;
-    nuiGetTokenValue<nuiCommand*>(pNotif->GetToken(), pCommand);
-    if (pCommand)
-      pCommand->Do();
-    pNotif->Release();
+    nuiTask* pTask = NULL;
+    while ((pTask = mMainQueue.Get(0)))
+    {
+      pTask->Run();
+      pTask->Release();
+    }
   }
 
-  mpNotificationManager->BroadcastQueuedNotifications();
+  {
+    nuiNotification* pNotif;
+    while ((pNotif = Get(0)))
+    {
+      nuiCommand* pCommand = NULL;
+      nuiGetTokenValue<nuiCommand*>(pNotif->GetToken(), pCommand);
+      if (pCommand)
+        pCommand->Do();
+      pNotif->Release();
+    }
+
+    mpNotificationManager->BroadcastQueuedNotifications();
+
+  }
 
   nuiRefCount::PurgeAutoReleasePoolForCurrentThread();
 }
+
+nuiTaskQueue& nglKernel::GetMainQueue()
+{
+  return mMainQueue;
+}
+
+nuiTaskQueue& nuiGetMainQueue()
+{
+  return App->GetMainQueue();
+}
+
+
 
 void nglKernel::PostNotification(nuiNotification* pNotification)
 {

@@ -346,6 +346,9 @@ public:
 
   void TimedPrint(const char* Format, ...) const;
   void TimedPrintv(const char* Format, va_list Args) const;
+  
+  nuiTaskQueue& GetMainQueue();
+
 protected:
   // Life cycle
   nglKernel();
@@ -389,6 +392,7 @@ private:
   bool          mDebug;
   nglLog*       mpLog;
   nglConsole*   mpCon;
+  nuiTaskQueue  mMainQueue;
 
 #ifndef _MINUI3_
   nglClipBoard  mClipboard;
@@ -585,5 +589,7 @@ template<typename TTarget, typename TSource> inline TTarget checked_cast(TSource
   return static_cast<TTarget>(src);
 
 }
+
+nuiTaskQueue& nuiGetMainQueue();
 
 #endif // __nglKernel_h__

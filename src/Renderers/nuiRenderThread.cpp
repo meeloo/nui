@@ -42,6 +42,11 @@ void nuiRenderThread::OnStart()
 #endif
 }
 
+void nuiRenderThread::RunTaskOnRenderThread(nuiTask* pTask)
+{
+  mQueue.Post(pTask);
+}
+
 // Public API:
 void nuiRenderThread::StartRendering(uint32 x, uint32 y)
 {
@@ -186,4 +191,13 @@ void nuiRenderThread::DrawChild(nuiDrawContext* pContext, nuiWidget* pKey)
 }
 
 
+nuiPainter* nuiRenderThread::GetPainter() const
+{
+  return mpPainter;
+}
+
+nuiDrawContext* nuiRenderThread::GetDrawContext() const
+{
+  return mpDrawContext;
+}
 
