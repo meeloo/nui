@@ -25,12 +25,14 @@ public:
   void Exit();
   void SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void SetRootWidget(nuiWidget* pRoot);
-  void RunTaskOnRenderThread(nuiTask* rTask);
+  void RunTaskOnRenderThread(nuiTask* rTask, bool OnNextFrame);
 
   nuiPainter* GetPainter() const;
   nuiDrawContext* GetDrawContext() const;
 private:
   nuiTaskQueue mQueue;
+  nuiTaskQueue mNextFrameQueue;
+
   nuiRect mRect;
   std::vector<nuiRect> mPartialRects;
   nuiWidget* mpRoot = nullptr;

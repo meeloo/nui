@@ -42,9 +42,12 @@ void nuiRenderThread::OnStart()
 #endif
 }
 
-void nuiRenderThread::RunTaskOnRenderThread(nuiTask* pTask)
+void nuiRenderThread::RunTaskOnRenderThread(nuiTask* pTask, bool OnNextFrame)
 {
-  mQueue.Post(pTask);
+  if (OnNextFrame)
+    mNextFrameQueue.Post(pTask);
+  else
+    mQueue.Post(pTask);
 }
 
 // Public API:
@@ -109,6 +112,15 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 
   mpDrawContext->SetPainter(mpPainter);
   mpDrawContext->StartRendering();
+
+  nuiTask* pTask = nullptr;
+  while (mContinue && (pTask = mNextFrameQueue.Get(0)))
+  {
+    pTask->Run();
+    pTask->Release();
+  }
+  
+
   mpDrawContext->Set2DProjectionMatrix(mRect.Size());
 
   mpDrawContext->ResetState();
