@@ -203,6 +203,16 @@ void nuiRenderThread::DrawChild(nuiDrawContext* pContext, nuiWidget* pKey)
 }
 
 
+nuiMetaPainter* nuiRenderThread::GetRootPainter() const
+{
+  auto it = mPainters.find(mpRoot);
+  if (it == mPainters.end())
+  {
+    return nullptr;
+  }
+  return it->second;
+}
+
 nuiPainter* nuiRenderThread::GetPainter() const
 {
   return mpPainter;
@@ -211,5 +221,10 @@ nuiPainter* nuiRenderThread::GetPainter() const
 nuiDrawContext* nuiRenderThread::GetDrawContext() const
 {
   return mpDrawContext;
+}
+
+nglContext* nuiRenderThread::GetContext() const
+{
+  return mpContext;
 }
 

@@ -28,7 +28,12 @@ public:
   void RunTaskOnRenderThread(nuiTask* rTask, bool OnNextFrame);
 
   nuiPainter* GetPainter() const;
+  nuiMetaPainter* GetRootPainter() const;
   nuiDrawContext* GetDrawContext() const;
+  nglContext* GetContext() const;
+
+  void DrawChild(nuiDrawContext* pContext, nuiWidget* pKey);
+
 private:
   nuiTaskQueue mQueue;
   nuiTaskQueue mNextFrameQueue;
@@ -50,7 +55,6 @@ private:
   void _SetRootWidget(nuiWidget* pWidget);
   void _RenderFrame(nuiMetaPainter* pFrame);
 
-  void DrawChild(nuiDrawContext* pContext, nuiWidget* pKey);
 
   virtual void OnStart();
 
