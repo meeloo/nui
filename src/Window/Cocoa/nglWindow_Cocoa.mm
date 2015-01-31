@@ -220,13 +220,17 @@ float nuiGetInvScaleFactor()
 {
   mpNGLWindow->GetLock().Lock();
 
-  NSWindow* win = [notification object];
+  nglNSWindow* win = (nglNSWindow*)[notification object];
   NSRect rect = {0};
   rect = [win frame];
   [win resize: [win contentRectForFrameRect: rect].size];
 
+  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
+  [_context update];
+
   mpNGLWindow->GetLock().Unlock();
 
+  mpNGLWindow->CallOnPaint();
 }
 
 -(void)windowWillClose:(NSNotification *)note
