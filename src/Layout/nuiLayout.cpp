@@ -383,9 +383,17 @@ bool nuiLayout::AddChild(nuiWidgetPtr pChild)
     pChild->SetAutoUpdateLayout(true);
     return true;
   }
-
+  
   return false;
 }
+
+bool nuiLayout::DelChild(nuiWidgetPtr pChild)
+{
+//  NGL_ASSERT(mConstraints.find(pChild) != mConstraints.end());
+  mConstraints.erase(pChild);
+  return nuiWidget::DelChild(pChild);
+}
+
 
 void nuiLayout::SetVerticalAnchorMovable(const nglString& rName, bool movable)
 {

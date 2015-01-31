@@ -126,6 +126,7 @@ public:
 
   virtual void SetProperty(const nglString& rName, const nglString& rValue); ///< Add or change a property of the object.
   virtual bool AddChild(nuiWidgetPtr pChild);
+  virtual bool DelChild(nuiWidgetPtr pChild);
 
   virtual bool MouseClicked(const nglMouseInfo& rInfo);
   virtual bool MouseUnclicked(const nglMouseInfo& rInfo);
