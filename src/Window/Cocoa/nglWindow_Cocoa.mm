@@ -635,7 +635,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 - (void)resize: (NSSize) size
 {
   //printf("resize %f x %f\n", size.width, size.height);
-  mpNGLWindow->CallOnResize(size.width, size.height);
+  mpNGLWindow->CallOnResize(ToNearest(size.width), ToNearest(size.height));
 }
 
 - (BOOL)acceptsMouseMovedEvents
