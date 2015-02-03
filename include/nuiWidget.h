@@ -18,7 +18,6 @@
 #include "nuiHotKey.h"
 #include "nuiDecorationDefines.h"
 #include "nuiDefaultDecoration.h"
-#include "nuiSurface.h"
 #include "nuiRenderState.h"
 #include "nuiAnimation.h"
 #include "nuiMatrixNode.h"
@@ -601,22 +600,6 @@ public:
   const nuiMetaPainter* GetRenderCache() const;
   //@}
 
-  /** @name Rendering the widget in a surface */
-  //@{
-  void EnableSurface(bool Set); ///< Declare that this widget can use offscreen rendering to speed up display. 
-  bool IsSurfaceEnabled() const; ///< Returns true if offscreen rendering is permited on this widget.
-  virtual void DrawSurface(nuiDrawContext* pContext);
-  void InvalidateSurface();
-  nuiSurface* GetSurface() const;
-  const nuiMatrix& GetSurfaceMatrix() const;
-  void SetSurfaceMatrix(const nuiMatrix& rMatrix);
-  const nuiColor& GetSurfaceColor() const;
-  void SetSurfaceColor(const nuiColor& rColor);
-  nuiBlendFunc GetSurfaceBlendFunc() const;
-  void SetSurfaceBlendFunc(nuiBlendFunc BlendFunc);
-  
-  //@}
-
   virtual void ConnectTopLevel(); ///< This method is called when the widget is connected to the Top Level. Overload it to perform specific actions in a widget.
   virtual void DisconnectTopLevel(); ///< This method is called when the widget is disconnected from the Top Level. Overload it to perform specific actions in a widget.
 
@@ -763,9 +746,6 @@ protected:
   nuiRect mUserRect; ///< The bounding box of the nuiObject if set by the user (in coordinates of its parent).
   nuiRect mHotRect; ///< The currently important interactive part of the widget. Containers try to keep this rect in view when possible. For exemple set it as the cursor rectangle in a text edit widget. Is you text edit is contained in a scroll view, the scroll view will try to follow the cursor.
 
-  nuiSurface* mpSurface;
-  void UpdateSurface(const nuiRect& rRect);
-  
   nuiSize mBorderLeft, mBorderRight; // empty space left left and right the widget itself
   nuiSize mBorderTop, mBorderBottom; // empty space left below and above the widget itself
 
@@ -781,10 +761,6 @@ protected:
   void _SetMatrix(nuiMatrix Matrix);
 
   
-  nuiMatrix mSurfaceMatrix;
-  nuiColor mSurfaceColor;
-  nuiBlendFunc mSurfaceBlendFunc;
-
   void Animate(const nuiEvent& rEvent);
   
   bool TriggerHotKeys(const nglKeyEvent& rEvent, bool KeyDown,  bool Priority, nuiKeyModifier Mask); ///< Helper function. Triggers appropriate hotkeys
@@ -836,8 +812,6 @@ protected:
   bool mNeedRender: 1;
   bool mNeedSelfRedraw: 1;
   
-  bool mNeedSurfaceRedraw: 1;
-  bool mSurfaceEnabled: 1;
   bool mMouseEventEnabled: 1;
   bool mWantKeyboardFocus: 1;
   bool mMuteKeyboardFocusDispatch: 1;
