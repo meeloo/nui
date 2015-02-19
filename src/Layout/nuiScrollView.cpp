@@ -1070,11 +1070,11 @@ bool nuiScrollView::MouseUngrabbed(nglTouchId Id)
 {
   if (!HasGrab(Id))
     return false;
-  NGL_ASSERT(mLeftClick > 0);
-  mLeftClick--;
-  if (!mLeftClick)
+//  NGL_ASSERT(mLeftClick > 0);
+
+  if (mLeftClick > 0)
   {
-    
+    mLeftClick--;
   }
   
   return true;

@@ -74,7 +74,7 @@ bool nuiTableView::SetRect(const nuiRect& rRect)
   if (mNeedUpdateCells)
   {
     mNeedUpdateCells=false;
-    CreateCells(rRect.GetHeight());
+    CreateCells(rRect.GetHeight()+GetOverDrawBottom()+GetOverDrawTop());
   }
   return nuiScrollView::SetRect(rRect);
 }
@@ -132,7 +132,7 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
   const nuiSize tableHeight = GetRect().GetHeight();
   const nuiSize tableWidth = GetRect().GetWidth();
 
-  int32 firstVisibleCell = MAX(0, ::ToBelow(YOffset / cellHeight));
+  int32 firstVisibleCell = MAX(0, ::ToBelow((YOffset - GetOverDrawTop())/ cellHeight));
   int32 lastVisibleCell = MIN((int32)mpSource->GetNumberOfCells()-1, firstVisibleCell + mVisibleCells.size()-1);
 
   if (mFirstVisibleCell > firstVisibleCell)
