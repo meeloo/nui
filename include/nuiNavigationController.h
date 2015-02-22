@@ -31,6 +31,8 @@ class nuiNavigationController : public nuiWidget, public nuiNotificationObserver
   
 public:
   nuiNavigationController();
+  virtual void ConnectTopLevel();
+  virtual void DisconnectTopLevel();
 
   /// Push a view container to the top of the controller stack
   /// \p pViewController
@@ -76,6 +78,9 @@ protected:
   virtual bool Draw(nuiDrawContext* pContext);
   virtual bool SetRect(const nuiRect& rRect);
   
+  void SetShowNavbar(bool Show) { mShowNavigationBar = Show; }
+  bool GetShowNavbar() const { return mShowNavigationBar; }
+
 private:
   
   void _PushViewController(nuiViewController* pViewController, bool animated, TransitionType transition, bool viewOverlay = false);
@@ -85,15 +90,13 @@ private:
   void _PopToRootViewControllerAnimated(bool animated, TransitionType transition); 
 
   
-  virtual void ConnectTopLevel();
-  virtual void OnNotification(const nuiNotification& rNotif);  
+  virtual void OnNotification(const nuiNotification& rNotif);
   
   void InitAttributes();
   void InitStatic();
   
   void SetAnimPosition(nuiSize value);
   nuiSize GetAnimPositon() const;
-  
   
   std::vector<nuiViewController*> mViewControllers;
   nuiViewController* mpIn;

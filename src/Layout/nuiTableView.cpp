@@ -74,7 +74,7 @@ bool nuiTableView::SetRect(const nuiRect& rRect)
   if (mNeedUpdateCells)
   {
     mNeedUpdateCells=false;
-    CreateCells(rRect.GetHeight());
+    CreateCells(rRect.GetHeight()+GetOverDrawBottom()+GetOverDrawTop());
   }
   return nuiScrollView::SetRect(rRect);
 }
@@ -132,7 +132,7 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
   const nuiSize tableHeight = GetRect().GetHeight();
   const nuiSize tableWidth = GetRect().GetWidth();
 
-  int32 firstVisibleCell = MAX(0, ::ToBelow(YOffset / cellHeight));
+  int32 firstVisibleCell = MAX(0, ::ToBelow((YOffset - GetOverDrawTop())/ cellHeight));
   int32 lastVisibleCell = MIN((int32)mpSource->GetNumberOfCells()-1, firstVisibleCell + mVisibleCells.size()-1);
 
   if (mFirstVisibleCell > firstVisibleCell)
@@ -196,33 +196,16 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
 void nuiTableView::CreateCells(nuiSize Height)
 {
   NGL_ASSERT(mpSource);
+  int32 currentVisibleCells = mVisibleCells.size();
   int32 visibleCells = MIN(mpSource->GetNumberOfCells(), ::ToAbove(Height / GetCellHeight()) + 1);
-//  mLastVisibleCell = mFirstVisibleCell + (visibleCells-1);
-//
-//  int32 diff = visibleCells - mVisibleCells.size();
-//
-//  if (diff != 0)
-//  {
-//    int32 cell = mLastVisibleCell-diff;
-//    while (diff > 0)
-//    {
-//      nuiWidget* pWidget = mpSource->CreateCell();
-//      NGL_ASSERT(pWidget);
-//      mVisibleCells.push_back(pWidget);
-//      mpSource->UpdateCell(cell++, pWidget);
-//      AddChild(pWidget);
-//      --diff;
-//    }
-//    while (diff < 0)
-//    {
-//      nuiWidget* pWidget = mVisibleCells.back();
-//      DelChild(pWidget);
-//      mVisibleCells.pop_back();
-//      ++diff;
-//    }
 
+  if (currentVisibleCells == visibleCells)
+    return true;
+  
+  
   mFirstVisibleCell = 0;
   mLastVisibleCell = (visibleCells-1);
+  
   if (mVisibleCells.size() != visibleCells)
   {
 //    printf("DelChild %d - AddChild %d\n", mVisibleCells.size(), visibleCells);
@@ -230,7 +213,7 @@ void nuiTableView::CreateCells(nuiSize Height)
     {
       nuiWidget* pWidget = mVisibleCells.front();
       DelChild(pWidget);
-      mVisibleCells.erase(mVisibleCells.begin());
+      mVisibleCells.pop_front();
     }
 
     for (int32 cell = 0; cell < visibleCells; ++cell)

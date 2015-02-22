@@ -26,7 +26,8 @@ std::vector<float> nuiNavigationController::mDurations;
 // Constructor
 //
 nuiNavigationController::nuiNavigationController()
-: nuiWidget(), mEventSink(this)
+: nuiWidget(),
+  mEventSink(this)
 {
   if (SetObjectClass(_T("nuiNavigationController")))
     InitAttributes();
@@ -106,6 +107,10 @@ void nuiNavigationController::InitAttributes()
                (nglString(_T(".AnimPosition")), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiNavigationController::GetAnimPositon), 
                 nuiMakeDelegate(this, &nuiNavigationController::SetAnimPosition)));
+  AddAttribute(new nuiAttribute<bool>
+               (nglString(_T("ShowNavbar")), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiNavigationController::GetShowNavbar),
+                nuiMakeDelegate(this, &nuiNavigationController::SetShowNavbar)));
 }
 
 
@@ -200,7 +205,12 @@ const std::vector<nuiViewController*>& nuiNavigationController::GetViewControlle
 //
 void nuiNavigationController::ConnectTopLevel()
 {
-  GetTopLevel()->RegisterObserver(NOTIF_PENDING_OPERATION, this); 
+  GetTopLevel()->RegisterObserver(NOTIF_PENDING_OPERATION, this);
+}
+
+void nuiNavigationController::DisconnectTopLevel()
+{
+  GetTopLevel()->UnregisterObserver(this, NOTIF_PENDING_OPERATION);
 }
 
 
@@ -452,14 +462,18 @@ void nuiNavigationController::_PushViewController(nuiViewController* pViewContro
   mpIn->mAnimated = animated;
   mpIn->SetAlpha(1);
   
-  if (mShowNavigationBar)
+  if (mShowNavigationBar) {
+    NGL_ASSERT(mpIn->GetNavigationBar());
     mpIn->GetNavigationBar()->SetAlpha(1);
+  }
   
-  if (mViewControllers.size() >0) 
+  if (mViewControllers.size() > 0)
   {
     // display the "Back" button by default (can be overwritten in the display callbacks)
-    if (mShowNavigationBar)
+    if (mShowNavigationBar) {
+      NGL_ASSERT(mpIn->GetNavigationBar());
       mpIn->GetNavigationBar()->SetBackNavigationItem(true);
+    }
     
     // if no overlay, the current view has to move out, to let the next view move in.
     if (!viewOverlay)

@@ -22,6 +22,7 @@ public:
   void AddChild(nuiLayer* pLayer);
   void DelChild(nuiLayer* pLayer);
   const std::vector<nuiLayer*>& GetChildren() const;
+
 private:
   std::vector<nuiLayer*> mLayers;
   void Change() { mChanged = true; }
