@@ -8,24 +8,40 @@
 
 #pragma once
 
-class nuiLayer : public nuiObject
+class nuiLayer : public nuiNode
 {
 public:
+  typedef nuiFastDelegate2<const nuiLayer*, nuiDrawContext*> DrawContentsDelegate;
+
   static nuiLayer* GetLayer(const nglString& rName);
-  static nuiLayer* CreateLayer(const nglString& rName, int width, int height, nglImagePixelFormat PixelFormat = eImagePixelRGBA, int depth = 0, int stencil = 0);
+  static nuiLayer* CreateLayer(const nglString& rName, int width, int height);
   
-//  NUI_GETSETDO(int, Width, Change());
-//  NUI_GETSETDO(int, Height, Change());
-//  NUI_GETSETDO(nglImagePixelFormat, PixelFormat, Change());
-//  NUI_GETSETDO(int, Depth, Change());
-//  NUI_GETSETDO(int, Stencil, Change());
-  
+  void SetContents(nuiWidget* pWidget);
+  void SetContents(nuiTexture* pTexture);
+  void SetContents(const DrawContentsDelegate& rDelegate);
+
+  NUI_GETSETDO(float, Width, Change());
+  NUI_GETSETDO(float, Height, Change());
+
+  void UpdateContents(nuiDrawContext* pContext);
+  void Draw(nuiDrawContext* pContext);
 private:
-  nglString& mName;
-  int mWidth = 0;
-  int mHeight = 0;
-  nglImagePixelFormat PixelFormat;
-  int mDepth = 0;
-  int mStencil = 0;
+  nuiLayer(const nglString& rName, int width, int height);
+  virtual ~nuiLayer();
+
+  static std::map<nglString, nuiLayer*> mLayers;
+
+  float mWidth = 0;
+  float mHeight = 0;
+
+  nuiSurface* mpSurface = nullptr;
+
+  void Change() { mChanged = true; }
   bool mChanged = true;
+  bool mContentsChanged = true;
+
+  nuiTexture* mpTextureContents = nullptr;
+  nuiWidget* mpWidgetContents = nullptr;
+  DrawContentsDelegate mDrawContentsDelegate;
 };
+
