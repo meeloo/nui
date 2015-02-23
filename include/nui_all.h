@@ -173,6 +173,7 @@ typedef double nuiSize;
   #include "nuiHotKey.h"
   #include "nuiDefaultDecoration.h"
   #include "nuiMouseEvent.h"
+  #include "nuiNode.h"
   #include "nuiLayer.h"
   #include "nuiWidget.h"
   #include "nuiTopLevel.h"
