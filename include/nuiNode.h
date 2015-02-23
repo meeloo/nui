@@ -64,10 +64,6 @@ public:
   void SetBlending(bool value);
   bool GetBlending() const;
 
-  nuiSignal2<nuiNode*, const nglMouseInfo&, bool> MouseClicked;
-  nuiSignal2<nuiNode*, const nglMouseInfo&, bool> MouseUnclicked;
-  nuiSignal2<nuiNode*, const nglMouseInfo&, bool> MouseMoved;
-
   void GetNodesAtPoint(float x, float y, std::vector<nuiNode*>& rNodes);
   virtual bool IsInside(float x, float y) const;
 

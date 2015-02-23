@@ -56,7 +56,104 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
 
   mLayers[rName] = this;
 
-  mContents.Texture = nullptr;
   mWidth = width;
   mHeight = height;
+}
+
+void nuiLayer::SetContents(nuiWidget* pWidget)
+{
+  // Layers don't own their widgets, it's just a link and the widget should tell the layer when it's dead
+  //  if (pWidget)
+  //    pWidget->Acquire();
+  //
+  //  if (mpWidgetContents)
+  //    mpWidgetContents->Release();
+
+  if (mpTextureContents)
+    mpTextureContents->Release();
+  
+  mpWidgetContents = pWidget;
+  mpTextureContents = nullptr;
+  mDrawContentsDelegate.clear();
+
+  mContentsChanged = true;
+}
+
+void nuiLayer::SetContents(nuiTexture* pTexture)
+{
+  if (pTexture)
+    pTexture->Acquire();
+
+  // Layers don't own their widgets, it's just a link and the widget should tell the layer when it's dead
+  //  if (mpWidgetContents)
+  //    mpWidgetContents->Release();
+
+  if (mpTextureContents)
+    mpTextureContents->Release();
+  
+  mpWidgetContents = nullptr;
+  mpTextureContents = pTexture;
+  mDrawContentsDelegate.clear();
+
+  mContentsChanged = true;
+}
+
+void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
+{
+  // Layers don't own their widgets, it's just a link and the widget should tell the layer when it's dead
+  //  if (mpWidgetContents)
+  //    mpWidgetContents->Release();
+
+  if (mpTextureContents)
+    mpTextureContents->Release();
+
+  mpWidgetContents = nullptr;
+  mpTextureContents = nullptr;
+
+  mDrawContentsDelegate = rDelegate;
+
+  mContentsChanged = true;
+}
+
+void nuiLayer::UpdateContents(nuiDrawContext* pContext)
+{
+  if (!mContentsChanged || mpTextureContents)
+    return;
+
+  pContext->SetSurface(mpSurface);
+  if (mpWidgetContents)
+  {
+
+  }
+  else if (mDrawContentsDelegate)
+  {
+    mDrawContentsDelegate(this, pContext);
+  }
+  // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
+
+  pContext->SetSurface(nullptr);
+
+  mContentsChanged = false;
+}
+
+void nuiLayer::Draw(nuiDrawContext* pContext)
+{
+  CheckValid();
+
+  nuiTexture* pTex = nullptr;
+  if (mpTextureContents)
+  {
+    pTex = mpTextureContents;
+  }
+  else
+  {
+    pTex = mpSurface->GetTexture();
+  }
+
+  pContext->SetTexture(pTex);
+
+  nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
+  nuiRect dst = src;
+  dst.Move(-GetPivot()[0], -GetPivot()[1]);
+  pContext->DrawImage(dst, src);
 }

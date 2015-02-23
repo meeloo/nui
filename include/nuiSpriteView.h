@@ -107,7 +107,6 @@ public:
   float GetSpeed() const;
   void SetSpeed(float speed); ///< Default is 1
 
-
   nuiSignal2<nuiSprite*, const nglMouseInfo&, bool> MouseClicked;
   nuiSignal2<nuiSprite*, const nglMouseInfo&, bool> MouseUnclicked;
   nuiSignal2<nuiSprite*, const nglMouseInfo&, bool> MouseMoved;
