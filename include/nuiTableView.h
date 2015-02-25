@@ -75,6 +75,8 @@ public:
   void SetStartDragDelegate(const StartDragDelegate& rDelegate) { mStartDragDelegate = rDelegate; }
   void OnDragStop(bool canceled);
 
+  void OnSourceDataChanged(const nuiEvent& rEvent);
+
 protected:
   void InitAttributes();
   bool SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy, nuiSize scrollv, nuiSize scrollh);
@@ -85,7 +87,6 @@ protected:
 private:
   nuiCellSource* mpSource = nullptr;
   bool mOwnSource = false;
-  void OnSourceDataChanged(const nuiEvent& rEvent);
   
   using Cells = std::list<nuiWidget*>;
   Cells mVisibleCells;
