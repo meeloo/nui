@@ -15,25 +15,25 @@
 
 class nuiTableView;
 
-class nuiCellSource : public nuiObject
+class nuiCellSource
 {
 public:
   typedef nuiSimpleEventSource<0> CellSourceEvent;
   
-  nuiCellSource() : nuiObject(), mNeedsRefresh(false) {}
-  
+  nuiCellSource() : mNeedsRefresh(false) {}
+  virtual ~nuiCellSource() {}
+
   virtual nuiWidget* CreateCell() = 0;
   virtual void UpdateCell(int32 index, nuiWidget* pItem) = 0;
   virtual uint32 GetNumberOfCells() = 0;
   
   bool GetNeedsRefresh() { return mNeedsRefresh; }
   virtual void SetNeedsRefresh(bool refresh) { mNeedsRefresh = refresh; }
-
+  
   CellSourceEvent DataChanged;
-
+  
   void SetTableView(nuiTableView* pView) { mpTableView = pView; }
 protected:
-  virtual ~nuiCellSource() {};
   nuiTableView* mpTableView = nullptr;
 private:
   bool mNeedsRefresh;
@@ -47,15 +47,17 @@ class nuiTableView : public nuiScrollView
 {
 public:
   nuiTableView();
-  nuiTableView(nuiCellSource* pSource);
-
+  nuiTableView(nuiCellSource* pSource, bool OwnSource=true);
   virtual ~nuiTableView();
+  nuiCellSource* GetSource() { return mpSource; }
+  void SetSource(nuiCellSource* pSource, bool OwnSource=true);
+
+  
   nuiRect CalcIdealSize();
   bool SetRect(const nuiRect& rRect);
   bool Draw(nuiDrawContext* pContext);
   
-  nuiCellSource* GetSource() { return mpSource; }
-
+  
   nuiWidget* GetCell(int32 Index);
 
   void SetCellHeight(nuiSize Height) { mCellHeight = Height; InvalidateLayout(); }
@@ -73,6 +75,8 @@ public:
   void SetStartDragDelegate(const StartDragDelegate& rDelegate) { mStartDragDelegate = rDelegate; }
   void OnDragStop(bool canceled);
 
+  void OnSourceDataChanged(const nuiEvent& rEvent);
+
 protected:
   void InitAttributes();
   bool SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy, nuiSize scrollv, nuiSize scrollh);
@@ -82,7 +86,7 @@ protected:
 
 private:
   nuiCellSource* mpSource = nullptr;
-  void OnSourceDataChanged(const nuiEvent& rEvent);
+  bool mOwnSource = false;
   
   using Cells = std::list<nuiWidget*>;
   Cells mVisibleCells;

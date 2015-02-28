@@ -11,13 +11,14 @@
 
 #pragma mark nuiTableView
 
-nuiTableView::nuiTableView(nuiCellSource* pSource)
+nuiTableView::nuiTableView(nuiCellSource* pSource, bool OwnSource)
 : nuiScrollView(false, true),
   mpSource(pSource),
+  mOwnSource(OwnSource),
   mTableViewSink(this)
 {
   NGL_ASSERT(pSource);
-  pSource->Acquire();
+//  pSource->Acquire();
   mSelection.resize(pSource->GetNumberOfCells(), false);
 
   mpSource->SetTableView(this);
@@ -39,7 +40,18 @@ void nuiTableView::OnSourceDataChanged(const nuiEvent& rEvent)
 
 nuiTableView::~nuiTableView()
 {
-  mpSource->Release();
+  if (mpSource && mOwnSource)
+    delete mpSource;
+}
+
+
+void nuiTableView::SetSource(nuiCellSource* pSource, bool OwnSource)
+{
+  if (mpSource && mOwnSource)
+    delete mpSource;
+  mOwnSource = OwnSource;
+  mpSource = pSource;
+  InvalidateLayout();
 }
 
 void nuiTableView::InitAttributes()
