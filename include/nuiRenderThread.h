@@ -9,6 +9,7 @@
 #pragma once
 
 class nuiMetaPainter;
+class nuiLayer;
 
 class nuiRenderThread : public nglThread
 {
@@ -26,6 +27,7 @@ public:
   void SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void SetRootWidget(nuiWidget* pRoot);
   void RunTaskOnRenderThread(nuiTask* rTask, bool OnNextFrame);
+  void SetLayerTree(nuiLayer* pLayerRoot);
 
   nuiPainter* GetPainter() const;
   nuiMetaPainter* GetRootPainter() const;
@@ -47,12 +49,14 @@ private:
   nuiPainter* mpPainter = nullptr;
   RenderingDoneDelegate mRenderingDone;
   bool mContinue = true;
+  nuiLayer* mpLayerTreeRoot = nullptr;
 
   void _StartRendering(uint32 x, uint32 y);
   void _SetRect(const nuiRect& rRect);
   void _Exit();
   void _SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void _SetRootWidget(nuiWidget* pWidget);
+  void _SetLayerTree(nuiLayer* pRoot);
   void _RenderFrame(nuiMetaPainter* pFrame);
 
 

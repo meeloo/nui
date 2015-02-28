@@ -77,6 +77,13 @@ void nuiRenderThread::SetRootWidget(nuiWidget* pRoot)
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetRootWidget, pRoot));
 }
 
+void nuiRenderThread::SetLayerTree(nuiLayer* pLayerRoot)
+{
+  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerTree, pLayerRoot));
+}
+
+
+
 void nuiRenderThread::RenderingDone(bool result)
 {
   mRenderingDone(this, result);
@@ -90,62 +97,112 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     return;
   }
 
-  auto it = mPainters.find(mpRoot);
-  if (it == mPainters.end())
+  if (mpLayerTreeRoot)
   {
-    RenderingDone(false);
-    return;
+    mpContext->GetLock().Lock();
+    
+    mpPainter->ResetStats();
+    mpContext->BeginSession();
+    mpPainter->BeginSession();
+    
+    mpDrawContext->SetPainter(mpPainter);
+    mpDrawContext->StartRendering();
+    
+    nuiTask* pTask = nullptr;
+    while (mContinue && (pTask = mNextFrameQueue.Get(0)))
+    {
+      pTask->Run();
+      pTask->Release();
+    }
+    
+    mpDrawContext->Set2DProjectionMatrix(mRect.Size());
+    
+    mpDrawContext->ResetState();
+    mpDrawContext->ResetClipRect();
+    
+    mpDrawContext->SetClearColor(nuiColor(255,255,255));
+    //  if (mClearBackground)
+    {
+      mpDrawContext->Clear();
+    }
+    //  else
+    //  {
+    //    // Force the initial render state anyway!
+    //    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
+    //  }
+    
+    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+
+    mpLayerTreeRoot->Draw(mpDrawContext);
+    
+    mpDrawContext->StopRendering();
+    mpPainter->EndSession();
+    mpContext->EndSession();
+    
+    mpContext->GetLock().Unlock();
+    
+    RenderingDone(true);
   }
-  nuiMetaPainter* pRootPainter = it->second;
-  if (pRootPainter == nullptr)
+  else
   {
-    RenderingDone(false);
-    return;
+    auto it = mPainters.find(mpRoot);
+    if (it == mPainters.end())
+    {
+      RenderingDone(false);
+      return;
+    }
+    
+    nuiMetaPainter* pRootPainter = it->second;
+    if (pRootPainter == nullptr)
+    {
+      RenderingDone(false);
+      return;
+    }
+    
+    
+    mpContext->GetLock().Lock();
+    
+    mpPainter->ResetStats();
+    mpContext->BeginSession();
+    mpPainter->BeginSession();
+    
+    mpDrawContext->SetPainter(mpPainter);
+    mpDrawContext->StartRendering();
+    
+    nuiTask* pTask = nullptr;
+    while (mContinue && (pTask = mNextFrameQueue.Get(0)))
+    {
+      pTask->Run();
+      pTask->Release();
+    }
+    
+    
+    mpDrawContext->Set2DProjectionMatrix(mRect.Size());
+    
+    mpDrawContext->ResetState();
+    mpDrawContext->ResetClipRect();
+    
+    mpDrawContext->SetClearColor(nuiColor(255,255,255));
+    //  if (mClearBackground)
+    {
+      mpDrawContext->Clear();
+    }
+    //  else
+    //  {
+    //    // Force the initial render state anyway!
+    //    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
+    //  }
+    
+    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+    
+    mpDrawContext->StopRendering();
+    mpPainter->EndSession();
+    mpContext->EndSession();
+    
+    mpContext->GetLock().Unlock();
+    
+    RenderingDone(true);
   }
-
-  
-  mpContext->GetLock().Lock();
-
-  mpPainter->ResetStats();
-  mpContext->BeginSession();
-  mpPainter->BeginSession();
-
-  mpDrawContext->SetPainter(mpPainter);
-  mpDrawContext->StartRendering();
-
-  nuiTask* pTask = nullptr;
-  while (mContinue && (pTask = mNextFrameQueue.Get(0)))
-  {
-    pTask->Run();
-    pTask->Release();
-  }
-  
-
-  mpDrawContext->Set2DProjectionMatrix(mRect.Size());
-
-  mpDrawContext->ResetState();
-  mpDrawContext->ResetClipRect();
-
-  mpDrawContext->SetClearColor(nuiColor(255,255,255));
-//  if (mClearBackground)
-  {
-    mpDrawContext->Clear();
-  }
-//  else
-//  {
-//    // Force the initial render state anyway!
-//    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
-//  }
-
-  pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
-
-  mpDrawContext->StopRendering();
-  mpPainter->EndSession();
-  mpContext->EndSession();
-
-  mpContext->GetLock().Unlock();
-
-  RenderingDone(true);
 }
 
 void nuiRenderThread::_SetRect(const nuiRect& rRect)
@@ -189,6 +246,11 @@ void nuiRenderThread::_SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPai
 void nuiRenderThread::_SetRootWidget(nuiWidget* pRoot)
 {
   mpRoot = pRoot;
+}
+
+void nuiRenderThread::_SetLayerTree(nuiLayer* pRoot)
+{
+  mpLayerTreeRoot = pRoot;
 }
 
 void nuiRenderThread::DrawChild(nuiDrawContext* pContext, nuiWidget* pKey)

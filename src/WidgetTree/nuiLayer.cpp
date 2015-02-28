@@ -8,6 +8,8 @@
 
 #include "nui.h"
 
+std::map<nglString, nuiLayer*> nuiLayer::mLayers;
+
 nuiLayer* nuiLayer::GetLayer(const nglString& rName)
 {
   auto it = mLayers.find(rName);
@@ -59,6 +61,13 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
   mWidth = width;
   mHeight = height;
 }
+
+nuiLayer::~nuiLayer()
+{
+  if (mpSurface)
+    mpSurface->Release();
+}
+
 
 void nuiLayer::SetContents(nuiWidget* pWidget)
 {
