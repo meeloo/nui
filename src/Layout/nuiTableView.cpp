@@ -212,8 +212,14 @@ void nuiTableView::CreateCells(nuiSize Height)
   int32 visibleCells = MIN(mpSource->GetNumberOfCells(), ::ToAbove(Height / GetCellHeight()) + 1);
 
   if (currentVisibleCells == visibleCells)
+  {
+    auto pWidgetIt = mVisibleCells.begin();
+    for (int32 cell = mFirstVisibleCell; cell <= mLastVisibleCell; ++cell)
+    {
+      mpSource->UpdateCell(cell, *pWidgetIt++);
+    }
     return true;
-  
+  }
   
   mFirstVisibleCell = 0;
   mLastVisibleCell = (visibleCells-1);
