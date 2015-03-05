@@ -8,6 +8,8 @@
 
 #include "nui.h"
 
+std::map<nglString, nuiLayer*> nuiLayer::mLayers;
+
 nuiLayer* nuiLayer::GetLayer(const nglString& rName)
 {
   auto it = mLayers.find(rName);
@@ -59,6 +61,13 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
   mWidth = width;
   mHeight = height;
 }
+
+nuiLayer::~nuiLayer()
+{
+  if (mpSurface)
+    mpSurface->Release();
+}
+
 
 void nuiLayer::SetContents(nuiWidget* pWidget)
 {
@@ -115,15 +124,20 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
   mContentsChanged = true;
 }
 
-void nuiLayer::UpdateContents(nuiDrawContext* pContext)
+void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<nuiDrawContext*, nuiWidget*>& rDrawWidgetDelegate)
 {
   if (!mContentsChanged || mpTextureContents)
     return;
 
   pContext->SetSurface(mpSurface);
+
+  pContext->ResetState();
+  pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
+  pContext->ResetClipRect();
+
   if (mpWidgetContents)
   {
-
+    rDrawWidgetDelegate(pContext, mpWidgetContents);
   }
   else if (mDrawContentsDelegate)
   {

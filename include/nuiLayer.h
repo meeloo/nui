@@ -23,7 +23,7 @@ public:
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
 
-  void UpdateContents(nuiDrawContext* pContext);
+  void UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<nuiDrawContext*, nuiWidget*>& rDrawWidgetDelegate);
   void Draw(nuiDrawContext* pContext);
 private:
   nuiLayer(const nglString& rName, int width, int height);
