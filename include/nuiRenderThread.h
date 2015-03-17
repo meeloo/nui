@@ -25,6 +25,7 @@ public:
 //  void AddClipRect(const nuiRect& rRect);
   void Exit();
   void SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
+  void SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
   void SetRootWidget(nuiWidget* pRoot);
   void RunTaskOnRenderThread(nuiTask* rTask, bool OnNextFrame);
   void SetLayerTree(nuiLayer* pLayerRoot);
@@ -43,7 +44,7 @@ private:
   nuiRect mRect;
   std::vector<nuiRect> mPartialRects;
   nuiWidget* mpRoot = nullptr;
-  std::map<nuiWidget*, nuiMetaPainter*> mPainters;
+  std::map<nuiObject*, nuiMetaPainter*> mPainters;
   nglContext* mpContext = nullptr;
   nuiDrawContext* mpDrawContext = nullptr;
   nuiPainter* mpPainter = nullptr;
@@ -55,6 +56,7 @@ private:
   void _SetRect(const nuiRect& rRect);
   void _Exit();
   void _SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
+  void _SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
   void _SetRootWidget(nuiWidget* pWidget);
   void _SetLayerTree(nuiLayer* pRoot);
   void _RenderFrame(nuiMetaPainter* pFrame);

@@ -72,6 +72,12 @@ void nuiRenderThread::SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPain
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetPainter, pWidget, pPainter));
 }
 
+void nuiRenderThread::SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
+{
+  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerPainter, pLayer, pPainter));
+}
+
+
 void nuiRenderThread::SetRootWidget(nuiWidget* pRoot)
 {
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetRootWidget, pRoot));
@@ -242,6 +248,35 @@ void nuiRenderThread::_SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPai
     mPainters[pWidget] = pPainter;
   }
 }
+
+void nuiRenderThread::_SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
+{
+  auto it = mPainters.find(pLayer);
+  if (it != mPainters.end())
+  {
+    nuiMetaPainter* pOld = it->second;
+    NGL_ASSERT(pOld);
+    
+    mpContext->GetLock().Lock();
+    pOld->Release();
+    mpContext->GetLock().Unlock();
+    
+    if (pPainter)
+    {
+      it->second = pPainter;
+    }
+    else
+    {
+      mPainters.erase(it);
+    }
+    return;
+  }
+  else if (pPainter)
+  {
+    mPainters[pLayer] = pPainter;
+  }
+}
+
 
 void nuiRenderThread::_SetRootWidget(nuiWidget* pRoot)
 {
