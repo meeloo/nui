@@ -26,16 +26,22 @@ nuiLayer* nuiLayer::GetLayer(const nglString& rName)
 nuiLayer* nuiLayer::CreateLayer(const nglString& rName, int width, int height)
 {
   nuiLayer* pLayer = GetLayer(rName);
-  if (pLayer)
+  
+  if (!pLayer)
   {
-    if (pLayer->GetWidth() == width && pLayer->GetHeight() == height)
-    {
-      return pLayer;
-    }
-
-    pLayer->SetWidth(width);
-    pLayer->SetHeight(height);
+    return new nuiLayer(rName, width, height);
   }
+
+  
+  if (pLayer->GetWidth() == width && pLayer->GetHeight() == height)
+  {
+    return pLayer;
+  }
+
+  pLayer->SetWidth(width);
+  pLayer->SetHeight(height);
+  
+  return pLayer;
 }
 
 
