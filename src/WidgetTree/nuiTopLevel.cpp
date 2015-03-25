@@ -393,7 +393,7 @@ nuiDrawContext* nuiTopLevel::GetDrawContext()
     return mpDrawContext;
   
   nuiRect rect = GetRect().Size();
-  mpDrawContext = nuiDrawContext::CreateDrawContext(rect, mRenderer, GetNGLContext());
+  mpDrawContext = nuiDrawContext::CreateDrawContext(rect, GetNGLContext()->GetPainter());
   nuiMetaPainter* pMeta = new nuiMetaPainter();
   mpDrawContext->SetPainter(pMeta);
   return mpDrawContext;
@@ -409,7 +409,7 @@ nuiRenderThread* nuiTopLevel::GetRenderThread()
   nuiPainter* pPainter = pContext->GetPainter();
 
   nuiRect rect = GetRect().Size();
-  nuiDrawContext* pDrawContext = nuiDrawContext::CreateDrawContext(rect, mRenderer, GetNGLContext());
+  nuiDrawContext* pDrawContext = nuiDrawContext::CreateDrawContext(rect, GetNGLContext()->GetPainter());
 //  nuiDrawContext* pDrawContext = GetDrawContext();
 
   mpRenderThread = new nuiRenderThread(pContext, pDrawContext, pPainter, nuiMakeDelegate(this, &nuiTopLevel::OnRenderingDone));

@@ -57,7 +57,7 @@ class nuiDrawContext
 {
 
 public:
-  static nuiDrawContext *CreateDrawContext(const nuiRect& rRect, nuiRenderer mode, nglContext* pContext = NULL); 
+  static nuiDrawContext *CreateDrawContext(const nuiRect& rRect, nuiPainter* pPainter);
 
   nuiDrawContext(const nuiRect& rRect);
   virtual ~nuiDrawContext();

@@ -325,3 +325,14 @@ nglContext* nuiRenderThread::GetContext() const
   return mpContext;
 }
 
+
+void nuiRenderThread::SetLayerDirty(nuiLayer *pLayer)
+{
+  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDirty, pLayer));
+}
+
+void nuiRenderThread::_SetLayerDirty(nuiLayer *pLayer)
+{
+  mDirtyLayers.insert(pLayer);
+}
+

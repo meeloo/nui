@@ -1583,20 +1583,17 @@ void nuiDrawContext::DrawShade(const nuiRect& rSourceRect, const nuiRect& rShade
 }
 
 
-nuiDrawContext *nuiDrawContext::CreateDrawContext(const nuiRect& rRect, nuiRenderer Renderer, nglContext* pContext)
+nuiDrawContext *nuiDrawContext::CreateDrawContext(const nuiRect& rRect, nuiPainter* pPainter)
 {
   nuiDrawContext* pC = new nuiDrawContext(rRect);
-  nuiPainter* pPainter = pContext->GetPainter();
-  pPainter->SetSize(rRect.GetWidth(), rRect.GetHeight());
+  pPainter->SetSize(ToNearest(rRect.GetWidth()), ToNearest(rRect.GetHeight()));
   pC->SetMainPainter(pPainter);
   pC->SetPainter(pPainter);
-//  if (pContext)
-//    pContext->BeginSession();
   pC->Set2DProjectionMatrix(rRect);
-//  if (pContext)
-//    pContext->EndSession();
   return pC;
 }
+
+
 
 int nuiDrawContext::GetWidth() const
 {
