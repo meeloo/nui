@@ -20,6 +20,18 @@ public:
   void SetContents(nuiTexture* pTexture);
   void SetContents(const DrawContentsDelegate& rDelegate);
 
+//  void SetColor(const nuiColor& rColor);
+//  nuiColor GetColor() const;
+//  
+//  void SetBlendFunc(nuiBlendFunc blendfunc);
+//  nuiBlendFunc SetBlendFunc() const;
+//  
+//  void SetClearOnUpdate(bool ClearOnUpdate);
+//  bool GetClearOnUpdate() const;
+//
+//  void SetClearColor(const nuiColor& rClearColor);
+//  nuiColor GetClearColor() const;
+  
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
 

@@ -31,7 +31,6 @@ nuiLayer* nuiLayer::CreateLayer(const nglString& rName, int width, int height)
   {
     return new nuiLayer(rName, width, height);
   }
-
   
   if (pLayer->GetWidth() == width && pLayer->GetHeight() == height)
   {
@@ -171,9 +170,12 @@ void nuiLayer::Draw(nuiDrawContext* pContext)
   }
 
   pContext->SetTexture(pTex);
+  pContext->SetFillColor(nuiColor(1.f, 1.f, 1.f, 1.f));
 
   nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
   nuiRect dst = src;
   dst.Move(-GetPivot()[0], -GetPivot()[1]);
   pContext->DrawImage(dst, src);
 }
+
+
