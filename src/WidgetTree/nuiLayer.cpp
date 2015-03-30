@@ -134,6 +134,19 @@ void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<n
   if (!mContentsChanged || mpTextureContents)
     return;
 
+  bool recreate = false;
+  if (mpSurface == nullptr)
+    recreate = true;
+  else if (mpSurface->GetWidth() != mWidth || mpSurface->GetHeight() != mHeight)
+    recreate = true;
+
+  if (recreate)
+  {
+    if (mpSurface)
+      mpSurface->Release();
+    mpSurface = nuiSurface::CreateSurface(GetObjectName(), ToNearest(mWidth), ToNearest(mHeight));
+  }
+  
   pContext->SetSurface(mpSurface);
 
   pContext->ResetState();
@@ -166,6 +179,7 @@ void nuiLayer::Draw(nuiDrawContext* pContext)
   }
   else
   {
+    NGL_ASSERT(mpSurface != nullptr);
     pTex = mpSurface->GetTexture();
   }
 
