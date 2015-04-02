@@ -213,10 +213,13 @@ void nuiTableView::CreateCells(nuiSize Height)
 
   if (currentVisibleCells == visibleCells)
   {
-    auto pWidgetIt = mVisibleCells.begin();
-    for (int32 cell = mFirstVisibleCell; cell <= mLastVisibleCell; ++cell)
+    if (visibleCells > 0)
     {
-      mpSource->UpdateCell(cell, *pWidgetIt++);
+      auto pWidgetIt = mVisibleCells.begin();
+      for (int32 cell = mFirstVisibleCell; cell <= mLastVisibleCell; ++cell)
+      {
+        mpSource->UpdateCell(cell, *pWidgetIt++);
+      }
     }
     return true;
   }
