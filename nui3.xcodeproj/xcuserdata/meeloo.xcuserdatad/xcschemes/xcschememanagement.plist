@@ -24,6 +24,16 @@
 			<key>orderHint</key>
 			<integer>11</integer>
 		</dict>
+		<key>nuiCocoa.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>10</integer>
+		</dict>
+		<key>nuiPhone.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>11</integer>
+		</dict>
 		<key>nuiPhoneD.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
