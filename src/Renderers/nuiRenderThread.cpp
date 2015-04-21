@@ -77,6 +77,11 @@ void nuiRenderThread::SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerPainter, pLayer, pPainter));
 }
 
+void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
+{
+  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter));
+}
+
 
 void nuiRenderThread::SetRootWidget(nuiWidget* pRoot)
 {
@@ -251,8 +256,8 @@ void nuiRenderThread::_SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPai
 
 void nuiRenderThread::_SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
-  auto it = mPainters.find(pLayer);
-  if (it != mPainters.end())
+  auto it = mLayerPainters.find(pLayer);
+  if (it != mLayerPainters.end())
   {
     nuiMetaPainter* pOld = it->second;
     NGL_ASSERT(pOld);
@@ -267,6 +272,35 @@ void nuiRenderThread::_SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainte
     }
     else
     {
+      mLayerPainters.erase(it);
+    }
+    return;
+  }
+  else if (pPainter)
+  {
+    mLayerPainters[pLayer] = pPainter;
+  }
+}
+
+void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
+{
+  auto it = mPainters.find(pLayer);
+  if (it != mPainters.end())
+  {
+    nuiMetaPainter* pOld = it->second;
+    NGL_ASSERT(pOld);
+
+    mpContext->GetLock().Lock();
+    pOld->Release();
+    mpContext->GetLock().Unlock();
+
+    if (pPainter)
+    {
+      it->second = pPainter;
+      mDirtyLayers.insert(pLayer);
+    }
+    else
+    {
       mPainters.erase(it);
     }
     return;
@@ -274,6 +308,7 @@ void nuiRenderThread::_SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainte
   else if (pPainter)
   {
     mPainters[pLayer] = pPainter;
+    mDirtyLayers.insert(pLayer);
   }
 }
 
@@ -323,16 +358,5 @@ nuiDrawContext* nuiRenderThread::GetDrawContext() const
 nglContext* nuiRenderThread::GetContext() const
 {
   return mpContext;
-}
-
-
-void nuiRenderThread::SetLayerDirty(nuiLayer *pLayer)
-{
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDirty, pLayer));
-}
-
-void nuiRenderThread::_SetLayerDirty(nuiLayer *pLayer)
-{
-  mDirtyLayers.insert(pLayer);
 }
 
