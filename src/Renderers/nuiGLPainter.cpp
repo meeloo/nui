@@ -2260,6 +2260,15 @@ bool nuiCheckForGLErrorsReal()
     case GL_OUT_OF_MEMORY:
       NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("There is not enough memory left to execute the function. The state of OpenGL is undefined, except for the state of the error flags, after this error is recorded."));
       break;
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
+      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("Attempt to read from or write/render to a framebuffer that is not complete."));
+      break;
+#ifdef GL_CONTEXT_LOST
+    case GL_CONTEXT_LOST:
+      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("OpenGL context has been lost, due to a graphics card reset."));
+      break;
+#endif
+          
     default:
       NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("Unkown error %d 0x%x."), err, err);
       break;
