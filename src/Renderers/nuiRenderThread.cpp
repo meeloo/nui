@@ -82,6 +82,11 @@ void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* 
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter));
 }
 
+void nuiRenderThread::InvalidateLayerContents(nuiLayer* pLayer)
+{
+  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerContents, pLayer));
+}
+
 
 void nuiRenderThread::SetRootWidget(nuiWidget* pRoot)
 {
@@ -310,6 +315,11 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter*
     mPainters[pLayer] = pPainter;
     mDirtyLayers.insert(pLayer);
   }
+}
+
+void nuiRenderThread::_InvalidateLayerContents(nuiLayer* pLayer)
+{
+    mDirtyLayers.insert(pLayer);
 }
 
 

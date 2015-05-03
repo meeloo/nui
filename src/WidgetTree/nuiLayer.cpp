@@ -129,6 +129,22 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
   mContentsChanged = true;
 }
 
+void nuiLayer::UpdateSizeFromContents()
+{
+  int w, h;
+  if (mpTextureContents)
+  {
+    SetWidth(mpTextureContents->GetWidth());
+    SetHeight(mpTextureContents->GetHeight());
+  }
+  else if (mpWidgetContents)
+  {
+    SetWidth(mpWidgetContents->GetRect().GetWidth());
+    SetHeight(mpWidgetContents->GetRect().GetHeight());
+  }
+}
+
+
 void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<nuiDrawContext*, nuiWidget*>& rDrawWidgetDelegate)
 {
   if (!mContentsChanged || mpTextureContents)

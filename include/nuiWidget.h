@@ -712,6 +712,16 @@ public:
   uint32 GetCSSPass() const;
   //@}
 
+  /** @name Layers */
+  //@{
+  void SetDrawToLayer(bool UseLayer);
+  bool GetDrawToLayer() const;
+  nuiLayer* GetLayer() const;
+  nuiWidget* GetParentLayerWidget() const;
+  nuiLayer* GetParentLayer() const;
+  //@}
+
+
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
   NUI_GETSET(bool, AutoAcceptMouseSteal);
@@ -899,6 +909,7 @@ protected:
   void ChildrenCallOnTrash();
 
   nuiWidgetList mpChildren;
+  nuiLayer* mpBackingLayer = nullptr;
 
 };
 

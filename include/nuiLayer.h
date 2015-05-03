@@ -22,7 +22,9 @@ public:
 
 //  void SetClearColor(const nuiColor& rClearColor);
 //  nuiColor GetClearColor() const;
-  
+
+  void UpdateSizeFromContents();
+
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
 

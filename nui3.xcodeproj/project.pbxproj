@@ -6474,14 +6474,6 @@
 		E581672D0C3CEBF100902DFE = {
 			isa = PBXGroup;
 			children = (
-				612094A21A39B5D1006CACE7 /* AVFoundation.framework */,
-				612094A01A39B5CB006CACE7 /* Foundation.framework */,
-				6120949A1A39B5B7006CACE7 /* QTKit.framework */,
-				6120949B1A39B5B8006CACE7 /* Quartz.framework */,
-				6120949C1A39B5B8006CACE7 /* QuickTime.framework */,
-				612094981A39B59A006CACE7 /* QuartzCore.framework */,
-				612094961A39B4F6006CACE7 /* Accelerate.framework */,
-				612094941A39B4EC006CACE7 /* CoreFoundation.framework */,
 				E58167440C3CECA700902DFE /* deps */,
 				E5816D200C3CECAB00902DFE /* src */,
 				E58167400C3CEC1300902DFE /* Products */,
@@ -6504,18 +6496,9 @@
 		E58167440C3CECA700902DFE /* deps */ = {
 			isa = PBXGroup;
 			children = (
+				E5BAC3CB1AF596D200B2BE76 /* Frameworks */,
 				E52FD3A0184D499D0015935E /* clipper */,
 				E573205B14BF2142008D488E /* premake4.lua */,
-				E537A288183707C200A40F04 /* MobileCoreServices.framework */,
-				E58172BB0C3CED8800902DFE /* OpenGL.framework */,
-				408D9C88109764A000AEE78A /* QTKit.framework */,
-				612094911A39AE4D006CACE7 /* CoreVideo.framework */,
-				E5D435961004DC5300388BF5 /* ApplicationServices.framework */,
-				E59DF6CC1196396000E46CF8 /* AudioToolbox.framework */,
-				E59CD7F80CDAAAE100B1C729 /* AudioUnit.framework */,
-				E592C0620EFE8AEB00340B35 /* Cocoa.framework */,
-				E59CD7F90CDAAAE100B1C729 /* CoreAudio.framework */,
-				E59CD7FA0CDAAAE100B1C729 /* CoreAudioKit.framework */,
 				5621843F0D6302A2008C7CCB /* expat */,
 				E58167460C3CECA700902DFE /* freetype2 */,
 				E524184911CB9CD10025CA71 /* glu */,
@@ -7482,6 +7465,8 @@
 				E5816CF70C3CECAB00902DFE /* nuiRenderArray.h */,
 				E5816DBE0C3CECAB00902DFE /* nuiRenderState.cpp */,
 				E5816CF80C3CECAB00902DFE /* nuiRenderState.h */,
+				E58742091A3E0F2B00016A80 /* nuiRenderThread.cpp */,
+				E58742111A3E0F7500016A80 /* nuiRenderThread.h */,
 				E5AD0A58169F235B00836BAA /* nuiShader.cpp */,
 				E5AD0A4F169F20EC00836BAA /* nuiShader.h */,
 				61D085100EAFAA3F00B73835 /* nuiSurface.cpp */,
@@ -7490,15 +7475,13 @@
 				E5816D0E0C3CECAB00902DFE /* nuiTexture.h */,
 				E5816DC60C3CECAB00902DFE /* nuiTextureHelpers.cpp */,
 				E5816D0F0C3CECAB00902DFE /* nuiTextureHelpers.h */,
-				E548CEEE16E4EA9500F98E45 /* nuiUniformDesc.h */,
 				E548CEF616E4EABF00F98E45 /* nuiUniformDesc.cpp */,
+				E548CEEE16E4EA9500F98E45 /* nuiUniformDesc.h */,
 				E50F41E516E7744000519AF0 /* nuiVertexAttribDesc.cpp */,
 				E50F41F516E7746D00519AF0 /* nuiVertexAttribDesc.h */,
 				E5DD1A781096111200BBB0EA /* Painters */,
 				E5DD1A791096113400BBB0EA /* Shapes & Contours */,
 				E55DEDF90D350FE3002DA5BD /* SoftwareRasterizer */,
-				E58742091A3E0F2B00016A80 /* nuiRenderThread.cpp */,
-				E58742111A3E0F7500016A80 /* nuiRenderThread.h */,
 			);
 			name = Renderers;
 			path = src/Renderers;
@@ -8014,6 +7997,31 @@
 			name = utils;
 			path = deps/libcss/src/utils;
 			sourceTree = SOURCE_ROOT;
+		};
+		E5BAC3CB1AF596D200B2BE76 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E537A288183707C200A40F04 /* MobileCoreServices.framework */,
+				612094A21A39B5D1006CACE7 /* AVFoundation.framework */,
+				612094A01A39B5CB006CACE7 /* Foundation.framework */,
+				6120949A1A39B5B7006CACE7 /* QTKit.framework */,
+				6120949B1A39B5B8006CACE7 /* Quartz.framework */,
+				6120949C1A39B5B8006CACE7 /* QuickTime.framework */,
+				612094981A39B59A006CACE7 /* QuartzCore.framework */,
+				612094961A39B4F6006CACE7 /* Accelerate.framework */,
+				612094941A39B4EC006CACE7 /* CoreFoundation.framework */,
+				E58172BB0C3CED8800902DFE /* OpenGL.framework */,
+				408D9C88109764A000AEE78A /* QTKit.framework */,
+				612094911A39AE4D006CACE7 /* CoreVideo.framework */,
+				E5D435961004DC5300388BF5 /* ApplicationServices.framework */,
+				E59DF6CC1196396000E46CF8 /* AudioToolbox.framework */,
+				E59CD7F80CDAAAE100B1C729 /* AudioUnit.framework */,
+				E592C0620EFE8AEB00340B35 /* Cocoa.framework */,
+				E59CD7F90CDAAAE100B1C729 /* CoreAudio.framework */,
+				E59CD7FA0CDAAAE100B1C729 /* CoreAudioKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
 		};
 		E5BC292D0F0003A0009EEA3B /* CoreFoundation */ = {
 			isa = PBXGroup;

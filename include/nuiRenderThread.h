@@ -27,6 +27,7 @@ public:
   void SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
   void SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
+  void InvalidateLayerContents(nuiLayer* pLayer);
   void SetRootWidget(nuiWidget* pRoot);
   void RunTaskOnRenderThread(nuiTask* rTask, bool OnNextFrame);
   void SetLayerTree(nuiLayer* pLayerRoot);
@@ -61,6 +62,7 @@ private:
   void _SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
   void _SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
   void _SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
+  void _InvalidateLayerContents(nuiLayer* pLayer);
   void _SetRootWidget(nuiWidget* pWidget);
   void _SetLayerTree(nuiLayer* pRoot);
   void _RenderFrame(nuiMetaPainter* pFrame);
