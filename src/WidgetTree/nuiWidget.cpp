@@ -6412,7 +6412,7 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
 
     nglString name;
     name.CFormat("WidgetLayer_%p", this);
-    mpBackingLayer = nuiLayer::CreateLayer(name, mRect.GetWidth(), mRect.GetHeight());
+    mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
     mpBackingLayer->SetContents(this);
 
     // Find the parent layer:
@@ -6426,12 +6426,22 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
       mpBackingLayer->SetPosition(x, y);
       pParent->AddChild(mpBackingLayer);
     }
+
+    if (GetTopLevel() == this)
+    {
+      GetRenderThread()->SetLayerTree(mpBackingLayer);
+    }
   }
   else
   {
     NGL_ASSERT(mpBackingLayer);
     mpBackingLayer->Release();
     mpBackingLayer = nullptr;
+
+    if (GetTopLevel() == this)
+    {
+      GetRenderThread()->SetLayerTree(nullptr);
+    }
   }
 }
 

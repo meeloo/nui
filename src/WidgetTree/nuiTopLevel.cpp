@@ -264,7 +264,10 @@ void nuiTopLevel::Exit()
   mpChildren.clear();
   
   if (mpDrawContext)
+  {
     delete mpDrawContext;
+    mpDrawContext = nullptr;
+  }
 
   nuiTheme* pTheme = nuiTheme::GetTheme();
   pTheme->Release(); // Release once because of the Acquire in nuiTheme::GetTheme()

@@ -147,9 +147,9 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     //    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
     //  }
     
-//    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
-//
-//    mpLayerTreeRoot->Draw(mpDrawContext);
+    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+
+    mpLayerTreeRoot->Draw(mpDrawContext);
 
     mpDrawContext->StopRendering();
     mpPainter->EndSession();
