@@ -152,6 +152,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
     for (auto layer : mDirtyLayers)
     {
+      NGL_OUT("Update dirty layer %p\n", layer);
       layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
     }
     mDirtyLayers.clear();

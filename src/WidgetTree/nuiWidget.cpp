@@ -1063,6 +1063,8 @@ void nuiWidget::SilentInvalidate()
   #endif
   
   mNeedSelfRedraw = true;
+  if (mpBackingLayer)
+    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 //  if (mpRenderCache)
 //    mpRenderCache->Reset(NULL);
   DebugRefreshInfo();
@@ -1077,6 +1079,8 @@ void nuiWidget::BroadcastInvalidate(nuiWidgetPtr pSender)
   }
 
   mNeedRender = true;
+  if (mpBackingLayer)
+    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 
   DebugRefreshInfo();
 }
