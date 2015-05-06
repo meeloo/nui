@@ -86,6 +86,8 @@ public:
     mNeedSelfLayout = true;
     mNeedIdealRect = true;
     mNeedRender = true;
+    if (mpBackingLayer)
+      GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
     DebugRefreshInfo();
   }
 
@@ -2199,6 +2201,9 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
 //  NGL_OUT("nuiTopLevel::BroadcastInvalidateRect %s / %s / 0x%x RECT:%s\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender, rRect.GetValue().GetChars());
   AddInvalidRect(r);
   mNeedRender = true;
+  if (mpBackingLayer)
+    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
+
   DebugRefreshInfo();
 }
 

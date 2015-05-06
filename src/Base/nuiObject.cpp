@@ -47,7 +47,7 @@ void nuiObject::Init(const nglString& rObjectName)
     mpTrace = &(it->second);
     mpTrace->mAlive = true;
 
-    uint32 s = mObjects.size();
+    size_t s = mObjects.size();
     //if (!(s % 500))
     {
       NGL_LOG("nuiObject", NGL_LOG_INFO, "Objects total count %d\n", s);
@@ -56,7 +56,7 @@ void nuiObject::Init(const nglString& rObjectName)
 #endif
 
   mClassNameIndex = -1;
-  if (SetObjectClass(_T("nuiObject")))
+  if (SetObjectClass("nuiObject"))
   {
     InitAttributes();
   }

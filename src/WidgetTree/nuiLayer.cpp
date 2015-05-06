@@ -89,8 +89,6 @@ void nuiLayer::SetContents(nuiWidget* pWidget)
   mpWidgetContents = pWidget;
   mpTextureContents = nullptr;
   mDrawContentsDelegate.clear();
-
-  mContentsChanged = true;
 }
 
 void nuiLayer::SetContents(nuiTexture* pTexture)
@@ -108,8 +106,6 @@ void nuiLayer::SetContents(nuiTexture* pTexture)
   mpWidgetContents = nullptr;
   mpTextureContents = pTexture;
   mDrawContentsDelegate.clear();
-
-  mContentsChanged = true;
 }
 
 void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
@@ -125,8 +121,6 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
   mpTextureContents = nullptr;
 
   mDrawContentsDelegate = rDelegate;
-
-  mContentsChanged = true;
 }
 
 void nuiLayer::UpdateSizeFromContents()
@@ -143,15 +137,13 @@ void nuiLayer::UpdateSizeFromContents()
     SetHeight(mpWidgetContents->GetRect().GetHeight());
   }
 
-  NGL_OUT("Layer %p new size requested: %f x %f\n", this, GetWidth(), GetHeight());
+//  NGL_OUT("Layer %p new size requested: %f x %f\n", this, GetWidth(), GetHeight());
 }
 
 
 void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<nuiDrawContext*, nuiWidget*>& rDrawWidgetDelegate)
 {
-  if (!mContentsChanged || mpTextureContents)
-    return;
-
+//  NGL_OUT("nuiLayer::UpdateContents\n");
   bool recreate = false;
   if (mpSurface == nullptr)
     recreate = true;
@@ -163,7 +155,7 @@ void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<n
     if (mpSurface)
       mpSurface->Release();
     mpSurface = nuiSurface::CreateSurface(GetObjectName(), ToNearest(mWidth), ToNearest(mHeight));
-    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
+//    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
   }
   
   pContext->SetSurface(mpSurface);
@@ -184,11 +176,11 @@ void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<n
 
   pContext->SetSurface(nullptr);
 
-  mContentsChanged = false;
 }
 
 void nuiLayer::Draw(nuiDrawContext* pContext)
 {
+//  NGL_OUT("nuiLayer::Draw\n");
   CheckValid();
 
   nuiTexture* pTex = nullptr;

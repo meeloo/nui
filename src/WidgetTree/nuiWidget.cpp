@@ -1008,6 +1008,8 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
   }
 
   mNeedRender = true;
+  if (mpBackingLayer)
+    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 
   r.Move(rect.Left(), rect.Top());
 

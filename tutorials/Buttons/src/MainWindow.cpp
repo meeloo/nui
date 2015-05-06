@@ -22,10 +22,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "nuiTableView.h"
 
-class ButtonCellSource : public CellSource
+class ButtonCellSource : public nuiCellSource
 {
 public:
-  ButtonCellSource() : CellSource() {}
+  ButtonCellSource() : nuiCellSource() {}
   
   nuiWidget* CreateCell()
   {
@@ -63,10 +63,10 @@ public:
 };
 
 
-class ComplexCellSource : public CellSource
+class ComplexCellSource : public nuiCellSource
 {
 public:
-  ComplexCellSource() : CellSource() {}
+  ComplexCellSource() : nuiCellSource() {}
   
   nuiWidget* CreateCell()
   {

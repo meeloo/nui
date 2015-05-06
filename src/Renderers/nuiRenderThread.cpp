@@ -84,7 +84,7 @@ void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* 
 
 void nuiRenderThread::InvalidateLayerContents(nuiLayer* pLayer)
 {
-  NGL_OUT("InvalidateLayerContents %p\n", pLayer);
+//  NGL_OUT("InvalidateLayerContents %p\n", pLayer);
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerContents, pLayer));
 }
 
@@ -110,10 +110,10 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 {
   if (ngl_atomic_dec(mRenderingTicks) > 0)
   {
-    printf("[nuiRenderThread] skipping frame\n");
+    NGL_OUT("[nuiRenderThread] skipping frame\n");
     return;
   }
-  printf("[nuiRenderThread] render\n");
+  NGL_OUT("[nuiRenderThread] render\n");
 
   if (mpLayerTreeRoot)
   {
@@ -152,7 +152,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
     for (auto layer : mDirtyLayers)
     {
-      NGL_OUT("Update dirty layer %p\n", layer);
+//      NGL_OUT("Update dirty layer %p\n", layer);
       layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
     }
     mDirtyLayers.clear();
@@ -327,7 +327,7 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter*
 
 void nuiRenderThread::_InvalidateLayerContents(nuiLayer* pLayer)
 {
-    NGL_OUT("_InvalidateLayerContents %p\n", pLayer);
+//    NGL_OUT("_InvalidateLayerContents %p\n", pLayer);
     mDirtyLayers.insert(pLayer);
 }
 

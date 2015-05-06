@@ -45,7 +45,6 @@ private:
 
   void Change() { mChanged = true; }
   bool mChanged = true;
-  bool mContentsChanged = true;
 
   nuiTexture* mpTextureContents = nullptr;
   nuiWidget* mpWidgetContents = nullptr;
