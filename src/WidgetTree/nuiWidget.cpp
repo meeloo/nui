@@ -5291,6 +5291,9 @@ bool nuiWidget::DrawChildren(nuiDrawContext* pContext)
 void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 {
   CheckValid();
+  if (pChild->GetDrawToLayer())
+    return;
+  
   float x,y;
 
   x = (float)pChild->GetRect().mLeft;
