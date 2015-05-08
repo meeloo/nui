@@ -49,9 +49,8 @@ public:
     
     mpEditLine->SetFont(pLabel->GetFont());
     mpEditLine->Focus();
-    mpEditLine->SetColor(eNormalTextBg,   nuiColor(255,255,255));
-    mpEditLine->SetColor(eNormalTextFg,   nuiColor(0,0,0));
-    mpEditLine->SetColor(eSelectedTextFg, nuiColor("#3EFEFE"));
+    mpEditLine->SetNormalTextBg(nuiColor(255,255,255));
+    mpEditLine->SetNormalTextFg(nuiColor(0,0,0));
     mpEditLine->SetFollowModifications(true);
     mpEditLine->Do(nuiEditText::eSelectAll, NULL);
     mpEditLine->SetDecoration(NULL);

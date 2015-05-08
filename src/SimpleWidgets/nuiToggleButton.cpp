@@ -99,17 +99,6 @@ bool nuiToggleButton::Draw(nuiDrawContext* pContext)
 
   nuiDecoration* pDeco = GetDecoration();
 
-//  if (mDisplayAsCheckBox)
-//  {
-//    pContext->ResetState();
-//    nuiTheme* pTheme = GetTheme();
-//    NGL_ASSERT(pTheme);
-//    pTheme->DrawCheckBox(pContext, this);
-//    pTheme->Release();
-//
-//    DrawChildren(pContext);
-//  }
-//  else 
   if (mDisplayAsFrameBox)
   {
     pContext->ResetState();

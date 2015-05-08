@@ -1582,6 +1582,37 @@ void nuiDrawContext::DrawShade(const nuiRect& rSourceRect, const nuiRect& rShade
     SetBlendFunc(blendfunc);
 }
 
+#define INACTIVE_SHADE_SIZE 8
+#define ACTIVE_SHADE_SIZE 15
+
+void nuiDrawContext::DrawWindowShade(const nuiRect& rRect, const nuiColor& rColor, bool Active)
+{
+  int ShadeSize = Active? ACTIVE_SHADE_SIZE : INACTIVE_SHADE_SIZE;
+  nuiRect ShadeRect = rRect;
+  ShadeRect.mLeft -= ShadeSize;
+  ShadeRect.mRight += ShadeSize;
+  ShadeRect.mTop += ShadeSize;
+  ShadeRect.mBottom += ShadeSize;
+
+  DrawShade(rRect,ShadeRect, rColor);
+}
+
+void nuiDrawContext::DrawMenuWindow(nuiWidget* pWidget, const nuiRect& rRect)
+{
+  nuiFrame* pFrame = (nuiFrame*)nuiDecoration::Get(_T("nuiDefaultDecorationPopupMenu"));
+  NGL_ASSERT(pFrame);
+
+  nuiRect rect;
+  rect.Set(rRect.Left() - pFrame->GetBorder(nuiLeft, pWidget), rRect.Top() - pFrame->GetBorder(nuiTop, pWidget),
+           rRect.GetWidth() + pFrame->GetBorder(nuiLeft, pWidget) + pFrame->GetBorder(nuiRight, pWidget),
+           rRect.GetHeight() + pFrame->GetBorder(nuiTop, pWidget) + pFrame->GetBorder(nuiBottom, pWidget));
+
+  pFrame->Draw(this, pWidget, rect);
+  pFrame->Release();
+}
+
+
+
 
 nuiDrawContext *nuiDrawContext::CreateDrawContext(const nuiRect& rRect, nuiPainter* pPainter)
 {

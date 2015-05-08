@@ -30,6 +30,7 @@ public:
 
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
+  NUI_GETSETDO(nuiColor, ClearColor, Change());
 
 
 private:
@@ -40,6 +41,7 @@ private:
 
   float mWidth = 0;
   float mHeight = 0;
+  nuiColor mClearColor;
 
   nuiSurface* mpSurface = nullptr;
 

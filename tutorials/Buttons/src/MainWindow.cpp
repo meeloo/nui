@@ -144,11 +144,12 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  ButtonCellSource* pSource = new ButtonCellSource();
-//  ComplexCellSource* pSource = new ComplexCellSource();
-  nuiTableView* pListView = new nuiTableView(pSource);
-  AddChild(pListView);
-  
+  if (0)
+  {
+    ButtonCellSource* pSource = new ButtonCellSource();
+  //  ComplexCellSource* pSource = new ComplexCellSource();
+    nuiTableView* pListView = new nuiTableView(pSource);
+    AddChild(pListView);
 //  nuiWidget* pChild = CreateTestDelChildren();
 //  AddChild(pChild);
 
@@ -172,39 +173,41 @@ void MainWindow::OnCreation()
 //    pButton->SetUserHeight(42);
 //    pVBox->AddCell(pButton);
 //  }
+  }
 
-//// create a vertical box for the layout
-//  nuiVBox* pMainBox = new nuiVBox(0);
-//  pMainBox->SetExpand(nuiExpandShrinkAndGrow);
-//  pMainBox->SetPosition(nuiFillVertical);
-//  AddChild(pMainBox);
-//
-//  // create a label width background for information display
-//  nuiPane* pPane = new nuiPane();
-//  pPane->SetBorder(20,20);
-//  pMainBox->AddCell(pPane, nuiFillHorizontal);
-//  mpLabel = new nuiLabel();
-//  pPane->AddChild(mpLabel);
-//  pPane->SetUserHeight(40);
-//
-//  nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
-//  pMainBox->AddCell(pLabel, nuiLeft);
-//  pMainBox->AddCell(Tutorial_Buttons());
-//
-//  pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
-//  pMainBox->AddCell(pLabel, nuiLeft);
-//  pMainBox->AddCell(Tutorial_ToggleButtons());
-//
-//  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-//  pMainBox->AddCell(pLabel, nuiLeft);
-//  pMainBox->AddCell(Tutorial_RadioButtons1());
-//
-//  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-//  pMainBox->AddCell(pLabel, nuiLeft);
-//  pMainBox->AddCell(Tutorial_RadioButtons2());
-//
-//  // make the mainbox's layout fill the entire user size (c.f. line #33)
-//  pMainBox->SetAllCellsExpand(nuiExpandShrinkAndGrow);
+
+// create a vertical box for the layout
+  nuiVBox* pMainBox = new nuiVBox(0);
+  pMainBox->SetExpand(nuiExpandShrinkAndGrow);
+  pMainBox->SetPosition(nuiFillVertical);
+  AddChild(pMainBox);
+
+  // create a label width background for information display
+  nuiPane* pPane = new nuiPane();
+  pPane->SetBorder(20,20);
+  pMainBox->AddCell(pPane, nuiFillHorizontal);
+  mpLabel = new nuiLabel();
+  pPane->AddChild(mpLabel);
+  pPane->SetUserHeight(40);
+
+  nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
+  pMainBox->AddCell(pLabel, nuiLeft);
+  pMainBox->AddCell(Tutorial_Buttons());
+
+  pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
+  pMainBox->AddCell(pLabel, nuiLeft);
+  pMainBox->AddCell(Tutorial_ToggleButtons());
+
+  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
+  pMainBox->AddCell(pLabel, nuiLeft);
+  pMainBox->AddCell(Tutorial_RadioButtons1());
+
+  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
+  pMainBox->AddCell(pLabel, nuiLeft);
+  pMainBox->AddCell(Tutorial_RadioButtons2());
+
+  // make the mainbox's layout fill the entire user size (c.f. line #33)
+  pMainBox->SetAllCellsExpand(nuiExpandShrinkAndGrow);
 }
 
 

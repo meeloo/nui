@@ -52,10 +52,6 @@ public:
   virtual void DrawSliderBackground(nuiDrawContext* pContext, nuiSlider* pScroll);
   virtual void DrawSliderForeground(nuiDrawContext* pContext, nuiSlider* pScroll);
 
-
-  // CheckBox:
-  virtual void DrawCheckBox(nuiDrawContext* pContext, nuiToggleButton* pButton);  ///< Render a CheckBox
-
   // Menus a Menu items:
   virtual void DrawMenuWindow(nuiDrawContext* pContext, const nuiRect& rRect, nuiWidget* pWidget = NULL); ///< draw the a menu window (border, shadow, etc...).
   virtual void DrawMenuItem(nuiDrawContext* pContext, const nuiRect& rRect, bool Hover); ///< Draw the background of a menu item.

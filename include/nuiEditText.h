@@ -150,7 +150,11 @@ public:
   nuiSimpleEventSource<0> TextChanged;
 
   virtual void OnSetFocus(nuiWidgetPtr pWidget);
-  
+
+  NUI_GETSETDO(nuiColor, NormalTextBg, Invalidate());
+  NUI_GETSETDO(nuiColor, NormalTextFg, Invalidate());
+  NUI_GETSETDO(nuiColor, SelectionMarkee, Invalidate());
+
 protected:
   virtual ~nuiEditText();
 
@@ -304,7 +308,9 @@ protected:
   
   bool mTextColorSet;
   nuiColor mTextColor;
-  
+  nuiColor mNormalTextBg;
+  nuiColor mNormalTextFg;
+  nuiColor mSelectionMarkee;
 };
 
 #endif // __nuiEditText_h__

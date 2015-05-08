@@ -189,6 +189,12 @@ public:
   void DrawGradient(const nuiGradient& rGradient, const nuiRect& rEnclosingRect, nuiSize x1, nuiSize y1, nuiSize x2, nuiSize y2);
   void DrawArray(nuiRenderArray* pArray);
   void DrawObject(const nuiRenderObject& rObject);
+
+  void DrawWindowShade(const nuiRect& rRect, const nuiColor& rColor, bool Active);
+  void DrawMenuWindow(nuiWidget* pWidget, const nuiRect& rRect);
+
+  
+
   //@}
 
   int GetWidth() const;

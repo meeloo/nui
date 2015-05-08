@@ -1209,7 +1209,7 @@ bool nuiGrid::Draw(nuiDrawContext *pContext)
 
   if (mDisplayWidgetBoundingRect)
   {
-    pContext->SetStrokeColor(GetColor(eBorder));
+    pContext->SetStrokeColor("nuiBorder");
   }
 
   IteratorPtr pIt;
@@ -1254,7 +1254,7 @@ bool nuiGrid::Draw(nuiDrawContext *pContext)
   {
     nuiShape* shape = new nuiShape();
     pContext->SetLineWidth(mGridBorderSize);
-    pContext->SetStrokeColor(GetColor(eBorder));
+    pContext->SetStrokeColor("nuiBorder");
     nuiSize widthSoFar = 0.f;
     for (uint32 i = 0; i < mWidths.size(); i++)
     {

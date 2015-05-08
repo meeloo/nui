@@ -606,14 +606,14 @@ public:
   
   /** @name Drawing */
   //@{
-  void SetFillColor(nuiDrawContext* pContext, nuiWidgetElement Element);
-  void SetStrokeColor(nuiDrawContext* pContext, nuiWidgetElement Element);
-
-  void SetColor(nuiWidgetElement element, const nuiColor& rColor);
-  void DelColor(nuiWidgetElement element);
-  nuiColor GetColor(nuiWidgetElement element);
-  void SetTheme(nuiTheme* pTheme);
-  nuiTheme* GetTheme();
+//  void SetFillColor(nuiDrawContext* pContext, nuiWidgetElement Element);
+//  void SetStrokeColor(nuiDrawContext* pContext, nuiWidgetElement Element);
+//
+//  void SetColor(nuiWidgetElement element, const nuiColor& rColor);
+//  void DelColor(nuiWidgetElement element);
+//  nuiColor GetColor(nuiWidgetElement element);
+//  void SetTheme(nuiTheme* pTheme);
+//  nuiTheme* GetTheme();
 
   void AutoDestroy(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
   bool IsTrashed(bool combined = true) const;

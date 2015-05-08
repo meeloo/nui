@@ -45,7 +45,7 @@ nuiLayer* nuiLayer::CreateLayer(const nglString& rName, int width, int height)
 
 
 nuiLayer::nuiLayer(const nglString& rName, int width, int height)
-: nuiNode(rName)
+: nuiNode(rName), mClearColor(0, 0, 0, 0)
 {
   NGL_ASSERT(mLayers.find(rName) == mLayers.end());
 
@@ -59,6 +59,10 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
                  ("Height", nuiUnitCustom,
                   nuiMakeDelegate(this, &nuiLayer::GetHeight),
                   nuiMakeDelegate(this, &nuiLayer::SetHeight)));
+    AddAttribute(new nuiAttribute<nuiColor>
+                 ("ClearColor", nuiUnitCustom,
+                  nuiMakeDelegate(this, &nuiLayer::GetClearColor),
+                  nuiMakeDelegate(this, &nuiLayer::SetClearColor)));
   }
 
   mLayers[rName] = this;
@@ -166,10 +170,15 @@ void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<n
 
   if (mpWidgetContents)
   {
+    mpWidgetContents->GetColor(eActiveWindowBg);
+    pContext->Clear();
     rDrawWidgetDelegate(pContext, mpWidgetContents);
   }
   else if (mDrawContentsDelegate)
   {
+    pContext->SetClearColor(mClearColor);
+    pContext->Clear();
+    
     mDrawContentsDelegate(this, pContext);
   }
   // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
