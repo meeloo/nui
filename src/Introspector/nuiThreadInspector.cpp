@@ -103,8 +103,8 @@ void nuiThreadInspector::Build()
   nuiGrid* pGrid = new nuiGrid(4, 1);
   mpMainBox->SetCell(0, pGrid);
   pGrid->DisplayGridBorder(true, 1);
-  pGrid->SetColor(eBorder, INTROSPECTOR_COLOR_GRID);
-  
+//  pGrid->SetColor(eBorder, INTROSPECTOR_COLOR_GRID);
+
   uint row = 0;
   
   // column headers
@@ -114,7 +114,7 @@ void nuiThreadInspector::Build()
   pGrid->SetColumnExpand(3, nuiExpandShrinkAndGrow);
   
   nuiLabel* pLabel = new nuiLabel(_T("ThreadChecker"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
-  pLabel->SetColor(eNormalTextFg, INTROSPECTOR_COLOR_GRID_TITLE);
+//  pLabel->SetColor(eNormalTextFg, INTROSPECTOR_COLOR_GRID_TITLE);
   pLabel->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_GRID_TITLE), eDecorationBorder);
   pGrid->SetCell(0,0, pLabel);
 

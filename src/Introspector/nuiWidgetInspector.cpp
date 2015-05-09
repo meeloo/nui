@@ -534,8 +534,8 @@ void nuiWidgetInfo::BuildInfo()
     nuiGrid* pBox = new nuiGrid(2, count);
     pBox->SetColumnExpand(1, nuiExpandShrinkAndGrow);
     pBox->DisplayGridBorder(true, 1);
-    pBox->SetColor(eBorder, nuiColor(200,200,200));
-    
+//    pBox->SetColor(eBorder, nuiColor(200,200,200));
+
     //pBox->SetExpand(nuiExpandShrinkAndGrow);
     
     nuiLabel* pLabel = new nuiLabel(_T("Name"));
@@ -653,8 +653,8 @@ void nuiWidgetInfo::BuildInfo()
     pSPane->AddChild(pBox);
     
     pLabel = new nuiLabel(_T("Standard"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
-    pLabel->SetColor(eNormalTextFg, INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
-    pLabel->SetColor(eSelectedTextFg, INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
+//    pLabel->SetNormalTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
+//    pLabel->SetSelectedTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
     pSPane->SetTitleWithHandle(pLabel);
     if (pTitlePaneDeco)
       pSPane->GetTitle()->SetDecoration(pTitlePaneDeco, eDecorationBorder);
@@ -668,8 +668,8 @@ void nuiWidgetInfo::BuildInfo()
     
     nuiFolderPane* pAPane = new nuiFolderPane();
     nuiLabel* pLabel3 = new nuiLabel(_T("Attributes"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
-    pLabel3->SetColor(eNormalTextFg, INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
-    pLabel3->SetColor(eSelectedTextFg, INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
+//    pLabel3->SetNormalTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
+//    pLabel3->SetSelectedTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
     pAPane->SetTitleWithHandle(pLabel3);
     if (pTitlePaneDeco)
       pAPane->GetTitle()->SetDecoration(pTitlePaneDeco, eDecorationBorder);
@@ -682,8 +682,8 @@ void nuiWidgetInfo::BuildInfo()
     // Widget rendering
     nuiFolderPane* pProxyPane = new nuiFolderPane(_T("Rendering"), true);
     nuiLabel* pLabel4 = new nuiLabel(_T("Rendering"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
-    pLabel4->SetColor(eNormalTextFg, INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
-    pLabel4->SetColor(eSelectedTextFg, INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
+//    pLabel4->SetNormalTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
+//    pLabel4->SetSelectedTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
     pProxyPane->SetTitleWithHandle(pLabel4);
     if (pTitlePaneDeco)
       pProxyPane->GetTitle()->SetDecoration(pTitlePaneDeco, eDecorationBorder);
@@ -705,8 +705,8 @@ void nuiWidgetInfo::BuildInfo()
       // Widget rendering list
       nuiFolderPane* pCachePane = new nuiFolderPane(_T("Render cache"), true);
       nuiLabel* pLabel = new nuiLabel(_T("Render Cache"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
-      pLabel->SetColor(eNormalTextFg, INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
-      pLabel->SetColor(eSelectedTextFg, INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
+//      pLabel->SetNormalTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
+//      pLabel->SetSelectedTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
       pCachePane->SetTitleWithHandle(pLabel);
       pCachePane->Close();
       if (pTitlePaneDeco)
