@@ -35,7 +35,6 @@ class nuiAnimation;
 
 class nuiPainter;
  
-class nuiTheme;
 class nuiRectAttributeAnimation;
 
 class nuiMatrixNode;
@@ -778,7 +777,6 @@ protected:
 
   std::map<nuiWidgetElement, nuiColor> mWidgetElementColors;
 
-  nuiTheme* mpTheme;
   nuiPainter* mpSavedPainter;
 
   LayoutConstraint mConstraint;

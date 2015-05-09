@@ -50,8 +50,8 @@ void nuiFolderPane::Init (bool opened)
   if (mIsOpened)
     pTitle->SetSelected(true);
     
-  pTitle->SetColor(eSelectedTextFg, pTitle->GetColor(eNormalTextFg));
-  
+//  pTitle->SetColor(eSelectedTextFg, pTitle->GetColor(eNormalTextFg));
+
   AddCell(NULL); // a third cell to the titledpane for the WidgetOnClosing
   
   SetLayoutAnimationDuration(0.1f);

@@ -170,7 +170,8 @@ void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<n
 
   if (mpWidgetContents)
   {
-    mpWidgetContents->GetColor(eActiveWindowBg);
+//    mpWidgetContents->GetColor(eActiveWindowBg);
+    pContext->SetClearColor(nuiColor(0, 0, 0, 0));
     pContext->Clear();
     rDrawWidgetDelegate(pContext, mpWidgetContents);
   }

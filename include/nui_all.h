@@ -146,7 +146,6 @@ typedef double nuiSize;
   #include "nuiApplication.h"
   #include "nuiNavigationBarStyle.h"
   #include "nuiWidgetElements.h"
-  #include "nuiTheme.h"
 
   #include "nuiTextStyle.h"
   #include "nuiTextRun.h"

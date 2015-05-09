@@ -34,8 +34,8 @@ void nuiDialogSelectFile::Init(nuiMainWindow* pParent, const nglString& rTitle, 
   mpEditLine = new nuiEditLine();
   mpEditLine->SetObjectName(_T("nuiDialog::EditLine"));
   mpEditLine->SetObjectClass(_T("nuiDialog::EditLine"));
-  mpEditLine->SetColor(eNormalTextFg, nuiColor(64,64,64));
-  mpEditLine->SetColor(eSelectedTextFg, nuiColor(64,64,64));
+  mpEditLine->SetNormalTextFg(nuiColor(64,64,64));
+//  mpEditLine->SetSelectedTextFg(nuiColor(64,64,64));
   pEditContainer->AddChild(mpEditLine);
 	
   mpContainer = new nuiWidget();
@@ -69,10 +69,10 @@ void nuiDialogSelectFile::Init(nuiMainWindow* pParent, const nglString& rTitle, 
 //  pTitle->SetObjectClass(_T("nuiDialogSelectFile::Title"));
   
   nuiWidget* pLayoutPane = new nuiWidget();
-  pLayoutPane->SetObjectClass(_T("nuiDialog::Pane"));
-  pLayoutPane->SetObjectName(_T("nuiDialog::Pane"));
-  pLayoutPane->SetColor(eNormalTextFg, nuiColor(0,0,0));
-  
+  pLayoutPane->SetObjectClass("nuiDialog::Pane");
+  pLayoutPane->SetObjectName("nuiDialog::Pane");
+//  pLayoutPane->SetNormalTextFg(nuiColor(0,0,0));
+
   nuiDefaultDecoration::Dialog(pLayoutPane);
   
   InitDialog(pTitle, pLayoutPane, nuiDialog::eDialogButtonOk | nuiDialog::eDialogButtonCancel);

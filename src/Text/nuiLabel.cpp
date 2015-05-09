@@ -10,7 +10,7 @@
 #define NUI_LABEL_HMARGIN 6.f
 #define NUI_LABEL_VMARGIN 0.f
 
-nuiLabel::nuiLabel(const nglString& Text, nuiTheme::FontStyle FontStyle)
+nuiLabel::nuiLabel(const nglString& Text)
   : nuiWidget(),
     mLabelSink(this)
 {
@@ -21,7 +21,7 @@ nuiLabel::nuiLabel(const nglString& Text, nuiTheme::FontStyle FontStyle)
 
   InitProperties();
 
-  SetFont(FontStyle);
+  SetFont(nuiFont::GetFont(12));
   SetText(Text);
 }
 
@@ -41,7 +41,7 @@ nuiLabel::nuiLabel(const nglString& Text, nuiFont* pFont, bool AlreadyAcquired)
 }
 
 
-nuiLabel::nuiLabel(const nglString& Text, const nglString& rObjectName, nuiTheme::FontStyle FontStyle)
+nuiLabel::nuiLabel(const nglString& Text, const nglString& rObjectName)
 : nuiWidget(rObjectName), mLabelSink(this)
 {
   InitDefaultValues();
@@ -51,7 +51,7 @@ nuiLabel::nuiLabel(const nglString& Text, const nglString& rObjectName, nuiTheme
   
   InitProperties();
   
-  SetFont(FontStyle);
+  SetFont(nuiFont::GetFont(12));
   SetText(Text);
 }
 
@@ -477,11 +477,6 @@ void nuiLabel::SetBackground(bool bg)
 bool nuiLabel::GetBackground() const
 {
   return mClearBg;
-}
-
-void nuiLabel::SetFont(nuiTheme::FontStyle FontStyle)
-{
-  SetFont(nuiFont::GetFont(12));
 }
 
 void nuiLabel::SetFont(nuiFont* pFont, bool AlreadyAcquired)

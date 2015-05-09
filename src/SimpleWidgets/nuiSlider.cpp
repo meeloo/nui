@@ -82,21 +82,18 @@ nuiSlider::~nuiSlider()
 
 void nuiSlider::DrawBackground(nuiDrawContext* pContext)
 {
-  GetTheme()->DrawSliderBackground(pContext,this);
+  pContext->DrawSliderBackground(this);
 }
 
 void nuiSlider::DrawForeground(nuiDrawContext* pContext)
 {
-  GetTheme()->DrawSliderForeground(pContext,this);
+  pContext->DrawSliderForeground(this);
 }
 
 bool nuiSlider::Draw(nuiDrawContext* pContext)
 {
   //pContext->PushState();
   pContext->ResetState();
-  nuiTheme* pTheme = GetTheme();
-  NGL_ASSERT(pTheme);
-  
   if (mDrawBackground)
   {
     if (!mpBackground)
@@ -106,13 +103,11 @@ bool nuiSlider::Draw(nuiDrawContext* pContext)
   }
   
   if (!mpHandle)
-    pTheme->DrawSliderForeground(pContext,this);
+    pContext->DrawSliderForeground(this);
   else
     DrawChild(pContext, mpHandle);
   
   //pContext->PopState();
-  pTheme->Release();
-  
   return true;
 }
 

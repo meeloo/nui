@@ -30,6 +30,8 @@ public:
   void SetLineWidth(nuiSize Width);
   nuiSize GetLineWidth() const;
 
+  NUI_GETSETDO(nuiColor, StrokeColor, Invalidate());
+  NUI_GETSETDO(nuiColor, FillColor, Invalidate());
 protected:
   virtual ~nuiShapeView();
 
@@ -37,6 +39,8 @@ protected:
   nuiShapeMode mShapeMode;
   bool mAntialiasing;
   nuiSize mLineWidth;
+  nuiColor mStrokeColor;
+  nuiColor mFillColor;
 };
 
 #endif // __nuiShapeView_h__

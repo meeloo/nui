@@ -133,7 +133,6 @@ void nuiWidget::InitDefaultValues()
   mCSSPasses = 0;
   mpMatrixNodes = NULL;
   mpParent = NULL;
-  mpTheme = NULL;
   mDecorationEnabled = true;
   mDecorationMode = eDecorationOverdraw;
   mHotKeyMask = -1;
@@ -653,9 +652,6 @@ nuiWidget::~nuiWidget()
 
   //NGL_ASSERT(!pRoot || IsTrashed());
 
-  if (mpTheme)
-    mpTheme->Release();
-    
   if (mpDecoration)
   {
     mpDecoration->Release();
@@ -3418,88 +3414,6 @@ const nuiMetaPainter* nuiWidget::GetRenderCache() const
   return mpRenderCache;
 }
 
-//void nuiWidget::SetColor(nuiWidgetElement element, const nuiColor& rColor)
-//{
-//  CheckValid();
-//  mWidgetElementColors[element] = rColor;
-//  Invalidate();
-//  DebugRefreshInfo();
-//}
-//
-//void nuiWidget::DelColor(nuiWidgetElement element)
-//{
-//  CheckValid();
-//  mWidgetElementColors.erase(element);
-//  Invalidate();
-//  DebugRefreshInfo();
-//}
-//
-//nuiColor nuiWidget::GetColor(nuiWidgetElement element)
-//{
-//  CheckValid();
-//  nuiColor col;
-//  std::map<nuiWidgetElement, nuiColor>::iterator it = mWidgetElementColors.find(element);
-//  if (it != mWidgetElementColors.end())
-//    col = it->second;
-//  else
-//  {
-//    if (mpParent)
-//      col = mpParent->GetColor(element);
-//    else
-//    {
-//      nuiTheme* pTheme = GetTheme();
-//      NGL_ASSERT(pTheme);
-//      col = pTheme->GetElementColor(element); // Return the theme color
-//      pTheme->Release();
-//    }
-//  }
-//
-//  if (mMixAlpha)
-//  {
-//    float alpha = GetAlpha();
-//    col.Multiply(alpha);
-//  }
-//  return col;
-//}
-//
-//void nuiWidget::SetFillColor(nuiDrawContext* pContext, nuiWidgetElement Element)
-//{
-//  CheckValid();
-//  pContext->SetFillColor(GetColor(Element));
-//}
-//
-//void nuiWidget::SetStrokeColor(nuiDrawContext* pContext, nuiWidgetElement Element)
-//{
-//  CheckValid();
-//  pContext->SetStrokeColor(GetColor(Element));
-//}
-//
-//void nuiWidget::SetTheme(nuiTheme* pTheme)
-//{
-//  CheckValid();
-//  if (mpTheme)
-//    mpTheme->Release();
-//  mpTheme = pTheme;
-//  if (mpTheme)
-//    mpTheme->Acquire();
-//  DebugRefreshInfo();
-//}
-//
-//nuiTheme* nuiWidget::GetTheme()
-//{
-//  CheckValid();
-//  // Do we have a local theme?
-//  if (mpTheme)
-//  {
-//    mpTheme->Acquire();
-//    return mpTheme;
-//  }
-//  // Do we have a parent that may have a local theme?
-//  if (mpParent)
-//    return mpParent->GetTheme();
-//  // Revert to the global theme:
-//  return nuiTheme::GetTheme();
-//}
 
 void nuiWidget::AutoDestroy(const nuiEvent& rEvent)
 {

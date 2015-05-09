@@ -85,13 +85,10 @@ bool nuiPopupView::Draw(nuiDrawContext* pContext)
 {
   if (!mpPopupDecoration) 
   {
-    nuiTheme* pTheme = GetTheme();
-    NGL_ASSERT(pTheme);
-    pTheme->DrawWindowShade(pContext, mChildrenRect, nuiColor(1.0f, 1.0f, 1.0f, GetMixedAlpha()), true);
-    pTheme->Release();
-    
-    SetFillColor(pContext, eActiveWindowBg);
-    SetStrokeColor(pContext, eActiveWindowFg);
+    pContext->DrawWindowShade(mChildrenRect, nuiColor(1.0f, 1.0f, 1.0f, GetMixedAlpha()), true);
+
+    pContext->SetFillColor("nuiActiveWindowBg");
+    pContext->SetStrokeColor("nuiActiveWindowFg");
     
     pContext->DrawRect(mChildrenRect, eStrokeAndFillShape);
   }

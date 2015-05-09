@@ -464,7 +464,7 @@ void nuiDefaultDecoration::InitSelection()
 //
 // InitMaps
 //
-// those maps are loaded in decorations, but are used dynamically in nuiTheme drawing methods, 
+// those maps are loaded in decorations, but are used dynamically, 
 // during the application running
 //
 void nuiDefaultDecoration::InitMaps()
@@ -1019,8 +1019,8 @@ void nuiDefaultDecoration::ComboBox(nuiWidget* pWidget)
   pWidget->SetDecoration(pState, eDecorationBorder);
   pWidget->SetUserHeight(18);
   
-  pWidget->SetColor(eSelectedTextFg, nuiColor(32,32,32));
-  
+//  pWidget->SetColor(eSelectedTextFg, nuiColor(32,32,32));
+
 }
 
 

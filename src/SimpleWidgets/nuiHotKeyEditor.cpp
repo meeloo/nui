@@ -6,11 +6,21 @@
 */
 
 #include "nui.h"
+#include <utility>
+#include <type_traits>
 
 nuiHotKeyEditor::nuiHotKeyEditor()
 : nuiWidget(), mEventSink(this)
 {
-  SetObjectClass(_T("nuiHotKeyEditor"));
+  if (SetObjectClass("nuiHotKeyEditor"))
+  {
+    NUI_ADD_ATTRIBUTE(NormalTextFg);
+    NUI_ADD_ATTRIBUTE(SelectedTextFg);
+    NUI_ADD_ATTRIBUTE(DisabledTextFg);
+    NUI_ADD_ATTRIBUTE(NormalTextBg);
+    NUI_ADD_ATTRIBUTE(SelectedTextBg);
+    NUI_ADD_ATTRIBUTE(DisabledTextBg);
+  }
   
   mShortcutColumnWidth = 150;
   
@@ -19,12 +29,12 @@ nuiHotKeyEditor::nuiHotKeyEditor()
   mpSelectedHotKey = NULL;
   
   // #FIXME: temp highlight : write text in green when a label is seleted. Background coloring doesn't seem to work though
-  SetColor(eNormalTextFg, nuiColor(_T("black")));
-  SetColor(eSelectedTextFg, nuiColor(_T("Green")));
-  SetColor(eDisabledTextFg, nuiColor(_T("red")));
-  SetColor(eNormalTextBg, nuiColor(_T("Red")));
-  SetColor(eSelectedTextBg, nuiColor(_T("Green")));
-  SetColor(eDisabledTextBg, nuiColor(_T("Blue")));
+  mNormalTextFg = nuiColor("black");
+  mSelectedTextFg = nuiColor("Green");
+  mDisabledTextFg = nuiColor("red");
+  mNormalTextBg = nuiColor("Red");
+  mSelectedTextBg = nuiColor("Green");
+  mDisabledTextBg = nuiColor("Blue");
   
   SetWantKeyboardFocus(true);
 }

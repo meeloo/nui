@@ -12,6 +12,7 @@
 #include "nuiSignalsSlots.h"
 #include "nuiFastDelegate.h"
 #include "nuiVariant.h"
+#include <utility>
 
 
 #ifndef _MINUI3_
@@ -81,6 +82,12 @@ return;\
 m##Y = val;\
 Z;\
 }
+
+#define NUI_ADD_ATTRIBUTE(NAME) \
+AddAttribute( new nuiAttribute<decltype(m##NAME)> (nglString(#NAME), nuiUnitNone, \
+nuiMakeDelegate(this, &std::remove_pointer<decltype(this)>::type::Get##NAME),     \
+nuiMakeDelegate(this, &std::remove_pointer<decltype(this)>::type::Set##NAME)));
+
 
 
 

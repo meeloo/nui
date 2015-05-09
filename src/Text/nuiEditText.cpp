@@ -29,7 +29,7 @@ nuiEditText::nuiEditText(const nglString& rText)
   if (SetObjectClass(_T("nuiEditText")))
     InitAttributes();
   
-  SetFont(nuiTheme::Default);
+  SetFont(nuiFont::GetFont(12));
   SetText(rText);
   InitCommands();
   InitKeyBindings();
@@ -1754,16 +1754,6 @@ void nuiEditText::SetAnchorPos(uint Pos)
 uint nuiEditText::GetAnchorPos() const
 {
   return mAnchorPos;
-}
-
-bool nuiEditText::SetFont(nuiTheme::FontStyle FontStyle)
-{
-  SetFont(nuiFont::GetFont(12));
-
-  ClearBlocks();
-  CreateBlocks(mText, mpBlocks);
-  InvalidateLayout();  
-  return true;
 }
 
 bool nuiEditText::SetFont(nuiFont* pFont, bool AlreadyAcquired)

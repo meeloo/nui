@@ -108,9 +108,9 @@ nglString nuiColor::GetValue() const
 
 void nuiColor::EnumStandardColorNames(std::vector<nglString>& rStandardColorNames)
 {
-  for (int i = 0; i < 147; i++)
+  for (const auto & color : mCustomColors)
   {
-    rStandardColorNames.push_back(static_colors[i].name);
+    rStandardColorNames.push_back(color.first);
   }
 }
 

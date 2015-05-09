@@ -271,10 +271,6 @@ void nuiTopLevel::Exit()
     mpDrawContext = nullptr;
   }
 
-  nuiTheme* pTheme = nuiTheme::GetTheme();
-  pTheme->Release(); // Release once because of the Acquire in nuiTheme::GetTheme()
-                     //pTheme->Release(); // Release twice to balance the nuiTheme::InitTheme(..).       
-  
   std::map<nglString, nuiHotKey*>::iterator it = mHotKeys.begin();
   std::map<nglString, nuiHotKey*>::iterator end = mHotKeys.end();
 
@@ -1968,7 +1964,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
       pContext->Clip(mDirtyRects[i]);
       pContext->EnableClipping(true);
       
-      nuiColor clearColor(GetColor(eActiveWindowBg));
+      nuiColor clearColor("nuiActiveWindowBg");
       //pContext->SetClearColor(clearColor);
       if (mClearBackground)
       {

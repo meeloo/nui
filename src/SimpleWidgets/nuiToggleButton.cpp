@@ -108,14 +108,14 @@ bool nuiToggleButton::Draw(nuiDrawContext* pContext)
       if (HasProperty("NormalBg"))
         pContext->SetStrokeColor(nuiColor(GetProperty("NormalBg")));
       else
-        SetStrokeColor(pContext, eNormalButtonBg);
+        pContext->SetStrokeColor("nuiNormalButtonBg");
     }
     else
     {
       if (HasProperty("SelectedBg"))
         pContext->SetStrokeColor(nuiColor(GetProperty("SelectedBg")));
       else
-        SetStrokeColor(pContext, eSelectedButtonBg);
+        pContext->SetStrokeColor("nuiSelectedButtonBg");
     }
 
     nuiRect r(mRect.Size());
