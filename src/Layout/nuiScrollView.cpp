@@ -698,14 +698,19 @@ bool nuiScrollView::GetFillChildren()
 
 bool nuiScrollView::MouseWheelMoved(const nglMouseInfo& rInfo)
 {
+  bool res = false;
   if (mpHorizontal && !mForceNoHorizontal)
   {
+    auto value = mpHorizontal->GetRange().GetValue();
     mpHorizontal->GetRange().SetValue(mpHorizontal->GetRange().GetValue() + rInfo.DeltaX * 5);
+    res |= value != mpHorizontal->GetRange().GetValue();
   }
   
   if (mpVertical && !mForceNoVertical)
   {
+    auto value = mpVertical->GetRange().GetValue();
     mpVertical->GetRange().SetValue(mpVertical->GetRange().GetValue() + rInfo.DeltaY * 5);
+    res |= value != mpVertical->GetRange().GetValue();
   }
   
   if (mHideScrollBars)
@@ -713,8 +718,8 @@ bool nuiScrollView::MouseWheelMoved(const nglMouseInfo& rInfo)
     ShowScrollBars(true);
   }
   
-  
-  return true;
+  printf("Wheel: %s\n", YESNO(res));
+  return res;
 }
 
 bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)

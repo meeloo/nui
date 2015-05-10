@@ -79,13 +79,13 @@ void nuiRenderThread::SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter
 
 void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
-  NGL_OUT("SetLayerContentsPainter %p\n", pLayer);
+//  NGL_OUT("SetLayerContentsPainter %p\n", pLayer);
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter));
 }
 
 void nuiRenderThread::InvalidateLayerContents(nuiLayer* pLayer)
 {
-  NGL_OUT("InvalidateLayerContents %p\n", pLayer);
+//  NGL_OUT("InvalidateLayerContents %p\n", pLayer);
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerContents, pLayer));
 }
 
@@ -97,7 +97,7 @@ void nuiRenderThread::SetRootWidget(nuiWidget* pRoot)
 
 void nuiRenderThread::SetLayerTree(nuiLayer* pLayerRoot)
 {
-  NGL_OUT("SetLayerTree %p\n", pLayerRoot);
+//  NGL_OUT("SetLayerTree %p\n", pLayerRoot);
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerTree, pLayerRoot));
 }
 
@@ -271,7 +271,7 @@ void nuiRenderThread::_SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPai
 
 void nuiRenderThread::_SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
-  NGL_OUT("_SetLayerPainter %p (%p)\n", pLayer, pPainter);
+//  NGL_OUT("_SetLayerPainter %p (%p)\n", pLayer, pPainter);
   auto it = mLayerPainters.find(pLayer);
   if (it != mLayerPainters.end())
   {
@@ -300,7 +300,7 @@ void nuiRenderThread::_SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainte
 
 void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
-  NGL_OUT("_SetLayerContentsPainter %p\n", pLayer);
+//  NGL_OUT("_SetLayerContentsPainter %p\n", pLayer);
   auto it = mPainters.find(pLayer);
   if (it != mPainters.end())
   {
@@ -336,7 +336,7 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter*
 
 void nuiRenderThread::_InvalidateLayerContents(nuiLayer* pLayer)
 {
-    NGL_OUT("_InvalidateLayerContents %p\n", pLayer);
+//    NGL_OUT("_InvalidateLayerContents %p\n", pLayer);
     mDirtyLayers.insert(pLayer);
 }
 
@@ -348,7 +348,7 @@ void nuiRenderThread::_SetRootWidget(nuiWidget* pRoot)
 
 void nuiRenderThread::_SetLayerTree(nuiLayer* pRoot)
 {
-  NGL_OUT("_SetLayerTree %p\n", pRoot);
+//  NGL_OUT("_SetLayerTree %p\n", pRoot);
   mpLayerTreeRoot = pRoot;
 }
 
