@@ -190,7 +190,8 @@ void nuiNode::AddChild(nuiNode* pChild)
   CheckValid();
   pChild->Acquire();
   nuiNode* pParent = pChild->GetParent();
-  pParent->DelChild(pChild);
+  if (pParent)
+    pParent->DelChild(pChild);
   mpChildren.push_back(pChild);
 }
 

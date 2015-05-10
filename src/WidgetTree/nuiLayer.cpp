@@ -75,6 +75,7 @@ nuiLayer::~nuiLayer()
 {
   if (mpSurface)
     mpSurface->Release();
+  mpSurface = nullptr;
 }
 
 

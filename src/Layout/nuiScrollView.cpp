@@ -728,26 +728,30 @@ bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
     {
       if (mpHorizontal && !mForceNoHorizontal)
       {
+        auto value = mpHorizontal->GetRange().GetValue();
         mpHorizontal->GetRange().Decrement();
-        res = true;
+        res = value != mpHorizontal->GetRange().GetValue();
       }
       else if (mpVertical && !mForceNoVertical)
       {
+        auto value = mpVertical->GetRange().GetValue();
         mpVertical->GetRange().Decrement();
-        res = true;
+        res = value != mpVertical->GetRange().GetValue();
       }
     }
     else
     {
       if (mpVertical && !mForceNoVertical)
       {
+        auto value = mpVertical->GetRange().GetValue();
         mpVertical->GetRange().Decrement();
-        res = true;
+        res = value != mpVertical->GetRange().GetValue();
       }
       else if (mpHorizontal && !mForceNoHorizontal && !mForceNoSmartScroll)
       {
+        auto value = mpHorizontal->GetRange().GetValue();
         mpHorizontal->GetRange().Decrement();
-        res = true;
+        res = value != mpHorizontal->GetRange().GetValue();
       }
     }
     
@@ -758,13 +762,15 @@ bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
     {
       if (mpHorizontal && !mForceNoHorizontal)
       {
+        auto value = mpHorizontal->GetRange().GetValue();
         mpHorizontal->GetRange().Increment();
-        res = true;
+        res = value != mpHorizontal->GetRange().GetValue();
       }
       else if (mpVertical && !mForceNoVertical)
       {
+        auto value = mpVertical->GetRange().GetValue();
         mpVertical->GetRange().Increment();
-        res = true;
+        res = value != mpVertical->GetRange().GetValue();
       }
       
     }
@@ -772,13 +778,15 @@ bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
     {
       if (mpVertical && !mForceNoVertical)
       {
+        auto value = mpVertical->GetRange().GetValue();
         mpVertical->GetRange().Increment();
-        res = true;
+        res = value != mpVertical->GetRange().GetValue();
       }
       else if (mpHorizontal && !mForceNoHorizontal && !mForceNoSmartScroll)
       {
+        auto value = mpHorizontal->GetRange().GetValue();
         mpHorizontal->GetRange().Increment();
-        res = true;
+        res = value != mpHorizontal->GetRange().GetValue();
       }
     }
   }
@@ -786,16 +794,18 @@ bool nuiScrollView::MouseClicked(const nglMouseInfo& rInfo)
   {
     if (mpHorizontal && !mForceNoHorizontal)
     {
+      auto value = mpHorizontal->GetRange().GetValue();
       mpHorizontal->GetRange().Decrement();
-      res = true;
+      res = value != mpHorizontal->GetRange().GetValue();
     }
   }
   else if (rInfo.Buttons & nglMouseInfo::ButtonWheelRight)
   {
     if (mpHorizontal && !mForceNoHorizontal)
     {
+      auto value = mpHorizontal->GetRange().GetValue();
       mpHorizontal->GetRange().Increment();
-      res = true;
+      res = value != mpHorizontal->GetRange().GetValue();
     }
   }
   else if (rInfo.Buttons & nglMouseInfo::ButtonLeft && mDragEnabled && !mLeftClick)
