@@ -320,13 +320,7 @@ void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, int32 pos)
   }
 
   pTitleWidget = new Tab(pTitle);
-  
-  nuiColor color;
-  nuiColor::GetColor(_T("nuiDefaultClrNormalTab"), color);
-  pTitleWidget->SetColor(eNormalTextFg, color);
-  nuiColor::GetColor(_T("nuiDefaultClrSelectedTab"), color);
-  pTitleWidget->SetColor(eSelectedTextFg, color);
-  
+    
   AddChild(pContentsWidget);
   AddChild(pTitleWidget);
 

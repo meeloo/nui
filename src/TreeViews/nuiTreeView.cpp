@@ -35,9 +35,7 @@ nuiTreeNode::nuiTreeNode(const nglString& rLabelName, bool Opened, bool Selected
 {
   SetObjectClass(_T("nuiTreeNode"));
 
-  nuiTheme *pTheme = nuiTheme::GetTheme();
-  mpElement = pTheme->CreateTreeNodeLabel(rLabelName);
-  pTheme->Release();
+  mpElement = new nuiLabel(rLabelName);
 
   mOpened = Opened;
   mSelected = Selected;
@@ -353,10 +351,7 @@ bool nuiTreeView::Draw(nuiDrawContext* pContext)
   if (mDrawMarkee)
   {
     nuiRect Markee(mClickX, mClickY, mNewX, mNewY, false);
-    nuiTheme* pTheme = GetTheme();
-    NGL_ASSERT(pTheme);
-    pTheme->DrawMarkee(pContext, Markee, eSelectionMarkee);
-    pTheme->Release();
+    pContext->DrawMarkee(Markee, "nuiSelectionMarkee");
   }
 
   return true;
@@ -368,16 +363,13 @@ bool nuiTreeView::DrawTree(nuiDrawContext* pContext, uint32 Depth, nuiTreeNode* 
   if (!pTree)
     return false;
 
-  nuiTheme* pTheme = GetTheme();
-  NGL_ASSERT(pTheme);
-
   nuiWidgetPtr pWidget = pTree->GetElement();
   if (pWidget && ((Depth != 0) || mDisplayRoot))
   {
     nuiRect rect = pWidget->GetRect();
 
     if (pTree->IsSelected())
-      pTheme->DrawSelectionBackground(pContext, rect);
+      pContext->DrawSelectionBackground(this, rect);
 
 
     if (!pTree->IsEmpty() || pTree->mAlwaysDisplayTreeHandle)
@@ -385,10 +377,10 @@ bool nuiTreeView::DrawTree(nuiDrawContext* pContext, uint32 Depth, nuiTreeNode* 
       nuiRect r = rect;
       r.Move(-NUI_TREEVIEW_HANDLE_SIZE, 0);
       r.SetSize(NUI_TREEVIEW_HANDLE_SIZE, r.GetHeight());
-      pContext->SetFillColor(GetColor(eTreeViewHandle));
-      pContext->SetStrokeColor(GetColor(eTreeViewHandle));
+      pContext->SetFillColor("nuiTreeViewHandle");
+      pContext->SetStrokeColor("nuiTreeViewHandle");
       if (pTree->IsTreeHandleDrawned())
-        pTheme->DrawTreeHandle(pContext, r, pTree->IsOpened(), NUI_TREEVIEW_HANDLE_SIZE, mHandleColor);
+        pContext->DrawTreeHandle(r, pTree->IsOpened(), NUI_TREEVIEW_HANDLE_SIZE, mHandleColor);
     }
     DrawChild(pContext, pWidget);
 
@@ -402,7 +394,7 @@ bool nuiTreeView::DrawTree(nuiDrawContext* pContext, uint32 Depth, nuiTreeNode* 
     
     
     if (pTree->IsSelected())
-      pTheme->DrawSelectionForeground(pContext, rect);
+      pContext->DrawSelectionForeground(this, rect);
     
   }
 
@@ -418,7 +410,6 @@ bool nuiTreeView::DrawTree(nuiDrawContext* pContext, uint32 Depth, nuiTreeNode* 
       }
     }
   }
-  pTheme->Release();
   return true;
 }
 

@@ -86,6 +86,8 @@ public:
     mNeedSelfLayout = true;
     mNeedIdealRect = true;
     mNeedRender = true;
+    if (mpBackingLayer)
+      GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
     DebugRefreshInfo();
   }
 
@@ -264,12 +266,11 @@ void nuiTopLevel::Exit()
   mpChildren.clear();
   
   if (mpDrawContext)
+  {
     delete mpDrawContext;
+    mpDrawContext = nullptr;
+  }
 
-  nuiTheme* pTheme = nuiTheme::GetTheme();
-  pTheme->Release(); // Release once because of the Acquire in nuiTheme::GetTheme()
-                     //pTheme->Release(); // Release twice to balance the nuiTheme::InitTheme(..).       
-  
   std::map<nglString, nuiHotKey*>::iterator it = mHotKeys.begin();
   std::map<nglString, nuiHotKey*>::iterator end = mHotKeys.end();
 
@@ -393,7 +394,7 @@ nuiDrawContext* nuiTopLevel::GetDrawContext()
     return mpDrawContext;
   
   nuiRect rect = GetRect().Size();
-  mpDrawContext = nuiDrawContext::CreateDrawContext(rect, mRenderer, GetNGLContext());
+  mpDrawContext = nuiDrawContext::CreateDrawContext(rect, GetNGLContext()->GetPainter());
   nuiMetaPainter* pMeta = new nuiMetaPainter();
   mpDrawContext->SetPainter(pMeta);
   return mpDrawContext;
@@ -409,7 +410,7 @@ nuiRenderThread* nuiTopLevel::GetRenderThread()
   nuiPainter* pPainter = pContext->GetPainter();
 
   nuiRect rect = GetRect().Size();
-  nuiDrawContext* pDrawContext = nuiDrawContext::CreateDrawContext(rect, mRenderer, GetNGLContext());
+  nuiDrawContext* pDrawContext = nuiDrawContext::CreateDrawContext(rect, GetNGLContext()->GetPainter());
 //  nuiDrawContext* pDrawContext = GetDrawContext();
 
   mpRenderThread = new nuiRenderThread(pContext, pDrawContext, pPainter, nuiMakeDelegate(this, &nuiTopLevel::OnRenderingDone));
@@ -1963,7 +1964,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
       pContext->Clip(mDirtyRects[i]);
       pContext->EnableClipping(true);
       
-      nuiColor clearColor(GetColor(eActiveWindowBg));
+      nuiColor clearColor("nuiActiveWindowBg");
       //pContext->SetClearColor(clearColor);
       if (mClearBackground)
       {
@@ -2196,6 +2197,9 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
 //  NGL_OUT("nuiTopLevel::BroadcastInvalidateRect %s / %s / 0x%x RECT:%s\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender, rRect.GetValue().GetChars());
   AddInvalidRect(r);
   mNeedRender = true;
+  if (mpBackingLayer)
+    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
+
   DebugRefreshInfo();
 }
 

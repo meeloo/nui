@@ -42,8 +42,8 @@ bool nuiShapeView::Draw(nuiDrawContext* pContext)
     y = -rect.Top();
   if (rect.Left() < 0)
     x = -rect.Left();
-  pContext->SetStrokeColor(GetColor(eShapeStroke));
-  pContext->SetFillColor(GetColor(eShapeFill));
+  pContext->SetStrokeColor("nuiShapeStroke");
+  pContext->SetFillColor("nuiShapeFill");
 
   pContext->EnableBlending(true);
   pContext->SetBlendFunc(nuiBlendTransp);

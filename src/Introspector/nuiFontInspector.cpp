@@ -50,7 +50,7 @@ void nuiFontInspector::UpdateFonts()
   // Columns:
   // FontID, FamilyName, StyleName, Size, Bold, Italic, FixedWidth, GlyphCount, Path, Preview
   pGrid->DisplayGridBorder(true, 1);
-  pGrid->SetColor(eBorder, nuiColor(200,200,200));
+//  pGrid->SetColor(eBorder, nuiColor(200,200,200));
   pScrollView->AddChild(pGrid);
   
   std::vector<nuiFont*> Fonts;

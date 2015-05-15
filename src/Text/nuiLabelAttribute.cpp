@@ -7,8 +7,8 @@
 
 #include "nui.h"
 
-nuiLabelAttribute::nuiLabelAttribute(const nuiAttrib<const nglString&>& rAttribute, nuiTheme::FontStyle FontStyle)
-	: nuiLabel(rAttribute.Get(), FontStyle)
+nuiLabelAttribute::nuiLabelAttribute(const nuiAttrib<const nglString&>& rAttribute)
+	: nuiLabel(rAttribute.Get())
 {
 	SetObjectClass(_T("nuiLabelAttribute"));
 

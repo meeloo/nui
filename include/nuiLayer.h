@@ -20,11 +20,19 @@ public:
   void SetContents(nuiTexture* pTexture);
   void SetContents(const DrawContentsDelegate& rDelegate);
 
-  NUI_GETSETDO(float, Width, Change());
-  NUI_GETSETDO(float, Height, Change());
+//  void SetClearColor(const nuiColor& rClearColor);
+//  nuiColor GetClearColor() const;
+
+  void UpdateSizeFromContents();
 
   void UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<nuiDrawContext*, nuiWidget*>& rDrawWidgetDelegate);
   void Draw(nuiDrawContext* pContext);
+
+  NUI_GETSETDO(float, Width, Change());
+  NUI_GETSETDO(float, Height, Change());
+  NUI_GETSETDO(nuiColor, ClearColor, Change());
+
+
 private:
   nuiLayer(const nglString& rName, int width, int height);
   virtual ~nuiLayer();
@@ -33,15 +41,19 @@ private:
 
   float mWidth = 0;
   float mHeight = 0;
+  nuiColor mClearColor;
 
   nuiSurface* mpSurface = nullptr;
 
   void Change() { mChanged = true; }
   bool mChanged = true;
-  bool mContentsChanged = true;
 
   nuiTexture* mpTextureContents = nullptr;
   nuiWidget* mpWidgetContents = nullptr;
   DrawContentsDelegate mDrawContentsDelegate;
+
+
+  nuiMetaPainter* mpContentsPainter = nullptr; ///< This containts the rendering instructions to update the contents of this layer
+  nuiMetaPainter* mpDrawPainter = nullptr; ///< This containts the rendering instructions to display the contents of this layer
 };
 

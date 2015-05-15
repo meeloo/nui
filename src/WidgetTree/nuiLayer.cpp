@@ -26,21 +26,26 @@ nuiLayer* nuiLayer::GetLayer(const nglString& rName)
 nuiLayer* nuiLayer::CreateLayer(const nglString& rName, int width, int height)
 {
   nuiLayer* pLayer = GetLayer(rName);
-  if (pLayer)
+  
+  if (!pLayer)
   {
-    if (pLayer->GetWidth() == width && pLayer->GetHeight() == height)
-    {
-      return pLayer;
-    }
-
-    pLayer->SetWidth(width);
-    pLayer->SetHeight(height);
+    return new nuiLayer(rName, width, height);
   }
+  
+  if (pLayer->GetWidth() == width && pLayer->GetHeight() == height)
+  {
+    return pLayer;
+  }
+
+  pLayer->SetWidth(width);
+  pLayer->SetHeight(height);
+  
+  return pLayer;
 }
 
 
 nuiLayer::nuiLayer(const nglString& rName, int width, int height)
-: nuiNode(rName)
+: nuiNode(rName), mClearColor(0, 0, 0, 0)
 {
   NGL_ASSERT(mLayers.find(rName) == mLayers.end());
 
@@ -54,6 +59,10 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
                  ("Height", nuiUnitCustom,
                   nuiMakeDelegate(this, &nuiLayer::GetHeight),
                   nuiMakeDelegate(this, &nuiLayer::SetHeight)));
+    AddAttribute(new nuiAttribute<nuiColor>
+                 ("ClearColor", nuiUnitCustom,
+                  nuiMakeDelegate(this, &nuiLayer::GetClearColor),
+                  nuiMakeDelegate(this, &nuiLayer::SetClearColor)));
   }
 
   mLayers[rName] = this;
@@ -66,6 +75,7 @@ nuiLayer::~nuiLayer()
 {
   if (mpSurface)
     mpSurface->Release();
+  mpSurface = nullptr;
 }
 
 
@@ -84,8 +94,6 @@ void nuiLayer::SetContents(nuiWidget* pWidget)
   mpWidgetContents = pWidget;
   mpTextureContents = nullptr;
   mDrawContentsDelegate.clear();
-
-  mContentsChanged = true;
 }
 
 void nuiLayer::SetContents(nuiTexture* pTexture)
@@ -103,8 +111,6 @@ void nuiLayer::SetContents(nuiTexture* pTexture)
   mpWidgetContents = nullptr;
   mpTextureContents = pTexture;
   mDrawContentsDelegate.clear();
-
-  mContentsChanged = true;
 }
 
 void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
@@ -120,15 +126,43 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
   mpTextureContents = nullptr;
 
   mDrawContentsDelegate = rDelegate;
-
-  mContentsChanged = true;
 }
+
+void nuiLayer::UpdateSizeFromContents()
+{
+  int w, h;
+  if (mpTextureContents)
+  {
+    SetWidth(mpTextureContents->GetWidth());
+    SetHeight(mpTextureContents->GetHeight());
+  }
+  else if (mpWidgetContents)
+  {
+    SetWidth(mpWidgetContents->GetRect().GetWidth());
+    SetHeight(mpWidgetContents->GetRect().GetHeight());
+  }
+
+//  NGL_OUT("Layer %p new size requested: %f x %f\n", this, GetWidth(), GetHeight());
+}
+
 
 void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<nuiDrawContext*, nuiWidget*>& rDrawWidgetDelegate)
 {
-  if (!mContentsChanged || mpTextureContents)
-    return;
+  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
+  bool recreate = false;
+  if (mpSurface == nullptr)
+    recreate = true;
+  else if (mpSurface->GetWidth() != mWidth || mpSurface->GetHeight() != mHeight)
+    recreate = true;
 
+  if (recreate)
+  {
+    if (mpSurface)
+      mpSurface->Release();
+    mpSurface = nuiSurface::CreateSurface(GetObjectName(), ToNearest(mWidth), ToNearest(mHeight));
+//    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
+  }
+  
   pContext->SetSurface(mpSurface);
 
   pContext->ResetState();
@@ -137,21 +171,27 @@ void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<n
 
   if (mpWidgetContents)
   {
+//    mpWidgetContents->GetColor(eActiveWindowBg);
+    pContext->SetClearColor(nuiColor(0, 0, 0, 0));
+    pContext->Clear();
     rDrawWidgetDelegate(pContext, mpWidgetContents);
   }
   else if (mDrawContentsDelegate)
   {
+    pContext->SetClearColor(mClearColor);
+    pContext->Clear();
+    
     mDrawContentsDelegate(this, pContext);
   }
   // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
 
   pContext->SetSurface(nullptr);
 
-  mContentsChanged = false;
 }
 
 void nuiLayer::Draw(nuiDrawContext* pContext)
 {
+  NGL_OUT("nuiLayer::Draw %p\n", this);
   CheckValid();
 
   nuiTexture* pTex = nullptr;
@@ -161,13 +201,17 @@ void nuiLayer::Draw(nuiDrawContext* pContext)
   }
   else
   {
+    NGL_ASSERT(mpSurface != nullptr);
     pTex = mpSurface->GetTexture();
   }
 
   pContext->SetTexture(pTex);
+  pContext->SetFillColor(nuiColor(1.f, 1.f, 1.f, 1.f));
 
   nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
   nuiRect dst = src;
   dst.Move(-GetPivot()[0], -GetPivot()[1]);
   pContext->DrawImage(dst, src);
 }
+
+

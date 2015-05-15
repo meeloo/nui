@@ -16,7 +16,7 @@
 class nuiLabelAttribute : public nuiLabel
 {
 public:
-  nuiLabelAttribute(const nuiAttrib<const nglString&>& rAttribute, nuiTheme::FontStyle FontStyle=nuiTheme::Default);
+  nuiLabelAttribute(const nuiAttrib<const nglString&>& rAttribute);
   nuiLabelAttribute(const nuiAttrib<const nglString&>& rAttribute, nuiFont* pFont, bool AlreadyAcquired = false);
   virtual ~nuiLabelAttribute();
 	

@@ -73,9 +73,6 @@ nuiTreeNode* nuiColumnTreeView::DrawColumn(nuiDrawContext* pContext, nuiTreeNode
   if (!pTree)
     return NULL;
 
-  nuiTheme* pTheme = GetTheme();
-  NGL_ASSERT(pTheme);
-
   uint32 count = pTree->GetChildrenCount();
   for (uint32 i = 0; i < count; i++)
   {
@@ -86,7 +83,7 @@ nuiTreeNode* nuiColumnTreeView::DrawColumn(nuiDrawContext* pContext, nuiTreeNode
       {
         nuiRect r = pWidget->GetRect();
         r.SetSize(r.GetWidth() + mHandleSize, r.GetHeight());
-        pTheme->DrawSelectionBackground(pContext, r, pWidget);
+        pContext->DrawSelectionBackground(pWidget, r);
       }
 
       if (!pNode->IsEmpty())
@@ -95,12 +92,12 @@ nuiTreeNode* nuiColumnTreeView::DrawColumn(nuiDrawContext* pContext, nuiTreeNode
         nuiRect r = pWidget->GetRect();
         nuiRect HR(r.Left() + r.GetWidth(), r.Top(), mHandleSize, r.GetHeight());
         
-        SetFillColor(pContext, eTreeViewHandle);
-        SetStrokeColor(pContext, eTreeViewHandle);
+        pContext->SetFillColor("nuiTreeViewHandle");
+        pContext->SetStrokeColor("nuiTreeViewHandle");
         pContext->PushClipping();
         r.SetSize(r.GetWidth() + mHandleSize, r.GetHeight());
         pContext->Clip(r);
-        pTheme->DrawTreeHandle(pContext, HR, false, mHandleSize-4, GetColor(eTreeViewHandle));
+        pContext->DrawTreeHandle(HR, false, mHandleSize-4, "nuiTreeViewHandle");
         pContext->PopClipping();
       }
       DrawChild(pContext, pWidget);
@@ -111,12 +108,11 @@ nuiTreeNode* nuiColumnTreeView::DrawColumn(nuiDrawContext* pContext, nuiTreeNode
         
         nuiRect r = pWidget->GetRect();
         r.SetSize(r.GetWidth() + mHandleSize, r.GetHeight());
-        pTheme->DrawSelectionForeground(pContext, r, pWidget);
+        pContext->DrawSelectionForeground(pWidget, r);
       }
       
     }
   }
-  pTheme->Release();
   return pRes;
 }
 
@@ -814,7 +810,7 @@ void nuiColumnTreeView::CreateScrollBars()
       nuiCustomScrollBar* pScrollBar = new nuiCustomScrollBar(nuiVertical);
       AddChild(pScrollBar);
       
-      nuiPane* pPane = new nuiPane(GetColor(eScrollBarBg), GetColor(eScrollBarFg), eFillShape);
+      nuiPane* pPane = new nuiPane("nuiScrollBarBg", "nuiScrollBarFg", eFillShape);
       pPane->SetUserSize(mBarSize, mBarSize + 2.f);
       nuiPath path;
       path.AddVertex(nuiPoint(0.f, 0.f));
@@ -829,13 +825,13 @@ void nuiColumnTreeView::CreateScrollBars()
       pPane->AddChild(pShapeView);
       pShapeView->SetUserSize(8.f,8.f);
       pShapeView->SetShapeMode(eStrokeAndFillShape);
-      pShapeView->SetColor(eShapeStroke, GetColor(eScrollBarFg));
-      pShapeView->SetColor(eShapeFill, GetColor(eScrollBarFg));
+      pShapeView->SetStrokeColor("nuiScrollBarFg");
+      pShapeView->SetFillColor("nuiScrollBarFg");
       pScrollBar->AddWidget(pPane, nuiBottom);
       mColumnTreeViewSink.Connect(pPane->Clicked, &nuiColumnTreeView::ArrowDownClicked, (void*)mpScrollBars.size());
       mColumnTreeViewSink.Connect(pPane->Unclicked, &nuiColumnTreeView::StopButtonTimer, (void*)mpScrollBars.size());
       
-      pPane = new nuiPane(GetColor(eScrollBarBg), GetColor(eScrollBarFg), eFillShape);
+      pPane = new nuiPane("nuiScrollBarBg", "nuiScrollBarFg", eFillShape);
       pPane->SetUserSize(mBarSize, mBarSize + 2.f);
       path = nuiPath();
       path.AddVertex(nuiPoint(0.f, 6.f));
@@ -850,8 +846,8 @@ void nuiColumnTreeView::CreateScrollBars()
       pPane->AddChild(pShapeView);
       pShapeView->SetUserSize(8.f,8.f);
       pShapeView->SetShapeMode(eStrokeAndFillShape);
-      pShapeView->SetColor(eShapeStroke, GetColor(eScrollBarFg));
-      pShapeView->SetColor(eShapeFill, GetColor(eScrollBarFg));
+      pShapeView->SetStrokeColor("nuiScrollBarFg");
+      pShapeView->SetFillColor("nuiScrollBarFg");
       pScrollBar->AddWidget(pPane, nuiBottom);
       pPane->SetInterceptMouse(true);
       mColumnTreeViewSink.Connect(pPane->Clicked, &nuiColumnTreeView::ArrowUpClicked, (void*)mpScrollBars.size());

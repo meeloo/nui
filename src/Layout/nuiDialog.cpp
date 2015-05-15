@@ -298,8 +298,7 @@ nuiWidget* nuiDialog::CreateDefaultLayout()
   mpPane = new nuiWidget();
   mpPane->SetObjectClass(_T("nuiDialog::Pane"));
   mpPane->SetObjectName(_T("nuiDialog::Pane"));
-  mpPane->SetColor(eNormalTextFg, nuiColor(0,0,0));
-  
+
   nuiDefaultDecoration::Dialog(mpPane);
   
   return mpPane;

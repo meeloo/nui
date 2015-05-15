@@ -96,10 +96,7 @@ bool nuiPopupMenu::Draw(nuiDrawContext* pContext)
   NGL_ASSERT(!mRects.empty());
   nuiMenuRect* pRect = mRects[0];
 
-  nuiTheme* pTheme = GetTheme();
-  NGL_ASSERT(pTheme);
-
-  pTheme->DrawMenuWindow(pContext, pRect->mRect, this);
+  pContext->DrawMenuWindow(this, pRect->mRect);
   if (pRect->mpSBar->IsVisible())
     DrawChild(pContext, pRect->mpSBar);
   //it++;
@@ -110,7 +107,7 @@ bool nuiPopupMenu::Draw(nuiDrawContext* pContext)
     NGL_ASSERT(pWidget);
     nuiRect rect = pWidget->GetRect();
     //Draw the main menu item (tree root item)
-    pContext->SetFillColor(GetColor(eMenuTitleBg));
+    pContext->SetFillColor("nuiMenuTitleBg");
     pContext->DrawRect(rect, eStrokeAndFillShape);
 
     pContext->EnableBlending(true);
@@ -122,7 +119,6 @@ bool nuiPopupMenu::Draw(nuiDrawContext* pContext)
   }
 
   DrawTree(pContext, mpTree, 0);
-  pTheme->Release();
   return true;
 }
 
@@ -137,12 +133,10 @@ bool nuiPopupMenu::DrawTree(nuiDrawContext* pContext, nuiTreeNode* pTree, uint d
   nuiMenuRect* pRect= mRects[depth];
 
   NGL_ASSERT(pTree);
-  nuiTheme* pTheme = GetTheme();
-  NGL_ASSERT(pTheme);
 
   if (pTree != mpTree) // then Draw a new rect for this depth
   {
-    pTheme->DrawMenuWindow(pContext, pRect->mRect, this);
+    pContext->DrawMenuWindow(this, pRect->mRect);
     if (pRect->mpSBar->IsVisible(false))
       DrawChild(pContext, pRect->mpSBar);
   }
@@ -160,7 +154,7 @@ bool nuiPopupMenu::DrawTree(nuiDrawContext* pContext, nuiTreeNode* pTree, uint d
       nuiRect r = WidgetRect;
       r.SetSize(WidgetRect.GetWidth()+TreeHandleSize, WidgetRect.GetHeight());
 
-      pTheme->DrawSelectionBackground(pContext, r, this);
+      pContext->DrawSelectionBackground(this, r);
     }
 
     if (!pChildNode->IsEmpty())
@@ -168,8 +162,7 @@ bool nuiPopupMenu::DrawTree(nuiDrawContext* pContext, nuiTreeNode* pTree, uint d
       nuiRect r = WidgetRect;
       r.Move(WidgetRect.GetWidth(), 0);
       r.SetSize(NUI_POPUP_TREE_HANDLE_SIZE-4.f, r.GetHeight());
-      pContext->SetFillColor(GetColor(eTreeViewHandle));
-      pTheme->DrawTreeHandle(pContext, r, false, NUI_POPUP_TREE_HANDLE_SIZE-4.f);
+      pContext->DrawTreeHandle(r, false, NUI_POPUP_TREE_HANDLE_SIZE-4.f, "nuiTreeViewHandle");
     }
 
     DrawChild(pContext, pChildWidget);
@@ -180,7 +173,7 @@ bool nuiPopupMenu::DrawTree(nuiDrawContext* pContext, nuiTreeNode* pTree, uint d
       nuiRect r = WidgetRect;
       r.SetSize(WidgetRect.GetWidth()+TreeHandleSize, WidgetRect.GetHeight());
 
-      pTheme->DrawSelectionForeground(pContext, r, this);
+      pContext->DrawSelectionForeground(this, r);
     }
 
 
@@ -193,12 +186,12 @@ bool nuiPopupMenu::DrawTree(nuiDrawContext* pContext, nuiTreeNode* pTree, uint d
 
   if (pRect->mpSBar->IsVisible(false))
   {
-    SetFillColor(pContext, eMenuBg);
-    SetStrokeColor(pContext, eNormalTextFg);
+    pContext->SetFillColor("nuiMenuBg");
+    pContext->SetStrokeColor("nuiNormalTextFg");
     pContext->EnableBlending(true);
   
     nuiGradient grad;
-    nuiColor bg(GetColor(eMenuBg));
+    nuiColor bg("nuiMenuBg");
     grad.AddStop(bg, 1);
     bg.Multiply(0);
     grad.AddStop(bg, 0);
@@ -236,7 +229,6 @@ bool nuiPopupMenu::DrawTree(nuiDrawContext* pContext, nuiTreeNode* pTree, uint d
   if (pOpenedNode)
     DrawTree(pContext, pOpenedNode, depth+1);
 
-  pTheme->Release();
   return true;
 }
 

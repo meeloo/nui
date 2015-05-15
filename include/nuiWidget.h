@@ -35,7 +35,6 @@ class nuiAnimation;
 
 class nuiPainter;
  
-class nuiTheme;
 class nuiRectAttributeAnimation;
 
 class nuiMatrixNode;
@@ -606,14 +605,14 @@ public:
   
   /** @name Drawing */
   //@{
-  void SetFillColor(nuiDrawContext* pContext, nuiWidgetElement Element);
-  void SetStrokeColor(nuiDrawContext* pContext, nuiWidgetElement Element);
-
-  void SetColor(nuiWidgetElement element, const nuiColor& rColor);
-  void DelColor(nuiWidgetElement element);
-  nuiColor GetColor(nuiWidgetElement element);
-  void SetTheme(nuiTheme* pTheme);
-  nuiTheme* GetTheme();
+//  void SetFillColor(nuiDrawContext* pContext, nuiWidgetElement Element);
+//  void SetStrokeColor(nuiDrawContext* pContext, nuiWidgetElement Element);
+//
+//  void SetColor(nuiWidgetElement element, const nuiColor& rColor);
+//  void DelColor(nuiWidgetElement element);
+//  nuiColor GetColor(nuiWidgetElement element);
+//  void SetTheme(nuiTheme* pTheme);
+//  nuiTheme* GetTheme();
 
   void AutoDestroy(const nuiEvent& rEvent); ///< This method will destroy the widget whenever it is called.
   bool IsTrashed(bool combined = true) const;
@@ -712,6 +711,16 @@ public:
   uint32 GetCSSPass() const;
   //@}
 
+  /** @name Layers */
+  //@{
+  void SetDrawToLayer(bool UseLayer);
+  bool GetDrawToLayer() const;
+  nuiLayer* GetLayer() const;
+  nuiWidget* GetParentLayerWidget() const;
+  nuiLayer* GetParentLayer() const;
+  //@}
+
+
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
   NUI_GETSET(bool, AutoAcceptMouseSteal);
@@ -768,7 +777,6 @@ protected:
 
   std::map<nuiWidgetElement, nuiColor> mWidgetElementColors;
 
-  nuiTheme* mpTheme;
   nuiPainter* mpSavedPainter;
 
   LayoutConstraint mConstraint;
@@ -899,6 +907,7 @@ protected:
   void ChildrenCallOnTrash();
 
   nuiWidgetList mpChildren;
+  nuiLayer* mpBackingLayer = nullptr;
 
 };
 

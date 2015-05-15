@@ -12,6 +12,8 @@
 #include "nuiWidget.h"
 #include "nuiEvent.h"
 
+class nuiSplitter;
+
 /// defines the way the splitter bar position is computed
 enum nuiSplitterMode
 {

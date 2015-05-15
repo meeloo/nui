@@ -60,7 +60,6 @@ void nuiMetaPainter::StoreOpCode(OpCode code)
 
 void nuiMetaPainter::StoreInt(int32 Val)
 {
-  //  StoreBuffer(&Val, sizeof(int32), 1);
   if (mDummyMode)
     return;
   
@@ -71,7 +70,6 @@ void nuiMetaPainter::StoreInt(int32 Val)
 
 void nuiMetaPainter::StoreFloat(float Val)
 {
-  //  StoreBuffer(&Val, sizeof(float), 1);
   if (mDummyMode)
     return;
   
@@ -82,7 +80,6 @@ void nuiMetaPainter::StoreFloat(float Val)
 
 void nuiMetaPainter::StoreFloat(double Val)
 {
-  //  StoreBuffer(&Val, sizeof(double), 1);
   if (mDummyMode)
     return;
   
@@ -93,7 +90,6 @@ void nuiMetaPainter::StoreFloat(double Val)
 
 void nuiMetaPainter::StorePointer(void* pVal)
 {
-  //  StoreBuffer(&pVal, sizeof(void*), 1);
   if (mDummyMode)
     return;
   
@@ -120,9 +116,6 @@ nuiMetaPainter::OpCode nuiMetaPainter::FetchOpCode() const
 
 int32 nuiMetaPainter::FetchInt() const
 {
-  //  int32 tmp;
-//  FetchBuffer(&tmp, sizeof(int32), 1);
-//  return tmp;
   int32 tmp;
   NGL_ASSERT(mOperationPos + sizeof(tmp) <= mOperations.size());
   tmp = *(int32*)&mOperations[mOperationPos];
@@ -132,7 +125,6 @@ int32 nuiMetaPainter::FetchInt() const
 
 void nuiMetaPainter::FetchFloat(double& rDouble) const
 {
-  //  FetchBuffer(&rDouble, sizeof(double), 1);
   NGL_ASSERT(mOperationPos + sizeof(rDouble) <= mOperations.size());
   rDouble = *(double*)&mOperations[mOperationPos];
   mOperationPos += sizeof(rDouble);
@@ -140,7 +132,6 @@ void nuiMetaPainter::FetchFloat(double& rDouble) const
 
 void nuiMetaPainter::FetchFloat(float& rFloat) const
 {
-  //  FetchBuffer(&rFloat, sizeof(float), 1);
   NGL_ASSERT(mOperationPos + sizeof(rFloat) <= mOperations.size());
   rFloat = *(float*)&mOperations[mOperationPos];
   mOperationPos += sizeof(rFloat);
@@ -148,10 +139,6 @@ void nuiMetaPainter::FetchFloat(float& rFloat) const
 
 void* nuiMetaPainter::FetchPointer() const
 {
-//  void* pTmp;
-//  FetchBuffer(&pTmp, sizeof(void*), 1);
-//  return pTmp;
-
   void* tmp;
   NGL_ASSERT(mOperationPos + sizeof(tmp) <= mOperations.size());
   tmp = *(void**)&mOperations[mOperationPos];
@@ -211,7 +198,6 @@ void nuiMetaPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   mLastStateValid = true;
   mLastState = rState;
   StoreOpCode(eSetState);
-  //StorePointer(new nuiRenderState(rState));
   StoreInt(mRenderStates.size());
   mRenderStates.push_back(rState);
   StoreInt(ForceApply?1:0);
@@ -236,7 +222,6 @@ void nuiMetaPainter::DrawArray(nuiRenderArray* pRenderArray)
   if (mDummyMode)
     return;
   StoreOpCode(eDrawArray);
-  //StorePointer(pRenderArray);
   StoreInt(mRenderArrays.size());
   mRenderArrays.push_back(pRenderArray);
 
@@ -244,16 +229,6 @@ void nuiMetaPainter::DrawArray(nuiRenderArray* pRenderArray)
   mRenderOperations++;
   mBatches++;
   mVertices += pRenderArray->GetSize();
-  
-/*
-  uint start = mVertices.size();
-  uint count = rRenderArray.GetSize();
-  
-  mVertices.AddArray(rRenderArray);
-  
-  StoreInt(start);
-  StoreInt(count);
-*/
 }
 
 void nuiMetaPainter::SetSize(uint32 w, uint32 h)
@@ -499,7 +474,6 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
         if (draw)
         {
           int32 index = FetchInt();
-          //nuiRenderState* pState = ((nuiRenderState*)FetchPointer());
           const nuiRenderState& rState(mRenderStates[index]);
           bool ForceApply = FetchInt() ? true : false;
           if (DoDrawSelf)
@@ -510,9 +484,7 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
         if (draw)
         {
           int32 index = FetchInt();
-          //nuiRenderState* pState = ((nuiRenderState*)FetchPointer());
           nuiRenderArray* pRenderArray = mRenderArrays[index];
-          //nuiRenderArray* pRenderArray = (nuiRenderArray*) FetchPointer();
           pRenderArray->Acquire(); // Pre acquire the render array as the painter will release it
           pPainter->DrawArray(pRenderArray);
         }
@@ -701,7 +673,6 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
       break;
     case eSetState:
       {
-        //FetchPointer();
         FetchInt();
         bool force = FetchInt();
         str.CFormat(_T("SetState(%s)"), TRUEFALSE(force));
@@ -709,7 +680,6 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
       break;
     case eDrawArray:
       {
-        //nuiRenderArray* pArray = (nuiRenderArray*)FetchPointer();
         int32 index = FetchInt();
         nuiRenderArray* pArray = mRenderArrays[index];
         const nglChar* pMode = GetGLMode(pArray->GetMode());
@@ -873,12 +843,10 @@ void nuiMetaPainter::UpdateIndices() const
       case eStartRendering:
         break;
       case eSetState:
-        //FetchPointer();
         FetchInt();
         FetchInt();
         break;
       case eDrawArray:
-        //FetchPointer();
         FetchInt();
         break;
       case eClear:

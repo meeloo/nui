@@ -133,7 +133,6 @@ void nuiWidget::InitDefaultValues()
   mCSSPasses = 0;
   mpMatrixNodes = NULL;
   mpParent = NULL;
-  mpTheme = NULL;
   mDecorationEnabled = true;
   mDecorationMode = eDecorationOverdraw;
   mHotKeyMask = -1;
@@ -483,6 +482,13 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetAutoAcceptMouseSteal),
                 nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseSteal)));
 
+
+  AddAttribute(new nuiAttribute<bool>
+               (nglString("DrawToLayer"), nuiUnitOnOff,
+                nuiMakeDelegate(this, &nuiWidget::GetDrawToLayer),
+                nuiMakeDelegate(this, &nuiWidget::SetDrawToLayer)));
+
+
 }
 
  
@@ -646,9 +652,6 @@ nuiWidget::~nuiWidget()
 
   //NGL_ASSERT(!pRoot || IsTrashed());
 
-  if (mpTheme)
-    mpTheme->Release();
-    
   if (mpDecoration)
   {
     mpDecoration->Release();
@@ -697,6 +700,9 @@ nuiWidget::~nuiWidget()
     }
   }
   delete pIt;
+
+  if (mpBackingLayer)
+    mpBackingLayer->Release();
 }
 
 void nuiWidget::Built()
@@ -998,6 +1004,8 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
   }
 
   mNeedRender = true;
+  if (mpBackingLayer)
+    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 
   r.Move(rect.Left(), rect.Top());
 
@@ -1053,6 +1061,8 @@ void nuiWidget::SilentInvalidate()
   #endif
   
   mNeedSelfRedraw = true;
+  if (mpBackingLayer)
+    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 //  if (mpRenderCache)
 //    mpRenderCache->Reset(NULL);
   DebugRefreshInfo();
@@ -1067,6 +1077,8 @@ void nuiWidget::BroadcastInvalidate(nuiWidgetPtr pSender)
   }
 
   mNeedRender = true;
+  if (mpBackingLayer)
+    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 
   DebugRefreshInfo();
 }
@@ -1317,6 +1329,9 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     mNeedRender = false;
     
     pRenderThread->SetWidgetPainter(this, pRenderCache); ///< Let the render thread know about this new painter
+
+    if (mpBackingLayer)
+      GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
   }
   else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
   { ///< NB: The render thread cannot optimize already set painters that shouldn't redraw
@@ -3399,88 +3414,6 @@ const nuiMetaPainter* nuiWidget::GetRenderCache() const
   return mpRenderCache;
 }
 
-void nuiWidget::SetColor(nuiWidgetElement element, const nuiColor& rColor)
-{
-  CheckValid();
-  mWidgetElementColors[element] = rColor;
-  Invalidate();
-  DebugRefreshInfo();
-}
-
-void nuiWidget::DelColor(nuiWidgetElement element)
-{
-  CheckValid();
-  mWidgetElementColors.erase(element);
-  Invalidate();
-  DebugRefreshInfo();
-}
-
-nuiColor nuiWidget::GetColor(nuiWidgetElement element)
-{
-  CheckValid();
-  nuiColor col;
-  std::map<nuiWidgetElement, nuiColor>::iterator it = mWidgetElementColors.find(element);
-  if (it != mWidgetElementColors.end())
-    col = it->second;
-  else
-  {
-    if (mpParent)
-      col = mpParent->GetColor(element);
-    else
-    {
-      nuiTheme* pTheme = GetTheme();
-      NGL_ASSERT(pTheme);
-      col = pTheme->GetElementColor(element); // Return the theme color
-      pTheme->Release();
-    }
-  }
-
-  if (mMixAlpha)
-  {
-    float alpha = GetAlpha();
-    col.Multiply(alpha);
-  }
-  return col;
-}
-
-void nuiWidget::SetFillColor(nuiDrawContext* pContext, nuiWidgetElement Element)
-{
-  CheckValid();
-  pContext->SetFillColor(GetColor(Element));
-}
-
-void nuiWidget::SetStrokeColor(nuiDrawContext* pContext, nuiWidgetElement Element)
-{
-  CheckValid();
-  pContext->SetStrokeColor(GetColor(Element));
-}
-
-void nuiWidget::SetTheme(nuiTheme* pTheme)
-{
-  CheckValid();
-  if (mpTheme)
-    mpTheme->Release();
-  mpTheme = pTheme;
-  if (mpTheme)
-    mpTheme->Acquire();
-  DebugRefreshInfo();
-}
-
-nuiTheme* nuiWidget::GetTheme()
-{
-  CheckValid();
-  // Do we have a local theme?
-  if (mpTheme)
-  {
-    mpTheme->Acquire();
-    return mpTheme;
-  }
-  // Do we have a parent that may have a local theme?
-  if (mpParent)
-    return mpParent->GetTheme();
-  // Revert to the global theme:
-  return nuiTheme::GetTheme();
-}
 
 void nuiWidget::AutoDestroy(const nuiEvent& rEvent)
 {
@@ -5272,6 +5205,9 @@ bool nuiWidget::DrawChildren(nuiDrawContext* pContext)
 void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 {
   CheckValid();
+  if (pChild->GetDrawToLayer())
+    return;
+  
   float x,y;
 
   x = (float)pChild->GetRect().mLeft;
@@ -5920,17 +5856,43 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
     inval = true;
 
   if (inval)
+  {
     Invalidate();
+  }
+
   if (mForceIdealSize)
+  {
     mRect.Set(rRect.Left(), rRect.Top(), mIdealRect.GetWidth(), mIdealRect.GetHeight());
+  }
   else
+  {
     mRect = rRect;
+  }
 
   if (!mOverrideVisibleRect)
+  {
     mVisibleRect = GetOverDrawRect(true, true);
+  }
+
+  if (mpBackingLayer)
+  {
+    mpBackingLayer->UpdateSizeFromContents();
+
+    nuiSize x = 0;
+    nuiSize y = 0;
+
+    nuiWidget* pParent = GetParentLayerWidget();
+    if (pParent)
+      LocalToLocal(pParent, x, y);
+
+    mpBackingLayer->SetPosition(x, y);
+  }
 
   if (inval)
+  {
     Invalidate();
+  }
+
 
   DebugRefreshInfo();
 }
@@ -6336,4 +6298,83 @@ void nuiWidget::GetHoverList(nuiSize X, nuiSize Y, std::set<nuiWidget*>& rHoverS
   delete pIt;
 }
 
+
+nuiLayer* nuiWidget::GetParentLayer() const
+{
+  nuiWidget* pParent = GetParentLayerWidget();
+  if (!pParent)
+    return nullptr;
+
+  return pParent->GetLayer();
+}
+
+nuiWidget* nuiWidget::GetParentLayerWidget() const
+{
+  nuiWidget* pParent = GetParent();
+  while (pParent)
+  {
+    nuiLayer* pLayer = pParent->GetLayer();
+    if (pLayer)
+      return pParent;
+
+    pParent = pParent->GetParent();
+  }
+
+  return nullptr;
+}
+
+
+void nuiWidget::SetDrawToLayer(bool UseLayer)
+{
+  if ((mpBackingLayer != nullptr) == UseLayer)
+    return;
+
+  if (UseLayer)
+  {
+    NGL_ASSERT(!mpBackingLayer);
+
+    nglString name;
+    name.CFormat("WidgetLayer_%p", this);
+    mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
+    mpBackingLayer->SetContents(this);
+
+    // Find the parent layer:
+    nuiWidget* pParentW = GetParentLayerWidget();
+
+    if (pParentW)
+    {
+      nuiLayer* pParent = pParentW->GetLayer();
+      nuiSize x = 0, y = 0;
+      LocalToLocal(pParentW, x, y);
+      mpBackingLayer->SetPosition(x, y);
+      pParent->AddChild(mpBackingLayer);
+    }
+
+    if (GetTopLevel() == this)
+    {
+      GetRenderThread()->SetLayerTree(mpBackingLayer);
+    }
+  }
+  else
+  {
+    NGL_ASSERT(mpBackingLayer);
+    mpBackingLayer->Release();
+    mpBackingLayer = nullptr;
+
+    if (GetTopLevel() == this)
+    {
+      GetRenderThread()->SetLayerTree(nullptr);
+    }
+  }
+}
+
+bool nuiWidget::GetDrawToLayer() const
+{
+  return mpBackingLayer != nullptr;
+}
+
+nuiLayer* nuiWidget::GetLayer() const
+{
+  return mpBackingLayer;
+}
 

@@ -60,8 +60,6 @@ nuiWidget* nuiIntrospector::GetToolbar()
 
   // add buttons to inspector's tools
   nuiRadioButton* pWBtn = new nuiRadioButton(_T("Widget Tree"));
-  pWBtn->SetColor(eNormalTextFg, textColor);
-  pWBtn->SetColor(eSelectedTextFg, textColor);
   pWBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pWBtn->SetBorders(0);
 
@@ -69,40 +67,30 @@ nuiWidget* nuiIntrospector::GetToolbar()
   pBox->AddCell(pWBtn);
 
   nuiRadioButton* pTBtn = new nuiRadioButton(_T("Threads"));
-  pTBtn->SetColor(eNormalTextFg, textColor);
-  pTBtn->SetColor(eSelectedTextFg, textColor);
   pTBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pTBtn->SetBorders(0);
   mEventSink.Connect(pTBtn->ButtonPressed, &nuiIntrospector::ShowThreadInspector);
   pBox->AddCell(pTBtn);
     
   nuiRadioButton* pFontBtn = new nuiRadioButton(_T("Fonts"));
-  pFontBtn->SetColor(eNormalTextFg, textColor);
-  pFontBtn->SetColor(eSelectedTextFg, textColor);
   pFontBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pFontBtn->SetBorders(0);
   mEventSink.Connect(pFontBtn->ButtonPressed, &nuiIntrospector::ShowFontInspector);
   pBox->AddCell(pFontBtn);
 
   nuiRadioButton* pDecoBtn = new nuiRadioButton(_T("Decorations"));
-  pDecoBtn->SetColor(eNormalTextFg, textColor);
-  pDecoBtn->SetColor(eSelectedTextFg, textColor);
   pDecoBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pDecoBtn->SetBorders(0);
   mEventSink.Connect(pDecoBtn->ButtonPressed, &nuiIntrospector::ShowDecorationInspector);
   pBox->AddCell(pDecoBtn);
   
   nuiRadioButton* pTextureBtn = new nuiRadioButton(_T("Textures"));
-  pTextureBtn->SetColor(eNormalTextFg, textColor);
-  pTextureBtn->SetColor(eSelectedTextFg, textColor);
   pTextureBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pTextureBtn->SetBorders(0);
   mEventSink.Connect(pTextureBtn->ButtonPressed, &nuiIntrospector::ShowTextureInspector);
   pBox->AddCell(pTextureBtn);
   
   nuiRadioButton* pObjectsBtn = new nuiRadioButton(_T("Objects"));
-  pObjectsBtn->SetColor(eNormalTextFg, textColor);
-  pObjectsBtn->SetColor(eSelectedTextFg, textColor);
   pObjectsBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pObjectsBtn->SetBorders(0);
   mEventSink.Connect(pObjectsBtn->ButtonPressed, &nuiIntrospector::ShowObjectInspector);

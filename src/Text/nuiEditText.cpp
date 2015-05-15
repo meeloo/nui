@@ -29,10 +29,15 @@ nuiEditText::nuiEditText(const nglString& rText)
   if (SetObjectClass(_T("nuiEditText")))
     InitAttributes();
   
-  SetFont(nuiTheme::Default);
+  SetFont(nuiFont::GetFont(12));
   SetText(rText);
   InitCommands();
   InitKeyBindings();
+
+  mNormalTextBg = nuiColor("nuiNormalTextBg");
+  mNormalTextFg = nuiColor("nuiNormalTextFg");
+  mSelectionMarkee = nuiColor("nuiSelectionMarkee");
+
 }
 
 nuiEditText::~nuiEditText()
@@ -83,7 +88,7 @@ bool nuiEditText::Draw(nuiDrawContext* pContext)
   pContext->EnableBlending(true);
   pContext->SetBlendFunc(nuiBlendTransp);
 
-  nuiColor c(GetColor(eNormalTextBg));
+  nuiColor c(mNormalTextBg);
   c.Multiply(GetMixedAlpha());
   pContext->SetFillColor(c);
   pContext->DrawRect(GetRect().Size(), eFillShape);
@@ -92,10 +97,10 @@ bool nuiEditText::Draw(nuiDrawContext* pContext)
   if (mTextColorSet)
     textColor = mTextColor;
   else
-    textColor = GetColor(eNormalTextFg);
+    textColor = mNormalTextFg;
     
   pContext->SetTextColor(textColor);
-  pContext->SetFillColor(GetColor(eSelectionMarkee));
+  pContext->SetFillColor(mSelectionMarkee);
   uint count = (uint32)mpBlocks.size();
   nuiSize PosX = 0, PosY = 0;
 
@@ -122,7 +127,7 @@ bool nuiEditText::Draw(nuiDrawContext* pContext)
 
     nuiRect cursor(CursorX, CursorY - fontinfo.Ascender, 2.0f, mpFont->GetHeight());
     cursor.RoundToBelow();
-    pContext->SetFillColor(GetColor(eNormalTextFg));
+    pContext->SetFillColor(mNormalTextFg);
     pContext->DrawRect(cursor, eFillShape);
 
     if (mStartDragging)
@@ -135,7 +140,7 @@ bool nuiEditText::Draw(nuiDrawContext* pContext)
 
       nuiRect dropCursor(CursorX, CursorY - fontinfo.Ascender, 2.0f, mpFont->GetHeight());
       dropCursor.RoundToBelow();
-      pContext->SetFillColor(GetColor(eNormalTextFg));
+      pContext->SetFillColor(mNormalTextFg);
       pContext->DrawRect(dropCursor, eFillShape);
     }
   }
@@ -1749,16 +1754,6 @@ void nuiEditText::SetAnchorPos(uint Pos)
 uint nuiEditText::GetAnchorPos() const
 {
   return mAnchorPos;
-}
-
-bool nuiEditText::SetFont(nuiTheme::FontStyle FontStyle)
-{
-  SetFont(nuiFont::GetFont(12));
-
-  ClearBlocks();
-  CreateBlocks(mText, mpBlocks);
-  InvalidateLayout();  
-  return true;
 }
 
 bool nuiEditText::SetFont(nuiFont* pFont, bool AlreadyAcquired)

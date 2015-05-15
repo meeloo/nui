@@ -1475,7 +1475,7 @@
 				E516F595185CBF7900D97CA6 /* src */,
 			);
 			name = AudioRecorder;
-			path = ../AudioRecorder;
+			path = ../../AudioRecorder;
 			sourceTree = "<group>";
 		};
 		E516F589185CBF7900D97CA6 /* resources */ = {
@@ -1891,7 +1891,6 @@
 		E55E7796185BBC62005F01B1 = {
 			isa = PBXGroup;
 			children = (
-				E516F583185CBF7900D97CA6 /* AudioRecorder */,
 				E55E77A8185BBC62005F01B1 /* Tutorials */,
 				E55E77A1185BBC62005F01B1 /* Frameworks */,
 				E55E77A0185BBC62005F01B1 /* Products */,
@@ -1975,6 +1974,7 @@
 		E55E77A8185BBC62005F01B1 /* Tutorials */ = {
 			isa = PBXGroup;
 			children = (
+				E516F583185CBF7900D97CA6 /* AudioRecorder */,
 				E516F71B185D30FC00D97CA6 /* CSSFontSelection */,
 				E516F6E0185D306900D97CA6 /* CoverFlow */,
 				E516F6B1185D1AB600D97CA6 /* Commands */,
@@ -2358,6 +2358,7 @@
 				TargetAttributes = {
 					61B37FEF1A180B3D004EA14B = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = GZ9B3EJNP6;
 					};
 				};
 			};
@@ -3243,6 +3244,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3254,6 +3256,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -3264,6 +3267,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/../Buttons/Info.plist";
@@ -3271,6 +3275,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

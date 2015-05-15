@@ -12,7 +12,6 @@
 #include "nglString.h"
 #include "nuiFont.h"
 #include "nuiWidget.h"
-#include "nuiTheme.h"
 
 class nuiFontRequest;
 
@@ -20,8 +19,8 @@ class nuiFontRequest;
 class nuiLabel : public nuiWidget
 {
 public:
-  nuiLabel(const nglString& Text = nglString::Empty, nuiTheme::FontStyle FontStyle=nuiTheme::Default);
-  nuiLabel(const nglString& Text, const nglString& rObjectName, nuiTheme::FontStyle FontStyle=nuiTheme::Default);
+  nuiLabel(const nglString& Text = nglString::Empty);
+  nuiLabel(const nglString& Text, const nglString& rObjectName);
   nuiLabel(const nglString& Text, nuiFont* pFont, bool AlreadyAcquired = false);
 
   void InitAttributes();
@@ -35,7 +34,6 @@ public:
   virtual void SetText(const nglString& Text); ///< Modify the label's text.
   virtual const nglString& GetText() const; ///< Retrieve the label's text.
 
-  void SetFont(nuiTheme::FontStyle FontStyle); //< Change the font used by the widget.
   void SetFont(nuiFont* pFont, bool AlreadyAcquired = false); //< Change the font used by the widget.
   void SetFont(nuiFontRequest& rFontRequest);
   void SetFont(const nglString& rFontSymbol);

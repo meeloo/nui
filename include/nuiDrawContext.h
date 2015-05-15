@@ -37,6 +37,8 @@
 
 class nuiTexture;
 class nuiShaderProgram;
+class nuiScrollBar;
+class nuiSlider;
 
 enum nuiRenderer
 {
@@ -57,7 +59,7 @@ class nuiDrawContext
 {
 
 public:
-  static nuiDrawContext *CreateDrawContext(const nuiRect& rRect, nuiRenderer mode, nglContext* pContext = NULL); 
+  static nuiDrawContext *CreateDrawContext(const nuiRect& rRect, nuiPainter* pPainter);
 
   nuiDrawContext(const nuiRect& rRect);
   virtual ~nuiDrawContext();
@@ -189,6 +191,20 @@ public:
   void DrawGradient(const nuiGradient& rGradient, const nuiRect& rEnclosingRect, nuiSize x1, nuiSize y1, nuiSize x2, nuiSize y2);
   void DrawArray(nuiRenderArray* pArray);
   void DrawObject(const nuiRenderObject& rObject);
+
+  void DrawWindowShade(const nuiRect& rRect, const nuiColor& rColor, bool Active);
+  void DrawMenuWindow(nuiWidget* pWidget, const nuiRect& rRect);
+  void DrawTreeHandle(const nuiRect& rRect, bool IsOpened, nuiSize TREE_HANDLE_SIZE, const nuiColor& rColor);
+  void DrawSelectionBackground(nuiWidget* pWidget, const nuiRect& rRect);
+  void DrawSelectionForeground(nuiWidget* pWidget, const nuiRect& rRect);
+  void DrawMarkee(const nuiRect& rRect, const nuiColor& rColor);
+  void DrawScrollBarBackground(nuiScrollBar* pScroll);
+  void DrawScrollBarForeground(nuiScrollBar* pScroll);
+  void DrawSliderBackground(nuiSlider* pSlider);
+  void DrawSliderForeground(nuiSlider* pSlider);
+
+  
+
   //@}
 
   int GetWidth() const;

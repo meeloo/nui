@@ -8,7 +8,6 @@
 #define __nuiEditText_h__
 
 #include "nuiWidget.h"
-#include "nuiTheme.h"
 
 #include "nglDragAndDropObjects.h"
 #include "nglDataObjects.h"
@@ -131,7 +130,6 @@ public:
   void GetCursorPos(uint& rX, uint& rY);
   void GetCursorPos(nuiSize& rX, nuiSize& rY);
 
-  bool SetFont(nuiTheme::FontStyle FontStyle = nuiTheme::Fixed);
   bool SetFont(nuiFont* pFont, bool AlreadyAcquired = false);
   nuiFont* GetFont();
 
@@ -150,7 +148,11 @@ public:
   nuiSimpleEventSource<0> TextChanged;
 
   virtual void OnSetFocus(nuiWidgetPtr pWidget);
-  
+
+  NUI_GETSETDO(nuiColor, NormalTextBg, Invalidate());
+  NUI_GETSETDO(nuiColor, NormalTextFg, Invalidate());
+  NUI_GETSETDO(nuiColor, SelectionMarkee, Invalidate());
+
 protected:
   virtual ~nuiEditText();
 
@@ -304,7 +306,9 @@ protected:
   
   bool mTextColorSet;
   nuiColor mTextColor;
-  
+  nuiColor mNormalTextBg;
+  nuiColor mNormalTextFg;
+  nuiColor mSelectionMarkee;
 };
 
 #endif // __nuiEditText_h__

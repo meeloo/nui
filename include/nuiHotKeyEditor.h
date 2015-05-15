@@ -35,6 +35,12 @@ public:
   bool LoadFromStream(nglIStream* pInput);
   bool SaveToStream(nglOStream* pOutput) const;
       
+  NUI_GETSETDO(nuiColor, NormalTextFg, Invalidate());
+  NUI_GETSETDO(nuiColor, SelectedTextFg, Invalidate());
+  NUI_GETSETDO(nuiColor, DisabledTextFg, Invalidate());
+  NUI_GETSETDO(nuiColor, NormalTextBg, Invalidate());
+  NUI_GETSETDO(nuiColor, SelectedTextBg, Invalidate());
+  NUI_GETSETDO(nuiColor, DisabledTextBg, Invalidate());
 protected:
   virtual ~nuiHotKeyEditor();
 
@@ -52,4 +58,12 @@ protected:
   nuiLabel* mpSelectedLabel; // selected label
   
   nuiHotKey* mpSelectedHotKey; // the hotkey we're currently editing, as saved in toplevel
+
+  nuiColor mNormalTextFg;
+  nuiColor mSelectedTextFg;
+  nuiColor mDisabledTextFg;
+  nuiColor mNormalTextBg;
+  nuiColor mSelectedTextBg;
+  nuiColor mDisabledTextBg;
+
 };

@@ -56,8 +56,6 @@ nuiList::~nuiList()
 
 bool nuiList::Draw(nuiDrawContext* pContext)
 {
-  nuiTheme *pTheme = GetTheme();
-
   IteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
@@ -73,17 +71,16 @@ bool nuiList::Draw(nuiDrawContext* pContext)
         irect.SetWidth(GetRect().GetWidth());
 
       if (pItem->IsSelected())
-        pTheme->DrawSelectionBackground(pContext, irect, pItem);
+        pContext->DrawSelectionBackground(pItem, irect);
 
       DrawChild(pContext, pItem);
 
       if (pItem->IsSelected())
-        pTheme->DrawSelectionForeground(pContext, irect, pItem);
+        pContext->DrawSelectionForeground(pItem, irect);
     }
   }
   delete pIt;
 
-  pTheme->Release();
   return true;
 }
 
