@@ -271,7 +271,7 @@ void nuiRenderThread::_SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPai
 
 void nuiRenderThread::_SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
-//  NGL_OUT("_SetLayerPainter %p (%p)\n", pLayer, pPainter);
+  NGL_OUT("_SetLayerPainter %p (%p)\n", pLayer, pPainter);
   auto it = mLayerPainters.find(pLayer);
   if (it != mLayerPainters.end())
   {
@@ -300,7 +300,7 @@ void nuiRenderThread::_SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainte
 
 void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
-//  NGL_OUT("_SetLayerContentsPainter %p\n", pLayer);
+  NGL_OUT("_SetLayerContentsPainter %p\n", pLayer);
   auto it = mPainters.find(pLayer);
   if (it != mPainters.end())
   {
@@ -336,7 +336,7 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter*
 
 void nuiRenderThread::_InvalidateLayerContents(nuiLayer* pLayer)
 {
-//    NGL_OUT("_InvalidateLayerContents %p\n", pLayer);
+    NGL_OUT("_InvalidateLayerContents %p\n", pLayer);
     mDirtyLayers.insert(pLayer);
 }
 
@@ -348,7 +348,7 @@ void nuiRenderThread::_SetRootWidget(nuiWidget* pRoot)
 
 void nuiRenderThread::_SetLayerTree(nuiLayer* pRoot)
 {
-//  NGL_OUT("_SetLayerTree %p\n", pRoot);
+  NGL_OUT("_SetLayerTree %p\n", pRoot);
   mpLayerTreeRoot = pRoot;
 }
 

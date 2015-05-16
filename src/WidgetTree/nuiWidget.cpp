@@ -484,7 +484,7 @@ void nuiWidget::InitAttributes()
 
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString("DrawToLayer"), nuiUnitOnOff,
+               ("DrawToLayer", nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetDrawToLayer),
                 nuiMakeDelegate(this, &nuiWidget::SetDrawToLayer)));
 
@@ -5206,7 +5206,39 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 {
   CheckValid();
   if (pChild->GetDrawToLayer())
+  {
+//    float x,y;
+//
+//    x = (float)pChild->GetRect().mLeft;
+//    y = (float)pChild->GetRect().mTop;
+//
+//    bool matrixchanged = false;
+//    if (x != 0 || y != 0)
+//    {
+//      pContext->PushMatrix();
+//      pContext->Translate( x, y );
+//      matrixchanged = true;
+//    }
+//
+    nuiPainter* pPainter = pContext->GetPainter();
+
+    pChild->DrawWidget(pContext);
+
+    NGL_ASSERT(IsDrawingInCache(true));
+
+//    if (IsDrawingInCache(true))
+//    {
+//      nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
+//      if (pMetaPainter)
+//        pMetaPainter->DrawChild(pContext, pChild);
+//    }
+
+//    if (matrixchanged)
+//    {
+//      pContext->PopMatrix();
+//    }
     return;
+  }
   
   float x,y;
 
@@ -6326,7 +6358,7 @@ nuiWidget* nuiWidget::GetParentLayerWidget() const
 
 void nuiWidget::SetDrawToLayer(bool UseLayer)
 {
-  if ((mpBackingLayer != nullptr) == UseLayer)
+  if (GetDrawToLayer() == UseLayer)
     return;
 
   if (UseLayer)
@@ -6366,6 +6398,8 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
       GetRenderThread()->SetLayerTree(nullptr);
     }
   }
+
+  InvalidateLayout();
 }
 
 bool nuiWidget::GetDrawToLayer() const

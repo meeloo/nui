@@ -2233,7 +2233,7 @@ void nuiGLPainter::DestroyRenderArray(nuiRenderArray* pArray)
 bool nuiCheckForGLErrorsReal()
 {
   GLenum err = GL_NO_ERROR;
-#if 1 // Globally enable/disable OpenGL error checking
+#if 0 // Globally enable/disable OpenGL error checking
   //#ifdef NGL_DEBUG
   err = glGetError();
   if (err == GL_NO_ERROR)

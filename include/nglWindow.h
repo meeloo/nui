@@ -95,8 +95,8 @@ public:
 
   int32   X;        ///< Horizontal coordinate
   int32   Y;        ///< Vertical coordinate
-  int32 DeltaX;     ///< Mouse Wheel displacement in X
-  int32 DeltaY;     ///< Mouse Wheel displacement in Y
+  float DeltaX;     ///< Mouse Wheel displacement in X
+  float DeltaY;     ///< Mouse Wheel displacement in Y
 
   Flags Buttons;  ///< Buttons state
   nglTouchId    TouchId; ///< used to retrieve which finger acting
