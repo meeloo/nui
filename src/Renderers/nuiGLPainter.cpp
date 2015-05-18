@@ -244,6 +244,7 @@ nuiGLPainter::~nuiGLPainter()
   mActiveContexts--;
   if (mActiveContexts == 0)
     glAAExit();
+  nglCriticalSectionGuard fag(mFrameArraysCS);
   for (auto pArray : mFrameArrays)
     pArray->Release();
   mFrameArrays.clear();
@@ -313,6 +314,7 @@ void nuiGLPainter::SetViewport()
 void nuiGLPainter::StartRendering()
 {
   nuiPainter::StartRendering();
+  nglCriticalSectionGuard fag(mFrameArraysCS);
   for (auto pArray : mFrameArrays)
     pArray->Release();
   mFrameArrays.clear();
@@ -594,6 +596,7 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, i
   NGL_ASSERT(slot >= 0);
   
   // 2D Textures:
+  nglCriticalSectionGuard tg(mTexturesCS);
   auto it = mTextures.end();
   nuiTexture* pTexture = rState.mpTexture[slot];
   if (pTexture)
@@ -891,8 +894,11 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   //  }
 
   pArray->Acquire();
-  mFrameArrays.push_back(pArray);
-
+  {
+    nglCriticalSectionGuard fag(mFrameArraysCS);
+    mFrameArrays.push_back(pArray);
+  }
+  
   uint32 s = pArray->GetSize();
 
   total += s;
@@ -1320,6 +1326,7 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
   bool changedctx = false;
 
+  nglCriticalSectionGuard tg(mTexturesCS);
   std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
   if (it == mTextures.end())
     it = mTextures.insert(mTextures.begin(), std::pair<nuiTexture*, TextureInfo>(pTexture, TextureInfo()));
@@ -1657,6 +1664,7 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
 void nuiGLPainter::DestroyTexture(nuiTexture* pTexture)
 {
+  nglCriticalSectionGuard tg(mTexturesCS);
   std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
   if (it == mTextures.end())
     return;
@@ -1687,6 +1695,7 @@ nuiGLPainter::FramebufferInfo::FramebufferInfo()
 
 void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
 {
+  nglCriticalSectionGuard fbg(mFramebuffersCS);
   std::map<nuiSurface*, FramebufferInfo>::iterator it = mFramebuffers.find(pSurface);
   if (it == mFramebuffers.end())
   {
@@ -1754,6 +1763,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 
   if (pSurface)
   {
+    nglCriticalSectionGuard fbg(mFramebuffersCS);
     std::map<nuiSurface*, FramebufferInfo>::const_iterator it = mFramebuffers.find(pSurface);
     bool create = (it == mFramebuffers.end()) ? true : false;
 
@@ -1940,6 +1950,8 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
         UploadTexture(pTexture, 0);
         nuiCheckForGLErrors();
 
+        nglCriticalSectionGuard tg(mTexturesCS);
+
         std::map<nuiTexture*, TextureInfo>::iterator tex_it = mTextures.find(pTexture);
         NGL_ASSERT(tex_it != mTextures.end());
         TextureInfo& tex_info(tex_it->second);
@@ -2007,7 +2019,10 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
       CheckFramebufferStatus();
 #endif
       nuiCheckForGLErrors();
-      mFramebuffers[pSurface] = info;
+      {
+        nglCriticalSectionGuard fbg(mFramebuffersCS);
+        mFramebuffers[pSurface] = info;
+      }
     }
     else
     {
@@ -2279,5 +2294,16 @@ bool nuiCheckForGLErrorsReal()
 
   return true;
 }
+
+
+std::map<nuiTexture*, nuiGLPainter::TextureInfo> nuiGLPainter::mTextures;
+std::map<nuiSurface*, nuiGLPainter::FramebufferInfo> nuiGLPainter::mFramebuffers;
+std::vector<nuiRenderArray*> nuiGLPainter::mFrameArrays;
+std::map<nuiRenderArray*, nuiGLPainter::RenderArrayInfo*> nuiGLPainter::mRenderArrays;
+nglCriticalSection nuiGLPainter::mTexturesCS;
+nglCriticalSection nuiGLPainter::mFramebuffersCS;
+nglCriticalSection nuiGLPainter::mFrameArraysCS;
+nglCriticalSection nuiGLPainter::mRenderArraysCS;
+
 
 #endif //   #ifndef __NUI_NO_GL__
