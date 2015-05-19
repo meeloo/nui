@@ -554,8 +554,10 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
 
   ApplyState(*mpState, mForceApply);
   pArray->Acquire();
-  mFrameArrays.push_back(pArray);
-
+  {
+    nglCriticalSectionGuard fag(mFrameArraysCS);
+    mFrameArrays.push_back(pArray);
+  }
 
 
   if (mFinalState.mpTexture && pArray->IsArrayEnabled(nuiRenderArray::eTexCoord))
@@ -674,6 +676,7 @@ void nuiGL2Painter::DrawArray(nuiRenderArray* pArray)
 
   if (pArray->IsStatic())
   {
+    nglCriticalSectionGuard rag(mRenderArraysCS);
     auto it = mRenderArrays.find(pArray);
     if (it == mRenderArrays.end())
     {
@@ -1037,6 +1040,7 @@ void nuiGL2Painter::ResetVertexPointers(const nuiRenderArray& rArray)
 
 void nuiGL2Painter::DestroyRenderArray(nuiRenderArray* pArray)
 {
+  nglCriticalSectionGuard rag(mRenderArraysCS);
   auto it = mRenderArrays.find(pArray);
   if (it == mRenderArrays.end())
     return; // This render array was not stored here

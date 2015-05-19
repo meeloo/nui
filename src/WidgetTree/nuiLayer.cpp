@@ -160,7 +160,7 @@ void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<n
     if (mpSurface)
       mpSurface->Release();
     mpSurface = nuiSurface::CreateSurface(GetObjectName(), ToNearest(mWidth), ToNearest(mHeight));
-//    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
+    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
   }
   
   pContext->SetSurface(mpSurface);

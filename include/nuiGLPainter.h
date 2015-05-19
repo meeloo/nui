@@ -143,11 +143,18 @@ protected:
   bool mForceApply;
   uint32 mCanRectangleTexture;
   GLenum mTextureTarget;
-  std::map<nuiTexture*, TextureInfo> mTextures;
-  std::map<nuiSurface*, FramebufferInfo> mFramebuffers;
+  
+  static std::map<nuiTexture*, TextureInfo> mTextures;
+  static std::map<nuiSurface*, FramebufferInfo> mFramebuffers;
+  static std::vector<nuiRenderArray*> mFrameArrays;
+  static std::map<nuiRenderArray*, RenderArrayInfo*> mRenderArrays;
+  static nglCriticalSection mTexturesCS;
+  static nglCriticalSection mFramebuffersCS;
+  static nglCriticalSection mFrameArraysCS;
+  static nglCriticalSection mRenderArraysCS;
+
+  
   int64 dummy = 0;
-  std::vector<nuiRenderArray*> mFrameArrays;
-  std::map<nuiRenderArray*, RenderArrayInfo*> mRenderArrays;
   int32 mScissorX;
   int32 mScissorY;
   int32 mScissorW;
