@@ -77,6 +77,8 @@ public:
 
   void OnSourceDataChanged(const nuiEvent& rEvent);
 
+  int32 GetCellIndex(nuiWidget* pCell) const noexcept;
+
 protected:
   void InitAttributes();
   bool SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy, nuiSize scrollv, nuiSize scrollh);

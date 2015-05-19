@@ -148,7 +148,7 @@ void nuiLayer::UpdateSizeFromContents()
 
 void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<nuiDrawContext*, nuiWidget*>& rDrawWidgetDelegate)
 {
-  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
+//  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
   bool recreate = false;
   if (mpSurface == nullptr)
     recreate = true;
@@ -191,7 +191,7 @@ void nuiLayer::UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<n
 
 void nuiLayer::Draw(nuiDrawContext* pContext)
 {
-  NGL_OUT("nuiLayer::Draw %p\n", this);
+//  NGL_OUT("nuiLayer::Draw %p\n", this);
   CheckValid();
 
   nuiTexture* pTex = nullptr;

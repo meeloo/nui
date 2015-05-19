@@ -718,7 +718,7 @@ bool nuiScrollView::MouseWheelMoved(const nglMouseInfo& rInfo)
     ShowScrollBars(true);
   }
   
-  printf("Wheel: %s\n", YESNO(res));
+//  printf("Wheel: %s\n", YESNO(res));
   return res;
 }
 

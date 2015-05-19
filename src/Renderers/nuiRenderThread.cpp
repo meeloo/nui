@@ -115,7 +115,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     NGL_OUT("[nuiRenderThread] skipping frame\n");
     return;
   }
-  NGL_OUT("[nuiRenderThread] render\n");
+//  NGL_OUT("[nuiRenderThread] render\n");
 
   if (mpLayerTreeRoot)
   {
@@ -154,7 +154,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
     for (auto layer : mDirtyLayers)
     {
-      NGL_OUT("Update dirty layer %p\n", layer);
+//      NGL_OUT("Update dirty layer %p\n", layer);
       layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
     }
     mDirtyLayers.clear();

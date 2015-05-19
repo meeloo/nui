@@ -422,3 +422,14 @@ const nuiTableView::Selection& nuiTableView::GetSelection()
   return mSelection;
 }
 
+
+int32 nuiTableView::GetCellIndex(nuiWidget* pCell) const noexcept
+{
+  auto pWidgetIt = mVisibleCells.begin();
+  for (int32 cell = mFirstVisibleCell; cell <= mLastVisibleCell; ++cell, pWidgetIt++)
+  {
+    if (pCell == *pWidgetIt)
+      return cell;
+  }
+  return -1;
+}
