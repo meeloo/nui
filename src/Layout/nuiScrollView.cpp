@@ -45,7 +45,7 @@ mHorizontalHotRectActive(true)
 void nuiScrollView::InitAttributes()
 {
   AddAttribute(new nuiAttribute<bool>(_T("EnableHorizontalScroll"), nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::GetEnableHorizontalScroll), nuiMakeDelegate(this, &nuiScrollView::SetEnableHorizontalScroll)));
-  AddAttribute(new nuiAttribute<bool>(_T("EnableVerticalScroll"), nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::GetEnableHorizontalScroll), nuiMakeDelegate(this, &nuiScrollView::SetEnableHorizontalScroll)));
+  AddAttribute(new nuiAttribute<bool>(_T("EnableVerticalScroll"), nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::GetEnableVerticalScroll), nuiMakeDelegate(this, &nuiScrollView::SetEnableVerticalScroll)));
   AddAttribute(new nuiAttribute<bool>(_T("EnableSmoothScrolling"), nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::IsSmoothScrollingEnabled), nuiMakeDelegate(this, &nuiScrollView::EnableSmoothScrolling)));
   
   AddAttribute(new nuiAttribute<float>(_T("HIncrement"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetHIncrement), nuiMakeDelegate(this, &nuiScrollView::SetHIncrement)));
@@ -1000,7 +1000,8 @@ bool nuiScrollView::CallPreMouseClicked(const nglMouseInfo& rInfo)
   if (mLeftClick)
     return false;
   
-  if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
+  if (rInfo.Buttons & nglMouseInfo::ButtonLeft &&
+      IsInsideFromSelf(rInfo.X, rInfo.Y))
   {
     mTouch = rInfo;
     mTouched = true;

@@ -144,6 +144,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
+  const bool DRAW_TO_LAYER = false;
   if (0)
   {
     ButtonCellSource* pSource = new ButtonCellSource();
@@ -182,11 +183,11 @@ void MainWindow::OnCreation()
   pMainBox->SetPosition(nuiFillVertical);
   AddChild(pMainBox);
 
-  pMainBox->SetDrawToLayer(true);
+  pMainBox->SetDrawToLayer(DRAW_TO_LAYER);
 
   // create a label width background for information display
   nuiPane* pPane = new nuiPane();
-  pPane->SetDrawToLayer(true);
+  pPane->SetDrawToLayer(DRAW_TO_LAYER);
   pPane->SetBorder(20,20);
   pMainBox->AddCell(pPane, nuiFillHorizontal);
   mpLabel = new nuiLabel();
@@ -194,22 +195,22 @@ void MainWindow::OnCreation()
   pPane->SetUserHeight(40);
 
   nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
-  pLabel->SetDrawToLayer(true);
+  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
   pMainBox->AddCell(pLabel, nuiLeft);
   pMainBox->AddCell(Tutorial_Buttons());
 
   pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
-  pLabel->SetDrawToLayer(true);
+  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
   pMainBox->AddCell(pLabel, nuiLeft);
   pMainBox->AddCell(Tutorial_ToggleButtons());
 
   pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-  pLabel->SetDrawToLayer(true);
+  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
   pMainBox->AddCell(pLabel, nuiLeft);
   pMainBox->AddCell(Tutorial_RadioButtons1());
 
   pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-  pLabel->SetDrawToLayer(true);
+  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
   pMainBox->AddCell(pLabel, nuiLeft);
   pMainBox->AddCell(Tutorial_RadioButtons2());
 

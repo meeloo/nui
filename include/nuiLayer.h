@@ -23,10 +23,8 @@ public:
 //  void SetClearColor(const nuiColor& rClearColor);
 //  nuiColor GetClearColor() const;
 
-  void UpdateSizeFromContents();
-
-  void UpdateContents(nuiDrawContext* pContext, const nuiFastDelegate2<nuiDrawContext*, nuiWidget*>& rDrawWidgetDelegate);
-  void Draw(nuiDrawContext* pContext);
+  void UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pContext);
+  void UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext);
 
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
@@ -44,6 +42,7 @@ private:
   nuiColor mClearColor;
 
   nuiSurface* mpSurface = nullptr;
+  void UpdateSurface();
 
   void Change() { mChanged = true; }
   bool mChanged = true;
@@ -51,7 +50,6 @@ private:
   nuiTexture* mpTextureContents = nullptr;
   nuiWidget* mpWidgetContents = nullptr;
   DrawContentsDelegate mDrawContentsDelegate;
-
 
   nuiMetaPainter* mpContentsPainter = nullptr; ///< This containts the rendering instructions to update the contents of this layer
   nuiMetaPainter* mpDrawPainter = nullptr; ///< This containts the rendering instructions to display the contents of this layer

@@ -22,10 +22,10 @@ public:
   // Public API:
   void StartRendering(uint32 x, uint32 y);
   void SetRect(const nuiRect& rRect);
-//  void AddClipRect(const nuiRect& rRect);
+  //  void AddClipRect(const nuiRect& rRect);
   void Exit();
   void SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
-  void SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
+  void SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
   void SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
   void InvalidateLayerContents(nuiLayer* pLayer);
   void SetRootWidget(nuiWidget* pRoot);
@@ -58,7 +58,7 @@ private:
   void _SetRect(const nuiRect& rRect);
   void _Exit();
   void _SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
-  void _SetLayerPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
+  void _SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
   void _SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
   void _InvalidateLayerContents(nuiLayer* pLayer);
   void _SetRootWidget(nuiWidget* pWidget);

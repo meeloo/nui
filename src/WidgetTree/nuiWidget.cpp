@@ -1355,7 +1355,6 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 
   }
 
-
   DebugRefreshInfo();
 
   return true;
@@ -5091,6 +5090,11 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
       dlg(this);
   }
 
+  if (mpBackingLayer)
+  {
+    mpBackingLayer->UpdateContents(GetRenderThread(), GetDrawContext());
+  }
+
   StartAnimation("SHOW");
 
   IteratorPtr pIt;
@@ -5276,7 +5280,7 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
   {
     nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
     if (pMetaPainter)
-      pMetaPainter->DrawChild(pContext, pChild);
+      pMetaPainter->DrawWidget(pContext, pChild);
   }
 
   if (matrixchanged)
@@ -5910,8 +5914,6 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
 
   if (mpBackingLayer)
   {
-    mpBackingLayer->UpdateSizeFromContents();
-
     nuiSize x = 0;
     nuiSize y = 0;
 
@@ -5920,6 +5922,7 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
       LocalToLocal(pParent, x, y);
 
     mpBackingLayer->SetPosition(x, y);
+    mpBackingLayer->UpdateDraw(GetRenderThread(), GetDrawContext());
   }
 
   if (inval)
