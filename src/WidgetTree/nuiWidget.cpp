@@ -5276,7 +5276,7 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
   {
     nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
     if (pMetaPainter)
-      pMetaPainter->DrawChild(pContext, pChild);
+      pMetaPainter->DrawWidget(pContext, pChild);
   }
 
   if (matrixchanged)

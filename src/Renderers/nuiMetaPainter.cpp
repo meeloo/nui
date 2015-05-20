@@ -241,20 +241,36 @@ void nuiMetaPainter::SetSize(uint32 w, uint32 h)
   mHeight = h;
 }
 
-void nuiMetaPainter::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
+void nuiMetaPainter::DrawWidget(nuiDrawContext* pContext, nuiWidget* pWidget)
 {
   if (mDrawChildrenImmediat)
   {
-    pChild->DrawWidget(pContext);
+    pWidget->DrawWidget(pContext);
   }
   else
   {
-    StoreOpCode(eDrawChild);
-    StorePointer(pChild);
+    StoreOpCode(eDrawWidget);
+    StorePointer(pWidget);
   }
   mLastStateValid = false;
   mNbDrawChild++;
 }
+
+void nuiMetaPainter::DrawLayer(nuiDrawContext* pContext, nuiLayer* pLayer)
+{
+  if (mDrawChildrenImmediat)
+  {
+    pLayer->Draw(pContext);
+  }
+  else
+  {
+    StoreOpCode(eDrawLayer);
+    StorePointer(pLayer);
+  }
+  mLastStateValid = false;
+  mNbDrawChild++;
+}
+
 
 void nuiMetaPainter::LoadMatrix(const nuiMatrix& rMatrix)
 {
@@ -392,9 +408,9 @@ void nuiMetaPainter::AddBreakPoint()
   StoreOpCode(eBreak);
 }
 
-void nuiMetaPainter::ReDraw(nuiDrawContext* pContext, const DrawChildDelegate& rDrawChildDelegate)
+void nuiMetaPainter::ReDraw(nuiDrawContext* pContext, const DrawWidgetDelegate& rDrawWidgetDelegate, const DrawLayerDelegate& rDrawLayerDelegate)
 {
-  PartialReDraw(pContext, 0, mNbOperations, rDrawChildDelegate);
+  PartialReDraw(pContext, 0, mNbOperations, rDrawWidgetDelegate);
 }
 
 void nuiMetaPainter::Reset(nuiPainter const * pFrom)
@@ -440,7 +456,7 @@ int32 nuiMetaPainter::GetNbOperations() const
   return mNbOperations;
 }
 
-void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last, const DrawChildDelegate& rDrawChildDelegate) const
+void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last, const DrawWidgetDelegate& rDrawWidgetDelegate, const DrawLayerDelegate& rDrawLayerDelegate) const
 {
   nuiPainter* pPainter = pContext->GetPainter();
   mOperationPos = 0;
@@ -509,14 +525,24 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
           if (DoDrawSelf)
             pPainter->EndSession();
         break;
-      case eDrawChild:
+      case eDrawWidget:
         if (draw)
         {
-          nuiWidget* pChild = (nuiWidget*)FetchPointer();
-          if (rDrawChildDelegate)
-            rDrawChildDelegate(pContext, pChild);
+          nuiWidget* pWidget = (nuiWidget*)FetchPointer();
+          if (rDrawWidgetDelegate)
+            rDrawWidgetDelegate(pContext, pWidget);
           else
-            pChild->DrawWidget(pContext);
+            pWidget->DrawWidget(pContext);
+        }
+        break;
+      case eDrawLayer:
+        if (draw)
+        {
+          nuiLayer* pLayer = (nuiLayer*)FetchPointer();
+          if (rDrawLayerDelegate)
+            rDrawLayerDelegate(pContext, pLayer);
+          else
+            pLayer->Draw(pContext);
         }
         break;
       case eLoadMatrix:
@@ -703,12 +729,20 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
     case eEndSession:
       str = _T("EndSession");
       break;
-    case eDrawChild:
+    case eDrawWidget:
       {
         nuiWidget* pS = (nuiWidget*)FetchPointer();
         nglString clss(pS->GetObjectClass());
         nglString name(pS->GetObjectName());
-        str.CFormat(_T("DrawChild 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
+        str.CFormat(_T("DrawWidget 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
+      }
+      break;
+    case eDrawLayer:
+      {
+        nuiLayer* pS = (nuiLayer*)FetchPointer();
+        nglString clss(pS->GetObjectClass());
+        nglString name(pS->GetObjectName());
+        str.CFormat(_T("DrawLayer 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
       }
       break;
     case eLoadMatrix:
@@ -856,7 +890,10 @@ void nuiMetaPainter::UpdateIndices() const
         break;
       case eEndSession:
         break;
-      case eDrawChild:
+      case eDrawWidget:
+        FetchPointer();
+        break;
+      case eDrawLayer:
         FetchPointer();
         break;
       case eLoadMatrix:

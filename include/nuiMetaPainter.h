@@ -22,7 +22,8 @@ class nuiMetaPainter : public nuiPainter
 {
 public:
   static int64 Count;
-  typedef nuiFastDelegate2<nuiDrawContext*, nuiWidget*> DrawChildDelegate;
+  typedef nuiFastDelegate2<nuiDrawContext*, nuiWidget*> DrawWidgetDelegate;
+  typedef nuiFastDelegate2<nuiDrawContext*, nuiLayer*> DrawLayerDelegate;
   
   nuiMetaPainter(nglContext* pContext = NULL);
   virtual ~nuiMetaPainter();
@@ -50,7 +51,8 @@ public:
   virtual void EnableClipping(bool set);
 //  virtual bool GetClipRect(nuiRect& rRect, bool LocalRect);
   
-  void DrawChild(nuiDrawContext* pContext, nuiWidget* pChild);
+  void DrawWidget(nuiDrawContext* pContext, nuiWidget* pWidget);
+  void DrawLayer(nuiDrawContext* pContext, nuiLayer* pLayer);
 
   /** @name Render operation storage management */
   //@{
@@ -63,13 +65,13 @@ public:
   }
   //@}
 
-  void ReDraw(nuiDrawContext* pContext, const DrawChildDelegate& rDrawChildDelegate = DrawChildDelegate());
+  void ReDraw(nuiDrawContext* pContext, const DrawWidgetDelegate& rDrawWidgetDelegate = DrawWidgetDelegate(), const DrawLayerDelegate& rDrawLayerDelegate = DrawLayerDelegate());
   void Reset(nuiPainter const * pFrom);
 
   // Debugging and profiling
   virtual void AddBreakPoint();
   int32 GetNbOperations() const;
-  void PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last, const DrawChildDelegate& rDrawChildDelegate = DrawChildDelegate()) const;
+  void PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last, const DrawWidgetDelegate& rDrawWidgetDelegate = DrawWidgetDelegate(), const DrawLayerDelegate& rDrawLayerDelegate = DrawLayerDelegate()) const;
   nglString GetOperationDescription(int32 OperationIndex) const;
   nglString GetNextDescription() const;
   void SetName(const nglString& rName);
@@ -110,7 +112,8 @@ protected:
     eResetClipRect,
     eEnableClipping,
 
-    eDrawChild,
+    eDrawWidget,
+    eDrawLayer,
     
     eBreak
   };
