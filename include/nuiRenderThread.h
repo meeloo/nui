@@ -37,8 +37,6 @@ public:
   nuiDrawContext* GetDrawContext() const;
   nglContext* GetContext() const;
 
-  void DrawChild(nuiDrawContext* pContext, nuiWidget* pKey);
-
 private:
   nuiTaskQueue mQueue;
   nuiTaskQueue mNextFrameQueue;
@@ -71,6 +69,10 @@ private:
   virtual void OnStart();
 
   void RenderingDone(bool result);
+
+  void DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey);
+  void DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey);
+
 
   nglAtomic mRenderingTicks=0;
 

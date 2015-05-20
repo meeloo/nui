@@ -151,15 +151,22 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     //    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
     //  }
     
-//    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+//    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
     for (auto layer : mDirtyLayers)
     {
       NGL_OUT("Update dirty layer %p\n", layer);
-      layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+      layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
     }
     mDirtyLayers.clear();
 
-    mpLayerTreeRoot->Draw(mpDrawContext);
+    auto i = mLayerPainters.find(mpLayerTreeRoot);
+    if (i != mLayerPainters.end())
+    {
+      nuiMetaPainter* pPainter = i->second;
+      pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget, &nuiRenderThread::DrawLayer));
+
+//      mpLayerTreeRoot->Draw(mpDrawContext);
+    }
 
     mpDrawContext->StopRendering();
     mpPainter->EndSession();
@@ -219,7 +226,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     //    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
     //  }
     
-    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
     
     mpDrawContext->StopRendering();
     mpPainter->EndSession();
@@ -352,14 +359,25 @@ void nuiRenderThread::_SetLayerTree(nuiLayer* pRoot)
   mpLayerTreeRoot = pRoot;
 }
 
-void nuiRenderThread::DrawChild(nuiDrawContext* pContext, nuiWidget* pKey)
+void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
 {
   auto it = mPainters.find(pKey);
   if (it != mPainters.end())
   {
     nuiMetaPainter* pPainter = it->second;
     NGL_ASSERT(pPainter);
-    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawChild));
+    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
+  }
+}
+
+void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
+{
+  auto it = mLayerPainters.find(pKey);
+  if (it != mLayerPainters.end())
+  {
+    nuiMetaPainter* pPainter = it->second;
+    NGL_ASSERT(pPainter);
+    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
   }
 }
 
