@@ -133,15 +133,23 @@ void nuiLayer::UpdateSurface()
   int w, h;
   if (mpTextureContents)
   {
-    SetWidth(mpTextureContents->GetWidth());
-    SetHeight(mpTextureContents->GetHeight());
+    w = mpTextureContents->GetWidth();
+    h = mpTextureContents->GetHeight();
   }
   else if (mpWidgetContents)
   {
-    SetWidth(mpWidgetContents->GetRect().GetWidth());
-    SetHeight(mpWidgetContents->GetRect().GetHeight());
+    w = mpWidgetContents->GetRect().GetWidth();
+    h = mpWidgetContents->GetRect().GetHeight();
   }
 
+  if (w < 1)
+    w = 1;
+  if (h < 1)
+    h = 1;
+ 
+  SetWidth(w);
+  SetHeight(h);
+  
   bool recreate = false;
   if (mpSurface == nullptr)
     recreate = true;
@@ -223,6 +231,11 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     pTex = mpSurface->GetTexture();
   }
 
+  NGL_ASSERT(pTex);
+  NGL_ASSERT(pTex->GetWidth() > 0);
+  NGL_ASSERT(pTex->GetHeight() > 0);
+//  pTex = nuiTexture::GetTexture("ButtonUp");
+  
   nuiPainter* pPainter = pContext->GetPainter();
 
   pContext->PushClipping();
@@ -239,9 +252,17 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 
   nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
   nuiRect dst = src;
-  dst.Move(-GetPivot()[0], -GetPivot()[1]);
+//  dst.Move(-GetPivot()[0], -GetPivot()[1]);
+  nuiMatrix Matrix;
+  GetMatrix(Matrix);
+  pContext->LoadMatrix(Matrix);
+
   pContext->DrawImage(dst, src);
 
+  pContext->SetStrokeColor("red");
+  pContext->EnableTexturing(false);
+  pContext->DrawRect(dst, eStrokeShape);
+  
   for (auto child : mpChildren)
   {
     nuiLayer* pLayer = (nuiLayer*)child;
