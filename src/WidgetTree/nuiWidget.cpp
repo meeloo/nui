@@ -149,7 +149,7 @@ void nuiWidget::InitDefaultValues()
   mAutoAcceptMouseCancel = true;
   mAutoAcceptMouseSteal = true;
   
-//  SetDrawToLayer(true);
+  SetDrawToLayer(true);
 }
 
 
@@ -6404,7 +6404,8 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
     }
   }
 
-  InvalidateLayout();
+  if (GetTopLevel())
+    InvalidateLayout();
 }
 
 bool nuiWidget::GetDrawToLayer() const
