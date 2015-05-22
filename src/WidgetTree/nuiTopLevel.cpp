@@ -227,6 +227,8 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
 
 nuiTopLevel::~nuiTopLevel()
 {
+  if (GetDrawToLayer())
+    GetRenderThread()->SetLayerTree(nullptr);
   CheckValid();
   Exit();
 }

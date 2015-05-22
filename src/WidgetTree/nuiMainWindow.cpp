@@ -93,9 +93,14 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   
 //  mMainWinSink.Connect(nuiAnimation::AcquireTimer()->Tick, &nuiMainWindow::InvalidateTimer);
 
-  GetDrawContext();
-
+  nuiDrawContext* pContext = GetDrawContext();
+  nuiRenderThread* pRenderThread = GetRenderThread();
   SetDrawToLayer(true);
+  if (GetDrawToLayer())
+  {
+    pRenderThread->SetLayerTree(mpBackingLayer);
+    mpBackingLayer->UpdateContents(pRenderThread, pContext);
+  }
 }
 
 nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo, const nglContext* pShared, const nglPath& rResPath)
@@ -141,8 +146,14 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
 
 //  mMainWinSink.Connect(nuiAnimation::AcquireTimer()->Tick, &nuiMainWindow::InvalidateTimer);
 
-  GetDrawContext();
+  nuiDrawContext* pContext = GetDrawContext();
+  nuiRenderThread* pRenderThread = GetRenderThread();
   SetDrawToLayer(true);
+  if (GetDrawToLayer())
+  {
+    pRenderThread->SetLayerTree(mpBackingLayer);
+    mpBackingLayer->UpdateContents(pRenderThread, pContext);
+  }
 }
 
 nuiMainWindow::~nuiMainWindow()
@@ -207,6 +218,11 @@ void nuiMainWindow::LazyPaint()
   {
     mInvalidatePosted = true;
     Paint();
+  }
+  else
+  {
+    nuiRenderThread* pRenderThread = GetRenderThread();
+    pRenderThread->StartRendering(0,0);
   }
 }
 

@@ -44,8 +44,9 @@ private:
   nuiRect mRect;
   std::vector<nuiRect> mPartialRects;
   nuiWidget* mpRoot = nullptr;
-  std::map<nuiObject*, nuiMetaPainter*> mPainters;
-  std::map<nuiObject*, nuiMetaPainter*> mLayerPainters;
+  std::map<nuiWidget*, nuiMetaPainter*> mWidgetPainters;
+  std::map<nuiLayer*, nuiMetaPainter*> mLayerContentsPainters;
+  std::map<nuiLayer*, nuiMetaPainter*> mLayerDrawPainters;
   std::set<nuiLayer*> mDirtyLayers;
   nglContext* mpContext = nullptr;
   nuiDrawContext* mpDrawContext = nullptr;

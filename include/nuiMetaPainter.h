@@ -31,6 +31,8 @@ public:
   virtual void SetSize(uint32 sizex, uint32 sizey);
   virtual void StartRendering();
   virtual void SetState(const nuiRenderState& rState, bool ForceApply = false);
+  virtual void SetSurface(nuiSurface* pSurface);
+
   virtual void DrawArray(nuiRenderArray* pArray);
   virtual void Clear(bool color, bool depth, bool stencil);
   virtual void BeginSession();
@@ -114,6 +116,7 @@ protected:
 
     eDrawWidget,
     eDrawLayer,
+    eSetSurface,
     
     eBreak
   };

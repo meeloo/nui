@@ -820,7 +820,8 @@ nuiTexture::~nuiTexture()
   {
     //mpSurface->Release();
   }
-  mpTextures.erase(GetProperty("Source"));
+  nglString source(GetProperty("Source"));
+  mpTextures.erase(source);
   
   if (mpProxyTexture)
     mpProxyTexture->Release();

@@ -161,7 +161,7 @@ void nuiLayer::UpdateSurface()
     if (mpSurface)
       mpSurface->Release();
     mpSurface = nuiSurface::CreateSurface(GetObjectName(), ToNearest(mWidth), ToNearest(mHeight));
-    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
+//    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
   }
 }
 
@@ -172,13 +172,14 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
 
   if (mpContentsPainter)
   {
-    mpContentsPainter->Release();
+//    mpContentsPainter->Release();
     mpContentsPainter = nullptr;
   }
   mpContentsPainter = new nuiMetaPainter();
 
 
-  pContext->SetSurface(mpSurface);
+  NGL_ASSERT(mpSurface);
+  mpContentsPainter->SetSurface(mpSurface);
 
   pContext->ResetState();
   pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
@@ -200,7 +201,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
   }
   // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
 
-  pContext->SetSurface(nullptr);
+  mpContentsPainter->SetSurface(nullptr);
 
   pRenderThread->SetLayerContentsPainter(this, mpContentsPainter);
 }
@@ -214,7 +215,6 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   
   if (mpDrawPainter)
   {
-    mpDrawPainter->Release();
     mpDrawPainter = nullptr;
   }
   mpDrawPainter = new nuiMetaPainter();
@@ -238,31 +238,27 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   
   nuiPainter* pPainter = pContext->GetPainter();
 
-  pContext->PushClipping();
-  pContext->PushState();
-
   pContext->SetPainter(mpDrawPainter);
-  pContext->ResetState();
-  pContext->ResetClipRect();
-  pContext->EnableBlending(true);
-  pContext->EnableTexturing(true);
+//  pContext->ResetState();
+//  pContext->ResetClipRect();
 
   pContext->SetTexture(pTex);
-  pContext->SetFillColor(nuiColor(0.5f, 0.5f, 0.5f, 0.5f));
+  pContext->SetFillColor(nuiColor(0.5f, 0.5f, 1.0f, 1.0f));
 
   nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
   nuiRect dst = src;
 //  dst.Move(-GetPivot()[0], -GetPivot()[1]);
   nuiMatrix Matrix;
   GetMatrix(Matrix);
-  pContext->LoadMatrix(Matrix);
+  pContext->MultMatrix(Matrix);
 
   pContext->DrawImage(dst, src);
 
   pContext->SetStrokeColor("red");
   pContext->EnableTexturing(false);
   pContext->DrawRect(dst, eStrokeShape);
-  
+  pContext->EnableTexturing(true);
+
   for (auto child : mpChildren)
   {
     nuiLayer* pLayer = (nuiLayer*)child;
@@ -270,8 +266,6 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   }
 
   pContext->SetPainter(pPainter);
-  pContext->PopClipping();
-  pContext->PopState();
 
   pRenderThread->SetLayerDrawPainter(this, mpDrawPainter);
 }
