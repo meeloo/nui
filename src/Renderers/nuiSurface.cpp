@@ -42,7 +42,7 @@ nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int3
 nuiSurface::nuiSurface(const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat)
   : nuiObject()
 {
-  SetObjectClass(_T("nuiSurface"));
+  SetObjectClass("nuiSurface");
   SetObjectName(rName);
   static bool tr = false;
   if (tr)

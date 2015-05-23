@@ -128,7 +128,7 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
   mDrawContentsDelegate = rDelegate;
 }
 
-void nuiLayer::UpdateSurface()
+bool nuiLayer::UpdateSurface()
 {
   int w, h;
   if (mpTextureContents)
@@ -160,50 +160,66 @@ void nuiLayer::UpdateSurface()
   {
     if (mpSurface)
       mpSurface->Release();
-    mpSurface = nuiSurface::CreateSurface(GetObjectName(), ToNearest(mWidth), ToNearest(mHeight));
+
+    nglString name;
+    if (mpWidgetContents)
+      name.CFormat("Wid %s %s %p", mpWidgetContents->GetObjectClass().GetChars(), mpWidgetContents->GetObjectName().GetChars(), mpWidgetContents);
+    else
+      name = GetObjectName();
+
+    mpSurface = nuiSurface::CreateSurface(name, ToNearest(mWidth), ToNearest(mHeight));
 //    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
   }
+
+  return recreate;
 }
 
 void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext)
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
-  UpdateSurface();
+  if (UpdateSurface())
+  { // Surface has changed
 
-  if (mpContentsPainter)
-  {
-//    mpContentsPainter->Release();
-    mpContentsPainter = nullptr;
+    if (mpContentsPainter)
+    {
+      mpContentsPainter->Release();
+      mpContentsPainter = nullptr;
+    }
+    mpContentsPainter = new nuiMetaPainter();
+
+
+    NGL_ASSERT(mpSurface);
+    mpContentsPainter->SetSurface(mpSurface);
+
+    pContext->ResetState();
+    pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
+    pContext->ResetClipRect();
+
+    if (mpWidgetContents)
+    {
+  //    mpWidgetContents->GetColor(eActiveWindowBg);
+      pContext->SetClearColor(nuiColor(0, 0, 0, 0));
+      pContext->Clear();
+      mpContentsPainter->DrawWidget(pContext, mpWidgetContents);
+    }
+    else if (mDrawContentsDelegate)
+    {
+      pContext->SetClearColor(mClearColor);
+      pContext->Clear();
+      
+      mDrawContentsDelegate(this, pContext);
+    }
+    // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
+
+    mpContentsPainter->SetSurface(nullptr);
+
+    pRenderThread->SetLayerContentsPainter(this, mpContentsPainter);
   }
-  mpContentsPainter = new nuiMetaPainter();
-
-
-  NGL_ASSERT(mpSurface);
-  mpContentsPainter->SetSurface(mpSurface);
-
-  pContext->ResetState();
-  pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
-  pContext->ResetClipRect();
-
-  if (mpWidgetContents)
+  else
   {
-//    mpWidgetContents->GetColor(eActiveWindowBg);
-    pContext->SetClearColor(nuiColor(0, 0, 0, 0));
-    pContext->Clear();
-    mpContentsPainter->DrawWidget(pContext, mpWidgetContents);
+    // Only the contents has changed
+    pRenderThread->InvalidateLayerContents(this);
   }
-  else if (mDrawContentsDelegate)
-  {
-    pContext->SetClearColor(mClearColor);
-    pContext->Clear();
-    
-    mDrawContentsDelegate(this, pContext);
-  }
-  // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
-
-  mpContentsPainter->SetSurface(nullptr);
-
-  pRenderThread->SetLayerContentsPainter(this, mpContentsPainter);
 }
 
 void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pContext)
@@ -215,6 +231,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   
   if (mpDrawPainter)
   {
+    mpDrawPainter->Release();
     mpDrawPainter = nullptr;
   }
   mpDrawPainter = new nuiMetaPainter();

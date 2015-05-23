@@ -29,6 +29,14 @@ static inline void LOG_GETTEXTURE(nuiTexture* pTexture)
 }
 #endif
 
+nglString nuiGetSurfaceHash(nuiSurface* pSurface)
+{
+  nglString name;
+  name.Format("Sfc %s %dx%d %p", pSurface->GetObjectName().GetChars(), pSurface->GetWidth(), pSurface->GetHeight(), pSurface);
+
+  return name;
+}
+
 nuiTexture* nuiTexture::GetTexture (nglIStream* pInput, nglImageCodec* pCodec)
 {
   nuiTexture* pTexture = NULL;
@@ -113,8 +121,7 @@ nuiTexture* nuiTexture::GetTexture(nuiSurface* pSurface)
   nuiTexture* pTexture = pSurface->GetTexture();
   if (!pTexture)
   {
-    nglString name;
-    name.Format(_T("Surface %s (%p)"), pSurface->GetObjectName().GetChars(), pSurface);
+    nglString name = nuiGetSurfaceHash(pSurface);
     nuiTextureMap::iterator it = mpTextures.find(name);
     if (it == mpTextures.end())
       pTexture = new nuiTexture(pSurface);    
@@ -624,9 +631,8 @@ nuiTexture::nuiTexture(nuiSurface* pSurface)
   mForceReload = false;
   mRetainBuffer = false;
 
-  nglString name;
-  name.Format(_T("Surface 0x%x"), mpSurface);
-  SetProperty(_T("Source"), name);
+  nglString name = nuiGetSurfaceHash(pSurface);
+  SetProperty("Source", name);
   mpTextures[name] = this;
 
   Init();

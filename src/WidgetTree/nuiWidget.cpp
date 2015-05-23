@@ -1006,11 +1006,6 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
   }
 
   mNeedRender = true;
-  nuiRenderThread* pRenderThread = GetRenderThread();
-  if (mpBackingLayer && pRenderThread)
-  {
-    GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
-  }
 
   r.Move(rect.Left(), rect.Top());
 
@@ -1066,9 +1061,6 @@ void nuiWidget::SilentInvalidate()
   #endif
   
   mNeedSelfRedraw = true;
-  nuiRenderThread* pRenderThread = GetRenderThread();
-  if (mpBackingLayer && pRenderThread)
-    pRenderThread->InvalidateLayerContents(mpBackingLayer);
 //  if (mpRenderCache)
 //    mpRenderCache->Reset(NULL);
   DebugRefreshInfo();
@@ -1083,9 +1075,6 @@ void nuiWidget::BroadcastInvalidate(nuiWidgetPtr pSender)
   }
 
   mNeedRender = true;
-  nuiRenderThread* pRenderThread = GetRenderThread();
-  if (mpBackingLayer && pRenderThread)
-    pRenderThread->InvalidateLayerContents(mpBackingLayer);
 
   DebugRefreshInfo();
 }
@@ -1338,7 +1327,9 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     pRenderThread->SetWidgetPainter(this, pRenderCache); ///< Let the render thread know about this new painter
 
     if (mpBackingLayer)
-      pRenderThread->InvalidateLayerContents(mpBackingLayer);
+    {
+      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext());
+    }
   }
   else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
   { ///< NB: The render thread cannot optimize already set painters that shouldn't redraw
@@ -1357,7 +1348,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     delete pIt;
 
     if (mpBackingLayer && drawchildren)
-      pRenderThread->InvalidateLayerContents(mpBackingLayer);
+      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext());
 
     mNeedRender = false;
   }

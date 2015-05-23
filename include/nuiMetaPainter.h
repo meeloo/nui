@@ -164,6 +164,7 @@ protected:
   
   std::vector<nuiRenderState> mRenderStates;
   std::vector<nuiRenderArray*> mRenderArrays;
+  std::vector<nuiSurface*> mSurfaces;
   virtual void DestroyTexture(nuiTexture* pTexture);
 };
 

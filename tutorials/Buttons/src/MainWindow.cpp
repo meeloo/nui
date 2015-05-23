@@ -126,6 +126,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
   : nuiMainWindow(rContextInfo, rInfo, pShared, nglPath(ePathCurrent)), mEventSink(this)
 {
   SetDebugMode(true);
+  App->GetLog().SetLevel("nuiTexture", NGL_LOG_ALWAYS);
   LoadCSS(_T("rsrc:/css/main.css"));  
 }
 

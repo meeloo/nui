@@ -279,9 +279,14 @@ void nuiMetaPainter::SetSurface(nuiSurface* pSurface)
     return;
 
   if (pSurface)
+  {
     pSurface->Acquire();
+    mSurfaces.push_back(pSurface);
+  }
+
   StoreOpCode(eSetSurface);
   StorePointer(pSurface);
+
 }
 
 
@@ -445,7 +450,11 @@ void nuiMetaPainter::Reset(nuiPainter const * pFrom)
   for (uint32 i = 0; i < mRenderArrays.size(); i++)
     mRenderArrays[i]->Release();
   mRenderArrays.clear();
-  
+
+  for (auto surface : mSurfaces)
+    surface->Release();
+  mSurfaces.clear();
+
   mpClippingStack = std::stack<nuiClipper>();
   mMatrixStack = std::stack<nglMatrixf>();
 

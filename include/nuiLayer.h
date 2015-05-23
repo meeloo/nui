@@ -42,7 +42,7 @@ private:
   nuiColor mClearColor;
 
   nuiSurface* mpSurface = nullptr;
-  void UpdateSurface();
+  bool UpdateSurface();
 
   void Change() { mChanged = true; }
   bool mChanged = true;
