@@ -76,6 +76,7 @@ nuiLayer::~nuiLayer()
   if (mpSurface)
     mpSurface->Release();
   mpSurface = nullptr;
+  mLayers.erase(GetObjectName());
 }
 
 

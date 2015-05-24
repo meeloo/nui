@@ -95,6 +95,7 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
 
   nuiDrawContext* pContext = GetDrawContext();
   nuiRenderThread* pRenderThread = GetRenderThread();
+  SetDrawToLayer(false);
   SetDrawToLayer(true);
   if (GetDrawToLayer())
   {
@@ -148,6 +149,7 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
 
   nuiDrawContext* pContext = GetDrawContext();
   nuiRenderThread* pRenderThread = GetRenderThread();
+  SetDrawToLayer(false);
   SetDrawToLayer(true);
   if (GetDrawToLayer())
   {
