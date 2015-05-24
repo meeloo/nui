@@ -76,5 +76,4 @@ private:
 
 
   nglAtomic mRenderingTicks=0;
-
 };

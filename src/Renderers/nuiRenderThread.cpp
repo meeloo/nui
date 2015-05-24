@@ -420,6 +420,8 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
     nuiMetaPainter* pPainter = it->second;
     NGL_ASSERT(pPainter);
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+    pContext->SetStrokeColor(nuiColor("green"));
+    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
   }
   glPopGroupMarkerEXT();
 }

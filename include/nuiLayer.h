@@ -36,6 +36,8 @@ private:
   virtual ~nuiLayer();
 
   static std::map<nglString, nuiLayer*> mLayers;
+  static nglCriticalSection mLayersCS;
+  static void DumpLayers();
 
   float mWidth = 0;
   float mHeight = 0;
@@ -53,5 +55,6 @@ private:
 
   nuiMetaPainter* mpContentsPainter = nullptr; ///< This containts the rendering instructions to update the contents of this layer
   nuiMetaPainter* mpDrawPainter = nullptr; ///< This containts the rendering instructions to display the contents of this layer
+  
 };
 

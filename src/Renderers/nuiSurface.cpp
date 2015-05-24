@@ -1,9 +1,28 @@
 #include "nui.h"
 
 nuiSurfaceMap nuiSurface::mpSurfaces;
+nglCriticalSection nuiSurface::mSurfacesCS;
+
+void nuiSurface::DumpSurfaces()
+{
+  nglCriticalSectionGuard gcs(mSurfacesCS);
+  int i = 0;
+  NGL_OUT("Dump %d surfaces\n", mpSurfaces.size());
+  for (auto it : mpSurfaces)
+  {
+    nuiSurface* pSurface = it.second;
+    NGL_ASSERT(pSurface != nullptr);
+    
+    NGL_OUT("%d nuiSurface %p (%d) %s %dx%d\n", i, pSurface, pSurface->GetRefCount(), pSurface->GetObjectName().GetChars(), pSurface->GetWidth(), pSurface->GetHeight());
+    i++;
+    
+  }
+}
+
 
 nuiSurface* nuiSurface::GetSurface (const nglString& rName, bool Acquired)
 {
+  nglCriticalSectionGuard gcs(mSurfacesCS);
   nuiSurface* pSurface = NULL;
 
   nuiSurfaceMap::const_iterator it = mpSurfaces.find(rName);
@@ -18,6 +37,7 @@ nuiSurface* nuiSurface::GetSurface (const nglString& rName, bool Acquired)
 
 nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat)
 {
+  nglCriticalSectionGuard gcs(mSurfacesCS);
   nuiSurface* pSurface = NULL;
   //NGL_OUT(_T("nuiSurface::CreateSurface(%s, %.1f, %.1f)\n"), rName.GetChars(), Width, Height);
   nuiSurfaceMap::const_iterator it = mpSurfaces.find(rName);
@@ -36,6 +56,7 @@ nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int3
 
 //  NGL_OUT(_T("nuiSurface CreateSurface [0x%x] NAME: [%s] COUNT [%d]\n"), pSurface, rName.GetChars(), mpSurfaces.size());
 
+  DumpSurfaces();
   return pSurface;
 }
 
@@ -64,11 +85,16 @@ nuiSurface::nuiSurface(const nglString& rName, int32 Width, int32 Height, nglIma
   
   //NGL_OUT(_T("nuiSurface CTOR [0x%x] SIZE[%dx%d]\n"), this, Width, Height);
   //SetTrace(true);
+  
+  DumpSurfaces();
 }
 
 nuiSurface::~nuiSurface()
 {
+  {
+  nglCriticalSectionGuard gcs(mSurfacesCS);
   mpSurfaces.erase(GetObjectName());
+  }
 
   if (mpTexture)
   {
@@ -78,6 +104,8 @@ nuiSurface::~nuiSurface()
   //NGL_OUT(_T("nuiSurface DTOR [0x%x] NAME: [%s] COUNT [%d]\n"), this, GetObjectName().GetChars(), mpSurfaces.size());
 
   nuiPainter::BroadcastDestroySurface(this);
+  
+  DumpSurfaces();
 }
 
 int32 nuiSurface::GetWidth() const

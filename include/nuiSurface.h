@@ -53,6 +53,8 @@ private:
   nuiTexture* mpTexture;
   
   static nuiSurfaceMap mpSurfaces;
+  static nglCriticalSection mSurfacesCS;
+  static void DumpSurfaces();
 
   bool mDirty;
 };

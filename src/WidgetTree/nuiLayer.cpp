@@ -9,9 +9,12 @@
 #include "nui.h"
 
 std::map<nglString, nuiLayer*> nuiLayer::mLayers;
+nglCriticalSection nuiLayer::mLayersCS;
+
 
 nuiLayer* nuiLayer::GetLayer(const nglString& rName)
 {
+  nglCriticalSectionGuard gcs(mLayersCS);
   auto it = mLayers.find(rName);
   if (it != mLayers.end())
   {
@@ -43,12 +46,28 @@ nuiLayer* nuiLayer::CreateLayer(const nglString& rName, int width, int height)
   return pLayer;
 }
 
+void nuiLayer::DumpLayers()
+{
+  nglCriticalSectionGuard gcs(mLayersCS);
+  int i = 0;
+  for (auto it : mLayers)
+  {
+    nuiLayer* l = it.second;
+    NGL_OUT("Layer %d: %s %p %fx%f\n", i, l->GetObjectName().GetChars(), l, l->GetWidth(), l->GetHeight());
+    i++;
+  }
+}
 
 nuiLayer::nuiLayer(const nglString& rName, int width, int height)
 : nuiNode(rName), mClearColor(0, 0, 0, 0)
 {
-  NGL_ASSERT(mLayers.find(rName) == mLayers.end());
-
+  #if _DEBUG
+  {
+    nglCriticalSectionGuard gcs(mLayersCS);
+    NGL_ASSERT(mLayers.find(rName) == mLayers.end());
+  }
+  #endif
+  
   if (SetObjectClass("nuiLayer"))
   {
     AddAttribute(new nuiAttribute<float>
@@ -65,8 +84,10 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
                   nuiMakeDelegate(this, &nuiLayer::SetClearColor)));
   }
 
-  mLayers[rName] = this;
-
+  {
+    nglCriticalSectionGuard gcs(mLayersCS);
+    mLayers[rName] = this;
+  }
   mWidth = width;
   mHeight = height;
 }
@@ -76,7 +97,10 @@ nuiLayer::~nuiLayer()
   if (mpSurface)
     mpSurface->Release();
   mpSurface = nullptr;
-  mLayers.erase(GetObjectName());
+  {
+    nglCriticalSectionGuard gcs(mLayersCS);
+    mLayers.erase(GetObjectName());
+  }
 }
 
 
@@ -160,7 +184,10 @@ bool nuiLayer::UpdateSurface()
   if (recreate)
   {
     if (mpSurface)
+    {
       mpSurface->Release();
+      mpSurface = nullptr;
+    }
 
     nglString name;
     if (mpWidgetContents)
@@ -168,8 +195,10 @@ bool nuiLayer::UpdateSurface()
     else
       name = GetObjectName();
 
+    NGL_ASSERT(mpSurface == nullptr);
     mpSurface = nuiSurface::CreateSurface(name, ToNearest(mWidth), ToNearest(mHeight));
 //    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
+    
   }
 
   return recreate;
