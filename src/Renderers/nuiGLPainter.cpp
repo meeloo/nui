@@ -1697,8 +1697,11 @@ void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
 {
   nglCriticalSectionGuard fbg(mFramebuffersCS);
   std::map<nuiSurface*, FramebufferInfo>::iterator it = mFramebuffers.find(pSurface);
-  NGL_ASSERT(it != mFramebuffers.end());
-
+  
+  if (it == mFramebuffers.end())
+  {
+    return;
+  }
   FramebufferInfo info = it->second;
 
   NGL_ASSERT(info.mFramebuffer > 0);
