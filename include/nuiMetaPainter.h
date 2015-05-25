@@ -166,6 +166,9 @@ protected:
   std::vector<nuiRenderArray*> mRenderArrays;
   std::vector<nuiSurface*> mSurfaces;
   virtual void DestroyTexture(nuiTexture* pTexture);
+  
+  virtual void OnAcquired() const;
+  virtual void OnReleased() const;
 };
 
 #endif // __nuiMetaPainter_h__

@@ -197,6 +197,7 @@ bool nuiLayer::UpdateSurface()
 
     NGL_ASSERT(mpSurface == nullptr);
     mpSurface = nuiSurface::CreateSurface(name, ToNearest(mWidth), ToNearest(mHeight));
+    mpSurface->SetTrace(true);
 //    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
     
   }
@@ -216,6 +217,9 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
       mpContentsPainter = nullptr;
     }
     mpContentsPainter = new nuiMetaPainter();
+    nglString name;
+    name.CFormat("layer contents %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
+    mpContentsPainter->SetName(name);
 
 
     NGL_ASSERT(mpSurface);
@@ -265,6 +269,9 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     mpDrawPainter = nullptr;
   }
   mpDrawPainter = new nuiMetaPainter();
+  nglString name;
+  name.CFormat("layer draw %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
+  mpDrawPainter->SetName(name);
 
 
   nuiTexture* pTex = nullptr;

@@ -177,51 +177,63 @@ void MainWindow::OnCreation()
 //  }
   }
 
+  if (0)
+  {
+  // create a vertical box for the layout
+    nuiVBox* pMainBox = new nuiVBox(0);
+    pMainBox->SetExpand(nuiExpandShrinkAndGrow);
+    pMainBox->SetPosition(nuiFillVertical);
+    AddChild(pMainBox);
 
-// create a vertical box for the layout
-  nuiVBox* pMainBox = new nuiVBox(0);
-  pMainBox->SetExpand(nuiExpandShrinkAndGrow);
-  pMainBox->SetPosition(nuiFillVertical);
-  AddChild(pMainBox);
+  //  pMainBox->SetDrawToLayer(DRAW_TO_LAYER);
 
-//  pMainBox->SetDrawToLayer(DRAW_TO_LAYER);
+    // create a label width background for information display
+    nuiPane* pPane = new nuiPane();
+  //  pPane->SetDrawToLayer(DRAW_TO_LAYER);
+    pPane->SetBorder(20,20);
+    pMainBox->AddCell(pPane, nuiFillHorizontal);
+    mpLabel = new nuiLabel();
+    pPane->AddChild(mpLabel);
+    pPane->SetUserHeight(40);
 
-  // create a label width background for information display
-  nuiPane* pPane = new nuiPane();
-//  pPane->SetDrawToLayer(DRAW_TO_LAYER);
-  pPane->SetBorder(20,20);
-  pMainBox->AddCell(pPane, nuiFillHorizontal);
-  mpLabel = new nuiLabel();
-  pPane->AddChild(mpLabel);
-  pPane->SetUserHeight(40);
+    nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
+  //  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
+    pMainBox->AddCell(pLabel, nuiLeft);
+    pMainBox->AddCell(Tutorial_Buttons());
 
-  nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
-//  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
-  pMainBox->AddCell(pLabel, nuiLeft);
-  pMainBox->AddCell(Tutorial_Buttons());
+    pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
+  //  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
+    pMainBox->AddCell(pLabel, nuiLeft);
+    pMainBox->AddCell(Tutorial_ToggleButtons());
 
-  pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
-//  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
-  pMainBox->AddCell(pLabel, nuiLeft);
-  pMainBox->AddCell(Tutorial_ToggleButtons());
+    pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
+  //  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
+    pMainBox->AddCell(pLabel, nuiLeft);
+    pMainBox->AddCell(Tutorial_RadioButtons1());
 
-  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-//  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
-  pMainBox->AddCell(pLabel, nuiLeft);
-  pMainBox->AddCell(Tutorial_RadioButtons1());
+    pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
+  //  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
+    pMainBox->AddCell(pLabel, nuiLeft);
+    pMainBox->AddCell(Tutorial_RadioButtons2());
 
-  pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-//  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
-  pMainBox->AddCell(pLabel, nuiLeft);
-  pMainBox->AddCell(Tutorial_RadioButtons2());
+    // make the mainbox's layout fill the entire user size (c.f. line #33)
+    pMainBox->SetAllCellsExpand(nuiExpandShrinkAndGrow);
 
-  // make the mainbox's layout fill the entire user size (c.f. line #33)
-  pMainBox->SetAllCellsExpand(nuiExpandShrinkAndGrow);
+    nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
+    pAnim->SetTargetAttribute("Alpha");
+    pAnim->SetTargetObject(pPane);
+    pPane->AddAnimation("Fade", pAnim);
+    pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+  }
+  
+  nuiLabel* pLabel = new nuiLabel("My Label");
+  pLabel->SetPosition(nuiCenter);
+  AddChild(pLabel);
 
   nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
   pAnim->SetTargetAttribute("Alpha");
-  pAnim->SetTargetObject(pPane);
-  pPane->AddAnimation("Fade", pAnim);
+  pAnim->SetTargetObject(pLabel);
+  pLabel->AddAnimation("Fade", pAnim);
   pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
 }
 

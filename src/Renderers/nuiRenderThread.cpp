@@ -69,6 +69,7 @@ void nuiRenderThread::Exit()
 
 void nuiRenderThread::SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
 {
+  pPainter->Acquire();
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetPainter, pWidget, pPainter));
 }
 
@@ -76,12 +77,14 @@ void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPai
 {
 //  NGL_OUT("SetLayerDrawPainter %p (%p %d)\n", pLayer, pPainter, pPainter->GetRefCount());
   pPainter->nuiRefCount::SetTrace(true);
+  pPainter->Acquire();
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDrawPainter, pLayer, pPainter));
 }
 
 void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
 //  NGL_OUT("SetLayerContentsPainter %p\n", pLayer);
+  pPainter->Acquire();
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter));
 }
 

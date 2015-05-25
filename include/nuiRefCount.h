@@ -24,6 +24,7 @@ public:
     {
       NGL_OUT(_T("Acquire object %p (%d)\n"), this, val);
     }
+    OnAcquired();
     return val;
   }
 
@@ -38,6 +39,7 @@ public:
     NGL_ASSERTR(val > 0, val);
 
     val = ngl_atomic_dec(mRefCount);
+    OnReleased();
 
     if (mTrace)
     {
@@ -108,6 +110,14 @@ public:
   {
   }
 
+  virtual void OnAcquired() const ///< This callback is called when we are about to acquire this
+  {
+  }
+  
+  virtual void OnReleased() const ///< This callback is called when we are about to release this
+  {
+  }
+  
   void AutoRelease()
   {
     if (!mAutoReleased)

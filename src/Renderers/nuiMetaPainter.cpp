@@ -452,7 +452,10 @@ void nuiMetaPainter::Reset(nuiPainter const * pFrom)
   mRenderArrays.clear();
 
   for (auto surface : mSurfaces)
+  {
+    NGL_OUT("nuiMetaPainter release surface %s %p\n", surface->GetObjectName().GetChars(), surface);
     surface->Release();
+  }
   mSurfaces.clear();
 
   mpClippingStack = std::stack<nuiClipper>();
@@ -1031,5 +1034,16 @@ void nuiMetaPainter::DBGSetReferenceObject(const nuiObject* pRef)
     mDebugObjectClass.Nullify();
   }
 }
+
+void nuiMetaPainter::OnAcquired() const ///< This callback is called when we are about to acquire this
+{
+  NGL_OUT("nuiMetaPainter::OnAcquire %p %d %s\n", this, GetRefCount(), GetName().GetChars());
+}
+
+void nuiMetaPainter::OnReleased() const ///< This callback is called when we are about to release this
+{
+  NGL_OUT("nuiMetaPainter::OnRelease %p %d %s\n", this, GetRefCount(), GetName().GetChars());
+}
+
 #endif
 
