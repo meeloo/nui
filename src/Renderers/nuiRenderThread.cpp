@@ -35,6 +35,7 @@ void nuiRenderThread::OnStart()
   {
     pTask->Run();
     pTask->Release();
+//    NGL_OUT("Unqueued task %p, %d left (%d contents painter requests)\n", pTask, mQueue.GetSize(), SetLayerContentsPainterCounter);
   }
 
 #if (defined _UIKIT_) || (defined _COCOA_)
@@ -76,16 +77,18 @@ void nuiRenderThread::SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPain
 void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
 //  NGL_OUT("SetLayerDrawPainter %p (%p %d)\n", pLayer, pPainter, pPainter->GetRefCount());
-  pPainter->nuiRefCount::SetTrace(true);
+//  pPainter->nuiRefCount::SetTrace(true);
   pPainter->Acquire();
   mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDrawPainter, pLayer, pPainter));
 }
 
 void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
-//  NGL_OUT("SetLayerContentsPainter %p\n", pLayer);
+//  NGL_OUT("SetLayerContentsPainter %p -> %p\n", pLayer, pPainter);
   pPainter->Acquire();
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter));
+  nuiTask* task = nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter);
+
+  mQueue.Post(task);
 }
 
 void nuiRenderThread::InvalidateLayerContents(nuiLayer* pLayer)
@@ -158,7 +161,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 
     if (!mDirtyLayers.empty())
     {
-      NGL_OUT("Update %d dirty layers!\n", mDirtyLayers.size());
+//      NGL_OUT("Update %d dirty layers!\n", mDirtyLayers.size());
     }
 //    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
     glPushGroupMarkerEXT(0, "Update dirty layers");
@@ -208,7 +211,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       if (it != mLayerDrawPainters.end())
       {
         nuiMetaPainter* pPainter = it->second;
-        NGL_OUT("Draw Layer Tree %p (%p - %d)\n", mpLayerTreeRoot, pPainter, pPainter->GetRefCount());
+//        NGL_OUT("Draw Layer Tree %p (%p - %d)\n", mpLayerTreeRoot, pPainter, pPainter->GetRefCount());
         pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
       }
     }
@@ -297,7 +300,7 @@ void nuiRenderThread::_Exit()
 
 void nuiRenderThread::_SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
 {
-  NGL_OUT("_SetWidgetPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pPainter);
+//  NGL_OUT("_SetWidgetPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pPainter);
   auto it = mWidgetPainters.find(pWidget);
   if (it != mWidgetPainters.end())
   {
@@ -334,7 +337,7 @@ void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPa
     NGL_ASSERT(pOld);
     
     mpContext->GetLock().Lock();
-    NGL_OUT("                   %p replaces %p\n", pPainter, pOld);
+//    NGL_OUT("                   %p replaces %p\n", pPainter, pOld);
     pOld->Release();
     mpContext->GetLock().Unlock();
     
@@ -356,12 +359,13 @@ void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPa
 
 void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
 {
-  NGL_OUT("_SetLayerContentsPainter %p (%p)\n", pLayer, pPainter);
+//  NGL_OUT("_SetLayerContentsPainter %p (%p - %d)\n", pLayer, pPainter, SetLayerContentsPainterCounter);
   auto it = mLayerContentsPainters.find(pLayer);
   if (it != mLayerContentsPainters.end())
   {
     nuiMetaPainter* pOld = it->second;
     NGL_ASSERT(pOld);
+//    NGL_OUT("                   %p replaces %p\n", pPainter, pOld);
 
     mpContext->GetLock().Lock();
     if (!pOld->Release())
@@ -390,11 +394,18 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter*
   {
     mDirtyLayers.erase(pLayer);
   }
+
+
+//  NGL_OUT("LayerContentsPainters (%d)\n", mLayerContentsPainters.size());
+  for (auto it : mLayerContentsPainters)
+  {
+//    NGL_OUT("\t%p -> %p [%d]\n", it.first, it.second, it.second->GetRefCount());
+  }
 }
 
 void nuiRenderThread::_InvalidateLayerContents(nuiLayer* pLayer)
 {
-    NGL_OUT("_InvalidateLayerContents %p\n", pLayer);
+//    NGL_OUT("_InvalidateLayerContents %p\n", pLayer);
     mDirtyLayers.insert(pLayer);
 }
 
@@ -415,7 +426,7 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
   nglString str;
   str.CFormat("Draw sub widget %s %s %p", pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
-  NGL_OUT("%s\n", str.GetChars());
+//  NGL_OUT("%s\n", str.GetChars());
   auto it = mWidgetPainters.find(pKey);
   NGL_ASSERT(it != mWidgetPainters.end());
   if (it != mWidgetPainters.end())
@@ -423,8 +434,8 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
     nuiMetaPainter* pPainter = it->second;
     NGL_ASSERT(pPainter);
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
-    pContext->SetStrokeColor(nuiColor("green"));
-    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
+//    pContext->SetStrokeColor(nuiColor("green"));
+//    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
   }
   glPopGroupMarkerEXT();
 }
@@ -434,7 +445,7 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
   nglString str;
   str.CFormat("Draw sub layer %s %s %p", pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
-  NGL_OUT("%s\n", str.GetChars());
+//  NGL_OUT("%s\n", str.GetChars());
   auto it = mLayerDrawPainters.find(pKey);
   if (it != mLayerDrawPainters.end())
   {

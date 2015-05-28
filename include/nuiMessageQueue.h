@@ -34,11 +34,12 @@ public :
 
   bool Post(Message* message)
   {
-    nglCriticalSectionGuard guard(mQueueCS);
+    mQueueCS.Lock();
     mQueue.push(message);
 
     // unlock thread waiting to read the message
     mSyncEvent.Set ();
+    mQueueCS.Unlock();
     return true;
   }
 
@@ -66,9 +67,14 @@ public :
     return message;
   }
 
+  size_t GetSize() const
+  {
+    nglCriticalSectionGuard cgs(mQueueCS);
+    return mQueue.size();
+  }
 private : 
 
-  nglCriticalSection mQueueCS;
+  mutable nglCriticalSection mQueueCS;
   std::queue<Message*> mQueue;
   nglSyncEvent mSyncEvent;
 };

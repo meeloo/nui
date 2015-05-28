@@ -1035,15 +1035,15 @@ void nuiMetaPainter::DBGSetReferenceObject(const nuiObject* pRef)
   }
 }
 
-void nuiMetaPainter::OnAcquired() const ///< This callback is called when we are about to acquire this
-{
-  NGL_OUT("nuiMetaPainter::OnAcquire %p %d %s\n", this, GetRefCount(), GetName().GetChars());
-}
-
-void nuiMetaPainter::OnReleased() const ///< This callback is called when we are about to release this
-{
-  NGL_OUT("nuiMetaPainter::OnRelease %p %d %s\n", this, GetRefCount(), GetName().GetChars());
-}
+//void nuiMetaPainter::OnAcquired() const ///< This callback is called when we are about to acquire this
+//{
+//  NGL_OUT("nuiMetaPainter::OnAcquire %p %d %s\n", this, GetRefCount(), GetName().GetChars());
+//}
+//
+//void nuiMetaPainter::OnReleased() const ///< This callback is called when we are about to release this
+//{
+//  NGL_OUT("nuiMetaPainter::OnRelease %p %d %s\n", this, GetRefCount(), GetName().GetChars());
+//}
 
 #endif
 

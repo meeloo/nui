@@ -155,7 +155,7 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
 
 bool nuiLayer::UpdateSurface()
 {
-  int w, h;
+  int w = ToAbove(mWidth), h = ToAbove(mHeight);
   if (mpTextureContents)
   {
     w = mpTextureContents->GetWidth();
@@ -163,8 +163,8 @@ bool nuiLayer::UpdateSurface()
   }
   else if (mpWidgetContents)
   {
-    w = mpWidgetContents->GetRect().GetWidth();
-    h = mpWidgetContents->GetRect().GetHeight();
+    w = ToAbove(mpWidgetContents->GetRect().GetWidth());
+    h = ToAbove(mpWidgetContents->GetRect().GetHeight());
   }
 
   if (w < 1)
@@ -197,19 +197,22 @@ bool nuiLayer::UpdateSurface()
 
     NGL_ASSERT(mpSurface == nullptr);
     mpSurface = nuiSurface::CreateSurface(name, ToNearest(mWidth), ToNearest(mHeight));
-    mpSurface->SetTrace(true);
+//    mpSurface->SetTrace(true);
 //    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
-    
+    mSurfaceChanged = true;
+    return true;
   }
 
-  return recreate;
+  return false;
 }
 
 void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext)
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
-  if (UpdateSurface())
+  UpdateSurface();
+  if (mSurfaceChanged)
   { // Surface has changed
+    mSurfaceChanged = false;
 
     if (mpContentsPainter)
     {
@@ -232,7 +235,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     if (mpWidgetContents)
     {
   //    mpWidgetContents->GetColor(eActiveWindowBg);
-      pContext->SetClearColor(nuiColor(0, 0, 0, 0));
+      pContext->SetClearColor(nuiColor(0, 0, 1., 1.));
       pContext->Clear();
       mpContentsPainter->DrawWidget(pContext, mpWidgetContents);
     }
@@ -262,7 +265,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   CheckValid();
 
   UpdateSurface();
-  
+
   if (mpDrawPainter)
   {
     mpDrawPainter->Release();
@@ -308,10 +311,10 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 
   pContext->DrawImage(dst, src);
 
-  pContext->SetStrokeColor("red");
-  pContext->EnableTexturing(false);
-  pContext->DrawRect(dst, eStrokeShape);
-  pContext->EnableTexturing(true);
+//  pContext->SetStrokeColor("red");
+//  pContext->EnableTexturing(false);
+//  pContext->DrawRect(dst, eStrokeShape);
+//  pContext->EnableTexturing(true);
 
   for (auto child : mpChildren)
   {
