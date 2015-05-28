@@ -431,7 +431,7 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
   glPushGroupMarkerEXT(0, str.GetChars());
 //  NGL_OUT("%s\n", str.GetChars());
   auto it = mWidgetPainters.find(pKey);
-  NGL_ASSERT(it != mWidgetPainters.end());
+//  NGL_ASSERT(it != mWidgetPainters.end());
   if (it != mWidgetPainters.end())
   {
     nuiMetaPainter* pPainter = it->second;
