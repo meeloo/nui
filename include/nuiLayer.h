@@ -41,6 +41,8 @@ private:
 
   float mWidth = 0;
   float mHeight = 0;
+  float mOffsetX = 0;
+  float mOffsetY = 0;
   nuiColor mClearColor;
 
   nuiSurface* mpSurface = nullptr;

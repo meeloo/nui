@@ -453,7 +453,7 @@ void nuiMetaPainter::Reset(nuiPainter const * pFrom)
 
   for (auto surface : mSurfaces)
   {
-    NGL_OUT("nuiMetaPainter release surface %s %p\n", surface->GetObjectName().GetChars(), surface);
+//    NGL_OUT("nuiMetaPainter release surface %s %p\n", surface->GetObjectName().GetChars(), surface);
     surface->Release();
   }
   mSurfaces.clear();
@@ -780,9 +780,16 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
     case eSetSurface:
       {
         nuiSurface* pS = (nuiSurface*)FetchPointer();
-        nglString clss(pS->GetObjectClass());
-        nglString name(pS->GetObjectName());
-        str.CFormat(_T("SetSurface 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
+        if (pS)
+        {
+          nglString clss(pS->GetObjectClass());
+          nglString name(pS->GetObjectName());
+          str.CFormat("SetSurface 0x%x / '%s - %s'", pS, clss.GetChars(), name.GetChars());
+        }
+        else
+        {
+          str.CFormat("SetSurface NULL");
+        }
       }
       break;
     case eLoadMatrix:

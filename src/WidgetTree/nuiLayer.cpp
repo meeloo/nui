@@ -163,8 +163,11 @@ bool nuiLayer::UpdateSurface()
   }
   else if (mpWidgetContents)
   {
-    w = ToAbove(mpWidgetContents->GetRect().GetWidth());
-    h = ToAbove(mpWidgetContents->GetRect().GetHeight());
+    nuiRect overdraw = mpWidgetContents->GetOverDrawRect(true, true);
+    w = ToAbove(overdraw.GetWidth());
+    h = ToAbove(overdraw.GetHeight());
+    mOffsetX = overdraw.Left();
+    mOffsetY = overdraw.Top();
   }
 
   if (w < 1)
@@ -220,6 +223,10 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
       mpContentsPainter = nullptr;
     }
     mpContentsPainter = new nuiMetaPainter();
+    nuiPainter* oldpainter = pContext->GetPainter();
+    
+    pContext->SetPainter(mpContentsPainter);
+    
     nglString name;
     name.CFormat("layer contents %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
     mpContentsPainter->SetName(name);
@@ -228,27 +235,37 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     NGL_ASSERT(mpSurface);
     mpContentsPainter->SetSurface(mpSurface);
 
-    pContext->ResetState();
-    pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
-    pContext->ResetClipRect();
+//    pContext->ResetState();
+//    pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
+//    pContext->ResetClipRect();
 
+    if (mOffsetX != 0 || mOffsetY != 0)
+    {
+      pContext->Translate(-mOffsetX, -mOffsetY);
+    }
+    
     if (mpWidgetContents)
     {
   //    mpWidgetContents->GetColor(eActiveWindowBg);
-      pContext->SetClearColor(nuiColor(0, 0, 1., 1.));
+      pContext->SetClearColor(nuiColor(0.0f, 0.0f, 0.0f, 0.0f));
       pContext->Clear();
       mpContentsPainter->DrawWidget(pContext, mpWidgetContents);
     }
     else if (mDrawContentsDelegate)
     {
-      pContext->SetClearColor(mClearColor);
-      pContext->Clear();
+//      pContext->SetClearColor(mClearColor);
+//      pContext->Clear();
       
       mDrawContentsDelegate(this, pContext);
     }
     // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
 
     mpContentsPainter->SetSurface(nullptr);
+    if (mOffsetX != 0 || mOffsetY != 0)
+    {
+      pContext->Translate(mOffsetX, mOffsetY);
+    }
+    pContext->SetPainter(oldpainter);
 
     pRenderThread->SetLayerContentsPainter(this, mpContentsPainter);
   }
@@ -300,14 +317,21 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //  pContext->ResetClipRect();
 
   pContext->SetTexture(pTex);
-  pContext->SetFillColor(nuiColor(0.5f, 0.5f, 1.0f, 1.0f));
+  pContext->SetFillColor(nuiColor(1.0f, 1.0f, 1.0f, 1.0f));
+    pContext->SetBlendFunc(nuiBlendTransp);
+    pContext->EnableBlending(true);
 
   nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
   nuiRect dst = src;
 //  dst.Move(-GetPivot()[0], -GetPivot()[1]);
   nuiMatrix Matrix;
   GetMatrix(Matrix);
+  pContext->PushMatrix();
   pContext->MultMatrix(Matrix);
+  if (mOffsetX != 0 || mOffsetY != 0)
+  {
+    pContext->Translate(mOffsetX, mOffsetY);
+  }
 
   pContext->DrawImage(dst, src);
 
@@ -322,6 +346,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     mpDrawPainter->DrawLayer(pContext, pLayer);
   }
 
+  pContext->PopMatrix();
   pContext->SetPainter(pPainter);
 
   pRenderThread->SetLayerDrawPainter(this, mpDrawPainter);

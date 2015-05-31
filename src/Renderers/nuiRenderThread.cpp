@@ -134,6 +134,11 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     
     mpPainter->ResetStats();
     mpContext->BeginSession();
+      mpDrawContext->SetClearColor(nuiColor(255,255,255));
+      //  if (mClearBackground)
+      {
+          mpDrawContext->Clear();
+      }
     mpPainter->BeginSession();
     
     mpDrawContext->SetPainter(mpPainter);
@@ -151,11 +156,6 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     mpDrawContext->ResetState();
     mpDrawContext->ResetClipRect();
     
-    mpDrawContext->SetClearColor(nuiColor(255,255,255));
-    //  if (mClearBackground)
-    {
-      mpDrawContext->Clear();
-    }
     //  else
     //  {
     //    // Force the initial render state anyway!
@@ -180,6 +180,14 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       if (it != mLayerContentsPainters.end())
       {
         nuiMetaPainter* pPainter = it->second;
+        
+        
+//        for (int i = 0; i < pPainter->GetNbOperations(); i++)
+//        {
+//          NGL_OUT("op %s\n", pPainter->GetOperationDescription(i).GetChars());
+//        }
+        
+        
         mpDrawContext->ResetState();
         mpDrawContext->ResetClipRect();
 //        NGL_OUT("Update Dirty Layer %p (%p - %d)\n", layer, pPainter, pPainter->GetRefCount());
@@ -207,6 +215,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       mpDrawContext->ResetState();
       mpDrawContext->ResetClipRect();
       mpDrawContext->EnableBlending(true);
+      mpDrawContext->SetBlendFunc(nuiBlendTransp);
       mpDrawContext->EnableTexturing(true);
       mpDrawContext->LoadIdentity();
 
@@ -455,6 +464,7 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
     nuiMetaPainter* pPainter = it->second;
 //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
+    
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
   }
   glPopGroupMarkerEXT();

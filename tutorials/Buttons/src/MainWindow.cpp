@@ -126,7 +126,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
   : nuiMainWindow(rContextInfo, rInfo, pShared, nglPath(ePathCurrent)), mEventSink(this)
 {
   SetDebugMode(true);
-  App->GetLog().SetLevel("nuiTexture", NGL_LOG_ALWAYS);
+  //App->GetLog().SetLevel("nuiTexture", NGL_LOG_ALWAYS);
   LoadCSS(_T("rsrc:/css/main.css"));  
 }
 
@@ -145,36 +145,35 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  const bool DRAW_TO_LAYER = false;
-  if (0)
+  if (1)
   {
     ButtonCellSource* pSource = new ButtonCellSource();
   //  ComplexCellSource* pSource = new ComplexCellSource();
     nuiTableView* pListView = new nuiTableView(pSource);
     AddChild(pListView);
-//  nuiWidget* pChild = CreateTestDelChildren();
-//  AddChild(pChild);
+  nuiWidget* pChild = CreateTestDelChildren();
+  AddChild(pChild);
 
-//  nuiScrollView* pSView = new nuiScrollView(false, true);
-//  AddChild(pSView);
-//  pSView->SetPosition(nuiFill);
-//  pSView->SetUserWidth(256);
-//  
-//  nuiVBox* pVBox = new nuiVBox();
-//  pVBox->SetBorderRight(42);
-//  pVBox->SetExpand(nuiExpandShrinkAndGrow);
-//  pSView->AddChild(pVBox);
-//  nuiButton* pButton;
-//  
-//  for (int i = 0; i < 128; i++)
-//  {
-//    nglString str;
-//    str.CFormat("Button %d", i);
-//    pButton = new nuiButton(str);
-//    pButton->SetObjectName(str);
-//    pButton->SetUserHeight(42);
-//    pVBox->AddCell(pButton);
-//  }
+  nuiScrollView* pSView = new nuiScrollView(false, true);
+  AddChild(pSView);
+  pSView->SetPosition(nuiFill);
+  pSView->SetUserWidth(256);
+  
+  nuiVBox* pVBox = new nuiVBox();
+  pVBox->SetBorderRight(42);
+  pVBox->SetExpand(nuiExpandShrinkAndGrow);
+  pSView->AddChild(pVBox);
+  nuiButton* pButton;
+  
+  for (int i = 0; i < 128; i++)
+  {
+    nglString str;
+    str.CFormat("Button %d", i);
+    pButton = new nuiButton(str);
+    pButton->SetObjectName(str);
+    pButton->SetUserHeight(42);
+    pVBox->AddCell(pButton);
+  }
   }
 
   if (0)
@@ -185,11 +184,8 @@ void MainWindow::OnCreation()
     pMainBox->SetPosition(nuiFillVertical);
     AddChild(pMainBox);
 
-  //  pMainBox->SetDrawToLayer(DRAW_TO_LAYER);
-
     // create a label width background for information display
     nuiPane* pPane = new nuiPane();
-  //  pPane->SetDrawToLayer(DRAW_TO_LAYER);
     pPane->SetBorder(20,20);
     pMainBox->AddCell(pPane, nuiFillHorizontal);
     mpLabel = new nuiLabel();
@@ -197,22 +193,18 @@ void MainWindow::OnCreation()
     pPane->SetUserHeight(40);
 
     nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
-  //  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
     pMainBox->AddCell(pLabel, nuiLeft);
     pMainBox->AddCell(Tutorial_Buttons());
 
     pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
-  //  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
     pMainBox->AddCell(pLabel, nuiLeft);
     pMainBox->AddCell(Tutorial_ToggleButtons());
 
     pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-  //  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
     pMainBox->AddCell(pLabel, nuiLeft);
     pMainBox->AddCell(Tutorial_RadioButtons1());
 
     pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
-  //  pLabel->SetDrawToLayer(DRAW_TO_LAYER);
     pMainBox->AddCell(pLabel, nuiLeft);
     pMainBox->AddCell(Tutorial_RadioButtons2());
 
@@ -226,15 +218,31 @@ void MainWindow::OnCreation()
     pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
   }
   
-  nuiLabel* pLabel = new nuiLabel("My Label");
-  pLabel->SetPosition(nuiCenter);
-  AddChild(pLabel);
+    if (0)
+    {
+      nuiLabel* pLabel = new nuiLabel("My Label");
+      pLabel->SetPosition(nuiCenter);
+      AddChild(pLabel);
 
-  nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
-  pAnim->SetTargetAttribute("Alpha");
-  pAnim->SetTargetObject(pLabel);
-  pLabel->AddAnimation("Fade", pAnim);
-  pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+//      nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
+//      pAnim->SetTargetAttribute("Alpha");
+//      pAnim->SetTargetObject(pLabel);
+//      pLabel->AddAnimation("Fade", pAnim);
+//      pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+    }
+
+    if (0)
+    {
+        nuiButton* pButton = new nuiButton("My Button");
+        pButton->SetPosition(nuiCenter);
+        AddChild(pButton);
+        
+        nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
+        pAnim->SetTargetAttribute("Alpha");
+        pAnim->SetTargetObject(pButton);
+        pButton->AddAnimation("Fade", pAnim);
+        pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+    }
 }
 
 

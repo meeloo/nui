@@ -56,7 +56,7 @@ nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int3
 
 //  NGL_OUT(_T("nuiSurface CreateSurface [0x%x] NAME: [%s] COUNT [%d]\n"), pSurface, rName.GetChars(), mpSurfaces.size());
 
-  DumpSurfaces();
+//  DumpSurfaces();
   return pSurface;
 }
 
@@ -86,7 +86,7 @@ nuiSurface::nuiSurface(const nglString& rName, int32 Width, int32 Height, nglIma
   //NGL_OUT(_T("nuiSurface CTOR [0x%x] SIZE[%dx%d]\n"), this, Width, Height);
   //SetTrace(true);
   
-  DumpSurfaces();
+//  DumpSurfaces();
 }
 
 nuiSurface::~nuiSurface()
@@ -105,7 +105,7 @@ nuiSurface::~nuiSurface()
 
   nuiPainter::BroadcastDestroySurface(this);
   
-  DumpSurfaces();
+//  DumpSurfaces();
 }
 
 int32 nuiSurface::GetWidth() const
