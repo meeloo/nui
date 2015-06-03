@@ -134,12 +134,12 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     
     mpPainter->ResetStats();
     mpContext->BeginSession();
-      mpDrawContext->SetClearColor(nuiColor(255,255,255));
-      //  if (mClearBackground)
-      {
-          mpDrawContext->Clear();
-      }
     mpPainter->BeginSession();
+    mpDrawContext->SetClearColor(nuiColor(255,255,255));
+    //  if (mClearBackground)
+    {
+      mpDrawContext->Clear();
+    }
     
     mpDrawContext->SetPainter(mpPainter);
     mpDrawContext->StartRendering();

@@ -621,6 +621,7 @@ nuiTexture::nuiTexture (nglImage* pImage, bool OwnImage)
 nuiTexture::nuiTexture(nuiSurface* pSurface)
 : nuiObject(), mTextureID(0), mTarget(0), mRotated(false)
 {
+  NGL_ASSERT(pSurface != nullptr);
   if (SetObjectClass(_T("nuiTexture")))
     InitAttributes();
 

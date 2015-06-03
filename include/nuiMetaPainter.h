@@ -85,6 +85,11 @@ public:
   virtual void DestroySurface(nuiSurface* pSurface);
   virtual void DestroyRenderArray(nuiRenderArray* pArray);
 
+  int32 GetNbDrawChild() const;
+  int32 GetNbDrawLayer() const;
+  int32 GetNbDrawArray() const;
+  int32 GetNbClearColor() const;
+  
 #ifdef _DEBUG_
   void DBGSetReferenceObject(const nuiObject* pRef);
 #endif
@@ -145,6 +150,7 @@ protected:
   bool mLastStateValid;
 
   int32 mNbDrawChild;
+  int32 mNbDrawLayer;
   int32 mNbDrawArray;
   int32 mNbClearColor;
   mutable int32 mOperationPos;

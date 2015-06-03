@@ -16,6 +16,7 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
   mLastStateValid = false;
   mpCache = &mOperations;
   mNbDrawChild = 0;
+  mNbDrawLayer = 0;
   mNbDrawArray = 0;
   mNbClearColor = 0;
   mNbOperations = 0;
@@ -269,7 +270,7 @@ void nuiMetaPainter::DrawLayer(nuiDrawContext* pContext, nuiLayer* pLayer)
     StorePointer(pLayer);
   }
   mLastStateValid = false;
-  mNbDrawChild++;
+  mNbDrawLayer++;
 }
 
 
@@ -439,6 +440,7 @@ void nuiMetaPainter::Reset(nuiPainter const * pFrom)
   mOperationPos = 0;
   mLastStateValid = false;
   mNbDrawChild = 0;
+  mNbDrawLayer = 0;
   mNbDrawArray = 0;
   mNbClearColor = 0;
   mRenderOperations = 0;
@@ -488,9 +490,10 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
   uint size = mOperations.size();
   
   const bool DoDrawChild = mNbDrawChild;
+  const bool DoDrawLayer = mNbDrawLayer;
   const bool DoDrawArray = mNbDrawArray;
   const bool DoDrawSelf = DoDrawArray || mNbClearColor;
-  if (!(DoDrawChild || DoDrawSelf))
+  if (!(DoDrawChild || DoDrawSelf || DoDrawLayer))
     return;
   
   int32 currentop = 0;
@@ -1051,6 +1054,28 @@ void nuiMetaPainter::DBGSetReferenceObject(const nuiObject* pRef)
 //{
 //  NGL_OUT("nuiMetaPainter::OnRelease %p %d %s\n", this, GetRefCount(), GetName().GetChars());
 //}
+
+int32 nuiMetaPainter::GetNbDrawChild() const
+{
+  return mNbDrawChild;
+}
+
+int32 nuiMetaPainter::GetNbDrawLayer() const
+{
+  return mNbDrawLayer;
+}
+
+int32 nuiMetaPainter::GetNbDrawArray() const
+{
+  return mNbDrawArray;
+}
+
+int32 nuiMetaPainter::GetNbClearColor() const
+{
+  return mNbClearColor;
+}
+
+
 
 #endif
 

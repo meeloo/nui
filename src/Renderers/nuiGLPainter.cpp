@@ -1805,7 +1805,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     if (create)
     {
       glGenFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
-//      NGL_OUT("glGenFramebuffersNUI '%s' -> %d\n", pSurface->GetObjectName().GetChars(), info.mFramebuffer);
+      NGL_OUT("glGenFramebuffersNUI %p '%s' -> %d (%d x %d)\n", pSurface, pSurface->GetObjectName().GetChars(), info.mFramebuffer, pSurface->GetWidth(), pSurface->GetHeight());
       NGL_ASSERT(info.mFramebuffer);
       nuiCheckForGLErrors();
 
@@ -1966,7 +1966,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
                                   GetTextureTarget(pTexture->IsPowerOfTwo()),
                                   tex_info.mTexture,
                                   0);
-        //NGL_OUT("surface texture -> %d\n", tex_info.mTexture);
+        NGL_OUT("surface texture -> %d\n", tex_info.mTexture);
         nuiCheckForGLErrors();
       }
       else
@@ -2249,15 +2249,18 @@ void nuiGLPainter::DestroyRenderArray(nuiRenderArray* pArray)
 bool nuiCheckForGLErrorsReal()
 {
   GLenum err = GL_NO_ERROR;
-#if 0 // Globally enable/disable OpenGL error checking
+#if 1 // Globally enable/disable OpenGL error checking
   //#ifdef NGL_DEBUG
   err = glGetError();
   if (err == GL_NO_ERROR)
     return true;
 
-//  App->GetLog().SetLevel("nuiGLPainter", 1000);
+  App->GetLog().SetLevel("nuiGLPainter", 1000);
   switch (err)
   {
+    case 0:
+      break;
+      
     case GL_INVALID_ENUM:
       NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("An unacceptable value is specified for an enumerated argument. The offending function is ignored, having no side effect other than to set the error flag."));
       break;
@@ -2290,7 +2293,7 @@ bool nuiCheckForGLErrorsReal()
       break;
   }
   //#endif
-  NGL_ASSERT(0);
+  return false;
 #endif
 
   return true;
