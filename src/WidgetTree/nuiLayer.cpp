@@ -155,6 +155,17 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
 
 bool nuiLayer::UpdateSurface()
 {
+  
+  if (!mDraw)
+  {
+    if (mpContentsPainter)
+    {
+      mpContentsPainter->Release();
+      mpContentsPainter = nullptr;
+    }
+  }
+  
+  
   int w = ToAbove(mWidth), h = ToAbove(mHeight);
   if (mpTextureContents)
   {
@@ -178,40 +189,58 @@ bool nuiLayer::UpdateSurface()
   SetWidth(w);
   SetHeight(h);
   
-  bool recreate = false;
-  if (mpSurface == nullptr)
-    recreate = true;
-  else if (mpSurface->GetWidth() != mWidth || mpSurface->GetHeight() != mHeight)
-    recreate = true;
-
-  if (recreate)
+  if (mDraw)
   {
-    if (mpSurface)
+    bool recreate = false;
+    if (mpSurface == nullptr)
+      recreate = true;
+    else if (mpSurface->GetWidth() != mWidth || mpSurface->GetHeight() != mHeight)
+      recreate = true;
+
+    if (recreate)
     {
-      mpSurface->Release();
-      mpSurface = nullptr;
+      if (mpSurface)
+      {
+        mpSurface->Release();
+        mpSurface = nullptr;
+      }
+
+      nglString name;
+      if (mpWidgetContents)
+        name.CFormat("Wid %s %s %p", mpWidgetContents->GetObjectClass().GetChars(), mpWidgetContents->GetObjectName().GetChars(), mpWidgetContents);
+      else
+        name = GetObjectName();
+
+      NGL_ASSERT(mpSurface == nullptr);
+      mpSurface = nuiSurface::CreateSurface(name, ToNearest(mWidth), ToNearest(mHeight));
+  //    mpSurface->SetTrace(true);
+  //    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
+      mSurfaceChanged = true;
+      return true;
     }
-
-    nglString name;
-    if (mpWidgetContents)
-      name.CFormat("Wid %s %s %p", mpWidgetContents->GetObjectClass().GetChars(), mpWidgetContents->GetObjectName().GetChars(), mpWidgetContents);
-    else
-      name = GetObjectName();
-
-    NGL_ASSERT(mpSurface == nullptr);
-    mpSurface = nuiSurface::CreateSurface(name, ToNearest(mWidth), ToNearest(mHeight));
-//    mpSurface->SetTrace(true);
-//    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
-    mSurfaceChanged = true;
-    return true;
   }
-
   return false;
 }
 
 void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext)
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
+  if (mpWidgetContents)
+  {
+    // See if the widget's meta painter is empty or not
+    const nuiMetaPainter* pMP = mpWidgetContents->GetRenderCache();
+    if (pMP)
+    {
+      int32 arrays = pMP->GetNbDrawArray();
+      mDraw = arrays != 0;
+    }
+    else
+    {
+      mDraw = false;
+    }
+  }
+
+  
   UpdateSurface();
   if (mSurfaceChanged)
   { // Surface has changed
@@ -294,36 +323,13 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   mpDrawPainter->SetName(name);
 
 
-  nuiTexture* pTex = nullptr;
-  if (mpTextureContents)
-  {
-    pTex = mpTextureContents;
-  }
-  else
-  {
-    NGL_ASSERT(mpSurface != nullptr);
-    pTex = mpSurface->GetTexture();
-  }
-
-  NGL_ASSERT(pTex);
-  NGL_ASSERT(pTex->GetWidth() > 0);
-  NGL_ASSERT(pTex->GetHeight() > 0);
-//  pTex = nuiTexture::GetTexture("ButtonUp");
-  
   nuiPainter* pPainter = pContext->GetPainter();
 
   pContext->SetPainter(mpDrawPainter);
 //  pContext->ResetState();
 //  pContext->ResetClipRect();
 
-  pContext->SetTexture(pTex);
-  pContext->SetFillColor(nuiColor(1.0f, 1.0f, 1.0f, 1.0f));
-    pContext->SetBlendFunc(nuiBlendTransp);
-    pContext->EnableBlending(true);
-
-  nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
-  nuiRect dst = src;
-//  dst.Move(-GetPivot()[0], -GetPivot()[1]);
+  //  dst.Move(-GetPivot()[0], -GetPivot()[1]);
   nuiMatrix Matrix;
   GetMatrix(Matrix);
   pContext->PushMatrix();
@@ -333,13 +339,39 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     pContext->Translate(mOffsetX, mOffsetY);
   }
 
-  pContext->DrawImage(dst, src);
+  if (mDraw)
+  {
+    nuiTexture* pTex = nullptr;
+    if (mpTextureContents)
+    {
+      pTex = mpTextureContents;
+    }
+    else
+    {
+      NGL_ASSERT(mpSurface != nullptr);
+      pTex = mpSurface->GetTexture();
+    }
+    NGL_ASSERT(pTex);
+    NGL_ASSERT(pTex->GetWidth() > 0);
+    NGL_ASSERT(pTex->GetHeight() > 0);
+    //  pTex = nuiTexture::GetTexture("ButtonUp");
+    
+    nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
+    nuiRect dst = src;
+
+    pContext->SetTexture(pTex);
+    pContext->SetFillColor(nuiColor(1.0f, 1.0f, 1.0f, 1.0f));
+    pContext->SetBlendFunc(nuiBlendTransp);
+    pContext->EnableBlending(true);
+    
+    pContext->DrawImage(dst, src);
 
 //  pContext->SetStrokeColor("red");
 //  pContext->EnableTexturing(false);
 //  pContext->DrawRect(dst, eStrokeShape);
 //  pContext->EnableTexturing(true);
-
+  }
+  
   for (auto child : mpChildren)
   {
     nuiLayer* pLayer = (nuiLayer*)child;

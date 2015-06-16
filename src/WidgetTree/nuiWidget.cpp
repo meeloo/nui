@@ -148,8 +148,9 @@ void nuiWidget::InitDefaultValues()
   mAutoUpdateLayout = false;
   mAutoAcceptMouseCancel = true;
   mAutoAcceptMouseSteal = true;
-  
-  SetDrawToLayer(true);
+
+  if (NUI_USE_LAYERS)
+    SetDrawToLayer(true);
 }
 
 
