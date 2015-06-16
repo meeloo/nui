@@ -48,6 +48,8 @@ private:
   nuiSurface* mpSurface = nullptr;
   bool UpdateSurface();
   bool mSurfaceChanged = false;
+  
+  bool mDraw = true;
 
   void Change() { mChanged = true; }
   bool mChanged = true;

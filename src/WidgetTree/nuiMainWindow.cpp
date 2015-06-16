@@ -11,7 +11,8 @@
 
 using namespace std;
 
-#define NUI_MULTISAMPLES 0
+#define NUI_MULTISAMPLES          0
+#define NUI_MAINWINDOW_USE_LAYERS (1 && NUI_USE_LAYERS)
 
 nuiContextInfo::nuiContextInfo(Type type)
 {
@@ -95,8 +96,14 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
 
   nuiDrawContext* pContext = GetDrawContext();
   nuiRenderThread* pRenderThread = GetRenderThread();
+  
   SetDrawToLayer(false);
-  SetDrawToLayer(true);
+  
+  if (NUI_MAINWINDOW_USE_LAYERS)
+  {
+    SetDrawToLayer(true);
+  }
+  
   if (GetDrawToLayer())
   {
     pRenderThread->SetLayerTree(mpBackingLayer);
@@ -149,8 +156,14 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
 
   nuiDrawContext* pContext = GetDrawContext();
   nuiRenderThread* pRenderThread = GetRenderThread();
+
   SetDrawToLayer(false);
-  SetDrawToLayer(true);
+  
+  if (NUI_MAINWINDOW_USE_LAYERS)
+  {
+    SetDrawToLayer(true);
+  }
+  
   if (GetDrawToLayer())
   {
     pRenderThread->SetLayerTree(mpBackingLayer);

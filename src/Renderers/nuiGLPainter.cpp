@@ -1466,31 +1466,31 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
       else
       {
         NGL_ASSERT(pSurface);
-#if !defined(_OPENGL_ES_) && defined(_MACOSX_)
-        internalPixelformat = pSurface->GetPixelFormat();
-        if (internalPixelformat == GL_RGBA)
-        {
-          internalPixelformat = GL_RGBA;
-          pixelformat = GL_BGRA;
-          type = GL_UNSIGNED_INT_8_8_8_8_REV;
-        }
-        else if (internalPixelformat == GL_RGB)
-        {
-          internalPixelformat = GL_RGB;
-          pixelformat = GL_BGR;
-          type = GL_UNSIGNED_BYTE;
-        }
-        else
-        {
-          pixelformat = pSurface->GetPixelFormat();
-          type = GL_UNSIGNED_BYTE;
-        }
-        glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_FALSE);
-#else
+//#if !defined(_OPENGL_ES_) && defined(_MACOSX_)
+//        internalPixelformat = pSurface->GetPixelFormat();
+//        if (internalPixelformat == GL_RGBA)
+//        {
+//          internalPixelformat = GL_RGBA;
+//          pixelformat = GL_BGRA;
+//          type = GL_UNSIGNED_INT_8_8_8_8_REV;
+//        }
+//        else if (internalPixelformat == GL_RGB)
+//        {
+//          internalPixelformat = GL_RGB;
+//          pixelformat = GL_BGR;
+//          type = GL_UNSIGNED_BYTE;
+//        }
+//        else
+//        {
+//          pixelformat = pSurface->GetPixelFormat();
+//          type = GL_UNSIGNED_BYTE;
+//        }
+//        glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_FALSE);
+//#else
         internalPixelformat = pSurface->GetPixelFormat();
         pixelformat = pSurface->GetPixelFormat();
         type = GL_UNSIGNED_BYTE;
-#endif
+//#endif
       }
 
 

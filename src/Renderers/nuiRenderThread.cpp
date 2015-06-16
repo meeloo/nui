@@ -176,7 +176,6 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       glPushGroupMarkerEXT(0, str.GetChars());
 
       auto it = mLayerContentsPainters.find(layer);
-      NGL_ASSERT(it != mLayerContentsPainters.end());
       if (it != mLayerContentsPainters.end())
       {
         nuiMetaPainter* pPainter = it->second;
@@ -207,7 +206,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //      nuiMetaPainter* pPainter = i->second;
 //      pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
 //
-//    }
+ //    }
 
     if (mpLayerTreeRoot)
     {
@@ -239,7 +238,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   }
   else
   {
-    NGL_ASSERT(0);
+//    NGL_ASSERT(0);
     auto it = mWidgetPainters.find(mpRoot);
     if (it == mWidgetPainters.end())
     {
