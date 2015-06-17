@@ -873,48 +873,41 @@ bool nuiMainWindow::OnKeyDown(const nglKeyEvent& rEvent)
   mLastInteractiveEventTime = nglTime();
   if (mDebugMode)
   {
-    if (rEvent.mKey == NK_D && 
-        (IsKeyDown(NK_LCTRL) || IsKeyDown(NK_RCTRL)) && 
+    if ((IsKeyDown(NK_LCTRL) || IsKeyDown(NK_RCTRL)) &&
         (IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT))
-       )
+        )
     {
-      ShowWidgetInspector();
-    }
-    else if (rEvent.mKey == NK_T && 
-             (IsKeyDown(NK_LCTRL) || IsKeyDown(NK_RCTRL)) && 
-             (IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT))
-             )
-    {
-      nuiDrawContext* pCtx = GetDrawContext();
-      nuiPainter* pPainter = pCtx->GetPainter();
-      pPainter->DEBUG_EnableDrawArray(!pPainter->DEBUG_GetEnableDrawArray());
-      
-      InvalidateLayout();
-    }
-    else if (rEvent.mKey == NK_W && 
-             (IsKeyDown(NK_LCTRL) || IsKeyDown(NK_RCTRL)) && 
-             (IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT))
-             )
-    {
-      mDebugSlowRedraw = !mDebugSlowRedraw;
-      InvalidateLayout();
-    }
+      if (rEvent.mKey == NK_D)
+      {
+        ShowWidgetInspector();
+      }
+      else if (rEvent.mKey == NK_T)
+      {
+        nuiDrawContext* pCtx = GetDrawContext();
+        nuiPainter* pPainter = pCtx->GetPainter();
+        pPainter->DEBUG_EnableDrawArray(!pPainter->DEBUG_GetEnableDrawArray());
+        
+        InvalidateLayout();
+      }
+      else if (rEvent.mKey == NK_W)
+      {
+        mDebugSlowRedraw = !mDebugSlowRedraw;
+        InvalidateLayout();
+      }
 #if 0
 #ifndef _UIKIT_
-    else if (rEvent.mKey == NK_S && 
-             (IsKeyDown(NK_LCTRL) || IsKeyDown(NK_RCTRL)) && 
-             (IsKeyDown(NK_LSHIFT) || IsKeyDown(NK_RSHIFT))
-             )
-    {
-      nuiXMLNode* pNode = Serialize(NULL, true);
-      nglString dump(pNode->Dump(0));
-      nglMimeTextSource mimesrc(dump);
-      App->GetClipBoard().SetData(mimesrc);
-      
-      //NGL_OUT(_T("Dumping this widget tree XML description:\n%s\n"), dump.GetChars());
+      else if (rEvent.mKey == NK_S)
+      {
+        nuiXMLNode* pNode = Serialize(NULL, true);
+        nglString dump(pNode->Dump(0));
+        nglMimeTextSource mimesrc(dump);
+        App->GetClipBoard().SetData(mimesrc);
+        
+        //NGL_OUT(_T("Dumping this widget tree XML description:\n%s\n"), dump.GetChars());
+      }
+#endif
+#endif
     }
-#endif
-#endif
   }
   return CallKeyDown(rEvent);
 }
