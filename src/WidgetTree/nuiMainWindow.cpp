@@ -567,7 +567,10 @@ void nuiMainWindow::OnClose()
   mLastEventTime = nglTime();
   mLastInteractiveEventTime = nglTime();
   //OUT("OnClose\n");
-  if (mQuitOnClose)
+
+  bool quit = mQuitOnClose;
+  Release();
+  if (quit)
     App->Quit(0);
 }
 
