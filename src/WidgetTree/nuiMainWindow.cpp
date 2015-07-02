@@ -173,6 +173,12 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
 
 nuiMainWindow::~nuiMainWindow()
 {
+  if (mpRenderThread)
+  {
+    mpRenderThread->Exit();
+    mpRenderThread->Join();
+  }
+  
   if (mpInspectorWindow)
     mpInspectorWindow->Release();
   nuiTopLevel::Exit();
@@ -878,6 +884,10 @@ bool nuiMainWindow::OnKeyDown(const nglKeyEvent& rEvent)
         )
     {
       if (rEvent.mKey == NK_D)
+      {
+        ShowWidgetInspector();
+      }
+      else if (rEvent.mKey == NK_K)
       {
         ShowWidgetInspector();
       }

@@ -1065,11 +1065,6 @@ int32 nuiMetaPainter::GetNbDrawLayer() const
   return mNbDrawLayer;
 }
 
-int32 nuiMetaPainter::GetNbDrawArray() const
-{
-  return mNbDrawArray;
-}
-
 int32 nuiMetaPainter::GetNbClearColor() const
 {
   return mNbClearColor;
@@ -1078,4 +1073,9 @@ int32 nuiMetaPainter::GetNbClearColor() const
 
 
 #endif
+
+int32 nuiMetaPainter::GetNbDrawArray() const
+{
+  return mNbDrawArray;
+}
 

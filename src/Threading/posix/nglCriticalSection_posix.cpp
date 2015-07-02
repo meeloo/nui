@@ -49,7 +49,13 @@ nglCriticalSectionPrivate::nglCriticalSectionPrivate ()
 
 nglCriticalSectionPrivate::~nglCriticalSectionPrivate ()
 {
-	int res = pthread_mutex_destroy(&cmutex);
+  lock();
+  unlock();
+  int res = pthread_mutex_destroy(&cmutex);;
+  while (res != 0)
+  {
+    pthread_mutex_destroy(&cmutex);
+  }
   NGL_ASSERT(res == 0);
 }
 

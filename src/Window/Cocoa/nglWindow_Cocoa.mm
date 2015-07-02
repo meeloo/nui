@@ -1347,9 +1347,15 @@ void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData)
   nglWindow* pWindow = (nglWindow*)pUserData;
   NGL_ASSERT(pWindow);
   nglTime now;
-  pWindow->mpAnimationTimer->OnTick(now - pWindow->mLastTick);
-  pWindow->mLastTick = now;
-  pWindow->CallOnPaint();
+  nglTimer* pT = pWindow->mpAnimationTimer;
+  if (pT)
+  {
+    auto last = pWindow->mLastTick;
+    auto t = now - last;
+    pT->OnTick(t);
+    pWindow->mLastTick = now;
+    pWindow->CallOnPaint();
+  }
 }
 
 void nglWindow::AcquireTimer()
@@ -1383,15 +1389,17 @@ void nglWindow::AcquireTimer()
   mLastTick = nglTime();
   CFRunLoopAddTimer(CFRunLoopGetCurrent(), mpCFRunLoopTimer, kCFRunLoopCommonModes);
 }
+
 void nglWindow::ReleaseTimer()
 {
   NGL_ASSERT(mpCFRunLoopTimer);
-  CFRunLoopRef currentRunLoop = CFRunLoopGetCurrent();
-  CFRunLoopRemoveTimer(currentRunLoop, mpCFRunLoopTimer, kCFRunLoopCommonModes);
-  if (mpCFRunLoopTimer)
-    CFRelease(mpCFRunLoopTimer);
+  CFRunLoopTimerRef timer = mpCFRunLoopTimer;
   mpCFRunLoopTimer = NULL;
+  mpAnimationTimer = NULL;
   nuiAnimation::ReleaseTimer();
+  CFRunLoopRef currentRunLoop = CFRunLoopGetCurrent();
+  CFRunLoopRemoveTimer(currentRunLoop, timer, kCFRunLoopCommonModes);
+  CFRelease(timer);
 }
 
 
@@ -1467,6 +1475,7 @@ void nglWindow::ReleaseDisplayLink()
     mDisplayLink = nil;
   }
   nuiAnimation::ReleaseTimer();
+  mpAnimationTimer = NULL;
 }
 
 

@@ -239,6 +239,10 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
       mDraw = false;
     }
   }
+  else
+  {
+    mDraw = true;
+  }
 
   
   UpdateSurface();
