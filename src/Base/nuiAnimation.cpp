@@ -159,6 +159,7 @@ nuiTimer* nuiAnimation::AcquireTimer()
   mAnimCounter++;
   if (!mpTimer)
   {
+    NGL_OUT("Start animation timer's first instance, start up\n");
     mpTimer = new nuiTimer(1.0 / mFrameRate);
     AnimSink.Connect(mpTimer->Tick, (void (*)(const nuiEvent&))&nuiAnimation::StartTasks);
     mpTimer->Start(false, false);
@@ -176,6 +177,7 @@ void nuiAnimation::ReleaseTimer()
   mAnimCounter--;
   if (!mAnimCounter)
   {
+    NGL_OUT("Release animation timer's last instance, shutdown\n");
     delete mpTimer;
     AnimSink.DisconnectAll();
     // also kill all tasks:

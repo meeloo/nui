@@ -369,8 +369,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 
 - (void) dealloc
 {
-  mpNGLWindow->CallOnDestruction();
-
+  [self Unregister];
   [super dealloc];
 }
 
@@ -1196,8 +1195,9 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
 nglWindow::~nglWindow()
 {
+  CallOnDestruction();
   ReleaseTimer();
-  [(id)mpNSWindow Unregister];
+  [(id)mpNSWindow release];
   Unregister();
 }
 
@@ -1379,6 +1379,7 @@ void nglWindow::AcquireTimer()
                                            0,// timer order, not implemented so far
                                            &OnCFRunLoopTicked,
                                            &_timer_ctx);
+  NGL_OUT("Installed timer for window %p\n", this);
 
   if (!mpCFRunLoopTimer)
   {
@@ -1398,8 +1399,10 @@ void nglWindow::ReleaseTimer()
   mpAnimationTimer = NULL;
   nuiAnimation::ReleaseTimer();
   CFRunLoopRef currentRunLoop = CFRunLoopGetCurrent();
-  CFRunLoopRemoveTimer(currentRunLoop, timer, kCFRunLoopCommonModes);
+//  CFRunLoopRemoveTimer(currentRunLoop, timer, kCFRunLoopCommonModes);
+  CFRunLoopTimerInvalidate(timer);
   CFRelease(timer);
+  NGL_OUT("Released timer for window %p\n", this);
 }
 
 
@@ -1464,6 +1467,7 @@ void nglWindow::AcquireDisplayLink()
     NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkStart returned an error"));
     NGL_ASSERT(0);
   }
+  NGL_OUT("Installed display link for window %p\n", this);
 }
 
 void nglWindow::ReleaseDisplayLink()
@@ -1476,6 +1480,7 @@ void nglWindow::ReleaseDisplayLink()
   }
   nuiAnimation::ReleaseTimer();
   mpAnimationTimer = NULL;
+  NGL_OUT("Released display link for window %p\n", this);
 }
 
 

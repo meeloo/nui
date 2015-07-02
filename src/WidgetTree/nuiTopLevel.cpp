@@ -283,7 +283,7 @@ void nuiTopLevel::Exit()
     ++it;
   }
 
-  nuiAnimation::ReleaseTimer();
+//  nuiAnimation::ReleaseTimer();
 }
 
 void nuiTopLevel::DisconnectWidget(nuiWidget* pWidget)

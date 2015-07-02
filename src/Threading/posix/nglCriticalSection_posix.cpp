@@ -49,8 +49,6 @@ nglCriticalSectionPrivate::nglCriticalSectionPrivate ()
 
 nglCriticalSectionPrivate::~nglCriticalSectionPrivate ()
 {
-  lock();
-  unlock();
   int res = pthread_mutex_destroy(&cmutex);;
   while (res != 0)
   {
