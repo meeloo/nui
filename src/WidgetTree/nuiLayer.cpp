@@ -222,27 +222,10 @@ bool nuiLayer::UpdateSurface()
   return false;
 }
 
-void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext)
+void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering)
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
-  if (mpWidgetContents)
-  {
-    // See if the widget's meta painter is empty or not
-    const nuiMetaPainter* pMP = mpWidgetContents->GetRenderCache();
-    if (pMP)
-    {
-      int32 arrays = pMP->GetNbDrawArray();
-      mDraw = arrays != 0;
-    }
-    else
-    {
-      mDraw = false;
-    }
-  }
-  else
-  {
-    mDraw = true;
-  }
+  mDraw = !ShouldSkipRendering;
 
   
   UpdateSurface();

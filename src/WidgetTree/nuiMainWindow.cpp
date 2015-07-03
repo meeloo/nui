@@ -107,7 +107,7 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   if (GetDrawToLayer())
   {
     pRenderThread->SetLayerTree(mpBackingLayer);
-    mpBackingLayer->UpdateContents(pRenderThread, pContext);
+    mpBackingLayer->UpdateContents(pRenderThread, pContext, mpRenderCache->GetNbDrawArray());
   }
 }
 
@@ -167,7 +167,7 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   if (GetDrawToLayer())
   {
     pRenderThread->SetLayerTree(mpBackingLayer);
-    mpBackingLayer->UpdateContents(pRenderThread, pContext);
+    mpBackingLayer->UpdateContents(pRenderThread, pContext, mRenderCacheIsEmpty);
   }
 }
 

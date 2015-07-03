@@ -846,6 +846,7 @@ protected:
   void Init(); ///< Initialise the basic parameters of the class.
 
   nuiMetaPainter* mpRenderCache;
+  bool mRenderCacheIsEmpty = true;
 
   uint32 mDebugLevel;
   

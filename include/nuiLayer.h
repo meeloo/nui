@@ -24,7 +24,7 @@ public:
 //  nuiColor GetClearColor() const;
 
   void UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pContext);
-  void UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext);
+  void UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering);
 
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());

@@ -1329,7 +1329,8 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 
     if (mpBackingLayer)
     {
-      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext());
+      mRenderCacheIsEmpty = pRenderCache->GetNbDrawArray() == 0;
+      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
     }
   }
   else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
@@ -1349,7 +1350,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     delete pIt;
 
     if (mpBackingLayer && drawchildren)
-      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext());
+      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
 
     mNeedRender = false;
   }
@@ -5123,7 +5124,7 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
 
     if (pRenderThread)
     {
-      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext());
+      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
     }
   }
 
