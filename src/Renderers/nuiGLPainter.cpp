@@ -1489,6 +1489,11 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 //#else
         internalPixelformat = pSurface->GetPixelFormat();
         pixelformat = pSurface->GetPixelFormat();
+        
+//        internalPixelformat = GL_RGBA8;
+//        pixelformat = GL_BGRA;
+//        Width = 4 * Width;
+//        Height = 4 * Height;
         type = GL_UNSIGNED_BYTE;
 //#endif
       }

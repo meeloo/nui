@@ -1379,7 +1379,7 @@ void nglWindow::AcquireTimer()
                                            0,// timer order, not implemented so far
                                            &OnCFRunLoopTicked,
                                            &_timer_ctx);
-  NGL_OUT("Installed timer for window %p\n", this);
+//  NGL_OUT("Installed timer for window %p\n", this);
 
   if (!mpCFRunLoopTimer)
   {
@@ -1402,7 +1402,7 @@ void nglWindow::ReleaseTimer()
 //  CFRunLoopRemoveTimer(currentRunLoop, timer, kCFRunLoopCommonModes);
   CFRunLoopTimerInvalidate(timer);
   CFRelease(timer);
-  NGL_OUT("Released timer for window %p\n", this);
+//  NGL_OUT("Released timer for window %p\n", this);
 }
 
 
@@ -1467,7 +1467,7 @@ void nglWindow::AcquireDisplayLink()
     NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkStart returned an error"));
     NGL_ASSERT(0);
   }
-  NGL_OUT("Installed display link for window %p\n", this);
+//  NGL_OUT("Installed display link for window %p\n", this);
 }
 
 void nglWindow::ReleaseDisplayLink()
@@ -1480,7 +1480,7 @@ void nglWindow::ReleaseDisplayLink()
   }
   nuiAnimation::ReleaseTimer();
   mpAnimationTimer = NULL;
-  NGL_OUT("Released display link for window %p\n", this);
+//  NGL_OUT("Released display link for window %p\n", this);
 }
 
 
@@ -1610,13 +1610,13 @@ bool nglWindow::GetResolution(float& rHorizontal, float& rVertical) const
 void nglWindow::EnterModalState()
 {
   SetState(eShow);
-  NGL_OUT(_T("nglWindow::EnterModalState NOT IMPLENTED YET!"));
+  NGL_OUT(_T("nglWindow::EnterModalState NOT IMPLEMENTED YET!"));
 //  NGL_ASSERT(!"Not Implemented");
 }
 
 void nglWindow::ExitModalState()
 {
-  NGL_OUT(_T("nglWindow::ExitModalState NOT IMPLENTED YET!"));
+  NGL_OUT(_T("nglWindow::ExitModalState NOT IMPLEMENTED YET!"));
 //  NGL_ASSERT(!"Not Implemented");  
 }
 
