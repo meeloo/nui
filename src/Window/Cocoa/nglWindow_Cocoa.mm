@@ -1153,10 +1153,11 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16,
     NSOpenGLPFAAccelerated,
     NSOpenGLPFABackingStore,
-    NSOpenGLPFAMultisample,
-    NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
-    NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)4,
+//    NSOpenGLPFAMultisample,
+//    NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
+//    NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)4,
     //NSOpenGLPFAWindow,
+    NSOpenGLPFANoRecovery,
     (NSOpenGLPixelFormatAttribute)0
   };
   NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];

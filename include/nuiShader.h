@@ -204,7 +204,7 @@ protected:
   //! This method simply calls glBindAttribLocation for the current ProgramObject.
   void        BindAttribLocation(GLint index, GLchar* name);
 
-  friend class nuiGL2Painter;
+  friend class nuiGLPainter;
 
   GLint GetVAPositionLocation() const;
   GLint GetVATexCoordLocation() const;

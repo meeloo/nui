@@ -43,7 +43,6 @@ class nuiSlider;
 enum nuiRenderer
 {
   eSoftware = eTargetAPI_None,
-  eOpenGL = eTargetAPI_OpenGL,
   eOpenGL2 = eTargetAPI_OpenGL2,
   eDirect3D = eTargetAPI_Direct3D,
   eMeta

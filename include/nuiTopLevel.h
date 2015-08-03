@@ -53,7 +53,7 @@ public:
   //@{
   nuiDrawContext* GetDrawContext();
   nuiRenderThread* GetRenderThread();
-  static void SetRenderer(nuiRenderer Renderer = eOpenGL);
+  static void SetRenderer(nuiRenderer Renderer = eOpenGL2);
   static nuiRenderer GetRenderer();
   virtual nglContext* GetNGLContext() const = 0;
   void OnRenderingDone(nuiRenderThread* pThread, bool Result);

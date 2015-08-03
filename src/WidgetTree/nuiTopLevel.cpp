@@ -441,7 +441,7 @@ nuiTopLevel* nuiTopLevel::GetTopLevel() const
   return (nuiTopLevel*)Self;
 }
 
-nuiRenderer nuiTopLevel::mRenderer = eOpenGL;
+nuiRenderer nuiTopLevel::mRenderer = eOpenGL2;
 
 void nuiTopLevel::SetRenderer(nuiRenderer Renderer)
 {

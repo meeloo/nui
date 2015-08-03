@@ -61,7 +61,7 @@ void Application::OnInit()
   ParseDefaultArgs();
 
   GetLog().UseConsole(true);
-  GetLog().SetLevel(_T("font"), 100);
+//  GetLog().SetLevel(_T("font"), 100);
 
   // Manual
   if ( (GetArgCount() == 1) &&
@@ -95,7 +95,7 @@ void Application::OnInit()
     else if (!arg.Compare(_T("--renderer")) || !arg.Compare(_T("-r")))
     {
       arg = GetArg(i+1);
-      if (!arg.Compare(_T("opengl"))) Renderer = eOpenGL;
+      if (!arg.Compare(_T("opengl"))) Renderer = eOpenGL2;
       else if (!arg.Compare(_T("direct3d"))) Renderer = eDirect3D;
       else if (!arg.Compare(_T("software"))) Renderer = eSoftware;
       i++;
@@ -122,8 +122,8 @@ void Application::OnInit()
       Width = current_mode.GetWidth();
       Height = current_mode.GetHeight();
 #else
-      Width = 800;
-      Height = 600;
+      Width = 320;
+      Height = 240;
 #endif
     }
   }

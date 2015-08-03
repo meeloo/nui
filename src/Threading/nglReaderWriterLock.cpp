@@ -29,8 +29,9 @@ void nglReaderWriterLock::LockRead()
       }
     }
 
-    if (mWriter)
-      mWaitForRead.Wait();
+    // If the writer changes after the test but before the wait we are fucked
+    while (mWriter)
+      mWaitForRead.Wait(1);
 
   } while (!ok);
 }
@@ -73,8 +74,8 @@ void nglReaderWriterLock::LockWrite()
       }
     }
 
-    if (mWriter && mWriter != nglThread::GetCurThreadID())
-      mWaitForWrite.Wait();
+    while (mWriter && mWriter != nglThread::GetCurThreadID())
+      mWaitForWrite.Wait(1);
 
   } while (mWriter != nglThread::GetCurThreadID());
 }

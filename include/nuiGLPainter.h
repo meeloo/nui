@@ -191,6 +191,28 @@ protected:
   nuiShaderProgram* mpShader = nullptr;
   nuiShaderState* mpShaderState = nullptr;
 
+  // Immediate mode setup:
+  void SetVertexPointers(const nuiRenderArray& rArray);
+  
+  //  VBO Setup:
+  void SetVertexBuffersPointers(const nuiRenderArray& rArray, RenderArrayInfo& rInfo);
+  void SetStreamBuffersPointers(const nuiRenderArray& rArray, const RenderArrayInfo& rInfo, int index);
+  
+  // Reset vertices modes
+  void ResetVertexPointers(const nuiRenderArray& rArray);
+  
+  
+  nuiShaderProgram* mpShader_TextureVertexColor;
+  nuiShaderProgram* mpShader_TextureAlphaVertexColor;
+  nuiShaderProgram* mpShader_TextureDifuseColor;
+  nuiShaderProgram* mpShader_TextureAlphaDifuseColor;
+  nuiShaderProgram* mpShader_DifuseColor;
+  nuiShaderProgram* mpShader_VertexColor;
+  
+  nuiMatrix mSurfaceMatrix;
+  
+  RenderArrayInfo* mpCurrentRenderArrayInfo;
+  nuiRenderArray* mpLastArray;
 };
 
 bool nuiCheckForGLErrorsReal();

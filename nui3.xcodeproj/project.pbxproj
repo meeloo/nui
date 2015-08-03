@@ -1452,12 +1452,6 @@
 		E50F41FC16E7746D00519AF0 /* nuiVertexAttribDesc.h in Headers */ = {isa = PBXBuildFile; fileRef = E50F41F516E7746D00519AF0 /* nuiVertexAttribDesc.h */; };
 		E50F79F913C1CACB002CB5A0 /* hb-ot-shape-complex-indic-machine.hh in Headers */ = {isa = PBXBuildFile; fileRef = E50F79F813C1CACB002CB5A0 /* hb-ot-shape-complex-indic-machine.hh */; };
 		E50F79FB13C1CACB002CB5A0 /* hb-ot-shape-complex-indic-machine.hh in Headers */ = {isa = PBXBuildFile; fileRef = E50F79F813C1CACB002CB5A0 /* hb-ot-shape-complex-indic-machine.hh */; };
-		E50FE78C1691089600A9461A /* nuiGL2Painter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E50FE78A1691089600A9461A /* nuiGL2Painter.cpp */; };
-		E50FE78F1691089600A9461A /* nuiGL2Painter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E50FE78A1691089600A9461A /* nuiGL2Painter.cpp */; };
-		E50FE7911691089600A9461A /* nuiGL2Painter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E50FE78A1691089600A9461A /* nuiGL2Painter.cpp */; };
-		E50FE795169108A300A9461A /* nuiGL2Painter.h in Headers */ = {isa = PBXBuildFile; fileRef = E50FE793169108A300A9461A /* nuiGL2Painter.h */; };
-		E50FE798169108A300A9461A /* nuiGL2Painter.h in Headers */ = {isa = PBXBuildFile; fileRef = E50FE793169108A300A9461A /* nuiGL2Painter.h */; };
-		E50FE79A169108A300A9461A /* nuiGL2Painter.h in Headers */ = {isa = PBXBuildFile; fileRef = E50FE793169108A300A9461A /* nuiGL2Painter.h */; };
 		E511F7411367149000DE93B0 /* hb-blob-private.hh in Headers */ = {isa = PBXBuildFile; fileRef = E511F5C11367145700DE93B0 /* hb-blob-private.hh */; };
 		E511F7421367149000DE93B0 /* hb-blob.cc in Sources */ = {isa = PBXBuildFile; fileRef = E511F5C21367145700DE93B0 /* hb-blob.cc */; };
 		E511F7431367149000DE93B0 /* hb-blob.h in Headers */ = {isa = PBXBuildFile; fileRef = E511F5C31367145700DE93B0 /* hb-blob.h */; };
@@ -4062,8 +4056,6 @@
 		E50F41E516E7744000519AF0 /* nuiVertexAttribDesc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiVertexAttribDesc.cpp; sourceTree = "<group>"; };
 		E50F41F516E7746D00519AF0 /* nuiVertexAttribDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiVertexAttribDesc.h; path = include/nuiVertexAttribDesc.h; sourceTree = SOURCE_ROOT; };
 		E50F79F813C1CACB002CB5A0 /* hb-ot-shape-complex-indic-machine.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = "hb-ot-shape-complex-indic-machine.hh"; path = "harfbuzz/hb-ot-shape-complex-indic-machine.hh"; sourceTree = "<group>"; };
-		E50FE78A1691089600A9461A /* nuiGL2Painter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiGL2Painter.cpp; sourceTree = "<group>"; };
-		E50FE793169108A300A9461A /* nuiGL2Painter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiGL2Painter.h; path = include/nuiGL2Painter.h; sourceTree = SOURCE_ROOT; };
 		E511F5C11367145700DE93B0 /* hb-blob-private.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = "hb-blob-private.hh"; path = "harfbuzz/hb-blob-private.hh"; sourceTree = "<group>"; };
 		E511F5C21367145700DE93B0 /* hb-blob.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "hb-blob.cc"; path = "harfbuzz/hb-blob.cc"; sourceTree = "<group>"; };
 		E511F5C31367145700DE93B0 /* hb-blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "hb-blob.h"; path = "harfbuzz/hb-blob.h"; sourceTree = "<group>"; };
@@ -6470,7 +6462,9 @@
 				E5816D200C3CECAB00902DFE /* src */,
 				E58167400C3CEC1300902DFE /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		E58167400C3CEC1300902DFE /* Products */ = {
 			isa = PBXGroup;
@@ -8179,8 +8173,6 @@
 				E5816CBC0C3CECAB00902DFE /* nuiD3DPainter.h */,
 				E5816DB00C3CECAB00902DFE /* nuiGLPainter.cpp */,
 				E5816CCC0C3CECAB00902DFE /* nuiGLPainter.h */,
-				E50FE78A1691089600A9461A /* nuiGL2Painter.cpp */,
-				E50FE793169108A300A9461A /* nuiGL2Painter.h */,
 				E5816DB40C3CECAB00902DFE /* nuiMetaPainter.cpp */,
 				E5816CDD0C3CECAB00902DFE /* nuiMetaPainter.h */,
 				E5816DB60C3CECAB00902DFE /* nuiPainter.cpp */,
@@ -8681,7 +8673,6 @@
 				E531A9A31440A20F00ED88C9 /* nuiLayout.h in Headers */,
 				E5C3FA3514BDC5CC00F4FB96 /* nuiHTTPServer.h in Headers */,
 				E52FA68314F686CF00992064 /* nuiStringTemplate.h in Headers */,
-				E50FE798169108A300A9461A /* nuiGL2Painter.h in Headers */,
 				E5AD0A54169F20EC00836BAA /* nuiShader.h in Headers */,
 				E54D8FC216C1D81300102723 /* nuiAudioDevice_AudioUnit.h in Headers */,
 				E548CEF316E4EA9500F98E45 /* nuiUniformDesc.h in Headers */,
@@ -9425,7 +9416,6 @@
 				E531A9A01440A20F00ED88C9 /* nuiLayout.h in Headers */,
 				E5C3FA3214BDC5CC00F4FB96 /* nuiHTTPServer.h in Headers */,
 				E52FA68014F686CF00992064 /* nuiStringTemplate.h in Headers */,
-				E50FE795169108A300A9461A /* nuiGL2Painter.h in Headers */,
 				E5AD0A51169F20EC00836BAA /* nuiShader.h in Headers */,
 				E548CEF016E4EA9500F98E45 /* nuiUniformDesc.h in Headers */,
 				E50F41F716E7746D00519AF0 /* nuiVertexAttribDesc.h in Headers */,
@@ -9800,7 +9790,6 @@
 				E531A9A51440A20F00ED88C9 /* nuiLayout.h in Headers */,
 				E5C3FA3714BDC5CC00F4FB96 /* nuiHTTPServer.h in Headers */,
 				E52FA68514F686CF00992064 /* nuiStringTemplate.h in Headers */,
-				E50FE79A169108A300A9461A /* nuiGL2Painter.h in Headers */,
 				61ED91A31A702716001AF911 /* nglStdStream.h in Headers */,
 				E5AD0A56169F20EC00836BAA /* nuiShader.h in Headers */,
 				E548CEF516E4EA9500F98E45 /* nuiUniformDesc.h in Headers */,
@@ -10894,7 +10883,6 @@
 				E531A99A1440A1EE00ED88C9 /* nuiLayout.cpp in Sources */,
 				E5C3FA3F14BDC60F00F4FB96 /* nuiHTTPServer.cpp in Sources */,
 				E52FA67914F686AA00992064 /* nuiStringTemplate.cpp in Sources */,
-				E50FE78F1691089600A9461A /* nuiGL2Painter.cpp in Sources */,
 				E5AD0A5E169F235B00836BAA /* nuiShader.cpp in Sources */,
 				E58615D418AD8FD9005B0D12 /* nuiDrawerView.cpp in Sources */,
 				E54D8FBE16C1D7FD00102723 /* nuiAudioDevice_AudioUnit.mm in Sources */,
@@ -11457,7 +11445,6 @@
 				E531A9971440A1EE00ED88C9 /* nuiLayout.cpp in Sources */,
 				E5C3FA3C14BDC60F00F4FB96 /* nuiHTTPServer.cpp in Sources */,
 				E52FA67614F686AA00992064 /* nuiStringTemplate.cpp in Sources */,
-				E50FE78C1691089600A9461A /* nuiGL2Painter.cpp in Sources */,
 				E5AD0A5B169F235B00836BAA /* nuiShader.cpp in Sources */,
 				E548CEF916E4EABF00F98E45 /* nuiUniformDesc.cpp in Sources */,
 				E50F41E816E7744000519AF0 /* nuiVertexAttribDesc.cpp in Sources */,
@@ -11794,7 +11781,6 @@
 				E531A99C1440A1EE00ED88C9 /* nuiLayout.cpp in Sources */,
 				E5C3FA4114BDC60F00F4FB96 /* nuiHTTPServer.cpp in Sources */,
 				E52FA67B14F686AA00992064 /* nuiStringTemplate.cpp in Sources */,
-				E50FE7911691089600A9461A /* nuiGL2Painter.cpp in Sources */,
 				E5AD0A60169F235B00836BAA /* nuiShader.cpp in Sources */,
 				E58615D318AD8FD9005B0D12 /* nuiDrawerView.cpp in Sources */,
 				E548CEFE16E4EABF00F98E45 /* nuiUniformDesc.cpp in Sources */,
@@ -12288,14 +12274,14 @@
 		E58167310C3CEBF100902DFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -12367,7 +12353,8 @@
 					AVMPLUS_IA32,
 					NDEBUG,
 				);
-				GCC_THREADSAFE_STATICS = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = YES;
 				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
@@ -12386,13 +12373,13 @@
 		E58B44CF1836DFC8003F30B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -12465,7 +12452,8 @@
 					AVMPLUS_IA32,
 					_DEBUG,
 				);
-				GCC_THREADSAFE_STATICS = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
@@ -12504,7 +12492,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_FAST_MATH = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				INSTALL_PATH = /usr/local/lib;
 				PRELINK_LIBS = "-liconv -lz";
@@ -12591,9 +12578,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_FAST_MATH = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
-				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_OPTIMIZATION_LEVEL = s;
 				INSTALL_PATH = /usr/local/lib;
 				PRELINK_LIBS = "-liconv -lz";
 				PRODUCT_NAME = nuiCocoa;

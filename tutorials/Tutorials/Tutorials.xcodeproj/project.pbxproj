@@ -1909,7 +1909,9 @@
 				E516F641185D15A500D97CA6 /* CSSFontSelection copy-Info.plist */,
 				61B37FE61A180AF0004EA14B /* Buttons copy2-Info.plist */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		E55E77A0185BBC62005F01B1 /* Products */ = {
 			isa = PBXGroup;

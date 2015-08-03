@@ -225,8 +225,8 @@ bool nuiLayer::UpdateSurface()
 void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering)
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
-  mDraw = !ShouldSkipRendering;
-
+//  mDraw = !ShouldSkipRendering;
+  mDraw = true;
   
   UpdateSurface();
   if (mSurfaceChanged)

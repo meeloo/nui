@@ -56,7 +56,7 @@ void Application::OnInit()
   ParseDefaultArgs();
 
   GetLog().UseConsole(true);
-  GetLog().SetLevel(_T("font"), 100);
+//  GetLog().SetLevel(_T("font"), 100);
 
   // Manual
   if ( (GetArgCount() == 1) &&

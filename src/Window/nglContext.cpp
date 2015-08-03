@@ -270,13 +270,9 @@ void nglContext::InitPainter()
   switch (mTargetAPI)
   {
 #ifndef __NUI_NO_GL__
-    case eOpenGL:
+    case eOpenGL2:
       mpPainter = new nuiGLPainter(this);
       NGL_OUT("nuiGLPainter created\n");
-      break;
-    case eOpenGL2:
-      mpPainter = new nuiGL2Painter(this);
-      NGL_OUT("nuiGL2Painter created\n");
       break;
 #endif
 #ifndef __NUI_NO_D3D__
