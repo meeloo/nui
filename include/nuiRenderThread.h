@@ -38,6 +38,8 @@ public:
   nglContext* GetContext() const;
 
 private:
+  void Post(nuiTask* pTask);
+    
   nuiTaskQueue mQueue;
   nuiTaskQueue mNextFrameQueue;
 

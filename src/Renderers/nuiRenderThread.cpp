@@ -13,6 +13,9 @@
 # import <Foundation/NSAutoreleasePool.h>
 #endif
 
+#define NUI_ENABLE_LAYER_TREE 0
+#define NUI_ENABLE_THREADED_RENDERING 0
+
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
 : mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
 {
@@ -22,6 +25,17 @@ nuiRenderThread::~nuiRenderThread()
 {
 
 }
+
+void nuiRenderThread::Post(nuiTask* pTask)
+{
+#if NUI_ENABLE_THREADED_RENDERING
+  mQueue.Post(pTask);
+#else
+  pTask->Run();
+  pTask->Release();
+#endif
+}
+
 
 void nuiRenderThread::OnStart()
 {
@@ -48,31 +62,31 @@ void nuiRenderThread::RunTaskOnRenderThread(nuiTask* pTask, bool OnNextFrame)
   if (OnNextFrame)
     mNextFrameQueue.Post(pTask);
   else
-    mQueue.Post(pTask);
+    Post(pTask);
 }
 
 // Public API:
 void nuiRenderThread::StartRendering(uint32 x, uint32 y)
 {
   ngl_atomic_inc(mRenderingTicks);
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_StartRendering, x, y));
+  Post(nuiMakeTask(this, &nuiRenderThread::_StartRendering, x, y));
 }
 
 void nuiRenderThread::SetRect(const nuiRect& rRect)
 {
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetRect, rRect));
+  Post(nuiMakeTask(this, &nuiRenderThread::_SetRect, rRect));
 }
 
 void nuiRenderThread::Exit()
 {
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_Exit));
+  Post(nuiMakeTask(this, &nuiRenderThread::_Exit));
 }
 
 void nuiRenderThread::SetWidgetPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
 {
   if (pPainter)
     pPainter->Acquire();
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetPainter, pWidget, pPainter));
+  Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetPainter, pWidget, pPainter));
 }
 
 void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
@@ -81,7 +95,7 @@ void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPai
 //  pPainter->nuiRefCount::SetTrace(true);
   if (pPainter)
     pPainter->Acquire();
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDrawPainter, pLayer, pPainter));
+  Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDrawPainter, pLayer, pPainter));
 }
 
 void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
@@ -91,25 +105,25 @@ void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* 
     pPainter->Acquire();
   nuiTask* task = nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter);
 
-  mQueue.Post(task);
+  Post(task);
 }
 
 void nuiRenderThread::InvalidateLayerContents(nuiLayer* pLayer)
 {
 //  NGL_OUT("InvalidateLayerContents %p\n", pLayer);
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerContents, pLayer));
+  Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerContents, pLayer));
 }
 
 
 void nuiRenderThread::SetRootWidget(nuiWidget* pRoot)
 {
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetRootWidget, pRoot));
+  Post(nuiMakeTask(this, &nuiRenderThread::_SetRootWidget, pRoot));
 }
 
 void nuiRenderThread::SetLayerTree(nuiLayer* pLayerRoot)
 {
 //  NGL_OUT("SetLayerTree %p\n", pLayerRoot);
-  mQueue.Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerTree, pLayerRoot));
+  Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerTree, pLayerRoot));
 }
 
 
@@ -128,7 +142,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //  }
 //  NGL_OUT("[nuiRenderThread] render\n");
 
-  if (mpLayerTreeRoot)
+  if (NUI_ENABLE_LAYER_TREE && mpLayerTreeRoot)
   {
     mpContext->GetLock().Lock();
     
