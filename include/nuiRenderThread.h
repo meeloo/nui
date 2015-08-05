@@ -78,4 +78,5 @@ private:
 
 
   nglAtomic mRenderingTicks=0;
+  int mWidgetIndentation = 0;
 };

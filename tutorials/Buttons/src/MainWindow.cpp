@@ -145,6 +145,10 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
+  
+  AddChild(new nuiLabel("Prout"));
+  return;
+  
   if (0)
   {
     ButtonCellSource* pSource = new ButtonCellSource();

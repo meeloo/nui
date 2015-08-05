@@ -40,7 +40,7 @@ This file includes all nui needed headers to ease the creation of precompiled he
 #endif // _WIN32_
 
 #define NUI_USE_RENDER_THREAD
-#define NUI_USE_LAYERS 1
+#define NUI_USE_LAYERS 0
 
 //#define _TU_USE_STL 1
 

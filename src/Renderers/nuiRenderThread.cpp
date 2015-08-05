@@ -14,7 +14,7 @@
 #endif
 
 #define NUI_ENABLE_LAYER_TREE 0
-#define NUI_ENABLE_THREADED_RENDERING 0
+#define NUI_ENABLE_THREADED_RENDERING 1
 
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
 : mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
@@ -301,7 +301,9 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     //    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
     //  }
     
-    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+//    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+    mWidgetIndentation = 0;
+    DrawWidget(mpDrawContext, mpRoot);
     
     mpDrawContext->StopRendering();
     mpPainter->EndSession();
@@ -448,21 +450,28 @@ void nuiRenderThread::_SetLayerTree(nuiLayer* pRoot)
 
 void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
 {
-  nglString str;
-  str.CFormat("Draw sub widget %s %s %p", pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
-  glPushGroupMarkerEXT(0, str.GetChars());
-//  NGL_OUT("%s\n", str.GetChars());
+  mWidgetIndentation++;
+
   auto it = mWidgetPainters.find(pKey);
-//  NGL_ASSERT(it != mWidgetPainters.end());
   if (it != mWidgetPainters.end())
   {
     nuiMetaPainter* pPainter = it->second;
     NGL_ASSERT(pPainter);
+    
+    nglString str;
+    str.CFormat("Draw sub widget %s %p", pPainter->GetName().GetChars(), pKey);
+    nglString indent;
+    indent.Fill("  ", mWidgetIndentation);
+    str.Prepend(indent);
+    glPushGroupMarkerEXT(0, str.GetChars());
+    //  NGL_OUT("%s\n", str.GetChars());
+
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
 //    pContext->SetStrokeColor(nuiColor("green"));
 //    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
+    glPopGroupMarkerEXT();
   }
-  glPopGroupMarkerEXT();
+  mWidgetIndentation--;
 }
 
 void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
