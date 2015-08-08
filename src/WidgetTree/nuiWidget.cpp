@@ -149,6 +149,7 @@ void nuiWidget::InitDefaultValues()
   mAutoAcceptMouseCancel = true;
   mAutoAcceptMouseSteal = true;
   mForceNoDrawToLayer = false;
+  mCurrentlyOnScreen = false;
 }
 
 
@@ -1294,16 +1295,12 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   nuiRect _self = GetOverDrawRect(true, false);
   nuiRect _self_and_decorations = GetOverDrawRect(true, true);
   nuiRect inter;
+  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
 
-//  _self.Intersect(_self, mVisibleRect);
-//  _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
-//  if (!inter.Intersect(_self_and_decorations, clip)) // Only render at the last needed moment. As we are currently offscreen or clipped entirely we will redraw another day.
-//  {
-/////< This painter and it's children's may have changed, but are not to be redrawn by the render thread within this clip rect.
-//    return false;
-//  }
-
-
+  _self.Intersect(_self, mVisibleRect);
+  _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
+  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
+  
   bool rendertest = mNeedRender;
   NGL_ASSERT(!mpRenderCache);
 
@@ -1386,7 +1383,8 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   
   _self.Intersect(_self, mVisibleRect);
   _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
-  if (!inter.Intersect(_self_and_decorations, clip)) // Only render at the last needed moment. As we are currently offscreen or clipped entirely we will redraw another day.
+  mCurrentlyOnScreen =   inter.Intersect(_self_and_decorations, clip);
+  if (!mCurrentlyOnScreen) // Only render at the last needed moment. As we are currently offscreen or clipped entirely we will redraw another day.
     return false;
   
   nuiDrawContext* pSavedCtx = pContext;
@@ -5952,24 +5950,6 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
     mVisibleRect = GetOverDrawRect(true, true);
   }
 
-  if (mpBackingLayer)
-  {
-    nuiSize x = 0;
-    nuiSize y = 0;
-
-    nuiWidget* pParent = GetParentLayerWidget();
-    if (pParent)
-      LocalToLocal(pParent, x, y);
-
-//    NGL_OUT("Set layer position %f %f\n", x, y);
-    mpBackingLayer->SetPosition(x, y);
-    nuiRenderThread* pRenderThread = GetRenderThread();
-    if (pRenderThread)
-    {
-      mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
-    }
-  }
-
   if (inval)
   {
     Invalidate();
@@ -6045,6 +6025,24 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
       } while (GetNextChild(pIt));
       delete pIt;
 
+    }
+  }
+
+  if (mpBackingLayer && (PositionChanged || SizeChanged))
+  {
+    nuiSize x = 0;
+    nuiSize y = 0;
+    
+    nuiWidget* pParent = GetParentLayerWidget();
+    if (pParent)
+      LocalToLocal(pParent, x, y);
+    
+    NGL_OUT("Set layer position %s %p %f %f\n", GetObjectClass().GetChars(), this, x, y);
+    mpBackingLayer->SetPosition(x, y);
+    nuiRenderThread* pRenderThread = GetRenderThread();
+    if (pRenderThread)
+    {
+      mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
     }
   }
 

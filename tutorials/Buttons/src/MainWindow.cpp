@@ -172,7 +172,7 @@ void MainWindow::OnCreation()
       anim->SetTargetObject(prout);
       anim->SetTargetAttribute("Alpha");
       anim->SetCaptureStartOnPlay(true);
-      anim->SetEndValue(0);
+      anim->SetEndValue(0.5);
       anim->SetEasing(nuiEasingSinus);
       anim->SetDuration(1.0f);
       prout->AddAnimation("Fade", anim);
@@ -186,7 +186,7 @@ void MainWindow::OnCreation()
     return;
   }
   
-  if (0)
+  if (1)
   {
     ButtonCellSource* pSource = new ButtonCellSource();
   //  ComplexCellSource* pSource = new ComplexCellSource();
@@ -206,15 +206,17 @@ void MainWindow::OnCreation()
   pSView->AddChild(pVBox);
   nuiButton* pButton;
   
-  for (int i = 0; i < 128; i++)
-  {
-    nglString str;
-    str.CFormat("Button %d", i);
-    pButton = new nuiButton(str);
-    pButton->SetObjectName(str);
-    pButton->SetUserHeight(42);
-    pVBox->AddCell(pButton);
-  }
+    for (int i = 0; i < 128; i++)
+    {
+      nglString str;
+      str.CFormat("Button %d", i);
+      pButton = new nuiButton(str);
+      pButton->SetObjectName(str);
+      pButton->SetUserHeight(42);
+      pVBox->AddCell(pButton);
+    }
+    
+    return;
   }
 
   if (1)

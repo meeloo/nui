@@ -274,10 +274,10 @@ bool nuiHTMLView::Draw(nuiDrawContext* pContext)
   if (!mpRootBox)
     return true;
   
-  if (!(mLastVisibleRect == mVisibleRect))
+  if (!(mLastVisibleRect == GetVisibleRect()))
   {
-    mpRootBox->UpdateVisibility(mVisibleRect);
-    mLastVisibleRect = mVisibleRect;
+    mpRootBox->UpdateVisibility(GetVisibleRect());
+    mLastVisibleRect = GetVisibleRect();
   }
   
   nuiWidget::Draw(pContext);

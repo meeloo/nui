@@ -839,6 +839,7 @@ protected:
   bool mAutoAcceptMouseCancel : 1;
   bool mAutoAcceptMouseSteal : 1;
   bool mForceNoDrawToLayer : 1;
+  bool mCurrentlyOnScreen : 1;
 
 
   bool mClickThru: 1;

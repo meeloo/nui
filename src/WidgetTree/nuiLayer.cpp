@@ -174,7 +174,8 @@ bool nuiLayer::UpdateSurface()
   }
   else if (mpWidgetContents)
   {
-    nuiRect overdraw = mpWidgetContents->GetOverDrawRect(true, true);
+//    nuiRect overdraw = mpWidgetContents->GetOverDrawRect(true, true);
+    nuiRect overdraw = mpWidgetContents->GetVisibleRect();
     w = ToAbove(overdraw.GetWidth());
     h = ToAbove(overdraw.GetHeight());
     mOffsetX = overdraw.Left();
@@ -214,7 +215,7 @@ bool nuiLayer::UpdateSurface()
       NGL_ASSERT(mpSurface == nullptr);
       mpSurface = nuiSurface::CreateSurface(name, ToNearest(mWidth), ToNearest(mHeight));
   //    mpSurface->SetTrace(true);
-  //    NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
+      NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
       mSurfaceChanged = true;
       return true;
     }
@@ -225,7 +226,7 @@ bool nuiLayer::UpdateSurface()
 void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering)
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
-//  mDraw = !ShouldSkipRendering;
+  mDraw = !ShouldSkipRendering;
   mDraw = true;
   
   UpdateSurface();
@@ -298,7 +299,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
 
 void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pContext)
 {
-//  NGL_OUT("nuiLayer::Draw %p\n", this);
+//  NGL_OUT("nuiLayer::UpdateDraw %p\n", this);
   CheckValid();
 
   UpdateSurface();
@@ -313,6 +314,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   name.CFormat("layer draw %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
   mpDrawPainter->SetName(name);
 
+  NGL_OUT("nuiLayer::UpdateDraw %s %s\n", mpWidgetContents?mpWidgetContents->GetObjectClass().GetChars():"???", name.GetChars());
 
   nuiPainter* pPainter = pContext->GetPainter();
 
@@ -325,10 +327,6 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   GetMatrix(Matrix);
   pContext->PushMatrix();
   pContext->MultMatrix(Matrix);
-  if (mOffsetX != 0 || mOffsetY != 0)
-  {
-    pContext->Translate(mOffsetX, mOffsetY);
-  }
 
   if (mDraw)
   {
@@ -349,6 +347,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     
     nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
     nuiRect dst = src;
+    dst.Move(mOffsetX, mOffsetY);
 
     pContext->SetTexture(pTex);
     pContext->SetFillColor(nuiColor(1.0f, 1.0f, 1.0f, 1.0f));
@@ -363,7 +362,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //  pContext->DrawRect(dst, eStrokeShape);
 //  pContext->EnableTexturing(true);
   }
-  
+
   for (auto child : mpChildren)
   {
     nuiLayer* pLayer = (nuiLayer*)child;

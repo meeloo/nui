@@ -1987,13 +1987,13 @@ void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
     glBindTexture(GL_TEXTURE_2D, 0);
     nuiCheckForGLErrors();
     
-    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, tinfo.mTexture);
+//    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, tinfo.mTexture);
     
   }
 
 
   glGenFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
-  NGL_OUT("glGenFramebuffersNUI %p '%s' -> %d (%d x %d)\n", pSurface, pSurface->GetObjectName().GetChars(), info.mFramebuffer, pSurface->GetWidth(), pSurface->GetHeight());
+//  NGL_OUT("glGenFramebuffersNUI %p '%s' -> %d (%d x %d)\n", pSurface, pSurface->GetObjectName().GetChars(), info.mFramebuffer, pSurface->GetWidth(), pSurface->GetHeight());
   NGL_ASSERT(info.mFramebuffer);
   nuiCheckForGLErrors();
 
@@ -2018,7 +2018,7 @@ void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
     glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, info.mTexture, 0);
     nuiCheckForGLErrors();
     
-    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, info.mTexture);
+//    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, info.mTexture);
   }
   else
   {
