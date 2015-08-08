@@ -1849,7 +1849,7 @@ void nuiGLPainter::DestroyTexture(nuiTexture* pTexture)
   {
     return;
   }
-  //NGL_OUT(_T("nuiGLPainter::DestroyTexture 0x%x : '%s' / %d\n"), pTexture, pTexture->GetSource().GetChars(), info.mTexture);
+  NGL_OUT(_T("nuiGLPainter::DestroyTexture 0x%x : '%s' / %d\n"), pTexture, pTexture->GetSource().GetChars(), info.mTexture);
 
   mpContext->BeginSession();
   glDeleteTextures(1, (GLuint*)&info.mTexture);
@@ -1885,46 +1885,341 @@ void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
   if (info.mStencilbuffer > 0)
     glDeleteRenderbuffersNUI(1, (GLuint*)&info.mStencilbuffer);
 
+  NGL_OUT("nuiGLPainter::EraseSurface %p (fbo %d tx %d)\n", pSurface, info.mFramebuffer, info.mTexture);
   mFramebuffers.erase(it);
+}
+
+void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
+{
+  //NGL_OUT("nuiGLPainter::CreateSurface %p\n", pSurface);
+  
+  GLint DefaultFrameBuffer = 0;
+  GLint DefaultRenderBuffer = 0;
+  
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &DefaultFrameBuffer);
+  nuiCheckForGLErrors();
+  glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &DefaultRenderBuffer);
+  nuiCheckForGLErrors();
+
+  nglCriticalSectionGuard fbg(mFramebuffersCS);
+  std::map<nuiSurface*, FramebufferInfo>::const_iterator it = mFramebuffers.find(pSurface);
+  bool create = (it == mFramebuffers.end()) ? true : false;
+  if (!create)
+    return;
+
+  GLint width = (GLint)pSurface->GetWidth();
+  GLint height = (GLint)pSurface->GetHeight();
+
+  float scale = mpContext->GetScale();
+  width *= scale;
+  height *= scale;
+
+  nuiTexture* pTexture = pSurface->GetTexture();
+
+#if defined DEBUG && defined _UIKIT_
+  if (pTexture)
+    glPushGroupMarkerEXT(0, pTexture->GetSource().GetChars());
+  else
+    glPushGroupMarkerEXT(0, pSurface->GetObjectName().GetChars());
+  nuiCheckForGLErrors();
+#endif
+
+  if (pTexture && !pTexture->IsPowerOfTwo())
+  {
+    switch (GetRectangleTextureSupport())
+    {
+      case 0:
+        width  = MakePOT(width);
+        height = MakePOT(height);
+        break;
+      case 1:
+      case 2:
+        break;
+    }
+  }
+
+  FramebufferInfo info;
+
+  if (pTexture && pSurface->GetRenderToTexture())
+  {
+    if (mActiveTextureSlot != 0)
+    {
+      glActiveTexture(GL_TEXTURE0);
+      mActiveTextureSlot = 0;
+    }
+    mFinalState.mpTexture[0] = nullptr;
+    
+    nglCriticalSectionGuard tg(mTexturesCS);
+    std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
+    if (it == mTextures.end())
+      it = mTextures.insert(mTextures.begin(), std::pair<nuiTexture*, TextureInfo>(pTexture, TextureInfo()));
+    NGL_ASSERT(it != mTextures.end());
+    
+    TextureInfo& tinfo(it->second);
+    
+    if (tinfo.mTexture > 0)
+    {
+      glDeleteTextures(1, (GLuint*)&tinfo.mTexture);
+      nuiCheckForGLErrors();
+      tinfo.mTexture = -1;
+    }
+    
+    glGenTextures(1, (GLuint*)&tinfo.mTexture);
+    info.mTexture = tinfo.mTexture;
+    
+    nuiCheckForGLErrors();
+    glBindTexture(GL_TEXTURE_2D, tinfo.mTexture);
+    nuiCheckForGLErrors();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    nuiCheckForGLErrors();
+    char* tmp = (char*)malloc(width * height * 4);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
+    free(tmp);
+    nuiCheckForGLErrors();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    nuiCheckForGLErrors();
+    
+    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, tinfo.mTexture);
+    
+  }
+
+
+  glGenFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
+  NGL_OUT("glGenFramebuffersNUI %p '%s' -> %d (%d x %d)\n", pSurface, pSurface->GetObjectName().GetChars(), info.mFramebuffer, pSurface->GetWidth(), pSurface->GetHeight());
+  NGL_ASSERT(info.mFramebuffer);
+  nuiCheckForGLErrors();
+
+#ifdef _UIKIT_
+#ifdef NGL_DEBUG
+//      if (pTexture)
+//        glLabelObjectEXT(GL_BUFFER_OBJECT_EXT, info.mFramebuffer, 0, pTexture->GetSource().GetChars());
+//      else
+//        glLabelObjectEXT(GL_BUFFER_OBJECT_EXT, info.mFramebuffer, 0, pSurface->GetObjectName().GetChars());
+//      nuiCheckForGLErrors();
+#endif
+#endif
+
+  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, info.mFramebuffer);
+  nuiCheckForGLErrors();
+//  glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
+//  nuiCheckForGLErrors();
+
+  ///< We definetly need a color attachement, either a texture, or a renderbuffer
+  if (pTexture && pSurface->GetRenderToTexture())
+  {
+    glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, info.mTexture, 0);
+    nuiCheckForGLErrors();
+    
+    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, info.mTexture);
+  }
+  else
+  {
+    glGenRenderbuffersNUI(1, (GLuint*)&info.mRenderbuffer);
+    nuiCheckForGLErrors();
+    
+    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mRenderbuffer);
+    nuiCheckForGLErrors();
+    
+    GLint pixelformat = pSurface->GetPixelFormat();
+    GLint internalPixelformat = pSurface->GetPixelFormat();
+    internalPixelformat = GL_RGBA;
+#if !defined(_OPENGL_ES_) && defined(_MACOSX_)
+    if (internalPixelformat == GL_RGBA)
+    {
+      pixelformat = GL_BGRA;
+    }
+    else if (internalPixelformat == GL_RGB)
+    {
+      pixelformat = GL_BGR;
+    }
+#else
+#ifdef _UIKIT_
+    pixelformat = GL_RGBA8_OES;
+#endif
+#endif
+    
+    glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, pixelformat, width, height);
+    nuiCheckForGLErrors();
+    
+    GLint w, h;
+    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
+    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
+    
+    NGL_ASSERT(w == width);
+    NGL_ASSERT(h == height);
+    
+    NGL_OUT("init color surface %d x %d (asked %d x %d)\n", w, h, width, height);
+    
+    
+    glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
+                                 GL_COLOR_ATTACHMENT0_NUI,
+                                 GL_RENDERBUFFER_NUI,
+                                 info.mRenderbuffer);
+    //NGL_OUT("surface render buffer -> %d\n", info.mRenderbuffer);
+    nuiCheckForGLErrors();
+  }
+  
+
+  ///< Do we need a depth buffer
+  if (pSurface->GetDepth())
+  {
+    glGenRenderbuffersNUI(1, (GLuint*)&info.mDepthbuffer);
+    nuiCheckForGLErrors();
+    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mDepthbuffer);
+    nuiCheckForGLErrors();
+
+    
+#ifdef _OPENGL_ES_
+    if (pSurface->GetStencil())
+    {
+      glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI,
+                               GL_DEPTH24_STENCIL8_OES,
+                               width, height);
+      nuiCheckForGLErrors();
+
+      GLint w, h;
+      glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
+      glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
+
+      NGL_ASSERT(w == width);
+      NGL_ASSERT(h == height);
+
+      NGL_OUT("init depth surface %d x %d (asked %d x %d)\n", w, h, width, height);
+    }
+    else
+#endif
+    {
+      int32 depth = pSurface->GetDepth();
+#ifndef _OPENGL_ES_
+      if (depth <= 16)
+        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT16, width, height);
+      else if (depth <= 24)
+        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT24, width, height);
+      else
+        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT32, width, height);
+#else
+      if (depth <= 16)
+        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT16, width, height);
+      else
+        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT24, width, height);
+#endif
+      nuiCheckForGLErrors();
+
+      GLint w, h;
+      glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
+      glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
+
+      NGL_ASSERT(w == width);
+      NGL_ASSERT(h == height);
+
+      NGL_OUT("init depth surface %d x %d (asked %d x %d)\n", w, h, width, height);
+      
+    }
+
+    nuiCheckForGLErrors();
+
+    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
+    nuiCheckForGLErrors();
+
+    glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
+                                 GL_DEPTH_ATTACHMENT_NUI,
+                                 GL_RENDERBUFFER_NUI,
+                                 info.mDepthbuffer);
+    nuiCheckForGLErrors();
+
+#ifdef _OPENGL_ES_
+    if (pSurface->GetStencil())
+    {
+      glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
+                                   GL_STENCIL_ATTACHMENT_NUI,
+                                   GL_RENDERBUFFER_NUI,
+                                   info.mDepthbuffer);
+    }
+#endif
+    nuiCheckForGLErrors();
+  }
+
+  ///< Do we need a stencil buffer
+#ifndef _OPENGL_ES_
+  if (pSurface->GetStencil())
+  {
+    NGL_ASSERT(!"Stencil attachement not supported");
+    glGenRenderbuffersNUI(1, (GLuint*)&info.mStencilbuffer);
+    nuiCheckForGLErrors();
+
+    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mStencilbuffer);
+    nuiCheckForGLErrors();
+
+    glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI,
+                             GL_STENCIL_INDEX,
+                             width, height);
+    nuiCheckForGLErrors();
+    GLint w, h;
+    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
+    glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
+
+    NGL_ASSERT(w == width);
+    NGL_ASSERT(h == height);
+
+    NGL_OUT("init stencil surface %d x %d (asked %d x %d)\n", w, h, width, height);
+
+    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
+    nuiCheckForGLErrors();
+
+    glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
+                                 GL_STENCIL_ATTACHMENT_NUI,
+                                 GL_RENDERBUFFER_NUI,
+                                 info.mStencilbuffer);
+    nuiCheckForGLErrors();
+  }
+#endif
+
+#ifdef NGL_DEBUG
+  CheckFramebufferStatus();
+#endif
+  nuiCheckForGLErrors();
+  {
+    nglCriticalSectionGuard fbg(mFramebuffersCS);
+    mFramebuffers[pSurface] = info;
+  }
+
+  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, DefaultFrameBuffer);
+  nuiCheckForGLErrors();
+  //NGL_OUT("glBindFramebufferNUI -> %d\n", DefaultFrameBuffer);
+  if (DefaultRenderBuffer >= 0)
+  {
+    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, DefaultRenderBuffer);
+    nuiCheckForGLErrors();
+    //NGL_OUT("glBindRenderbufferNUI -> %d\n", DefaultRenderBuffer);
+  }
+
+  nuiCheckForGLErrors();
+#ifdef NGL_DEBUG
+  CheckFramebufferStatus();
+#endif
+
 }
 
 void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 {
   //NGL_OUT("nuiGLPainter::SetSurface %p\n", pSurface);
-  if (pSurface)
-  {
-    if (mpSurface)
-    {
-      mpSurfaceStack.push(mpSurface);
-    }
-  }
-  else
-  {
-    if (!mpSurfaceStack.empty())
-    {
-      pSurface = mpSurfaceStack.top();
-      mpSurfaceStack.pop();
-    }
-  }
-
-  if (mpSurface == pSurface)
-    return;
-
   if (!mpSurface && pSurface)
   {
-//#ifdef _OPENGL_ES_
-//    glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &mDefaultFramebuffer);
-//    nuiCheckForGLErrors();
-//    glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
-//    nuiCheckForGLErrors();
-//#endif
-
+    //#ifdef _OPENGL_ES_
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING_NUI, &mDefaultFramebuffer);
+    nuiCheckForGLErrors();
+    glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
+    nuiCheckForGLErrors();
+    //#endif
+    
   }
   
-
   if (pSurface)
     pSurface->Acquire();
-
+  
   if (mpSurface)
   {
     mpSurface->Release();
@@ -1933,22 +2228,22 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 #endif
   }
   mpSurface = pSurface;
-
+  
   if (pSurface)
   {
     nglCriticalSectionGuard fbg(mFramebuffersCS);
     std::map<nuiSurface*, FramebufferInfo>::const_iterator it = mFramebuffers.find(pSurface);
     bool create = (it == mFramebuffers.end()) ? true : false;
-
+    
     GLint width = (GLint)pSurface->GetWidth();
     GLint height = (GLint)pSurface->GetHeight();
-
+    
     float scale = mpContext->GetScale();
     width *= scale;
     height *= scale;
-
+    
     nuiTexture* pTexture = pSurface->GetTexture();
-
+    
 #if defined DEBUG && defined _UIKIT_
     if (pTexture)
       glPushGroupMarkerEXT(0, pTexture->GetSource().GetChars());
@@ -1956,7 +2251,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
       glPushGroupMarkerEXT(0, pSurface->GetObjectName().GetChars());
     nuiCheckForGLErrors();
 #endif
-
+    
     if (pTexture && !pTexture->IsPowerOfTwo())
     {
       switch (GetRectangleTextureSupport())
@@ -1970,320 +2265,51 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
           break;
       }
     }
-
-
-    FramebufferInfo info;
-
+    
+    
+    
     if (create)
     {
-      glGenFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
-      NGL_OUT("glGenFramebuffersNUI %p '%s' -> %d (%d x %d)\n", pSurface, pSurface->GetObjectName().GetChars(), info.mFramebuffer, pSurface->GetWidth(), pSurface->GetHeight());
-      NGL_ASSERT(info.mFramebuffer);
-      nuiCheckForGLErrors();
+      CreateSurface(pSurface);
+      it = mFramebuffers.find(pSurface);
+    }
 
-#ifdef _UIKIT_
-#ifdef NGL_DEBUG
-//      if (pTexture)
-//        glLabelObjectEXT(GL_BUFFER_OBJECT_EXT, info.mFramebuffer, 0, pTexture->GetSource().GetChars());
-//      else
-//        glLabelObjectEXT(GL_BUFFER_OBJECT_EXT, info.mFramebuffer, 0, pSurface->GetObjectName().GetChars());
+    const FramebufferInfo& info(it->second);
+    glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, info.mFramebuffer);
+    nuiCheckForGLErrors();
+    //NGL_OUT("glBindFramebufferNUI -> %d\n", info.mFramebuffer);
+//    if (info.mRenderbuffer >= 0)
+//    {
+//      glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mRenderbuffer);
 //      nuiCheckForGLErrors();
-#endif
-#endif
-
-      glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, info.mFramebuffer);
-      nuiCheckForGLErrors();
-      glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
-      nuiCheckForGLErrors();
-
-      ///< We definetly need a color attachement, either a texture, or a renderbuffer
-      if (pTexture && pSurface->GetRenderToTexture())
-      {
-        //        GLint oldTexture;
-        //        if (mActiveTextureSlot != 0)
-        //        {
-        //          glActiveTexture(GL_TEXTURE0);
-        //          mActiveTextureSlot = 0;
-        //        }
-        //        glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &oldTexture);
-        //
-        //        UploadTexture(pTexture, 0);
-        //        nuiCheckForGLErrors();
-        //
-        //        nglCriticalSectionGuard tg(mTexturesCS);
-        //
-        //        std::map<nuiTexture*, TextureInfo>::iterator tex_it = mTextures.find(pTexture);
-        //        NGL_ASSERT(tex_it != mTextures.end());
-        //        TextureInfo& tex_info(tex_it->second);
-        //
-        //        glBindTexture(GL_TEXTURE_2D, 0);
-        //
-        //        nuiCheckForGLErrors();
-        //
-        //        glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI,
-        //                                  GL_COLOR_ATTACHMENT0_NUI,
-        //                                  GetTextureTarget(pTexture->IsPowerOfTwo()),
-        //                                  tex_info.mTexture,
-        //                                  0);
-        //        NGL_OUT("surface texture -> %d\n", tex_info.mTexture);
-        //        nuiCheckForGLErrors();
-        
-        if (mActiveTextureSlot != 0)
-        {
-          glActiveTexture(GL_TEXTURE0);
-          mActiveTextureSlot = 0;
-        }
-        mFinalState.mpTexture[0] = nullptr;
-        
-        nglCriticalSectionGuard tg(mTexturesCS);
-        std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
-        if (it == mTextures.end())
-          it = mTextures.insert(mTextures.begin(), std::pair<nuiTexture*, TextureInfo>(pTexture, TextureInfo()));
-        NGL_ASSERT(it != mTextures.end());
-        
-        TextureInfo& info(it->second);
-        
-        if (info.mTexture > 0)
-        {
-          glDeleteTextures(1, (GLuint*)&info.mTexture);
-          nuiCheckForGLErrors();
-          info.mTexture = -1;
-        }
-        
-        glGenTextures(1, (GLuint*)&info.mTexture);
-        nuiCheckForGLErrors();
-        glBindTexture(GL_TEXTURE_2D, info.mTexture);
-        nuiCheckForGLErrors();
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        nuiCheckForGLErrors();
-//        glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-        nuiCheckForGLErrors();
-//        glBindTexture(GL_TEXTURE_2D, 0);
-        nuiCheckForGLErrors();
-        glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, info.mTexture, 0);
-        nuiCheckForGLErrors();
-        
-        GLint w, h;
-//        glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
-//        glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
-        NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, info.mTexture);
-        
-      }
-      else
-      {
-        glGenRenderbuffersNUI(1, (GLuint*)&info.mRenderbuffer);
-        nuiCheckForGLErrors();
-        
-        glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mRenderbuffer);
-        nuiCheckForGLErrors();
-        
-        GLint pixelformat = pSurface->GetPixelFormat();
-        GLint internalPixelformat = pSurface->GetPixelFormat();
-        internalPixelformat = GL_RGBA;
-#if !defined(_OPENGL_ES_) && defined(_MACOSX_)
-        if (internalPixelformat == GL_RGBA)
-        {
-          pixelformat = GL_BGRA;
-        }
-        else if (internalPixelformat == GL_RGB)
-        {
-          pixelformat = GL_BGR;
-        }
-#else
-#ifdef _UIKIT_
-        pixelformat = GL_RGBA8_OES;
-#endif
-#endif
-        
-        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, pixelformat, width, height);
-        nuiCheckForGLErrors();
-        
-        GLint w, h;
-        glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
-        glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
-        
-        NGL_ASSERT(w == width);
-        NGL_ASSERT(h == height);
-        
-        NGL_OUT("init color surface %d x %d (asked %d x %d)\n", w, h, width, height);
-        
-        
-        glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-                                     GL_COLOR_ATTACHMENT0_NUI,
-                                     GL_RENDERBUFFER_NUI,
-                                     info.mRenderbuffer);
-        //NGL_OUT("surface render buffer -> %d\n", info.mRenderbuffer);
-        nuiCheckForGLErrors();
-      }
-      
-
-      ///< Do we need a depth buffer
-      if (pSurface->GetDepth())
-      {
-        glGenRenderbuffersNUI(1, (GLuint*)&info.mDepthbuffer);
-        nuiCheckForGLErrors();
-        glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mDepthbuffer);
-        nuiCheckForGLErrors();
-
-        
-#ifdef _OPENGL_ES_
-        if (pSurface->GetStencil())
-        {
-          glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI,
-                                   GL_DEPTH24_STENCIL8_OES,
-                                   width, height);
-          nuiCheckForGLErrors();
-
-          GLint w, h;
-          glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
-          glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
-
-          NGL_ASSERT(w == width);
-          NGL_ASSERT(h == height);
-
-          NGL_OUT("init depth surface %d x %d (asked %d x %d)\n", w, h, width, height);
-        }
-        else
-#endif
-        {
-          int32 depth = pSurface->GetDepth();
-#ifndef _OPENGL_ES_
-          if (depth <= 16)
-            glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT16, width, height);
-          else if (depth <= 24)
-            glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT24, width, height);
-          else
-            glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT32, width, height);
-#else
-          if (depth <= 16)
-            glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT16, width, height);
-          else
-            glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT24, width, height);
-#endif
-          nuiCheckForGLErrors();
-
-          GLint w, h;
-          glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
-          glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
-
-          NGL_ASSERT(w == width);
-          NGL_ASSERT(h == height);
-
-          NGL_OUT("init depth surface %d x %d (asked %d x %d)\n", w, h, width, height);
-          
-        }
-
-        nuiCheckForGLErrors();
-
-        glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
-        nuiCheckForGLErrors();
-
-        glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-                                     GL_DEPTH_ATTACHMENT_NUI,
-                                     GL_RENDERBUFFER_NUI,
-                                     info.mDepthbuffer);
-        nuiCheckForGLErrors();
-
-#ifdef _OPENGL_ES_
-        if (pSurface->GetStencil())
-        {
-          glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-                                       GL_STENCIL_ATTACHMENT_NUI,
-                                       GL_RENDERBUFFER_NUI,
-                                       info.mDepthbuffer);
-        }
-#endif
-        nuiCheckForGLErrors();
-      }
-
-      ///< Do we need a stencil buffer
-#ifndef _OPENGL_ES_
-      if (pSurface->GetStencil())
-      {
-        NGL_ASSERT(!"Stencil attachement not supported");
-        glGenRenderbuffersNUI(1, (GLuint*)&info.mStencilbuffer);
-        nuiCheckForGLErrors();
-
-        glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mStencilbuffer);
-        nuiCheckForGLErrors();
-
-        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI,
-                                 GL_STENCIL_INDEX,
-                                 width, height);
-        nuiCheckForGLErrors();
-        GLint w, h;
-        glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_WIDTH_NUI, &w);
-        glGetRenderbufferParameterivNUI(GL_RENDERBUFFER_NUI, GL_RENDERBUFFER_HEIGHT_NUI, &h);
-
-        NGL_ASSERT(w == width);
-        NGL_ASSERT(h == height);
-
-        NGL_OUT("init stencil surface %d x %d (asked %d x %d)\n", w, h, width, height);
-
-        glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
-        nuiCheckForGLErrors();
-
-        glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-                                     GL_STENCIL_ATTACHMENT_NUI,
-                                     GL_RENDERBUFFER_NUI,
-                                     info.mStencilbuffer);
-        nuiCheckForGLErrors();
-      }
-#endif
-
+//      //NGL_OUT("glBindRenderbufferNUI -> %d\n", info.mRenderbuffer);
+//    }
+    
+    nuiCheckForGLErrors();
 #ifdef NGL_DEBUG
-      CheckFramebufferStatus();
+    CheckFramebufferStatus();
 #endif
-      nuiCheckForGLErrors();
-      {
-        nglCriticalSectionGuard fbg(mFramebuffersCS);
-        mFramebuffers[pSurface] = info;
-      }
-    }
-    else
-    {
-      /// !create
-      info = it->second;
-      glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, info.mFramebuffer);
-      nuiCheckForGLErrors();
-      //NGL_OUT("glBindFramebufferNUI -> %d\n", info.mFramebuffer);
-      if (info.mRenderbuffer >= 0)
-      {
-        glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mRenderbuffer);
-        nuiCheckForGLErrors();
-        //NGL_OUT("glBindRenderbufferNUI -> %d\n", info.mRenderbuffer);
-      }
-
-      nuiCheckForGLErrors();
-#ifdef NGL_DEBUG
-      CheckFramebufferStatus();
-#endif
-    }
   }
   else
   {
     /// !pSurface
     glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, mDefaultFramebuffer);
     nuiCheckForGLErrors();
-//    NGL_OUT("UNBIND glBindFramebufferNUI -> %d\n", mDefaultFramebuffer);
-    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, mDefaultRenderbuffer);
-//    NGL_OUT("UNBIND glBindRenderbufferNUI -> %d\n", mDefaultRenderbuffer);
-    nuiCheckForGLErrors();
-
+    //    NGL_OUT("UNBIND glBindFramebufferNUI -> %d\n", mDefaultFramebuffer);
+//    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, mDefaultRenderbuffer);
+//    //    NGL_OUT("UNBIND glBindRenderbufferNUI -> %d\n", mDefaultRenderbuffer);
+//    nuiCheckForGLErrors();
+    
 #if defined _UIKIT_
-//    glResolveMultisampleFramebufferAPPLE();
+    //    glResolveMultisampleFramebufferAPPLE();
 #endif
-
+    
     nuiCheckForGLErrors();
 #ifdef NGL_DEBUG
     CheckFramebufferStatus();
 #endif
   }
-
+  
   ResetOpenGLState();
 }
 

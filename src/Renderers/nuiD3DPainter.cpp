@@ -1743,6 +1743,11 @@ uint32 nuiD3DPainter::GetRectangleTextureSupport() const
   return mCanRectangleTexture;
 }
 
+void nuiD3DPainter::CreateSurface(nuiSurface* pSurface)
+{
+  
+}
+
 void nuiD3DPainter::SetSurface(nuiSurface* pSurface)
 {
   NGL_OUT(_T("SetSurface(0x%x)\n"), pSurface);

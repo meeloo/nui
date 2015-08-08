@@ -290,6 +290,21 @@ void nuiMetaPainter::SetSurface(nuiSurface* pSurface)
 
 }
 
+void nuiMetaPainter::CreateSurface(nuiSurface* pSurface)
+{
+  if (mDummyMode)
+    return;
+  
+  NGL_ASSERT(pSurface);
+
+  pSurface->Acquire();
+  mSurfaces.push_back(pSurface);
+  
+  StoreOpCode(eCreateSurface);
+  StorePointer(pSurface);
+  
+}
+
 
 void nuiMetaPainter::LoadMatrix(const nuiMatrix& rMatrix)
 {
@@ -580,6 +595,13 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
             pPainter->SetSurface(pSurface);
         }
         break;
+      case eCreateSurface:
+        if (draw)
+        {
+          nuiSurface* pSurface = (nuiSurface*)FetchPointer();
+          pPainter->CreateSurface(pSurface);
+        }
+        break;
       case eLoadMatrix:
         if (draw)
         {
@@ -795,6 +817,15 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         }
       }
       break;
+    case eCreateSurface:
+    {
+      nuiSurface* pS = (nuiSurface*)FetchPointer();
+      NGL_ASSERT(pS);
+      nglString clss(pS->GetObjectClass());
+      nglString name(pS->GetObjectName());
+      str.CFormat("CreateSurface 0x%x / '%s - %s'", pS, clss.GetChars(), name.GetChars());
+    }
+      break;
     case eLoadMatrix:
       {
         nuiMatrix m;
@@ -949,6 +980,9 @@ void nuiMetaPainter::UpdateIndices() const
       case eSetSurface:
         FetchPointer();
         break;
+      case eCreateSurface:
+        FetchPointer();
+        break;
       case eLoadMatrix:
       {
         nuiMatrix m;
@@ -1077,5 +1111,10 @@ int32 nuiMetaPainter::GetNbClearColor() const
 int32 nuiMetaPainter::GetNbDrawArray() const
 {
   return mNbDrawArray;
+}
+
+const std::vector<nuiSurface*> nuiMetaPainter::GetSurfaces() const
+{
+  return mSurfaces;
 }
 

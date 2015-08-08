@@ -59,7 +59,7 @@ void nuiLayer::DumpLayers()
 }
 
 nuiLayer::nuiLayer(const nglString& rName, int width, int height)
-: nuiNode(rName), mClearColor(0, 0, 0, 0)
+: nuiNode(rName), mClearColor(1.0f, 1.0f, 1.0f, 0.0f)
 {
   #if _DEBUG
   {
@@ -263,7 +263,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     if (mpWidgetContents)
     {
   //    mpWidgetContents->GetColor(eActiveWindowBg);
-      pContext->SetClearColor(nuiColor(0.0f, 0.0f, 0.0f, 0.0f));
+      pContext->SetClearColor(mClearColor);
       pContext->Clear();
       mpContentsPainter->DrawWidget(pContext, mpWidgetContents);
     }

@@ -258,26 +258,7 @@ void nuiPainter::DelNeedTextureBackingStore()
 
 void nuiPainter::SetSurface(nuiSurface* pSurface)
 {
-  //#TODO Verify the acquire/release scheme here, seems overly complex
   NGL_OUT("nuiPainter::SetSurface %p\n", pSurface);
-  if (pSurface)
-  {
-    if (mpSurface)
-    {
-      mpSurface->Acquire();
-      mpSurfaceStack.push(mpSurface);
-    }
-  }
-  else
-  {
-    NGL_ASSERT(!mpSurfaceStack.empty());
-    pSurface = mpSurfaceStack.top();
-    pSurface->Release();
-    mpSurfaceStack.pop();
-  }
-
-  if (pSurface == mpSurface)
-    return;
   
   if (pSurface)
     pSurface->Acquire();
@@ -286,6 +267,18 @@ void nuiPainter::SetSurface(nuiSurface* pSurface)
   
   mpSurface = pSurface;
 }
+
+void nuiPainter::CreateSurface(nuiSurface* pSurface)
+{
+  NGL_OUT("nuiPainter::SetSurface %p\n", pSurface);
+  if (pSurface)
+    pSurface->Acquire();
+  if (mpSurface)
+    mpSurface->Release();
+  
+  mpSurface = pSurface;
+}
+
 
 nuiSurface* nuiPainter::GetSurface() const
 {

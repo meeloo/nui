@@ -1906,6 +1906,15 @@ static const bool DISPLAY_PARTIAL_RECTS = false;
 bool nuiTopLevel::Draw(class nuiDrawContext *pContext)
 {
   CheckValid();
+  
+  if (mClearBackground)
+  {
+    //pContext->Clear();
+    nuiColor clearColor("nuiActiveWindowBg");
+    pContext->SetFillColor(clearColor);
+    pContext->DrawRect(GetRect().Size(), eFillShape);
+  }
+  
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
   {

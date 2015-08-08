@@ -145,9 +145,25 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  
-  AddChild(new nuiLabel("Prout"));
-  return;
+  if (1)
+  {
+    nuiLabel* prout = new nuiLabel("Prout");
+    prout->SetDrawToLayer(true);
+    AddChild(prout);
+    
+    nuiAttributeAnimation* anim = new nuiAttributeAnimation();
+    anim->SetTargetObject(this);
+    anim->SetTargetAttribute("Alpha");
+    anim->SetCaptureStartOnPlay(true);
+    anim->SetEndValue(0);
+    anim->SetEasing(nuiEasingSinus);
+    anim->SetDuration(1.0f);
+    prout->AddAnimation("Fade", anim);
+    anim->Play(100000, eAnimLoopPingPong);
+    
+    
+    return;
+  }
   
   if (0)
   {

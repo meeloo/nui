@@ -32,6 +32,7 @@ public:
   virtual void StartRendering();
   virtual void SetState(const nuiRenderState& rState, bool ForceApply = false);
   virtual void SetSurface(nuiSurface* pSurface);
+  virtual void CreateSurface(nuiSurface* pSurface);
 
   virtual void DrawArray(nuiRenderArray* pArray);
   virtual void Clear(bool color, bool depth, bool stencil);
@@ -82,6 +83,8 @@ public:
   void SetDrawChildrenImmediat(bool set);
   bool GetDrawChildrenImmediat() const;
 
+  const std::vector<nuiSurface*> GetSurfaces() const;
+  
   virtual void DestroySurface(nuiSurface* pSurface);
   virtual void DestroyRenderArray(nuiRenderArray* pArray);
 
@@ -122,6 +125,7 @@ protected:
     eDrawWidget,
     eDrawLayer,
     eSetSurface,
+    eCreateSurface,
     
     eBreak
   };

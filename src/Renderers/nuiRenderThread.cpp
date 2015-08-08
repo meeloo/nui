@@ -13,8 +13,8 @@
 # import <Foundation/NSAutoreleasePool.h>
 #endif
 
-#define NUI_ENABLE_LAYER_TREE 0
-#define NUI_ENABLE_THREADED_RENDERING 1
+#define NUI_ENABLE_LAYER_TREE 1
+#define NUI_ENABLE_THREADED_RENDERING 0
 
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
 : mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
@@ -45,7 +45,7 @@ void nuiRenderThread::OnStart()
   NSAutoreleasePool* pPool = [[NSAutoreleasePool alloc] init];
 #endif
 
-  while (mContinue && (pTask = mQueue.Get(60000)))
+  while (mContinue && (pTask = mQueue.Get(1000)))
   {
     pTask->Run();
     pTask->Release();
@@ -149,7 +149,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     mpPainter->ResetStats();
     mpContext->BeginSession();
     mpPainter->BeginSession();
-    mpDrawContext->SetClearColor(nuiColor(255,255,255));
+    mpDrawContext->SetClearColor(nuiColor(255,255,255, 0));
     //  if (mClearBackground)
     {
       mpDrawContext->Clear();
@@ -183,6 +183,21 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
     glPushGroupMarkerEXT(0, "Update dirty layers");
 
+    // Create needed surfaces once for this frame:
+//    NGL_OUT("Create surface for current frame\n");
+    int count = 0;
+    for (auto elem : mLayerContentsPainters)
+    {
+      nuiMetaPainter* pPainter = elem.second;
+      auto surfaces(pPainter->GetSurfaces());
+      for (auto surface : surfaces)
+      {
+        mpPainter->CreateSurface(surface);
+        count++;
+      }
+    }
+//    NGL_OUT("DONE - Create surface for current frame (%d)\n", count);
+    
     for (auto layer : mDirtyLayers)
     {
       nglString str;
@@ -322,6 +337,7 @@ void nuiRenderThread::_SetRect(const nuiRect& rRect)
 
 void nuiRenderThread::_Exit()
 {
+  NGL_OUT("Exit render thread requested\n");
   mContinue = false;
 }
 

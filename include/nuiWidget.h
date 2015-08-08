@@ -724,6 +724,7 @@ public:
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
   NUI_GETSET(bool, AutoAcceptMouseSteal);
+  NUI_GETSETDO(bool, ForceNoDrawToLayer, BroadcastForceNoDrawToLayer());
 
   static void SetGlobalUseRenderCache(bool set);
   static bool GetGlobalUseRenderCache();
@@ -731,6 +732,8 @@ public:
 protected:
   virtual ~nuiWidget();
 
+  void BroadcastForceNoDrawToLayer();
+    
   std::map<nglString, nuiEventSource*, nglString::LessFunctor> mEventMap;
   std::vector<nuiEventActionHolder*> mEventActions;
 
@@ -835,7 +838,7 @@ protected:
   bool mAutoUpdateLayout : 1;
   bool mAutoAcceptMouseCancel : 1;
   bool mAutoAcceptMouseSteal : 1;
-
+  bool mForceNoDrawToLayer : 1;
 
 
   bool mClickThru: 1;

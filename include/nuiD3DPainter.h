@@ -61,6 +61,7 @@ public:
 
 protected:
   void SetSurface(nuiSurface* pSurface);
+  void CreateSurface(nuiSurface* pSurface);
 
   nglContext* mpContext;
 

@@ -126,6 +126,7 @@ public:
   bool DEBUG_GetEnableDrawArray() const;
   
   virtual void SetSurface(nuiSurface* pSurface);
+  virtual void CreateSurface(nuiSurface* pSurface);
   virtual nuiSurface* GetSurface() const;
 
   static void BroadcastDestroyTexture(nuiTexture* pTexture);
@@ -138,7 +139,6 @@ public:
 protected:
   virtual ~nuiPainter();
   nuiSurface* mpSurface;
-  std::stack<nuiSurface*> mpSurfaceStack;
 
   const nuiRenderState mDefaultState;
   const nuiRenderState* mpState = &mDefaultState;
