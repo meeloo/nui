@@ -145,21 +145,42 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  if (1)
+  if (0)
   {
-    nuiLabel* prout = new nuiLabel("Prout");
-    prout->SetDrawToLayer(true);
-    AddChild(prout);
+    nuiPosition pos[] = {
+      nuiTopLeft, nuiTop, nuiTopRight,
+      nuiLeft, nuiCenter, nuiRight,
+      nuiBottomLeft, nuiBottom, nuiBottomRight,
+      nuiNoPosition
+    };
+    const char* name[] = {
+      "TopLeft", "Top", "TopRight",
+      "Left", "Center", "Right",
+      "BottomLeft", "Bottom", "BottomRight",
+      NULL
+    };
     
-    nuiAttributeAnimation* anim = new nuiAttributeAnimation();
-    anim->SetTargetObject(this);
-    anim->SetTargetAttribute("Alpha");
-    anim->SetCaptureStartOnPlay(true);
-    anim->SetEndValue(0);
-    anim->SetEasing(nuiEasingSinus);
-    anim->SetDuration(1.0f);
-    prout->AddAnimation("Fade", anim);
-    anim->Play(100000, eAnimLoopPingPong);
+    for (int i = 0; pos[i] != nuiNoPosition; i++)
+    {
+      nuiLabel* prout = new nuiLabel(name[i]);
+      prout->SetDrawToLayer(true);
+      prout->SetBackground(true);
+      prout->SetBackgroundColor(nuiColor(0, 255, 0, 128));
+  //    prout->SetPosition(nuiFillVertical);
+      prout->SetPosition(pos[i]);
+      nuiAttributeAnimation* anim = new nuiAttributeAnimation();
+      anim->SetTargetObject(prout);
+      anim->SetTargetAttribute("Alpha");
+      anim->SetCaptureStartOnPlay(true);
+      anim->SetEndValue(0);
+      anim->SetEasing(nuiEasingSinus);
+      anim->SetDuration(1.0f);
+      prout->AddAnimation("Fade", anim);
+      anim->Play(100000, eAnimLoopPingPong);
+
+      AddChild(prout);
+    }
+    
     
     
     return;

@@ -803,6 +803,11 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
         w *= scale;
         h *= scale;
       }
+      
+      if (mpSurface)
+      {
+//        NGL_OUT("%p scissor: %d %d %d %d (%s)\n", mpSurface, x, y, w, h, mpSurface->GetObjectName().GetChars());
+      }
       glScissor(x, y, w, h);
     }
     nuiCheckForGLErrors();

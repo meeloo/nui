@@ -248,12 +248,13 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     mpContentsPainter->SetName(name);
 
 
+    pContext->ResetState();
+    pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
+    pContext->ResetClipRect();
+
     NGL_ASSERT(mpSurface);
     mpContentsPainter->SetSurface(mpSurface);
 
-//    pContext->ResetState();
-//    pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
-//    pContext->ResetClipRect();
 
     if (mOffsetX != 0 || mOffsetY != 0)
     {
@@ -262,15 +263,18 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     
     if (mpWidgetContents)
     {
-  //    mpWidgetContents->GetColor(eActiveWindowBg);
       pContext->SetClearColor(mClearColor);
       pContext->Clear();
       mpContentsPainter->DrawWidget(pContext, mpWidgetContents);
+//      pContext->SetStrokeColor(nuiColor(0, 0, 255, 128));
+//      pContext->EnableTexturing(false);
+//      pContext->DrawRect(nuiRect(GetWidth(), GetHeight()), eStrokeShape);
+//      pContext->EnableTexturing(true);
     }
     else if (mDrawContentsDelegate)
     {
-//      pContext->SetClearColor(mClearColor);
-//      pContext->Clear();
+      pContext->SetClearColor(mClearColor);
+      pContext->Clear();
       
       mDrawContentsDelegate(this, pContext);
     }
@@ -353,7 +357,8 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     
     pContext->DrawImage(dst, src);
 
-//  pContext->SetStrokeColor("red");
+//    pContext->SetBlendFunc(nuiBlendTransp);
+//  pContext->SetStrokeColor(nuiColor(255, 0, 0, 128));
 //  pContext->EnableTexturing(false);
 //  pContext->DrawRect(dst, eStrokeShape);
 //  pContext->EnableTexturing(true);

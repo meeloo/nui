@@ -236,11 +236,14 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //      pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
 //
  //    }
+    
+    
 
     if (mpLayerTreeRoot)
     {
       glPushGroupMarkerEXT(0, "Draw Layer tree");
       mpDrawContext->ResetState();
+      mpDrawContext->Set2DProjectionMatrix(nuiRect(mpDrawContext->GetWidth(), mpDrawContext->GetHeight()));
       mpDrawContext->ResetClipRect();
       mpDrawContext->EnableBlending(true);
       mpDrawContext->SetBlendFunc(nuiBlendTransp);
@@ -480,7 +483,7 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
     indent.Fill("  ", mWidgetIndentation);
     str.Prepend(indent);
     glPushGroupMarkerEXT(0, str.GetChars());
-    //  NGL_OUT("%s\n", str.GetChars());
+//    NGL_OUT("%s\n", str.GetChars());
 
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
 //    pContext->SetStrokeColor(nuiColor("green"));

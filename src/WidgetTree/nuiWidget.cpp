@@ -149,9 +149,6 @@ void nuiWidget::InitDefaultValues()
   mAutoAcceptMouseCancel = true;
   mAutoAcceptMouseSteal = true;
   mForceNoDrawToLayer = false;
-
-  if (NUI_USE_LAYERS)
-    SetDrawToLayer(true);
 }
 
 
@@ -5104,6 +5101,8 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
       SetForceNoDrawToLayer(true);
   }
 
+  SetDrawToLayer(NUI_USE_LAYERS && !mForceNoDrawToLayer);
+  
   nuiRenderThread* pRenderThread = GetRenderThread();
   if (mpBackingLayer)
   {
