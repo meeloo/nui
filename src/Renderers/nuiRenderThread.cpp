@@ -244,7 +244,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       mpDrawContext->SetPainter(mpPainter);
       mpDrawContext->StartRendering();
       glPushGroupMarkerEXT(0, "Draw Layer tree");
-//      NGL_OUT("Draw Layer tree %s\n", mRect.GetValue().GetChars());
+      //NGL_OUT("Draw Layer tree %s\n", mRect.GetValue().GetChars());
       mpDrawContext->ResetState();
       mpDrawContext->Set2DProjectionMatrix(mRect);
       mpDrawContext->ResetClipRect();
@@ -253,15 +253,16 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       mpDrawContext->EnableTexturing(true);
       mpDrawContext->LoadIdentity();
 
-      auto it = mLayerDrawPainters.find(mpLayerTreeRoot);
-      if (it != mLayerDrawPainters.end())
-      {
-        nuiMetaPainter* pPainter = it->second;
-//        NGL_OUT("Draw Layer Tree %p (%p - %d)\n", mpLayerTreeRoot, pPainter, pPainter->GetRefCount());
-        pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
-      }
+//      auto it = mLayerDrawPainters.find(mpLayerTreeRoot);
+//      if (it != mLayerDrawPainters.end())
+//      {
+//        nuiMetaPainter* pPainter = it->second;
+////        NGL_OUT("Draw Layer Tree %p (%p - %d)\n", mpLayerTreeRoot, pPainter, pPainter->GetRefCount());
+//        pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+//      }
+      DrawLayer(mpDrawContext, mpLayerTreeRoot);
+      glPopGroupMarkerEXT();
     }
-    glPopGroupMarkerEXT();
 
     mpDrawContext->StopRendering();
     mpPainter->EndSession();
@@ -498,8 +499,11 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
 
 void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
 {
+  static int count = 0;
   nglString str;
-  str.CFormat("Draw sub layer %s %s %p", pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
+  nglString tmp;
+  tmp.Fill("  ", count);
+  str.CFormat("%sDraw sub layer %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
 //  NGL_OUT("%s\n", str.GetChars());
   auto it = mLayerDrawPainters.find(pKey);
@@ -509,7 +513,9 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
 //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
     
+    count++;
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+    count--;
   }
   glPopGroupMarkerEXT();
 }

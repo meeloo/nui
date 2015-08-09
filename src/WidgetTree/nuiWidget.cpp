@@ -1324,8 +1324,22 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 
     if (mpBackingLayer)
     {
+      bool old = mRenderCacheIsEmpty;
       mRenderCacheIsEmpty = pRenderCache->GetNbDrawArray() == 0;
+      if (0 && mRenderCacheIsEmpty)
+      {
+        NGL_OUT("Render Cache is empty for %p (%s %s)\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
+        for (int i = 0; i < pRenderCache->GetNbOperations(); i++)
+        {
+          NGL_OUT("   Operation: %d - %s\n", i, pRenderCache->GetOperationDescription(i).GetChars());
+        }
+      }
       mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
+      if (old != mRenderCacheIsEmpty)
+      {
+        // If the render cache has changed from empty to full or from full to empty we need to update the layer draw operations
+        mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
+      }
     }
   }
   else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
@@ -6416,7 +6430,7 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
     NGL_ASSERT(!mpBackingLayer);
 
     nglString name;
-    name.CFormat("WidgetLayer_%p", this);
+    name.CFormat("WidgetLayer_%s_%p", GetObjectClass().GetChars(), this);
     mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
     mpBackingLayer->SetContents(this);
 

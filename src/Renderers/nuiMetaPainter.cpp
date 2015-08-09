@@ -509,7 +509,13 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
   const bool DoDrawArray = mNbDrawArray;
   const bool DoDrawSelf = DoDrawArray || mNbClearColor;
   if (!(DoDrawChild || DoDrawSelf || DoDrawLayer))
+  {
+    for (int i = 0; i < GetNbOperations(); i++)
+    {
+      NGL_OUT("Skipped %d - %s\n", i, GetOperationDescription(i).GetChars());
+    }
     return;
+  }
   
   int32 currentop = 0;
   while (mOperationPos < size && currentop < last)

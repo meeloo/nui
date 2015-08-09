@@ -155,7 +155,6 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
 
 bool nuiLayer::UpdateSurface()
 {
-  
   if (!mDraw)
   {
     if (mpContentsPainter)
@@ -227,7 +226,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
   mDraw = !ShouldSkipRendering;
-  mDraw = true;
+//  mDraw = true;
   
   UpdateSurface();
   if (mSurfaceChanged)
@@ -253,8 +252,8 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
     pContext->ResetClipRect();
 
-    NGL_ASSERT(mpSurface);
-    mpContentsPainter->SetSurface(mpSurface);
+    if (mpSurface)
+      mpContentsPainter->SetSurface(mpSurface);
 
 
     if (mOffsetX != 0 || mOffsetY != 0)
@@ -281,7 +280,8 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     }
     // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
 
-    mpContentsPainter->SetSurface(nullptr);
+    if (mpSurface)
+      mpContentsPainter->SetSurface(nullptr);
     if (mOffsetX != 0 || mOffsetY != 0)
     {
       pContext->Translate(mOffsetX, mOffsetY);
@@ -361,6 +361,10 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //  pContext->EnableTexturing(false);
 //  pContext->DrawRect(dst, eStrokeShape);
 //  pContext->EnableTexturing(true);
+  }
+  else
+  {
+//    NGL_OUT("Draw is false for %p %s %s\n", mpWidgetContents, mpWidgetContents->GetObjectName().GetChars(), mpWidgetContents->GetObjectClass().GetChars());
   }
 
   for (auto child : mpChildren)

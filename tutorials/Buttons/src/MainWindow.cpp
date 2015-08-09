@@ -231,23 +231,23 @@ void MainWindow::OnCreation()
     nuiPane* pPane = new nuiPane();
     pPane->SetBorder(20,20);
     pMainBox->AddCell(pPane, nuiFillHorizontal);
-    mpLabel = new nuiLabel();
+    mpLabel = new nuiLabel("---- Click on a button ---");
     pPane->AddChild(mpLabel);
     pPane->SetUserHeight(40);
 
-    nuiLabel* pLabel = new nuiLabel(_T("nuiButton:"), nuiFont::GetFont(16));
+    nuiLabel* pLabel = new nuiLabel("nuiButton:", nuiFont::GetFont(16));
     pMainBox->AddCell(pLabel, nuiLeft);
     pMainBox->AddCell(Tutorial_Buttons());
 
-    pLabel = new nuiLabel(_T("nuiToggleButton:"), nuiFont::GetFont(16));
+    pLabel = new nuiLabel("nuiToggleButton:", nuiFont::GetFont(16));
     pMainBox->AddCell(pLabel, nuiLeft);
     pMainBox->AddCell(Tutorial_ToggleButtons());
 
-    pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
+    pLabel = new nuiLabel("nuiRadioButton:", nuiFont::GetFont(16));
     pMainBox->AddCell(pLabel, nuiLeft);
     pMainBox->AddCell(Tutorial_RadioButtons1());
 
-    pLabel = new nuiLabel(_T("nuiRadioButton:"), nuiFont::GetFont(16));
+    pLabel = new nuiLabel("nuiRadioButton:", nuiFont::GetFont(16));
     pMainBox->AddCell(pLabel, nuiLeft);
     pMainBox->AddCell(Tutorial_RadioButtons2());
 
