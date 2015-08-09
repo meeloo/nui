@@ -6037,7 +6037,7 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
     if (pParent)
       LocalToLocal(pParent, x, y);
     
-    NGL_OUT("Set layer position %s %p %f %f\n", GetObjectClass().GetChars(), this, x, y);
+    //NGL_OUT("Set layer position %s %p %f %f\n", GetObjectClass().GetChars(), this, x, y);
     mpBackingLayer->SetPosition(x, y);
     nuiRenderThread* pRenderThread = GetRenderThread();
     if (pRenderThread)

@@ -1854,7 +1854,7 @@ void nuiGLPainter::DestroyTexture(nuiTexture* pTexture)
   {
     return;
   }
-  NGL_OUT(_T("nuiGLPainter::DestroyTexture 0x%x : '%s' / %d\n"), pTexture, pTexture->GetSource().GetChars(), info.mTexture);
+  //NGL_OUT(_T("nuiGLPainter::DestroyTexture 0x%x : '%s' / %d\n"), pTexture, pTexture->GetSource().GetChars(), info.mTexture);
 
   mpContext->BeginSession();
   glDeleteTextures(1, (GLuint*)&info.mTexture);
@@ -1890,7 +1890,7 @@ void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
   if (info.mStencilbuffer > 0)
     glDeleteRenderbuffersNUI(1, (GLuint*)&info.mStencilbuffer);
 
-  NGL_OUT("nuiGLPainter::EraseSurface %p (fbo %d tx %d)\n", pSurface, info.mFramebuffer, info.mTexture);
+//  NGL_OUT("nuiGLPainter::DestroySurface %p (fbo %d tx %d)\n", pSurface, info.mFramebuffer, info.mTexture);
   mFramebuffers.erase(it);
 }
 
