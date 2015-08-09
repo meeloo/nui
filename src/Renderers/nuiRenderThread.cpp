@@ -241,9 +241,12 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 
     if (mpLayerTreeRoot)
     {
+      mpDrawContext->SetPainter(mpPainter);
+      mpDrawContext->StartRendering();
       glPushGroupMarkerEXT(0, "Draw Layer tree");
+//      NGL_OUT("Draw Layer tree %s\n", mRect.GetValue().GetChars());
       mpDrawContext->ResetState();
-      mpDrawContext->Set2DProjectionMatrix(nuiRect(mpDrawContext->GetWidth(), mpDrawContext->GetHeight()));
+      mpDrawContext->Set2DProjectionMatrix(mRect);
       mpDrawContext->ResetClipRect();
       mpDrawContext->EnableBlending(true);
       mpDrawContext->SetBlendFunc(nuiBlendTransp);

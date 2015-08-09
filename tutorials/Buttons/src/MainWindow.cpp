@@ -186,7 +186,7 @@ void MainWindow::OnCreation()
     return;
   }
   
-  if (1)
+  if (0)
   {
     ButtonCellSource* pSource = new ButtonCellSource();
   //  ComplexCellSource* pSource = new ComplexCellSource();
