@@ -23,7 +23,7 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
   mDrawChildrenImmediat = false;
   mLastSize = -1;
 
-//  Count++;
+  Count++;
 //  printf("[NEW] MetaPainter Count: %lld\n", Count);
 #ifdef _DEBUG_
   mpDebugObjectRef = NULL;
@@ -33,7 +33,7 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
 
 nuiMetaPainter::~nuiMetaPainter()
 {
-//  Count--;
+  Count--;
 //  printf("[DEL] MetaPainter Count: %lld\n", Count);
 
   Reset(NULL);

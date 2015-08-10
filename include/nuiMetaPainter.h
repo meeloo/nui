@@ -92,6 +92,11 @@ public:
   int32 GetNbDrawLayer() const;
   int32 GetNbDrawArray() const;
   int32 GetNbClearColor() const;
+
+  static int64 GetNbInstances()
+  {
+    return Count;
+  }
   
 #ifdef _DEBUG_
   void DBGSetReferenceObject(const nuiObject* pRef);

@@ -1341,6 +1341,8 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
         mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
       }
     }
+    
+    pRenderCache->Release();
   }
   else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
   { ///< NB: The render thread cannot optimize already set painters that shouldn't redraw

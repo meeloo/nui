@@ -142,6 +142,8 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //  }
 //  NGL_OUT("[nuiRenderThread] render\n");
 
+//  NGL_OUT("Widget %d / ContentsLayer %d / DrawLayer %d / DirtyLayers %d (total meta painters %d)\n", mWidgetPainters.size(), mLayerContentsPainters.size(), mLayerDrawPainters.size(), mDirtyLayers.size(), (int32)nuiMetaPainter::GetNbInstances());
+
   if (NUI_ENABLE_LAYER_TREE && mpLayerTreeRoot)
   {
     mpContext->GetLock().Lock();
@@ -481,6 +483,7 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
     nuiMetaPainter* pPainter = it->second;
     NGL_ASSERT(pPainter);
     
+#if DEBUG
     nglString str;
     str.CFormat("Draw sub widget %s %p", pPainter->GetName().GetChars(), pKey);
     nglString indent;
@@ -488,23 +491,28 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
     str.Prepend(indent);
     glPushGroupMarkerEXT(0, str.GetChars());
 //    NGL_OUT("%s\n", str.GetChars());
-
+#endif
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
 //    pContext->SetStrokeColor(nuiColor("green"));
 //    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
+#if DEBUG
     glPopGroupMarkerEXT();
+#endif
   }
   mWidgetIndentation--;
 }
 
 void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
 {
+#if DEBUG
   static int count = 0;
   nglString str;
   nglString tmp;
   tmp.Fill("  ", count);
   str.CFormat("%sDraw sub layer %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
+#endif
+  
 //  NGL_OUT("%s\n", str.GetChars());
   auto it = mLayerDrawPainters.find(pKey);
   if (it != mLayerDrawPainters.end())
@@ -513,11 +521,19 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
 //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
     
+#if DEBUG
     count++;
+#endif
+    
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+
+#if DEBUG
     count--;
+#endif
   }
+#if DEBUG
   glPopGroupMarkerEXT();
+#endif
 }
 
 
