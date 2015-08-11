@@ -20,6 +20,10 @@ nuiScrollBar::nuiScrollBar(nuiOrientation orientation, const nuiRange& rRange, n
 {
   if (SetObjectClass(_T("nuiScrollBar")))
   {
+    AddAttribute(new nuiAttribute<nuiOrientation>(nglString(_T("Orientation")), nuiUnitOrientation,
+                                           nuiMakeDelegate(this, &nuiScrollBar::GetOrientation),
+                                           nuiMakeDelegate(this, &nuiScrollBar::SetOrientation)));
+
     AddAttribute(new nuiAttribute<nuiSize>(nglString(_T("ThumbMinSize")), nuiUnitNone,
                                            nuiMakeDelegate(this, &nuiScrollBar::GetThumbMinSize),
                                            nuiMakeDelegate(this, &nuiScrollBar::SetThumbMinSize)));

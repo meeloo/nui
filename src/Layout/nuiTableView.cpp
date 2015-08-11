@@ -95,10 +95,13 @@ bool nuiTableView::Draw(nuiDrawContext* pContext)
 {
   NGL_ASSERT(mFirstVisibleCell >= 0);
   int32 i = mFirstVisibleCell;
-  for (Cells::const_iterator it = mVisibleCells.begin(); it != mVisibleCells.end(); ++it)
+  if (IsSelectionEnabled())
   {
-    nuiWidget* pCell = *it;
-    pCell->SetSelected(mSelection[i++]);
+    for (Cells::const_iterator it = mVisibleCells.begin(); it != mVisibleCells.end(); ++it)
+    {
+      nuiWidget* pCell = *it;
+      pCell->SetSelected(mSelection[i++]);
+    }
   }
   nuiScrollView::Draw(pContext);
 
@@ -215,6 +218,12 @@ void nuiTableView::CreateCells(nuiSize Height)
   {
     if (visibleCells > 0)
     {
+      if (mLastVisibleCell >= mpSource->GetNumberOfCells())
+      {
+        mLastVisibleCell = mpSource->GetNumberOfCells()-1;
+        mFirstVisibleCell = MAX(0, mpSource->GetNumberOfCells()-visibleCells);
+      }
+      
       auto pWidgetIt = mVisibleCells.begin();
       for (int32 cell = mFirstVisibleCell; cell <= mLastVisibleCell; ++cell)
       {
@@ -279,7 +288,7 @@ int32 nuiTableView::GetCellIndex(const nglMouseInfo& rInfo)
 
 bool nuiTableView::MouseClicked(const nglMouseInfo& rInfo)
 {
-  if (mSpeedY == 0)
+  if (mSpeedY == 0 && IsSelectionEnabled())
   {
     int32 i = GetCellIndex(rInfo);
     mClickedIndex = i;

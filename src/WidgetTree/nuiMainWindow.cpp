@@ -240,11 +240,11 @@ void nuiMainWindow::LazyPaint()
     mInvalidatePosted = true;
     Paint();
   }
-  else
-  {
-    nuiRenderThread* pRenderThread = GetRenderThread();
-    pRenderThread->StartRendering(0,0);
-  }
+//  else
+//  {
+//    nuiRenderThread* pRenderThread = GetRenderThread();
+//    pRenderThread->StartRendering(0,0);
+//  }
 }
 
 nuiSize nuiMainWindow::GetStatusBarSize() const
