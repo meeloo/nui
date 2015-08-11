@@ -5097,7 +5097,7 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
   if (HasFocus())
     pTopLevel->SetFocus(this);
   pTopLevel->PrepareWidgetCSS(this, false, NUI_WIDGET_MATCHTAG_ALL);
-  ConnectTopLevel();
+//  ConnectTopLevel();
 
   // cal delegate for default decoration, if the user has not set any decoration, and if there is a default decoration
   int32 index = GetObjectClassNameIndex();
@@ -5114,8 +5114,10 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
     if (mpParent->GetForceNoDrawToLayer())
       SetForceNoDrawToLayer(true);
   }
-
   SetDrawToLayer(NUI_USE_LAYERS && !mForceNoDrawToLayer);
+
+  ConnectTopLevel();
+
   
   nuiRenderThread* pRenderThread = GetRenderThread();
   if (mpBackingLayer)
