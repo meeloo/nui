@@ -193,6 +193,7 @@ void nuiNode::AddChild(nuiNode* pChild)
   if (pParent)
     pParent->DelChild(pChild);
   mpChildren.push_back(pChild);
+  pChild->SetParent(this);
 }
 
 void nuiNode::DelChild(nuiNode* pChild)
