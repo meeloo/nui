@@ -135,11 +135,11 @@ void nuiRenderThread::RenderingDone(bool result)
 
 void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 {
-//  if (ngl_atomic_dec(mRenderingTicks) > 0)
-//  {
+  if (ngl_atomic_dec(mRenderingTicks) > 0)
+  {
 //    NGL_OUT("[nuiRenderThread] skipping frame\n");
-//    return;
-//  }
+    return;
+  }
 //  NGL_OUT("[nuiRenderThread] render\n");
 
 //  NGL_OUT("Widget %d / ContentsLayer %d / DrawLayer %d / DirtyLayers %d (total meta painters %d)\n", mWidgetPainters.size(), mLayerContentsPainters.size(), mLayerDrawPainters.size(), mDirtyLayers.size(), (int32)nuiMetaPainter::GetNbInstances());
