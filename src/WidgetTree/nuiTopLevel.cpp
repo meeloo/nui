@@ -380,6 +380,15 @@ void nuiTopLevel::AdviseSubTreeDeath(nuiWidgetPtr pWidget)
     for (pIt = pContainer->GetFirstChild(true); pIt && pIt->IsValid(); pContainer->GetNextChild(pIt))
     {
       nuiWidgetPtr pItem = pIt->GetWidget();
+      
+      if (mpBackingLayer)
+      {
+        nuiLayer* pLayer = pItem->GetLayer();
+        if (pLayer)
+        {
+          mpBackingLayer->DelChild(pLayer);
+        }
+      }
       if (pItem)
         AdviseSubTreeDeath(pItem);
     }

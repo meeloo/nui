@@ -629,6 +629,7 @@ void nuiScrollView::OnChildAdded(const nuiEvent& rEvent)
   if (pNode)
   {
     mSVSink.Connect(pNode->HotRectChanged, &nuiScrollView::OnHotRectChanged, pNode);
+//    pNode->SetForceNoDrawToLayer(true);
   }
   
   // The scroll bar must be the first to get mouse events, so let's put them on top of the list:

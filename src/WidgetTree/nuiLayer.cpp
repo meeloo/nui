@@ -372,9 +372,9 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   for (auto child : mpChildren)
   {
     nuiLayer* pLayer = (nuiLayer*)child;
-    nglString l;
-    l.Fill("  ", level);
-    NGL_OUT("%sSubLayer %p %s %s\n", l.GetChars(), pLayer, pLayer->GetObjectClass().GetChars(), pLayer->GetObjectName().GetChars());
+//    nglString l;
+//    l.Fill("  ", level);
+//    NGL_OUT("%sSubLayer %p %s %s\n", l.GetChars(), pLayer, pLayer->GetObjectClass().GetChars(), pLayer->GetObjectName().GetChars());
     mpDrawPainter->DrawLayer(pContext, pLayer);
   }
   level--;

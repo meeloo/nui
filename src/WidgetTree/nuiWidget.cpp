@@ -4444,6 +4444,7 @@ bool nuiWidget::DelChild(nuiWidgetPtr pChild)
     NGL_OUT("[%s] Del Child %p <--- %p (%s / %s)\n", GetObjectClass().GetChars(), this, pChild, pChild->GetObjectClass().GetChars(), pChild->GetObjectName().GetChars());
   }
   
+  nuiRenderThread* pRenderThread = GetRenderThread();
   nuiWidgetList::iterator it  = mpChildren.begin();
   nuiWidgetList::iterator end = mpChildren.end();
   for ( ; it != end; ++it)
@@ -4454,6 +4455,17 @@ bool nuiWidget::DelChild(nuiWidgetPtr pChild)
       {
         return pChild->Trash(); ///< This will call this->DelChild(pChild) again, but with pChild as Trashed.
       }
+
+      nuiLayer* pLayer = pChild->GetLayer();
+      if (pLayer)
+      {
+        nuiLayer* pParentLayer = (nuiLayer*)pLayer->GetParent();
+        if (pParentLayer)
+        {
+          pParentLayer->DelChild(pLayer);
+        }
+      }
+
       mpChildren.erase(it);
       pChild->SetParent(NULL);
       ChildDeleted(this, pChild);

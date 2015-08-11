@@ -259,6 +259,8 @@ void MainWindow::OnCreation()
     pAnim->SetTargetObject(pPane);
     pPane->AddAnimation("Fade", pAnim);
     pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+
+    AddChild(new nuiIntrospector(pMainBox));
   }
   
     if (0)
@@ -286,6 +288,7 @@ void MainWindow::OnCreation()
         pButton->AddAnimation("Fade", pAnim);
         pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
     }
+  
 }
 
 

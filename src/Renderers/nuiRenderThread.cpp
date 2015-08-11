@@ -203,9 +203,11 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     for (auto layer : mDirtyLayers)
     {
       nglString str;
+#ifdef DEBUG
       str.CFormat("Draw Layer Contents %s %s %p", layer->GetObjectClass().GetChars(), layer->GetObjectName().GetChars(), layer);
       glPushGroupMarkerEXT(0, str.GetChars());
-
+#endif
+      
       auto it = mLayerContentsPainters.find(layer);
       if (it != mLayerContentsPainters.end())
       {
@@ -225,7 +227,9 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
         //      layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
       }
 
+#ifdef DEBUG
       glPopGroupMarkerEXT();
+#endif
     }
     mDirtyLayers.clear();
 
