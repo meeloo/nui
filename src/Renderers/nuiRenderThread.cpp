@@ -14,7 +14,7 @@
 #endif
 
 #define NUI_ENABLE_LAYER_TREE 1
-#define NUI_ENABLE_THREADED_RENDERING 0
+#define NUI_ENABLE_THREADED_RENDERING 1
 
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
 : mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
