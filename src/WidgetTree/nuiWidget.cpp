@@ -5143,7 +5143,7 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
         nuiSize x = 0, y = 0;
         LocalToLocal(pParentW, x, y);
         mpBackingLayer->SetPosition(x, y);
-        NGL_OUT("[ConnectTopLevel]Adding Layer %p (%s) to %p (%s)\n", mpBackingLayer, mpBackingLayer->GetObjectName().GetChars(), pParent, pParent->GetObjectName().GetChars());
+//        NGL_OUT("[ConnectTopLevel]Adding Layer %p (%s) to %p (%s)\n", mpBackingLayer, mpBackingLayer->GetObjectName().GetChars(), pParent, pParent->GetObjectName().GetChars());
         pParent->AddChild(mpBackingLayer);
       }
 
@@ -6460,7 +6460,7 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
         nuiSize x = 0, y = 0;
         LocalToLocal(pParentW, x, y);
         mpBackingLayer->SetPosition(x, y);
-        NGL_OUT("[SetDrawToLayer]Adding Layer %p (%s) to %p (%s)\n", mpBackingLayer, mpBackingLayer->GetObjectName().GetChars(), pParent, pParent->GetObjectName().GetChars());
+        ///NGL_OUT("[SetDrawToLayer]Adding Layer %p (%s) to %p (%s)\n", mpBackingLayer, mpBackingLayer->GetObjectName().GetChars(), pParent, pParent->GetObjectName().GetChars());
         pParent->AddChild(mpBackingLayer);
       }
 

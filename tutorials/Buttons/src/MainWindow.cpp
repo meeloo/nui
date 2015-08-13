@@ -186,7 +186,7 @@ void MainWindow::OnCreation()
     return;
   }
   
-  if (0)
+  if (1)
   {
     ButtonCellSource* pSource = new ButtonCellSource();
   //  ComplexCellSource* pSource = new ComplexCellSource();
@@ -219,7 +219,7 @@ void MainWindow::OnCreation()
     return;
   }
 
-  if (1)
+  if (0)
   {
   // create a vertical box for the layout
     nuiVBox* pMainBox = new nuiVBox(0);
