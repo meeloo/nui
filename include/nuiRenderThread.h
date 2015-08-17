@@ -77,6 +77,7 @@ private:
 
 public:
   void DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey);
+  void DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pKey);
   void DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey);
 
 
