@@ -1320,7 +1320,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     mNeedSelfRedraw = false;
     mNeedRender = false;
     
-    pRenderThread->SetWidgetDrawPainter(this, pRenderCache); ///< Let the render thread know about this new painter
+    pRenderThread->SetWidgetContentsPainter(this, pRenderCache); ///< Let the render thread know about this new painter
 
     if (mpBackingLayer)
     {
@@ -2122,6 +2122,7 @@ void nuiWidget::SilentSetVisible(bool Visible)
     if (pRenderThread)
     {
       pRenderThread->SetWidgetDrawPainter(this, nullptr);
+      pRenderThread->SetWidgetContentsPainter(this, nullptr);
     }
   }
 }
@@ -4872,6 +4873,7 @@ void nuiWidget::CallOnTrash()
   if (pRenderThread)
   {
     pRenderThread->SetWidgetDrawPainter(this, nullptr);
+    pRenderThread->SetWidgetContentsPainter(this, nullptr);
   }
   
 
@@ -5865,6 +5867,7 @@ void nuiWidget::SetVisible(bool Visible)
         if (pRenderThread)
         {///< May need iteration of children
           pRenderThread->SetWidgetDrawPainter(this, nullptr);
+          pRenderThread->SetWidgetContentsPainter(this, nullptr);
         }
       }
     }
@@ -5897,6 +5900,7 @@ void nuiWidget::SetVisible(bool Visible)
         if (pRenderThread)
         {///< May need iteration of children
           pRenderThread->SetWidgetDrawPainter(this, nullptr);
+          pRenderThread->SetWidgetContentsPainter(this, nullptr);
         }
       }
     }
