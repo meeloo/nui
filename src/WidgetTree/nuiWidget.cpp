@@ -1320,7 +1320,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     mNeedSelfRedraw = false;
     mNeedRender = false;
     
-    pRenderThread->SetWidgetPainter(this, pRenderCache); ///< Let the render thread know about this new painter
+    pRenderThread->SetWidgetDrawPainter(this, pRenderCache); ///< Let the render thread know about this new painter
 
     if (mpBackingLayer)
     {
@@ -2121,7 +2121,7 @@ void nuiWidget::SilentSetVisible(bool Visible)
     nuiRenderThread* pRenderThread = GetRenderThread();
     if (pRenderThread)
     {
-      pRenderThread->SetWidgetPainter(this, nullptr);
+      pRenderThread->SetWidgetDrawPainter(this, nullptr);
     }
   }
 }
@@ -4871,7 +4871,7 @@ void nuiWidget::CallOnTrash()
   nuiRenderThread* pRenderThread = GetRenderThread();
   if (pRenderThread)
   {
-    pRenderThread->SetWidgetPainter(this, nullptr);
+    pRenderThread->SetWidgetDrawPainter(this, nullptr);
   }
   
 
@@ -5130,7 +5130,7 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
 
   ConnectTopLevel();
 
-  
+#if 0
   nuiRenderThread* pRenderThread = GetRenderThread();
   if (mpBackingLayer)
   {
@@ -5163,7 +5163,8 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
       mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
     }
   }
-
+#endif
+  
   StartAnimation("SHOW");
 
   IteratorPtr pIt;
@@ -5863,7 +5864,7 @@ void nuiWidget::SetVisible(bool Visible)
         nuiRenderThread* pRenderThread = GetRenderThread();
         if (pRenderThread)
         {///< May need iteration of children
-          pRenderThread->SetWidgetPainter(this, nullptr);
+          pRenderThread->SetWidgetDrawPainter(this, nullptr);
         }
       }
     }
@@ -5895,7 +5896,7 @@ void nuiWidget::SetVisible(bool Visible)
         nuiRenderThread* pRenderThread = GetRenderThread();
         if (pRenderThread)
         {///< May need iteration of children
-          pRenderThread->SetWidgetPainter(this, nullptr);
+          pRenderThread->SetWidgetDrawPainter(this, nullptr);
         }
       }
     }
@@ -6059,23 +6060,24 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
     }
   }
 
-  if (mpBackingLayer && (PositionChanged || SizeChanged))
-  {
-    nuiSize x = 0;
-    nuiSize y = 0;
-    
-    nuiWidget* pParent = GetParentLayerWidget();
-    if (pParent)
-      LocalToLocal(pParent, x, y);
-    
-    //NGL_OUT("Set layer position %s %p %f %f\n", GetObjectClass().GetChars(), this, x, y);
-    mpBackingLayer->SetPosition(x, y);
-    nuiRenderThread* pRenderThread = GetRenderThread();
-    if (pRenderThread)
-    {
-      mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
-    }
-  }
+// If Layers don't belong to a separate tree there is no need to do this anymore:
+//  if (mpBackingLayer && (PositionChanged || SizeChanged))
+//  {
+//    nuiSize x = 0;
+//    nuiSize y = 0;
+//    
+//    nuiWidget* pParent = GetParentLayerWidget();
+//    if (pParent)
+//      LocalToLocal(pParent, x, y);
+//    
+//    //NGL_OUT("Set layer position %s %p %f %f\n", GetObjectClass().GetChars(), this, x, y);
+//    mpBackingLayer->SetPosition(x, y);
+//    nuiRenderThread* pRenderThread = GetRenderThread();
+//    if (pRenderThread)
+//    {
+//      mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
+//    }
+//  }
 
   //#TEST:
 #ifdef NUI_CHECK_LAYOUTS
@@ -6451,51 +6453,52 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
     mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
     mpBackingLayer->SetContents(this);
 
-    if (pTop)
-    {
-      // Find the parent layer:
-      nuiWidget* pParentW = GetParentLayerWidget();
-
-      if (pParentW && mpBackingLayer->GetParent() == nullptr)
-      {
-        nuiLayer* pParent = pParentW->GetLayer();
-        nuiSize x = 0, y = 0;
-        LocalToLocal(pParentW, x, y);
-        mpBackingLayer->SetPosition(x, y);
-        ///NGL_OUT("[SetDrawToLayer]Adding Layer %p (%s) to %p (%s)\n", mpBackingLayer, mpBackingLayer->GetObjectName().GetChars(), pParent, pParent->GetObjectName().GetChars());
-        pParent->AddChild(mpBackingLayer);
-      }
-
-      if (pTop == this)
-      {
-        nuiRenderThread* pRenderThread = GetRenderThread();
-        if (pRenderThread)
-        {
-          pRenderThread->SetLayerTree(mpBackingLayer);
-        }
-      }
-    }
+    // Not needed anymore as we don't add layers to a separate tree anymore:
+//    if (pTop)
+//    {
+//      // Find the parent layer:
+//      nuiWidget* pParentW = GetParentLayerWidget();
+//
+//      if (pParentW && mpBackingLayer->GetParent() == nullptr)
+//      {
+//        nuiLayer* pParent = pParentW->GetLayer();
+//        nuiSize x = 0, y = 0;
+//        LocalToLocal(pParentW, x, y);
+//        mpBackingLayer->SetPosition(x, y);
+//        ///NGL_OUT("[SetDrawToLayer]Adding Layer %p (%s) to %p (%s)\n", mpBackingLayer, mpBackingLayer->GetObjectName().GetChars(), pParent, pParent->GetObjectName().GetChars());
+//        pParent->AddChild(mpBackingLayer);
+//      }
+//
+//      if (pTop == this)
+//      {
+//        nuiRenderThread* pRenderThread = GetRenderThread();
+//        if (pRenderThread)
+//        {
+//          pRenderThread->SetLayerTree(mpBackingLayer);
+//        }
+//      }
+//    }
   }
   else
   {
     NGL_ASSERT(mpBackingLayer);
-    nuiLayer* pParentLayer = (nuiLayer*)mpBackingLayer->GetParent();
-    if (pParentLayer)
-    {
-      pParentLayer->DelChild(mpBackingLayer);
-    }
+//    nuiLayer* pParentLayer = (nuiLayer*)mpBackingLayer->GetParent();
+//    if (pParentLayer)
+//    {
+//      pParentLayer->DelChild(mpBackingLayer);
+//    }
 
     mpBackingLayer->Release();
     mpBackingLayer = nullptr;
 
-    if (pTop == this)
-    {
-      nuiRenderThread* pRenderThread = GetRenderThread();
-      if (pRenderThread)
-      {
-        pRenderThread->SetLayerTree(nullptr);
-      }
-    }
+//    if (pTop == this)
+//    {
+//      nuiRenderThread* pRenderThread = GetRenderThread();
+//      if (pRenderThread)
+//      {
+//        pRenderThread->SetLayerTree(nullptr);
+//      }
+//    }
   }
 
   if (GetTopLevel())
