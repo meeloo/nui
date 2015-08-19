@@ -5137,9 +5137,7 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
       SetForceNoDrawToLayer(true);
   }
     
-  if (NUI_USE_LAYERS && !mForceNoDrawToLayer)
-    SetLayerPolicy(nuiDrawPolicyDrawSelf);
-  else
+  if (NUI_USE_LAYERS && mForceNoDrawToLayer)
     SetLayerPolicy(nuiDrawPolicyDrawNone);
 
   ConnectTopLevel();
@@ -6540,7 +6538,7 @@ nuiLayer* nuiWidget::GetLayer() const
 
 void nuiWidget::BroadcastForceNoDrawToLayer()
 {
-  SetLayerPolicy(mForceNoDrawToLayer?nuiDrawPolicyDrawNone : nuiDrawPolicyDrawSelf);
+  SetLayerPolicy(mForceNoDrawToLayer ? nuiDrawPolicyDrawNone : nuiDrawPolicyDrawSelf);
   for (auto child : mpChildren)
   {
     child->SetForceNoDrawToLayer(mForceNoDrawToLayer);
