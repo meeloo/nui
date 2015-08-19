@@ -2762,6 +2762,87 @@ nuiAttributeEditor* nuiAttribute<nuiTextLayoutMode>::GetDefaultEditor(void* pTar
  		return nuiCreateGenericAttributeEditor(pTarget, this);
 }
 #endif
+
+
+//********************************
+//
+// LayerPolicy
+//
+
+template class nuiAttribute<nuiDrawPolicy>;
+
+template <>
+void nuiAttribute<nuiDrawPolicy>::FormatDefault(nuiDrawPolicy value, nglString & string) const
+{
+  ToString(value, string);
+}
+
+template <>
+bool nuiAttribute<nuiDrawPolicy>::ToString(nuiDrawPolicy Value, nglString& rString) const
+{
+  switch (Value)
+  {
+    case nuiDrawPolicyDrawNone:
+      rString = _T("DrawNone"); break;
+    case nuiDrawPolicyDrawSelf:
+      rString = _T("DrawSelf"); break;
+    case nuiDrawPolicyDrawChildren:
+      rString = _T("DrawChildren"); break;
+    case nuiDrawPolicyDrawTree:
+      rString = _T("DrawTree"); break;
+      
+    default:
+      rString = _T("DrawSelf");
+      return false;
+  }
+  
+  return true;
+}
+
+template <>
+bool nuiAttribute<nuiDrawPolicy>::FromString(nuiDrawPolicy& rValue, const nglString& rString) const
+{
+  if (!rString.Compare(_T("DrawNone"), false))
+  {
+    rValue = nuiDrawPolicyDrawNone;
+    return true;
+  }
+  else if (!rString.Compare(_T("DrawSelf"), false))
+  {
+    rValue = nuiDrawPolicyDrawSelf;
+    return true;
+  }
+  else if (!rString.Compare(_T("DrawChildren"), false))
+  {
+    rValue = nuiDrawPolicyDrawChildren;
+    return true;
+  }
+  else if (!rString.Compare(_T("DrawTree"), false))
+  {
+    rValue = nuiDrawPolicyDrawTree;
+    return true;
+  }
+  
+  rValue = nuiDrawPolicyDrawSelf;
+  return false;
+}
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiDrawPolicy>::GetDefaultEditor(void* pTarget)
+{
+  std::vector<std::pair<nglString, nuiDrawPolicy> > values;
+  values.push_back(std::make_pair(_T("DrawNone"), nuiDrawPolicyDrawNone));
+  values.push_back(std::make_pair(_T("DrawSelf"), nuiDrawPolicyDrawSelf));
+  values.push_back(std::make_pair(_T("DrawChildren"), nuiDrawPolicyDrawSelf));
+  values.push_back(std::make_pair(_T("DrawTree"), nuiDrawPolicyDrawTree));
+  if (GetDimension() == 0)
+    return new nuiComboAttributeEditor<nuiDrawPolicy>(nuiAttrib<nuiDrawPolicy>(pTarget, this), values);
+  else
+    return nuiCreateGenericAttributeEditor(pTarget, this);
+}
+#endif
+
 #endif
 
 #if 0

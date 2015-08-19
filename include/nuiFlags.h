@@ -110,6 +110,14 @@ enum nuiTextLayoutMode
 };
 
 
+enum nuiDrawPolicy
+{
+nuiDrawPolicyDrawNone     = 0, ///< Draw nothing
+nuiDrawPolicyDrawSelf     = 1 << 0,  ///< draw itself but not its children
+nuiDrawPolicyDrawChildren = 1 << 1,  ///< draw its children but not itself
+nuiDrawPolicyDrawTree     = nuiDrawPolicyDrawSelf | nuiDrawPolicyDrawChildren ///< draw itself and its children
+};
+
 
 // This is just plain ugly; i know...
 typedef uint nuiWindowFlags;

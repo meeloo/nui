@@ -83,7 +83,8 @@ public:
   void SetDrawChildrenImmediat(bool set);
   bool GetDrawChildrenImmediat() const;
 
-  const std::vector<nuiSurface*> GetSurfaces() const;
+  const std::vector<nuiWidget*>& GetWidgets() const;
+  const std::vector<nuiSurface*>& GetSurfaces() const;
   
   virtual void DestroySurface(nuiSurface* pSurface);
   virtual void DestroyRenderArray(nuiRenderArray* pArray);
@@ -179,6 +180,7 @@ protected:
   
   std::vector<nuiRenderState> mRenderStates;
   std::vector<nuiRenderArray*> mRenderArrays;
+  std::vector<nuiWidget*> mWidgets;
   std::vector<nuiSurface*> mSurfaces;
   virtual void DestroyTexture(nuiTexture* pTexture);
   

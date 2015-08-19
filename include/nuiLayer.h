@@ -25,6 +25,7 @@ public:
 
   void UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pContext);
   void UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering);
+  nuiMetaPainter* GetDrawPainter() const;
 
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());

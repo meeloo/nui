@@ -9,6 +9,11 @@
 
 #include "nui.h"
 
+// Local layer disabling switch for testing:
+//#undef NUI_USE_LAYERS
+//#define NUI_USE_LAYERS 0
+
+
 bool nuiWidget::mGlobalUseRenderCache = true;
 
 void nuiWidget::SetGlobalUseRenderCache(bool set)
@@ -485,11 +490,15 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseSteal)));
 
 
+  AddAttribute(new nuiAttribute<nuiDrawPolicy>
+               ("LayerPolicy", nuiUnitCustom,
+                nuiMakeDelegate(this, &nuiWidget::GetLayerPolicy),
+                nuiMakeDelegate(this, &nuiWidget::SetLayerPolicy)));
+
   AddAttribute(new nuiAttribute<bool>
                ("DrawToLayer", nuiUnitOnOff,
-                nuiMakeDelegate(this, &nuiWidget::GetDrawToLayer),
-                nuiMakeDelegate(this, &nuiWidget::SetDrawToLayer)));
-
+                nuiMakeDelegate(this, &nuiWidget::GetDrawToLayer)));
+  
 
 }
 
@@ -1320,7 +1329,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     mNeedSelfRedraw = false;
     mNeedRender = false;
     
-    pRenderThread->SetWidgetDrawPainter(this, pRenderCache); ///< Let the render thread know about this new painter
+    pRenderThread->SetWidgetContentsPainter(this, pRenderCache); ///< Let the render thread know about this new painter
 
     if (mpBackingLayer)
     {
@@ -1340,6 +1349,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
         // If the render cache has changed from empty to full or from full to empty we need to update the layer draw operations
         mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
       }
+      pRenderThread->SetWidgetDrawPainter(this, mpBackingLayer->GetDrawPainter()); ///< Let the render thread know about this new painter
     }
     
     pRenderCache->Release();
@@ -5126,7 +5136,11 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
     if (mpParent->GetForceNoDrawToLayer())
       SetForceNoDrawToLayer(true);
   }
-  SetDrawToLayer(NUI_USE_LAYERS && !mForceNoDrawToLayer);
+    
+  if (NUI_USE_LAYERS && !mForceNoDrawToLayer)
+    SetLayerPolicy(nuiDrawPolicyDrawSelf);
+  else
+    SetLayerPolicy(nuiDrawPolicyDrawNone);
 
   ConnectTopLevel();
 
@@ -5281,7 +5295,7 @@ bool nuiWidget::DrawChildren(nuiDrawContext* pContext)
 void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 {
   CheckValid();
-  if (pChild->GetDrawToLayer())
+  if (pChild->GetDrawToLayer() && mLayerPolicy == nuiDrawPolicyDrawSelf)
   {
 //    float x,y;
 //
@@ -6437,14 +6451,14 @@ nuiWidget* nuiWidget::GetParentLayerWidget() const
 }
 
 
-void nuiWidget::SetDrawToLayer(bool UseLayer)
+void nuiWidget::SetLayerPolicy(nuiDrawPolicy policy)
 {
-  if (GetDrawToLayer() == UseLayer)
+  if (GetLayerPolicy() == policy)
     return;
 
   nuiTopLevel* pTop = GetTopLevel();
 
-  if (UseLayer)
+  if (policy != nuiDrawPolicyDrawNone)
   {
     NGL_ASSERT(!mpBackingLayer);
 
@@ -6481,14 +6495,16 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
   }
   else
   {
-    NGL_ASSERT(mpBackingLayer);
+    if (mpBackingLayer)
+    {
 //    nuiLayer* pParentLayer = (nuiLayer*)mpBackingLayer->GetParent();
 //    if (pParentLayer)
 //    {
 //      pParentLayer->DelChild(mpBackingLayer);
 //    }
 
-    mpBackingLayer->Release();
+      mpBackingLayer->Release();
+    }
     mpBackingLayer = nullptr;
 
 //    if (pTop == this)
@@ -6501,13 +6517,20 @@ void nuiWidget::SetDrawToLayer(bool UseLayer)
 //    }
   }
 
+  mLayerPolicy = policy;
+    
   if (GetTopLevel())
     InvalidateLayout();
 }
 
+nuiDrawPolicy nuiWidget::GetLayerPolicy() const
+{
+  return mLayerPolicy;
+}
+
 bool nuiWidget::GetDrawToLayer() const
 {
-  return mpBackingLayer != nullptr;
+  return mLayerPolicy != nuiDrawPolicyDrawNone;
 }
 
 nuiLayer* nuiWidget::GetLayer() const
@@ -6517,7 +6540,7 @@ nuiLayer* nuiWidget::GetLayer() const
 
 void nuiWidget::BroadcastForceNoDrawToLayer()
 {
-  SetDrawToLayer(!mForceNoDrawToLayer);
+  SetLayerPolicy(mForceNoDrawToLayer?nuiDrawPolicyDrawNone : nuiDrawPolicyDrawSelf);
   for (auto child : mpChildren)
   {
     child->SetForceNoDrawToLayer(mForceNoDrawToLayer);

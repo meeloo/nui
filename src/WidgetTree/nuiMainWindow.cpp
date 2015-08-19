@@ -11,6 +11,10 @@
 
 using namespace std;
 
+// Local layer disabling switch for testing:
+//#undef NUI_USE_LAYERS
+//#define NUI_USE_LAYERS 0
+
 #define NUI_MULTISAMPLES          0
 #define NUI_MAINWINDOW_USE_LAYERS (1 && NUI_USE_LAYERS)
 
@@ -97,11 +101,11 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   nuiDrawContext* pContext = GetDrawContext();
   nuiRenderThread* pRenderThread = GetRenderThread();
   
-  SetDrawToLayer(false);
+  SetLayerPolicy(nuiDrawPolicyDrawNone);
   
   if (NUI_MAINWINDOW_USE_LAYERS)
   {
-    SetDrawToLayer(true);
+    SetLayerPolicy(nuiDrawPolicyDrawSelf);
   }
   
   if (GetDrawToLayer())
@@ -157,11 +161,11 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   nuiDrawContext* pContext = GetDrawContext();
   nuiRenderThread* pRenderThread = GetRenderThread();
 
-  SetDrawToLayer(false);
+  SetLayerPolicy(nuiDrawPolicyDrawNone);
   
   if (NUI_MAINWINDOW_USE_LAYERS)
   {
-    SetDrawToLayer(true);
+    SetLayerPolicy(nuiDrawPolicyDrawSelf);
   }
   
   if (GetDrawToLayer())
@@ -964,7 +968,7 @@ bool nuiMainWindow::ShowWidgetInspector()
     Info.Height = 600;
 
     mpInspectorWindow = new nuiMainWindow(nuiContextInfo(nuiContextInfo::StandardContext2D), Info, GetNGLContext(), ResPath);
-//    mpInspectorWindow->SetForceNoDrawToLayer(true);
+    mpInspectorWindow->SetForceNoDrawToLayer(true);
     mpInspectorWindow->Acquire();
     mpInspectorWindow->SetQuitOnClose(false);
     mpInspectorWindow->AddChild(new nuiIntrospector(this));

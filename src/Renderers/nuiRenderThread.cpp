@@ -147,7 +147,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //    NGL_OUT("[nuiRenderThread] skipping frame\n");
     return;
   }
-//  NGL_OUT("[nuiRenderThread] render\n");
+  NGL_OUT("[nuiRenderThread] render\n");
 
 //  NGL_OUT("Widget %d / ContentsLayer %d / DrawLayer %d / DirtyLayers %d (total meta painters %d)\n", mWidgetPainters.size(), mLayerContentsPainters.size(), mLayerDrawPainters.size(), mDirtyLayers.size(), (int32)nuiMetaPainter::GetNbInstances());
 
@@ -397,6 +397,8 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     
 //    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
     mWidgetIndentation = 0;
+    
+    NGL_OUT(">>> Draw the widget tree\n");
     DrawWidget(mpDrawContext, mpRoot);
     
     mpDrawContext->StopRendering();
@@ -589,14 +591,14 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
 
   if (pPainter)
   {
-#if DEBUG
+#if _DEBUG
     nglString str;
     str.CFormat("Draw sub widget %s %p", pPainter->GetName().GetChars(), pKey);
     nglString indent;
     indent.Fill("  ", mWidgetIndentation);
     str.Prepend(indent);
     glPushGroupMarkerEXT(0, str.GetChars());
-//    NGL_OUT("%s\n", str.GetChars());
+    NGL_OUT("%s\n", str.GetChars());
 #endif
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
 //    pContext->SetStrokeColor(nuiColor("green"));
@@ -610,16 +612,16 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
 
 void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
 {
-#if DEBUG
+#if _DEBUG
   static int count = 0;
   nglString str;
   nglString tmp;
   tmp.Fill("  ", count);
   str.CFormat("%sDraw sub layer %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
+  NGL_OUT("%s\n", str.GetChars());
 #endif
   
-//  NGL_OUT("%s\n", str.GetChars());
   auto it = mLayerDrawPainters.find(pKey);
   if (it != mLayerDrawPainters.end())
   {

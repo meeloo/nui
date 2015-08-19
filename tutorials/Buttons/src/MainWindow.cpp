@@ -163,7 +163,7 @@ void MainWindow::OnCreation()
     for (int i = 0; pos[i] != nuiNoPosition; i++)
     {
       nuiLabel* prout = new nuiLabel(name[i]);
-      prout->SetDrawToLayer(true);
+      prout->SetLayerPolicy(nuiDrawPolicyDrawSelf);
       prout->SetBackground(true);
       prout->SetBackgroundColor(nuiColor(0, 255, 0, 128));
   //    prout->SetPosition(nuiFillVertical);
@@ -186,7 +186,7 @@ void MainWindow::OnCreation()
     return;
   }
   
-  if (1)
+  if (0)
   {
     ButtonCellSource* pSource = new ButtonCellSource();
   //  ComplexCellSource* pSource = new ComplexCellSource();
@@ -219,7 +219,7 @@ void MainWindow::OnCreation()
     return;
   }
 
-  if (0)
+  if (1)
   {
   // create a vertical box for the layout
     nuiVBox* pMainBox = new nuiVBox(0);

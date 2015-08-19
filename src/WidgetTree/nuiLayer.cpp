@@ -367,6 +367,45 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //    NGL_OUT("Draw is false for %p %s %s\n", mpWidgetContents, mpWidgetContents->GetObjectName().GetChars(), mpWidgetContents->GetObjectClass().GetChars());
   }
 
+  if (mpWidgetContents)
+  {
+    if (mpWidgetContents->GetLayerPolicy() == nuiDrawPolicyDrawSelf)
+    {
+      const nuiMetaPainter* pCache = mpWidgetContents->GetRenderCache();
+      if (pCache)
+      {
+        const auto& widgets = pCache->GetWidgets();
+        for (auto widget : widgets)
+        {
+          mpDrawPainter->PushMatrix();
+          nuiMatrix m;
+          nuiRect r = widget->GetRect();
+          m.SetTranslation(r.Left(), r.Top(), 0);
+          mpDrawPainter->MultMatrix(m);
+          mpDrawPainter->DrawWidget(pContext, widget);
+          mpDrawPainter->PopMatrix();
+        }
+      }
+      else  // No cache? What can we do? Draw all the children as is...
+      {
+        for (nuiWidget::Iterator* pIt = mpWidgetContents->GetFirstChild(); pIt && pIt->IsValid(); mpWidgetContents->GetNextChild(pIt))
+        {
+          nuiWidgetPtr widget = pIt->GetWidget();
+          if (widget)
+          {
+            mpDrawPainter->PushMatrix();
+            nuiMatrix m;
+            nuiRect r = widget->GetRect();
+            m.SetTranslation(r.Left(), r.Top(), 0);
+            mpDrawPainter->MultMatrix(m);
+            mpDrawPainter->DrawWidget(pContext, widget);
+            mpDrawPainter->PopMatrix();
+          }
+        }
+      }
+    }
+  }
+  
   static int level = 0;
   level++;
   for (auto child : mpChildren)
@@ -385,4 +424,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   pRenderThread->SetLayerDrawPainter(this, mpDrawPainter);
 }
 
-
+nuiMetaPainter* nuiLayer::GetDrawPainter() const
+{
+  return mpDrawPainter;
+}

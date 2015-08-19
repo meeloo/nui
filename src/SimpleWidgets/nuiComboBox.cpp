@@ -46,7 +46,7 @@ nuiComboBox::nuiComboBox(nuiTreeNode* pChoicesTree, bool ownTree)
 
 nuiComboBox::~nuiComboBox()
 {
-  UnparentTree(mpChoicesTree);
+//  UnparentTree(mpChoicesTree);
 
   if (mpChoicesTree)
     mpChoicesTree->Release();

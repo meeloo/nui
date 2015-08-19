@@ -46,7 +46,6 @@ typedef std::vector<nuiWidgetPtr> nuiWidgetList;
 typedef nuiTreeEventSource<nuiChildAdded, nuiWidget> nuiWidgetAddedEventSource;
 typedef nuiTreeEventSource<nuiChildDeleted, nuiWidget> nuiWidgetDeletedEventSource;
 
-
 class nuiWidget : public nuiObject
 {
 protected:
@@ -713,7 +712,8 @@ public:
 
   /** @name Layers */
   //@{
-  void SetDrawToLayer(bool UseLayer);
+  void SetLayerPolicy(nuiDrawPolicy policy);
+  nuiDrawPolicy GetLayerPolicy() const;
   bool GetDrawToLayer() const;
   nuiLayer* GetLayer() const;
   nuiWidget* GetParentLayerWidget() const;
@@ -913,6 +913,7 @@ protected:
 
   nuiWidgetList mpChildren;
   nuiLayer* mpBackingLayer = nullptr;
+  nuiDrawPolicy mLayerPolicy;
 
 };
 

@@ -253,6 +253,7 @@ void nuiMetaPainter::DrawWidget(nuiDrawContext* pContext, nuiWidget* pWidget)
   {
     StoreOpCode(eDrawWidget);
     StorePointer(pWidget);
+    mWidgets.push_back(pWidget);
   }
   mLastStateValid = false;
   mNbDrawChild++;
@@ -490,6 +491,8 @@ void nuiMetaPainter::Reset(nuiPainter const * pFrom)
     mClip.Move(-m.Elt.M14, -m.Elt.M24);
     mClip.mEnabled = clip;
   }
+    
+  mWidgets.clear();
 }
 
 
@@ -1119,8 +1122,13 @@ int32 nuiMetaPainter::GetNbDrawArray() const
   return mNbDrawArray;
 }
 
-const std::vector<nuiSurface*> nuiMetaPainter::GetSurfaces() const
+const std::vector<nuiWidget*>& nuiMetaPainter::GetWidgets() const
 {
-  return mSurfaces;
+  return mWidgets;
+}
+
+const std::vector<nuiSurface*>& nuiMetaPainter::GetSurfaces() const
+{
+    return mSurfaces;
 }
 

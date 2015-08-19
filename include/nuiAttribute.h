@@ -51,12 +51,18 @@ enum nuiAttributeUnit
 };
 
 // Getter and Setter helpers:
-#define NUI_GETSET(X, Y) \
-X Get##Y() const { return m##Y; } \
+#define NUI_GET(X, Y) \
+X Get##Y() const { return m##Y; }
+
+#define NUI_SET(X, Y) \
 void Set##Y(X val) { m##Y = val; }
 
+#define NUI_GETSET(X, Y) \
+NUI_GET(X, Y); \
+NUI_SET(X, Y);
+
 #define NUI_GETSETDO(X, Y, Z) \
-X Get##Y() const { return m##Y; } \
+NUI_GET(X, Y); \
 void Set##Y(X val) \
 {\
   if (m##Y == val)\
@@ -2309,6 +2315,25 @@ void nuiAttribute<nuiTextLayoutMode>::FormatDefault(nuiTextLayoutMode value, ngl
 #ifndef _MINUI3_
 template <>
 nuiAttributeEditor* nuiAttribute<nuiTextLayoutMode>::GetDefaultEditor(void* pTarget);
+#endif
+
+//********************************
+//
+// LayerPolicy
+//
+
+template <>
+bool nuiAttribute<nuiDrawPolicy>::ToString(nuiDrawPolicy Value, nglString& rString) const;
+
+template <>
+bool nuiAttribute<nuiDrawPolicy>::FromString(nuiDrawPolicy& rValue, const nglString& rString) const;
+
+template <>
+void nuiAttribute<nuiDrawPolicy>::FormatDefault(nuiDrawPolicy value, nglString& string) const;
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiDrawPolicy>::GetDefaultEditor(void* pTarget);
 #endif
 
 
