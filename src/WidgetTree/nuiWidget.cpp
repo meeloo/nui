@@ -2132,6 +2132,7 @@ void nuiWidget::SilentSetVisible(bool Visible)
     if (pRenderThread)
     {
       pRenderThread->SetWidgetDrawPainter(this, nullptr);
+      pRenderThread->SetWidgetContentsPainter(this, nullptr);
     }
   }
 }
@@ -4882,6 +4883,7 @@ void nuiWidget::CallOnTrash()
   if (pRenderThread)
   {
     pRenderThread->SetWidgetDrawPainter(this, nullptr);
+    pRenderThread->SetWidgetContentsPainter(this, nullptr);
   }
   
 
@@ -5877,6 +5879,7 @@ void nuiWidget::SetVisible(bool Visible)
         if (pRenderThread)
         {///< May need iteration of children
           pRenderThread->SetWidgetDrawPainter(this, nullptr);
+          pRenderThread->SetWidgetContentsPainter(this, nullptr);
         }
       }
     }
@@ -5909,6 +5912,7 @@ void nuiWidget::SetVisible(bool Visible)
         if (pRenderThread)
         {///< May need iteration of children
           pRenderThread->SetWidgetDrawPainter(this, nullptr);
+          pRenderThread->SetWidgetContentsPainter(this, nullptr);
         }
       }
     }

@@ -422,6 +422,8 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   pContext->SetPainter(pPainter);
 
   pRenderThread->SetLayerDrawPainter(this, mpDrawPainter);
+  if (mpWidgetContents)
+    pRenderThread->SetWidgetDrawPainter(mpWidgetContents, mpDrawPainter);
 }
 
 nuiMetaPainter* nuiLayer::GetDrawPainter() const
