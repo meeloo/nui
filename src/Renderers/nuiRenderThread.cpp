@@ -189,11 +189,6 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   mpDrawContext->ResetClipRect();
 
   // Update Layers:
-  if (!mDirtyLayers.empty())
-  {
-    //      NGL_OUT("Update %d dirty layers!\n", mDirtyLayers.size());
-  }
-  //    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
   glPushGroupMarkerEXT(0, "Update dirty layers");
   
   // Create needed surfaces once for this frame:
@@ -231,121 +226,12 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
       //      layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
     }
-    
-    nuiMetaPainter* pRootPainter = it->second;
-    if (pRootPainter == nullptr)
-    {
-      RenderingDone(false);
-      return;
-    }
-    
-    
-    mpContext->GetLock().Lock();
-    
-    mpPainter->ResetStats();
-    mpContext->BeginSession();
-    mpPainter->BeginSession();
-    
-    mpDrawContext->SetPainter(mpPainter);
-    mpDrawContext->StartRendering();
-    
-    nuiTask* pTask = nullptr;
-    while (mContinue && (pTask = mNextFrameQueue.Get(0)))
-    {
-      pTask->Run();
-      pTask->Release();
-    }
-    
-    
-    mpDrawContext->Set2DProjectionMatrix(mRect.Size());
-    
-    mpDrawContext->ResetState();
-    mpDrawContext->ResetClipRect();
 
-    // Update Layers:
-    if (!mDirtyLayers.empty())
-    {
-      //      NGL_OUT("Update %d dirty layers!\n", mDirtyLayers.size());
-    }
-    //    mpLayerTreeRoot->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
-    glPushGroupMarkerEXT(0, "Update dirty layers");
-    
-    // Create needed surfaces once for this frame:
-    //    NGL_OUT("Create surface for current frame\n");
-    int count = 0;
-    for (auto elem : mLayerContentsPainters)
-    {
-      nuiMetaPainter* pPainter = elem.second;
-      auto surfaces(pPainter->GetSurfaces());
-      for (auto surface : surfaces)
-      {
-        mpPainter->CreateSurface(surface);
-        count++;
-      }
-    }
-    //    NGL_OUT("DONE - Create surface for current frame (%d)\n", count);
-    
-    for (auto layer : mDirtyLayers)
-    {
-      nglString str;
-#ifdef DEBUG
-      str.CFormat("Draw Layer Contents %s %s %p", layer->GetObjectClass().GetChars(), layer->GetObjectName().GetChars(), layer);
-      glPushGroupMarkerEXT(0, str.GetChars());
-#endif
-      
-      auto it = mLayerContentsPainters.find(layer);
-      if (it != mLayerContentsPainters.end())
-      {
-        nuiMetaPainter* pPainter = it->second;
-        
-        
-        //        for (int i = 0; i < pPainter->GetNbOperations(); i++)
-        //        {
-        //          NGL_OUT("op %s\n", pPainter->GetOperationDescription(i).GetChars());
-        //        }
-        
-        
-        mpDrawContext->ResetState();
-        mpDrawContext->ResetClipRect();
-        //        NGL_OUT("Update Dirty Layer %p (%p - %d)\n", layer, pPainter, pPainter->GetRefCount());
-        pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayerContents));
-        //      layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
-      }
-      
 #ifdef DEBUG
     glPopGroupMarkerEXT();
-    
-    mpDrawContext->SetClearColor(nuiColor(255,255,255));
-    //  if (mClearBackground)
-    {
-      mpDrawContext->Clear();
-    }
-    //  else
-    //  {
-    //    // Force the initial render state anyway!
-    //    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
-    //  }
-    
-//    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
-    mWidgetIndentation = 0;
-    
-    NGL_OUT(">>> Draw the widget tree\n");
-    DrawWidget(mpDrawContext, mpRoot);
-    
-    mpDrawContext->StopRendering();
-    mpPainter->EndSession();
-    mpContext->EndSession();
-    
-    mpContext->GetLock().Unlock();
-    
-    RenderingDone(true);
 #endif
   }
-  mDirtyLayers.clear();
-  
-  glPopGroupMarkerEXT();
-  
-  
+
   mpDrawContext->SetClearColor(nuiColor(255,255,255));
   //  if (mClearBackground)
   {
@@ -359,8 +245,10 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
 //    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
   mWidgetIndentation = 0;
-  DrawWidget(mpDrawContext, mpRoot);
   
+  NGL_OUT(">>> Draw the widget tree\n");
+  DrawWidget(mpDrawContext, mpRoot);
+    
   mpDrawContext->StopRendering();
   mpPainter->EndSession();
   mpContext->EndSession();
@@ -626,37 +514,6 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
   }
   mWidgetIndentation--;
 }
-
-void nuiRenderThread::DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pKey)
-{
-  mWidgetIndentation++;
-
-  nuiMetaPainter* pPainter = nullptr;
-  auto it = mWidgetContentsPainters.find(pKey);
-  if (it != mWidgetContentsPainters.end())
-    pPainter = it->second;
-
-  if (pPainter)
-  {
-#if DEBUG
-    nglString str;
-    str.CFormat("Draw sub widget contents %s %p", pPainter->GetName().GetChars(), pKey);
-    nglString indent;
-    indent.Fill("  ", mWidgetIndentation);
-    str.Prepend(indent);
-    glPushGroupMarkerEXT(0, str.GetChars());
-    NGL_OUT("%s\n", str.GetChars());
-#endif
-    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
-    //    pContext->SetStrokeColor(nuiColor("green"));
-    //    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
-#if DEBUG
-    glPopGroupMarkerEXT();
-#endif
-  }
-  mWidgetIndentation--;
-}
-
 
 void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
 {
