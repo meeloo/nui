@@ -145,150 +145,153 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  if (0)
+  int test = 0;
+  switch (test)
   {
-    nuiPosition pos[] = {
-      nuiTopLeft, nuiTop, nuiTopRight,
-      nuiLeft, nuiCenter, nuiRight,
-      nuiBottomLeft, nuiBottom, nuiBottomRight,
-      nuiNoPosition
-    };
-    const char* name[] = {
-      "TopLeft", "Top", "TopRight",
-      "Left", "Center", "Right",
-      "BottomLeft", "Bottom", "BottomRight",
-      NULL
-    };
-    
-    for (int i = 0; pos[i] != nuiNoPosition; i++)
+  case 0:
     {
-      nuiLabel* prout = new nuiLabel(name[i]);
-      prout->SetLayerPolicy(nuiDrawPolicyDrawSelf);
-      prout->SetBackground(true);
-      prout->SetBackgroundColor(nuiColor(0, 255, 0, 128));
-  //    prout->SetPosition(nuiFillVertical);
-      prout->SetPosition(pos[i]);
-      nuiAttributeAnimation* anim = new nuiAttributeAnimation();
-      anim->SetTargetObject(prout);
-      anim->SetTargetAttribute("Alpha");
-      anim->SetCaptureStartOnPlay(true);
-      anim->SetEndValue(0.5);
-      anim->SetEasing(nuiEasingSinus);
-      anim->SetDuration(1.0f);
-      prout->AddAnimation("Fade", anim);
-      anim->Play(100000, eAnimLoopPingPong);
+      nuiPosition pos[] = {
+        nuiTopLeft, nuiTop, nuiTopRight,
+        nuiLeft, nuiCenter, nuiRight,
+        nuiBottomLeft, nuiBottom, nuiBottomRight,
+        nuiNoPosition
+      };
+      const char* name[] = {
+        "TopLeft", "Top", "TopRight",
+        "Left", "Center", "Right",
+        "BottomLeft", "Bottom", "BottomRight",
+        NULL
+      };
+      
+      for (int i = 0; pos[i] != nuiNoPosition; i++)
+      {
+        nuiLabel* prout = new nuiLabel(name[i]);
+        prout->SetLayerPolicy(nuiDrawPolicyDrawSelf);
+        prout->SetBackground(true);
+        prout->SetBackgroundColor(nuiColor(0, 255, 0, 128));
+    //    prout->SetPosition(nuiFillVertical);
+        prout->SetPosition(pos[i]);
+        nuiAttributeAnimation* anim = new nuiAttributeAnimation();
+        anim->SetTargetObject(prout);
+        anim->SetTargetAttribute("Alpha");
+        anim->SetCaptureStartOnPlay(true);
+        anim->SetEndValue(0.5);
+        anim->SetEasing(nuiEasingSinus);
+        anim->SetDuration(1.0f);
+        prout->AddAnimation("Fade", anim);
+        anim->Play(100000, eAnimLoopPingPong);
 
-      AddChild(prout);
-    }
+        AddChild(prout);
+      }
+      
+      
+      
+      return;
+    }break;
     
-    
-    
-    return;
-  }
-  
-  if (0)
-  {
-    ButtonCellSource* pSource = new ButtonCellSource();
-  //  ComplexCellSource* pSource = new ComplexCellSource();
-    nuiTableView* pListView = new nuiTableView(pSource);
-    AddChild(pListView);
-  nuiWidget* pChild = CreateTestDelChildren();
-  AddChild(pChild);
-
-  nuiScrollView* pSView = new nuiScrollView(false, true);
-  AddChild(pSView);
-  pSView->SetPosition(nuiFill);
-  pSView->SetUserWidth(256);
-  
-  nuiVBox* pVBox = new nuiVBox();
-  pVBox->SetBorderRight(42);
-  pVBox->SetExpand(nuiExpandShrinkAndGrow);
-  pSView->AddChild(pVBox);
-  nuiButton* pButton;
-  
-    for (int i = 0; i < 128; i++)
+  case 1:
     {
-      nglString str;
-      str.CFormat("Button %d", i);
-      pButton = new nuiButton(str);
-      pButton->SetObjectName(str);
-      pButton->SetUserHeight(42);
-      pVBox->AddCell(pButton);
-    }
+      ButtonCellSource* pSource = new ButtonCellSource();
+    //  ComplexCellSource* pSource = new ComplexCellSource();
+      nuiTableView* pListView = new nuiTableView(pSource);
+      AddChild(pListView);
+    nuiWidget* pChild = CreateTestDelChildren();
+    AddChild(pChild);
+
+    nuiScrollView* pSView = new nuiScrollView(false, true);
+    AddChild(pSView);
+    pSView->SetPosition(nuiFill);
+    pSView->SetUserWidth(256);
     
-    return;
-  }
+    nuiVBox* pVBox = new nuiVBox();
+    pVBox->SetBorderRight(42);
+    pVBox->SetExpand(nuiExpandShrinkAndGrow);
+    pSView->AddChild(pVBox);
+    nuiButton* pButton;
+    
+      for (int i = 0; i < 128; i++)
+      {
+        nglString str;
+        str.CFormat("Button %d", i);
+        pButton = new nuiButton(str);
+        pButton->SetObjectName(str);
+        pButton->SetUserHeight(42);
+        pVBox->AddCell(pButton);
+      }
+      
+      return;
+    } break;
 
-  if (1)
-  {
-  // create a vertical box for the layout
-    nuiVBox* pMainBox = new nuiVBox(0);
-    pMainBox->SetExpand(nuiExpandShrinkAndGrow);
-    pMainBox->SetPosition(nuiFillVertical);
-    AddChild(pMainBox);
-
-    // create a label width background for information display
-    nuiPane* pPane = new nuiPane();
-    pPane->SetBorder(20,20);
-    pMainBox->AddCell(pPane, nuiFillHorizontal);
-    mpLabel = new nuiLabel("---- Click on a button ---");
-    pPane->AddChild(mpLabel);
-    pPane->SetUserHeight(40);
-
-    nuiLabel* pLabel = new nuiLabel("nuiButton:", nuiFont::GetFont(16));
-    pMainBox->AddCell(pLabel, nuiLeft);
-    pMainBox->AddCell(Tutorial_Buttons());
-
-    pLabel = new nuiLabel("nuiToggleButton:", nuiFont::GetFont(16));
-    pMainBox->AddCell(pLabel, nuiLeft);
-    pMainBox->AddCell(Tutorial_ToggleButtons());
-
-    pLabel = new nuiLabel("nuiRadioButton:", nuiFont::GetFont(16));
-    pMainBox->AddCell(pLabel, nuiLeft);
-    pMainBox->AddCell(Tutorial_RadioButtons1());
-
-    pLabel = new nuiLabel("nuiRadioButton:", nuiFont::GetFont(16));
-    pMainBox->AddCell(pLabel, nuiLeft);
-    pMainBox->AddCell(Tutorial_RadioButtons2());
-
-    // make the mainbox's layout fill the entire user size (c.f. line #33)
-    pMainBox->SetAllCellsExpand(nuiExpandShrinkAndGrow);
-
-    nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
-    pAnim->SetTargetAttribute("Alpha");
-    pAnim->SetTargetObject(pPane);
-    pPane->AddAnimation("Fade", pAnim);
-    pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
-
-    AddChild(new nuiIntrospector(pMainBox));
-  }
-  
-    if (0)
+  case 2:
     {
-      nuiLabel* pLabel = new nuiLabel("My Label");
-      pLabel->SetPosition(nuiCenter);
-      AddChild(pLabel);
+    // create a vertical box for the layout
+      nuiVBox* pMainBox = new nuiVBox(0);
+      pMainBox->SetExpand(nuiExpandShrinkAndGrow);
+      pMainBox->SetPosition(nuiFillVertical);
+      AddChild(pMainBox);
 
-//      nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
-//      pAnim->SetTargetAttribute("Alpha");
-//      pAnim->SetTargetObject(pLabel);
-//      pLabel->AddAnimation("Fade", pAnim);
-//      pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
-    }
+      // create a label width background for information display
+      nuiPane* pPane = new nuiPane();
+      pPane->SetBorder(20,20);
+      pMainBox->AddCell(pPane, nuiFillHorizontal);
+      mpLabel = new nuiLabel("---- Click on a button ---");
+      pPane->AddChild(mpLabel);
+      pPane->SetUserHeight(40);
 
-    if (0)
-    {
-        nuiButton* pButton = new nuiButton("My Button");
-        pButton->SetPosition(nuiCenter);
-        AddChild(pButton);
-        
-        nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
-        pAnim->SetTargetAttribute("Alpha");
-        pAnim->SetTargetObject(pButton);
-        pButton->AddAnimation("Fade", pAnim);
-        pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+      nuiLabel* pLabel = new nuiLabel("nuiButton:", nuiFont::GetFont(16));
+      pMainBox->AddCell(pLabel, nuiLeft);
+      pMainBox->AddCell(Tutorial_Buttons());
+
+      pLabel = new nuiLabel("nuiToggleButton:", nuiFont::GetFont(16));
+      pMainBox->AddCell(pLabel, nuiLeft);
+      pMainBox->AddCell(Tutorial_ToggleButtons());
+
+      pLabel = new nuiLabel("nuiRadioButton:", nuiFont::GetFont(16));
+      pMainBox->AddCell(pLabel, nuiLeft);
+      pMainBox->AddCell(Tutorial_RadioButtons1());
+
+      pLabel = new nuiLabel("nuiRadioButton:", nuiFont::GetFont(16));
+      pMainBox->AddCell(pLabel, nuiLeft);
+      pMainBox->AddCell(Tutorial_RadioButtons2());
+
+      // make the mainbox's layout fill the entire user size (c.f. line #33)
+      pMainBox->SetAllCellsExpand(nuiExpandShrinkAndGrow);
+
+      nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
+      pAnim->SetTargetAttribute("Alpha");
+      pAnim->SetTargetObject(pPane);
+      pPane->AddAnimation("Fade", pAnim);
+      pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+
+      AddChild(new nuiIntrospector(pMainBox));
+    } break;
+
+  case 3:
+      {
+        nuiLabel* pLabel = new nuiLabel("My Label");
+        pLabel->SetPosition(nuiCenter);
+        AddChild(pLabel);
+
+  //      nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
+  //      pAnim->SetTargetAttribute("Alpha");
+  //      pAnim->SetTargetObject(pLabel);
+  //      pLabel->AddAnimation("Fade", pAnim);
+  //      pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+      }
+
+      if (0)
+      {
+          nuiButton* pButton = new nuiButton("My Button");
+          pButton->SetPosition(nuiCenter);
+          AddChild(pButton);
+          
+          nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
+          pAnim->SetTargetAttribute("Alpha");
+          pAnim->SetTargetObject(pButton);
+          pButton->AddAnimation("Fade", pAnim);
+          pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+      } break;
     }
-  
 }
 
 

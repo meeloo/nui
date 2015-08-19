@@ -371,7 +371,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
         mpDrawContext->ResetState();
         mpDrawContext->ResetClipRect();
         //        NGL_OUT("Update Dirty Layer %p (%p - %d)\n", layer, pPainter, pPainter->GetRefCount());
-        pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+        pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayerContents));
         //      layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
       }
       
@@ -574,21 +574,79 @@ void nuiRenderThread::_SetLayerTree(nuiLayer* pRoot)
   mpLayerTreeRoot = pRoot;
 }
 
-void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
+void nuiRenderThread::DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pKey)
 {
   mWidgetIndentation++;
 
   nuiMetaPainter* pPainter = nullptr;
+  auto it = mWidgetContentsPainters.find(pKey);
+  if (it != mWidgetContentsPainters.end())
+    pPainter = it->second;
+
+  if (pPainter)
+  {
+#if _DEBUG
+    nglString str;
+    str.CFormat("Draw widget contents %s %p", pPainter->GetName().GetChars(), pKey);
+    nglString indent;
+    indent.Fill("  ", mWidgetIndentation);
+    str.Prepend(indent);
+    glPushGroupMarkerEXT(0, str.GetChars());
+    NGL_OUT("%s\n", str.GetChars());
+#endif
+    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+//    pContext->SetStrokeColor(nuiColor("green"));
+//    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
+#if DEBUG
+    glPopGroupMarkerEXT();
+#endif
+  }
+  mWidgetIndentation--;
+}
+
+void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey)
+{
+#if _DEBUG
+  static int count = 0;
+  nglString str;
+  nglString tmp;
+  tmp.Fill("  ", count);
+  str.CFormat("%sDraw layer contents %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
+  glPushGroupMarkerEXT(0, str.GetChars());
+  NGL_OUT("%s\n", str.GetChars());
+#endif
+  
+  auto it = mLayerContentsPainters.find(pKey);
+  if (it != mLayerContentsPainters.end())
+  {
+    nuiMetaPainter* pPainter = it->second;
+//    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
+    NGL_ASSERT(pPainter);
+    
+#if DEBUG
+    count++;
+#endif
+    
+    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+
+#if DEBUG
+    count--;
+#endif
+  }
+#if DEBUG
+  glPopGroupMarkerEXT();
+#endif
+}
+
+void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
+{
+  mWidgetIndentation++;
+  
+  nuiMetaPainter* pPainter = nullptr;
   auto it = mWidgetDrawPainters.find(pKey);
   if (it != mWidgetDrawPainters.end())
     pPainter = it->second;
-  else
-  {
-    it = mWidgetContentsPainters.find(pKey);
-    if (it != mWidgetContentsPainters.end())
-      pPainter = it->second;
-  }
-
+  
   if (pPainter)
   {
 #if _DEBUG
@@ -601,8 +659,8 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
     NGL_OUT("%s\n", str.GetChars());
 #endif
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
-//    pContext->SetStrokeColor(nuiColor("green"));
-//    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
+    //    pContext->SetStrokeColor(nuiColor("green"));
+    //    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
 #if DEBUG
     glPopGroupMarkerEXT();
 #endif
@@ -626,7 +684,7 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
   if (it != mLayerDrawPainters.end())
   {
     nuiMetaPainter* pPainter = it->second;
-//    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
+    //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
     
 #if DEBUG
@@ -634,7 +692,7 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
 #endif
     
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
-
+    
 #if DEBUG
     count--;
 #endif
