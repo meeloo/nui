@@ -263,7 +263,7 @@ void MainWindow::OnCreation()
       pPane->AddAnimation("Fade", pAnim);
       pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
 
-      AddChild(new nuiIntrospector(pMainBox));
+//      AddChild(new nuiIntrospector(pMainBox));
     } break;
 
   case 3:

@@ -165,7 +165,6 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     return;
   }
   
-  
   mpContext->GetLock().Lock();
   
   mpPainter->ResetStats();
@@ -181,9 +180,6 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     pTask->Run();
     pTask->Release();
   }
-  
-  
-  mpDrawContext->Set2DProjectionMatrix(mRect.Size());
   
   mpDrawContext->ResetState();
   mpDrawContext->ResetClipRect();
@@ -208,28 +204,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   for (auto layer : mDirtyLayers)
   {
-    nglString str;
-#ifdef DEBUG
-    str.CFormat("Draw Layer Contents %s %s %p", layer->GetObjectClass().GetChars(), layer->GetObjectName().GetChars(), layer);
-    glPushGroupMarkerEXT(0, str.GetChars());
-#endif
-    
-    auto it = mLayerContentsPainters.find(layer);
-    if (it != mLayerContentsPainters.end())
-    {
-      nuiMetaPainter* pPainter = it->second;
-      
-      
-      mpDrawContext->ResetState();
-      mpDrawContext->ResetClipRect();
-      //        NGL_OUT("Update Dirty Layer %p (%p - %d)\n", layer, pPainter, pPainter->GetRefCount());
-      pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
-      //      layer->UpdateContents(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget));
-    }
-
-#ifdef DEBUG
-    glPopGroupMarkerEXT();
-#endif
+    DrawLayerContents(mpDrawContext, layer);
   }
 
   mpDrawContext->SetClearColor(nuiColor(255,255,255));
@@ -243,10 +218,12 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   //    mpDrawContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
   //  }
   
-//    pRootPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
   mWidgetIndentation = 0;
   
   NGL_OUT(">>> Draw the widget tree\n");
+  mpDrawContext->ResetState();
+  mpDrawContext->ResetClipRect();
+  mpDrawContext->Set2DProjectionMatrix(mRect.Size());
   DrawWidget(mpDrawContext, mpRoot);
     
   mpDrawContext->StopRendering();
@@ -439,12 +416,12 @@ void nuiRenderThread::DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pK
     indent.Fill("  ", mWidgetIndentation);
     str.Prepend(indent);
     glPushGroupMarkerEXT(0, str.GetChars());
-    NGL_OUT("%s\n", str.GetChars());
+//    NGL_OUT("%s\n", str.GetChars());
 #endif
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
 //    pContext->SetStrokeColor(nuiColor("green"));
 //    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
-#if DEBUG
+#if _DEBUG
     glPopGroupMarkerEXT();
 #endif
   }
@@ -460,7 +437,7 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
   tmp.Fill("  ", count);
   str.CFormat("%sDraw layer contents %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
-  NGL_OUT("%s\n", str.GetChars());
+//  NGL_OUT("%s\n", str.GetChars());
 #endif
   
   auto it = mLayerContentsPainters.find(pKey);
@@ -470,17 +447,17 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
 //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
     
-#if DEBUG
+#if _DEBUG
     count++;
 #endif
     
-    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
 
-#if DEBUG
+#if _DEBUG
     count--;
 #endif
   }
-#if DEBUG
+#if _DEBUG
   glPopGroupMarkerEXT();
 #endif
 }
@@ -498,17 +475,17 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
   {
 #if _DEBUG
     nglString str;
-    str.CFormat("Draw sub widget %s %p", pPainter->GetName().GetChars(), pKey);
+    str.CFormat("Draw widget %s %p", pPainter->GetName().GetChars(), pKey);
     nglString indent;
     indent.Fill("  ", mWidgetIndentation);
     str.Prepend(indent);
     glPushGroupMarkerEXT(0, str.GetChars());
-    NGL_OUT("%s\n", str.GetChars());
+//    NGL_OUT("%s\n", str.GetChars());
 #endif
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
     //    pContext->SetStrokeColor(nuiColor("green"));
     //    pContext->DrawLine(0, 0, pKey->GetRect().GetWidth(), pKey->GetRect().GetHeight());
-#if DEBUG
+#if _DEBUG
     glPopGroupMarkerEXT();
 #endif
   }
@@ -522,9 +499,9 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
   nglString str;
   nglString tmp;
   tmp.Fill("  ", count);
-  str.CFormat("%sDraw sub layer %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
+  str.CFormat("%sDraw layer %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
-  NGL_OUT("%s\n", str.GetChars());
+//  NGL_OUT("%s\n", str.GetChars());
 #endif
   
   auto it = mLayerDrawPainters.find(pKey);
@@ -534,17 +511,17 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
     //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
     
-#if DEBUG
+#if _DEBUG
     count++;
 #endif
     
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
     
-#if DEBUG
+#if _DEBUG
     count--;
 #endif
   }
-#if DEBUG
+#if _DEBUG
   glPopGroupMarkerEXT();
 #endif
 }
