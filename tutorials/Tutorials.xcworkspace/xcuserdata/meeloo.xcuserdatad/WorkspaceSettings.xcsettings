@@ -8,6 +8,8 @@
 	<string>RelativeToDerivedData</string>
 	<key>DerivedDataLocationStyle</key>
 	<string>Default</string>
+	<key>HasAskedToTakeAutomaticSnapshotBeforeSignificantChanges</key>
+	<true/>
 	<key>IDEWorkspaceUserSettings_BuildLocationStyle</key>
 	<integer>0</integer>
 	<key>IDEWorkspaceUserSettings_BuildSubfolderNameStyle</key>

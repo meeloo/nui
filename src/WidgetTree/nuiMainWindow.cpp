@@ -205,11 +205,6 @@ void nuiMainWindow::InitAttributes()
                 nuiMakeDelegate(this, &nuiMainWindow::SetWindowRect)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString("DrawToSurface"), nuiUnitNone,
-                nuiMakeDelegate(this, &nuiMainWindow::GetDrawToSurface),
-                nuiMakeDelegate(this, &nuiMainWindow::SetDrawToSurface)));
-
-  AddAttribute(new nuiAttribute<bool>
                (nglString("DrawDirtyRects"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiMainWindow::GetDrawDirtyRects),
                 nuiMakeDelegate(this, &nuiMainWindow::SetDrawDirtyRects)));
@@ -257,7 +252,7 @@ nuiSize nuiMainWindow::GetStatusBarSize() const
 }
 
 
-#ifdef NUI_USE_RENDER_THREAD
+#if NUI_USE_RENDER_THREAD
 
 void nuiMainWindow::Paint()
 {
@@ -390,30 +385,6 @@ void nuiMainWindow::Paint()
 
   pContext->StartRendering();
 
-  if (mDrawToSurface)
-  {
-    if (mpSurface)
-    {
-      if (mpSurface->GetWidth() != GetWidth() || mpSurface->GetHeight() != GetHeight() )
-      {
-        mpSurface->Release();
-        mpSurface = nullptr;
-      }
-    }
-
-    if (!mpSurface)
-    {
-      nglString name;
-      static int count = 0;
-      name.CFormat("nuiMainWindow %p %d", this, count++);
-      mpSurface = nuiSurface::CreateSurface(name, GetWidth(), GetHeight());
-      name.CFormat("nuiMainWindow_Texture %p %d", this, count++);
-      mpSurface->GetTexture()->SetSource(name);
-    }
-
-    pContext->SetSurface(mpSurface);
-  }
-
   pContext->Set2DProjectionMatrix(GetRect().Size());
   bool DrawFullFrame = !mInvalidatePosted || (mFullFrameRedraw > 0);
   bool RestorePartial = IsPartialRedrawEnabled();
@@ -460,22 +431,6 @@ void nuiMainWindow::Paint()
 //  {
 //    
 //  }
-
-  if (mDrawToSurface)
-  {
-    pContext->SetSurface(nullptr);
-
-  //  pContext->StartRendering();
-    pContext->Set2DProjectionMatrix(GetRect().Size());
-    nuiTexture* pTex = mpSurface->GetTexture();
-    pContext->SetTexture(pTex);
-    pContext->EnableTexturing(true);
-    pContext->SetFillColor(nuiColor(255, 255, 255));
-    pContext->ResetClipRect();
-    pContext->EnableClipping(false);
-    nuiRect r((int)pTex->GetWidth(), (int)pTex->GetHeight());
-    pContext->DrawImage(r,  r);
-  }
 
   pContext->StopRendering();
 
@@ -968,7 +923,8 @@ bool nuiMainWindow::ShowWidgetInspector()
     Info.Height = 600;
 
     mpInspectorWindow = new nuiMainWindow(nuiContextInfo(nuiContextInfo::StandardContext2D), Info, GetNGLContext(), ResPath);
-    mpInspectorWindow->SetForceNoDrawToLayer(true);
+//    mpInspectorWindow->SetForceNoDrawToLayer(true);
+    SetLayerPolicy(nuiDrawPolicyDrawTree);
     mpInspectorWindow->Acquire();
     mpInspectorWindow->SetQuitOnClose(false);
     mpInspectorWindow->AddChild(new nuiIntrospector(this));

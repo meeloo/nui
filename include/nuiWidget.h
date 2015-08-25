@@ -593,8 +593,6 @@ public:
 
   /** @name Render Cache */
   //@{
-  void EnableRenderCache(bool set); ///< Enable or disable the rendering cache that speeds up Widget rendering. Disable the cache if you need to use OpenGL directly in this widget.
-  bool IsRenderCacheEnabled(); ///< See EnableRenderCache.
   const nuiMetaPainter* GetRenderCache() const;
   //@}
 
@@ -726,9 +724,6 @@ public:
   NUI_GETSET(bool, AutoAcceptMouseSteal);
   NUI_GETSETDO(bool, ForceNoDrawToLayer, BroadcastForceNoDrawToLayer());
 
-  static void SetGlobalUseRenderCache(bool set);
-  static bool GetGlobalUseRenderCache();
-
 protected:
   virtual ~nuiWidget();
 
@@ -790,7 +785,6 @@ protected:
   void DispatchFocus(nuiWidgetPtr pWidget); ///< Advise the objet of a change of focus object. pWidget can be null.
 
   static bool mShowFocusDefault;
-  static bool mGlobalUseRenderCache;
 
 
   bool mAnimateLayout : 1;
@@ -798,7 +792,6 @@ protected:
   bool mMixAlpha : 1;
   bool mInheritAlpha : 1;
   bool mVisible : 1;
-  bool mUseRenderCache : 1;
   bool mDrawingInCache : 1;
   bool mNeedInvalidateOnSetRect : 1;
   bool mInteractiveOD : 1;

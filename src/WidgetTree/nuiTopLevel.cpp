@@ -218,7 +218,6 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   mLastClickedButton = nglMouseInfo::ButtonNone;
 
   EnablePartialRedraw(PARTIAL_REDRAW_DEFAULT);
-  EnableRenderCache(true);
 
   SetWantKeyboardFocus(true);
   SetFocusVisible(false);
@@ -1948,7 +1947,7 @@ bool nuiTopLevel::Draw(class nuiDrawContext *pContext)
   return true;
 }
 
-#ifdef NUI_USE_RENDER_THREAD
+#if NUI_USE_RENDER_THREAD
 
 bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
 {
@@ -2008,7 +2007,10 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
   }
   else
   {
-    DrawWidget(pContext);
+    for (auto widget : mDirtyWidgets)
+    {
+      widget->DrawWidget(pContext); //  This will update the Meta Painter for each invalidated widget
+    }
   }
 
   mDirtyRects.clear();
@@ -2076,7 +2078,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
       pContext->Clip(mDirtyRects[i]);
       pContext->EnableClipping(true);
 
-      nuiColor clearColor(GetColor(eActiveWindowBg));
+      nuiColor clearColor("nuiActiveWindowBg");
       //pContext->SetClearColor(clearColor);
       if (mClearBackground)
       {
@@ -2104,7 +2106,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
     pContext->ResetState();
     pContext->ResetClipRect();
 
-    pContext->SetClearColor(GetColor(eActiveWindowBg));
+    pContext->SetClearColor("nuiActiveWindowBg");
     if (mClearBackground)
     {
       pContext->Clear();
@@ -2220,8 +2222,15 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
   if (mpBackingLayer)
     GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 
+  mDirtyWidgets.insert(pSender);
   DebugRefreshInfo();
 }
+
+void nuiTopLevel::BroadcastInvalidate(nuiWidgetPtr pSender)
+{
+  mDirtyWidgets.insert(pSender);
+}
+
 
 //#define _DEBUG_LAYOUT
 bool nuiTopLevel::SetRect(const nuiRect& rRect)

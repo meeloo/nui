@@ -14,18 +14,6 @@
 //#define NUI_USE_LAYERS 0
 
 
-bool nuiWidget::mGlobalUseRenderCache = true;
-
-void nuiWidget::SetGlobalUseRenderCache(bool set)
-{
-  mGlobalUseRenderCache = set;
-}
-
-bool nuiWidget::GetGlobalUseRenderCache()
-{
-  return mGlobalUseRenderCache;
-}
-
 //#define NUI_LOG_GETIDEALRECT
 
 // Use like this:  nuiAnimation::RunOnAnimationTick(nuiMakeTask(nuiDelayedPlayAnim, eAnimFromStart, Time, count, loopmode));
@@ -280,12 +268,6 @@ void nuiWidget::InitAttributes()
   
   
   AddAttribute(new nuiAttribute<bool>
-              (nglString("UseRenderCache"), nuiUnitBoolean,
-               nuiMakeDelegate(this, &nuiWidget::IsRenderCacheEnabled),
-               nuiMakeDelegate(this, &nuiWidget::EnableRenderCache)));
-
-
-  AddAttribute(new nuiAttribute<bool>
                (nglString("RedrawOnHover"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiWidget::GetRedrawOnHover),
                 nuiMakeDelegate(this, &nuiWidget::SetRedrawOnHover)));
@@ -510,7 +492,6 @@ void nuiWidget::Init()
   mNeedInvalidateOnSetRect = true;
   mDrawingInCache = false;
   mpRenderCache = NULL;
-	mUseRenderCache = false;
 
   mTrashed = false;
   mDoneTrashed = false;
@@ -555,8 +536,6 @@ void nuiWidget::Init()
   mMuteKeyboardFocusDispatch = false;
 
   LoadIdentityMatrix();
-  
-  EnableRenderCache(true);
   
   // Events:
   NUI_ADD_EVENT(ChildAdded);
@@ -673,7 +652,7 @@ nuiWidget::~nuiWidget()
     mpFocusDecoration->Release();
   }
 
-#ifdef NUI_USE_RENDER_THREAD
+#if NUI_USE_RENDER_THREAD
   NGL_ASSERT(!mpRenderCache);
 #endif
 
@@ -1070,8 +1049,6 @@ void nuiWidget::SilentInvalidate()
   #endif
   
   mNeedSelfRedraw = true;
-//  if (mpRenderCache)
-//    mpRenderCache->Reset(NULL);
   DebugRefreshInfo();
 }
 
@@ -1263,25 +1240,7 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   return true;
 }
 
-#if 0
-
-1 option alter the rendering:
-- RenderCache on/off
-
-4 cases:
-
-  None:
-    InternalDrawWidget(pContext); // Draw!
-
-  RenderCache:
-    if (mNeedRender)
-      InternalDrawWidget(pRenderCache); // Fill the cache
-    DrawRenderCache(pContext); // Draw the cache to the screen
-
- 
-#endif
-
-#ifdef NUI_USE_RENDER_THREAD
+#if NUI_USE_RENDER_THREAD
 
 bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 {
@@ -1344,7 +1303,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
         }
       }
       mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
-      if (old != mRenderCacheIsEmpty)
+      if (old != mRenderCacheIsEmpty || mLayerPolicy == nuiDrawPolicyDrawSelf)
       {
         // If the render cache has changed from empty to full or from full to empty we need to update the layer draw operations
         mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
@@ -1357,21 +1316,20 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
   { ///< NB: The render thread cannot optimize already set painters that shouldn't redraw
 //    printf("nuiWidget::DrawWidget[%s][%s] -> Rendering children\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
-    bool drawchildren = false;
-    IteratorPtr pIt;
-    for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+    if (mpBackingLayer)
     {
-      nuiWidgetPtr pChild = pIt->GetWidget();
-      if (pChild)
+      if (mLayerPolicy == nuiDrawPolicyDrawSelf)
       {
-        pChild->DrawWidget(pContext);
-        drawchildren |= !pChild->GetDrawToLayer();
+//        mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
+//        pRenderThread->SetWidgetDrawPainter(this, mpBackingLayer->GetDrawPainter()); ///< Let the render thread know about this new painter
+      }
+      else if (mLayerPolicy & nuiDrawPolicyDrawChildren)
+      {
+        mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
+        mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
+        pRenderThread->SetWidgetDrawPainter(this, mpBackingLayer->GetDrawPainter()); ///< Let the render thread know about this new painter
       }
     }
-    delete pIt;
-
-    if (mpBackingLayer && drawchildren)
-      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
 
     mNeedRender = false;
   }
@@ -1416,49 +1374,35 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   nuiDrawContext* pSavedCtx = pContext;
   
   bool rendertest = mNeedRender;
-  if (mGlobalUseRenderCache && mUseRenderCache)
+  NGL_ASSERT(mpRenderCache);
+  
+  if (mNeedSelfRedraw)
   {
-    NGL_ASSERT(mpRenderCache);
+    mpSavedPainter = pContext->GetPainter();
+    mpRenderCache->Reset(mpSavedPainter);
+    pContext->SetPainter(mpRenderCache);
     
-    if (mNeedSelfRedraw)
-    {
-      mpSavedPainter = pContext->GetPainter();
-      mpRenderCache->Reset(mpSavedPainter);
-      pContext->SetPainter(mpRenderCache);
-      
-      mDrawingInCache = true;
-      
-      InternalDrawWidget(pContext, _self, _self_and_decorations, false);
-      
-      pContext->SetPainter(mpSavedPainter);
-      mNeedSelfRedraw = false;
-    }
+    mDrawingInCache = true;
     
-    if (!drawingincache && !pContext->GetPainter()->GetDummyMode())
-    {
-      mNeedRender = false;
-      if (!IsMatrixIdentity())
-      {
-        pContext->PushMatrix();
-        pContext->MultMatrix(GetMatrix());
-      }
-      
-      mpRenderCache->ReDraw(pContext);
-      
-      if (!IsMatrixIdentity())
-        pContext->PopMatrix();
-    }
+    InternalDrawWidget(pContext, _self, _self_and_decorations, false);
     
+    pContext->SetPainter(mpSavedPainter);
+    mNeedSelfRedraw = false;
   }
-  else
+  
+  if (!drawingincache && !pContext->GetPainter()->GetDummyMode())
   {
-    if (!drawingincache && !pContext->GetPainter()->GetDummyMode())
+    mNeedRender = false;
+    if (!IsMatrixIdentity())
     {
-      mNeedRender = false;
-      
-      InternalDrawWidget(pContext, _self, _self_and_decorations, true);
-      mNeedSelfRedraw = false;
+      pContext->PushMatrix();
+      pContext->MultMatrix(GetMatrix());
     }
+    
+    mpRenderCache->ReDraw(pContext, nullptr, nullptr);
+    
+    if (!IsMatrixIdentity())
+      pContext->PopMatrix();
   }
   
   pContext = pSavedCtx;
@@ -3403,41 +3347,6 @@ void nuiWidget::SetMatrix(const nuiMatrix& rMatrix)
   DebugRefreshInfo();
 }
 
-void nuiWidget::EnableRenderCache(bool set)
-{
-  CheckValid();
-  if (mUseRenderCache != set)
-  {
-    mUseRenderCache = set;
-#ifndef NUI_USE_RENDER_THREAD
-    if (mUseRenderCache)
-    {
-      if (!mpRenderCache)
-      {
-        mpRenderCache = new nuiMetaPainter();
-#ifdef _DEBUG_
-        mpRenderCache->DBGSetReferenceObject(this);
-#endif
-      }
-    }
-    else
-    {
-      mpRenderCache->Release();
-      mpRenderCache = NULL;
-    }
-    
-    Invalidate();
-    DebugRefreshInfo();
-#endif
-  }
-}
-
-bool nuiWidget::IsRenderCacheEnabled()
-{
-  CheckValid();
-  return mUseRenderCache;
-}
-
 const nuiMetaPainter* nuiWidget::GetRenderCache() const
 {
   CheckValid();
@@ -5295,60 +5204,46 @@ bool nuiWidget::DrawChildren(nuiDrawContext* pContext)
 void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 {
   CheckValid();
-  if (pChild->GetDrawToLayer() && mLayerPolicy == nuiDrawPolicyDrawSelf)
-  {
-//    float x,y;
+//  {
+//    NGL_ASSERT(IsDrawingInCache(true));
+//    nuiPainter* pPainter = pContext->GetPainter();
 //
-//    x = (float)pChild->GetRect().mLeft;
-//    y = (float)pChild->GetRect().mTop;
+//    pContext->SetPainter(nullptr);
+//    pChild->DrawWidget(pContext);
+//    pContext->SetPainter(pPainter);
 //
-//    bool matrixchanged = false;
-//    if (x != 0 || y != 0)
-//    {
-//      pContext->PushMatrix();
-//      pContext->Translate( x, y );
-//      matrixchanged = true;
-//    }
+//    nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
+//    if (pMetaPainter)
+//      pMetaPainter->DrawWidget(pContext, pChild);
 //
-    nuiPainter* pPainter = pContext->GetPainter();
-
-    pChild->DrawWidget(pContext);
-
-    NGL_ASSERT(IsDrawingInCache(true));
-
-//    if (IsDrawingInCache(true))
-//    {
-//      nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
-//      if (pMetaPainter)
-//        pMetaPainter->DrawChild(pContext, pChild);
-//    }
-
-//    if (matrixchanged)
-//    {
-//      pContext->PopMatrix();
-//    }
-    return;
-  }
+//    return;
+//  }
   
-  float x,y;
-
-  x = (float)pChild->GetRect().mLeft;
-  y = (float)pChild->GetRect().mTop;
-
   bool matrixchanged = false;
-  if (x != 0 || y != 0)
+  if (mLayerPolicy != nuiDrawPolicyDrawSelf)
   {
-    pContext->PushMatrix();
-    pContext->Translate( x, y );
-    matrixchanged = true;
-  }
+    float x,y;
 
+    x = (float)pChild->GetRect().mLeft;
+    y = (float)pChild->GetRect().mTop;
+
+    if (x != 0 || y != 0)
+    {
+      pContext->PushMatrix();
+      pContext->Translate( x, y );
+      matrixchanged = true;
+    }
+  }
   nuiPainter* pPainter = pContext->GetPainter();
 
 #ifndef NUI_USE_RENDER_THREAD
   if (mpSavedPainter)
     pContext->SetPainter(mpSavedPainter);
 #endif
+
+  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
+    pContext->SetPainter(mpSavedPainter);
+  
   pChild->DrawWidget(pContext);
 
 #ifndef NUI_USE_RENDER_THREAD
@@ -5356,11 +5251,14 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
     pContext->SetPainter(pPainter);
 #endif
 
-#ifdef NUI_USE_RENDER_THREAD
+  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
+    pContext->SetPainter(pPainter);
+
+#if NUI_USE_RENDER_THREAD
   NGL_ASSERT(IsDrawingInCache(true));
 #endif
 
-  if (IsDrawingInCache(true))
+  if (IsDrawingInCache(true) && mLayerPolicy != nuiDrawPolicyDrawSelf)
   {
     nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
     if (pMetaPainter)
@@ -6462,12 +6360,13 @@ void nuiWidget::SetLayerPolicy(nuiDrawPolicy policy)
 
   if (policy != nuiDrawPolicyDrawNone)
   {
-    NGL_ASSERT(!mpBackingLayer);
-
-    nglString name;
-    name.CFormat("WidgetLayer_%s_%p", GetObjectClass().GetChars(), this);
-    mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
-    mpBackingLayer->SetContents(this);
+    if (!mpBackingLayer)
+    {
+      nglString name;
+      name.CFormat("WidgetLayer_%s_%p", GetObjectClass().GetChars(), this);
+      mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
+      mpBackingLayer->SetContents(this);
+    }
 
     // Not needed anymore as we don't add layers to a separate tree anymore:
 //    if (pTop)

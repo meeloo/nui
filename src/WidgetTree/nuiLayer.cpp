@@ -369,6 +369,10 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 
   if (mpWidgetContents)
   {
+    NGL_OUT("Update layer contents with widget [%p %s] ( (%f, %f) / (%f x %f))\n",
+            mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
+            mpWidgetContents->GetRect().Left(), mpWidgetContents->GetRect().Top(),
+            mpWidgetContents->GetRect().GetWidth(), mpWidgetContents->GetRect().GetHeight());
     if (mpWidgetContents->GetLayerPolicy() == nuiDrawPolicyDrawSelf)
     {
       const nuiMetaPainter* pCache = mpWidgetContents->GetRenderCache();
@@ -384,6 +388,11 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
           mpDrawPainter->MultMatrix(m);
           mpDrawPainter->DrawWidget(pContext, widget);
           mpDrawPainter->PopMatrix();
+          NGL_OUT("draw subwidget of [%p %s] -> [%p %s] ( (%f, %f) / (%f x %f))\n",
+                  mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
+                  widget, widget->GetObjectClass().GetChars(),
+                  widget->GetRect().Left(), widget->GetRect().Top(),
+                  widget->GetRect().GetWidth(), widget->GetRect().GetHeight());
         }
       }
       else  // No cache? What can we do? Draw all the children as is...

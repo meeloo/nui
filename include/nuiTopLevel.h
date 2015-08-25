@@ -183,6 +183,7 @@ protected:
   void Exit();
   void SetDrawContext(nuiDrawContext* pDrawContext);
   virtual void BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect);
+  virtual void BroadcastInvalidate(nuiWidgetPtr pSender);
 //  void OnMessageQueueTick(const nuiEvent& rEvent);
   void UpdateHoverList(nglMouseInfo& rInfo);
   
@@ -258,6 +259,8 @@ protected:
   std::map<nuiWidgetPtr, nuiWidgetPtr> mTabBackward;
   std::map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabForwardRev;
   std::map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabBackwardRev;
+  
+  std::set<nuiWidget*> mDirtyWidgets;
 };
 
 typedef nuiTopLevel* nuiTopLevelPtr;

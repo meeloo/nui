@@ -145,7 +145,6 @@ public:
   bool ShowWidgetInspector();
 
   NUI_GETSETDO(bool, DrawDirtyRects, Invalidate());
-  NUI_GETSETDO(bool, DrawToSurface, Invalidate());
 
 private:
   void Register();
@@ -282,7 +281,6 @@ private:
   float mFPS;
 
   bool mDrawDirtyRects = false;
-  bool mDrawToSurface = false;
 };
 
 #endif // __nuiMainWindow_h__
