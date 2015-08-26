@@ -349,6 +349,7 @@ public:
   /** @name Rendering */
   //@{
 
+  virtual void UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderThread);
   virtual bool DrawWidget(nuiDrawContext* pContext); ///< This method asks the object to draw itself. It returns false in case of error. You must call Validate() once in this method if you decide to override it. You must not draw the widget if it is not visible (check the result of IsVisible() before drawing anything but after having called Validate()). All the actual rendering code should go in Draw() instead of DrawWidget wich mainly is there for rendering preparation. Most of the time the default behaviour will be enough and there are very few reasons to overload this method. Containers must use DrawWidget instead of directly calling Draw on their children.
   virtual void InvalidateRect(const nuiRect& rRect);
   virtual void Invalidate(); ///< Ask for a redraw of the object. Only the nuiMainWindow class should redefine this method.
@@ -620,7 +621,6 @@ public:
   bool IsDrawingInCache(bool Recurse);
 
   bool GetNeedLayout() const { return mNeedSelfLayout; }
-  bool GetNeedRender() const { return mNeedRender; }
   bool GetNeedSelfRedraw() const { return mNeedSelfRedraw; }
   bool GetNeedIdealRect() const { return mNeedIdealRect; }
 
@@ -813,7 +813,6 @@ protected:
   bool mNeedSelfLayout: 1; ///< Layout of this widget has been invalidated
   bool mNeedLayout: 1; ///< Layout has been invalidated in this branch of the widget tree. This doesn't mean that this particularobject needs to recalc its layout, it may come from one of its children.
   bool mNeedIdealRect: 1;
-  bool mNeedRender: 1;
   bool mNeedSelfRedraw: 1;
   
   bool mMouseEventEnabled: 1;

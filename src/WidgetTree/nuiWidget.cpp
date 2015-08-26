@@ -504,7 +504,6 @@ void nuiWidget::Init()
   mObjCursor = eCursorDoNotSet;
   mAlpha = 1.0f;
   mHasFocus = false;
-  mNeedRender = true;
   mNeedSelfLayout = true;
   mNeedLayout = true;
   mNeedIdealRect = true;
@@ -993,8 +992,6 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
     r.mBottom = MAX(vec1[1], MAX(vec2[1], MAX(vec3[1], vec4[1]) ) );
   }
 
-  mNeedRender = true;
-
   r.Move(rect.Left(), rect.Top());
 
   if (mpParent)
@@ -1013,7 +1010,7 @@ void nuiWidget::Invalidate()
 //  }
 
   CheckValid();
-  if ((mNeedRender && mNeedSelfRedraw))
+  if ((mNeedSelfRedraw))
     return;
 
   NGL_ASSERT(nglThread::GetCurThreadID() == App->GetMainThreadID());
@@ -1040,7 +1037,6 @@ void nuiWidget::Invalidate()
 void nuiWidget::SilentInvalidate()
 {
   CheckValid();
-  mNeedRender = true;
   #ifdef _DEBUG_LAYOUT
   if (GetDebug())
   {
@@ -1055,12 +1051,10 @@ void nuiWidget::SilentInvalidate()
 void nuiWidget::BroadcastInvalidate(nuiWidgetPtr pSender)
 {
   CheckValid();
-  if (mpParent && !mNeedRender)
+  if (mpParent)
   {
     mpParent->BroadcastInvalidate(pSender);
   }
-
-  mNeedRender = true;
 
   DebugRefreshInfo();
 }
@@ -1077,7 +1071,6 @@ void nuiWidget::SilentInvalidateLayout()
   mNeedSelfLayout = true;
   mNeedLayout = true;
   mNeedIdealRect = true;
-  mNeedRender = true;
   mNeedSelfRedraw = true;
   DebugRefreshInfo();
 }
@@ -1134,8 +1127,6 @@ void nuiWidget::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOn
     return;
   }
   
-  mNeedRender = true;
-
   if (!BroadCastOnly)
   {
     mNeedSelfLayout = true;
@@ -1240,8 +1231,60 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   return true;
 }
 
-#if NUI_USE_RENDER_THREAD
+void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderThread)
+{
+  CheckValid();
+  
+  NGL_OUT("nuiWidget::UpdateCache %p %s %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
+  
+  nuiRect clip;
+  pContext->GetClipRect(clip, true);
+  nuiRect _self = GetOverDrawRect(true, false);
+  nuiRect _self_and_decorations = GetOverDrawRect(true, true);
+  nuiRect inter;
+  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
+  
+  _self.Intersect(_self, mVisibleRect);
+  _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
+  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
+  
+  if (mpRenderCache)
+    mpRenderCache->Release();
+  
+  //    printf("nuiWidget::DrawWidget[%s][%s] -> SelfRendering\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
+  mpSavedPainter = pContext->GetPainter();
+  mpRenderCache = new nuiMetaPainter();
+  mpRenderCache->Reset(mpSavedPainter);
+  pContext->SetPainter(mpRenderCache);
+  
+  mDrawingInCache = true;
+  
+  InternalDrawWidget(pContext, _self, _self_and_decorations, false);
+  
+  pContext->SetPainter(mpSavedPainter);
+  mNeedSelfRedraw = false;
+  
+  pRenderThread->SetWidgetContentsPainter(this, mpRenderCache); ///< Let the render thread know about this new painter
+  
+  if (mpBackingLayer)
+  {
+    bool old = mRenderCacheIsEmpty;
+    mRenderCacheIsEmpty = mpRenderCache->GetNbDrawArray() == 0;
+    mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
+    if (old != mRenderCacheIsEmpty || mLayerPolicy == nuiDrawPolicyDrawSelf)
+    {
+      // If the render cache has changed from empty to full or from full to empty we need to update the layer draw operations
+      mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
+    }
+    pRenderThread->SetWidgetDrawPainter(this, mpBackingLayer->GetDrawPainter()); ///< Let the render thread know about this new painter
+  }
+  
+  return true;
+}
 
+
+
+#if NUI_USE_RENDER_THREAD
 bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
 {
   CheckValid();
@@ -1269,7 +1312,6 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
   mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
   
-  bool rendertest = mNeedRender;
   NGL_ASSERT(!mpRenderCache);
 
   if (mNeedSelfRedraw)
@@ -1286,7 +1328,6 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     
     pContext->SetPainter(mpSavedPainter);
     mNeedSelfRedraw = false;
-    mNeedRender = false;
     
     pRenderThread->SetWidgetContentsPainter(this, pRenderCache); ///< Let the render thread know about this new painter
 
@@ -1313,7 +1354,7 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
     
     pRenderCache->Release();
   }
-  else if (mNeedRender) ///< This Painter hasn't changed, but one of our children's has.
+  else ///< This Painter hasn't changed, but one of our children's has.
   { ///< NB: The render thread cannot optimize already set painters that shouldn't redraw
 //    printf("nuiWidget::DrawWidget[%s][%s] -> Rendering children\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
     if (mpBackingLayer)
@@ -1330,13 +1371,6 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
         pRenderThread->SetWidgetDrawPainter(this, mpBackingLayer->GetDrawPainter()); ///< Let the render thread know about this new painter
       }
     }
-
-    mNeedRender = false;
-  }
-  else
-  {
-///< This painter and it's children's haven't changed, but are to be redrawn by the render thread
-//    printf("-> Skip Rendering\n");
 
   }
 
@@ -1373,7 +1407,6 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   
   nuiDrawContext* pSavedCtx = pContext;
   
-  bool rendertest = mNeedRender;
   NGL_ASSERT(mpRenderCache);
   
   if (mNeedSelfRedraw)
@@ -1392,7 +1425,6 @@ bool nuiWidget::DrawWidget(nuiDrawContext* pContext)
   
   if (!drawingincache && !pContext->GetPainter()->GetDummyMode())
   {
-    mNeedRender = false;
     if (!IsMatrixIdentity())
     {
       pContext->PushMatrix();
@@ -5052,41 +5084,6 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
     SetLayerPolicy(nuiDrawPolicyDrawNone);
 
   ConnectTopLevel();
-
-#if 0
-  nuiRenderThread* pRenderThread = GetRenderThread();
-  if (mpBackingLayer)
-  {
-    if (!mpBackingLayer->GetParent())
-    {
-      // Find the parent layer:
-      nuiWidget* pParentW = GetParentLayerWidget();
-
-      if (pParentW && mpBackingLayer->GetParent() == nullptr)
-      {
-        nuiLayer* pParent = pParentW->GetLayer();
-        nuiSize x = 0, y = 0;
-        LocalToLocal(pParentW, x, y);
-        mpBackingLayer->SetPosition(x, y);
-//        NGL_OUT("[ConnectTopLevel]Adding Layer %p (%s) to %p (%s)\n", mpBackingLayer, mpBackingLayer->GetObjectName().GetChars(), pParent, pParent->GetObjectName().GetChars());
-        pParent->AddChild(mpBackingLayer);
-      }
-
-      if (pTopLevel == this)
-      {
-        if (pRenderThread)
-        {
-          pRenderThread->SetLayerTree(mpBackingLayer);
-        }
-      }
-    }
-
-    if (pRenderThread)
-    {
-      mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
-    }
-  }
-#endif
   
   StartAnimation("SHOW");
 
@@ -5095,7 +5092,10 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
   {
     pIt->GetWidget()->CallConnectTopLevel(pTopLevel);
   }
+  
   delete pIt;
+  
+  BroadcastInvalidate(this);
 }
 
 void nuiWidget::CallDisconnectTopLevel(nuiTopLevel* pTopLevel)

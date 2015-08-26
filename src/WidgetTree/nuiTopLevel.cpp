@@ -2007,9 +2007,10 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
   }
   else
   {
+    nuiRenderThread* pRenderThread = GetRenderThread();
     for (auto widget : mDirtyWidgets)
     {
-      widget->DrawWidget(pContext); //  This will update the Meta Painter for each invalidated widget
+      widget->UpdateCache(pContext, pRenderThread); //  This will update the Meta Painter for each invalidated widget
     }
   }
 
@@ -2218,7 +2219,6 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
 
 //  NGL_OUT("nuiTopLevel::BroadcastInvalidateRect %s / %s / 0x%x RECT:%s\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender, rRect.GetValue().GetChars());
   AddInvalidRect(r);
-  mNeedRender = true;
   if (mpBackingLayer)
     GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 

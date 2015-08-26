@@ -66,7 +66,6 @@ protected:
   nuiLabel* mpHasUserPos;
   nuiLabel* mpRect;
   nuiLabel* mpNeedLayout;
-  nuiLabel* mpNeedRender;
   nuiLabel* mpNeedSelfRedraw;
   nuiLabel* mpNeedIdealRectCalc;
   nuiLabel* mpGlobalRect;

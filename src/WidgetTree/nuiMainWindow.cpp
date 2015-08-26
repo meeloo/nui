@@ -234,7 +234,7 @@ void nuiMainWindow::OnPaint()
 
 void nuiMainWindow::LazyPaint()
 {
-  if (mInvalidatePosted || GetNeedRender() || GetNeedSelfRedraw() || GetNeedLayout() || GetNeedIdealRect())
+  if (mInvalidatePosted || GetNeedSelfRedraw() || GetNeedLayout() || GetNeedIdealRect())
   {
     mInvalidatePosted = true;
     Paint();
@@ -278,7 +278,7 @@ void nuiMainWindow::Paint()
   
   //  } while (IsTrashFull());
   
-  if (!(mInvalidatePosted  || GetNeedRender() || GetNeedSelfRedraw() || GetNeedLayout() || GetNeedIdealRect()))
+  if (!(mInvalidatePosted  || GetNeedSelfRedraw() || GetNeedLayout() || GetNeedIdealRect()))
   {
     return;
   }

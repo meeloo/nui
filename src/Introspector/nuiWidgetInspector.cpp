@@ -83,8 +83,8 @@ void nuiWidgetInspectorNode::UpdateInfos(const nuiEvent& rEvent)
   
   pLabel->SetText(str);
   
-  if (mpTarget->GetNeedRender())
-    r = .5f;
+//  if (mpTarget->GetNeedRender())
+//    r = .5f;
   if (mpTarget->GetNeedLayout())
     g = .5f;
   if (mpTarget->GetNeedSelfRedraw())
@@ -273,7 +273,6 @@ mWISink(this)
   mpHasUserPos = NULL;
   mpRect = NULL;
   mpNeedLayout = NULL;
-  mpNeedRender = NULL;
   mpNeedSelfRedraw = NULL;
   mpNeedIdealRectCalc = NULL;
   mpGlobalRect = NULL;
@@ -390,9 +389,6 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
     
     text = mpTarget->GetNeedLayout()?_T("true"):_T("false");
     mpNeedLayout->SetText(text);
-    
-    text = mpTarget->GetNeedRender()?_T("true"):_T("false");
-    mpNeedRender->SetText(text);
     
     text = mpTarget->GetNeedSelfRedraw()?_T("true"):_T("false");
     mpNeedSelfRedraw->SetText(text);
@@ -614,9 +610,6 @@ void nuiWidgetInfo::BuildInfo()
     pLabel = new nuiLabel(_T("Need Render"));
     pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
     pBox->SetCell(0, index, pLabel);
-    mpNeedRender = new nuiLabel();
-    mpNeedRender->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
-    pBox->SetCell(1, index++, mpNeedRender);
     
     pLabel = new nuiLabel(_T("Need Redraw"));
     pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
