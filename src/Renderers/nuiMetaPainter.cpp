@@ -247,7 +247,10 @@ void nuiMetaPainter::DrawWidget(nuiDrawContext* pContext, nuiWidget* pWidget)
 {
   if (mDrawChildrenImmediat)
   {
-    pWidget->DrawWidget(pContext);
+//    pWidget->DrawWidget(pContext);
+//    const nuiMetaPainter* pPainter = pWidget->GetRenderCache();
+//    pPainter->ReDraw(pContext, nullptr, nullptr);
+    NGL_ASSERT(0);
   }
   else
   {
@@ -584,7 +587,10 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
           if (rDrawWidgetDelegate)
             rDrawWidgetDelegate(pContext, pWidget);
           else
-            pWidget->DrawWidget(pContext);
+          {
+            nuiMetaPainter* pPainter = pWidget->GetRenderCache();
+            pPainter->ReDraw(pContext, rDrawWidgetDelegate, rDrawLayerDelegate);
+          }
         }
         break;
       case eDrawLayer:

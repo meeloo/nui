@@ -159,7 +159,6 @@ public:
   /** @name Inherited from nuiWidget: */
   //@{
   virtual void InvalidateChildren(bool Recurse);
-  virtual void SilentInvalidateChildren(bool Recurse);
   virtual bool Draw(nuiDrawContext* pContext);
   virtual nuiRect CalcIdealSize();
   bool SetSelfRect(const nuiRect& rRect);
@@ -350,10 +349,9 @@ public:
   //@{
 
   virtual void UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderThread);
-  virtual bool DrawWidget(nuiDrawContext* pContext); ///< This method asks the object to draw itself. It returns false in case of error. You must call Validate() once in this method if you decide to override it. You must not draw the widget if it is not visible (check the result of IsVisible() before drawing anything but after having called Validate()). All the actual rendering code should go in Draw() instead of DrawWidget wich mainly is there for rendering preparation. Most of the time the default behaviour will be enough and there are very few reasons to overload this method. Containers must use DrawWidget instead of directly calling Draw on their children.
   virtual void InvalidateRect(const nuiRect& rRect);
   virtual void Invalidate(); ///< Ask for a redraw of the object. Only the nuiMainWindow class should redefine this method.
-  virtual void SilentInvalidate(); ///< Mark this widget as invalid (= need to be redrawn) but don't broadcast the event in the hierarchy. Most of the time you really want to use Invalidate() instead of SilentInvalidate().
+
   virtual void InvalidateLayout(); ///< Tell the system that this widget's geometry should be recalculated, unless it has a user rect.
   virtual void ForcedInvalidateLayout(); ///< Nobody should use this method, please use InvalidateLayout instead. Tell the system that this widget's geometry should be recalculated, no exception!
   virtual void UpdateLayout(); ///< Force the re layout of this widget without telling the parrents that the internal geometry has changed.
@@ -594,7 +592,7 @@ public:
 
   /** @name Render Cache */
   //@{
-  const nuiMetaPainter* GetRenderCache() const;
+  nuiMetaPainter* GetRenderCache() const;
   //@}
 
   virtual void ConnectTopLevel(); ///< This method is called when the widget is connected to the Top Level. Overload it to perform specific actions in a widget.
@@ -617,8 +615,6 @@ public:
 
   void AutoStartTransition(const nuiEvent& rEvent); ///< This method will increment the transition state of this widget.
   void AutoStopTransition(const nuiEvent& rEvent);  ///< This method will decrement the transition state of this widget.
-
-  bool IsDrawingInCache(bool Recurse);
 
   bool GetNeedLayout() const { return mNeedSelfLayout; }
   bool GetNeedSelfRedraw() const { return mNeedSelfRedraw; }
@@ -743,7 +739,8 @@ protected:
 
   virtual void CallOnTrash(); ///< This method is called whenever a Trash occurred on the widget tree branch. It performs some clean up and then calls nuiWidget::OnTrash to enable the user to handle the trash.
 
-  nuiWidgetPtr mpParent;
+  nuiWidgetPtr mpParent = nullptr;
+  nuiTopLevel* mpTopLevel = nullptr;
 
   float mAlpha; ///< Indicates the transparency level of the object. Optional. 
   nuiRect mRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
@@ -905,7 +902,7 @@ protected:
 
   nuiWidgetList mpChildren;
   nuiLayer* mpBackingLayer = nullptr;
-  nuiDrawPolicy mLayerPolicy;
+  nuiDrawPolicy mLayerPolicy = nuiDrawPolicyDrawSelf;
 
 };
 

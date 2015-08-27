@@ -101,11 +101,11 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   nuiDrawContext* pContext = GetDrawContext();
   nuiRenderThread* pRenderThread = GetRenderThread();
   
-  SetLayerPolicy(nuiDrawPolicyDrawNone);
-  
+//  SetLayerPolicy(nuiDrawPolicyDrawNone);
+
   if (NUI_MAINWINDOW_USE_LAYERS)
   {
-    SetLayerPolicy(nuiDrawPolicyDrawSelf);
+//    SetLayerPolicy(nuiDrawPolicyDrawSelf);
   }
   
   if (GetDrawToLayer())
@@ -113,6 +113,9 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
     pRenderThread->SetLayerTree(mpBackingLayer);
     mpBackingLayer->UpdateContents(pRenderThread, pContext, mpRenderCache->GetNbDrawArray());
   }
+
+  Invalidate();
+  InvalidateLayout();
 }
 
 nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo, const nglContext* pShared, const nglPath& rResPath)
@@ -161,18 +164,21 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   nuiDrawContext* pContext = GetDrawContext();
   nuiRenderThread* pRenderThread = GetRenderThread();
 
-  SetLayerPolicy(nuiDrawPolicyDrawNone);
-  
+//  SetLayerPolicy(nuiDrawPolicyDrawNone);
+
   if (NUI_MAINWINDOW_USE_LAYERS)
   {
-    SetLayerPolicy(nuiDrawPolicyDrawSelf);
+//    SetLayerPolicy(nuiDrawPolicyDrawSelf);
   }
   
-  if (GetDrawToLayer())
-  {
-    pRenderThread->SetLayerTree(mpBackingLayer);
-    mpBackingLayer->UpdateContents(pRenderThread, pContext, mRenderCacheIsEmpty);
-  }
+//  if (GetDrawToLayer())
+//  {
+//    pRenderThread->SetLayerTree(mpBackingLayer);
+//    mpBackingLayer->UpdateContents(pRenderThread, pContext, mRenderCacheIsEmpty);
+//  }
+
+  Invalidate();
+  InvalidateLayout();
 }
 
 nuiMainWindow::~nuiMainWindow()

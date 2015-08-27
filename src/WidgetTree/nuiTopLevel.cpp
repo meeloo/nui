@@ -222,6 +222,7 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   SetWantKeyboardFocus(true);
   SetFocusVisible(false);
   SetMouseCursor(eCursorArrow);
+  mDirtyWidgets.insert(this);
 }
 
 nuiTopLevel::~nuiTopLevel()
@@ -1965,53 +1966,11 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
     clipWidth=pContext->GetWidth();
     clipHeight=pContext->GetHeight();
   }
-  if (0)//(mPartialRedraw && !DISPLAY_PARTIAL_RECTS)
-  {
-    //nuiStopWatch watch(_T("nuiTopLevel::DrawTree / PartialReDraw"));
-    // Prepare the layout changes:
-    pContext->ResetState();
-    
-    int count = mDirtyRects.size();
-    
-//        NGL_OUT("drawing %d partial rects\n", count);
-    
-    for (int i = 0; i < count; i++)
-    {
-//            NGL_OUT("\tDirty Rect: %d: %s\n", i, mDirtyRects[i].GetValue().GetChars());
-      pContext->ResetState();
-      pContext->ResetClipRect();
-      pContext->Clip(mDirtyRects[i]);
-      pContext->EnableClipping(true);
-      
-      nuiColor clearColor("nuiActiveWindowBg");
-      //pContext->SetClearColor(clearColor);
-      if (mClearBackground)
-      {
-        //pContext->Clear();
-        pContext->SetFillColor(clearColor);
-        pContext->DrawRect(mDirtyRects[i], eFillShape);
-      }
-      else
-      {
-        // Force the initial render state anyway!
-        pContext->DrawRect(nuiRect(0,0,0,0), eStrokeShape);
-      }
-      
-      pContext->SetStrokeColor(nuiColor(1.0f, 0.0f, 0.0f, 0.0f));
-      pContext->SetFillColor(nuiColor(1.0f, 0.0f, 0.0f, 0.5f));
-      
-      DrawWidget(pContext);
 
-    }
-    
-  }
-  else
+  nuiRenderThread* pRenderThread = GetRenderThread();
+  for (auto widget : mDirtyWidgets)
   {
-    nuiRenderThread* pRenderThread = GetRenderThread();
-    for (auto widget : mDirtyWidgets)
-    {
-      widget->UpdateCache(pContext, pRenderThread); //  This will update the Meta Painter for each invalidated widget
-    }
+    widget->UpdateCache(pContext, pRenderThread); //  This will update the Meta Painter for each invalidated widget
   }
 
   mDirtyRects.clear();

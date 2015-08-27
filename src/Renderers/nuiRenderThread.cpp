@@ -225,7 +225,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   mpDrawContext->ResetClipRect();
   mpDrawContext->Set2DProjectionMatrix(mRect.Size());
   DrawWidget(mpDrawContext, mpRoot);
-    
+
   mpDrawContext->StopRendering();
   mpPainter->EndSession();
   mpContext->EndSession();

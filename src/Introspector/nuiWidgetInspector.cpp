@@ -22,7 +22,7 @@ class nuiMetaPainterInspector : public nuiWidget
       if (!pTarget)
         return;
 
-      const nuiMetaPainter* pPainter = pTarget->GetRenderCache();
+      nuiMetaPainter* pPainter = pTarget->GetRenderCache();
       if (!pPainter)
         return;
       
@@ -224,7 +224,10 @@ class nuiWidgetProxy : public nuiWidget
       
       
       if (mpTarget)
-        mpTarget->DrawWidget(pContext);
+      {
+        nuiMetaPainter* pPainter = mpTarget->GetRenderCache();
+        pPainter->ReDraw(pContext, nullptr, nullptr);
+      }
       else
       {
         nuiFont* pFont = nuiFont::GetFont(24.0f);
