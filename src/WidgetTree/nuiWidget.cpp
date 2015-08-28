@@ -653,10 +653,6 @@ nuiWidget::~nuiWidget()
     mpFocusDecoration->Release();
   }
 
-#if NUI_USE_RENDER_THREAD
-  NGL_ASSERT(!mpRenderCache);
-#endif
-
   if (mpRenderCache)
   {
     mpRenderCache->Release();
@@ -746,9 +742,27 @@ bool nuiWidget::SetParent(nuiWidgetPtr pParent)
   SetLayoutConstraint(LayoutConstraint()); ///< Reset the constraints when the widget is reparented
   InvalidateLayout();
 
+  UpdateTopLevel();
+
+  DebugRefreshInfo();
+  return res;
+}
+
+void nuiWidget::UpdateTopLevel()
+{
   if (mpParent)
   {
-    mpTopLevel = mpParent->GetTopLevel();
+    nuiWidget* pParent = mpParent;
+    nuiWidget* pTop = nullptr;
+    while (pParent)
+    {
+      pTop = pParent;
+      pParent = pParent->GetParent();
+    }
+    
+    if (pTop)
+      mpTopLevel = dynamic_cast<nuiTopLevel*>(pTop);
+    
     if (mpTopLevel)
       CallConnectTopLevel(mpTopLevel);
   }
@@ -756,9 +770,6 @@ bool nuiWidget::SetParent(nuiWidgetPtr pParent)
   {
     mpTopLevel = nullptr;
   }
-
-  DebugRefreshInfo();
-  return res;
 }
 
 void nuiWidget::LocalToGlobal(int& x, int& y) const
@@ -4884,6 +4895,8 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
 {
   CheckValid();
 
+  mpTopLevel = pTopLevel;
+  
   // Apply CSS, do default stuff, etc...
   if (HasFocus())
     pTopLevel->SetFocus(this);
@@ -4928,6 +4941,7 @@ void nuiWidget::CallDisconnectTopLevel(nuiTopLevel* pTopLevel)
 {
   CheckValid();
 
+  mpTopLevel = nullptr;
   if (HasFocus())
     UnFocus();
   pTopLevel->DisconnectWidget(this);
@@ -5019,7 +5033,7 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 //  }
   
   bool matrixchanged = false;
-  if (mLayerPolicy != nuiDrawPolicyDrawSelf)
+//  if (mLayerPolicy != nuiDrawPolicyDrawSelf)
   {
     float x,y;
 
@@ -5040,24 +5054,24 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
     pContext->SetPainter(mpSavedPainter);
 #endif
 
-  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
-    pContext->SetPainter(mpSavedPainter);
-
-  if (mLayerPolicy & nuiDrawPolicyDrawChildren)
-  {
-    nuiMetaPainter* pPainter = pChild->GetRenderCache();
-    pPainter->ReDraw(pContext, nullptr, nullptr);
-  }
+//  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
+//    pContext->SetPainter(mpSavedPainter);
+//
+//  if (mLayerPolicy & nuiDrawPolicyDrawChildren)
+//  {
+//    nuiMetaPainter* pPainter = pChild->GetRenderCache();
+//    pPainter->ReDraw(pContext, nullptr, nullptr);
+//  }
 
 #ifndef NUI_USE_RENDER_THREAD
   if (mpSavedPainter)
     pContext->SetPainter(pPainter);
 #endif
 
-  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
-    pContext->SetPainter(pPainter);
+//  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
+//    pContext->SetPainter(pPainter);
 
-  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
+//  if (mLayerPolicy & nuiDrawPolicyDrawChildren)
   {
     nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
     if (pMetaPainter)

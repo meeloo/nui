@@ -904,6 +904,8 @@ protected:
   nuiLayer* mpBackingLayer = nullptr;
   nuiDrawPolicy mLayerPolicy = nuiDrawPolicyDrawSelf;
 
+  void UpdateTopLevel();
+
 };
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }

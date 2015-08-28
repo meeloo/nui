@@ -222,7 +222,9 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   SetWantKeyboardFocus(true);
   SetFocusVisible(false);
   SetMouseCursor(eCursorArrow);
+
   mDirtyWidgets.insert(this);
+  Acquire();
 }
 
 nuiTopLevel::~nuiTopLevel()
@@ -1971,8 +1973,10 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
   for (auto widget : mDirtyWidgets)
   {
     widget->UpdateCache(pContext, pRenderThread); //  This will update the Meta Painter for each invalidated widget
+    widget->Release();
   }
-
+  mDirtyWidgets.clear();
+  
   mDirtyRects.clear();
 //
 //  if (mpWatchedWidget)
@@ -2182,12 +2186,14 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
     GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 
   mDirtyWidgets.insert(pSender);
+  pSender->Acquire();
   DebugRefreshInfo();
 }
 
 void nuiTopLevel::BroadcastInvalidate(nuiWidgetPtr pSender)
 {
   mDirtyWidgets.insert(pSender);
+  pSender->Acquire();
 }
 
 
