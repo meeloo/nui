@@ -1856,7 +1856,7 @@ void nuiGLPainter::DestroyTexture(nuiTexture* pTexture)
   }
   //NGL_OUT(_T("nuiGLPainter::DestroyTexture 0x%x : '%s' / %d\n"), pTexture, pTexture->GetSource().GetChars(), info.mTexture);
 
-  mpContext->BeginSession();
+  mpContext->MakeCurrent();
   glDeleteTextures(1, (GLuint*)&info.mTexture);
 }
 
@@ -1881,6 +1881,9 @@ void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
   }
   FramebufferInfo info = it->second;
 
+  mpContext->MakeCurrent();
+  
+  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, 0);
   NGL_ASSERT(info.mFramebuffer > 0);
   glDeleteFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
   if (info.mRenderbuffer > 0)
@@ -2420,10 +2423,14 @@ void nuiGLPainter::RenderArrayInfo::Destroy()
 
   for (auto vao : mVAOs)
   {
+    glBindVertexArray(0);
     glDeleteVertexArrays(1, (GLuint*)&vao.second);
     nuiCheckForGLErrors();
   }
   mVAOs.clear();
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
   glDeleteBuffers(1, &mVertexBuffer);
   nuiCheckForGLErrors();
@@ -2843,6 +2850,8 @@ void nuiGLPainter::DestroyRenderArray(nuiRenderArray* pArray)
   if (it == mRenderArrays.end())
     return; // This render array was not stored here
   
+  mpContext->MakeCurrent();
+
   RenderArrayInfo* info(it->second);
   
   RenderArrayInfo::Recycle(info);

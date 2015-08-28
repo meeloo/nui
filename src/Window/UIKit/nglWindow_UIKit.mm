@@ -636,6 +636,8 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
   mpAnimationTimer = nuiAnimation::AcquireTimer();
   mpAnimationTimer->Stop();
+  mCurrentThread = 0;
+
   [_window startDisplayLink];
 }
 

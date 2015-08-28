@@ -1240,7 +1240,7 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
 {
   CheckValid();
   
-  NGL_OUT("nuiWidget::UpdateCache %p %s %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
+//  NGL_OUT("nuiWidget::UpdateCache %p %s %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
   
   nuiRect clip;
   pContext->GetClipRect(clip, true);

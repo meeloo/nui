@@ -480,7 +480,7 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
     indent.Fill("  ", mWidgetIndentation);
     str.Prepend(indent);
     glPushGroupMarkerEXT(0, str.GetChars());
-    NGL_OUT("%s\n", str.GetChars());
+//    NGL_OUT("%s\n", str.GetChars());
 #endif
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
     //    pContext->SetStrokeColor(nuiColor("green"));

@@ -1661,6 +1661,8 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     }
   }
   
+  mCurrentThread = 0;
+
   Invalidate();
   mInited = false;
 }

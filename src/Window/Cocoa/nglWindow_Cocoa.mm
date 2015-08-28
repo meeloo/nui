@@ -1187,6 +1187,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 	
   Build(rContext);
 
+  mCurrentThread = 0;
   mLastTick = nglTime();
   AcquireTimer();
 }
@@ -1489,6 +1490,9 @@ void nglWindow::ReleaseDisplayLink()
 
 void nglWindow::BeginSession()
 {
+  nglThread::ID threadid = nglThread::GetCurThreadID();
+  NGL_ASSERT(mCurrentThread == 0 || mCurrentThread == threadid);
+  mCurrentThread = threadid;
 #ifdef _DEBUG_WINDOW_
   NGL_LOG(_T("window"), NGL_LOG_INFO, _T("BeginSession\n"));
 #endif
@@ -1500,6 +1504,9 @@ void nglWindow::EndSession()
 {
 #ifndef __NOGLCONTEXT__
 
+  NGL_ASSERT(mCurrentThread != 0);
+  mCurrentThread = 0;
+  
 #ifdef _DEBUG_WINDOW_
   NGL_LOG(_T("window"), NGL_LOG_INFO, _T("EndSession\n"));
 #endif
@@ -1513,6 +1520,8 @@ glFlush();
 
 bool nglWindow::MakeCurrent() const
 {
+  nglThread::ID threadid = nglThread::GetCurThreadID();
+  NGL_ASSERT(mCurrentThread == 0 || mCurrentThread == threadid);
   NGL_ASSERT(mpNSGLContext);
   [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
   return true;

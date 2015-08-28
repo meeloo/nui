@@ -1047,6 +1047,7 @@ protected:
   double mFPSDelay;
   uint32 mFPSCount;
   float mFPS;
+  mutable nglThread::ID mCurrentThread = 0;
 };
 
 
