@@ -435,7 +435,8 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
   nglString str;
   nglString tmp;
   tmp.Fill("  ", count);
-  str.CFormat("%sDraw layer contents %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
+//  str.CFormat("%sDraw layer contents %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
+  str.CFormat("%sDraw layer contents %p", tmp.GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
 //  NGL_OUT("%s\n", str.GetChars());
 #endif
