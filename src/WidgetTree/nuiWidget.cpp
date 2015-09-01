@@ -1159,6 +1159,8 @@ void nuiWidget::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOn
 bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _self, const nuiRect& _self_and_decorations, bool ApplyMatrix)
 {
   CheckValid();
+  if (mpBackingLayer)
+    mpBackingLayer->ResetChildWidgets();
   pContext->PushState();
   pContext->ResetState();
   if (ApplyMatrix && !IsMatrixIdentity())
@@ -5032,20 +5034,24 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 //    return;
 //  }
   
-  bool matrixchanged = false;
-//  if (mLayerPolicy != nuiDrawPolicyDrawSelf)
+  if (mLayerPolicy != nuiDrawPolicyDrawSelf)
   {
-    float x,y;
+    mpBackingLayer->AddChildWidget(pChild);
+    return;
+  }
 
-    x = (float)pChild->GetRect().mLeft;
-    y = (float)pChild->GetRect().mTop;
+  
+  bool matrixchanged = false;
+  float x,y;
 
-    if (x != 0 || y != 0)
-    {
-      pContext->PushMatrix();
-      pContext->Translate( x, y );
-      matrixchanged = true;
-    }
+  x = (float)pChild->GetRect().mLeft;
+  y = (float)pChild->GetRect().mTop;
+
+  if (x != 0 || y != 0)
+  {
+    pContext->PushMatrix();
+    pContext->Translate( x, y );
+    matrixchanged = true;
   }
   nuiPainter* pPainter = pContext->GetPainter();
 

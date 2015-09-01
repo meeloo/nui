@@ -145,7 +145,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  int test = 2;
+  int test = 0;
   switch (test)
   {
   case 0:
@@ -166,11 +166,12 @@ void MainWindow::OnCreation()
       for (int i = 0; pos[i] != nuiNoPosition; i++)
       {
         nuiLabel* prout = new nuiLabel(name[i]);
-        prout->SetLayerPolicy(nuiDrawPolicyDrawSelf);
+        nuiButton* button = new nuiButton();
+        button->AddChild(prout);
         prout->SetBackground(true);
         prout->SetBackgroundColor(nuiColor(0, 255, 0, 128));
     //    prout->SetPosition(nuiFillVertical);
-        prout->SetPosition(pos[i]);
+        button->SetPosition(pos[i]);
         nuiAttributeAnimation* anim = new nuiAttributeAnimation();
         anim->SetTargetObject(prout);
         anim->SetTargetAttribute("Alpha");
@@ -179,9 +180,9 @@ void MainWindow::OnCreation()
         anim->SetEasing(nuiEasingSinus);
         anim->SetDuration(1.0f);
         prout->AddAnimation("Fade", anim);
-        anim->Play(100000, eAnimLoopPingPong);
+//        anim->Play(100000, eAnimLoopPingPong);
 
-        AddChild(prout);
+        AddChild(button);
       }
       
       

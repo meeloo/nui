@@ -260,7 +260,7 @@ nuiRect nuiSplitter::CalcIdealSize()
 
   NGL_ASSERT(mpChildren.size() <= 3);
 
-  nuiSize Height=0,Width=0;
+  nuiSize Height = 0,Width = 0;
   nuiWidgetList::iterator it;
   nuiWidgetList::iterator end = mpChildren.end();
   
@@ -268,10 +268,10 @@ nuiRect nuiSplitter::CalcIdealSize()
   mPositions.clear();
   if (mOrientation == nuiHorizontal)
   {
-    for (it=mpChildren.begin(); it!=end; ++it)
+    for (it = mpChildren.begin(); it!=end; ++it)
     {
       nuiRect Rect;
-      nuiWidgetPtr pItem = (*it);
+      nuiWidgetPtr pItem = (*it).Ptr();
       Rect = pItem->GetIdealRect();
 
       Width = MAX(Width, Rect.GetWidth()+2);
@@ -285,7 +285,7 @@ nuiRect nuiSplitter::CalcIdealSize()
     for (it=mpChildren.begin(); it!=end; ++it)
     {
       nuiRect Rect;
-      nuiWidgetPtr pItem = (*it);
+      nuiWidgetPtr pItem = (*it).Ptr();
       Rect = pItem->GetIdealRect();
 
       Height = MAX(Height, Rect.GetHeight()+2);
@@ -356,7 +356,7 @@ bool nuiSplitter::SetRectHorizontal(const nuiRect& rRect)
   // don't process the splitter handle before the first child (we need the size of the first child)
   if (it != end)
   {
-    pItem = (*it);
+    pItem = (*it).Ptr();
     if (pItem == mpHandle)
       ++it;
   }
@@ -364,7 +364,7 @@ bool nuiSplitter::SetRectHorizontal(const nuiRect& rRect)
 
   if (it != end)
   {
-    pItem = (*it);
+    pItem = (*it).Ptr();
 
     //*****************************************************
     //
@@ -433,7 +433,7 @@ bool nuiSplitter::SetRectHorizontal(const nuiRect& rRect)
     i++;
     if (it != end)
     {
-      pItem = (*it);
+      pItem = (*it).Ptr();
       if (pItem == mpHandle)
       {
         ++it;
@@ -450,7 +450,7 @@ bool nuiSplitter::SetRectHorizontal(const nuiRect& rRect)
   // Second child:
   if (it != end)
   {
-    pItem = (*it);
+    pItem = (*it).Ptr();
 
     if (mMasterChild)
     {
@@ -535,7 +535,7 @@ bool nuiSplitter::SetRectVertical(const nuiRect& rRect)
    // don't process the splitter handle before the first child (we need the size of the first child)
   if (it != end)
   {
-    pItem = (*it);
+    pItem = (*it).Ptr();
     if (pItem == mpHandle)
     {
       ++it;
@@ -551,7 +551,7 @@ bool nuiSplitter::SetRectVertical(const nuiRect& rRect)
 
   if (it != end)
   {
-    pItem = (*it);
+    pItem = (*it).Ptr();
 
     if (mMasterChild)
     {
@@ -616,7 +616,7 @@ bool nuiSplitter::SetRectVertical(const nuiRect& rRect)
     i++;
     if (it != end)
     {
-      pItem = (*it);
+      pItem = (*it).Ptr();
       if (pItem == mpHandle)
       {
         ++it;
@@ -632,7 +632,7 @@ bool nuiSplitter::SetRectVertical(const nuiRect& rRect)
   if (it !=end)
   {
     w = mRect.GetWidth() - left;
-    pItem = (*it);
+    pItem = (*it).Ptr();
     if (mMasterChild)
     {
       if (w < 0)

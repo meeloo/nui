@@ -375,42 +375,20 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //            mpWidgetContents->GetRect().GetWidth(), mpWidgetContents->GetRect().GetHeight());
     if (mpWidgetContents->GetLayerPolicy() == nuiDrawPolicyDrawSelf)
     {
-      const nuiMetaPainter* pCache = mpWidgetContents->GetRenderCache();
-      if (pCache)
+      for (auto widget : mChildWidgets)
       {
-        const auto& widgets = pCache->GetWidgets();
-        for (auto widget : widgets)
-        {
-          mpDrawPainter->PushMatrix();
-          nuiMatrix m;
-          nuiRect r = widget->GetRect();
-          m.SetTranslation(r.Left(), r.Top(), 0);
-          mpDrawPainter->MultMatrix(m);
-          mpDrawPainter->DrawWidget(pContext, widget);
-          mpDrawPainter->PopMatrix();
+        mpDrawPainter->PushMatrix();
+        nuiMatrix m;
+        nuiRect r = widget->GetRect();
+        m.SetTranslation(r.Left(), r.Top(), 0);
+        mpDrawPainter->MultMatrix(m);
+        mpDrawPainter->DrawWidget(pContext, widget);
+        mpDrawPainter->PopMatrix();
 //          NGL_OUT("draw subwidget of [%p %s] -> [%p %s] ( (%f, %f) / (%f x %f))\n",
 //                  mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
 //                  widget, widget->GetObjectClass().GetChars(),
 //                  widget->GetRect().Left(), widget->GetRect().Top(),
 //                  widget->GetRect().GetWidth(), widget->GetRect().GetHeight());
-        }
-      }
-      else  // No cache? What can we do? Draw all the children as is...
-      {
-        for (nuiWidget::Iterator* pIt = mpWidgetContents->GetFirstChild(); pIt && pIt->IsValid(); mpWidgetContents->GetNextChild(pIt))
-        {
-          nuiWidgetPtr widget = pIt->GetWidget();
-          if (widget)
-          {
-            mpDrawPainter->PushMatrix();
-            nuiMatrix m;
-            nuiRect r = widget->GetRect();
-            m.SetTranslation(r.Left(), r.Top(), 0);
-            mpDrawPainter->MultMatrix(m);
-            mpDrawPainter->DrawWidget(pContext, widget);
-            mpDrawPainter->PopMatrix();
-          }
-        }
       }
     }
   }
@@ -439,3 +417,14 @@ nuiMetaPainter* nuiLayer::GetDrawPainter() const
 {
   return mpDrawPainter;
 }
+
+void nuiLayer::AddChildWidget(nuiWidget* pWidget)
+{
+  mChildWidgets.push_back(pWidget);
+}
+
+void nuiLayer::ResetChildWidgets()
+{
+  mChildWidgets.clear();
+}
+

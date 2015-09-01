@@ -214,6 +214,17 @@ protected:
   
   RenderArrayInfo* mpCurrentRenderArrayInfo;
   nuiRenderArray* mpLastArray;
+    
+  void FinalizeSurfaces();
+  void FinalizeTextures();
+  void FinalizeRenderArrays();
+  void _DestroySurface(nuiSurface* pSurface);
+  void _DestroyTexture(nuiTexture* pTexture);
+  void _DestroyRenderArray(nuiRenderArray* pArray);
+  std::vector<nuiSurface*> mDestroyedSurfaces;
+  std::vector<nuiTexture*> mDestroyedTextures;
+  std::vector<nuiRenderArray*> mDestroyedRenderArrays;
+
 };
 
 bool nuiCheckForGLErrorsReal();

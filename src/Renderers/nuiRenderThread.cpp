@@ -146,7 +146,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 //    NGL_OUT("[nuiRenderThread] skipping frame\n");
     return;
   }
-  NGL_OUT("[nuiRenderThread] render\n");
+//  NGL_OUT("[nuiRenderThread] render %p\n", this);
 
 //  NGL_OUT("Widget %d / ContentsLayer %d / DrawLayer %d / DirtyLayers %d (total meta painters %d)\n", mWidgetPainters.size(), mLayerContentsPainters.size(), mLayerDrawPainters.size(), mDirtyLayers.size(), (int32)nuiMetaPainter::GetNbInstances());
 
@@ -220,7 +220,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   mWidgetIndentation = 0;
   
-  NGL_OUT(">>> Draw the widget tree\n");
+  //NGL_OUT(">>> Draw the widget tree %p\n", this);
   mpDrawContext->ResetState();
   mpDrawContext->ResetClipRect();
   mpDrawContext->Set2DProjectionMatrix(mRect.Size());

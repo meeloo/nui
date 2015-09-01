@@ -1430,6 +1430,10 @@ void nuiGLPainter::BeginSession()
   mpContext->MakeCurrent();
   nuiCheckForGLErrors();
 
+  FinalizeSurfaces();
+  FinalizeTextures();
+  FinalizeRenderArrays();
+  
   totalinframe = 0;
 }
 
@@ -1838,8 +1842,19 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
   nuiCheckForGLErrors();
 }
 
-
 void nuiGLPainter::DestroyTexture(nuiTexture* pTexture)
+{
+  mDestroyedTextures.push_back(pTexture);
+}
+
+void nuiGLPainter::FinalizeTextures()
+{
+  for (auto texture: mDestroyedTextures)
+    _DestroyTexture(texture);
+  mDestroyedTextures.clear();
+}
+
+void nuiGLPainter::_DestroyTexture(nuiTexture* pTexture)
 {
   nglCriticalSectionGuard tg(mTexturesCS);
   std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
@@ -1856,7 +1871,6 @@ void nuiGLPainter::DestroyTexture(nuiTexture* pTexture)
   }
   //NGL_OUT(_T("nuiGLPainter::DestroyTexture 0x%x : '%s' / %d\n"), pTexture, pTexture->GetSource().GetChars(), info.mTexture);
 
-  mpContext->MakeCurrent();
   glDeleteTextures(1, (GLuint*)&info.mTexture);
 }
 
@@ -1872,6 +1886,18 @@ nuiGLPainter::FramebufferInfo::FramebufferInfo()
 
 void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
 {
+  mDestroyedSurfaces.push_back(pSurface);
+}
+
+void nuiGLPainter::FinalizeSurfaces()
+{
+  for (auto surface : mDestroyedSurfaces)
+    _DestroySurface(surface);
+  mDestroyedSurfaces.clear();
+}
+
+void nuiGLPainter::_DestroySurface(nuiSurface* pSurface)
+{
   nglCriticalSectionGuard fbg(mFramebuffersCS);
   std::map<nuiSurface*, FramebufferInfo>::iterator it = mFramebuffers.find(pSurface);
   
@@ -1881,8 +1907,6 @@ void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
   }
   FramebufferInfo info = it->second;
 
-  mpContext->MakeCurrent();
-  
   glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, 0);
   NGL_ASSERT(info.mFramebuffer > 0);
   glDeleteFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
@@ -2842,16 +2866,25 @@ void nuiGLPainter::ResetVertexPointers(const nuiRenderArray& rArray)
 #undef glDeleteBuffersARB
 #endif
 
-
 void nuiGLPainter::DestroyRenderArray(nuiRenderArray* pArray)
+{
+  mDestroyedRenderArrays.push_back(pArray);
+}
+
+void nuiGLPainter::FinalizeRenderArrays()
+{
+  for (auto array : mDestroyedRenderArrays)
+    _DestroyRenderArray(array);
+  mDestroyedRenderArrays.clear();
+}
+
+void nuiGLPainter::_DestroyRenderArray(nuiRenderArray* pArray)
 {
   nglCriticalSectionGuard rag(mRenderArraysCS);
   auto it = mRenderArrays.find(pArray);
   if (it == mRenderArrays.end())
     return; // This render array was not stored here
   
-  mpContext->MakeCurrent();
-
   RenderArrayInfo* info(it->second);
   
   RenderArrayInfo::Recycle(info);

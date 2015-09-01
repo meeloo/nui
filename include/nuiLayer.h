@@ -30,8 +30,7 @@ public:
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
   NUI_GETSETDO(nuiColor, ClearColor, Change());
-
-
+    
 private:
   nuiLayer(const nglString& rName, int width, int height);
   virtual ~nuiLayer();
@@ -62,5 +61,9 @@ private:
   nuiMetaPainter* mpContentsPainter = nullptr; ///< This containts the rendering instructions to update the contents of this layer
   nuiMetaPainter* mpDrawPainter = nullptr; ///< This containts the rendering instructions to display the contents of this layer
   
+  friend class nuiWidget;
+  std::vector<nuiWidget*> mChildWidgets;
+  void AddChildWidget(nuiWidget* pWidget);
+  void ResetChildWidgets();
 };
 

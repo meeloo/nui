@@ -41,7 +41,7 @@ class nuiMatrixNode;
 class nuiEventActionHolder;
 
 typedef nuiWidget* nuiWidgetPtr;
-typedef std::vector<nuiWidgetPtr> nuiWidgetList;
+typedef std::vector<nuiRef<nuiWidget> > nuiWidgetList;
 
 typedef nuiTreeEventSource<nuiChildAdded, nuiWidget> nuiWidgetAddedEventSource;
 typedef nuiTreeEventSource<nuiChildDeleted, nuiWidget> nuiWidgetDeletedEventSource;

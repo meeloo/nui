@@ -222,3 +222,90 @@ T* nuiAutoRelease(T* pObj)
 
 #define nuiAutoRef nuiRefGuard nui_local_auto_ref(this);
 
+
+template <class Pointee>
+class nuiRef
+{
+public:
+  nuiRef(Pointee* pPointer)
+  {
+    mpPointer = pPointer;
+    if (pPointer)
+      pPointer->Acquire();
+  }
+  
+  nuiRef(const nuiRef<Pointee>& ref)
+  {
+    mpPointer = ref.mpPointer;
+    if (mpPointer)
+      mpPointer->Acquire();
+  }
+  
+  ~nuiRef()
+  {
+    if (mpPointer)
+      mpPointer->Release();
+  }
+  
+  nuiRef<Pointee>& operator = (const nuiRef& ref)
+  {
+    if (ref.mpPointer)
+      ref.mpPointer->Acquire();
+    if (mpPointer)
+      mpPointer->Release();
+    mpPointer = ref.mpPointer;
+    
+    return *this;
+  }
+  
+  nuiRef<Pointee>& operator = (Pointee* pPointer)
+  {
+    if (pPointer)
+      pPointer->Acquire();
+    if (mpPointer)
+      mpPointer->Release();
+    mpPointer = pPointer;
+    
+    return *this;
+  }
+
+  operator bool() const
+  {
+    return mpPointer != nullptr;
+  }
+  
+  bool operator==(Pointee* pPtr) const
+  {
+    return mpPointer == pPtr;
+  }
+  
+  bool operator==(const nuiRef<Pointee>& ref) const
+  {
+    return mpPointer == ref.mpPointer;
+  }
+
+  operator Pointee* () const
+  {
+    return mpPointer;
+  }
+  
+  Pointee* operator->() const
+  {
+    return mpPointer;
+  }
+  
+  const Pointee& operator*() const
+  {
+    return *mpPointer;
+  }
+
+  Pointee* Ptr() const
+  {
+    return mpPointer;
+  }
+  
+
+private:
+  Pointee* mpPointer = nullptr;
+};
+
