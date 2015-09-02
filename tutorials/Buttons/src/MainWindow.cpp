@@ -19,6 +19,8 @@
 #include "nuiFrame.h"
 #include "nuiCSS.h"
 
+#include "nuiWidgetInspector.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 #include "nuiTableView.h"
 
@@ -145,7 +147,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  int test = 1;
+  int test = 4;
   switch (test)
   {
   case 0:
@@ -273,24 +275,32 @@ void MainWindow::OnCreation()
         pLabel->SetPosition(nuiCenter);
         AddChild(pLabel);
 
-  //      nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
-  //      pAnim->SetTargetAttribute("Alpha");
-  //      pAnim->SetTargetObject(pLabel);
-  //      pLabel->AddAnimation("Fade", pAnim);
-  //      pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
-      }
+        nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
+        pAnim->SetTargetAttribute("Alpha");
+        pAnim->SetTargetObject(pLabel);
+        pLabel->AddAnimation("Fade", pAnim);
+        pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+      } break;
 
-      if (0)
+    case 4:
       {
-          nuiButton* pButton = new nuiButton("My Button");
-          pButton->SetPosition(nuiCenter);
-          AddChild(pButton);
-          
+        nuiSplitter* pSplitter = new nuiSplitter(nuiVertical);
+        AddChild(pSplitter);
+        nuiButton* pButton = new nuiButton("My Button");
+        pButton->SetPosition(nuiCenter);
+
+        if (0)
+        {
           nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
           pAnim->SetTargetAttribute("Alpha");
           pAnim->SetTargetObject(pButton);
           pButton->AddAnimation("Fade", pAnim);
           pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+        }
+        
+        nuiWidgetInfo* pInspector = new nuiWidgetInfo(pButton);
+        pSplitter->AddChild(pButton);
+        pSplitter->AddChild(pInspector);
       } break;
     }
 }

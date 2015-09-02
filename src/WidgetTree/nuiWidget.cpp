@@ -574,6 +574,8 @@ void nuiWidget::Init()
   NUI_ADD_EVENT(PreUnclicked);
   NUI_ADD_EVENT(PreMouseMoved);
   NUI_ADD_EVENT(PreMouseWheelMoved);
+  
+  SetLayerPolicy(nuiDrawPolicyDrawSelf);
 }
 
 bool nuiWidget::SetObjectClass(const nglString& rName)
@@ -5018,7 +5020,7 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 //    return;
 //  }
   
-  if (mLayerPolicy != nuiDrawPolicyDrawSelf)
+  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
   {
     mpBackingLayer->AddChildWidget(pChild);
     return;

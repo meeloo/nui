@@ -902,7 +902,7 @@ protected:
 
   nuiWidgetList mpChildren;
   nuiLayer* mpBackingLayer = nullptr;
-  nuiDrawPolicy mLayerPolicy = nuiDrawPolicyDrawSelf;
+  nuiDrawPolicy mLayerPolicy = nuiDrawPolicyDrawNone;
 
   void UpdateTopLevel();
 
