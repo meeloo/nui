@@ -145,7 +145,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  int test = 0;
+  int test = 1;
   switch (test)
   {
   case 0:
@@ -196,29 +196,29 @@ void MainWindow::OnCreation()
     //  ComplexCellSource* pSource = new ComplexCellSource();
       nuiTableView* pListView = new nuiTableView(pSource);
       AddChild(pListView);
-    nuiWidget* pChild = CreateTestDelChildren();
-    AddChild(pChild);
+      nuiWidget* pChild = CreateTestDelChildren();
+      AddChild(pChild);
 
-    nuiScrollView* pSView = new nuiScrollView(false, true);
-    AddChild(pSView);
-    pSView->SetPosition(nuiFill);
-    pSView->SetUserWidth(256);
-    
-    nuiVBox* pVBox = new nuiVBox();
-    pVBox->SetBorderRight(42);
-    pVBox->SetExpand(nuiExpandShrinkAndGrow);
-    pSView->AddChild(pVBox);
-    nuiButton* pButton;
-    
-      for (int i = 0; i < 128; i++)
-      {
-        nglString str;
-        str.CFormat("Button %d", i);
-        pButton = new nuiButton(str);
-        pButton->SetObjectName(str);
-        pButton->SetUserHeight(42);
-        pVBox->AddCell(pButton);
-      }
+//      nuiScrollView* pSView = new nuiScrollView(false, true);
+//      AddChild(pSView);
+//      pSView->SetPosition(nuiFill);
+//      pSView->SetUserWidth(256);
+//      
+//      nuiVBox* pVBox = new nuiVBox();
+//      pVBox->SetBorderRight(42);
+//      pVBox->SetExpand(nuiExpandShrinkAndGrow);
+//      pSView->AddChild(pVBox);
+//      nuiButton* pButton;
+//    
+//      for (int i = 0; i < 128; i++)
+//      {
+//        nglString str;
+//        str.CFormat("Button %d", i);
+//        pButton = new nuiButton(str);
+//        pButton->SetObjectName(str);
+//        pButton->SetUserHeight(42);
+//        pVBox->AddCell(pButton);
+//      }
       
       return;
     } break;

@@ -187,8 +187,8 @@ protected:
 //  void OnMessageQueueTick(const nuiEvent& rEvent);
   void UpdateHoverList(nglMouseInfo& rInfo);
   
-  nuiWidgetPtr mpFocus;
-  nuiWidgetPtr mpUnderMouse;
+  nuiRef<nuiWidget> mpFocus;
+  nuiRef<nuiWidget> mpUnderMouse;
 
 #ifndef DISABLE_TOOLTIP
   // ToolTips:
@@ -197,12 +197,12 @@ protected:
   nglTime mToolTipDelayOn;
   nglTime mToolTipDelayOff;
   bool mDisplayToolTip;
-  nuiWidgetPtr mpToolTipSource;
+  nuiRef<nuiWidget> mpToolTipSource;
   nuiToolTip* mpToolTipLabel;
 #endif
   nuiLabel* mpInfoLabel;
 
-  nuiWidget* mpDraggedWidget;
+  nuiRef<nuiWidget> mpDraggedWidget;
 
   typedef std::map<nglTouchId, nuiWidgetPtr> nuiGrabMap;
   nuiGrabMap mpGrab;
@@ -219,7 +219,7 @@ protected:
 
   nglMouseInfo mMouseInfo;
   
-  nuiWidgetPtr mpWatchedWidget;
+  nuiRef<nuiWidget> mpWatchedWidget;
 
   void UpdateWidgetsCSS();
   void UpdateMouseCursor(const nuiWidgetList& rWidgets);

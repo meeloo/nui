@@ -227,7 +227,7 @@ template <class Pointee>
 class nuiRef
 {
 public:
-  nuiRef(Pointee* pPointer)
+  nuiRef(Pointee* pPointer = nullptr)
   {
     mpPointer = pPointer;
     if (pPointer)
@@ -245,6 +245,7 @@ public:
   {
     if (mpPointer)
       mpPointer->Release();
+    mpPointer = nullptr;
   }
   
   nuiRef<Pointee>& operator = (const nuiRef& ref)

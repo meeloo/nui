@@ -17,7 +17,7 @@
 
 #define EXTRA_OUT_SIZE_RATIO 0.5
 
-#ifdef DEBUG
+#ifdef _DEBUG
 #define _DEBUG_LAYOUT 1
 #endif
 
@@ -165,6 +165,8 @@ void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVert
   //#ifdef _UIKIT_
   ActivateMobileMode();
   //#endif
+  
+  SetLayerPolicy(nuiDrawPolicyDrawSelf);
 }
 
 bool nuiScrollView::GetEnableHorizontalScroll() const

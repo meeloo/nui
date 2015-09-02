@@ -104,10 +104,9 @@ void nuiWidgetInspectorNode::Open(bool Opened)
   {
     Clear();
     
-    nuiWidget* pContainer = dynamic_cast<nuiWidget*>(mpTarget);
-    if (pContainer)
+    if (mpTarget)
     {
-      nuiWidget::IteratorPtr pIt = pContainer->GetFirstChild();
+      nuiWidget::IteratorPtr pIt = mpTarget->GetFirstChild();
       
       while (pIt->IsValid())
       {
@@ -117,7 +116,7 @@ void nuiWidgetInspectorNode::Open(bool Opened)
         AddChild(pINode);
         
         DelChildOnEvent(pTarget->Destroyed, pINode);
-        pContainer->GetNextChild(pIt);
+        mpTarget->GetNextChild(pIt);
       }
       delete pIt;
     }
@@ -128,8 +127,7 @@ void nuiWidgetInspectorNode::Open(bool Opened)
 
 bool nuiWidgetInspectorNode::IsEmpty() const
 {
-  nuiWidget* pContainer = dynamic_cast<nuiWidget*>(mpTarget);
-  if (pContainer && pContainer->GetChildrenCount())
+  if (mpTarget && mpTarget->GetChildrenCount())
     return false;
   
   return true;
@@ -248,14 +246,13 @@ class nuiWidgetProxy : public nuiWidget
     {
     }
   private:
-    nuiWidget* mpTarget;
+    nuiRef<nuiWidget> mpTarget;
   };
 
 nuiWidgetInfo::nuiWidgetInfo(nuiWidget* pTarget)
 : nuiWidget(),
 mWISink(this)
 {
-  mpTarget = NULL;
   mNeedUpdate = false;
   mpTimer = new nuiTimer(1.0/15.0);
   mWISink.Connect(mpTimer->Tick, &nuiWidgetInfo::OnTimerTick);

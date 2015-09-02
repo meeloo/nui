@@ -154,7 +154,7 @@ private :
   static std::vector<std::map<nglString, nuiAttributeBase*> > mClassAttributes;
   std::map<nglString, nuiAttributeBase*> mInstanceAttributes;
   static std::map<nglString, int32> mObjectClassNamesMap;
-  std::list<nuiObject*> mpLinkedObjects;
+  std::list<nuiRef<nuiObject> > mpLinkedObjects;
 
   uint32 mClassNameIndex;
   nglString mObjectName;

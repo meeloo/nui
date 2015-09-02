@@ -303,6 +303,8 @@ void nuiTopLevel::AdviseObjectDeath(nuiWidgetPtr pWidget)
   pWidget->StopAutoDraw();
   mHoveredWidgets.erase(pWidget);
 
+  mDirtyWidgets.erase(pWidget);
+  
   nuiGrabMap::iterator it2 = mpGrab.begin();
   while (it2 != mpGrab.end())
   {

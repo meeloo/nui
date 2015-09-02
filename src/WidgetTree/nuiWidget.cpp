@@ -678,12 +678,8 @@ nuiWidget::~nuiWidget()
     nuiWidgetPtr pItem = pIt->GetWidget();
     if (pItem)
     {
-      //      if (!pItem->IsTrashed(false) && pItem->Release())
-      //        pItem->SetParent(NULL);
       if (!pItem->IsTrashed(false))
         pItem->SetParent(NULL);
-      pItem->Release();
-
     }
   }
   delete pIt;
@@ -4193,7 +4189,6 @@ bool nuiWidget::AddChild(nuiWidgetPtr pChild)
   {
     NGL_OUT("[%s] Add Child %p <--- %p (%s / %s)\n", GetObjectClass().GetChars(), this, pChild, pChild->GetObjectClass().GetChars(), pChild->GetObjectName().GetChars());
   }
-  pChild->Acquire();
   nuiWidget* pParent = pChild->GetParent();
   NGL_ASSERT(pParent != this);
 
@@ -4247,22 +4242,11 @@ bool nuiWidget::DelChild(nuiWidgetPtr pChild)
         return pChild->Trash(); ///< This will call this->DelChild(pChild) again, but with pChild as Trashed.
       }
 
-      nuiLayer* pLayer = pChild->GetLayer();
-      if (pLayer)
-      {
-        nuiLayer* pParentLayer = (nuiLayer*)pLayer->GetParent();
-        if (pParentLayer)
-        {
-          pParentLayer->DelChild(pLayer);
-        }
-      }
-
-      mpChildren.erase(it);
       pChild->SetParent(NULL);
+      mpChildren.erase(it);
       ChildDeleted(this, pChild);
       InvalidateLayout();
       DebugRefreshInfo();
-      pChild->Release();
       return true;
     }
   }
@@ -4528,6 +4512,7 @@ void nuiWidget::LowerChild(nuiWidgetPtr pChild)
 void nuiWidget::RaiseChildToFront(nuiWidgetPtr pChild)
 {
   CheckValid();
+  mpChildren.push_back(pChild);
   nuiWidgetList::iterator it = mpChildren.begin();
   nuiWidgetList::iterator end = mpChildren.end();
   for ( ; it != end; ++it)
@@ -4536,7 +4521,6 @@ void nuiWidget::RaiseChildToFront(nuiWidgetPtr pChild)
     if (pChild == pItem)
     {
       mpChildren.erase(it);
-      mpChildren.push_back(pItem);
       Invalidate();
       DebugRefreshInfo();
       return;
@@ -4548,7 +4532,8 @@ void nuiWidget::RaiseChildToFront(nuiWidgetPtr pChild)
 void nuiWidget::LowerChildToBack(nuiWidgetPtr pChild)
 {
   CheckValid();
-  nuiWidgetList::iterator it = mpChildren.begin();
+  mpChildren.insert(mpChildren.begin(), pChild);
+  nuiWidgetList::iterator it = mpChildren.begin() + 1;
   nuiWidgetList::iterator end = mpChildren.end();
   for ( ; it != end; ++it)
   {
@@ -4556,7 +4541,6 @@ void nuiWidget::LowerChildToBack(nuiWidgetPtr pChild)
     if (pChild == pItem)
     {
       mpChildren.erase(it);
-      mpChildren.insert(mpChildren.begin(), pItem);
       Invalidate();
       DebugRefreshInfo();
       return;

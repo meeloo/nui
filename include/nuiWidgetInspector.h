@@ -29,7 +29,7 @@ public:
 private:
   nuiEventSink<nuiWidgetInspectorNode> mInspectorNodeSink;
   void UpdateInfos(const nuiEvent& rEvent);
-  nuiWidget* mpTarget;
+  nuiRef<nuiWidget> mpTarget;
   nuiWidgetInspectorNode* mpTree;
 };
 
@@ -47,7 +47,7 @@ protected:
   void OnDebugUpdate(const nuiEvent& rEvent);
   void OnTrashed(const nuiEvent& rEvent);
   nuiEventSink<nuiWidgetInfo> mWISink;
-  nuiWidget* mpTarget;
+  nuiRef<nuiWidget> mpTarget;
   nuiTimer* mpTimer;
   bool mNeedUpdate;
   
@@ -84,7 +84,7 @@ public:
 protected:
   virtual ~nuiWidgetInspector();
   nuiEventSink<nuiWidgetInspector> mInspectorSink;
-  nuiWidget* mpTarget;
+  nuiRef<nuiWidget> mpTarget;
   nuiTreeNode* mpTree;
   nuiWidgetInfo* mpWidgetInfo;
   void OnSelectionChanged(const nuiEvent& rEvent);
