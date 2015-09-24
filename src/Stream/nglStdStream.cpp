@@ -21,7 +21,7 @@ inline nglStreamWhence seekDirToStreamWhence(std::ios_base::seekdir direction)
     return eStreamFromEnd;
   default:
     {
-      NGL_ASSERT(!"WTF");
+      NGL_ASSERT(0);
     }
   }
   return eStreamForward;
@@ -33,17 +33,18 @@ inline nglStreamWhence seekDirToStreamWhence(std::ios_base::seekdir direction)
 nglStdIStreamBuf::nglStdIStreamBuf(nglIStream* stream)
 : mpIStream(stream)
 {
+  NGL_ASSERT(stream);
 }
 
-auto nglStdIStreamBuf::setbuf(char* pNotImplemented, std::streamsize notImplemented) -> std::streambuf*
+std::streambuf* nglStdIStreamBuf::setbuf(char* pNotImplemented, std::streamsize notImplemented)
 {
-  NGL_ASSERT(!"WTF");
+  NGL_ASSERT(0);
   return nullptr;
 }
 
-auto nglStdIStreamBuf::seekoff(std::streamoff off,
+std::streampos nglStdIStreamBuf::seekoff(std::streamoff off,
                                          std::ios_base::seekdir way,
-                                         std::ios_base::openmode which) -> std::streampos
+                                         std::ios_base::openmode which)
 {
   nglStreamWhence whence = seekDirToStreamWhence(way);
   off_t newPos = mpIStream->SetPos((off_t)off, whence);
@@ -52,15 +53,15 @@ auto nglStdIStreamBuf::seekoff(std::streamoff off,
   {
     return (std::streampos) newPos;
   }
-  NGL_ASSERT(!"POS INVALID");
+  NGL_ASSERT(0);
   return -1;
 }
 
-auto nglStdIStreamBuf::seekpos(std::streampos sp, std::ios_base::openmode which) -> std::streampos
+std::streampos nglStdIStreamBuf::seekpos(std::streampos sp, std::ios_base::openmode which)
 {
   if (!(which & std::ios_base::in))
   {
-    NGL_ASSERT(!"NOT A INPUT FILE");
+    NGL_ASSERT(0);
     return -1;
   }
 
@@ -70,27 +71,28 @@ auto nglStdIStreamBuf::seekpos(std::streampos sp, std::ios_base::openmode which)
   {
     return (std::streampos) newPos;
   }
-  NGL_ASSERT(!"NEW POS < 0");
+  NGL_ASSERT(0);
   return -1;
 }
 
-auto nglStdIStreamBuf::showmanyc() -> std::streamsize
+std::streamsize nglStdIStreamBuf::showmanyc()
 {
   return mpIStream->Available();
 }
 
-auto nglStdIStreamBuf::sync() -> int
+int nglStdIStreamBuf::sync()
 {
-  NGL_ASSERT(!"sync");
+  NGL_ASSERT(0);
+  return 0;
 }
 
-auto nglStdIStreamBuf::xsgetn(char *s, std::streamsize n) -> std::streamsize
+std::streamsize nglStdIStreamBuf::xsgetn(char *s, std::streamsize n)
 {
-  std::streamsize read = mpIStream->Read((void *) s, (size_t)n, 1);
+  std::streamsize read = mpIStream->Read((void *) s, (size_t) n, 1);
   return read;
 }
 
-auto nglStdIStreamBuf::underflow() -> int
+int nglStdIStreamBuf::underflow()
 {
   char ch;
   std::streamsize read = mpIStream->Peek(&ch, 1, 1);
@@ -102,7 +104,7 @@ auto nglStdIStreamBuf::underflow() -> int
   return traits_type::eof();
 }
 
-auto nglStdIStreamBuf::uflow() -> int
+int nglStdIStreamBuf::uflow()
 {
   char ch;
   std::streamsize read = mpIStream->Read(&ch, 1, 1);
@@ -115,13 +117,13 @@ auto nglStdIStreamBuf::uflow() -> int
   return traits_type::eof();
 }
 
-auto nglStdIStreamBuf::pbackfail(int c) -> int
+int nglStdIStreamBuf::pbackfail(int c)
 {
-  NGL_ASSERT(!"Not Implemented");
+  NGL_ASSERT(0); // Not implemented
 //  if (c != EOF)
 //  {
 //  }
-  return std::char_traits<char>::eof();
+  return traits_type::eof();
 }
 
 #pragma mark -
@@ -152,8 +154,8 @@ nglStdOStreamBuf::nglStdOStreamBuf(nglOStream* stream)
 
 std::streambuf* nglStdOStreamBuf::setbuf(char* pNotImplemented, std::streamsize notImplemented)
 {
-  NGL_ASSERT(!"not implemented");
-  return NULL;
+  NGL_ASSERT(0);
+  return nullptr;
 }
 
 std::streampos nglStdOStreamBuf::seekoff(std::streamoff off,
@@ -164,7 +166,7 @@ std::streampos nglStdOStreamBuf::seekoff(std::streamoff off,
 
   if (!(which & std::ios_base::out))
   {
-    NGL_ASSERT(!"which & std::ios_base::out");
+    NGL_ASSERT(0);
     return -1;
   }
 
@@ -197,10 +199,12 @@ std::streamsize nglStdOStreamBuf::xsputn(const char *s, std::streamsize n)
 
 int nglStdOStreamBuf::overflow(int c)
 {
-  if (c == EOF)
+  if (c == traits_type::eof())
+  {
     return c;
-  std::streamsize written = mpOStream->Write(&c, 1, sizeof(char));
-  return (written == 1) ? c : EOF;
+  }
+  std::streamsize written = mpOStream->Write(&c, 1, 1);
+  return (written == 1) ? c : traits_type::eof();
 }
 
 nglStdOStream::nglStdOStream(nglOStream* stream, bool OwnStream)
@@ -215,6 +219,8 @@ nglStdOStream::nglStdOStream(nglOStream* stream, bool OwnStream)
 nglStdOStream::~nglStdOStream()
 {
   if (mOwnStream)
+  {
     delete mpOStream;
+  }
 }
 

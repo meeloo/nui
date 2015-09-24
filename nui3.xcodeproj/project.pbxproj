@@ -7552,9 +7552,9 @@
 				E5816DEC0C3CECAB00902DFE /* nglZipFS.cpp */,
 				E5816CAB0C3CECAB00902DFE /* nglZipFS.h */,
 				E5816DED0C3CECAB00902DFE /* Zip */,
+				E540AB6010DFAC8F00791FBA /* nuiAsyncIStream.h */,
 				E540AB5C10DFAC5000791FBA /* nuiAsyncIStream.cpp */,
 				61ED91A11A702716001AF911 /* nglStdStream.h */,
-				E540AB6010DFAC8F00791FBA /* nuiAsyncIStream.h */,
 				61ED91A81A70273E001AF911 /* nglStdStream.cpp */,
 			);
 			name = Stream;

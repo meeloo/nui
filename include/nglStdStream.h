@@ -21,6 +21,7 @@
 #include "nglIStream.h"
 #include "nglOStream.h"
 
+//! nglStdIStreamBuf class
 class nglStdIStreamBuf : public std::streambuf
 {
 public:
@@ -28,24 +29,24 @@ public:
   virtual ~nglStdIStreamBuf() { }
   
   nglStdIStreamBuf(const nglStdIStreamBuf& rOther) = delete;
-  auto operator=(const nglStdIStreamBuf& rOther) -> nglStdIStreamBuf& = delete;
+  nglStdIStreamBuf& operator=(const nglStdIStreamBuf& rOther) = delete;
   
 protected:
-  virtual auto setbuf(char *s, std::streamsize n) -> std::streambuf* override;
-  virtual auto seekoff(std::streamoff off, std::ios_base::seekdir way,
-                       std::ios_base::openmode which = std::ios_base::in | std::ios_base::out) -> std::streampos override;
+  virtual std::streambuf* setbuf(char *s, std::streamsize n) override;
+  virtual std::streampos seekoff(std::streamoff off, std::ios_base::seekdir way,
+                                 std::ios_base::openmode which = std::ios_base::in | std::ios_base::out) override;
+  virtual std::streampos seekpos(std::streampos sp, std::ios_base::openmode which = std::ios_base::in | std::ios_base::out) override;
+  virtual std::streamsize showmanyc() override;
+  virtual std::streamsize xsgetn(char *s, std::streamsize n) override;
+  virtual int underflow() override;
+  virtual int uflow() override;
+  virtual int pbackfail(int c = traits_type::eof()) override;
+  virtual int sync() override;
   
-  virtual auto seekpos(std::streampos sp, std::ios_base::openmode which = std::ios_base::in | std::ios_base::out) -> std::streampos override;
-  virtual auto showmanyc() -> std::streamsize override;
-  virtual auto xsgetn(char *s, std::streamsize n) -> std::streamsize override;
-  virtual auto underflow() -> int override;
-  virtual auto uflow() -> int override;
-  virtual auto pbackfail(int c = EOF) -> int override;
-  virtual auto sync() -> int override;
-  
-  nglIStream* mpIStream;
+  nglIStream* mpIStream { nullptr };
 };
 
+//! nglStdIStream class
 class nglStdIStream : public std::istream
 {
 public:
@@ -58,8 +59,7 @@ protected:
   nglIStream* mpIStream = nullptr;
 };
 
-
-
+//! nglStdOStreamBuf class
 class nglStdOStreamBuf : public std::streambuf
 {
 public:
@@ -67,17 +67,18 @@ public:
   virtual ~nglStdOStreamBuf() { }
   
 protected:
-  virtual std::streambuf *setbuf(char *s, std::streamsize n);
+  virtual std::streambuf* setbuf(char *s, std::streamsize n) override;
   virtual std::streampos seekoff(std::streamoff off, std::ios_base::seekdir way,
-                                 std::ios_base::openmode which = std::ios_base::in | std::ios_base::out);
+                                 std::ios_base::openmode which = std::ios_base::in | std::ios_base::out) override;
   virtual std::streampos seekpos(std::streampos sp,
-                                 std::ios_base::openmode which = std::ios_base::in | std::ios_base::out);
-  virtual std::streamsize xsputn(const char *s, std::streamsize n);
-  virtual int overflow(int c);
+                                 std::ios_base::openmode which = std::ios_base::in | std::ios_base::out) override;
+  virtual std::streamsize xsputn(const char *s, std::streamsize n) override;
+  virtual int overflow(int c) override;
   
-  nglOStream* mpOStream;
+  nglOStream* mpOStream { nullptr };
 };
 
+//! nglStdOStream class
 class nglStdOStream : public std::ostream
 {
 public:
