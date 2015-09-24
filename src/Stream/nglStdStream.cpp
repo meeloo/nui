@@ -79,6 +79,11 @@ auto nglStdIStreamBuf::showmanyc() -> std::streamsize
   return mpIStream->Available();
 }
 
+auto nglStdIStreamBuf::sync() -> int
+{
+  NGL_ASSERT(!"sync");
+}
+
 auto nglStdIStreamBuf::xsgetn(char *s, std::streamsize n) -> std::streamsize
 {
   std::streamsize read = mpIStream->Read((void *) s, (size_t)n, 1);
@@ -87,45 +92,27 @@ auto nglStdIStreamBuf::xsgetn(char *s, std::streamsize n) -> std::streamsize
 
 auto nglStdIStreamBuf::underflow() -> int
 {
-  NGL_OUT("***UNDERFLOW***\n");
-  int8_t ch = std::char_traits<char>::eof();
+  char ch;
   std::streamsize read = mpIStream->Peek(&ch, 1, 1);
 
   if (read == 1)
   {
-    return (int) ch;
+    return traits_type::to_int_type(ch);
   }
-  return std::char_traits<char>::eof();
+  return traits_type::eof();
 }
 
 auto nglStdIStreamBuf::uflow() -> int
 {
-  NGL_OUT("***UFLOW***\n");
-  
-  if (underflow() == std::char_traits<char>::eof())
-  {
-    return std::char_traits<char>::eof();
-  }
-  
-  
-//  gbump(1);
-//  return gptr()[-1];
-  /*
-   int uflow() {
-   if ( underflow() == EOF ) return EOF;
-   gbump(1);
-   return gptr()[-1];
-   }
-   */
-  
-  int8_t ch = std::char_traits<char>::eof();
+  char ch;
   std::streamsize read = mpIStream->Read(&ch, 1, 1);
   
   if (read == 1)
   {
-    return ch;
+    return traits_type::to_int_type(ch);
   }
-  return std::char_traits<char>::eof();
+  
+  return traits_type::eof();
 }
 
 auto nglStdIStreamBuf::pbackfail(int c) -> int

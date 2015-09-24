@@ -27,6 +27,9 @@ public:
   nglStdIStreamBuf(nglIStream* stream);
   virtual ~nglStdIStreamBuf() { }
   
+  nglStdIStreamBuf(const nglStdIStreamBuf& rOther) = delete;
+  auto operator=(const nglStdIStreamBuf& rOther) -> nglStdIStreamBuf& = delete;
+  
 protected:
   virtual auto setbuf(char *s, std::streamsize n) -> std::streambuf* override;
   virtual auto seekoff(std::streamoff off, std::ios_base::seekdir way,
@@ -38,6 +41,7 @@ protected:
   virtual auto underflow() -> int override;
   virtual auto uflow() -> int override;
   virtual auto pbackfail(int c = EOF) -> int override;
+  virtual auto sync() -> int override;
   
   nglIStream* mpIStream;
 };
