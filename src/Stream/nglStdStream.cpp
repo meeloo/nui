@@ -35,79 +35,110 @@ nglStdIStreamBuf::nglStdIStreamBuf(nglIStream* stream)
 {
 }
 
-std::streambuf* nglStdIStreamBuf::setbuf(char* pNotImplemented, std::streamsize notImplemented)
+auto nglStdIStreamBuf::setbuf(char* pNotImplemented, std::streamsize notImplemented) -> std::streambuf*
 {
   NGL_ASSERT(!"WTF");
   return nullptr;
 }
 
-std::streampos nglStdIStreamBuf::seekoff(std::streamoff off,
+auto nglStdIStreamBuf::seekoff(std::streamoff off,
                                          std::ios_base::seekdir way,
-                                         std::ios_base::openmode which)
+                                         std::ios_base::openmode which) -> std::streampos
 {
   nglStreamWhence whence = seekDirToStreamWhence(way);
   off_t newPos = mpIStream->SetPos((off_t)off, whence);
 
   if (newPos >= 0)
+  {
     return (std::streampos) newPos;
+  }
+  NGL_ASSERT(!"POS INVALID");
   return -1;
 }
 
-std::streampos nglStdIStreamBuf::seekpos(std::streampos sp, std::ios_base::openmode which)
+auto nglStdIStreamBuf::seekpos(std::streampos sp, std::ios_base::openmode which) -> std::streampos
 {
   if (!(which & std::ios_base::in))
+  {
+    NGL_ASSERT(!"NOT A INPUT FILE");
     return -1;
+  }
 
   off_t newPos = mpIStream->SetPos((off_t) sp);
 
   if (newPos >= 0)
+  {
     return (std::streampos) newPos;
+  }
+  NGL_ASSERT(!"NEW POS < 0");
   return -1;
 }
 
-std::streamsize nglStdIStreamBuf::showmanyc()
+auto nglStdIStreamBuf::showmanyc() -> std::streamsize
 {
   return mpIStream->Available();
 }
 
-std::streamsize nglStdIStreamBuf::xsgetn(char *s, std::streamsize n)
+auto nglStdIStreamBuf::xsgetn(char *s, std::streamsize n) -> std::streamsize
 {
   std::streamsize read = mpIStream->Read((void *) s, (size_t)n, 1);
   return read;
 }
 
-int nglStdIStreamBuf::underflow()
+auto nglStdIStreamBuf::underflow() -> int
 {
-  int ch = EOF;
-  std::streamsize read = mpIStream->Peek(&ch, 1, sizeof(char));
+  NGL_OUT("***UNDERFLOW***\n");
+  int8_t ch = std::char_traits<char>::eof();
+  std::streamsize read = mpIStream->Peek(&ch, 1, 1);
 
   if (read == 1)
   {
-    return ch;
+    return (int) ch;
   }
-  return EOF;
+  return std::char_traits<char>::eof();
 }
 
-int nglStdIStreamBuf::uflow()
+auto nglStdIStreamBuf::uflow() -> int
 {
-  char ch = EOF;
-  std::streamsize read = mpIStream->Read(&ch, 1, sizeof(char));
+  NGL_OUT("***UFLOW***\n");
+  
+  if (underflow() == std::char_traits<char>::eof())
+  {
+    return std::char_traits<char>::eof();
+  }
+  
+  
+//  gbump(1);
+//  return gptr()[-1];
+  /*
+   int uflow() {
+   if ( underflow() == EOF ) return EOF;
+   gbump(1);
+   return gptr()[-1];
+   }
+   */
+  
+  int8_t ch = std::char_traits<char>::eof();
+  std::streamsize read = mpIStream->Read(&ch, 1, 1);
   
   if (read == 1)
   {
     return ch;
   }
-  return EOF;
+  return std::char_traits<char>::eof();
 }
 
-int nglStdIStreamBuf::pbackfail(int c)
+auto nglStdIStreamBuf::pbackfail(int c) -> int
 {
   NGL_ASSERT(!"Not Implemented");
 //  if (c != EOF)
 //  {
 //  }
-  return EOF;
+  return std::char_traits<char>::eof();
 }
+
+#pragma mark -
+#pragma mark nglStdIStream
 
 nglStdIStream::nglStdIStream(nglIStream* stream, bool OwnStream)
 : std::istream(NULL),
@@ -145,12 +176,17 @@ std::streampos nglStdOStreamBuf::seekoff(std::streamoff off,
   nglStreamWhence whence = seekDirToStreamWhence(way);
 
   if (!(which & std::ios_base::out))
+  {
+    NGL_ASSERT(!"which & std::ios_base::out");
     return -1;
+  }
 
   off_t newPos = mpOStream->SetPos((off_t) off, whence);
 
   if (newPos >= 0)
+  {
     return (std::streampos) newPos;
+  }
   return -1;
 }
 

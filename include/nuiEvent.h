@@ -53,6 +53,7 @@ public:
   bool OnEvent(const nuiEvent& rEvent);
   bool CallEvent(void* pTarget, nuiDelegateMemento pFunc, const nuiEvent& rEvent);
   void Connect(nuiEventSource& rSource, const nuiDelegateMemento& rTargetFunc, void* pUser = NULL);
+  template <typename ...T> void Connect(nuiEventSource& rSource, const std::function<void (T...)>& rTargetFunc);
   void DisconnectSource(nuiEventSource& rSource);
   void Disconnect(const nuiDelegateMemento& rTFunc);
   void Disconnect(nuiEventSource& rSource, const nuiDelegateMemento& rTFunc);
