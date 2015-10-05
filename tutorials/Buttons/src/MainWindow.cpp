@@ -147,7 +147,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  int test = 4;
+  int test = 0;
   switch (test)
   {
   case 0:
@@ -187,7 +187,25 @@ void MainWindow::OnCreation()
         AddChild(button);
       }
       
+      nuiVBox* pBox = new nuiVBox();
       
+      nuiFolderPane* pPane1 = new nuiFolderPane();
+      pPane1->SetTitle("Prout");
+      pPane1->SetContents(new nuiLabel("Contents bleh..."));
+
+      nuiFolderPane* pPane2 = new nuiFolderPane();
+      pPane2->SetTitle("Prout 2");
+      pPane2->SetContents(new nuiLabel("Contents bleh...2"));
+      pBox->AddCell(pPane1);
+      pBox->AddCell(pPane2);
+      
+      pBox->SetExpand(nuiExpandFixed);
+      pBox->SetAllCellsExpand(nuiExpandFixed);
+
+      nuiScrollView* pScrollView = new nuiScrollView();
+      pScrollView->AddChild(pBox);
+
+      AddChild(pScrollView);
       
       return;
     }break;

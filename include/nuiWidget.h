@@ -900,7 +900,9 @@ protected:
   nuiLayer* mpBackingLayer = nullptr;
   nuiDrawPolicy mLayerPolicy = nuiDrawPolicyDrawNone;
 
-  void UpdateTopLevel();
+  void UpdateTopLevel();  
+  void InternalSetLayerPolicy(nuiDrawPolicy policy);
+
 
 };
 
