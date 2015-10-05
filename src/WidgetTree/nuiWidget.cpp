@@ -5497,6 +5497,7 @@ void nuiWidget::SetVisible(bool Visible)
         //        pShowAnim->Play();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+        InternalSetLayerPolicy(mLayerPolicy);
       }
       else // otherwise set visible = true
       {
@@ -5506,6 +5507,7 @@ void nuiWidget::SetVisible(bool Visible)
         VisibilityChanged();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+        InternalSetLayerPolicy(mLayerPolicy);
       }
     }
     else if (pShowAnim && pShowAnim->IsPlaying())
@@ -5533,6 +5535,7 @@ void nuiWidget::SetVisible(bool Visible)
         //        pShowAnim->Play();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+        InternalSetLayerPolicy(mLayerPolicy);
       }
       else // otherwise set visible = true
       {
@@ -5542,6 +5545,7 @@ void nuiWidget::SetVisible(bool Visible)
         VisibilityChanged();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+        InternalSetLayerPolicy(mLayerPolicy);
       }
     }
   }
@@ -5583,6 +5587,7 @@ void nuiWidget::SetVisible(bool Visible)
         {///< May need iteration of children
           pRenderThread->SetWidgetDrawPainter(this, nullptr);
           pRenderThread->SetWidgetContentsPainter(this, nullptr);
+          InternalSetLayerPolicy(nuiDrawPolicyDrawNone);
         }
       }
     }
@@ -5616,6 +5621,7 @@ void nuiWidget::SetVisible(bool Visible)
         {///< May need iteration of children
           pRenderThread->SetWidgetDrawPainter(this, nullptr);
           pRenderThread->SetWidgetContentsPainter(this, nullptr);
+          InternalSetLayerPolicy(nuiDrawPolicyDrawNone);
         }
       }
     }
@@ -6155,14 +6161,10 @@ nuiWidget* nuiWidget::GetParentLayerWidget() const
   return nullptr;
 }
 
-
-void nuiWidget::SetLayerPolicy(nuiDrawPolicy policy)
+void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
 {
-  if (GetLayerPolicy() == policy)
-    return;
-
   nuiTopLevel* pTop = GetTopLevel();
-
+  
   if (policy != nuiDrawPolicyDrawNone)
   {
     if (!mpBackingLayer)
@@ -6172,61 +6174,29 @@ void nuiWidget::SetLayerPolicy(nuiDrawPolicy policy)
       mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
       mpBackingLayer->SetContents(this);
     }
-
-    // Not needed anymore as we don't add layers to a separate tree anymore:
-//    if (pTop)
-//    {
-//      // Find the parent layer:
-//      nuiWidget* pParentW = GetParentLayerWidget();
-//
-//      if (pParentW && mpBackingLayer->GetParent() == nullptr)
-//      {
-//        nuiLayer* pParent = pParentW->GetLayer();
-//        nuiSize x = 0, y = 0;
-//        LocalToLocal(pParentW, x, y);
-//        mpBackingLayer->SetPosition(x, y);
-//        ///NGL_OUT("[SetDrawToLayer]Adding Layer %p (%s) to %p (%s)\n", mpBackingLayer, mpBackingLayer->GetObjectName().GetChars(), pParent, pParent->GetObjectName().GetChars());
-//        pParent->AddChild(mpBackingLayer);
-//      }
-//
-//      if (pTop == this)
-//      {
-//        nuiRenderThread* pRenderThread = GetRenderThread();
-//        if (pRenderThread)
-//        {
-//          pRenderThread->SetLayerTree(mpBackingLayer);
-//        }
-//      }
-//    }
   }
   else
   {
     if (mpBackingLayer)
     {
-//    nuiLayer* pParentLayer = (nuiLayer*)mpBackingLayer->GetParent();
-//    if (pParentLayer)
-//    {
-//      pParentLayer->DelChild(mpBackingLayer);
-//    }
-
       mpBackingLayer->Release();
     }
     mpBackingLayer = nullptr;
-
-//    if (pTop == this)
-//    {
-//      nuiRenderThread* pRenderThread = GetRenderThread();
-//      if (pRenderThread)
-//      {
-//        pRenderThread->SetLayerTree(nullptr);
-//      }
-//    }
   }
+}
+
+void nuiWidget::SetLayerPolicy(nuiDrawPolicy policy)
+{
+  if (GetLayerPolicy() == policy)
+    return;
+
+  InternalSetLayerPolicy(policy);
 
   mLayerPolicy = policy;
-    
+  
   if (GetTopLevel())
     InvalidateLayout();
+  
 }
 
 nuiDrawPolicy nuiWidget::GetLayerPolicy() const
