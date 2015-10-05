@@ -13,6 +13,6 @@ pthread_key_t nuiRefCount::key;
 void nuiRefCount::DumpInfos() const
 {
 #ifdef _NUI_DEBUG_OBJECTS_
-  nuiObject::DumpObjectInfos((nuiObject*)(void*)this);
+//  nuiObject::DumpObjectInfos((nuiObject*)(void*)this);
 #endif
 }

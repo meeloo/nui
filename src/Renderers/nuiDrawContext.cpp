@@ -40,7 +40,6 @@ nuiDrawContext::~nuiDrawContext()
   if (mpAATexture)
     mpAATexture->Release();
 
-  mpPainter->Release();
   mpPainter = NULL;
   mpMainPainter = NULL;
   mpSavedPainter = NULL;
@@ -1886,7 +1885,7 @@ void nuiDrawContext::SetSurface(nuiSurface* pSurface)
   {
     if (mpPainter != mpMainPainter)
     {
-      NGL_ASSERT(mpSavedPainter == NULL);
+      NGL_ASSERT(!mpSavedPainter);
       mpSavedPainter = mpPainter;
       mpPainter = mpMainPainter;
     }
@@ -1895,7 +1894,7 @@ void nuiDrawContext::SetSurface(nuiSurface* pSurface)
   else
   {
     mpPainter->SetSurface(NULL);
-    if (mpSavedPainter != NULL)
+    if (!mpSavedPainter)
     {
       mpPainter = mpSavedPainter;
       mpSavedPainter = NULL;

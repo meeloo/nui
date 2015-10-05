@@ -273,7 +273,7 @@ void nuiObject::SetProperty (const nglString& rName, const nglString& rValue)
   CheckValid();
 //  if (rName == _T("ToolTip") && GetObjectClass() == _T("HelpLabel"))
 //  {
-//    NGL_OUT(_T("nuiObject::SetProperty for 0x%x %s / %s = %s\n"), this, GetObjectClass().GetChars(), GetObjectName().GetChars(), rValue.GetChars());
+//    NGL_OUT(_T("nuiObject::SetProperty for %p %s / %s = %s\n"), this, GetObjectClass().GetChars(), GetObjectName().GetChars(), rValue.GetChars());
 //  }
 
   nuiAttribBase attrib(GetAttribute(rName));
@@ -662,15 +662,15 @@ void nuiObject::DumpObjectInfos(const nuiObject* pointer)
     std::map<nuiObject*, Trace>::const_iterator it = mObjects.find(const_cast<nuiObject*>(pointer));
     if (it == mObjects.end())
     {
-      str.CFormat("Operating on an invalid Object! 0x%x was never created.\n", pointer);
+      str.CFormat("Operating on an invalid Object! %p was never created.\n", pointer);
     }
     else if (!it->second.mAlive)
     {
-      str.CFormat("Operating on a deleted Object! 0x%x (%s - %s).\n", pointer, it->second.mClass.GetChars(), it->second.mName.GetChars());
+      str.CFormat("Operating on a deleted Object! %p (%s - %s).\n", pointer, it->second.mClass.GetChars(), it->second.mName.GetChars());
     }
     else
     {
-      str.CFormat("Valid Object! 0x%x (%s - %s).\n", pointer, it->second.mClass.GetChars(), it->second.mName.GetChars());
+      str.CFormat("Valid Object! %p (%s - %s).\n", pointer, it->second.mClass.GetChars(), it->second.mName.GetChars());
     }
   }
 
@@ -690,11 +690,11 @@ void nuiObject::CheckValidInternal() const
     std::map<nuiObject*, Trace>::const_iterator it = mObjects.find(const_cast<nuiObject*>(this));
     if (it == mObjects.end())
     {
-      str.CFormat("Operating on an invalid Object! 0x%x was never created.\n", this);
+      str.CFormat("Operating on an invalid Object! %p was never created.\n", this);
     }
     else if (!it->second.mAlive)
     {
-      str.CFormat("Operating on an invalid Object! 0x%x (%s - %s).\n", this, it->second.mClass.GetChars(), it->second.mName.GetChars());
+      str.CFormat("Operating on an invalid Object! %p (%s - %s).\n", this, it->second.mClass.GetChars(), it->second.mName.GetChars());
     }
     NGL_ASSERT(it != mObjects.end());
     const Trace& rTrace(it->second);

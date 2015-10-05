@@ -255,9 +255,9 @@ protected:
   nuiSize mClipOffsetY;
   bool mPermitAntialising;
 
-  nuiPainter* mpPainter;
-  nuiPainter* mpMainPainter;
-  nuiPainter* mpSavedPainter;
+  nuiRef<nuiPainter> mpPainter;
+  nuiRef<nuiPainter> mpMainPainter;
+  nuiRef<nuiPainter> mpSavedPainter;
   nuiTexture* mpAATexture;
   GLint mClipShapeValue;
   

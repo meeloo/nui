@@ -494,7 +494,6 @@ void nuiWidget::Init()
   mCanRespectConstraint = false; ///< By default the widgets don't care about the constraints imposed by their parents. Only few ones care about this.
   mNeedInvalidateOnSetRect = true;
   mDrawingInCache = false;
-  mpRenderCache = NULL;
 
   mTrashed = false;
   mDoneTrashed = false;
@@ -526,8 +525,6 @@ void nuiWidget::Init()
 
   mMinIdealWidth = mMaxIdealWidth = mMinIdealHeight = mMaxIdealHeight = -1.0f;
   mMinWidth = mMaxWidth = mMinHeight = mMaxHeight = -1.0f;
-
-  mpSavedPainter = NULL;
 
 	mEnabled = true;
   mSelected = false;
@@ -653,12 +650,6 @@ nuiWidget::~nuiWidget()
   if (mpFocusDecoration)
   {
     mpFocusDecoration->Release();
-  }
-
-  if (mpRenderCache)
-  {
-    mpRenderCache->Release();
-    mpRenderCache = nullptr;
   }
 
   if (mpMatrixNodes)
@@ -1253,23 +1244,17 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
   _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
   mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
   
-  if (mpRenderCache)
-  {
-    mpRenderCache->Release();
-    mpRenderCache = nullptr;
-  }
-  
   //    printf("nuiWidget::DrawWidget[%s][%s] -> SelfRendering\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
-  mpSavedPainter = pContext->GetPainter();
-  mpRenderCache = new nuiMetaPainter();
-  mpRenderCache->Reset(mpSavedPainter);
+  nuiRef<nuiPainter> pSavedPainter = pContext->GetPainter();
+  mpRenderCache = nuiNewRef<nuiMetaPainter>();
+  mpRenderCache->Reset(pSavedPainter);
   pContext->SetPainter(mpRenderCache);
   
   mDrawingInCache = true;
   
   InternalDrawWidget(pContext, _self, _self_and_decorations, false);
   
-  pContext->SetPainter(mpSavedPainter);
+  pContext->SetPainter(pSavedPainter);
   mNeedSelfRedraw = false;
   
   pRenderThread->SetWidgetContentsPainter(this, mpRenderCache); ///< Let the render thread know about this new painter
@@ -5006,20 +4991,7 @@ bool nuiWidget::DrawChildren(nuiDrawContext* pContext)
 void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 {
   CheckValid();
-//  {
-//    nuiPainter* pPainter = pContext->GetPainter();
-//
-//    pContext->SetPainter(nullptr);
-//    pChild->DrawWidget(pContext);
-//    pContext->SetPainter(pPainter);
-//
-//    nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
-//    if (pMetaPainter)
-//      pMetaPainter->DrawWidget(pContext, pChild);
-//
-//    return;
-//  }
-  
+
   if (mLayerPolicy == nuiDrawPolicyDrawSelf)
   {
     mpBackingLayer->AddChildWidget(pChild);
@@ -5041,29 +5013,6 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
   }
   nuiPainter* pPainter = pContext->GetPainter();
 
-#ifndef NUI_USE_RENDER_THREAD
-  if (mpSavedPainter)
-    pContext->SetPainter(mpSavedPainter);
-#endif
-
-//  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
-//    pContext->SetPainter(mpSavedPainter);
-//
-//  if (mLayerPolicy & nuiDrawPolicyDrawChildren)
-//  {
-//    nuiMetaPainter* pPainter = pChild->GetRenderCache();
-//    pPainter->ReDraw(pContext, nullptr, nullptr);
-//  }
-
-#ifndef NUI_USE_RENDER_THREAD
-  if (mpSavedPainter)
-    pContext->SetPainter(pPainter);
-#endif
-
-//  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
-//    pContext->SetPainter(pPainter);
-
-//  if (mLayerPolicy & nuiDrawPolicyDrawChildren)
   {
     nuiMetaPainter* pMetaPainter = dynamic_cast<nuiMetaPainter*>(pPainter);
     if (pMetaPainter)

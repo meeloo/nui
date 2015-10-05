@@ -224,52 +224,56 @@ T* nuiAutoRelease(T* pObj)
 
 
 template <class Pointee>
-class nuiRef
+class nuiNewRef
 {
 public:
-  nuiRef(Pointee* pPointer = nullptr)
+  nuiNewRef(Pointee* pPointer)
   {
     mpPointer = pPointer;
-    if (pPointer)
-      pPointer->Acquire();
   }
-  
-  nuiRef(const nuiRef<Pointee>& ref)
+
+  nuiNewRef()
   {
-    mpPointer = ref.mpPointer;
-    if (mpPointer)
-      mpPointer->Acquire();
+    mpPointer = new Pointee();
   }
-  
-  ~nuiRef()
+
+  template<typename T0>
+  nuiNewRef(T0 p0)
+  {
+    mpPointer = new Pointee(p0);
+  }
+
+  template<typename T0, typename T1>
+  nuiNewRef(T0 p0, T1 p1)
+  {
+    mpPointer = new Pointee(p0, p1);
+  }
+
+  template<typename T0, typename T1, typename T2>
+  nuiNewRef(T0 p0, T1 p1, T2 p2)
+  {
+    mpPointer = new Pointee(p0, p1, p2);
+  }
+
+  template<typename T0, typename T1, typename T2, typename T3>
+  nuiNewRef(T0 p0, T1 p1, T2 p2, T3 p3)
+  {
+    mpPointer = new Pointee(p0, p1, p2, p3);
+  }
+
+  template<typename T0, typename T1, typename T2, typename T3, typename T4>
+  nuiNewRef(T0 p0, T1 p1, T2 p2, T3 p3, T4 p4)
+  {
+    mpPointer = new Pointee(p0, p1, p2, p3, p4);
+  }
+
+  ~nuiNewRef()
   {
     if (mpPointer)
       mpPointer->Release();
     mpPointer = nullptr;
   }
   
-  nuiRef<Pointee>& operator = (const nuiRef& ref)
-  {
-    if (ref.mpPointer)
-      ref.mpPointer->Acquire();
-    if (mpPointer)
-      mpPointer->Release();
-    mpPointer = ref.mpPointer;
-    
-    return *this;
-  }
-  
-  nuiRef<Pointee>& operator = (Pointee* pPointer)
-  {
-    if (pPointer)
-      pPointer->Acquire();
-    if (mpPointer)
-      mpPointer->Release();
-    mpPointer = pPointer;
-    
-    return *this;
-  }
-
   operator bool() const
   {
     return mpPointer != nullptr;
@@ -280,7 +284,7 @@ public:
     return mpPointer == pPtr;
   }
   
-  bool operator==(const nuiRef<Pointee>& ref) const
+  bool operator==(const nuiNewRef<Pointee>& ref) const
   {
     return mpPointer == ref.mpPointer;
   }
@@ -305,6 +309,132 @@ public:
     return mpPointer;
   }
   
+
+private:
+  Pointee* mpPointer = nullptr;
+};
+
+template <class Pointee>
+class nuiRef
+{
+public:
+  nuiRef(Pointee* pPointer = nullptr)
+  {
+    mpPointer = pPointer;
+    if (pPointer)
+      pPointer->Acquire();
+  }
+
+  nuiRef(const nuiRef<Pointee>& ref)
+  {
+    mpPointer = ref.mpPointer;
+    if (mpPointer)
+      mpPointer->Acquire();
+  }
+
+  nuiRef(const nuiNewRef<Pointee>& ref)
+  {
+    mpPointer = ref.Ptr();
+    if (mpPointer)
+      mpPointer->Acquire();
+  }
+
+  ~nuiRef()
+  {
+    if (mpPointer)
+      mpPointer->Release();
+    mpPointer = nullptr;
+  }
+
+  nuiRef<Pointee>& operator = (const nuiRef& ref)
+  {
+    if (ref.mpPointer)
+      ref.mpPointer->Acquire();
+    if (mpPointer)
+      mpPointer->Release();
+    mpPointer = ref.mpPointer;
+
+    return *this;
+  }
+
+  nuiRef<Pointee>& operator = (const nuiNewRef<Pointee>& ref)
+  {
+    Pointee* pPtr = ref.Ptr();
+    if (pPtr)
+      pPtr->Acquire();
+    if (mpPointer)
+      mpPointer->Release();
+    mpPointer = pPtr;
+
+    return *this;
+  }
+  
+  nuiRef<Pointee>& operator = (Pointee* pPointer)
+  {
+    if (pPointer)
+      pPointer->Acquire();
+    if (mpPointer)
+      mpPointer->Release();
+    mpPointer = pPointer;
+
+    return *this;
+  }
+
+  operator bool() const
+  {
+    return mpPointer != nullptr;
+  }
+
+  bool operator==(Pointee* pPtr) const
+  {
+    return mpPointer == pPtr;
+  }
+
+  bool operator==(const nuiRef<Pointee>& ref) const
+  {
+    return mpPointer == ref.Ptr();
+  }
+
+  bool operator==(const nuiNewRef<Pointee>& ref) const
+  {
+    return mpPointer == ref.Ptr();
+  }
+
+  bool operator!=(Pointee* pPtr) const
+  {
+    return mpPointer != pPtr;
+  }
+
+  bool operator!=(const nuiRef<Pointee>& ref) const
+  {
+    return mpPointer != ref.Ptr();
+  }
+
+  bool operator!=(const nuiNewRef<Pointee>& ref) const
+  {
+    return mpPointer != ref.Ptr();
+  }
+  
+  operator Pointee* () const
+  {
+    return mpPointer;
+  }
+
+  Pointee* operator->() const
+  {
+    return mpPointer;
+  }
+
+  const Pointee& operator*() const
+  {
+    return *mpPointer;
+  }
+
+  Pointee* Ptr() const
+  {
+    return mpPointer;
+  }
+
 
 private:
   Pointee* mpPointer = nullptr;

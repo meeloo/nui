@@ -24,10 +24,10 @@ public:
   void SetRect(const nuiRect& rRect);
   //  void AddClipRect(const nuiRect& rRect);
   void Exit();
-  void SetWidgetContentsPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
-  void SetWidgetDrawPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
-  void SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
-  void SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
+  void SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter);
+  void SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter);
+  void SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter);
+  void SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter);
   void InvalidateLayerContents(nuiLayer* pLayer);
   void SetRootWidget(nuiWidget* pRoot);
   void RunTaskOnRenderThread(nuiTask* rTask, bool OnNextFrame);
@@ -46,10 +46,10 @@ private:
   nuiRect mRect;
   std::vector<nuiRect> mPartialRects;
   nuiWidget* mpRoot = nullptr;
-  std::map<nuiWidget*, nuiMetaPainter*> mWidgetContentsPainters;
-  std::map<nuiWidget*, nuiMetaPainter*> mWidgetDrawPainters;
-  std::map<nuiLayer*, nuiMetaPainter*> mLayerContentsPainters;
-  std::map<nuiLayer*, nuiMetaPainter*> mLayerDrawPainters;
+  std::map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetContentsPainters;
+  std::map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetDrawPainters;
+  std::map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerContentsPainters;
+  std::map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerDrawPainters;
   std::set<nuiLayer*> mDirtyLayers;
   nglContext* mpContext = nullptr;
   nuiDrawContext* mpDrawContext = nullptr;
@@ -61,14 +61,14 @@ private:
   void _StartRendering(uint32 x, uint32 y);
   void _SetRect(const nuiRect& rRect);
   void _Exit();
-  void _SetWidgetContentsPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
-  void _SetWidgetDrawPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter);
-  void _SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
-  void _SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter);
+  void _SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter);
+  void _SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter);
+  void _SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter);
+  void _SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter);
   void _InvalidateLayerContents(nuiLayer* pLayer);
   void _SetRootWidget(nuiWidget* pWidget);
   void _SetLayerTree(nuiLayer* pRoot);
-  void _RenderFrame(nuiMetaPainter* pFrame);
+  void _RenderFrame(const nuiRef<nuiMetaPainter>& pFrame);
 
 
   virtual void OnStart();

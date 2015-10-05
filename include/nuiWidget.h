@@ -33,8 +33,6 @@ class nuiTopLevel;
 
 class nuiAnimation;
 
-class nuiPainter;
- 
 class nuiRectAttributeAnimation;
 
 class nuiMatrixNode;
@@ -772,8 +770,6 @@ protected:
 
   std::map<nuiWidgetElement, nuiColor> mWidgetElementColors;
 
-  nuiPainter* mpSavedPainter;
-
   LayoutConstraint mConstraint;
 
   void ApplyCSSForStateChange(uint32 MatchersTag); ///< This method will match this widget's state with the CSS and apply the changes needed to display it correctly
@@ -838,7 +834,7 @@ protected:
   void InitDefaultValues();
   void Init(); ///< Initialise the basic parameters of the class.
 
-  nuiMetaPainter* mpRenderCache;
+  nuiRef<nuiMetaPainter> mpRenderCache;
   bool mRenderCacheIsEmpty = true;
 
   uint32 mDebugLevel;

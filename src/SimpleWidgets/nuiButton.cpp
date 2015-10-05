@@ -62,7 +62,7 @@ nuiButton::nuiButton(const nglString& rText)
   nuiLabel* pLabel = new nuiLabel(rText);
   AddChild(pLabel);
   pLabel->SetPosition(nuiCenter);
-//  SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerPolicy(nuiDrawPolicyDrawTree);
   SetRedrawOnHover(false);
   EnableInteractiveDecoration(true);
   
@@ -97,7 +97,7 @@ nuiButton::nuiButton(const nglImage& rImage)
   nuiImage* pImage = new nuiImage(rImage);
   AddChild(pImage);
   pImage->SetPosition(nuiCenter);
-//  SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerPolicy(nuiDrawPolicyDrawTree);
 
   SetBorders(mDefaultBorders);
   SetWantKeyboardFocus(true);

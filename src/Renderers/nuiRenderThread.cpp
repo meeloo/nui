@@ -81,21 +81,19 @@ void nuiRenderThread::Exit()
   Post(nuiMakeTask(this, &nuiRenderThread::_Exit));
 }
 
-void nuiRenderThread::SetWidgetDrawPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
+void nuiRenderThread::SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
-  if (pPainter)
-    pPainter->Acquire();
   Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetDrawPainter, pWidget, pPainter));
 }
 
-void nuiRenderThread::SetWidgetContentsPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
+void nuiRenderThread::SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
   if (pPainter)
     pPainter->Acquire();
   Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetContentsPainter, pWidget, pPainter));
 }
 
-void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
+void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
 //  NGL_OUT("SetLayerDrawPainter %p (%p %d)\n", pLayer, pPainter, pPainter->GetRefCount());
 //  pPainter->nuiRefCount::SetTrace(true);
@@ -104,7 +102,7 @@ void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPai
   Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDrawPainter, pLayer, pPainter));
 }
 
-void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
+void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
 //  NGL_OUT("SetLayerContentsPainter %p -> %p\n", pLayer, pPainter);
   if (pPainter)
@@ -158,7 +156,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     return;
   }
   
-  nuiMetaPainter* pRootPainter = it->second;
+  nuiRef<nuiMetaPainter> pRootPainter = it->second;
   if (pRootPainter == nullptr)
   {
     RenderingDone(false);
@@ -192,7 +190,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   int count = 0;
   for (auto elem : mLayerContentsPainters)
   {
-    nuiMetaPainter* pPainter = elem.second;
+    nuiRef<nuiMetaPainter> pPainter = elem.second;
     auto surfaces(pPainter->GetSurfaces());
     for (auto surface : surfaces)
     {
@@ -246,13 +244,13 @@ void nuiRenderThread::_Exit()
   mContinue = false;
 }
 
-void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
+void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
 //  NGL_OUT("_SetWidgetDrawPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pPainter);
   auto it = mWidgetDrawPainters.find(pWidget);
   if (it != mWidgetDrawPainters.end())
   {
-    nuiMetaPainter* pOld = it->second;
+    nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
 
     mpContext->GetLock().Lock();
@@ -275,13 +273,13 @@ void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiMetaPainter* 
   }
 }
 
-void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiMetaPainter* pPainter)
+void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
   //  NGL_OUT("_SetWidgetContentsPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pPainter);
   auto it = mWidgetContentsPainters.find(pWidget);
   if (it != mWidgetContentsPainters.end())
   {
-    nuiMetaPainter* pOld = it->second;
+    nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
     
     mpContext->GetLock().Lock();
@@ -304,13 +302,13 @@ void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiMetaPaint
   }
 }
 
-void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
+void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
 //  NGL_OUT("_SetLayerDrawPainter %p (%p)\n", pLayer, pPainter);
   auto it = mLayerDrawPainters.find(pLayer);
   if (it != mLayerDrawPainters.end())
   {
-    nuiMetaPainter* pOld = it->second;
+    nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
     
     mpContext->GetLock().Lock();
@@ -334,13 +332,13 @@ void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiMetaPainter* pPa
   }
 }
 
-void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiMetaPainter* pPainter)
+void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
 //  NGL_OUT("_SetLayerContentsPainter %p (%p - %d)\n", pLayer, pPainter, SetLayerContentsPainterCounter);
   auto it = mLayerContentsPainters.find(pLayer);
   if (it != mLayerContentsPainters.end())
   {
-    nuiMetaPainter* pOld = it->second;
+    nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
 //    NGL_OUT("                   %p replaces %p\n", pPainter, pOld);
 
@@ -402,7 +400,7 @@ void nuiRenderThread::DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pK
 {
   mWidgetIndentation++;
 
-  nuiMetaPainter* pPainter = nullptr;
+  nuiRef<nuiMetaPainter> pPainter = nullptr;
   auto it = mWidgetContentsPainters.find(pKey);
   if (it != mWidgetContentsPainters.end())
     pPainter = it->second;
@@ -444,7 +442,7 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
   auto it = mLayerContentsPainters.find(pKey);
   if (it != mLayerContentsPainters.end())
   {
-    nuiMetaPainter* pPainter = it->second;
+    nuiRef<nuiMetaPainter> pPainter = it->second;
 //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
     
@@ -467,7 +465,7 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
 {
   mWidgetIndentation++;
   
-  nuiMetaPainter* pPainter = nullptr;
+  nuiRef<nuiMetaPainter> pPainter = nullptr;
   auto it = mWidgetDrawPainters.find(pKey);
   if (it != mWidgetDrawPainters.end())
     pPainter = it->second;
@@ -508,7 +506,7 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
   auto it = mLayerDrawPainters.find(pKey);
   if (it != mLayerDrawPainters.end())
   {
-    nuiMetaPainter* pPainter = it->second;
+    nuiRef<nuiMetaPainter> pPainter = it->second;
     //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
     

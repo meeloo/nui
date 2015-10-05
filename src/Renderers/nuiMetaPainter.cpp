@@ -25,6 +25,7 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
 
   Count++;
 //  printf("[NEW] MetaPainter Count: %lld\n", Count);
+  SetTrace(true);
 #ifdef _DEBUG_
   mpDebugObjectRef = NULL;
 #endif
@@ -588,7 +589,7 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
             rDrawWidgetDelegate(pContext, pWidget);
           else
           {
-            nuiMetaPainter* pPainter = pWidget->GetRenderCache();
+            nuiRef<nuiMetaPainter> pPainter = pWidget->GetRenderCache();
             pPainter->ReDraw(pContext, rDrawWidgetDelegate, rDrawLayerDelegate);
           }
         }

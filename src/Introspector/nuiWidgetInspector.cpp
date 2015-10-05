@@ -224,7 +224,8 @@ class nuiWidgetProxy : public nuiWidget
       if (mpTarget)
       {
         nuiMetaPainter* pPainter = mpTarget->GetRenderCache();
-        pPainter->ReDraw(pContext, nullptr, nullptr);
+        if (pPainter)
+          pPainter->ReDraw(pContext, nullptr, nullptr);
       }
       else
       {

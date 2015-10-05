@@ -46,7 +46,7 @@ private:
   nuiColor mClearColor;
 
   nuiSurface* mpSurface = nullptr;
-  bool UpdateSurface();
+  bool UpdateSurface(nuiRenderThread* pRenderThread);
   bool mSurfaceChanged = false;
   
   bool mDraw = true;
@@ -58,8 +58,7 @@ private:
   nuiWidget* mpWidgetContents = nullptr;
   DrawContentsDelegate mDrawContentsDelegate;
 
-  nuiMetaPainter* mpContentsPainter = nullptr; ///< This containts the rendering instructions to update the contents of this layer
-  nuiMetaPainter* mpDrawPainter = nullptr; ///< This containts the rendering instructions to display the contents of this layer
+  nuiRef<nuiMetaPainter> mpDrawPainter; ///< This containts the rendering instructions to display the contents of this layer
   
   friend class nuiWidget;
   std::vector<nuiWidget*> mChildWidgets;

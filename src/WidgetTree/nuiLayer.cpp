@@ -153,15 +153,11 @@ void nuiLayer::SetContents(const DrawContentsDelegate& rDelegate)
   mDrawContentsDelegate = rDelegate;
 }
 
-bool nuiLayer::UpdateSurface()
+bool nuiLayer::UpdateSurface(nuiRenderThread* pRenderThread)
 {
   if (!mDraw)
   {
-    if (mpContentsPainter)
-    {
-      mpContentsPainter->Release();
-      mpContentsPainter = nullptr;
-    }
+    pRenderThread->SetLayerContentsPainter(this, nullptr);
   }
   
   
@@ -228,24 +224,19 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
   mDraw = !ShouldSkipRendering;
 //  mDraw = true;
   
-  UpdateSurface();
+  UpdateSurface(pRenderThread);
   if (mSurfaceChanged)
   { // Surface has changed
     mSurfaceChanged = false;
 
-    if (mpContentsPainter)
-    {
-      mpContentsPainter->Release();
-      mpContentsPainter = nullptr;
-    }
-    mpContentsPainter = new nuiMetaPainter();
+    nuiRef<nuiMetaPainter> pContentsPainter = nuiNewRef<nuiMetaPainter>();
     nuiPainter* oldpainter = pContext->GetPainter();
     
-    pContext->SetPainter(mpContentsPainter);
+    pContext->SetPainter(pContentsPainter);
     
     nglString name;
     name.CFormat("layer contents %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
-    mpContentsPainter->SetName(name);
+    pContentsPainter->SetName(name);
 
 
     pContext->ResetState();
@@ -253,7 +244,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     pContext->ResetClipRect();
 
     if (mpSurface)
-      mpContentsPainter->SetSurface(mpSurface);
+      pContentsPainter->SetSurface(mpSurface);
 
 
     if (mOffsetX != 0 || mOffsetY != 0)
@@ -265,7 +256,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     {
       pContext->SetClearColor(mClearColor);
       pContext->Clear();
-      mpContentsPainter->DrawWidget(pContext, mpWidgetContents);
+      pContentsPainter->DrawWidget(pContext, mpWidgetContents);
 //      pContext->SetStrokeColor(nuiColor(0, 0, 255, 128));
 //      pContext->EnableTexturing(false);
 //      pContext->DrawRect(nuiRect(GetWidth(), GetHeight()), eStrokeShape);
@@ -281,14 +272,15 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
 
     if (mpSurface)
-      mpContentsPainter->SetSurface(nullptr);
+      pContentsPainter->SetSurface(nullptr);
     if (mOffsetX != 0 || mOffsetY != 0)
     {
       pContext->Translate(mOffsetX, mOffsetY);
     }
     pContext->SetPainter(oldpainter);
 
-    pRenderThread->SetLayerContentsPainter(this, mpContentsPainter);
+    pRenderThread->SetLayerContentsPainter(this, pContentsPainter);
+    pContentsPainter->Release();
   }
   else
   {
@@ -302,14 +294,9 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //  NGL_OUT("nuiLayer::UpdateDraw %p\n", this);
   CheckValid();
 
-  UpdateSurface();
+  UpdateSurface(pRenderThread);
 
-  if (mpDrawPainter)
-  {
-    mpDrawPainter->Release();
-    mpDrawPainter = nullptr;
-  }
-  mpDrawPainter = new nuiMetaPainter();
+  mpDrawPainter = nuiNewRef<nuiMetaPainter>();
   nglString name;
   name.CFormat("layer draw %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
   mpDrawPainter->SetName(name);
