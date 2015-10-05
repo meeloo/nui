@@ -94,6 +94,8 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
 
 nuiLayer::~nuiLayer()
 {
+  nuiRenderThread::DestroyLayer(this);
+
   if (mpSurface)
     mpSurface->Release();
   mpSurface = nullptr;

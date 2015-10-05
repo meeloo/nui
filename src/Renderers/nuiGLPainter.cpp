@@ -1166,7 +1166,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     else
     {
       // Vertex color off -> Difuse Color
-      if (pArray->IsArrayEnabled(nuiRenderArray::eTexCoord))
+      if (pArray->IsArrayEnabled(nuiRenderArray::eTexCoord) && mpState->mpTexture[0])
       {
         // texture on
         if (mpState->mpTexture[0]->GetPixelFormat() == eImagePixelAlpha)
