@@ -37,6 +37,14 @@ public:
   nuiDrawContext* GetDrawContext() const;
   nglContext* GetContext() const;
 
+  void DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pKey);
+  void DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey);
+  void DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey);
+  void DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey);
+
+  static void DestroyWidget(nuiWidget* pWidget);
+  static void DestroyLayer(nuiLayer* pLayer);
+
 private:
   void Post(nuiTask* pTask);
     
@@ -70,18 +78,15 @@ private:
   void _SetLayerTree(nuiLayer* pRoot);
   void _RenderFrame(const nuiRef<nuiMetaPainter>& pFrame);
 
-
   virtual void OnStart();
 
   void RenderingDone(bool result);
 
-public:
-  void DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pKey);
-  void DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey);
-  void DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey);
-  void DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey);
-
-
   nglAtomic mRenderingTicks=0;
   int mWidgetIndentation = 0;
+
+
+  static nglCriticalSection ThreadsCS;
+  static std::set<nuiRenderThread*> mThreads;
+
 };

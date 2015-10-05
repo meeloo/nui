@@ -24,8 +24,8 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
   mLastSize = -1;
 
   Count++;
-//  printf("[NEW] MetaPainter Count: %lld\n", Count);
-  SetTrace(true);
+  printf("[NEW] MetaPainter Count: %lld\n", Count);
+//  SetTrace(true);
 #ifdef _DEBUG_
   mpDebugObjectRef = NULL;
 #endif
@@ -35,7 +35,7 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
 nuiMetaPainter::~nuiMetaPainter()
 {
   Count--;
-//  printf("[DEL] MetaPainter Count: %lld\n", Count);
+  printf("[DEL] MetaPainter Count: %lld\n", Count);
 
   Reset(NULL);
 }

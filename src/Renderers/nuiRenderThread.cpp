@@ -15,14 +15,20 @@
 
 #define NUI_ENABLE_THREADED_RENDERING 1
 
+std::set<nuiRenderThread*> nuiRenderThread::mThreads;
+nglCriticalSection nuiRenderThread::ThreadsCS;
+
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
 : mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
 {
+  nglCriticalSectionGuard g(ThreadsCS);
+  mThreads.insert(this);
 }
 
 nuiRenderThread::~nuiRenderThread()
 {
-
+  nglCriticalSectionGuard g(ThreadsCS);
+  mThreads.erase(this);
 }
 
 void nuiRenderThread::Post(nuiTask* pTask)
@@ -79,6 +85,28 @@ void nuiRenderThread::SetRect(const nuiRect& rRect)
 void nuiRenderThread::Exit()
 {
   Post(nuiMakeTask(this, &nuiRenderThread::_Exit));
+}
+
+void nuiRenderThread::DestroyWidget(nuiWidget* pWidget)
+{
+  nglCriticalSectionGuard g(ThreadsCS);
+
+  for (auto it : mThreads)
+  {
+    it->SetWidgetContentsPainter(pWidget, nullptr);
+    it->SetWidgetDrawPainter(pWidget, nullptr);
+  }
+}
+
+void nuiRenderThread::DestroyLayer(nuiLayer* pLayer)
+{
+  nglCriticalSectionGuard g(ThreadsCS);
+
+  for (auto it : mThreads)
+  {
+    it->SetLayerContentsPainter(pLayer, nullptr);
+    it->SetLayerDrawPainter(pLayer, nullptr);
+  }
 }
 
 void nuiRenderThread::SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
@@ -250,12 +278,10 @@ void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPa
   auto it = mWidgetDrawPainters.find(pWidget);
   if (it != mWidgetDrawPainters.end())
   {
+    mpContext->GetLock().Lock();
+
     nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
-
-    mpContext->GetLock().Lock();
-    pOld->Release();
-    mpContext->GetLock().Unlock();
 
     if (pPainter)
     {
@@ -265,6 +291,8 @@ void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPa
     {
       mWidgetDrawPainters.erase(it);
     }
+
+    mpContext->GetLock().Unlock();
     return;
   }
   else if (pPainter)
@@ -279,13 +307,11 @@ void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMe
   auto it = mWidgetContentsPainters.find(pWidget);
   if (it != mWidgetContentsPainters.end())
   {
+    mpContext->GetLock().Lock();
     nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
     
-    mpContext->GetLock().Lock();
-    pOld->Release();
-    mpContext->GetLock().Unlock();
-    
+
     if (pPainter)
     {
       it->second = pPainter;
@@ -294,6 +320,8 @@ void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMe
     {
       mWidgetContentsPainters.erase(it);
     }
+
+    mpContext->GetLock().Unlock();
     return;
   }
   else if (pPainter)
@@ -308,14 +336,12 @@ void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPaint
   auto it = mLayerDrawPainters.find(pLayer);
   if (it != mLayerDrawPainters.end())
   {
+    mpContext->GetLock().Lock();
     nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
     
-    mpContext->GetLock().Lock();
 //    NGL_OUT("                   %p replaces %p\n", pPainter, pOld);
-    pOld->Release();
-    mpContext->GetLock().Unlock();
-    
+
     if (pPainter)
     {
       it->second = pPainter;
@@ -324,6 +350,7 @@ void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPaint
     {
       mLayerDrawPainters.erase(it);
     }
+    mpContext->GetLock().Unlock();
     return;
   }
   else if (pPainter)
@@ -338,15 +365,14 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaP
   auto it = mLayerContentsPainters.find(pLayer);
   if (it != mLayerContentsPainters.end())
   {
+    mpContext->GetLock().Lock();
+
     nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
 //    NGL_OUT("                   %p replaces %p\n", pPainter, pOld);
 
-    mpContext->GetLock().Lock();
-    if (!pOld->Release())
+    if (pOld->GetRefCount() == 1)
       it->second = nullptr;
-
-    mpContext->GetLock().Unlock();
 
     if (pPainter)
     {
@@ -358,6 +384,7 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaP
       mLayerContentsPainters.erase(it);
       mDirtyLayers.erase(pLayer);
     }
+    mpContext->GetLock().Unlock();
     return;
   }
   else if (pPainter)

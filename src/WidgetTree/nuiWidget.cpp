@@ -679,6 +679,8 @@ nuiWidget::~nuiWidget()
 
   if (mpBackingLayer)
     mpBackingLayer->Release();
+
+  nuiRenderThread::DestroyWidget(this);
 }
 
 void nuiWidget::Built()
