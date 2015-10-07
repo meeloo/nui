@@ -1924,6 +1924,7 @@ void nuiGLPainter::_DestroySurface(nuiSurface* pSurface)
 void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
 {
   //NGL_OUT("nuiGLPainter::CreateSurface %p\n", pSurface);
+  char* tmp = nullptr;
   
   GLint DefaultFrameBuffer = 0;
   GLint DefaultRenderBuffer = 0;
@@ -2007,9 +2008,13 @@ void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     nuiCheckForGLErrors();
-    char* tmp = (char*)malloc(width * height * 4);
+    
+    NGL_ASSERT(width > 0);
+    NGL_ASSERT(height > 0);
+    
+    tmp = (char*)malloc(width * height * 4);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-    free(tmp);
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     nuiCheckForGLErrors();
     glBindTexture(GL_TEXTURE_2D, 0);
     nuiCheckForGLErrors();
@@ -2232,6 +2237,9 @@ void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
 #ifdef NGL_DEBUG
   CheckFramebufferStatus();
 #endif
+
+  if (tmp)
+    free(tmp);
 
 }
 

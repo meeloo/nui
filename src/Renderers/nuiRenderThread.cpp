@@ -116,8 +116,6 @@ void nuiRenderThread::SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPai
 
 void nuiRenderThread::SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
-  if (pPainter)
-    pPainter->Acquire();
   Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetContentsPainter, pWidget, pPainter));
 }
 
@@ -125,16 +123,12 @@ void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainte
 {
 //  NGL_OUT("SetLayerDrawPainter %p (%p %d)\n", pLayer, pPainter, pPainter->GetRefCount());
 //  pPainter->nuiRefCount::SetTrace(true);
-  if (pPainter)
-    pPainter->Acquire();
   Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDrawPainter, pLayer, pPainter));
 }
 
 void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
 //  NGL_OUT("SetLayerContentsPainter %p -> %p\n", pLayer, pPainter);
-  if (pPainter)
-    pPainter->Acquire();
   nuiTask* task = nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter);
 
   Post(task);

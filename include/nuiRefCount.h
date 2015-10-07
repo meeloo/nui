@@ -43,14 +43,14 @@ public:
 
     if (mTrace)
     {
-      NGL_OUT(_T("Release object %p (%d)\n"), this, val);
+      NGL_OUT(_T("Release object %p (%d - %d)\n"), this, val, mRefCount);
     }
 
     if (val == 0)
     {
       if (mTrace)
       {
-        NGL_OUT(_T("Delete object %p\n"), this);
+        NGL_OUT(_T("Delete object %p %d\n"), this, mRefCount);
       }
       
       
@@ -59,7 +59,7 @@ public:
       if (mTrace)
       {
         DumpInfos();
-        NGL_OUT("delete ref counted object: %p %s / %d\n", this, typeid(this).name(), typeid(this).hash_code());
+        NGL_OUT("delete ref counted object: %p %s / %d / %d\n", this, typeid(this).name(), typeid(this).hash_code(), mRefCount);
       }
 
       delete this;
@@ -146,7 +146,7 @@ protected:
   {
 //    static int64 refDeleted = 1;
 //    printf("REF DELETED\t[%lld]\n", refDeleted++);
-    NGL_ASSERT(ngl_atomic_read(mRefCount) == 0);
+//    NGL_ASSERT(ngl_atomic_read(mRefCount) == 0);
   }
   
 private:

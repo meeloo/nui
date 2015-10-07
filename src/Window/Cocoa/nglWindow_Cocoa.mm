@@ -373,6 +373,12 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   [super dealloc];
 }
 
+- (void) clearWindow
+{
+  mpNGLWindow = nullptr;
+  mpDropObject = nullptr;
+}
+
 - (void)mouseDown:(NSEvent *)theEvent
 {
   nglMouseInfo info;
@@ -1199,6 +1205,7 @@ nglWindow::~nglWindow()
 {
   CallOnDestruction();
   ReleaseTimer();
+  [(id)mpNSWindow clearWindow];
   [(id)mpNSWindow release];
   Unregister();
 }

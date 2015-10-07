@@ -282,7 +282,6 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     pContext->SetPainter(oldpainter);
 
     pRenderThread->SetLayerContentsPainter(this, pContentsPainter);
-    pContentsPainter->Release();
   }
   else
   {
