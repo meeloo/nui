@@ -2395,6 +2395,7 @@ void nuiWidget::SetVisibleRect(const nuiRect& rRect)
   if (mVisibleRect == rRect)
     return;
   
+//  NGL_OUT("New visible rect for %p %s / %s -> %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars(), rRect.GetValue().GetChars());
   mVisibleRect = rRect;
   mOverrideVisibleRect = true;
   Invalidate();

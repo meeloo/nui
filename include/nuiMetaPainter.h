@@ -186,6 +186,7 @@ protected:
   
 //  virtual void OnAcquired() const;
 //  virtual void OnReleased() const;
+    int32 mClippingDepth = 0;
 };
 
 #endif // __nuiMetaPainter_h__

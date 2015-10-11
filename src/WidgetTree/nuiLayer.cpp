@@ -212,7 +212,7 @@ bool nuiLayer::UpdateSurface(nuiRenderThread* pRenderThread)
       NGL_ASSERT(mpSurface == nullptr);
       mpSurface = nuiSurface::CreateSurface(name, ToNearest(mWidth), ToNearest(mHeight));
   //    mpSurface->SetTrace(true);
-//      NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f)\n", this, GetWidth(), GetHeight());
+//      NGL_OUT("Recreate Surface for layer %p (size requested: %f x %f) (src = %s)\n", this, GetWidth(), GetHeight(), mpWidgetContents->GetObjectClass().GetChars());
       mSurfaceChanged = true;
       return true;
     }
@@ -316,6 +316,8 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   pContext->PushMatrix();
   pContext->MultMatrix(Matrix);
 
+  nuiRect dst;
+  
   if (mDraw)
   {
     nuiTexture* pTex = nullptr;
@@ -334,7 +336,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     //  pTex = nuiTexture::GetTexture("ButtonUp");
     
     nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
-    nuiRect dst = src;
+    dst = src;
     dst.Move(mOffsetX, mOffsetY);
 
     pContext->SetTexture(pTex);
@@ -361,22 +363,32 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //            mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
 //            mpWidgetContents->GetRect().Left(), mpWidgetContents->GetRect().Top(),
 //            mpWidgetContents->GetRect().GetWidth(), mpWidgetContents->GetRect().GetHeight());
+    
     if (mpWidgetContents->GetLayerPolicy() == nuiDrawPolicyDrawSelf)
     {
-      for (auto widget : mChildWidgets)
+      if (!mChildWidgets.empty())
       {
-        mpDrawPainter->PushMatrix();
-        nuiMatrix m;
-        nuiRect r = widget->GetRect();
-        m.SetTranslation(r.Left(), r.Top(), 0);
-        mpDrawPainter->MultMatrix(m);
-        mpDrawPainter->DrawWidget(pContext, widget);
-        mpDrawPainter->PopMatrix();
+        mpDrawPainter->PushClipping();
+        nuiRect clp(mpWidgetContents->GetRect().Size());
+        clp.Move(mOffsetX, mOffsetY);
+        mpDrawPainter->Clip(clp);
+        
+        for (auto widget : mChildWidgets)
+        {
+          mpDrawPainter->PushMatrix();
+          nuiMatrix m;
+          nuiRect r = widget->GetRect();
+          m.SetTranslation(r.Left(), r.Top(), 0);
+          mpDrawPainter->MultMatrix(m);
+          mpDrawPainter->DrawWidget(pContext, widget);
+          mpDrawPainter->PopMatrix();
 //          NGL_OUT("draw subwidget of [%p %s] -> [%p %s] ( (%f, %f) / (%f x %f))\n",
 //                  mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
 //                  widget, widget->GetObjectClass().GetChars(),
 //                  widget->GetRect().Left(), widget->GetRect().Top(),
 //                  widget->GetRect().GetWidth(), widget->GetRect().GetHeight());
+        }
+        mpDrawPainter->PopClipping();
       }
     }
   }

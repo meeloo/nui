@@ -403,6 +403,7 @@ void nuiMetaPainter::PushClipping()
   StoreOpCode(ePushClipping);
 
   nuiPainter::PushClipping();
+  mClippingDepth++;
 }
 
 void nuiMetaPainter::PopClipping()
@@ -410,6 +411,7 @@ void nuiMetaPainter::PopClipping()
   StoreOpCode(ePopClipping);
 
   nuiPainter::PopClipping();
+  mClippingDepth--;
 }
 
 void nuiMetaPainter::Clip(const nuiRect& rRect)
@@ -449,6 +451,7 @@ void nuiMetaPainter::AddBreakPoint()
 
 void nuiMetaPainter::ReDraw(nuiDrawContext* pContext, const DrawWidgetDelegate& rDrawWidgetDelegate, const DrawLayerDelegate& rDrawLayerDelegate)
 {
+  NGL_ASSERT(!mClippingDepth);
   PartialReDraw(pContext, 0, mNbOperations, rDrawWidgetDelegate, rDrawLayerDelegate);
 }
 
@@ -805,17 +808,19 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
     case eDrawWidget:
       {
         nuiWidget* pS = (nuiWidget*)FetchPointer();
-        nglString clss(pS->GetObjectClass());
-        nglString name(pS->GetObjectName());
-        str.CFormat(_T("DrawWidget 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
+//        nglString clss(pS->GetObjectClass());
+//        nglString name(pS->GetObjectName());
+//        str.CFormat(_T("DrawWidget 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
+        str.CFormat(_T("DrawWidget %p"), pS);
       }
       break;
     case eDrawLayer:
       {
         nuiLayer* pS = (nuiLayer*)FetchPointer();
-        nglString clss(pS->GetObjectClass());
-        nglString name(pS->GetObjectName());
-        str.CFormat(_T("DrawLayer 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
+//        nglString clss(pS->GetObjectClass());
+//        nglString name(pS->GetObjectName());
+//        str.CFormat(_T("DrawLayer 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
+        str.CFormat(_T("DrawLayer %p"), pS);
       }
       break;
     case eSetSurface:
@@ -823,9 +828,9 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         nuiSurface* pS = (nuiSurface*)FetchPointer();
         if (pS)
         {
-          nglString clss(pS->GetObjectClass());
-          nglString name(pS->GetObjectName());
-          str.CFormat("SetSurface 0x%x / '%s - %s'", pS, clss.GetChars(), name.GetChars());
+//          nglString clss(pS->GetObjectClass());
+//          nglString name(pS->GetObjectName());
+          str.CFormat("SetSurface %p", pS);
         }
         else
         {

@@ -166,7 +166,7 @@ void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVert
   ActivateMobileMode();
   //#endif
   
-  SetLayerPolicy(nuiDrawPolicyDrawSelf);
+//  SetLayerPolicy(nuiDrawPolicyDrawSelf);
 }
 
 bool nuiScrollView::GetEnableHorizontalScroll() const
