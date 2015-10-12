@@ -64,5 +64,7 @@ private:
   std::vector<nuiWidget*> mChildWidgets;
   void AddChildWidget(nuiWidget* pWidget);
   void ResetChildWidgets();
+  
+  bool mClipContents = true;
 };
 

@@ -162,7 +162,7 @@ bool nuiLayer::UpdateSurface(nuiRenderThread* pRenderThread)
     pRenderThread->SetLayerContentsPainter(this, nullptr);
   }
   
-  
+  bool needRedraw = false;
   int w = ToAbove(mWidth), h = ToAbove(mHeight);
   if (mpTextureContents)
   {
@@ -175,6 +175,10 @@ bool nuiLayer::UpdateSurface(nuiRenderThread* pRenderThread)
     nuiRect overdraw = mpWidgetContents->GetVisibleRect();
     w = ToAbove(overdraw.GetWidth());
     h = ToAbove(overdraw.GetHeight());
+    if (mOffsetX != overdraw.Left() || mOffsetY != overdraw.Top())
+    {
+        needRedraw = true;
+    }
     mOffsetX = overdraw.Left();
     mOffsetY = overdraw.Top();
   }
@@ -217,7 +221,9 @@ bool nuiLayer::UpdateSurface(nuiRenderThread* pRenderThread)
       return true;
     }
   }
-  return false;
+    
+  mSurfaceChanged = needRedraw;
+  return mSurfaceChanged;
 }
 
 void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering)
@@ -248,10 +254,14 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     if (mpSurface)
       pContentsPainter->SetSurface(mpSurface);
 
+    float offsetX = mOffsetX;
+    float offsetY = mOffsetY;
+//    float offsetX = mOffsetX + (mpWidgetContents ? -mpWidgetContents->GetRect().Left() : 0);
+//    float offsetY = mOffsetY + (mpWidgetContents ? -mpWidgetContents->GetRect().Top() : 0);
 
-    if (mOffsetX != 0 || mOffsetY != 0)
+    if (offsetX != 0 || offsetY != 0)
     {
-      pContext->Translate(-mOffsetX, -mOffsetY);
+      pContext->Translate(-offsetX, -offsetY);
     }
     
     if (mpWidgetContents)
@@ -275,9 +285,10 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
 
     if (mpSurface)
       pContentsPainter->SetSurface(nullptr);
-    if (mOffsetX != 0 || mOffsetY != 0)
+
+    if (offsetX != 0 || offsetY != 0)
     {
-      pContext->Translate(mOffsetX, mOffsetY);
+      pContext->Translate(offsetX, offsetY);
     }
     pContext->SetPainter(oldpainter);
 
@@ -307,10 +318,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   nuiPainter* pPainter = pContext->GetPainter();
 
   pContext->SetPainter(mpDrawPainter);
-//  pContext->ResetState();
-//  pContext->ResetClipRect();
 
-  //  dst.Move(-GetPivot()[0], -GetPivot()[1]);
   nuiMatrix Matrix;
   GetMatrix(Matrix);
   pContext->PushMatrix();
@@ -333,7 +341,6 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     NGL_ASSERT(pTex);
     NGL_ASSERT(pTex->GetWidth() > 0);
     NGL_ASSERT(pTex->GetHeight() > 0);
-    //  pTex = nuiTexture::GetTexture("ButtonUp");
     
     nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
     dst = src;
@@ -370,7 +377,8 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
       {
         mpDrawPainter->PushClipping();
         nuiRect clp(mpWidgetContents->GetRect().Size());
-        clp.Move(mOffsetX, mOffsetY);
+        mpDrawPainter->EnableClipping(mClipContents);
+//        clp.Move(mOffsetX, mOffsetY);
         mpDrawPainter->Clip(clp);
         
         for (auto widget : mChildWidgets)

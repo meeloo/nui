@@ -147,7 +147,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  int test = 0;
+  int test = 5;
   switch (test)
   {
   case 0:
@@ -320,7 +320,22 @@ void MainWindow::OnCreation()
         pSplitter->AddChild(pButton);
         pSplitter->AddChild(pInspector);
       } break;
-    }
+    case 5:
+    {
+      nuiScrollView* pScroll = new nuiScrollView();
+      nuiList* pList = new nuiList();
+      
+      for (int i = 0; i < 100; i++)
+      {
+        nglString str;
+        str.CFormat("Item %d", i);
+        pList->AddChild(new nuiLabel(str));
+      }
+      
+      pScroll->AddChild(pList);
+      AddChild(pScroll);
+    } break;
+  }
 }
 
 
