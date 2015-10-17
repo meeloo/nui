@@ -65,6 +65,6 @@ private:
   void AddChildWidget(nuiWidget* pWidget);
   void ResetChildWidgets();
   
-  bool mClipContents = true;
+  bool mClipContents = true;///////////
 };
 

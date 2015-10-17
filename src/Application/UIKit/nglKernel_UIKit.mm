@@ -171,3 +171,8 @@ bool nglKernel::SetClipboard(const nglString& rString)
   return false;
 }
 
+
+void nuiRenameCurrentThreadTo(CFStringRef name)
+{
+  [[NSThread currentThread] setName:name];
+}

@@ -43,6 +43,9 @@ private:
   pthread_t thread;
 };
 
+#if TARGET_OS_MAC
+void nuiRenameCurrentThreadTo(CFStringRef name);
+#endif
 
 static void *start_thread(void *arg)
 {
@@ -50,6 +53,10 @@ static void *start_thread(void *arg)
   nglThread::ID id = thread->GetID();
 
   // register the thread by the nglThreadChecker
+#if TARGET_OS_MAC
+  nuiRenameCurrentThreadTo(thread->GetName().ToCFString());
+#endif
+  pthread_setname_np(thread->GetName().GetChars());
   nglThreadChecker::RegisterThread(id, thread->GetName());
 
   nglThreadPrivate::Start(thread);
@@ -123,6 +130,7 @@ bool nglThread::Start()
     pthread_getattr_np(mpData->thread, &attr);
     pthread_attr_getstacksize(&attr, &mStackSize);
 #endif
+    
     nglAddThreadInGlobalList(this);
 
     if (ret != 0)

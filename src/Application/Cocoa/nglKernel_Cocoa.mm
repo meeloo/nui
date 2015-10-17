@@ -18,6 +18,7 @@
 */
 
 #include "nui.h"
+#import <Foundation/Foundation.h>
 
 using namespace std;
 
@@ -138,3 +139,7 @@ bool nglKernel::SetClipboard(const nglString& rString)
   return false;
 }
 
+void nuiRenameCurrentThreadTo(CFStringRef name)
+{
+  [[NSThread currentThread] setName:(NSString*)name];
+}
