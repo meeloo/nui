@@ -599,7 +599,7 @@ void nuiRenderThread::DumpStats()
 
   std::sort(sortedlayers.begin(), sortedlayers.end(), CompareLayerStats);
 
-  for (int i = 0; i < MIN(10, sortedlayers.size()); i++)
+  for (int i = 0; i < MIN(100, sortedlayers.size()); i++)
   {
     const std::pair<nuiLayer*, nuiRenderingStat> &stat(sortedlayers[i]);
     NGL_OUT("%d: %p %f %d %s\n", i, stat.first, stat.second.mTime, stat.second.mCount, stat.second.mName.GetChars());

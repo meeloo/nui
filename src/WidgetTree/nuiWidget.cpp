@@ -6135,7 +6135,7 @@ void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
     if (!mpBackingLayer)
     {
       nglString name;
-      name.CFormat("WidgetLayer_%s_%p", GetObjectClass().GetChars(), this);
+      name.CFormat("WidgetLayer_%s_%s_%p", GetObjectClass().GetChars(), GetObjectName().GetChars(), this);
       mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
       mpBackingLayer->SetContents(this);
     }
