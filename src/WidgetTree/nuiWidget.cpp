@@ -5490,8 +5490,9 @@ void nuiWidget::SetVisible(bool Visible)
       // Start Show Anim if there is one
       if (pShowAnim)
       {
+        mNeedSelfRedraw = false; ///< Forcing parent broadcast
+        mVisible = true; ///< Changing flag before tests in invalidate(s)
         Invalidate();
-        mVisible = true;
         InvalidateLayout();
         VisibilityChanged();
         //pShowAnim->SetTime(0, eAnimFromStart);
@@ -5504,8 +5505,9 @@ void nuiWidget::SetVisible(bool Visible)
       }
       else // otherwise set visible = true
       {
+        mNeedSelfRedraw = false;  ///< Forcing parent broadcast
+        mVisible = true; ///< Changing flag before tests in invalidate(s)
         Invalidate();
-        mVisible = true;
         InvalidateLayout();
         VisibilityChanged();
         DebugRefreshInfo();

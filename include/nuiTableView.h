@@ -66,6 +66,10 @@ public:
   bool GetDrawSeparators() const { return mDrawSeparators; }
   void SetSeparatorColor(const nuiColor& rColor) { mSeparatorColor = rColor; Invalidate(); }
   const nuiColor& GetSeparatorColor() const { return mSeparatorColor; }
+  void SetSeparatorOffset(nuiSize Offset) { mSeparatorOffset = Offset; Invalidate(); }
+  nuiSize GetSeparatorOffset() const { return mSeparatorOffset; }
+  void SetSeparatorWidth(nuiSize Width) { mSeparatorWidth = Width; Invalidate(); }
+  nuiSize GetSeparatorWidth() const { return mSeparatorWidth; }
 
   nuiSimpleEventSource<0> SelectionChanged;
   typedef nuiFastDelegate2<nuiCellSource, int32, bool> CellSelectedDelegate;
@@ -78,6 +82,8 @@ public:
   void OnSourceDataChanged(const nuiEvent& rEvent);
 
   int32 GetCellIndex(nuiWidget* pCell) const noexcept;
+
+  void SetHotCell(int32 Index) { mHotCell = Index; InvalidateLayout(); }
 
 protected:
   void InitAttributes();
@@ -97,14 +103,16 @@ private:
   nuiSize mCellHeight = 48;
   bool mNeedUpdateCells = true;
   void CreateCells(nuiSize Height);
-  
+
+  int32 mHotCell = -1;
+
   bool mDrawSeparators = true;
   nuiColor mSeparatorColor = nuiColor(0,0,0,192);
   
   StartDragDelegate mStartDragDelegate;
 
 
-
+  
 ///< Selection
 public:
   using Selection = std::vector<uint32>;
@@ -133,7 +141,9 @@ protected:
   nuiWidget* GetCell(const nglMouseInfo& rInfo);
   int32 GetCellIndex(const nglMouseInfo& rInfo);
   int32 mClickedIndex = -1;
-  
+  nuiSize mSeparatorOffset = 8;
+  nuiSize mSeparatorWidth = 1;
+  int32 GetClickedCell() { return mClickedIndex; }
 
 //  bool CallPreMouseMoved(const nglMouseInfo& rInfo);
 };
