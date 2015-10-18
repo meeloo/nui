@@ -87,9 +87,6 @@ public:
   void SetPainter(nuiPainter* pPainter);
   nuiPainter* GetPainter() const;
 
-  void SetMainPainter(nuiPainter* pPainter);
-  nuiPainter* GetMainPainter() const;
-
   /** @name Render state manipulation */
   //@{
   void PushState();
@@ -256,8 +253,6 @@ protected:
   bool mPermitAntialising;
 
   nuiRef<nuiPainter> mpPainter;
-  nuiRef<nuiPainter> mpMainPainter;
-  nuiRef<nuiPainter> mpSavedPainter;
   nuiTexture* mpAATexture;
   GLint mClipShapeValue;
   

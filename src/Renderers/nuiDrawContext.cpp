@@ -25,8 +25,6 @@ nuiDrawContext::nuiDrawContext(const nuiRect& rRect)
   mPermitAntialising = true;
 
   mpPainter = NULL;
-  mpMainPainter = NULL;
-  mpSavedPainter = NULL;
   mpAATexture = nuiTexture::GetAATexture();
   
   mStateChanges = 1;
@@ -41,8 +39,6 @@ nuiDrawContext::~nuiDrawContext()
     mpAATexture->Release();
 
   mpPainter = NULL;
-  mpMainPainter = NULL;
-  mpSavedPainter = NULL;
   while (!mpRenderStateStack.empty())
   {
     PopState();
@@ -79,16 +75,6 @@ void nuiDrawContext::SetPainter(nuiPainter* pPainter)
 nuiPainter* nuiDrawContext::GetPainter() const
 {
   return mpPainter;
-}
-
-void nuiDrawContext::SetMainPainter(nuiPainter* pPainter)
-{
-  mpMainPainter = pPainter;
-}
-
-nuiPainter* nuiDrawContext::GetMainPainter() const
-{
-  return mpMainPainter;
 }
 
 void nuiDrawContext::SetState(const nuiRenderState& rState)
@@ -1861,7 +1847,6 @@ nuiDrawContext *nuiDrawContext::CreateDrawContext(const nuiRect& rRect, nuiPaint
 {
   nuiDrawContext* pC = new nuiDrawContext(rRect);
   pPainter->SetSize(ToNearest(rRect.GetWidth()), ToNearest(rRect.GetHeight()));
-  pC->SetMainPainter(pPainter);
   pC->SetPainter(pPainter);
   pC->Set2DProjectionMatrix(rRect);
   return pC;
@@ -1881,26 +1866,7 @@ int nuiDrawContext::GetHeight() const
 
 void nuiDrawContext::SetSurface(nuiSurface* pSurface)
 {
-  if (pSurface)
-  {
-    if (mpPainter != mpMainPainter)
-    {
-      NGL_ASSERT(!mpSavedPainter);
-      mpSavedPainter = mpPainter;
-      mpPainter = mpMainPainter;
-    }
-    mpPainter->SetSurface(pSurface);
-  }
-  else
-  {
-    mpPainter->SetSurface(NULL);
-    if (!mpSavedPainter)
-    {
-      mpPainter = mpSavedPainter;
-      mpSavedPainter = NULL;
-    }
-  }
-
+  mpPainter->SetSurface(pSurface);
   mStateChanges++;
 }
 

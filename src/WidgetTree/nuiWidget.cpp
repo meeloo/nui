@@ -1193,7 +1193,9 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   }
   
   pContext->PushState();
+  uint32 clippingstacksize = pContext->GetClipStackSize();
   Draw(pContext);
+  NGL_ASSERT(clippingstacksize == pContext->GetClipStackSize());
   pContext->PopState();
   
   if (mAutoClip)
@@ -1232,6 +1234,14 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
 void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderThread)
 {
   CheckValid();
+  if (!IsVisible())
+  {
+    pRenderThread->SetWidgetDrawPainter(this, nullptr); ///< Let the render thread know about this new painter
+    pRenderThread->SetWidgetContentsPainter(this, nullptr); ///< Let the render thread know about this new painter
+    return;
+  }
+  
+  uint32 clippingstacksize = pContext->GetClipStackSize();
   
 //  NGL_OUT("nuiWidget::UpdateCache %p %s %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
   
@@ -1278,6 +1288,9 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
     pRenderThread->SetWidgetDrawPainter(this, mpRenderCache); ///< Let the render thread know about this new painter
   }
   
+  
+  NGL_ASSERT(clippingstacksize == pContext->GetClipStackSize());
+
   return true;
 }
 
