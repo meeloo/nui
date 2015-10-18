@@ -253,6 +253,8 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   mpContext->GetLock().Unlock();
   
   RenderingDone(true);
+
+  DumpStats();
 }
 
 void nuiRenderThread::_SetRect(const nuiRect& rRect)
@@ -449,6 +451,9 @@ void nuiRenderThread::DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pK
 
 void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey)
 {
+  auto& stats = mLayerStats[pKey];
+  nglTime start;
+
 #if _DEBUG
   static int count = 0;
   nglString str;
@@ -460,13 +465,14 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
 //  NGL_OUT("%s\n", str.GetChars());
 #endif
   
+  nuiRef<nuiMetaPainter> pPainter;
   auto it = mLayerContentsPainters.find(pKey);
   if (it != mLayerContentsPainters.end())
   {
-    nuiRef<nuiMetaPainter> pPainter = it->second;
+    pPainter = it->second;
 //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
-    
+
 #if _DEBUG
     count++;
 #endif
@@ -480,6 +486,12 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
 #if _DEBUG
   glPopGroupMarkerEXT();
 #endif
+
+  nglTime end;
+  double diff = end - start;
+  stats.mCount++;
+  stats.mTime += diff;
+  stats.mName = pPainter->GetName();
 }
 
 void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
@@ -560,5 +572,37 @@ nuiDrawContext* nuiRenderThread::GetDrawContext() const
 nglContext* nuiRenderThread::GetContext() const
 {
   return mpContext;
+}
+
+const std::map<nuiLayer*, nuiRenderingStat>& nuiRenderThread::GetStats() const
+{
+  return mLayerStats;
+}
+
+static bool CompareLayerStats(const std::pair<nuiLayer*, nuiRenderingStat>& first, const std::pair<nuiLayer*, nuiRenderingStat> & second)
+{
+  return first.second.mTime > second.second.mTime;
+}
+
+void nuiRenderThread::DumpStats()
+{
+  static int i = 0;
+  if ((i++ % 100))
+    return;
+
+  std::vector<std::pair<nuiLayer*, nuiRenderingStat> > sortedlayers;
+
+  for (const auto& stat : mLayerStats)
+  {
+    sortedlayers.push_back(stat);
+  }
+
+  std::sort(sortedlayers.begin(), sortedlayers.end(), CompareLayerStats);
+
+  for (int i = 0; i < MIN(10, sortedlayers.size()); i++)
+  {
+    const std::pair<nuiLayer*, nuiRenderingStat> &stat(sortedlayers[i]);
+    NGL_OUT("%d: %p %f %d %s\n", i, stat.first, stat.second.mTime, stat.second.mCount, stat.second.mName.GetChars());
+  }
 }
 
