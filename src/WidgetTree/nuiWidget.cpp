@@ -4885,7 +4885,15 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
   CheckValid();
 
   mpTopLevel = pTopLevel;
-  
+
+  if (mpBackingLayer)
+  {
+    // Update the backing layer name
+    nglString name;
+    name.CFormat("WidgetLayer_%s_%s_%p", GetObjectClass().GetChars(), GetObjectName().GetChars(), this);
+    mpBackingLayer->SetObjectName(name);
+  }
+
   // Apply CSS, do default stuff, etc...
   if (HasFocus())
     pTopLevel->SetFocus(this);

@@ -105,6 +105,18 @@ nuiLayer::~nuiLayer()
   }
 }
 
+void nuiLayer::SetObjectName(const nglString &rName)
+{
+  nglCriticalSectionGuard gcs(mLayersCS);
+  auto it = mLayers.find(rName);
+  if (it != mLayers.end())
+  {
+    mLayers[rName] = this;
+    mLayers.erase(it);
+  }
+
+  nuiNode::SetObjectName(rName);
+}
 
 void nuiLayer::SetContents(nuiWidget* pWidget)
 {

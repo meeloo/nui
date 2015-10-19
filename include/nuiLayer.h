@@ -30,7 +30,9 @@ public:
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
   NUI_GETSETDO(nuiColor, ClearColor, Change());
-    
+
+  virtual void SetObjectName(const nglString &rName);
+
 private:
   nuiLayer(const nglString& rName, int width, int height);
   virtual ~nuiLayer();

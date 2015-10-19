@@ -222,10 +222,13 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   }
   //    NGL_OUT("DONE - Create surface for current frame (%d)\n", count);
   
+  NGL_OUT("*** Update %d layers\n", mDirtyLayers.size());
   for (auto layer : mDirtyLayers)
   {
     DrawLayerContents(mpDrawContext, layer);
   }
+  mDirtyLayers.clear();
+
 
   mpDrawContext->SetClearColor(nuiColor(255,255,255));
   //  if (mClearBackground)
