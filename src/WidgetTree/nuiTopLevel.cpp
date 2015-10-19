@@ -1971,9 +1971,11 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
     clipHeight=pContext->GetHeight();
   }
 
+//  NGL_OUT("Update cache for %d widgets\n", mDirtyWidgets.size());
   nuiRenderThread* pRenderThread = GetRenderThread();
   for (auto widget : mDirtyWidgets)
   {
+//    NGL_OUT("    Update %s / %s \t(%p)\n", widget->GetObjectClass().GetChars(), widget->GetObjectName().GetChars(), widget);
     widget->UpdateCache(pContext, pRenderThread); //  This will update the Meta Painter for each invalidated widget
     widget->Release();
   }

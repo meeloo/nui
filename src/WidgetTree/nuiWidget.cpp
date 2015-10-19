@@ -4885,7 +4885,15 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
   CheckValid();
 
   mpTopLevel = pTopLevel;
-  
+
+  if (mpBackingLayer)
+  {
+    // Update the backing layer name
+    nglString name;
+    name.CFormat("WidgetLayer_%s_%s_%p", GetObjectClass().GetChars(), GetObjectName().GetChars(), this);
+    mpBackingLayer->SetObjectName(name);
+  }
+
   // Apply CSS, do default stuff, etc...
   if (HasFocus())
     pTopLevel->SetFocus(this);
@@ -5490,8 +5498,9 @@ void nuiWidget::SetVisible(bool Visible)
       // Start Show Anim if there is one
       if (pShowAnim)
       {
+        mNeedSelfRedraw = false; ///< Forcing parent broadcast
+        mVisible = true; ///< Changing flag before tests in invalidate(s)
         Invalidate();
-        mVisible = true;
         InvalidateLayout();
         VisibilityChanged();
         //pShowAnim->SetTime(0, eAnimFromStart);
@@ -5504,8 +5513,9 @@ void nuiWidget::SetVisible(bool Visible)
       }
       else // otherwise set visible = true
       {
+        mNeedSelfRedraw = false;  ///< Forcing parent broadcast
+        mVisible = true; ///< Changing flag before tests in invalidate(s)
         Invalidate();
-        mVisible = true;
         InvalidateLayout();
         VisibilityChanged();
         DebugRefreshInfo();

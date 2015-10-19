@@ -222,10 +222,13 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   }
   //    NGL_OUT("DONE - Create surface for current frame (%d)\n", count);
   
+//  NGL_OUT("*** Update %d layers\n", mDirtyLayers.size());
   for (auto layer : mDirtyLayers)
   {
     DrawLayerContents(mpDrawContext, layer);
   }
+  mDirtyLayers.clear();
+
 
   mpDrawContext->SetClearColor(nuiColor(255,255,255));
   //  if (mClearBackground)
@@ -254,7 +257,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   RenderingDone(true);
 
-  DumpStats();
+//  DumpStats();
 }
 
 void nuiRenderThread::_SetRect(const nuiRect& rRect)
@@ -487,11 +490,14 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
   glPopGroupMarkerEXT();
 #endif
 
-  nglTime end;
-  double diff = end - start;
-  stats.mCount++;
-  stats.mTime += diff;
-  stats.mName = pPainter->GetName();
+  if (pPainter)
+  {
+    nglTime end;
+    double diff = end - start;
+    stats.mCount++;
+    stats.mTime += diff;
+    stats.mName = pPainter->GetName();
+  }
 }
 
 void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)

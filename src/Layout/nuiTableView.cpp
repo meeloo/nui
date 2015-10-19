@@ -11,6 +11,16 @@
 
 #pragma mark nuiTableView
 
+nuiTableView::nuiTableView()
+: nuiScrollView(false, true),
+  mpSource(nullptr),
+  mOwnSource(false),
+  mTableViewSink(this)
+{
+  if (SetObjectClass("nuiTableView"))
+    InitAttributes();
+}
+
 nuiTableView::nuiTableView(nuiCellSource* pSource, bool OwnSource)
 : nuiScrollView(false, true),
   mpSource(pSource),
@@ -47,10 +57,20 @@ nuiTableView::~nuiTableView()
 
 void nuiTableView::SetSource(nuiCellSource* pSource, bool OwnSource)
 {
-  if (mpSource && mOwnSource)
-    delete mpSource;
+  if (mpSource)
+  {
+    mTableViewSink.Disconnect(pSource->DataChanged, &nuiTableView::OnSourceDataChanged);
+    if (mOwnSource)
+      delete mpSource;
+  }
   mOwnSource = OwnSource;
   mpSource = pSource;
+  if (pSource)
+  {
+    mpSource->SetTableView(this);
+    mTableViewSink.Connect(pSource->DataChanged, &nuiTableView::OnSourceDataChanged);
+  }
+
   InvalidateLayout();
 }
 
@@ -71,6 +91,13 @@ void nuiTableView::InitAttributes()
   AddAttribute(new nuiAttribute<const nuiColor&>(nglString(_T("SeparatorColor")), nuiUnitColor,
                                          nuiMakeDelegate(this, &nuiTableView::GetSeparatorColor),
                                          nuiMakeDelegate(this, &nuiTableView::SetSeparatorColor)));
+
+  AddAttribute(new nuiAttribute<nuiSize>(nglString(_T("SeparatorOffset")), nuiUnitSize,
+                                         nuiMakeDelegate(this, &nuiTableView::GetSeparatorOffset),
+                                         nuiMakeDelegate(this, &nuiTableView::SetSeparatorOffset)));
+  AddAttribute(new nuiAttribute<nuiSize>(nglString(_T("SeparatorWidth")), nuiUnitSize,
+                                         nuiMakeDelegate(this, &nuiTableView::GetSeparatorWidth),
+                                         nuiMakeDelegate(this, &nuiTableView::SetSeparatorWidth)));
 }
 
 nuiRect nuiTableView::CalcIdealSize()
@@ -88,7 +115,17 @@ bool nuiTableView::SetRect(const nuiRect& rRect)
     mNeedUpdateCells=false;
     CreateCells(rRect.GetHeight()+GetOverDrawBottom()+GetOverDrawTop());
   }
-  return nuiScrollView::SetRect(rRect);
+  nuiScrollView::SetRect(rRect);
+  
+  if (mHotCell >= 0)
+  {
+    nuiRect rect((nuiSize)0, mHotCell*GetCellHeight(), GetRect().GetWidth(), GetCellHeight());
+    GetRange(nuiVertical)->MakeInRangeVisual(rect.Top(), rect.GetHeight()-1);
+//    GetRange(nuiVertical)->SetValue(rect.Top());
+    mHotCell = -1;
+  }
+
+  return true;
 }
 
 bool nuiTableView::Draw(nuiDrawContext* pContext)
@@ -107,25 +144,35 @@ bool nuiTableView::Draw(nuiDrawContext* pContext)
 
   if (mDrawSeparators && mVisibleCells.size() > 1)
   {
-    nuiRenderArray* pLines = new nuiRenderArray(GL_LINES);
-    pLines->Reserve(mVisibleCells.size()-1);
+//    nuiRenderArray* pLines = new nuiRenderArray(GL_LINES);
+//    pLines->Reserve(mVisibleCells.size()-1);
 
-    nuiSize w = GetRect().GetWidth();
+    nuiColor color = mSeparatorColor;
+    color.SetAlpha(color.Alpha()*GetMixedAlpha());
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(nuiBlendTransp);
+    pContext->SetStrokeColor(color);
+    pContext->SetLineWidth(mSeparatorWidth);
+
+    nuiSize x0 = mSeparatorOffset;
+    nuiSize x1 = GetRect().GetWidth()-mSeparatorOffset;
+//    nuiSize w = GetRect().GetWidth();
     auto cell = mVisibleCells.begin();
     for (++cell; cell != mVisibleCells.end(); ++cell)
     {
       nuiSize y = (*cell)->GetRect().Top();
-      pLines->SetVertex(0,y);
-      pLines->PushVertex();
-      pLines->SetVertex(w,y);
-      pLines->PushVertex();
+      pContext->DrawLine(x0, y, x1, y);
+//      pLines->SetVertex(x0,y);
+//      pLines->PushVertex();
+//      pLines->SetVertex(x1,y);
+//      pLines->PushVertex();
     }
-    nuiColor color = mSeparatorColor;
-    color.SetAlpha(GetMixedAlpha());
-    pContext->EnableBlending(true);
-    pContext->SetBlendFunc(nuiBlendTransp);
-    pContext->SetStrokeColor(color);
-    pContext->DrawArray(pLines);
+//    nuiColor color = mSeparatorColor;
+//    color.SetAlpha(GetMixedAlpha());
+//    pContext->EnableBlending(true);
+//    pContext->SetBlendFunc(nuiBlendTransp);
+//    pContext->SetStrokeColor(color);
+//    pContext->DrawArray(pLines);
   }
 
   return true;
@@ -288,13 +335,16 @@ int32 nuiTableView::GetCellIndex(const nglMouseInfo& rInfo)
 
 bool nuiTableView::MouseClicked(const nglMouseInfo& rInfo)
 {
-  if (mSpeedY == 0 && IsSelectionEnabled())
+  if (mSpeedY == 0)// && IsSelectionEnabled())
   {
     int32 i = GetCellIndex(rInfo);
     mClickedIndex = i;
-    if (i >= 0 && mSelection.size() > i)
+    if (IsSelectionEnabled())
     {
-      SelectCell(i, !mSelection[i]); 
+      if (i >= 0 && mSelection.size() > i)
+      {
+        SelectCell(i, !mSelection[i]); 
+      }
     }
   }
   return nuiScrollView::MouseClicked(rInfo);
