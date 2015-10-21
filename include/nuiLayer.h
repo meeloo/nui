@@ -33,6 +33,10 @@ public:
 
   virtual void SetObjectName(const nglString &rName);
 
+  static void GetLayers(std::map<nglString, nuiRef<nuiLayer>>& layers);
+  
+  static nuiSimpleEventSource<0> LayersChanged;
+
 private:
   nuiLayer(const nglString& rName, int width, int height);
   virtual ~nuiLayer();

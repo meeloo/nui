@@ -2198,6 +2198,10 @@ void nuiTopLevel::BroadcastInvalidate(nuiWidgetPtr pSender)
 {
   mDirtyWidgets.insert(pSender);
   pSender->Acquire();
+  NGL_OUT("SetDirty %s %s %p\n",
+          pSender->GetObjectClass().GetChars(),
+          pSender->GetObjectName().GetChars(),
+          pSender);
 }
 
 

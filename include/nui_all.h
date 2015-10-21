@@ -310,6 +310,7 @@ typedef double nuiSize;
   #include "nuiDecorationInspector.h"
   #include "nuiTextureInspector.h"
   #include "nuiObjectInspector.h"
+  #include "nuiLayersInspector.h"
 
   #include "nuiMidi.h"
   #include "nuiVideoDecoder.h"

@@ -96,6 +96,11 @@ nuiWidget* nuiIntrospector::GetToolbar()
   mEventSink.Connect(pObjectsBtn->ButtonPressed, &nuiIntrospector::ShowObjectInspector);
   pBox->AddCell(pObjectsBtn);
   
+  nuiRadioButton* pLayersBtn = new nuiRadioButton("Layers");
+  pLayersBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
+  pLayersBtn->SetBorders(0);
+  mEventSink.Connect(pLayersBtn->ButtonPressed, &nuiIntrospector::ShowLayersInspector);
+  pBox->AddCell(pLayersBtn);
   
   // for visual comfort :).... doesn't work..!!?!
 //  nuiSeparator* pSeparator2 = new nuiSeparator(nuiHorizontal);
@@ -152,6 +157,12 @@ void nuiIntrospector::ShowTextureInspector(const nuiEvent& rEvent)
 void nuiIntrospector::ShowObjectInspector(const nuiEvent& rEvent)
 {
   SetCell(CELL_CLIENT, new nuiObjectInspector()); 
+  rEvent.Cancel();
+}
+
+void nuiIntrospector::ShowLayersInspector(const nuiEvent& rEvent)
+{
+  SetCell(CELL_CLIENT, new nuiLayersInspector());
   rEvent.Cancel();
 }
 

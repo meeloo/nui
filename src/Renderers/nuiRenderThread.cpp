@@ -257,7 +257,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   RenderingDone(true);
 
-//  DumpStats();
+  DumpStats();
 }
 
 void nuiRenderThread::_SetRect(const nuiRect& rRect)
@@ -585,15 +585,20 @@ const std::map<nuiLayer*, nuiRenderingStat>& nuiRenderThread::GetStats() const
   return mLayerStats;
 }
 
-static bool CompareLayerStats(const std::pair<nuiLayer*, nuiRenderingStat>& first, const std::pair<nuiLayer*, nuiRenderingStat> & second)
+static bool CompareLayerTimes(const std::pair<nuiLayer*, nuiRenderingStat>& first, const std::pair<nuiLayer*, nuiRenderingStat> & second)
 {
   return first.second.mTime > second.second.mTime;
+}
+
+static bool CompareLayerCounts(const std::pair<nuiLayer*, nuiRenderingStat>& first, const std::pair<nuiLayer*, nuiRenderingStat> & second)
+{
+  return first.second.mCount > second.second.mCount;
 }
 
 void nuiRenderThread::DumpStats()
 {
   static int i = 0;
-  if ((i++ % 100))
+  if ((i++ % 60))
     return;
 
   std::vector<std::pair<nuiLayer*, nuiRenderingStat> > sortedlayers;
@@ -603,9 +608,9 @@ void nuiRenderThread::DumpStats()
     sortedlayers.push_back(stat);
   }
 
-  std::sort(sortedlayers.begin(), sortedlayers.end(), CompareLayerStats);
+  std::sort(sortedlayers.begin(), sortedlayers.end(), CompareLayerCounts);
 
-  for (int i = 0; i < MIN(100, sortedlayers.size()); i++)
+  for (size_t i = 0; i < MIN(20, sortedlayers.size()); i++)
   {
     const std::pair<nuiLayer*, nuiRenderingStat> &stat(sortedlayers[i]);
     NGL_OUT("%d: %p %f %d %s\n", i, stat.first, stat.second.mTime, stat.second.mCount, stat.second.mName.GetChars());

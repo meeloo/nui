@@ -46,6 +46,7 @@ private:
   void ShowDecorationInspector(const nuiEvent& rEvent);
   void ShowTextureInspector(const nuiEvent& rEvent);
   void ShowObjectInspector(const nuiEvent& rEvent);
+  void ShowLayersInspector(const nuiEvent& rEvent);
 
   nuiEventSink<nuiIntrospector> mEventSink;
   nuiWidget* mpTarget;

@@ -10,6 +10,7 @@
 
 std::map<nglString, nuiLayer*> nuiLayer::mLayers;
 nglCriticalSection nuiLayer::mLayersCS;
+nuiSimpleEventSource<0> nuiLayer::LayersChanged;
 
 
 nuiLayer* nuiLayer::GetLayer(const nglString& rName)
@@ -90,6 +91,7 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
   }
   mWidth = width;
   mHeight = height;
+  LayersChanged();
 }
 
 nuiLayer::~nuiLayer()
@@ -105,6 +107,8 @@ nuiLayer::~nuiLayer()
     auto it = mLayers.find(name);
     NGL_ASSERT(it != mLayers.end());
     mLayers.erase(it);
+    App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent, nuiEvent()));
+//    LayersChanged();
   }
 }
 
@@ -117,6 +121,8 @@ void nuiLayer::SetObjectName(const nglString &rName)
   {
     mLayers[rName] = this;
     mLayers.erase(it);
+    App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent, nuiEvent()));
+    //    LayersChanged();
   }
 
   nuiNode::SetObjectName(rName);
@@ -452,3 +458,12 @@ void nuiLayer::ResetChildWidgets()
   mChildWidgets.clear();
 }
 
+void nuiLayer::GetLayers(std::map<nglString, nuiRef<nuiLayer>>& layers)
+{
+  for (const auto& it : mLayers)
+  {
+    layers[it.first] = it.second;
+  }
+  
+  return layers;
+}

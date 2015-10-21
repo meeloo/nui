@@ -1960,6 +1960,12 @@
 		E56B3E691A85A04300E624B4 /* nuiLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = E56B3E661A85A04300E624B4 /* nuiLayer.h */; };
 		E56D24040FE2F3AD00C16F53 /* nuiFlowView.h in Headers */ = {isa = PBXBuildFile; fileRef = E56D24020FE2F3AD00C16F53 /* nuiFlowView.h */; };
 		E56D24080FE2F3C000C16F53 /* nuiFlowView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E56D24060FE2F3C000C16F53 /* nuiFlowView.cpp */; };
+		E572AA0A1BD7DFD60093D57C /* nuiLayersInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = E572AA091BD7DFD60093D57C /* nuiLayersInspector.h */; };
+		E572AA0B1BD7DFD60093D57C /* nuiLayersInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = E572AA091BD7DFD60093D57C /* nuiLayersInspector.h */; };
+		E572AA0C1BD7DFD60093D57C /* nuiLayersInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = E572AA091BD7DFD60093D57C /* nuiLayersInspector.h */; };
+		E572AA0E1BD7DFF40093D57C /* nuiLayersInspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E572AA0D1BD7DFF40093D57C /* nuiLayersInspector.cpp */; };
+		E572AA0F1BD7DFF40093D57C /* nuiLayersInspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E572AA0D1BD7DFF40093D57C /* nuiLayersInspector.cpp */; };
+		E572AA101BD7DFF40093D57C /* nuiLayersInspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E572AA0D1BD7DFF40093D57C /* nuiLayersInspector.cpp */; };
 		E57465150D634B5600A2D66B /* nuiSerializeContext.h in Headers */ = {isa = PBXBuildFile; fileRef = E57465140D634B5600A2D66B /* nuiSerializeContext.h */; };
 		E57465180D634B6B00A2D66B /* nuiSerializeContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E57465170D634B6B00A2D66B /* nuiSerializeContext.cpp */; };
 		E57502A50E77EF6800D240DE /* nuiBindings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E57502A30E77EF6800D240DE /* nuiBindings.cpp */; };
@@ -4592,6 +4598,8 @@
 		E56B3E661A85A04300E624B4 /* nuiLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiLayer.h; path = include/nuiLayer.h; sourceTree = SOURCE_ROOT; };
 		E56D24020FE2F3AD00C16F53 /* nuiFlowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiFlowView.h; path = include/nuiFlowView.h; sourceTree = SOURCE_ROOT; };
 		E56D24060FE2F3C000C16F53 /* nuiFlowView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiFlowView.cpp; sourceTree = "<group>"; };
+		E572AA091BD7DFD60093D57C /* nuiLayersInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiLayersInspector.h; path = include/nuiLayersInspector.h; sourceTree = SOURCE_ROOT; };
+		E572AA0D1BD7DFF40093D57C /* nuiLayersInspector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiLayersInspector.cpp; path = Introspector/nuiLayersInspector.cpp; sourceTree = "<group>"; };
 		E573205B14BF2142008D488E /* premake4.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = premake4.lua; sourceTree = SOURCE_ROOT; };
 		E57465140D634B5600A2D66B /* nuiSerializeContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiSerializeContext.h; path = include/nuiSerializeContext.h; sourceTree = SOURCE_ROOT; };
 		E57465170D634B6B00A2D66B /* nuiSerializeContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiSerializeContext.cpp; sourceTree = "<group>"; };
@@ -5742,6 +5750,8 @@
 				E57ECB651110A6E300AE0A3A /* nuiTextureInspector.h */,
 				E5354C0611383244008F5402 /* nuiObjectInspector.h */,
 				E5354C0A113832B8008F5402 /* nuiObjectInspector.cpp */,
+				E572AA091BD7DFD60093D57C /* nuiLayersInspector.h */,
+				E572AA0D1BD7DFF40093D57C /* nuiLayersInspector.cpp */,
 			);
 			name = Introspector;
 			sourceTree = "<group>";
@@ -8472,6 +8482,7 @@
 				73F084C212E9BA0700656E84 /* nuiSignalsSlots.h in Headers */,
 				73F084C312E9BA0700656E84 /* nuiTreeView.h in Headers */,
 				73F084C412E9BA0700656E84 /* nuiBindingManager.h in Headers */,
+				E572AA0C1BD7DFD60093D57C /* nuiLayersInspector.h in Headers */,
 				73F084C612E9BA0700656E84 /* nuiHBox.h in Headers */,
 				73F084C712E9BA0700656E84 /* nuiVBox.h in Headers */,
 				73F084CD12E9BA0700656E84 /* nuiTitledPane.h in Headers */,
@@ -9286,6 +9297,7 @@
 				BC6477C20DEB208B000C5508 /* nuiDecorationDefines.h in Headers */,
 				BC3532790DF4279A003930C3 /* nuiMouseCursor.h in Headers */,
 				BC9362A40DF937170047AF39 /* nuiPopupMenu.h in Headers */,
+				E572AA0A1BD7DFD60093D57C /* nuiLayersInspector.h in Headers */,
 				BC77BAF00DF9574500E0EC0D /* nuiMainMenu.h in Headers */,
 				944C54190E00018200B691C5 /* nuiHotKeyEditor.h in Headers */,
 				BCFE08240E050ACB0073662D /* nuiDialogSelectDirectory.h in Headers */,
@@ -9436,6 +9448,7 @@
 				E5D63F1E1209AB9C009C26A9 /* nuiShape.h in Headers */,
 				E5D63F1F1209AB9C009C26A9 /* nglZipFS.h in Headers */,
 				E5D63F201209AB9C009C26A9 /* nuiArc.h in Headers */,
+				E572AA0B1BD7DFD60093D57C /* nuiLayersInspector.h in Headers */,
 				E5D63F231209AB9C009C26A9 /* ngl3DSLoader.h in Headers */,
 				E5D63F241209AB9C009C26A9 /* nuiModalContainer.h in Headers */,
 				E5D63F251209AB9C009C26A9 /* nglIMemory.h in Headers */,
@@ -10785,6 +10798,7 @@
 				73F0867F12E9BA0700656E84 /* nuiSampleInfo.cpp in Sources */,
 				73F0868012E9BA0700656E84 /* nuiSampleReader.cpp in Sources */,
 				73F0868112E9BA0700656E84 /* nuiSampleWriter.cpp in Sources */,
+				E572AA101BD7DFF40093D57C /* nuiLayersInspector.cpp in Sources */,
 				73F0868212E9BA0700656E84 /* nuiWaveReader.cpp in Sources */,
 				73F0868312E9BA0700656E84 /* nuiWaveWriter.cpp in Sources */,
 				73F0868412E9BA0700656E84 /* nuiUnicode.cpp in Sources */,
@@ -11449,6 +11463,7 @@
 				BC1684DE1381605F00A605E6 /* nuiGestureRecognizer.cpp in Sources */,
 				E5F0C25613A0AD2C00EC0FB0 /* nuiTextStyle.cpp in Sources */,
 				E5F0C26613A0AE1500EC0FB0 /* nuiTextRun.cpp in Sources */,
+				E572AA0E1BD7DFF40093D57C /* nuiLayersInspector.cpp in Sources */,
 				E5F0C27613A0AE9E00EC0FB0 /* nuiTextLine.cpp in Sources */,
 				E596F92B13C2898000C109F9 /* nglStringConv_CoreFoundation.cpp in Sources */,
 				E533392B13C373B60080C465 /* AtlasTexture.cpp in Sources */,
@@ -11675,6 +11690,7 @@
 				E5D6431B1209AB9C009C26A9 /* nuiSurface.cpp in Sources */,
 				E5D6431C1209AB9C009C26A9 /* nuiTranslator.cpp in Sources */,
 				E5D6431D1209AB9C009C26A9 /* nuiLocale.cpp in Sources */,
+				E572AA0F1BD7DFF40093D57C /* nuiLayersInspector.cpp in Sources */,
 				E5D6431E1209AB9C009C26A9 /* nuiSample.cpp in Sources */,
 				E5D6431F1209AB9C009C26A9 /* nuiSampleInfo.cpp in Sources */,
 				E5D643201209AB9C009C26A9 /* nuiSampleReader.cpp in Sources */,

@@ -269,6 +269,8 @@ void nuiMainWindow::Paint()
     return;
 
 
+  NGL_OUT("New Frame------------------------------------\n");
+  
   mLastEventTime = nglTime();
   
 //  if (mIsRendering)
