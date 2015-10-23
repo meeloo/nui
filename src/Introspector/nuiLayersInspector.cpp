@@ -103,39 +103,45 @@ void nuiLayersInspector::OnLayerSelection(const nuiEvent& rEvent)
   }
   
   mSlot.DisconnectAll();
-  //  mSlot.Connect(pLayers->Changed, nuiMakeDelegate(mpLabel, &nuiWidget::Invalidate));
-  //  mSlot.Connect(pLayers->Changed, nuiMakeDelegate(mpLabel->GetParent(), &nuiWidget::Invalidate));
 
   if (!pLayer)
     return;
   
-//  // build attributes list
-//  std::map<nglString, nuiAttributeBase*> attributes;
-//  nuiLayer::GetAttributesOfClass(index, attributes);
-//  uint32 i = 0;
-//  std::map<nglString, nuiAttributeBase*>::const_iterator it_a = attributes.begin();
-//  std::map<nglString, nuiAttributeBase*>::const_iterator end_a = attributes.end();
-//  
-//  uint32 rows = mpAttributeGrid->GetNbRows();
-//  if (rows)
-//    mpAttributeGrid->RemoveRows(0, rows);
-//  
-//  rows = attributes.size();
-//  if (rows)
-//  {
-//    mpAttributeGrid->AddRows(0, rows);
-//  }
-//  
-//  while (it_a != end_a)
-//  {
-//    nglString pname(it_a->first);
-//    //printf("\tattr: %s\n", pname.GetChars());
-//    //nuiAttribBase Base = it_a->second;
-//    //nuiAttributeEditor* pEditor = Base.GetEditor();
-//    mpAttributeGrid->SetCell(0, i, new nuiLabel(pname + nglString(":")));
-//        
-//    ++it_a;
-//    i++;
-//  }
+  // build attributes list
+  std::map<nglString, nuiAttribBase> attributes;
+  pLayer->GetAttributes(attributes);
+  uint32 i = 0;
+  std::map<nglString, nuiAttribBase>::const_iterator it_a = attributes.begin();
+  std::map<nglString, nuiAttribBase>::const_iterator end_a = attributes.end();
+  
+  uint32 rows = mpAttributeGrid->GetNbRows();
+  if (rows)
+    mpAttributeGrid->RemoveRows(0, rows);
+  
+  rows = attributes.size() + 1;
+  if (rows)
+  {
+    mpAttributeGrid->AddRows(0, rows);
+  }
+  
+  while (it_a != end_a)
+  {
+    nglString pname(it_a->first);
+    //printf("\tattr: %s\n", pname.GetChars());
+    nuiAttribBase Base = it_a->second;
+    nuiAttributeEditor* pEditor = Base.GetEditor();
+    mpAttributeGrid->SetCell(0, i, new nuiLabel(pname));
+    mpAttributeGrid->SetCell(1, i, pEditor);
+
+    ++it_a;
+    i++;
+  }
+  
+  nuiImage* pImage = new nuiImage();
+  pImage->SetPosition(nuiCenter);
+  mpAttributeGrid->SetCell(0, i, new nuiLabel("Contents"));
+  mpAttributeGrid->SetCell(1, i, pImage);
+  pImage->SetTexture(pLayer->GetTexture());
+
 }
 

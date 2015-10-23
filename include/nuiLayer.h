@@ -37,6 +37,7 @@ public:
   
   static nuiSimpleEventSource<0> LayersChanged;
 
+  nuiTexture* GetTexture() const;
 private:
   nuiLayer(const nglString& rName, int width, int height);
   virtual ~nuiLayer();

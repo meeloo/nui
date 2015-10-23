@@ -474,3 +474,10 @@ void nuiLayer::GetLayers(std::map<nglString, nuiRef<nuiLayer>>& layers)
   
   return layers;
 }
+
+nuiTexture* nuiLayer::GetTexture() const
+{
+   if (!mpSurface)
+     return nullptr;
+  return mpSurface->GetTexture();
+}
