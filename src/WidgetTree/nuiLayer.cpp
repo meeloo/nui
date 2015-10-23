@@ -105,9 +105,15 @@ nuiLayer::~nuiLayer()
     nglCriticalSectionGuard gcs(mLayersCS);
     nglString name = GetObjectName();
     auto it = mLayers.find(name);
-    NGL_ASSERT(it != mLayers.end());
-    mLayers.erase(it);
-    App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent, nuiEvent()));
+    if (it != mLayers.end())
+    {
+      mLayers.erase(it);
+      App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent, nuiEvent()));
+    }
+    else
+    {
+      NGL_OUT("ERROR: failed erasing layer from list %p '%s'\n", this, name.GetChars());
+    }
 //    LayersChanged();
   }
 }
@@ -460,6 +466,7 @@ void nuiLayer::ResetChildWidgets()
 
 void nuiLayer::GetLayers(std::map<nglString, nuiRef<nuiLayer>>& layers)
 {
+  nglCriticalSectionGuard gcs(mLayersCS);
   for (const auto& it : mLayers)
   {
     layers[it.first] = it.second;

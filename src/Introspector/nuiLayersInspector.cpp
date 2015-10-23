@@ -25,7 +25,7 @@ nuiLayersInspector::nuiLayersInspector()
   
   UpdateLayers();
   
-  mSink.Connect(nuiLayer::LayersChanged, &nuiLayersInspector::OnLayersChanged);
+//  mSink.Connect(nuiLayer::LayersChanged, &nuiLayersInspector::OnLayersChanged);
 }
 
 nuiLayersInspector::~nuiLayersInspector()

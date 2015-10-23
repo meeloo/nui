@@ -269,8 +269,6 @@ void nuiMainWindow::Paint()
     return;
 
 
-  NGL_OUT("New Frame------------------------------------\n");
-  
   mLastEventTime = nglTime();
   
 //  if (mIsRendering)
@@ -721,10 +719,13 @@ void nuiMainWindow::InvalidateTimer(const nuiEvent& rEvent)
   if (!App->IsActive()) // Only repaint if the application is active!
     return;
   
+  NGL_OUT("New Frame %d %p------------------------------------\n", mTotalFrames, this);
+  
   LazyPaint();
 
   nglTime now;
   mFPSCount++;
+  mTotalFrames++;
   if (now - mFPSDelay > 1.0)
   {
     double v = (now - mFPSDelay);
@@ -931,7 +932,7 @@ bool nuiMainWindow::ShowWidgetInspector()
     Info.Height = 600;
 
     mpInspectorWindow = new nuiMainWindow(nuiContextInfo(nuiContextInfo::StandardContext2D), Info, GetNGLContext(), ResPath);
-//    mpInspectorWindow->SetForceNoDrawToLayer(true);
+    mpInspectorWindow->SetForceNoDrawToLayer(true);
     SetLayerPolicy(nuiDrawPolicyDrawTree);
     mpInspectorWindow->Acquire();
     mpInspectorWindow->SetQuitOnClose(false);

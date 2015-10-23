@@ -275,10 +275,11 @@ private:
   double mLastInteractiveEventTime;
   double mLastEventTime;
   
-  double mLastPaint;
-  double mFPSDelay;
-  uint32 mFPSCount;
-  float mFPS;
+  double mLastPaint = 0;
+  double mFPSDelay = 0;
+  uint32 mFPSCount = 0;
+  float mFPS = 0;
+  uint64 mTotalFrames = 0;
 
   bool mDrawDirtyRects = false;
 };
