@@ -53,7 +53,7 @@ public:
   static void DestroyWidget(nuiWidget* pWidget);
   static void DestroyLayer(nuiLayer* pLayer);
 
-  const std::map<nuiLayer*, nuiRenderingStat>& GetStats() const;
+  std::map<nuiLayer*, nuiRenderingStat> GetStats() const;
 private:
   void Post(nuiTask* pTask);
     
@@ -98,6 +98,7 @@ private:
   static nglCriticalSection ThreadsCS;
   static std::set<nuiRenderThread*> mThreads;
 
+  mutable nglCriticalSection StatsCS;
   std::map<nuiLayer*, nuiRenderingStat> mLayerStats;
   void DumpStats();
 };

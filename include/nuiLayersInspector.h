@@ -16,7 +16,7 @@ class nuiText;
 class nuiLayersInspector : public nuiWidget
 {
 public:
-  nuiLayersInspector();
+  nuiLayersInspector(nuiRenderThread* pRenderThread);
 
 protected:
   virtual ~nuiLayersInspector();
@@ -25,9 +25,15 @@ protected:
   
   void OnLayersChanged(const nuiEvent& rEvent);
   void OnLayerSelection(const nuiEvent& rEvent);
+  void Setup();
   void UpdateLayers();
+  void OnSortChanged(const nuiEvent& rEvent);
+
   
-  nuiImage* mpImage;
-  nuiGrid* mpAttributeGrid;
+  nuiImage* mpImage = nullptr;
+  nuiGrid* mpAttributeGrid = nullptr;
   nuiSlotsSink mSlot;
+  nuiList* mpLayerList = nullptr;
+  nuiComboBox* mpSortCombo = nullptr;
+  nuiRenderThread* mpRenderThread = nullptr;
 };

@@ -162,7 +162,9 @@ void nuiIntrospector::ShowObjectInspector(const nuiEvent& rEvent)
 
 void nuiIntrospector::ShowLayersInspector(const nuiEvent& rEvent)
 {
-  SetCell(CELL_CLIENT, new nuiLayersInspector());
+  nuiTopLevel* pTop = mpTarget->GetTopLevel();
+  nuiRenderThread* pRenderThread = pTop->GetRenderThread();
+  SetCell(CELL_CLIENT, new nuiLayersInspector(pRenderThread));
   rEvent.Cancel();
 }
 

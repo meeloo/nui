@@ -454,7 +454,6 @@ void nuiRenderThread::DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pK
 
 void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey)
 {
-  auto& stats = mLayerStats[pKey];
   nglTime start;
 
 #if _DEBUG
@@ -493,6 +492,9 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
   if (pPainter)
   {
     nglTime end;
+    
+    nglCriticalSectionGuard g(StatsCS);
+    auto& stats = mLayerStats[pKey];
     double diff = end - start;
     stats.mCount++;
     stats.mTime += diff;
@@ -580,8 +582,9 @@ nglContext* nuiRenderThread::GetContext() const
   return mpContext;
 }
 
-const std::map<nuiLayer*, nuiRenderingStat>& nuiRenderThread::GetStats() const
+std::map<nuiLayer*, nuiRenderingStat> nuiRenderThread::GetStats() const
 {
+  nglCriticalSectionGuard g(StatsCS);
   return mLayerStats;
 }
 
@@ -603,11 +606,14 @@ void nuiRenderThread::DumpStats()
 
   std::vector<std::pair<nuiLayer*, nuiRenderingStat> > sortedlayers;
 
-  for (const auto& stat : mLayerStats)
   {
-    sortedlayers.push_back(stat);
+    nglCriticalSectionGuard g(StatsCS);
+    for (const auto& stat : mLayerStats)
+    {
+      sortedlayers.push_back(stat);
+    }
   }
-
+  
   std::sort(sortedlayers.begin(), sortedlayers.end(), CompareLayerCounts);
 
   for (size_t i = 0; i < MIN(20, sortedlayers.size()); i++)
