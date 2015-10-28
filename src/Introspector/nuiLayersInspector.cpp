@@ -87,7 +87,10 @@ void nuiLayersInspector::Setup()
   
   nuiSplitter* pSplitter = new nuiSplitter(nuiVertical);
   pBox->AddCell(pSplitter);
-  pSplitter->SetMasterChild(true);
+  pBox->SetCellExpand(1, nuiExpandShrinkAndGrow);
+
+//  pSplitter->SetMasterChild(true);
+  pSplitter->SetPosition(nuiFill);
   
   nuiScrollView* pScrollView1 = new nuiScrollView(false, true);
   nuiScrollView* pScrollView2 = new nuiScrollView(false, true);
@@ -166,9 +169,9 @@ void nuiLayersInspector::UpdateLayers()
     nglString index;
     index.SetCInt(i);
     nuiLabel* pLabel = new nuiLabel(name);
-    pLabel->SetProperty("Layers", name);
-    pLabel->SetProperty("Index", index);
-    pLabel->SetToken(new nuiToken<nuiRef<nuiLayer>>(pLayer));
+    pHolder->SetProperty("Layers", name);
+    pHolder->SetProperty("Index", index);
+    pHolder->SetToken(new nuiToken<nuiRef<nuiLayer>>(pLayer));
     pLabel->SetTextPosition(nuiLeft);
     pHolder->AddChild(pLabel);
 

@@ -112,7 +112,7 @@ nuiLayer::~nuiLayer()
     }
     else
     {
-      NGL_OUT("ERROR: failed erasing layer from list %p '%s'\n", this, name.GetChars());
+//      NGL_OUT("ERROR: failed erasing layer from list %p '%s'\n", this, name.GetChars());
     }
 //    LayersChanged();
   }
