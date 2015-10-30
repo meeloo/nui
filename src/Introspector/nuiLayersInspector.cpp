@@ -60,6 +60,8 @@ void nuiLayersInspector::Setup()
   Clear();
   
   nuiVBox* pBox = new nuiVBox();
+  pBox->SetPosition(nuiFill);
+  pBox->SetExpand(nuiExpandShrinkAndGrow);
   AddChild(pBox);
   nuiHBox* pHeader = new nuiHBox();
   pHeader->AddCell(new nuiLabel("Sort"));
@@ -259,7 +261,8 @@ void nuiLayersInspector::OnLayerSelection(const nuiEvent& rEvent)
   
   {
     nuiImage* pImage = new nuiImage();
-    pImage->SetPosition(nuiCenter);
+    pImage->SetPosition(nuiFill);
+    pImage->SetFillRule(nuiCenter);
     mpAttributeGrid->SetCell(0, i, new nuiLabel("Contents"));
     mpAttributeGrid->SetCell(1, i, pImage);
     pImage->SetTexture(pLayer->GetTexture());

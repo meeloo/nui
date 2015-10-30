@@ -91,7 +91,7 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
   }
   mWidth = width;
   mHeight = height;
-  LayersChanged();
+  App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent));
 }
 
 nuiLayer::~nuiLayer()
@@ -108,7 +108,7 @@ nuiLayer::~nuiLayer()
     if (it != mLayers.end())
     {
       mLayers.erase(it);
-      App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent, nuiEvent()));
+      App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent));
     }
     else
     {
@@ -127,7 +127,7 @@ void nuiLayer::SetObjectName(const nglString &rName)
   {
     mLayers[rName] = this;
     mLayers.erase(it);
-    App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent, nuiEvent()));
+    App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent));
     //    LayersChanged();
   }
 

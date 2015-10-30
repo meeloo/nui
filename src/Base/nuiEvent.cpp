@@ -126,6 +126,11 @@ void nuiEventSource::Disconnect(nuiEventTargetBase* t)
   }    
 }
 
+bool nuiEventSource::SendEvent()
+{
+  return SendEvent(nuiEvent(0));
+}
+
 bool nuiEventSource::SendEvent(const nuiEvent& rEvent)
 {
   if (IsEnabled() && !mpTargets.empty())

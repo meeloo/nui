@@ -87,7 +87,8 @@ public:
   virtual void Connect(nuiEventTargetBase* t);
   virtual void Disconnect(nuiEventTargetBase* t);
   void DisconnectAll();
-  virtual bool SendEvent(const nuiEvent& rEvent = nuiEvent(0));
+  virtual bool SendEvent();
+  virtual bool SendEvent(const nuiEvent& rEvent);
   virtual bool operator() (const nuiEvent& rEvent = nuiEvent(0));
   virtual bool operator() (const nuiVariant& rP0);
   virtual bool operator() (const nuiVariant& rP0, const nuiVariant& rP1);
