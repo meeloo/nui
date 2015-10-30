@@ -27,7 +27,7 @@ protected:
   void OnLayerSelection(const nuiEvent& rEvent);
   void Setup();
   void UpdateLayers();
-  void OnSortChanged(const nuiEvent& rEvent);
+  void OnUpdateLayers(const nuiEvent& rEvent);
 
   
   nuiImage* mpImage = nullptr;

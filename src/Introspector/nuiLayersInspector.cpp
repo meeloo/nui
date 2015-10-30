@@ -84,6 +84,13 @@ void nuiLayersInspector::Setup()
   mpSortCombo = new nuiComboBox(pSortOptions);
   pHeader->AddCell(mpSortCombo);
   pBox->AddCell(pHeader);
+
+  pHeader->AddCell(nullptr);
+  pHeader->SetCellExpand(pHeader->GetNbCells() - 1, nuiExpandShrinkAndGrow);
+
+  nuiButton* pUpdateBtn = new nuiButton("Update");
+  pHeader->AddCell(pUpdateBtn);
+  mSink.Connect(pUpdateBtn->Activated, &nuiLayersInspector::OnUpdateLayers);
   
   nuiSplitter* pSplitter = new nuiSplitter(nuiVertical);
   pBox->AddCell(pSplitter);
@@ -110,7 +117,7 @@ void nuiLayersInspector::Setup()
   
   pScrollView2->AddChild(mpAttributeGrid);
   
-  mSink.Connect(mpSortCombo->SelectionChanged, &nuiLayersInspector::OnSortChanged, nullptr);
+  mSink.Connect(mpSortCombo->SelectionChanged, &nuiLayersInspector::OnUpdateLayers, nullptr);
   mSink.Connect(mpLayerList->SelectionChanged, &nuiLayersInspector::OnLayerSelection, (void*)mpLayerList);
 }
 
@@ -205,7 +212,7 @@ void nuiLayersInspector::UpdateLayers()
   
 }
 
-void nuiLayersInspector::OnSortChanged(const nuiEvent& rEvent)
+void nuiLayersInspector::OnUpdateLayers(const nuiEvent& rEvent)
 {
   UpdateLayers();
 }

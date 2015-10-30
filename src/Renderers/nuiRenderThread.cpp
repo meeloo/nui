@@ -257,7 +257,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   RenderingDone(true);
 
-  DumpStats();
+//  DumpStats();
 }
 
 void nuiRenderThread::_SetRect(const nuiRect& rRect)
