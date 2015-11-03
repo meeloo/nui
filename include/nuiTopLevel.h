@@ -196,11 +196,11 @@ protected:
   nuiTimer mToolTipTimerOff;
   nglTime mToolTipDelayOn;
   nglTime mToolTipDelayOff;
-  bool mDisplayToolTip;
+  bool mDisplayToolTip = false;
   nuiRef<nuiWidget> mpToolTipSource;
-  nuiToolTip* mpToolTipLabel;
+  nuiToolTip* mpToolTipLabel = nullptr;
 #endif
-  nuiLabel* mpInfoLabel;
+  nuiLabel* mpInfoLabel = nullptr;
 
   nuiRef<nuiWidget> mpDraggedWidget;
 
@@ -215,7 +215,7 @@ protected:
 
   nglPath mResPath;
 
-  bool mClearBackground;
+  bool mClearBackground = true;
 
   nglMouseInfo mMouseInfo;
   
@@ -228,32 +228,32 @@ protected:
 protected:
   /* @name Trash management */
   //@{
-  bool mFillTrash;
+  bool mFillTrash = false;
   //@}
 
-  nuiDrawContext* mpDrawContext;
-  nuiRenderThread* mpRenderThread;
+  nuiDrawContext* mpDrawContext = nullptr;
+  nuiRenderThread* mpRenderThread = nullptr;
 
   static nuiRenderer mRenderer;
 
   nuiEventSink<nuiTopLevel> mTopLevelSink;
-  bool mPartialRedraw;
-  bool mIsDrawing;
-  bool mIsRendering;
+  bool mPartialRedraw = true;
+  bool mIsDrawing = false;
+  bool mIsRendering = false;
 
 #ifndef DISABLE_TOOLTIP
   void SetToolTipRect();
 #endif
   void SetDragFeedbackRect(int X, int Y);
 
-  nglMouseInfo::Flags mLastClickedButton;
+  nglMouseInfo::Flags mLastClickedButton = 0;
 
   std::map<nglString, nuiHotKey*> mHotKeys;
   
   std::set<nuiWidgetPtr> mHoveredWidgets;
   std::map<nuiWidgetPtr, uint32> mCSSWidgets;
   
-  nuiCSS* mpCSS;
+  nuiCSS* mpCSS = nullptr;
   
   std::map<nuiWidgetPtr, nuiWidgetPtr> mTabForward;
   std::map<nuiWidgetPtr, nuiWidgetPtr> mTabBackward;

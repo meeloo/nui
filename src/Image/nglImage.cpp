@@ -518,7 +518,7 @@ void ScaleRectAvg(uint8* pTarget, int32 TgtWidth, int32 TgtHeight,
   }
   
   delete[] pScanLine;
-  delete pScanLineAhead;
+  delete[] pScanLineAhead;
 }
 
 

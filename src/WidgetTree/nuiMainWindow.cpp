@@ -161,8 +161,8 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
 
 //  mMainWinSink.Connect(nuiAnimation::AcquireTimer()->Tick, &nuiMainWindow::InvalidateTimer);
 
-  nuiDrawContext* pContext = GetDrawContext();
-  nuiRenderThread* pRenderThread = GetRenderThread();
+  GetDrawContext();
+  GetRenderThread();
 
 //  SetLayerPolicy(nuiDrawPolicyDrawNone);
 

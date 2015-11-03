@@ -1154,14 +1154,14 @@ bool nuiFontManager::Load(nglIStream& rStream, double lastscantime)
   char* marker = new char[s];
   if (s != rStream.Read(marker, s, 1))
   {
-    delete marker;
+    delete[] marker;
     
     return false;
   }
   
   if (strcmp(NUI_FONTDB_MARKER, marker))
   {
-    delete marker;
+    delete[] marker;
     
     return false;
   }

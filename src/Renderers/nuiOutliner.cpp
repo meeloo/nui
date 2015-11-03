@@ -278,7 +278,7 @@ bool nuiOutliner::Tessellate(nuiPath& rPoints, float Quality) const
   uint total = Vertices.GetCount();
 
   uint offset = 0;
-  uint count = total;
+  uint count;
 
   //Find sub path:
   for (uint i = offset; i < total; i++)
@@ -488,7 +488,7 @@ bool nuiOutliner::TessellateObj(nuiRenderObject& rObject, float Quality) const
   uint total = Vertices.GetCount();
 
   uint offset = 0;
-  uint count = total;
+  uint count;
 
 #ifndef __NUI_NO_AA__
   glAALineWidth(mLineWidth);

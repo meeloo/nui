@@ -78,9 +78,9 @@ public:
       return GetWidget();
     }
   protected:
-    nuiWidget* mpSource;
-    bool mValid;
-    bool mRefCounting;
+    nuiWidget* mpSource = nullptr;
+    bool mValid = false;
+    bool mRefCounting = false;
   };
 
   class ConstIterator
@@ -99,9 +99,9 @@ public:
       return GetWidget();
     }
   protected:
-    const nuiWidget* mpSource;
-    bool mValid;
-    bool mRefCounting;
+    const nuiWidget* mpSource = nullptr;
+    bool mValid = false;
+    bool mRefCounting = false;
   };
 
   typedef Iterator* IteratorPtr;
@@ -634,10 +634,10 @@ public:
     LayoutConstraint& operator=(const LayoutConstraint& rSource);
     bool operator==(const LayoutConstraint& rSource) const;
 
-    nuiSize mMaxWidth;
-    nuiSize mMaxHeight;
-    nuiSize mMinWidth;
-    nuiSize mMinHeight;
+    nuiSize mMaxWidth = std::numeric_limits<float>::max();
+    nuiSize mMaxHeight = std::numeric_limits<float>::max();
+    nuiSize mMinWidth = 0;
+    nuiSize mMinHeight = 0;
   };
 
   virtual bool SetLayoutConstraint(const LayoutConstraint& rConstraint); ///< Change the layout constraint imposed by this widget's parent. Return false if the constraint haven't changed, true otherwise.
@@ -740,7 +740,7 @@ protected:
   nuiWidgetPtr mpParent = nullptr;
   nuiTopLevel* mpTopLevel = nullptr;
 
-  float mAlpha; ///< Indicates the transparency level of the object. Optional. 
+  float mAlpha = 1.0f; ///< Indicates the transparency level of the object. Optional.
   nuiRect mRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
   nuiRect mLayoutRect; ///< The rect given by the parent (may be different than mRect)
   nuiRect mVisibleRect; ///< The active bounding box of the nuiObject (in local coordinates).
@@ -748,10 +748,10 @@ protected:
   nuiRect mUserRect; ///< The bounding box of the nuiObject if set by the user (in coordinates of its parent).
   nuiRect mHotRect; ///< The currently important interactive part of the widget. Containers try to keep this rect in view when possible. For exemple set it as the cursor rectangle in a text edit widget. Is you text edit is contained in a scroll view, the scroll view will try to follow the cursor.
 
-  nuiSize mBorderLeft, mBorderRight; // empty space left left and right the widget itself
-  nuiSize mBorderTop, mBorderBottom; // empty space left below and above the widget itself
+  nuiSize mBorderLeft = 0, mBorderRight = 0; // empty space left left and right the widget itself
+  nuiSize mBorderTop = 0, mBorderBottom = 0; // empty space left below and above the widget itself
 
-  nuiMouseCursor mObjCursor;
+  nuiMouseCursor mObjCursor = eCursorArrow;
 
   nuiEventSink<nuiWidget> mGenericWidgetSink;
 
@@ -766,7 +766,7 @@ protected:
   void Animate(const nuiEvent& rEvent);
   
   bool TriggerHotKeys(const nglKeyEvent& rEvent, bool KeyDown,  bool Priority, nuiKeyModifier Mask); ///< Helper function. Triggers appropriate hotkeys
-  nuiKeyModifier mHotKeyMask;
+  nuiKeyModifier mHotKeyMask = 0;
 
   std::map<nuiWidgetElement, nuiColor> mWidgetElementColors;
 
@@ -829,7 +829,7 @@ protected:
 
   bool mClickThru: 1;
 
-  int32 mInTransition;
+  int32 mInTransition = 0;
   
   void InitDefaultValues();
   void Init(); ///< Initialise the basic parameters of the class.
@@ -837,35 +837,35 @@ protected:
   nuiRef<nuiMetaPainter> mpRenderCache;
   bool mRenderCacheIsEmpty = true;
 
-  uint32 mDebugLevel;
+  uint32 mDebugLevel = 0;
   
-  float mMaxIdealWidth;
-  float mMaxIdealHeight;
-  float mMinIdealWidth;
-  float mMinIdealHeight;
+  float mMaxIdealWidth = std::numeric_limits<float>::max();
+  float mMaxIdealHeight = std::numeric_limits<float>::max();
+  float mMinIdealWidth = 0;
+  float mMinIdealHeight = 0;
 
-  float mMaxWidth;
-  float mMaxHeight;
-  float mMinWidth;
-  float mMinHeight;
+  float mMaxWidth = std::numeric_limits<float>::max();
+  float mMaxHeight = std::numeric_limits<float>::max();
+  float mMinWidth = 0;
+  float mMinHeight = 0;
 
   friend class nuiTopLevel;
   friend class nuiWidgetInfo;
 	
 	std::map<nglString, nuiSimpleEventSource<nuiWidgetActivated>*> mHotKeyEvents;
 
-  nuiSize mODLeft;
-  nuiSize mODRight;
-  nuiSize mODTop;
-  nuiSize mODBottom;
+  nuiSize mODLeft = 0;
+  nuiSize mODRight = 0;
+  nuiSize mODTop = 0;
+  nuiSize mODBottom = 0;
   
   // Normal decoration:
-  nuiDecoration* mpDecoration;
-  nuiDecorationMode mDecorationMode;
+  nuiDecoration* mpDecoration = nullptr;
+  nuiDecorationMode mDecorationMode = eDecorationOverdraw;
 
   // Focus decoration:
-  nuiDecoration* mpFocusDecoration;
-  nuiDecorationMode mFocusDecorationMode;
+  nuiDecoration* mpFocusDecoration = nullptr;
+  nuiDecorationMode mFocusDecorationMode = eDecorationOverdraw;
   
   static std::vector<nuiDecorationDelegate> mDefaultDecorations;
 
@@ -878,11 +878,11 @@ protected:
   void InternalSetLayout(const nuiRect& rect);
   virtual void InternalSetLayout(const nuiRect& rect, bool PositionChanged, bool SizeChanged);
   
-  nuiPosition mPosition;
-  nuiPosition mFillRule;
-  nuiRectAttributeAnimation* mpLayoutAnimation;
+  nuiPosition mPosition = nuiFill;
+  nuiPosition mFillRule = nuiFill;
+  nuiRectAttributeAnimation* mpLayoutAnimation = nullptr;
   
-  uint32 mCSSPasses;
+  uint32 mCSSPasses = 0;
   virtual void InternalResetCSSPass();
   
   std::vector<nuiRect> mDirtyRects;

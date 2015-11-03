@@ -140,13 +140,13 @@ protected:
   
   static nuiPropertyMap mGlobalProperties;
 
-  nuiSerializeMode mSerializeMode;
+  nuiSerializeMode mSerializeMode = eDontSaveNode;
   
 private : 
   void Init(const nglString& rObjectName);
   void InitAttributes();
   
-  nuiTokenBase* mpToken;
+  nuiTokenBase* mpToken = nullptr;
   //std::map<nglString,nuiAttributeBase*> mAttributes;
   static uint32 mUniqueAttributeOrder; // to handle properties's order
   
@@ -156,7 +156,7 @@ private :
   static std::map<nglString, int32> mObjectClassNamesMap;
   std::list<nuiRef<nuiObject> > mpLinkedObjects;
 
-  uint32 mClassNameIndex;
+  uint32 mClassNameIndex = -1;
   nglString mObjectName;
   
 protected:
@@ -167,9 +167,9 @@ protected:
     nglString mName;
     bool mAlive;
   };
-  static std::map<nuiObject*, Trace> mObjects;
+  static std::map<nuiObject*, Trace*> mObjects;
   static nglCriticalSection gObjectTraceCS;
-  Trace* mpTrace;
+  Trace* mpTrace = nullptr;
 };
 
 //typedef nuiSmartPtr<nuiObject> nuiObjectPtr;

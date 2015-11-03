@@ -111,8 +111,8 @@ public:
     }
 
   protected:
-    nglDragAndDrop* mpDragObject;
-    nuiSize mX, mY;
+    nglDragAndDrop* mpDragObject = nullptr;
+    nuiSize mX = 0, mY = 0;
   };
   virtual bool Drag(nuiWidget* pDragSource, nglDragAndDrop* pDragObject);
   virtual void OnDragRequestData (nglDragAndDrop* pDragObject, const nglString& rMimeType);
@@ -188,15 +188,15 @@ protected:
 
   nuiEventSink<nuiMainWindow> mMainWinSink;
 
-  bool mQuitOnClose;
-  float mMaxFPS;
+  bool mQuitOnClose = true;
+  float mMaxFPS = 0;
   nglTime mLastRendering;
   void InvalidateTimer(const nuiEvent& rEvent);
-  bool mPaintEnabled;
-  bool mDebugSlowRedraw;
+  bool mPaintEnabled = true;
+  bool mDebugSlowRedraw = false;
 
-  nuiWidget*      mpDragSource; ///< widget that has initialized a drag operation
-  nuiWidget*      mpWidgetCanDrop; ///< if not NULL, this is the last widget that return true to an OnCanDrop call (used for DragLeave)
+  nuiWidget*      mpDragSource = nullptr; ///< widget that has initialized a drag operation
+  nuiWidget*      mpWidgetCanDrop = nullptr; ///< if not NULL, this is the last widget that return true to an OnCanDrop call (used for DragLeave)
   
 private:
   
@@ -205,15 +205,15 @@ private:
   
   /* @name Debugging */
   //@{
-  bool mDisplayMouseOverInfo;
-  bool mDisplayMouseOverObject;
+  bool mDisplayMouseOverInfo = false;
+  bool mDisplayMouseOverObject = false;
   //@}
 
   bool mDebugMode;
 //  bool ShowWidgetInspector();
-  nuiMainWindow* mpInspectorWindow;
+  nuiMainWindow* mpInspectorWindow = nullptr;
 
-  bool mInvalidatePosted;
+  bool mInvalidatePosted = false;
   
   friend class NGLWindow;
 
@@ -266,7 +266,7 @@ private:
     //@}
 
   private:
-    nuiMainWindow* mpMainWindow;
+    nuiMainWindow* mpMainWindow = nullptr;
   };
 
   NGLWindow* mpNGLWindow;

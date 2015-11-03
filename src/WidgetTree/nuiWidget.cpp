@@ -4233,7 +4233,7 @@ bool nuiWidget::DelChild(nuiWidgetPtr pChild)
     NGL_OUT("[%s] Del Child %p <--- %p (%s / %s)\n", GetObjectClass().GetChars(), this, pChild, pChild->GetObjectClass().GetChars(), pChild->GetObjectName().GetChars());
   }
   
-  nuiRenderThread* pRenderThread = GetRenderThread();
+//  nuiRenderThread* pRenderThread = GetRenderThread();
   nuiWidgetList::iterator it  = mpChildren.begin();
   nuiWidgetList::iterator end = mpChildren.end();
   for ( ; it != end; ++it)
@@ -4964,7 +4964,8 @@ void nuiWidget::InvalidateChildren(bool Recurse)
       nuiWidgetPtr pCont = dynamic_cast<nuiWidgetPtr>(pItem);
       if (pCont)
         pCont->InvalidateChildren(Recurse);
-      pItem->Invalidate();
+      if (pItem)
+        pItem->Invalidate();
     }
   }
   else
@@ -6138,8 +6139,6 @@ nuiWidget* nuiWidget::GetParentLayerWidget() const
 
 void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
 {
-  nuiTopLevel* pTop = GetTopLevel();
-  
   if (policy != nuiDrawPolicyDrawNone)
   {
     if (!mpBackingLayer)

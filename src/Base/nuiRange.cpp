@@ -430,7 +430,6 @@ bool nuiRange::MakeInRange(double Position, double size)
 bool nuiRange::MakeInRangeVisual(double Position, double size)
 {
   double tmp = mValue;
-  double val = mValue;
 
   if (Position >= mValue && ((Position+size) <= (mValue+mPageSize)))
     return tmp != mValue;

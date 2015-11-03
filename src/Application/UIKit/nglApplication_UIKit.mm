@@ -35,7 +35,7 @@ void objCCallOnMemoryWarning();
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidFinishLaunching");
   NGL_OUT(_T("[nglUIApplicationDelegate applicationDidFinishLaunching]\n"));
-  NGL_ASSERT(App);
+  assert(App);
 
   objCCallOnInit(pUIApplication);
 }
@@ -43,7 +43,7 @@ void objCCallOnMemoryWarning();
 - (BOOL)application:(UIApplication *)pUIApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 {
   //App->TimedPrint("nglUIApplicationDelegate didFinishLaunchingWithOptions");
-	NGL_ASSERT(App);
+	assert(App);
 	NSURL *launchURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];	
 	//objCCallOnInitWithURL(pUIApplication, nglString ((CFStringRef)@"bleepbox://oauth?oauth_verifier=fffff"));
 	
@@ -62,7 +62,7 @@ void objCCallOnMemoryWarning();
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidBecomeActive");
   NGL_DEBUG( NGL_OUT(_T("[nglUIApplicationDelegate applicationDidBecomeActive]\n")); )
-  NGL_ASSERT(App);
+  assert(App);
 
   objCCallOnActivation();
   
@@ -85,7 +85,7 @@ void objCCallOnMemoryWarning();
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidEnterBackground");
   NGL_DEBUG( NGL_OUT(_T("[nglUIApplicationDelegate applicationDidEnterBackground]\n")); )
-  NGL_ASSERT(App);
+  assert(App);
 
 	NSEnumerator *e = [[pUIApplication windows] objectEnumerator];
 	
@@ -107,7 +107,7 @@ void objCCallOnMemoryWarning();
 - (void) applicationDidReceiveMemoryWarning:  (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidReceiveMemoryWarning");
-	NGL_ASSERT(App);
+	assert(App);
   objCCallOnMemoryWarning();
 }
 
@@ -129,7 +129,7 @@ void objCCallOnMemoryWarning();
 	id win;
 	while ((win = [e nextObject]))
   {
-		[win release];
+		[win close];
 	}	
  
 

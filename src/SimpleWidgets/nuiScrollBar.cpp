@@ -102,7 +102,6 @@ void nuiScrollBar::SetThumbRect(const nuiRect& rRect)
   if (length <= 0)
   {
     thumbLength = 1;
-    length = 1;
     thumbPosition  = 0;
   }
   else

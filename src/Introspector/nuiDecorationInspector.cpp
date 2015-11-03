@@ -118,10 +118,13 @@ void nuiDecorationInspector::OnDecoSelection(const nuiEvent& rEvent)
   }
 
   mSlot.DisconnectAll();
-  mSlot.Connect(pDeco->Changed, nuiMakeDelegate(mpLabel, &nuiWidget::Invalidate));
-  mSlot.Connect(pDeco->Changed, nuiMakeDelegate(mpLabel->GetParent(), &nuiWidget::Invalidate));
-  mSlot.Connect(pDeco->Changed, nuiMakeDelegate(this, &nuiDecorationInspector::DumpDecl));
-  mpLabel->SetDecoration(pDeco);
+  if (pDeco)
+  {
+    mSlot.Connect(pDeco->Changed, nuiMakeDelegate(mpLabel, &nuiWidget::Invalidate));
+    mSlot.Connect(pDeco->Changed, nuiMakeDelegate(mpLabel->GetParent(), &nuiWidget::Invalidate));
+    mSlot.Connect(pDeco->Changed, nuiMakeDelegate(this, &nuiDecorationInspector::DumpDecl));
+    mpLabel->SetDecoration(pDeco);
+  }
   mpInfoLabel->SetText(info);
 
   // build attributes list

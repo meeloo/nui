@@ -147,7 +147,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  int test = 5;
+  int test = 0;
   switch (test)
   {
   case 0:

@@ -1503,6 +1503,7 @@ public:
 
           if (!GetChar()) // Eat }
           {
+            delete pActionHolder;
             SetError(_T("unexpected end of file"));
             return NULL;
           }
@@ -1742,7 +1743,10 @@ public:
           pMatcher = new nuiGlobalVariableMatcher(property, str);
         
         if (!SkipBlank())
+        {
+          delete pMatcher;
           return NULL;
+        }
       }
       
       if (!GetChar())

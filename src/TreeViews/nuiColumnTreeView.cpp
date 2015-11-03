@@ -234,7 +234,6 @@ nuiTreeNode* nuiColumnTreeView::SetColumnRect(const nuiRect& rRect, nuiTreeNode*
   x = rRect.Left();
   y = rRect.Top();
   w = rRect.GetWidth() - (mBarSize + mHandleSize);
-  h = rRect.GetHeight();
   nuiTreeNode* pRes = NULL;
 
   if (!pTree)

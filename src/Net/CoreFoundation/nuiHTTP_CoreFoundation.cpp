@@ -145,10 +145,14 @@ nuiHTTPResponse* nuiHTTPRequest::SendRequest(const nuiHTTPResponseReceivedDelega
     
     if (size == -1)
     {
-      CFRelease(url);
-      CFRelease(method);
-      CFRelease(req);
-      CFRelease(readStream);
+      if (url)
+        CFRelease(url);
+      if (method)
+        CFRelease(method);
+      if (req)
+        CFRelease(req);
+      if (readStream)
+        CFRelease(readStream);
       return NULL;
     }
     else
@@ -166,7 +170,7 @@ nuiHTTPResponse* nuiHTTPRequest::SendRequest(const nuiHTTPResponseReceivedDelega
       }
       else
       {
-        if (doadd)
+        if (doadd && pResponse)
           pResponse->AddToBody(&buf[0], size);
       }
     }

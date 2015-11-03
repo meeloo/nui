@@ -902,8 +902,8 @@ bool nuiScrollView::MouseMoved(const nglMouseInfo& rInfo)
   mSpeedX = vectX / elapsed;
   mSpeedY = vectY / elapsed;
   
-  double accelX = mSpeedX / oldSpeedX;
-  double accelY = mSpeedY / oldSpeedY;
+//  double accelX = mSpeedX / oldSpeedX;
+//  double accelY = mSpeedY / oldSpeedY;
   
   //  NGL_OUT("Elapsed %f VectY %f SpeedY %f AccelY %f\n", elapsed, vectY, mSpeedY, accelY);
   
@@ -1185,7 +1185,6 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     }
     else
     {
-      xdiff = 0;
       mXOffset = XOffset;
       mSpeedX = 0;
     }
@@ -1215,7 +1214,6 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     }
     else
     {
-      ydiff = 0;
       mYOffset = YOffset;
       mSpeedY = 0;
     }
@@ -1397,10 +1395,14 @@ void nuiScrollView::SetHideScrollBars(bool hide)
   }
   else if (!mpShowAnimH)
   {
-    mpShowAnimH->Release();
-    mpShowAnimV->Release();
-    mpHideAnimH->Release();
-    mpHideAnimV->Release();
+    if (mpShowAnimH)
+      mpShowAnimH->Release();
+    if (mpShowAnimV)
+      mpShowAnimV->Release();
+    if (mpHideAnimH)
+      mpHideAnimH->Release();
+    if (mpHideAnimV)
+      mpHideAnimV->Release();
     mpShowAnimH = NULL;
     mpShowAnimV = NULL;
     mpHideAnimH = NULL;

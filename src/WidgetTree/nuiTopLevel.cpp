@@ -1015,7 +1015,7 @@ nuiWidgetPtr DeepSearchPreviousFocussableWidget(nuiWidgetPtr pWidget, bool TryTh
     }
   }
   
-  if (TryThisNode && pWidget->GetWantKeyboardFocus())
+  if (TryThisNode && pWidget && pWidget->GetWantKeyboardFocus())
     return pWidget;
   
   return NULL;

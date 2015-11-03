@@ -209,7 +209,7 @@ public:
   }
   
 private:
-  const nuiRefCount* mpRef;
+  const nuiRefCount* mpRef = nullptr;
 };
 
 template <class T>

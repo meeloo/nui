@@ -264,8 +264,8 @@ void glAAGenerateAABuffer(float Falloff, float alias, uint8* texture)
 {      
   // compute the AA sphere
   {
-    uint32 l2phf = ToBelow(log2(phf));
-    uint32 l2psz = ToBelow(log2(psz));
+//    uint32 l2phf = ToBelow(log2(phf));
+//    uint32 l2psz = ToBelow(log2(psz));
     
     int32 x = phf - 1;
     int32 y = 0;
@@ -561,7 +561,7 @@ void glAAVertex2f(float x, float y)
           // real sqrt. But the err is too high on the G5, so we need a divide here.
           alpha_fix *= MIN(1.0f, leng);
           leng = MAX(1.0f, leng);
-          perpd = MIN(1.0f, perpd);
+//          perpd = MIN(1.0f, perpd); // Never used?
           x1 -= perp_y * 0.5f;
           y1 += perp_x * 0.5f;
         } 
@@ -569,12 +569,12 @@ void glAAVertex2f(float x, float y)
         {
           perp_y = 0.0f;
           perp_x = 1.0f;
-          perpd = leng = 1.0f;
+//          perpd = leng = 1.0f; // Never used?
         }
 
         float width = (maxr + 1.0f) * 0.5f;
-        float unit_x = -perp_y;
-        float unit_y =  perp_x;
+//        float unit_x = -perp_y; // Never Used?
+//        float unit_y =  perp_x; // Never Used?
         perp_y *= width;
         perp_x *= width;
         float parl_x = -perp_y;
@@ -582,8 +582,8 @@ void glAAVertex2f(float x, float y)
 
         float s = 0.0f;
 
-        int32 i = glAA_VAR_i;
-        const float lengm1 = leng - 1.0f;
+//        int32 i = glAA_VAR_i;  // Never Used?
+//        const float lengm1 = leng - 1.0f;  // Never Used?
 
         // pick vertex colors and adjust alpha if needed
         int32 c1 = (glAA_vc[glAA_vp]) ? glAA_v[glAA_vp].rgba : glAA_v[glAA_vcl].rgba;

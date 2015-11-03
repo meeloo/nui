@@ -15,7 +15,6 @@ using namespace std;
 int64 nuiObject::ObjectCount = 0;
 
 nuiObject::nuiObject()
-: mpTrace(NULL)
 {
   nglString name;
   name.CFormat("%p", this);
@@ -27,7 +26,6 @@ nuiObject::nuiObject()
 }
 
 nuiObject::nuiObject(const nglString& rObjectName)
-: mpTrace(NULL)
 {
   Init(rObjectName);
 //  ObjectCount++;
@@ -41,27 +39,67 @@ void nuiObject::Init(const nglString& rObjectName)
 #ifdef _NUI_DEBUG_OBJECTS_
   {
     nglCriticalSectionGuard g(gObjectTraceCS);
-    std::pair<std::map<nuiObject*, Trace>::iterator, bool> p = mObjects.insert(std::pair<nuiObject*, Trace>(this, Trace()));
-    NGL_ASSERT(p.first != mObjects.end());
-    std::map<nuiObject*, Trace>::iterator it = p.first; //mObjects.find(this);
-    mpTrace = &(it->second);
+    mpTrace = new Trace();
     mpTrace->mAlive = true;
+    mObjects[this] = mpTrace;
+
+    printf("new object '%s' %p -> %p\n", rObjectName.GetChars(), this, mpTrace);
 
     size_t s = mObjects.size();
-    //if (!(s % 500))
+    if (!(s % 500))
     {
       NGL_LOG("nuiObject", NGL_LOG_INFO, "Objects total count %d\n", s);
     }
   }
 #endif
 
+  SetObjectName(rObjectName);
+
   mClassNameIndex = -1;
-  if (SetObjectClass("nuiObject"))
+  nglString obj("nuiObject");
+  
+  
+  
+#if 1
+  {
+    {
+      CheckValid();
+#ifdef _DEBUG_
+      mpTrace->mClass = obj;
+#endif
+      
+      int32 c = GetClassNameIndex(obj);
+      bool first = mInheritanceMap[c] < -1;
+      mInheritanceMap[c] = GetObjectClassNameIndex();
+      
+      //	const nglString propname = _T("Class");
+      //  mProperties[propname] = obj;
+      
+      mClassNameIndex = c;
+      
+      DebugRefreshInfo();
+      
+#ifdef NUI_OBJECT_DEBUG_TOOLTIPS
+      {
+        // Enable this to debug your tooltips and classes
+        nglString tt;
+        tt.Add(GetObjectClass()).Add(_T(" - ")).Add(GetObjectName());
+        SetProperty(_T("ToolTip"), tt);
+      }
+#endif
+      if (first)
+      {
+        InitAttributes();
+      }
+    }
+  }
+#else
+  if (SetObjectClass(obj))
   {
     InitAttributes();
   }
-  SetObjectName(rObjectName);
-
+#endif
+    
   mSerializeMode = eSaveNode;
 
   mpToken = NULL;
@@ -644,13 +682,13 @@ bool nuiObject::ClearGlobalProperty(const char* pName)
   return ClearGlobalProperty(nglString(pName));
 }
 
-std::map<nuiObject*, nuiObject::Trace> nuiObject::mObjects;
+std::map<nuiObject*, nuiObject::Trace*> nuiObject::mObjects;
 nglCriticalSection nuiObject::gObjectTraceCS;
 
 #ifdef _NUI_DEBUG_OBJECTS_
 bool nuiObject::IsObject(void* pointer)
 {
-  std::map<nuiObject*, Trace>::const_iterator it = mObjects.find((nuiObject*)pointer);
+  std::map<nuiObject*, Trace*>::const_iterator it = mObjects.find((nuiObject*)pointer);
   return it != mObjects.end();
 }
 
@@ -659,18 +697,18 @@ void nuiObject::DumpObjectInfos(const nuiObject* pointer)
   nglString str;
   {
     nglCriticalSectionGuard g(gObjectTraceCS);
-    std::map<nuiObject*, Trace>::const_iterator it = mObjects.find(const_cast<nuiObject*>(pointer));
+    std::map<nuiObject*, Trace*>::const_iterator it = mObjects.find(const_cast<nuiObject*>(pointer));
     if (it == mObjects.end())
     {
       str.CFormat("Operating on an invalid Object! %p was never created.\n", pointer);
     }
-    else if (!it->second.mAlive)
+    else if (!it->second->mAlive)
     {
-      str.CFormat("Operating on a deleted Object! %p (%s - %s).\n", pointer, it->second.mClass.GetChars(), it->second.mName.GetChars());
+      str.CFormat("Operating on a deleted Object! %p (%s - %s).\n", pointer, it->second->mClass.GetChars(), it->second->mName.GetChars());
     }
     else
     {
-      str.CFormat("Valid Object! %p (%s - %s).\n", pointer, it->second.mClass.GetChars(), it->second.mName.GetChars());
+      str.CFormat("Valid Object! %p (%s - %s).\n", pointer, it->second->mClass.GetChars(), it->second->mName.GetChars());
     }
   }
 
@@ -687,18 +725,18 @@ void nuiObject::CheckValidInternal() const
   nglString str;
   {
     nglCriticalSectionGuard g(gObjectTraceCS);
-    std::map<nuiObject*, Trace>::const_iterator it = mObjects.find(const_cast<nuiObject*>(this));
+    std::map<nuiObject*, Trace*>::const_iterator it = mObjects.find(const_cast<nuiObject*>(this));
     if (it == mObjects.end())
     {
       str.CFormat("Operating on an invalid Object! %p was never created.\n", this);
     }
-    else if (!it->second.mAlive)
+    else if (!it->second->mAlive)
     {
-      str.CFormat("Operating on an invalid Object! %p (%s - %s).\n", this, it->second.mClass.GetChars(), it->second.mName.GetChars());
+      str.CFormat("Operating on an invalid Object! %p (%s - %s).\n", this, it->second->mClass.GetChars(), it->second->mName.GetChars());
     }
     NGL_ASSERT(it != mObjects.end());
-    const Trace& rTrace(it->second);
-    NGL_ASSERT(rTrace.mAlive);
+    const Trace* pTrace = it->second;
+    NGL_ASSERT(pTrace->mAlive);
   }
   if (!str.IsEmpty())
   {

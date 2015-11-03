@@ -196,7 +196,6 @@ nuiRenderObject* nuiTessellator::GenerateFromShape(float Quality)
         }
       }
       gluTessEndContour(mpTess);
-      beginNext = true;
     }
   }
 

@@ -85,7 +85,7 @@ void nglKernel::NonBlockingHeartBeat()
 
 void objCCallOnInit(void* pUIApplication)
 {
-  NGL_ASSERT(App);
+  assert(App);
   App->mpUIApplication = pUIApplication;
   App->CallOnInit();
 
@@ -103,7 +103,7 @@ void objCCallOnInit(void* pUIApplication)
 
 void objCCallOnInitWithURL(void* pUIApplication, const nglString &url)
 {
-	NGL_ASSERT(App);
+	assert(App);
 	App->mpUIApplication = pUIApplication;
 	App->AddArg(_T("--openurl"));
 	App->AddArg(url);
@@ -112,13 +112,13 @@ void objCCallOnInitWithURL(void* pUIApplication, const nglString &url)
 
 void objCCallOnWillExit()
 {
-  NGL_ASSERT(App);
+  assert(App);
 	App->CallOnWillExit();
 }
 
 void objCCallOnExit(int Code)
 {
-  NGL_ASSERT(App);
+  assert(App);
   App->CallOnExit(Code);
 /*
 NGL_OUT(_T("objCCallOnExit trying to release our window\n"));
@@ -137,19 +137,19 @@ NGL_OUT(_T("objCCallOnExit App->CallOnExit\n"));
 
 void objCCallOnActivation()
 {
-  NGL_ASSERT(App);
+  assert(App);
 	App->CallOnActivation();
 }
 
 void objCCallOnDeactivation()
 {
-  NGL_ASSERT(App);
+  assert(App);
 	App->CallOnDeactivation();
 }
 
 void objCCallOnMemoryWarning()
 {
-  NGL_ASSERT(App);
+  assert(App);
 	App->CallOnMemoryWarning();
 }
 
