@@ -68,6 +68,7 @@ public:
 
   nuiRenderObject* Fill(float Quality);
   nuiRenderObject* Outline(float Quality, float LineWidth, nuiLineJoin LineJoin = nuiLineJoinMiter, nuiLineCap LineCap = nuiLineCapBut, float MiterLimit = 0.5f);
+  nuiRenderObject* Stroke(float Quality, float LineWidth, nuiLineJoin LineJoin = nuiLineJoinMiter, nuiLineCap LineCap = nuiLineCapBut, float MiterLimit = 0.5f);
 
   enum Winding 
   {

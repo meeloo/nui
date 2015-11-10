@@ -347,6 +347,60 @@ nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin L
 
 }
 
+nuiRenderObject* nuiShape::Stroke(float Quality, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
+{
+  nuiPath Vertices;
+  bool res = Tessellate(Vertices, Quality);
+
+  if (!res)
+    return nullptr;
+
+  nuiRenderObject* pObject = new nuiRenderObject();
+  uint total = Vertices.GetCount();
+
+  uint offset = 0;
+  uint count;
+
+  //Find sub path:
+  nuiRenderArray* pArray = nullptr;
+  std::vector<float> distance;
+  distance.reserve(Vertices.GetCount());
+  for (uint i = offset; i < total; i++)
+  {
+    uint ii = i+1;
+    if (Vertices[i].GetType() == nuiPointTypeStop || ii == total)
+    {
+      count = ii - offset;
+
+      if (!pArray)
+      {
+        // Only create an array if needed
+        pArray = new nuiRenderArray(GL_TRIANGLE_STRIP, false, false, false);
+      }
+
+      if (Vertices[i].GetType() == nuiPointTypeStop)
+      {
+        // restart the process:
+        count--;
+
+        pArray->AddStream(nuiRenderArray::StreamDesc(0, 1, distance.size(), &distance[0], true, false));
+        distance.clear();
+        pObject->AddArray(pArray);
+        pArray = nullptr;
+      }
+      else
+      {
+        
+      }
+
+      offset = ii;
+    }
+  }
+
+  return pObject;
+}
+
+
 /*
 nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
 {
