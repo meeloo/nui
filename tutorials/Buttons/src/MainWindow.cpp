@@ -117,7 +117,36 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+class nuiStrokeTest : public nuiWidget
+{
+public:
+  
+  nuiStrokeTest()
+  {
+    mpShape = new nuiShape();
+    mpShape->LineTo(nuiPoint(10, 10));
+    mpShape->LineTo(nuiPoint(100, 10));
+    mpShape->LineTo(nuiPoint(50, 50));
+    mpShape->LineTo(nuiPoint(100, 100));
+    mpShape->LineTo(nuiPoint(10, 150));
+    mpShape->LineTo(nuiPoint(50, 75));
+  }
+  
+  nuiRect CalcIdealSize()
+  {
+    return nuiRect(200, 200);
+  }
+  
+  bool Draw(nuiDrawContext* pContext)
+  {
+    pContext->SetFillColor(nuiColor("blue"));
+    pContext->DrawObject(*mpShape->Stroke(1.0, 3));
+    return true;
+  }
 
+private:
+  nuiShape* mpShape = nullptr;
+};
 
 
 /*
@@ -147,7 +176,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  int test = 0;
+  int test = 6;
   switch (test)
   {
   case 0:
@@ -335,6 +364,10 @@ void MainWindow::OnCreation()
       pScroll->AddChild(pList);
       AddChild(pScroll);
     } break;
+    case 6:
+    {
+      AddChild(new nuiStrokeTest());
+    }
   }
 }
 
