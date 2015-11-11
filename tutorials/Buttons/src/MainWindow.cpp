@@ -124,12 +124,12 @@ public:
   nuiStrokeTest()
   {
     mpShape = new nuiShape();
-    mpShape->LineTo(nuiPoint(10, 10));
-    mpShape->LineTo(nuiPoint(100, 10));
     mpShape->LineTo(nuiPoint(50, 50));
-    mpShape->LineTo(nuiPoint(100, 100));
-    mpShape->LineTo(nuiPoint(10, 150));
-    mpShape->LineTo(nuiPoint(50, 75));
+    mpShape->LineTo(nuiPoint(200, 150));
+    mpShape->LineTo(nuiPoint(150, 180));
+    mpShape->LineTo(nuiPoint(231, 200));
+    mpShape->LineTo(nuiPoint(50, 210));
+    mpShape->LineTo(nuiPoint(25, 150));
   }
   
   nuiRect CalcIdealSize()
@@ -140,7 +140,7 @@ public:
   bool Draw(nuiDrawContext* pContext)
   {
     pContext->SetFillColor(nuiColor("blue"));
-    pContext->DrawObject(*mpShape->Stroke(1.0, 3));
+    pContext->DrawObject(*mpShape->Stroke(1.0, 30));
     return true;
   }
 
