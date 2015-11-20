@@ -350,7 +350,6 @@ nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin L
 // Adapted from https://github.com/paulhoux/Cinder-Samples/blob/master/GeometryShader/assets/shaders/lines1.geom
 static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
 {
-  const float MITER_LIMIT = -1.0;
   const float HalfLineWidth = LineWidth / 2;
   nuiRenderArray* pArray = new nuiRenderArray(GL_TRIANGLE_STRIP);
 //  pArray->EnableArray(nuiRenderArray::eTexCoord);
@@ -388,11 +387,15 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     float length_a = HalfLineWidth / ( miter_a * n1 );
     float length_b = HalfLineWidth / ( miter_b * n1 );
 
+    bool skipfirst = false;
+    
     // prevent excessively long miters at sharp corners
-    if ( ( v0 * v1 ) < -MITER_LIMIT )
+    if ( ( v0 * v1 ) < -MiterLimit )
     {
       miter_a = n1;
       length_a = HalfLineWidth;
+      
+      skipfirst = true;
       
       // close the gap
       if ( ( v0 * n1 ) > 0 )
@@ -400,19 +403,19 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
         pArray->SetTexCoords(0, 0);
         pArray->SetVertex(p1 + HalfLineWidth * n0);
         pArray->SetNormal(1, 0, 0);
-        pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+        pArray->SetColor(1.0f, 1.0f, 0.0f, 1.0f);
         pArray->PushVertex();
         
         pArray->SetTexCoords( 0, 0 );
         pArray->SetVertex( p1 + HalfLineWidth * n1 );
         pArray->SetNormal(1, 0, 0);
-        pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+        pArray->SetColor(1.0f, 0.0f, 1.0f, 1.0f);
         pArray->PushVertex();
         
         pArray->SetTexCoords( 0, 0.5 );
         pArray->SetVertex(p1);
         pArray->SetNormal(1, 0, 0);
-        pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+        pArray->SetColor(0.0f, 1.0f, 1.0f, 1.0f);
         pArray->PushVertex();
       }
       else
@@ -437,23 +440,26 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
       }
     }
     
-    if( ( v1 * v2 ) < -MITER_LIMIT ) {
+    if( ( v1 * v2 ) < -MiterLimit ) {
       miter_b = n1;
       length_b = HalfLineWidth;
     }
     
     // generate the triangle strip
-    pArray->SetTexCoords( 0, 0 );
-    pArray->SetVertex( p1 + length_a * miter_a );
-    pArray->SetNormal(1, 0, 0);
-    pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
-    pArray->PushVertex();
-    
-    pArray->SetTexCoords( 0, 1 );
-    pArray->SetVertex( p1 - length_a * miter_a );
-    pArray->SetNormal(-1, 0, 0);
-    pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
-    pArray->PushVertex();
+    if (!skipfirst)
+    {
+      pArray->SetTexCoords( 0, 0 );
+      pArray->SetVertex( p1 + length_a * miter_a );
+      pArray->SetNormal(1, 0, 0);
+      pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+      pArray->PushVertex();
+      
+      pArray->SetTexCoords( 0, 1 );
+      pArray->SetVertex( p1 - length_a * miter_a );
+      pArray->SetNormal(-1, 0, 0);
+      pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+      pArray->PushVertex();
+    }
     
     pArray->SetTexCoords( 0, 0 );
     pArray->SetVertex( p2 + length_b * miter_b );
@@ -466,7 +472,6 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     pArray->SetNormal(-1, 0, 0);
     pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
     pArray->PushVertex();
-    
   }
   
   return pArray;

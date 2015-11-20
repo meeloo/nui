@@ -484,6 +484,11 @@ void nuiWidget::InitAttributes()
                ("DrawToLayer", nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetDrawToLayer)));
   
+  AddAttribute(new nuiAttribute<bool> ("EnableMouseEvents", nuiUnitBoolean,
+                                       nuiMakeDelegate(this, &nuiWidget::MouseEventsEnabled),
+                                       nuiMakeDelegate(this, &nuiWidget::EnableMouseEvents)));
+
+  
 
 }
 
@@ -1500,7 +1505,7 @@ nuiKeyModifier nuiWidget::GetHotKeyMask() const
 }
 
 
-void nuiWidget::EnableMouseEvent(bool enable)
+void nuiWidget::EnableMouseEvents(bool enable)
 {
   CheckValid();
   mMouseEventEnabled = enable;
