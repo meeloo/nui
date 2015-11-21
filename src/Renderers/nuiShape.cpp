@@ -391,10 +391,13 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     nuiVector p1a = p1 + n1 * HalfLineWidth;
     nuiVector p1b = p1 - n1 * HalfLineWidth;
 
+    nuiVector pma = p1 + length * miter;
+    nuiVector pmb = p1 - length * miter;
+    
     bool skipfirst = false;
     
     // prevent excessively long miters at sharp corners
-    if ( ( v0 * v1 ) < -MiterLimit )
+    if (( v0 * v1 ) < -MiterLimit )
     {
       miter = n1;
       length = HalfLineWidth;
@@ -405,62 +408,57 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
       if ( ( v0 * n1 ) > 0 )
       {
         pArray->SetTexCoords(0, 0);
-        pArray->SetVertex(p1 - HalfLineWidth * n0);
+        pArray->SetVertex(p0a);
         pArray->SetNormal(1, 0, 0);
         pArray->SetColor(1.0f, 1.0f, 0.0f, 1.0f);
         pArray->PushVertex();
         
         pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( p1 - length * miter );
+        pArray->SetVertex( pmb );
         pArray->SetNormal(-1, 0, 0);
         pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
         pArray->PushVertex();
 
         pArray->SetTexCoords( 0, 0 );
-        pArray->SetVertex( p1 - HalfLineWidth * n1 );
+        pArray->SetVertex( p1a );
         pArray->SetNormal(1, 0, 0);
         pArray->SetColor(0.0f, 1.0f, 1.0f, 1.0f);
         pArray->PushVertex();
-//
-//        pArray->SetTexCoords( 0, 0.5 );
-//        pArray->SetVertex(p1);
-//        pArray->SetNormal(1, 0, 0);
-//        pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
-//        pArray->PushVertex();
-
-//        pArray->SetTexCoords( 0, 0 );
-//        pArray->SetVertex( p1 + length * miter );
-//        pArray->SetNormal(1, 0, 0);
-//        pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
-//        pArray->PushVertex();
-//
-//        pArray->SetTexCoords( 0, 1 );
-//        pArray->SetVertex( p1 - length * miter );
-//        pArray->SetNormal(-1, 0, 0);
-//        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
-//        pArray->PushVertex();
+        
+        pArray->SetTexCoords( 0, 1 );
+        pArray->SetVertex( pmb );
+        pArray->SetNormal(-1, 0, 0);
+        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+        pArray->PushVertex();
+        
       }
       else
       {
         pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( p1 + HalfLineWidth * n0 );
+        pArray->SetVertex( pma );
         pArray->SetNormal(-1, 0, 0);
         pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
         pArray->PushVertex();
 
           pArray->SetTexCoords( 0, 1 );
-          pArray->SetVertex( p1 + length * miter );
+          pArray->SetVertex( p0b );
           pArray->SetNormal(-1, 0, 0);
           pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
           pArray->PushVertex();
 
         pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( p1 + HalfLineWidth * n1 );
+        pArray->SetVertex( pma );
         pArray->SetNormal(-1, 0, 0);
         pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
         pArray->PushVertex();
         
-//        pArray->SetTexCoords( 0, 0.5 );
+        pArray->SetTexCoords( 0, 1 );
+        pArray->SetVertex( p1b );
+        pArray->SetNormal(-1, 0, 0);
+        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+        pArray->PushVertex();
+
+        //        pArray->SetTexCoords( 0, 0.5 );
 //        pArray->SetVertex(p1);
 //        pArray->SetNormal(0, 0, 0);
 //        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
@@ -483,13 +481,13 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     {
       // generate the triangle strip
       pArray->SetTexCoords( 0, 0 );
-      pArray->SetVertex( p1 + length * miter );
+      pArray->SetVertex( pma );
       pArray->SetNormal(1, 0, 0);
       pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
       pArray->PushVertex();
       
       pArray->SetTexCoords( 0, 1 );
-      pArray->SetVertex( p1 - length * miter );
+      pArray->SetVertex( pmb );
       pArray->SetNormal(-1, 0, 0);
       pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
       pArray->PushVertex();
