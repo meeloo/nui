@@ -396,7 +396,7 @@ public:
   //@{
   virtual bool AcceptsMultipleGrabs() const { return false; }
   // These three methods receive the mouse coordinates in this object referential
-  void EnableMouseEvent(bool enable);
+  void EnableMouseEvents(bool enable);
   bool MouseEventsEnabled() const;
 //  virtual bool MouseClicked  (nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
 //  virtual bool MouseUnclicked(nuiSize X, nuiSize Y, nglMouseInfo::Flags Button);
