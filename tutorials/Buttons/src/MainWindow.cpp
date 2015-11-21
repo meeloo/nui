@@ -126,10 +126,10 @@ public:
     mpShape = new nuiShape();
     mpShape->LineTo(nuiPoint(50, 50));
     mpShape->LineTo(nuiPoint(200, 150));
-    mpShape->LineTo(nuiPoint(150, 180));
-    mpShape->LineTo(nuiPoint(231, 200));
-    mpShape->LineTo(nuiPoint(50, 210));
-    mpShape->LineTo(nuiPoint(25, 150));
+//      mpShape->LineTo(nuiPoint(150, 180));
+//      mpShape->LineTo(nuiPoint(231, 200));
+    mpShape->LineTo(nuiPoint(70, 180));
+//      mpShape->LineTo(nuiPoint(25, 150));
   }
   
   nuiRect CalcIdealSize()
