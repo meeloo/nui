@@ -380,7 +380,7 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     // determine the length of the miter by projecting it onto normal and then inverse it
     float length = HalfLineWidth / ( miter* n1 );
 
-    // p0a--------p1b
+    // p0a--------p1a
     // |           |
     // p0----------p1
     // |           |
@@ -408,25 +408,25 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
       if ( ( v0 * n1 ) > 0 )
       {
         pArray->SetTexCoords(0, 0);
-        pArray->SetVertex(p0a);
+        pArray->SetVertex(pma);
         pArray->SetNormal(1, 0, 0);
         pArray->SetColor(1.0f, 1.0f, 0.0f, 1.0f);
         pArray->PushVertex();
         
         pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( pmb );
+        pArray->SetVertex( p0b );
         pArray->SetNormal(-1, 0, 0);
         pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
         pArray->PushVertex();
 
         pArray->SetTexCoords( 0, 0 );
-        pArray->SetVertex( p1a );
+        pArray->SetVertex( pma );
         pArray->SetNormal(1, 0, 0);
         pArray->SetColor(0.0f, 1.0f, 1.0f, 1.0f);
         pArray->PushVertex();
         
         pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( pmb );
+        pArray->SetVertex( p0b );
         pArray->SetNormal(-1, 0, 0);
         pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
         pArray->PushVertex();
@@ -435,46 +435,28 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
       else
       {
         pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( pma );
+        pArray->SetVertex( p0a );
         pArray->SetNormal(-1, 0, 0);
-        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+        pArray->SetColor(0.0f, 1.0f, 0.0f, 1.0f);
         pArray->PushVertex();
 
           pArray->SetTexCoords( 0, 1 );
-          pArray->SetVertex( p0b );
+          pArray->SetVertex( pmb );
           pArray->SetNormal(-1, 0, 0);
-          pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+          pArray->SetColor(1.0f, 0.0f, 1.0f, 1.0f);
           pArray->PushVertex();
 
         pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( pma );
+        pArray->SetVertex( p1a );
         pArray->SetNormal(-1, 0, 0);
-        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+        pArray->SetColor(1.0f, 1.0f, 0.0f, 1.0f);
         pArray->PushVertex();
         
         pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( p1b );
+        pArray->SetVertex( pmb );
         pArray->SetNormal(-1, 0, 0);
-        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+        pArray->SetColor(0.0f, 1.0f, 1.0f, 1.0f);
         pArray->PushVertex();
-
-        //        pArray->SetTexCoords( 0, 0.5 );
-//        pArray->SetVertex(p1);
-//        pArray->SetNormal(0, 0, 0);
-//        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
-//        pArray->PushVertex();
-
-//        pArray->SetTexCoords( 0, 0 );
-//        pArray->SetVertex( p1 + length * miter );
-//        pArray->SetNormal(1, 0, 0);
-//        pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
-//        pArray->PushVertex();
-//
-//        pArray->SetTexCoords( 0, 1 );
-//        pArray->SetVertex( p1 - length * miter );
-//        pArray->SetNormal(-1, 0, 0);
-//        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
-//        pArray->PushVertex();
       }
     }
     else
