@@ -351,7 +351,10 @@ nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin L
 static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
 {
   const float HalfLineWidth = LineWidth / 2;
+  const float HalfLineWidthRef = HalfLineWidth + 1;
+  
   nuiRenderArray* pArray = new nuiRenderArray(GL_TRIANGLE_STRIP);
+//  nuiRenderArray* pArray = new nuiRenderArray(GL_LINE_STRIP);
 //  pArray->EnableArray(nuiRenderArray::eTexCoord);
   pArray->EnableArray(nuiRenderArray::eNormal);
   pArray->EnableArray(nuiRenderArray::eColor);
@@ -378,7 +381,7 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     miter.Normalize();
 
     // determine the length of the miter by projecting it onto normal and then inverse it
-    float length = HalfLineWidth / ( miter* n1 );
+    float length = HalfLineWidthRef / ( miter* n1 );
 
     // p0a--------p1a
     // |           |
@@ -386,92 +389,83 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     // |           |
     // p0b--------p1b
 
-    nuiVector p0a = p0 + n0 * HalfLineWidth;
-    nuiVector p0b = p0 - n0 * HalfLineWidth;
-    nuiVector p1a = p1 + n1 * HalfLineWidth;
-    nuiVector p1b = p1 - n1 * HalfLineWidth;
+    nuiVector o0 = n0 * HalfLineWidthRef;
+    nuiVector o1 = n1 * HalfLineWidthRef;
+    
+    nuiVector p0a = p1 + o0;
+    nuiVector p0b = p1 - o0;
+    nuiVector p1a = p1 + o1;
+    nuiVector p1b = p1 - o1;
 
     nuiVector pma = p1 + length * miter;
     nuiVector pmb = p1 - length * miter;
     
-    bool skipfirst = false;
+    nuiColor left("red");
+    nuiColor right("blue");
     
     // prevent excessively long miters at sharp corners
     if (( v0 * v1 ) < -MiterLimit )
     {
       miter = n1;
-      length = HalfLineWidth;
-      
-      skipfirst = true;
+      length = HalfLineWidthRef;
       
       // close the gap
       if ( ( v0 * n1 ) > 0 )
       {
-        pArray->SetTexCoords(0, 0);
-        pArray->SetVertex(pma);
-        pArray->SetNormal(1, 0, 0);
-        pArray->SetColor(1.0f, 1.0f, 0.0f, 1.0f);
-        pArray->PushVertex();
-        
-        pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( p0b );
-        pArray->SetNormal(-1, 0, 0);
-        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+        pArray->SetVertex( p0a );
+        pArray->SetColor(left);
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
 
-        pArray->SetTexCoords( 0, 0 );
-        pArray->SetVertex( pma );
-        pArray->SetNormal(1, 0, 0);
-        pArray->SetColor(0.0f, 1.0f, 1.0f, 1.0f);
+        pArray->SetVertex(pmb);
+        pArray->SetColor(right);
+        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+        pArray->PushVertex();
+
+        pArray->SetVertex( p1a );
+        pArray->SetColor(left);
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
         
-        pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( p0b );
-        pArray->SetNormal(-1, 0, 0);
-        pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+        pArray->SetVertex(pmb);
+        pArray->SetColor(right);
+        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
-        
       }
       else
       {
-        pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( p0a );
-        pArray->SetNormal(-1, 0, 0);
-        pArray->SetColor(0.0f, 1.0f, 0.0f, 1.0f);
+        pArray->SetVertex( pma );
+        pArray->SetColor(left);
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
 
-          pArray->SetTexCoords( 0, 1 );
-          pArray->SetVertex( pmb );
-          pArray->SetNormal(-1, 0, 0);
-          pArray->SetColor(1.0f, 0.0f, 1.0f, 1.0f);
-          pArray->PushVertex();
-
-        pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( p1a );
-        pArray->SetNormal(-1, 0, 0);
-        pArray->SetColor(1.0f, 1.0f, 0.0f, 1.0f);
+        pArray->SetVertex( p0b );
+        pArray->SetColor(right);
+        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
         
-        pArray->SetTexCoords( 0, 1 );
-        pArray->SetVertex( pmb );
-        pArray->SetNormal(-1, 0, 0);
-        pArray->SetColor(0.0f, 1.0f, 1.0f, 1.0f);
+        pArray->SetVertex( pma );
+        pArray->SetColor(left);
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+        pArray->PushVertex();
+        
+        pArray->SetVertex( p1b );
+        pArray->SetColor(right);
+        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
       }
     }
     else
     {
       // generate the triangle strip
-      pArray->SetTexCoords( 0, 0 );
       pArray->SetVertex( pma );
-      pArray->SetNormal(1, 0, 0);
-      pArray->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+      pArray->SetColor(left);
+      pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
       pArray->PushVertex();
       
-      pArray->SetTexCoords( 0, 1 );
       pArray->SetVertex( pmb );
-      pArray->SetNormal(-1, 0, 0);
-      pArray->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+      pArray->SetColor(right);
+      pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
       pArray->PushVertex();
     }
   }

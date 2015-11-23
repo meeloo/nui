@@ -116,6 +116,45 @@ public:
   }
 };
 
+static const char* vertex_shader =
+SHADER_STRING
+(
+ 
+attribute vec4 Position;
+attribute vec3 Normal;
+attribute vec4 Color;
+uniform mat4 SurfaceMatrix;
+uniform mat4 ModelViewMatrix;
+uniform mat4 ProjectionMatrix;
+uniform vec4 Offset;
+varying vec4 ColorVar;
+varying vec3 NormalVar;
+
+void main()
+{
+  ColorVar = Color;
+  NormalVar = Normal;
+  gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
+}
+ 
+);
+
+static const char* fragment_shader =
+SHADER_STRING
+(
+varying vec4 ColorVar;
+varying vec3 NormalVar;
+
+void main()
+{
+  float ref = abs(NormalVar.y);
+  float width = NormalVar.z;
+  float smooth = 1.0 - smoothstep(width, width + 0.5, ref);
+  gl_FragColor = ColorVar * vec4(smooth);
+}
+ 
+);
+
 ////////////////////////////////////////////////////////////////////////////////
 class nuiStrokeTest : public nuiWidget
 {
@@ -126,10 +165,17 @@ public:
     mpShape = new nuiShape();
     mpShape->LineTo(nuiPoint(50, 50));
     mpShape->LineTo(nuiPoint(200, 150));
-//      mpShape->LineTo(nuiPoint(150, 180));
+      mpShape->LineTo(nuiPoint(150, 180));
 //      mpShape->LineTo(nuiPoint(231, 200));
     mpShape->LineTo(nuiPoint(70, 180));
-//      mpShape->LineTo(nuiPoint(25, 150));
+      mpShape->LineTo(nuiPoint(250, 50));
+    mpShape->LineTo(nuiPoint(100, 50));
+    
+    mpShader = new nuiShaderProgram("Stroker");
+    mpShader->AddShader(eVertexShader, vertex_shader);
+    mpShader->AddShader(eFragmentShader, fragment_shader);
+    mpShader->Link();
+    mpShaderState = mpShader->GetCurrentState();
   }
   
   nuiRect CalcIdealSize()
@@ -140,12 +186,18 @@ public:
   bool Draw(nuiDrawContext* pContext)
   {
     pContext->SetFillColor(nuiColor("blue"));
-    pContext->DrawObject(*mpShape->Stroke(1.0, 30));
+    pContext->SetShader(mpShader, mpShaderState);
+    pContext->DrawObject(*mpShape->Stroke(1.0, .0125));
+    
+    
     return true;
   }
 
 private:
   nuiShape* mpShape = nullptr;
+  nuiShaderProgram *mpShader = nullptr;
+  nuiShaderState *mpShaderState = nullptr;
+  
 };
 
 
