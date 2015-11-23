@@ -358,6 +358,7 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
 //  pArray->EnableArray(nuiRenderArray::eTexCoord);
   pArray->EnableArray(nuiRenderArray::eNormal);
   pArray->EnableArray(nuiRenderArray::eColor);
+  pArray->SetShape(true);
 
   size_t count = subpath.size() - 2;
   for (size_t i = 0; i < count; i++)

@@ -147,7 +147,7 @@ varying vec3 NormalVar;
 
 void main()
 {
-  float feather = .5;
+  float feather = 1.;
   float ref = abs(NormalVar.y);
   float width = NormalVar.z;
   float smooth = smoothstep(width - feather, width + feather, ref);
@@ -177,10 +177,10 @@ public:
     mpShape = new nuiShape();
     mpShape->LineTo(nuiPoint(50, 50));
     mpShape->LineTo(nuiPoint(200, 150));
-//      mpShape->LineTo(nuiPoint(150, 180));
-//      mpShape->LineTo(nuiPoint(231, 200));
-//    mpShape->LineTo(nuiPoint(70, 180));
-//      mpShape->LineTo(nuiPoint(250, 50));
+      mpShape->LineTo(nuiPoint(150, 180));
+      mpShape->LineTo(nuiPoint(231, 200));
+    mpShape->LineTo(nuiPoint(70, 180));
+      mpShape->LineTo(nuiPoint(250, 50));
     mpShape->LineTo(nuiPoint(100, 25));
     mpShape->LineTo(nuiPoint(50, 80));
 
@@ -213,7 +213,7 @@ private:
   nuiShape* mpShape = nullptr;
   nuiShaderProgram *mpShader = nullptr;
   nuiShaderState *mpShaderState = nullptr;
-  float mStrokeWidth = 20;
+  float mStrokeWidth = 1;
 };
 
 
