@@ -147,10 +147,11 @@ varying vec3 NormalVar;
 
 void main()
 {
+  float feather = .5;
   float ref = abs(NormalVar.y);
   float width = NormalVar.z;
-  float smooth = 1.0 - smoothstep(width, width + 0.5, ref);
-  gl_FragColor = ColorVar * vec4(smooth);
+  float smooth = smoothstep(width - feather, width + feather, ref);
+  gl_FragColor = vec4(ColorVar.xyz, ColorVar.w * vec4(1.0 - sqrt(smooth)));
 }
  
 );
@@ -162,15 +163,27 @@ public:
   
   nuiStrokeTest()
   {
+    if (SetObjectClass("nuiStrokeTest"))
+    {
+      AddAttribute(new nuiAttribute<float>
+                   (nglString("StrokeWidth"), nuiUnitSize,
+                    nuiMakeDelegate(this, &nuiStrokeTest::GetStrokeWidth),
+                    nuiMakeDelegate(this, &nuiStrokeTest::SetStrokeWidth),
+                    nuiRange(1, 0.125, 50, .1, .1, 0)
+                    ));
+
+    }
+
     mpShape = new nuiShape();
     mpShape->LineTo(nuiPoint(50, 50));
     mpShape->LineTo(nuiPoint(200, 150));
-      mpShape->LineTo(nuiPoint(150, 180));
+//      mpShape->LineTo(nuiPoint(150, 180));
 //      mpShape->LineTo(nuiPoint(231, 200));
-    mpShape->LineTo(nuiPoint(70, 180));
-      mpShape->LineTo(nuiPoint(250, 50));
-    mpShape->LineTo(nuiPoint(100, 50));
-    
+//    mpShape->LineTo(nuiPoint(70, 180));
+//      mpShape->LineTo(nuiPoint(250, 50));
+    mpShape->LineTo(nuiPoint(100, 25));
+    mpShape->LineTo(nuiPoint(50, 80));
+
     mpShader = new nuiShaderProgram("Stroker");
     mpShader->AddShader(eVertexShader, vertex_shader);
     mpShader->AddShader(eFragmentShader, fragment_shader);
@@ -185,19 +198,22 @@ public:
   
   bool Draw(nuiDrawContext* pContext)
   {
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(nuiBlendTransp);
     pContext->SetFillColor(nuiColor("blue"));
     pContext->SetShader(mpShader, mpShaderState);
-    pContext->DrawObject(*mpShape->Stroke(1.0, .0125));
+    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth));
     
     
     return true;
   }
 
+  NUI_GETSETDO(float , StrokeWidth, Invalidate());
 private:
   nuiShape* mpShape = nullptr;
   nuiShaderProgram *mpShader = nullptr;
   nuiShaderState *mpShaderState = nullptr;
-  
+  float mStrokeWidth = 20;
 };
 
 

@@ -63,7 +63,8 @@ bool nuiEditLine::KeyDown (const nglKeyEvent& rEvent)
     if (Activated())
     {
       nuiTopLevel* pTop = GetTopLevel();
-      pTop->EndTextInput();
+      if (pTop)
+        pTop->EndTextInput();
     }
     Invalidate();
     return true;

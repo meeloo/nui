@@ -351,7 +351,7 @@ nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin L
 static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
 {
   const float HalfLineWidth = LineWidth / 2;
-  const float HalfLineWidthRef = HalfLineWidth + 1;
+  const float HalfLineWidthRef = HalfLineWidth + .5;
   
   nuiRenderArray* pArray = new nuiRenderArray(GL_TRIANGLE_STRIP);
 //  nuiRenderArray* pArray = new nuiRenderArray(GL_LINE_STRIP);
@@ -489,15 +489,26 @@ nuiRenderObject* nuiShape::Stroke(float Quality, float LineWidth, nuiLineJoin Li
 
   std::vector<nuiVector> subpath;
   //Find sub path:
+
   for (uint i = offset; i < total; i++)
   {
     uint ii = i+1;
     if (Vertices[i].GetType() == nuiPointTypeStop || ii == total)
     {
       size_t c = subpath.size();
-      subpath.push_back(2.0 * subpath[c - 1] - subpath[c - 2]);
+
+      if (subpath.size() > 2 && subpath[1] == subpath.back()) // If the path is closed then do what needs to be done
+      {
+        subpath[0] = subpath[c - 2];
+        subpath.push_back(subpath[2]);
+      }
+      else
+      {
+        subpath.push_back(2.0 * subpath[c - 1] - subpath[c - 2]);
+      }
+
       pObject->AddArray(StrokeSubPath(subpath, LineWidth, LineJoin, LineCap, MiterLimit));
-      
+
       // restart the process:
       subpath.clear();
       offset = ii;
