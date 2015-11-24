@@ -169,7 +169,7 @@ public:
                    (nglString("StrokeWidth"), nuiUnitSize,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetStrokeWidth),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetStrokeWidth),
-                    nuiRange(1, 0.125, 50, .1, .1, 0)
+                    nuiRange(1, 0.125, 150, .1, .1, 0)
                     ));
 
     }
@@ -177,11 +177,11 @@ public:
     mpShape = new nuiShape();
     mpShape->LineTo(nuiPoint(50, 50));
     mpShape->LineTo(nuiPoint(200, 150));
-      mpShape->LineTo(nuiPoint(150, 180));
+      mpShape->LineTo(nuiPoint(180, 180));
       mpShape->LineTo(nuiPoint(231, 200));
     mpShape->LineTo(nuiPoint(70, 180));
-      mpShape->LineTo(nuiPoint(250, 50));
-    mpShape->LineTo(nuiPoint(100, 25));
+      mpShape->LineTo(nuiPoint(200, 50));
+    mpShape->LineTo(nuiPoint(150, 25));
     mpShape->LineTo(nuiPoint(50, 80));
 
     mpShader = new nuiShaderProgram("Stroker");
@@ -189,6 +189,14 @@ public:
     mpShader->AddShader(eFragmentShader, fragment_shader);
     mpShader->Link();
     mpShaderState = mpShader->GetCurrentState();
+    
+    nuiAttribBase Attrib(GetAttribute("StrokeWidth"));
+    if (Attrib.IsValid())
+    {
+      nuiAttributeEditor* pEditor = Attrib.GetEditor();
+      pEditor->SetPosition(nuiTopLeft);
+      AddChild(pEditor);
+    }
   }
   
   nuiRect CalcIdealSize()
