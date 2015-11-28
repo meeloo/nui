@@ -369,6 +369,8 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
 
     nuiVector v0 = p1 - p0;
     nuiVector v1 = p2 - p1;
+    float l0 = v0.Length();
+    float l1 = v1.Length();
 
     v0.Normalize();
     v1.Normalize();
@@ -401,59 +403,81 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     nuiVector pma = p1 + length * miter;
     nuiVector pmb = p1 - length * miter;
     
-    nuiColor left("red");
-    nuiColor right("blue");
-    
+    nuiColor left(.5f, .5f, .5f, .5f);
+    nuiColor right(.5f, .5f, .5f, .5f);
+
     // prevent excessively long miters at sharp corners
-    if (( v0 * v1 ) < -MiterLimit )
+    if ( (LineJoin == nuiLineJoinBevel) || (LineJoin == nuiLineJoinMiter && ( v0 * v1 ) < -MiterLimit) )
     {
-      miter = n1;
-      length = HalfLineWidthRef;
-      
-      // close the gap
-      if ( ( v0 * n1 ) > 0 )
+      if (length > l0 || length > l1)
       {
         pArray->SetVertex( p0a );
         pArray->SetColor(left);
         pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
 
-        pArray->SetVertex(pmb);
+        pArray->SetVertex( p0b );
         pArray->SetColor(right);
-        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+        pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
 
         pArray->SetVertex( p1a );
         pArray->SetColor(left);
         pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
-        
-        pArray->SetVertex(pmb);
+
+        pArray->SetVertex( p1b );
         pArray->SetColor(right);
-        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+        pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
         pArray->PushVertex();
       }
       else
       {
-        pArray->SetVertex( pma );
-        pArray->SetColor(left);
-        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
+        // close the gap
+        if ( ( v0 * n1 ) > 0 )
+        {
+          pArray->SetVertex( p0a );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
 
-        pArray->SetVertex( p0b );
-        pArray->SetColor(right);
-        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-        
-        pArray->SetVertex( pma );
-        pArray->SetColor(left);
-        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-        
-        pArray->SetVertex( p1b );
-        pArray->SetColor(right);
-        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
+          pArray->SetVertex(pmb);
+          pArray->SetColor(right);
+          pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( p1a );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex(pmb);
+          pArray->SetColor(right);
+          pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+        }
+        else
+        {
+          pArray->SetVertex( pma );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( p0b );
+          pArray->SetColor(right);
+          pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( pma );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( p1b );
+          pArray->SetColor(right);
+          pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+        }
       }
     }
     else

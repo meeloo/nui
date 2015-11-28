@@ -210,7 +210,7 @@ public:
     pContext->SetBlendFunc(nuiBlendTransp);
     pContext->SetFillColor(nuiColor("blue"));
     pContext->SetShader(mpShader, mpShaderState);
-    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth));
+    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, nuiLineJoinBevel, nuiLineCapBut, 0.5));
     
     
     return true;
