@@ -347,14 +347,17 @@ nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin L
 
 }
 
-static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, const nuiVector& _p1, const nuiVector& nextPointInLine, nuiRenderArray* verts, float HLWR, float HLW)
+static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, const nuiVector& _p1, const nuiVector& nextPointInLine, nuiRenderArray* verts, float HLWR, float HLW, const nuiColor& left, const nuiColor& right)
 {
   const float EPSILON = 0.0001f;
 
-  float radius = (center - _p0).Length();
+  nuiVector v0 = _p0 - center;
+  nuiVector v1 = _p1 - center;
 
-  float angle0 = atan2f((_p1[1] - center[1]), (_p1[0] - center[0]));
-  float angle1 = atan2f((_p0[1] - center[1]), (_p0[0] - center[0]));
+  float radius = HLWR;
+
+  float angle0 = atan2f(v0[1], v0[0]);
+  float angle1 = atan2f(v1[1], v1[0]);
 
   float orgAngle0 = angle0;
 
@@ -375,17 +378,17 @@ static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, con
 
   float angleDiff = angle1 - angle0;
 
-  if (fabs( angleDiff ) >= M_PI - EPSILON && fabs( angleDiff ) <= M_PI + EPSILON)
+  if ((fabs( angleDiff ) >= M_PI - EPSILON) && (fabs( angleDiff ) <= M_PI + EPSILON))
   {
-    verts->SetVertex(_p0);
-    verts->SetNormal(1, HLWR, HLW);
-    verts->PushVertex();
-
-    verts->SetVertex(_p1);
-    verts->SetNormal(1, -HLWR, HLW);
-    verts->PushVertex();
-
-    return;
+//    verts->SetVertex(_p0);
+//    verts->SetNormal(1, HLWR, HLW);
+//    verts->PushVertex();
+//
+//    verts->SetVertex(_p1);
+//    verts->SetNormal(1, -HLWR, HLW);
+//    verts->PushVertex();
+//
+//    return;
 
     nuiVector r1 = center - nextPointInLine;
     if ( r1[0] == 0 )
@@ -406,13 +409,18 @@ static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, con
 
   float angleInc = angleDiff / nsegments;
 
+  nuiColor mix = left;
+  mix.Mix(right, 0.5);
   for (int i = 0; i < nsegments; i++)
   {
     verts->SetVertex(center);
-    verts->SetNormal(0, 0, 0);
+//    verts->SetNormal(0, 0, 0);
+    verts->SetNormal(1, HLWR, HLW);
+    verts->SetColor(mix);
     verts->PushVertex();
 
     verts->SetVertex(center[0] + radius * cosf(orgAngle0 + angleInc * i), center[1] + radius * sinf(orgAngle0 + angleInc * i) );
+    verts->SetColor(left);
     verts->SetNormal(1, HLWR, HLW);
     verts->PushVertex();
   }
@@ -420,7 +428,7 @@ static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, con
 
 
 // Adapted from https://github.com/paulhoux/Cinder-Samples/blob/master/GeometryShader/assets/shaders/lines1.geom
-static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
+static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit, bool closed)
 {
   const float HalfLineWidth = LineWidth / 2;
   const float HalfLineWidthRef = HalfLineWidth + .5f;
@@ -474,56 +482,36 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
 
     nuiVector pma = p1 + length * miter;
     nuiVector pmb = p1 - length * miter;
-    
+
+#if 0
     nuiColor left(.5f, .5f, .5f, .5f);
     nuiColor right(.5f, .5f, .5f, .5f);
+#else
+    nuiColor left(255, 0, 0, 128);
+    nuiColor right(0, 0, 255, 128);
+#endif
 
-    // prevent excessively long miters at sharp corners
-    if ( LineJoin == nuiLineJoinRound)
+    if ((i == 0 || i == count - 1) && !closed)
     {
-      if ( ( v0 * n1 ) > 0 )
-        nuiCreateRoundCap(p1, p1a, p1b, p2, pArray, HalfLineWidthRef, HalfLineWidth);
-      else
-        nuiCreateRoundCap(p1, p1a, p1b, p2, pArray, HalfLineWidthRef, HalfLineWidth);
+      // make ends
+      pArray->SetVertex( p1a );
+      pArray->SetColor(left);
+      pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+      pArray->PushVertex();
+
+      pArray->SetVertex( p1b );
+      pArray->SetColor(right);
+      pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
+      pArray->PushVertex();
     }
-    else if ( (LineJoin == nuiLineJoinBevel) || (LineJoin == nuiLineJoinMiter && ( v0 * v1 ) < -MiterLimit) )
+    else
     {
-      if (length > l0 || length > l1)
+      // prevent excessively long miters at sharp corners
+      if ( LineJoin == nuiLineJoinRound)
       {
-        pArray->SetVertex( p0a );
-        pArray->SetColor(left);
-        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-
-        pArray->SetVertex( p0b );
-        pArray->SetColor(right);
-        pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-
-        pArray->SetVertex( p1a );
-        pArray->SetColor(left);
-        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-
-        pArray->SetVertex( p1b );
-        pArray->SetColor(right);
-        pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-      }
-      else
-      {
-        // close the gap
         if ( ( v0 * n1 ) > 0 )
         {
-          pArray->SetVertex( p0a );
-          pArray->SetColor(left);
-          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-          pArray->PushVertex();
-
-          pArray->SetVertex(pmb);
-          pArray->SetColor(right);
-          pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
-          pArray->PushVertex();
+          nuiCreateRoundCap(p1, p0a, p1a, p2, pArray, HalfLineWidthRef, HalfLineWidth, left, right);
 
           pArray->SetVertex( p1a );
           pArray->SetColor(left);
@@ -537,15 +525,7 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
         }
         else
         {
-          pArray->SetVertex( pma );
-          pArray->SetColor(left);
-          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-          pArray->PushVertex();
-
-          pArray->SetVertex( p0b );
-          pArray->SetColor(right);
-          pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
-          pArray->PushVertex();
+          nuiCreateRoundCap(p1, p0b, p1b, p2, pArray, HalfLineWidthRef, HalfLineWidth ,left, right);
 
           pArray->SetVertex( pma );
           pArray->SetColor(left);
@@ -557,59 +537,133 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
           pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
           pArray->PushVertex();
         }
+
       }
-    }
-    else
-    {
-      if (length > l0 || length > l1)
+      else if ( (LineJoin == nuiLineJoinBevel) || (LineJoin == nuiLineJoinMiter && ( v0 * v1 ) < -MiterLimit) )
       {
-        pArray->SetVertex( p0a );
-        pArray->SetColor(left);
-        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-
-        pArray->SetVertex( p0b );
-        pArray->SetColor(right);
-        pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-
-        if ( ( v0 * n1 ) > 0 )
+        if (length > l0 || length > l1)
         {
-          pArray->SetVertex( pma );
+          pArray->SetVertex( p0a );
           pArray->SetColor(left);
           pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( p0b );
+          pArray->SetColor(right);
+          pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( p1a );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( p1b );
+          pArray->SetColor(right);
+          pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
           pArray->PushVertex();
         }
         else
         {
+          // close the gap
+          if ( ( v0 * n1 ) > 0 )
+          {
+            pArray->SetVertex( p0a );
+            pArray->SetColor(left);
+            pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+
+            pArray->SetVertex(pmb);
+            pArray->SetColor(right);
+            pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+
+            pArray->SetVertex( p1a );
+            pArray->SetColor(left);
+            pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+
+            pArray->SetVertex(pmb);
+            pArray->SetColor(right);
+            pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+          }
+          else
+          {
+            pArray->SetVertex( pma );
+            pArray->SetColor(left);
+            pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+
+            pArray->SetVertex( p0b );
+            pArray->SetColor(right);
+            pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+
+            pArray->SetVertex( pma );
+            pArray->SetColor(left);
+            pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+
+            pArray->SetVertex( p1b );
+            pArray->SetColor(right);
+            pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+          }
+        }
+      }
+      else
+      {
+        if (length > l0 || length > l1)
+        {
+          pArray->SetVertex( p0a );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( p0b );
+          pArray->SetColor(right);
+          pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          if ( ( v0 * n1 ) > 0 )
+          {
+            pArray->SetVertex( pma );
+            pArray->SetColor(left);
+            pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+          }
+          else
+          {
+            pArray->SetVertex( pmb );
+            pArray->SetColor(right);
+            pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+            pArray->PushVertex();
+          }
+
+          pArray->SetVertex( p1a );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+
+          pArray->SetVertex( p1b );
+          pArray->SetColor(right);
+          pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+        }
+        else
+        {
+          // generate the triangle strip
+          pArray->SetVertex( pma );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+          
           pArray->SetVertex( pmb );
           pArray->SetColor(right);
           pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
           pArray->PushVertex();
         }
-
-        pArray->SetVertex( p1a );
-        pArray->SetColor(left);
-        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-
-        pArray->SetVertex( p1b );
-        pArray->SetColor(right);
-        pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-      }
-      else
-      {
-        // generate the triangle strip
-        pArray->SetVertex( pma );
-        pArray->SetColor(left);
-        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
-        
-        pArray->SetVertex( pmb );
-        pArray->SetColor(right);
-        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
-        pArray->PushVertex();
       }
     }
   }
@@ -645,13 +699,14 @@ nuiRenderObject* nuiShape::Stroke(float Quality, float LineWidth, nuiLineJoin Li
       {
         subpath[0] = subpath[c - 2];
         subpath.push_back(subpath[2]);
+        pObject->AddArray(StrokeSubPath(subpath, LineWidth, LineJoin, LineCap, MiterLimit, true));
       }
       else
       {
         subpath.push_back(2.0 * subpath[c - 1] - subpath[c - 2]);
+        pObject->AddArray(StrokeSubPath(subpath, LineWidth, LineJoin, LineCap, MiterLimit, false));
       }
 
-      pObject->AddArray(StrokeSubPath(subpath, LineWidth, LineJoin, LineCap, MiterLimit));
 
       // restart the process:
       subpath.clear();
