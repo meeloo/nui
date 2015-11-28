@@ -482,16 +482,56 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     }
     else
     {
-      // generate the triangle strip
-      pArray->SetVertex( pma );
-      pArray->SetColor(left);
-      pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
-      pArray->PushVertex();
-      
-      pArray->SetVertex( pmb );
-      pArray->SetColor(right);
-      pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
-      pArray->PushVertex();
+      if (length > l0 || length > l1)
+      {
+        pArray->SetVertex( p0a );
+        pArray->SetColor(left);
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+        pArray->PushVertex();
+
+        pArray->SetVertex( p0b );
+        pArray->SetColor(right);
+        pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
+        pArray->PushVertex();
+
+        if ( ( v0 * n1 ) > 0 )
+        {
+          pArray->SetVertex( pma );
+          pArray->SetColor(left);
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+        }
+        else
+        {
+          pArray->SetVertex( pmb );
+          pArray->SetColor(right);
+          pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+          pArray->PushVertex();
+        }
+
+        pArray->SetVertex( p1a );
+        pArray->SetColor(left);
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+        pArray->PushVertex();
+
+        pArray->SetVertex( p1b );
+        pArray->SetColor(right);
+        pArray->SetNormal(1, -HalfLineWidthRef, HalfLineWidth);
+        pArray->PushVertex();
+      }
+      else
+      {
+        // generate the triangle strip
+        pArray->SetVertex( pma );
+        pArray->SetColor(left);
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+        pArray->PushVertex();
+        
+        pArray->SetVertex( pmb );
+        pArray->SetColor(right);
+        pArray->SetNormal(-1, -HalfLineWidthRef, HalfLineWidth);
+        pArray->PushVertex();
+      }
     }
   }
   
