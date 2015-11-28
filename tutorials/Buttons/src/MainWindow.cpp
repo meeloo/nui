@@ -177,12 +177,12 @@ public:
     mpShape = new nuiShape();
     mpShape->LineTo(nuiPoint(50, 50));
     mpShape->LineTo(nuiPoint(200, 150));
-      mpShape->LineTo(nuiPoint(180, 180));
-      mpShape->LineTo(nuiPoint(231, 200));
-    mpShape->LineTo(nuiPoint(70, 180));
-      mpShape->LineTo(nuiPoint(200, 50));
+//      mpShape->LineTo(nuiPoint(180, 180));
+//      mpShape->LineTo(nuiPoint(231, 200));
+//    mpShape->LineTo(nuiPoint(70, 180));
+//      mpShape->LineTo(nuiPoint(200, 50));
     mpShape->LineTo(nuiPoint(150, 25));
-    mpShape->LineTo(nuiPoint(50, 80));
+//    mpShape->LineTo(nuiPoint(50, 80));
 
     mpShader = new nuiShaderProgram("Stroker");
     mpShader->AddShader(eVertexShader, vertex_shader);
@@ -210,7 +210,7 @@ public:
     pContext->SetBlendFunc(nuiBlendTransp);
     pContext->SetFillColor(nuiColor("blue"));
     pContext->SetShader(mpShader, mpShaderState);
-    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, nuiLineJoinMiter, nuiLineCapBut, 0.5));
+    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, nuiLineJoinRound, nuiLineCapBut, 0.5));
     
     
     return true;

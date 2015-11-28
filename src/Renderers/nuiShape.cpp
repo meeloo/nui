@@ -347,11 +347,83 @@ nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin L
 
 }
 
+static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, const nuiVector& _p1, const nuiVector& nextPointInLine, nuiRenderArray* verts, float HLWR, float HLW)
+{
+  const float EPSILON = 0.0001f;
+
+  float radius = (center - _p0).Length();
+
+  float angle0 = atan2f((_p1[1] - center[1]), (_p1[0] - center[0]));
+  float angle1 = atan2f((_p0[1] - center[1]), (_p0[0] - center[0]));
+
+  float orgAngle0 = angle0;
+
+  if ( angle1 > angle0)
+  {
+    if ( angle1 - angle0 >= M_PI - EPSILON)
+    {
+   			angle1 = angle1 - 2.0f * (float)M_PI;
+    }
+  }
+  else
+  {
+    if ( angle0 - angle1 >= M_PI - EPSILON)
+    {
+   			angle0 = angle0 - 2.0f * (float)M_PI;
+    }
+  }
+
+  float angleDiff = angle1 - angle0;
+
+  if (fabs( angleDiff ) >= M_PI - EPSILON && fabs( angleDiff ) <= M_PI + EPSILON)
+  {
+    verts->SetVertex(_p0);
+    verts->SetNormal(1, HLWR, HLW);
+    verts->PushVertex();
+
+    verts->SetVertex(_p1);
+    verts->SetNormal(1, -HLWR, HLW);
+    verts->PushVertex();
+
+    return;
+
+    nuiVector r1 = center - nextPointInLine;
+    if ( r1[0] == 0 )
+    {
+      if (r1[1] > 0)
+      {
+        angleDiff = -angleDiff;
+      }
+    }
+    else if ( r1[0] >= -EPSILON )
+    {
+      angleDiff = -angleDiff;
+    }
+  }
+
+  int nsegments = ToBelow(fabs(angleDiff * radius) / 7.0f);
+  nsegments++;
+
+  float angleInc = angleDiff / nsegments;
+
+  for (int i = 0; i < nsegments; i++)
+  {
+    verts->SetVertex(center);
+    verts->SetNormal(0, 0, 0);
+    verts->PushVertex();
+
+    verts->SetVertex(center[0] + radius * cosf(orgAngle0 + angleInc * i), center[1] + radius * sinf(orgAngle0 + angleInc * i) );
+    verts->SetNormal(1, HLWR, HLW);
+    verts->PushVertex();
+  }
+}
+
+
 // Adapted from https://github.com/paulhoux/Cinder-Samples/blob/master/GeometryShader/assets/shaders/lines1.geom
 static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit)
 {
   const float HalfLineWidth = LineWidth / 2;
-  const float HalfLineWidthRef = HalfLineWidth + .5;
+  const float HalfLineWidthRef = HalfLineWidth + .5f;
   
   nuiRenderArray* pArray = new nuiRenderArray(GL_TRIANGLE_STRIP);
 //  nuiRenderArray* pArray = new nuiRenderArray(GL_LINE_STRIP);
@@ -407,7 +479,14 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     nuiColor right(.5f, .5f, .5f, .5f);
 
     // prevent excessively long miters at sharp corners
-    if ( (LineJoin == nuiLineJoinBevel) || (LineJoin == nuiLineJoinMiter && ( v0 * v1 ) < -MiterLimit) )
+    if ( LineJoin == nuiLineJoinRound)
+    {
+      if ( ( v0 * n1 ) > 0 )
+        nuiCreateRoundCap(p1, p1a, p1b, p2, pArray, HalfLineWidthRef, HalfLineWidth);
+      else
+        nuiCreateRoundCap(p1, p1a, p1b, p2, pArray, HalfLineWidthRef, HalfLineWidth);
+    }
+    else if ( (LineJoin == nuiLineJoinBevel) || (LineJoin == nuiLineJoinMiter && ( v0 * v1 ) < -MiterLimit) )
     {
       if (length > l0 || length > l1)
       {
