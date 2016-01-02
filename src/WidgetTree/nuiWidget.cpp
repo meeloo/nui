@@ -8,6 +8,8 @@
 
 
 #include "nui.h"
+#define KIWI_NO_EXCEPTIONS
+#include "kiwi/kiwi.h"
 
 // Local layer disabling switch for testing:
 //#undef NUI_USE_LAYERS
