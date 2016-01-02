@@ -43,7 +43,7 @@ void nuiObject::Init(const nglString& rObjectName)
     mpTrace->mAlive = true;
     mObjects[this] = mpTrace;
 
-    printf("new object '%s' %p -> %p\n", rObjectName.GetChars(), this, mpTrace);
+//    printf("new object '%s' %p -> %p\n", rObjectName.GetChars(), this, mpTrace);
 
     size_t s = mObjects.size();
     if (!(s % 500))

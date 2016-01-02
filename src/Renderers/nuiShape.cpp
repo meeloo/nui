@@ -409,6 +409,12 @@ static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, con
 
   float angleInc = angleDiff / nsegments;
 
+
+  verts->SetVertex(_p0);
+  verts->SetColor(right);
+  verts->PushVertex();
+  verts->SetNormal(1, HLWR, HLW);
+
   nuiColor mix = left;
   mix.Mix(right, 0.5);
   for (int i = 0; i < nsegments; i++)
