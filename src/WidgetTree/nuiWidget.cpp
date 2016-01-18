@@ -168,6 +168,17 @@ bool nuiWidget::AttrIsVisible()
 
 void nuiWidget::InitAttributes()
 {
+//  kiwi::Solver solver;
+//  kiwi::Variable x("X");
+//  kiwi::Variable y("Y");
+//
+//  solver.addConstraint(x == 20);
+//  solver.addConstraint(x + 2 == y + 10);
+//  solver.updateVariables();
+//  solver.dump();
+//
+//  NGL_OUT("x = %f / y = %f\n", x.value(), y.value());
+
   AddAttribute(new nuiAttribute<bool>
     (nglString("Enabled"), nuiUnitBoolean,
      nuiMakeDelegate(this, &nuiWidget::AttrIsEnabled),

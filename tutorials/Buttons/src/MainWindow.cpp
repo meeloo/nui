@@ -252,19 +252,19 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  int test = 6;
+  int test = 0;
   switch (test)
   {
   case 0:
     {
       nuiPosition pos[] = {
-        nuiTopLeft, nuiTop, nuiTopRight,
+        nuiTopLeft, nuiNoPosition, nuiTop, nuiTopRight,
         nuiLeft, nuiCenter, nuiRight,
         nuiBottomLeft, nuiBottom, nuiBottomRight,
         nuiNoPosition
       };
       const char* name[] = {
-        "TopLeft", "Top", "TopRight",
+        "TopLeft", NULL, "Top", "TopRight",
         "Left", "Center", "Right",
         "BottomLeft", "Bottom", "BottomRight",
         NULL
@@ -279,39 +279,41 @@ void MainWindow::OnCreation()
         prout->SetBackgroundColor(nuiColor(0, 255, 0, 128));
     //    prout->SetPosition(nuiFillVertical);
         button->SetPosition(pos[i]);
-        nuiAttributeAnimation* anim = new nuiAttributeAnimation();
-        anim->SetTargetObject(prout);
-        anim->SetTargetAttribute("Alpha");
-        anim->SetCaptureStartOnPlay(true);
-        anim->SetEndValue(0.5);
-        anim->SetEasing(nuiEasingSinus);
-        anim->SetDuration(1.0f);
-        prout->AddAnimation("Fade", anim);
+        button->SetTrace(true);
+        button->SetDebug(1000);
+//        nuiAttributeAnimation* anim = new nuiAttributeAnimation();
+//        anim->SetTargetObject(prout);
+//        anim->SetTargetAttribute("Alpha");
+//        anim->SetCaptureStartOnPlay(true);
+//        anim->SetEndValue(0.5);
+//        anim->SetEasing(nuiEasingSinus);
+//        anim->SetDuration(1.0f);
+//        prout->AddAnimation("Fade", anim);
 //        anim->Play(100000, eAnimLoopPingPong);
 
         AddChild(button);
       }
       
-      nuiVBox* pBox = new nuiVBox();
-      
-      nuiFolderPane* pPane1 = new nuiFolderPane();
-      pPane1->SetTitle("Prout");
-      pPane1->SetContents(new nuiLabel("Contents bleh..."));
+//      nuiVBox* pBox = new nuiVBox();
+//      
+//      nuiFolderPane* pPane1 = new nuiFolderPane();
+//      pPane1->SetTitle("Prout");
+//      pPane1->SetContents(new nuiLabel("Contents bleh..."));
+//
+//      nuiFolderPane* pPane2 = new nuiFolderPane();
+//      pPane2->SetTitle("Prout 2");
+//      pPane2->SetContents(new nuiLabel("Contents bleh...2"));
+//      pBox->AddCell(pPane1);
+//      pBox->AddCell(pPane2);
+//      
+//      pBox->SetExpand(nuiExpandFixed);
+//      pBox->SetAllCellsExpand(nuiExpandFixed);
+//
+//      nuiScrollView* pScrollView = new nuiScrollView();
+//      pScrollView->AddChild(pBox);
+//
+//      AddChild(pScrollView);
 
-      nuiFolderPane* pPane2 = new nuiFolderPane();
-      pPane2->SetTitle("Prout 2");
-      pPane2->SetContents(new nuiLabel("Contents bleh...2"));
-      pBox->AddCell(pPane1);
-      pBox->AddCell(pPane2);
-      
-      pBox->SetExpand(nuiExpandFixed);
-      pBox->SetAllCellsExpand(nuiExpandFixed);
-
-      nuiScrollView* pScrollView = new nuiScrollView();
-      pScrollView->AddChild(pBox);
-
-      AddChild(pScrollView);
-      
       return;
     }break;
     
