@@ -1153,8 +1153,10 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
   if (!mTimerOn)
     return;
   
-  const float XOffset = (float)mpHorizontal->GetRange().GetValue();
-  const float YOffset = (float)mpVertical->GetRange().GetValue();
+  const nuiRange& rHRange = mpHorizontal->GetRange();
+  const nuiRange& rVRange = mpVertical->GetRange();
+  const float XOffset = (float)rHRange.GetValue();
+  const float YOffset = (float)rVRange.GetValue();
   
   if (!mLeftClick)
   {
@@ -1163,7 +1165,7 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     double elapsed = now.GetValue() - mLastTime.GetValue();
     mLastTime = now;
     
-    bool isXOffsetting = (mXOffset < 0 || mXOffset > (GetIdealRect().GetWidth()-GetRect().GetWidth()));
+    bool isXOffsetting = (mXOffset < 0 || mXOffset > (rHRange.GetMaximum()-rHRange.GetPageSize()));
     if (isXOffsetting)
       mSpeedX *= INERTIA_OFFSET_BRAKES;
     
@@ -1192,7 +1194,7 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     
     ////////////////////
     
-    bool isYOffsetting = (mYOffset < 0 || mYOffset > (GetIdealRect().GetHeight()-GetRect().GetHeight()));
+    bool isYOffsetting = (mYOffset < 0 || mYOffset > (rVRange.GetMaximum()-rVRange.GetPageSize()));
     if (isYOffsetting)
       mSpeedY *= INERTIA_OFFSET_BRAKES;
     
@@ -1201,20 +1203,20 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     
     if (std::fabs(speedY) > MINSPEED) ///< inertia
     {
-      mYOffset += speedY;
+      SetYOffset(mYOffset + speedY);
       SetYPos(mYOffset);
       mTimerOn = true;
     }
     else if (std::fabs(ydiff) > 1) ///< smooth
     {
       ydiff *= NUI_SMOOTH_SCROLL_RATIO;
-      mYOffset += ydiff;
+      SetYOffset(mYOffset + ydiff);
       mSpeedY = 0;
       mTimerOn = true;
     }
     else
     {
-      mYOffset = YOffset;
+      SetYOffset(YOffset);
       mSpeedY = 0;
     }
     
@@ -1229,7 +1231,7 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
     mSpeedX = 0;
     mSpeedY = 0;
     mXOffset = XOffset;
-    mYOffset = YOffset;
+    SetYOffset(YOffset);
   }
   
 //  UpdateLayout();
