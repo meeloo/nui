@@ -1977,7 +1977,6 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
   {
 //    NGL_OUT("    Update %s / %s \t(%p)\n", widget->GetObjectClass().GetChars(), widget->GetObjectName().GetChars(), widget);
     widget->UpdateCache(pContext, pRenderThread); //  This will update the Meta Painter for each invalidated widget
-    widget->Release();
   }
   mDirtyWidgets.clear();
   
@@ -2190,14 +2189,12 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
     GetRenderThread()->InvalidateLayerContents(mpBackingLayer);
 
   mDirtyWidgets.insert(pSender);
-  pSender->Acquire();
   DebugRefreshInfo();
 }
 
 void nuiTopLevel::BroadcastInvalidate(nuiWidgetPtr pSender)
 {
   mDirtyWidgets.insert(pSender);
-  pSender->Acquire();
 //  NGL_OUT("SetDirty %s %s %p\n",
 //          pSender->GetObjectClass().GetChars(),
 //          pSender->GetObjectName().GetChars(),

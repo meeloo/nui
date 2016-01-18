@@ -414,7 +414,23 @@ public:
   {
     return mpPointer != ref.Ptr();
   }
+
+  bool operator<(Pointee* pPtr) const
+  {
+    return mpPointer < pPtr;
+  }
+
+  bool operator<(const nuiRef<Pointee>& ref) const
+  {
+    return mpPointer < ref.Ptr();
+  }
+
+  bool operator<(const nuiNewRef<Pointee>& ref) const
+  {
+    return mpPointer < ref.Ptr();
+  }
   
+
   operator Pointee* () const
   {
     return mpPointer;

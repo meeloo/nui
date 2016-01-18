@@ -260,7 +260,7 @@ protected:
   std::map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabForwardRev;
   std::map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabBackwardRev;
   
-  std::set<nuiWidget*> mDirtyWidgets;
+  std::set< nuiRef<nuiWidget> > mDirtyWidgets;
 };
 
 typedef nuiTopLevel* nuiTopLevelPtr;
