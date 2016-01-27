@@ -194,6 +194,9 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
   const nuiSize tableHeight = GetRect().GetHeight();
   const nuiSize tableWidth = GetRect().GetWidth();
 
+  if (mVisibleCells.empty())
+    return true;
+
   int32 firstVisibleCell = MAX(0, ::ToBelow((YOffset - GetOverDrawTop())/ cellHeight));
   int32 lastVisibleCell = MIN((int32)mpSource->GetNumberOfCells()-1, firstVisibleCell + mVisibleCells.size()-1);
 
@@ -204,13 +207,6 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
       nuiWidget* pCell = mVisibleCells.back();
       mVisibleCells.pop_back();
       mVisibleCells.push_front(pCell);
-
-//      for (int32 i = mVisibleCells.size()-1; i > 0; i--)
-//      {
-//        mVisibleCells[i] = mVisibleCells[i-1];
-//      }
-//      mVisibleCells[0] = pCell;
-
       --mFirstVisibleCell;
       --mLastVisibleCell;
       mpSource->UpdateCell(mFirstVisibleCell, pCell);
@@ -223,12 +219,6 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
       nuiWidget* pCell = mVisibleCells.front();
       mVisibleCells.pop_front();
       mVisibleCells.push_back(pCell);
-
-//      for (int32 i = 1; i < mVisibleCells.size(); i++)
-//      {
-//        mVisibleCells[i-1] = mVisibleCells[i];
-//      }
-//      mVisibleCells[mVisibleCells.size()-1] = pCell;
 
       ++mLastVisibleCell;
       ++mFirstVisibleCell;
