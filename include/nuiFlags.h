@@ -118,6 +118,36 @@ nuiDrawPolicyDrawChildren = 1 << 1,  ///< draw its children but not itself
 nuiDrawPolicyDrawTree     = nuiDrawPolicyDrawSelf | nuiDrawPolicyDrawChildren ///< draw itself and its children
 };
 
+enum nuiEasingPreset
+{
+  nuiEasingPresetBounceOut = 0,
+  nuiEasingPresetBounceIn,
+  nuiEasingPresetBackIn,
+  nuiEasingPresetBackOut,
+  nuiEasingPresetIdentity,
+  nuiEasingPresetSquare,
+  nuiEasingPresetCubic,
+  nuiEasingPresetQuartic,
+  nuiEasingPresetSlowStart,
+  nuiEasingPresetQuintic,
+  nuiEasingPresetSinusStartFast,
+  nuiEasingPresetSinusStartSlow,
+  nuiEasingPresetSinus,
+  nuiEasingPresetSquareRev,
+  nuiEasingPresetCubicRev,
+  nuiEasingPresetQuarticRev,
+  nuiEasingPresetSlowStartRev,
+  nuiEasingPresetQuinticRev,
+  nuiEasingPresetSinusStartSlowRev,
+  nuiEasingPresetSinusStartFastRev,
+  nuiEasingPresetSinusRev,
+  nuiEasingPresetElasticIn,
+  nuiEasingPresetElasticOut,
+
+  nuiEasingPresetLast
+};
+
+
 
 // This is just plain ugly; i know...
 typedef uint nuiWindowFlags;
@@ -136,6 +166,10 @@ nglString nuiGetOrientation (nuiOrientation Value);
 nglString nuiGetAlignment (nuiAlignment Value);
 
 bool nuiGetBool (const nglString& rBool, bool Default = false);
+
+const nglString& nuiGetEasingPresetName(nuiEasingPreset preset);
+nuiEasingPreset nuiGetEasingPresetForName(const nglString& name);
+
 
 // Get enum from XML desc:
 nuiPosition     nuiGetPosition    (const nuiXMLNode* pNode, const nglString& Attr, nuiPosition Default = nuiCenter);

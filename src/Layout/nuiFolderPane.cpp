@@ -55,7 +55,7 @@ void nuiFolderPane::Init (bool opened)
   AddCell(NULL); // a third cell to the titledpane for the WidgetOnClosing
   
   SetLayoutAnimationDuration(0.1f);
-  SetLayoutAnimationEasing(nuiEasingSinus);
+  SetLayoutAnimationEasingMethod(nuiEasingSinus);
   nuiRectAttributeAnimation* pAnim = GetLayoutAnimation(false);
   pAnim->SetWidthAnim(false);
   pAnim->SetAutoRound(true);

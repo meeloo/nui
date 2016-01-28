@@ -176,6 +176,76 @@ bool nuiGetBool (const nglString& rBool, bool Default)
   return Default;
 }
 
+const nglString& nuiGetEasingPresetName(nuiEasingPreset preset)
+{
+  static nglString names[] =
+  {
+    "BounceOut",
+    "BounceIn",
+    "BackIn",
+    "BackOut",
+    "Identity",
+    "Square",
+    "Cubic",
+    "Quartic",
+    "SlowStart",
+    "Quintic",
+    "SinusStartFast",
+    "SinusStartSlow",
+    "Sinus",
+    "SquareRev",
+    "CubicRev",
+    "QuarticRev",
+    "SlowStartRev",
+    "QuinticRev",
+    "SinusStartSlowRev",
+    "SinusStartFastRev",
+    "SinusRev",
+    "ElasticIn",
+    "ElasticOut",
+  };
+
+  NGL_ASSERT(preset < nuiEasingPresetLast);
+  return names[preset];
+}
+
+nuiEasingPreset nuiGetEasingPresetForName(const nglString& name)
+{
+  static std::map<nglString, nuiEasingPreset> names =
+  {
+    { "BounceOut", nuiEasingPresetBounceOut },
+    { "BounceIn", nuiEasingPresetBounceIn },
+    { "BackIn", nuiEasingPresetBackIn },
+    { "BackOut", nuiEasingPresetBackOut },
+    { "Identity", nuiEasingPresetIdentity },
+    { "Square", nuiEasingPresetSquare },
+    { "Cubic", nuiEasingPresetCubic },
+    { "Quartic", nuiEasingPresetQuartic },
+    { "SlowStart", nuiEasingPresetSlowStart },
+    { "Quintic", nuiEasingPresetQuintic },
+    { "SinusStartFast", nuiEasingPresetSinusStartFast },
+    { "SinusStartSlow", nuiEasingPresetSinusStartSlow },
+    { "Sinus", nuiEasingPresetSinus },
+    { "SquareRev", nuiEasingPresetSquareRev },
+    { "CubicRev", nuiEasingPresetCubicRev },
+    { "QuarticRev", nuiEasingPresetQuarticRev },
+    { "SlowStartRev", nuiEasingPresetSlowStartRev },
+    { "QuinticRev", nuiEasingPresetQuinticRev },
+    { "SinusStartSlowRev", nuiEasingPresetSinusStartSlowRev },
+    { "SinusStartFastRev", nuiEasingPresetSinusStartFastRev },
+    { "SinusRev", nuiEasingPresetSinusRev },
+    { "ElasticIn", nuiEasingPresetElasticIn },
+    { "ElasticOut", nuiEasingPresetElasticOut },
+  };
+
+  auto it = names.find(name);
+  if (it == names.end())
+    return nuiEasingPresetLast;
+  return it->second;
+}
+
+
+
 // Get enum from XML desc:
 nuiPosition nuiGetPosition (const nuiXMLNode* pNode, const nglString& Attr, nuiPosition Default)
 {

@@ -985,7 +985,7 @@ void nuiList::OnChildAdded(const nuiEvent& rEvent)
   if (mMoveAnimDuration)
   {
     rTreeEvent.mpChild->SetLayoutAnimationDuration(mMoveAnimDuration);
-    rTreeEvent.mpChild->SetLayoutAnimationEasing(mMoveAnimEasing);
+    rTreeEvent.mpChild->SetLayoutAnimationEasingMethod(mMoveAnimEasing);
     nuiRectAttributeAnimation* pAnim = rTreeEvent.mpChild->GetLayoutAnimation(true);
     if (mOrientation == nuiVertical)
     {

@@ -268,6 +268,11 @@ void nuiAnimation::SetEasing(const nuiEasingMethod& rMethod)
   SetEasing(new nuiEasingFunction(rMethod));
 }
 
+nuiEasing* nuiAnimation::GetEasing() const
+{
+  return mpEasing;
+}
+
 void nuiAnimation::SetEasing(nuiEasing* pEasing)
 {
   pEasing->Acquire();
@@ -276,6 +281,18 @@ void nuiAnimation::SetEasing(nuiEasing* pEasing)
   mpEasing = pEasing;
 }
 
+nuiEasingMethod nuiAnimation::GetEasingMethod() const
+{
+  nuiEasing* easing = GetEasing();
+  if (!easing)
+    return nullptr;
+
+  nuiEasingFunction* function = dynamic_cast<nuiEasingFunction*>(easing);
+  if (!function)
+    return nullptr;
+
+  return function->GetMethod();
+}
 
 void nuiAnimation::SetTimeFromStart(double Time)
 {
@@ -824,4 +841,71 @@ void nuiAnimationSequence::OnAnimStopped(const nuiEvent& rEvent)
       mpAnimations.front()->Play();
     }
   }
+}
+
+
+nuiEasingMethod nuiGetEasingMethodForPreset(nuiEasingPreset preset)
+{
+  nuiEasingMethod methods[] =
+  {
+    nuiEasingBounceOut,
+    nuiEasingBounceIn,
+    nuiEasingBackIn,
+    nuiEasingBackOut,
+    nuiEasingIdentity,
+    nuiEasingSquare,
+    nuiEasingCubic,
+    nuiEasingQuartic,
+    nuiEasingSlowStart,
+    nuiEasingQuintic,
+    nuiEasingSinusStartFast,
+    nuiEasingSinusStartSlow,
+    nuiEasingSinus,
+    nuiEasingSquareRev,
+    nuiEasingCubicRev,
+    nuiEasingQuarticRev,
+    nuiEasingSlowStartRev,
+    nuiEasingQuinticRev,
+    nuiEasingSinusStartSlowRev,
+    nuiEasingSinusStartFastRev,
+    nuiEasingSinusRev,
+    nuiEasingElasticIn<500>,
+    nuiEasingElasticOut<500>,
+  };
+
+  NGL_ASSERT(preset < nuiEasingPresetLast);
+  return methods[preset];
+}
+
+
+nuiEasingPreset nuiGetEasingPresetForMethod(nuiEasingMethod method)
+{
+  std::map<nuiEasingMethod, nuiEasingPreset> methods =
+  {
+    { nuiEasingBounceOut, nuiEasingPresetBounceOut },
+    { nuiEasingBounceIn, nuiEasingPresetBounceIn },
+    { nuiEasingBackIn, nuiEasingPresetBackIn },
+    { nuiEasingBackOut, nuiEasingPresetBackOut },
+    { nuiEasingIdentity, nuiEasingPresetIdentity },
+    { nuiEasingSquare, nuiEasingPresetSquare },
+    { nuiEasingCubic, nuiEasingPresetCubic },
+    { nuiEasingQuartic, nuiEasingPresetQuartic },
+    { nuiEasingSlowStart, nuiEasingPresetSlowStart },
+    { nuiEasingQuintic, nuiEasingPresetQuintic },
+    { nuiEasingSinusStartFast, nuiEasingPresetSinusStartFast },
+    { nuiEasingSinusStartSlow, nuiEasingPresetSinusStartSlow },
+    { nuiEasingSinus, nuiEasingPresetSinus },
+    { nuiEasingSquareRev, nuiEasingPresetSquareRev },
+    { nuiEasingCubicRev, nuiEasingPresetCubicRev },
+    { nuiEasingQuarticRev, nuiEasingPresetQuarticRev },
+    { nuiEasingSlowStartRev, nuiEasingPresetSlowStartRev },
+    { nuiEasingQuinticRev, nuiEasingPresetQuinticRev },
+    { nuiEasingSinusStartSlowRev, nuiEasingPresetSinusStartSlowRev },
+    { nuiEasingSinusStartFastRev, nuiEasingPresetSinusStartFastRev },
+    { nuiEasingSinusRev, nuiEasingPresetSinusRev },
+    { nuiEasingElasticIn<500>, nuiEasingPresetElasticIn },
+    { nuiEasingElasticOut<500>, nuiEasingPresetElasticOut }
+  };
+
+
 }

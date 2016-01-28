@@ -74,11 +74,6 @@ template <int32 percent> double nuiEasingElasticOut(double val) ///< percent = 1
 }
 
 
-double nuiEasingBounceOut(double val);
-double nuiEasingBounceIn(double val);
-double nuiEasingBackIn(double val);
-double nuiEasingBackOut(double val);
-
 class nuiEasing : public nuiRefCount
 {
 public:
@@ -97,6 +92,9 @@ protected:
 
 };
 
+nuiEasingMethod nuiGetEasingMethodForPreset(nuiEasingPreset preset);
+nuiEasingPreset nuiGetEasingPresetForMethod(nuiEasingMethod method);
+
 class nuiEasingFunction : public nuiEasing
 {
 public:
@@ -112,7 +110,12 @@ public:
   {
     return mFunction(val);
   }
-  
+
+  nuiEasingMethod GetMethod() const
+  {
+    return mFunction;
+  }
+
 private:
   nuiEasingMethod mFunction;
 };
@@ -155,7 +158,9 @@ public:
   
   void SetEasing(const nuiEasingMethod& rMethod);
   void SetEasing(nuiEasing* pEasing);
-  
+  nuiEasing* GetEasing() const;
+  nuiEasingMethod GetEasingMethod() const;
+
   static nuiTimer* AcquireTimer(); ///< You must pair each call to AcquireTimer() with a call to ReleaseTimer().
   static nuiTimer* GetTimer(); ///< GetTimer doesn't allocate the timer and you must not pair it with ReleaseTimer(). It may return NULL if the timer was never created.
   static void ReleaseTimer();

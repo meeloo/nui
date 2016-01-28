@@ -448,6 +448,13 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::SetLayoutAnimationDuration)
                ));
 
+  AddAttribute(new nuiAttribute<nuiEasingPreset>
+               (nglString("LayoutAnimationEasing"), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiWidget::GetLayoutAnimationEasingPreset),
+                nuiMakeDelegate(this, &nuiWidget::SetLayoutAnimationEasingPreset)
+                ));
+
+
   nuiAttribute<float>* pAlphaAttrib = new nuiAttribute<float>
   (nglString("Alpha"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiWidget::GetAlpha),
@@ -3096,7 +3103,7 @@ float nuiWidget::GetLayoutAnimationDuration()
   return 0;
 }
 
-void nuiWidget::SetLayoutAnimationEasing(const nuiEasingMethod& rMethod)
+void nuiWidget::SetLayoutAnimationEasingMethod(const nuiEasingMethod& rMethod)
 {
   CheckValid();
   nuiRectAttributeAnimation* pAnim = GetLayoutAnimation(true);
@@ -3104,6 +3111,24 @@ void nuiWidget::SetLayoutAnimationEasing(const nuiEasingMethod& rMethod)
     pAnim->SetEasing(rMethod);
 }
 
+void nuiWidget::SetLayoutAnimationEasingPreset(nuiEasingPreset preset)
+{
+  SetLayoutAnimationEasingMethod(nuiGetEasingMethodForPreset(preset));
+}
+
+nuiEasingPreset nuiWidget::GetLayoutAnimationEasingPreset() const
+{
+  nuiRectAttributeAnimation* pAnim = nullptr;
+  if (mpLayoutAnimation)
+    pAnim = mpLayoutAnimation;
+
+  if (pAnim)
+  {
+    nuiEasingMethod method = pAnim->GetEasingMethod();
+    return nuiGetEasingPresetForMethod(method);
+  }
+  return nuiEasingPresetLast;
+}
 
 /// Matrix Operations:
 nuiMatrix nuiWidget::mIdentityMatrix;
@@ -6081,7 +6106,7 @@ void nuiWidget::SetChildrenLayoutAnimationEasing(const nuiEasingMethod& rMethod)
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
     nuiWidgetPtr pItem = pIt->GetWidget();
-    pItem->SetLayoutAnimationEasing(rMethod);
+    pItem->SetLayoutAnimationEasingMethod(rMethod);
   }
   delete pIt;
 }

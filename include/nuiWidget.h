@@ -568,7 +568,11 @@ public:
   nuiRectAttributeAnimation* GetLayoutAnimation(bool CreateIfNotAvailable);
   void SetLayoutAnimationDuration(float duration);
   float GetLayoutAnimationDuration();
-  void SetLayoutAnimationEasing(const nuiEasingMethod& rMethod);
+
+  void SetLayoutAnimationEasingMethod(const nuiEasingMethod& rMethod);
+  void SetLayoutAnimationEasingPreset(nuiEasingPreset preset);
+  nuiEasingPreset GetLayoutAnimationEasingPreset() const;
+
   //@}
 
   /** @name Matrix Transformation Support */

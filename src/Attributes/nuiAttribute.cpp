@@ -1036,6 +1036,45 @@ bool nuiAttribute<nuiDirection>::FromString(nuiDirection& rValue, const nglStrin
   return true;
 }
 
+//********************************
+//
+// nuiEasingPreset
+//
+
+template class nuiAttribute<nuiEasingPreset>;
+
+template <>
+nuiAttributeEditor* nuiAttribute<nuiEasingPreset>::GetDefaultEditor(void* pTarget)
+{
+  std::vector<std::pair<nglString, nuiEasingPreset> > values;
+  for (int preset = 0; preset < nuiEasingPresetLast; preset++)
+  {
+    values.push_back(std::make_pair(nuiGetEasingPresetName((nuiEasingPreset)preset), (nuiEasingPreset)preset));
+  }
+  return new nuiComboAttributeEditor<nuiEasingPreset>(nuiAttrib<nuiEasingPreset>(pTarget, this), values);
+}
+
+template <>
+void nuiAttribute<nuiEasingPreset>::FormatDefault(nuiEasingPreset value, nglString & string) const
+{
+  string = nuiGetEasingPresetName(value);
+}
+
+
+template <>
+bool nuiAttribute<nuiEasingPreset>::ToString(nuiEasingPreset Value, nglString& rString) const
+{
+  rString = nuiGetEasingPresetName(Value);
+  return true;
+}
+
+template <>
+bool nuiAttribute<nuiEasingPreset>::FromString(nuiEasingPreset& rValue, const nglString& rString) const
+{
+  rValue = nuiGetEasingPresetForName(rString);
+  return true;
+}
+
 #endif /////////////
 
 

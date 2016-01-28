@@ -1804,6 +1804,29 @@ bool nuiAttribute<nuiDirection>::FromString(nuiDirection& rValue, const nglStrin
 
 //********************************
 //
+// nuiEasingPreset
+//
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiEasingPreset>::GetDefaultEditor(void* pTarget);
+#endif
+
+template <>
+void nuiAttribute<nuiEasingPreset>::FormatDefault(nuiEasingPreset value, nglString& string) const;
+
+template <>
+bool nuiAttribute<nuiEasingPreset>::ToString(nuiEasingPreset Value, nglString& rString) const;
+
+template <>
+bool nuiAttribute<nuiEasingPreset>::FromString(nuiEasingPreset& rValue, const nglString& rString) const;
+
+
+
+
+
+//********************************
+//
 // nglString
 //
 
