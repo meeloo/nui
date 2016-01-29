@@ -494,6 +494,10 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetAutoAcceptMouseSteal),
                 nuiMakeDelegate(this, &nuiWidget::SetAutoAcceptMouseSteal)));
 
+  AddAttribute(new nuiAttribute<bool>
+               (nglString("ClickThru"), nuiUnitOnOff,
+                nuiMakeDelegate(this, &nuiWidget::GetClickThru),
+                nuiMakeDelegate(this, &nuiWidget::SetClickThru)));
 
   AddAttribute(new nuiAttribute<nuiDrawPolicy>
                ("LayerPolicy", nuiUnitCustom,
