@@ -158,8 +158,10 @@ public:
   
   void SetEasing(const nuiEasingMethod& rMethod);
   void SetEasing(nuiEasing* pEasing);
+  void SetEasing(nuiEasingPreset preset);
   nuiEasing* GetEasing() const;
   nuiEasingMethod GetEasingMethod() const;
+  nuiEasingPreset GetEasingPreset() const;
 
   static nuiTimer* AcquireTimer(); ///< You must pair each call to AcquireTimer() with a call to ReleaseTimer().
   static nuiTimer* GetTimer(); ///< GetTimer doesn't allocate the timer and you must not pair it with ReleaseTimer(). It may return NULL if the timer was never created.
@@ -209,7 +211,9 @@ protected:
   double GetTimeFromStart() const;
   double GetTimeFromNow() const;
   double GetTimeFromEnd() const;
-  
+
+  void SetEasingPreset(nuiEasingPreset preset);
+
   nuiEventSink<nuiAnimation> mAnimSink;
 
 };

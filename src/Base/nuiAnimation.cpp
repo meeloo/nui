@@ -248,6 +248,19 @@ nuiAnimation::nuiAnimation()
                  (nglString(_T("DeleteOnStop")), nuiUnitBoolean,
                   nuiMakeDelegate(this, &nuiAnimation::GetDeleteOnStop),
                   nuiMakeDelegate(this, &nuiAnimation::SetDeleteOnStop)));
+
+    AddAttribute(new nuiAttribute<double>
+                 (nglString("Duration"), nuiUnitSize,
+                  nuiMakeDelegate(this, &nuiAnimation::GetDuration),
+                  nuiMakeDelegate(this, &nuiAnimation::SetDuration)
+                  ));
+
+    AddAttribute(new nuiAttribute<nuiEasingPreset>
+                 (nglString("Easing"), nuiUnitNone,
+                  nuiMakeDelegate(this, &nuiAnimation::GetEasingPreset),
+                  nuiMakeDelegate(this, &nuiAnimation::SetEasingPreset)
+                  ));
+
     
   }
 }
@@ -267,6 +280,17 @@ void nuiAnimation::SetEasing(const nuiEasingMethod& rMethod)
 {
   SetEasing(new nuiEasingFunction(rMethod));
 }
+
+void nuiAnimation::SetEasing(nuiEasingPreset preset)
+{
+  SetEasing(nuiGetEasingMethodForPreset(preset));
+}
+
+void nuiAnimation::SetEasingPreset(nuiEasingPreset preset)
+{
+  SetEasing(preset);
+}
+
 
 nuiEasing* nuiAnimation::GetEasing() const
 {
@@ -293,6 +317,13 @@ nuiEasingMethod nuiAnimation::GetEasingMethod() const
 
   return function->GetMethod();
 }
+
+nuiEasingPreset nuiAnimation::GetEasingPreset() const
+{
+  return nuiGetEasingPresetForMethod(GetEasingMethod());
+}
+
+
 
 void nuiAnimation::SetTimeFromStart(double Time)
 {

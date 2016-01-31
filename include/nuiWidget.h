@@ -888,7 +888,9 @@ protected:
   nuiPosition mPosition = nuiFill;
   nuiPosition mFillRule = nuiFill;
   nuiRectAttributeAnimation* mpLayoutAnimation = nullptr;
-  
+  nuiObject* GetLayoutAnimationBase() const;
+
+
   uint32 mCSSPasses = 0;
   virtual void InternalResetCSSPass();
   

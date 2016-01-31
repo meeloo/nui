@@ -2359,5 +2359,24 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiDrawPolicy>::GetDefaultEditor(void* pTarget);
 #endif
 
+//********************************
+//
+// nuiObject*
+//
+
+template <>
+bool nuiAttribute<nuiObject*>::ToString(nuiObject* Value, nglString& rString) const;
+
+template <>
+bool nuiAttribute<nuiObject*>::FromString(nuiObject*& rValue, const nglString& rString) const;
+
+template <>
+void nuiAttribute<nuiObject*>::FormatDefault(nuiObject* value, nglString& string) const;
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiObject*>::GetDefaultEditor(void* pTarget);
+#endif
+
 
 #endif

@@ -454,6 +454,11 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::SetLayoutAnimationEasingPreset)
                 ));
 
+  AddAttribute(new nuiAttribute<nuiObject*>
+               ("LayoutAnimation", nuiUnitNone,
+                nuiMakeDelegate(this, &nuiWidget::GetLayoutAnimationBase))
+               );
+
 
   nuiAttribute<float>* pAlphaAttrib = new nuiAttribute<float>
   (nglString("Alpha"), nuiUnitNone,
@@ -3089,6 +3094,12 @@ nuiRectAttributeAnimation* nuiWidget::GetLayoutAnimation(bool CreateIfNotAvailab
   mpLayoutAnimation = pAnim;
   return pAnim;
 }
+
+nuiObject* nuiWidget::GetLayoutAnimationBase() const
+{
+  return const_cast<nuiWidget*>(this)->GetLayoutAnimation(false);
+}
+
 
 void nuiWidget::SetLayoutAnimationDuration(float duration)
 {

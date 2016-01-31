@@ -2882,6 +2882,47 @@ nuiAttributeEditor* nuiAttribute<nuiDrawPolicy>::GetDefaultEditor(void* pTarget)
 }
 #endif
 
+//********************************
+//
+// LayerPolicy
+//
+
+template class nuiAttribute<nuiObject*>;
+
+template <>
+void nuiAttribute<nuiObject*>::FormatDefault(nuiObject* value, nglString & string) const
+{
+  ToString(value, string);
+}
+
+template <>
+bool nuiAttribute<nuiObject*>::ToString(nuiObject* Value, nglString& rString) const
+{
+  if (Value)
+  {
+    rString = Value->GetObjectName();
+    return true;
+  }
+
+  rString = "null object";
+  return false;
+}
+
+template <>
+bool nuiAttribute<nuiObject*>::FromString(nuiObject*& rValue, const nglString& rString) const
+{
+  return false;
+}
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiObject*>::GetDefaultEditor(void* pTarget)
+{
+  return nuiCreateGenericAttributeEditor(pTarget, this);
+}
+#endif
+
+
 #endif
 
 #if 0
