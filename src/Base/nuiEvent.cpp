@@ -295,17 +295,24 @@ bool nuiEventTargetBase::OnEvent(const nuiEvent& rEvent)
       nuiDelegateMemento pFunc = pLink->mTargetFunc;
       rEvent.mpUser = pLink->mpUser;
       
-      handled = CallEvent((void*)mpTarget, pFunc, rEvent);
+      handled = pLink->CallEvent(rEvent);
     }
   }
   return handled;
 }
 
-bool nuiEventTargetBase::CallEvent(void* pTarget, nuiDelegateMemento pFunc, const nuiEvent& rEvent)
+bool nuiEventTargetBase::Link::CallEvent(const nuiEvent& rEvent)
 {
-  Delegate del;
-  del.SetMemento(pFunc);
-  del(rEvent);
+  if (!mTargetFunc)
+  {
+    mTargetFunction(rEvent);
+  }
+  else
+  {
+    Delegate del;
+    del.SetMemento(mTargetFunc);
+    del(rEvent);
+  }
   return rEvent.IsCanceled();
 }
 
@@ -320,6 +327,19 @@ void nuiEventTargetBase::Connect(nuiEventSource& rSource, const nuiDelegateMemen
   LinkList& rLinkList(mpLinks[&rSource]);
   rLinkList.insert(rLinkList.begin(), pLink);
 }
+
+void nuiEventTargetBase::Connect(nuiEventSource& rSource, const std::function<void(const nuiEvent&)>& rTargetFunc, void* pUser)
+{
+  Link* pLink = new Link;
+  pLink->mTargetFunction = rTargetFunc;
+  pLink->mpUser = pUser;
+
+  rSource.Connect(this);
+
+  LinkList& rLinkList(mpLinks[&rSource]);
+  rLinkList.insert(rLinkList.begin(), pLink);
+}
+
 
 void nuiEventTargetBase::DisconnectSource(nuiEventSource& rSource)
 {
