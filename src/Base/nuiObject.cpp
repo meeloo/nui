@@ -490,9 +490,22 @@ void nuiObject::GetSortedAttributes(std::list<nuiAttribBase>& rListToFill) const
 nuiAttribBase nuiObject::GetAttribute(const nglString& rName) const
 {
   CheckValid();
+
+  nglString name(rName);
+  int pos = rName.FindLast('.');
+  if (pos >= 0)
+  {
+    nglString path = rName.GetLeft(pos);
+    name = rName.Extract(pos + 1);
+    nuiObject* pObject = GetObject(path);
+    if (pObject)
+      return pObject->GetAttribute(name);
+    return nuiAttribBase();
+  }
+
   // Search Instance Attributes:
   {
-    std::map<nglString,nuiAttributeBase*>::const_iterator it = mInstanceAttributes.find(rName);
+    std::map<nglString,nuiAttributeBase*>::const_iterator it = mInstanceAttributes.find(name);
     std::map<nglString,nuiAttributeBase*>::const_iterator end = mInstanceAttributes.end();
 
     if (it != end)
@@ -504,7 +517,7 @@ nuiAttribBase nuiObject::GetAttribute(const nglString& rName) const
   int32 c = mClassNameIndex;
   while (c >= 0)
   {
-    std::map<nglString,nuiAttributeBase*>::const_iterator it = mClassAttributes[c].find(rName);
+    std::map<nglString,nuiAttributeBase*>::const_iterator it = mClassAttributes[c].find(name);
     std::map<nglString,nuiAttributeBase*>::const_iterator end = mClassAttributes[c].end();
 
     if (it != end)
@@ -775,3 +788,27 @@ void nuiObject::DumpInfos() const
   DumpObjectInfos(this);
 }
 #endif
+
+nuiObject* nuiObject::GetObject(const nglString& rName) const
+{
+  int pos = rName.Find(".", 0, rName.GetLength());
+  nglString name = rName;
+  nglString path;
+  if (pos >= 0)
+  {
+    name = rName.Extract(0, pos);
+    path = rName.Extract(pos + 1, rName.GetLength() - pos - 1);
+  }
+
+  nuiAttrib<nuiObject*> attrib = GetAttribute(name);
+  if (!attrib.IsValid())
+    return nullptr;
+
+  nuiObject* pObject = attrib.Get();
+
+  if (path.IsEmpty())
+    return pObject;
+
+  return pObject->GetObject(path);
+}
+

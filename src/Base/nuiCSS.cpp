@@ -377,6 +377,26 @@ public:
     return !rResult.IsEmpty();
   }
   
+  bool GetLSymbol(nglString& rResult)
+  {
+    mAccumulator.clear();
+    if (!SkipBlank())
+    {
+      rResult.Nullify();
+      return false;
+    }
+
+    while (IsValidInLSymbol(mChar))
+    {
+      mAccumulator.push_back(mChar);
+      GetChar();
+    }
+
+    if (!mAccumulator.empty())
+      rResult.Copy(&mAccumulator[0], mAccumulator.size());
+    return !rResult.IsEmpty();
+  }
+  
   bool GetValue(nglString& rResult, bool AllowBlank = false, nglUChar separator = 0)
   {
     mAccumulator.clear();
@@ -482,7 +502,22 @@ public:
     
     return true;
   }
-  
+
+  bool IsValidInLSymbol(nglChar c) const
+  {
+    switch (c)
+    {
+      case _T('.'): // added dot operator to look into children
+        return true;
+        break;
+      default:
+        break;
+    }
+
+    return IsValidInSymbol(c);
+  }
+
+
   bool IsValidInValue(nglChar c) const
   {
     switch (c)
@@ -1892,7 +1927,7 @@ public:
       return false;
     }
     
-    bool res = GetSymbol(symbol);
+    bool res = GetLSymbol(symbol);
     if (res)
     {
       if (!SkipBlank())
@@ -1935,7 +1970,7 @@ public:
     nglString symbol(rLValue);
     if (symbol.IsNull())
     {
-      res = GetSymbol(symbol);
+      res = GetLSymbol(symbol);
       if (!res)
       {
         SetError(_T("Missing symbol name (l-value)"));

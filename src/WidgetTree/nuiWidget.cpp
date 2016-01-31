@@ -4349,7 +4349,7 @@ int nuiWidget::GetChildrenCount() const
   return mpChildren.size();
 }
 
-nuiWidgetPtr nuiWidget::GetChild(int index)
+nuiWidgetPtr nuiWidget::GetChild(int index) const
 {
   CheckValid();
   NGL_ASSERT(index >= 0);
@@ -4743,13 +4743,13 @@ nuiWidgetPtr nuiWidget::GetRoot() const
     return const_cast<nuiWidgetPtr>(this);
 }
 
-nuiWidgetPtr nuiWidget::GetChild(nuiSize X, nuiSize Y)
+nuiWidgetPtr nuiWidget::GetChild(nuiSize X, nuiSize Y) const
 {
   CheckValid();
   X -= mRect.mLeft;
   Y -= mRect.mTop;
 
-  IteratorPtr pIt;
+  ConstIteratorPtr pIt;
   for (pIt = GetLastChild(); pIt && pIt->IsValid(); GetPreviousChild(pIt))
   {
     nuiWidgetPtr pItem = pIt->GetWidget();
@@ -4765,7 +4765,7 @@ nuiWidgetPtr nuiWidget::GetChild(nuiSize X, nuiSize Y)
   }
   delete pIt;
 
-  return this;
+  return const_cast<nuiWidgetPtr>(this);
 }
 
 void nuiWidget::GetChildren(nuiSize X, nuiSize Y, nuiWidgetList& rChildren, bool DeepSearch)
@@ -4835,10 +4835,10 @@ nuiWidgetPtr nuiWidget::GetChildIf(nuiSize X, nuiSize Y, TestWidgetFunctor* pFun
 }
 
 
-nuiWidgetPtr nuiWidget::GetChild(const nglString& rName, bool ResolveNameAsPath)
+nuiWidgetPtr nuiWidget::GetChild(const nglString& rName, bool ResolveNameAsPath) const
 {
   CheckValid();
-  IteratorPtr pIt;
+  ConstIteratorPtr pIt;
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
     nuiWidgetPtr pItem = pIt->GetWidget();
@@ -4853,7 +4853,7 @@ nuiWidgetPtr nuiWidget::GetChild(const nglString& rName, bool ResolveNameAsPath)
   if (!ResolveNameAsPath) // Are we allowed to search the complete tree?
     return NULL;
 
-  nuiWidgetPtr pNode = this;
+  nuiWidgetPtr pNode = const_cast<nuiWidgetPtr>(this);
   nglString name = rName;
 
   if (name[0] == '/')
@@ -4888,6 +4888,41 @@ nuiWidgetPtr nuiWidget::GetChild(const nglString& rName, bool ResolveNameAsPath)
 
   return pNode;
 }
+
+nuiObject* nuiWidget::GetObject(const nglString& rName) const
+{
+  int pos = rName.Find(".", 0, rName.GetLength());
+  nglString name = rName;
+  nglString path;
+  if (pos >= 0)
+  {
+    name = rName.Extract(0, pos);
+    path = rName.Extract(pos + 1, rName.GetLength() - pos - 1);
+  }
+
+  nuiWidget* pChild = GetChild(name, false);
+  if (pChild)
+  {
+    if (path.IsEmpty())
+      return pChild;
+
+    return pChild->GetObject(path);
+  }
+
+  nuiAttrib<nuiObject*> attrib = GetAttribute(name);
+  if (!attrib.IsValid())
+    return nullptr;
+
+  nuiObject* pObject = attrib.Get();
+
+  if (path.IsEmpty())
+    return pObject;
+
+  return pObject->GetObject(path);
+}
+
+
+
 
 nuiWidgetPtr nuiWidget::SearchForChild(const nglString& rName, bool recurse )
 {

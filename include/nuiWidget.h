@@ -112,10 +112,13 @@ public:
   virtual bool AddChild(nuiWidgetPtr pChild);
   virtual bool DelChild(nuiWidgetPtr pChild); ///< Remove this child from the object. If Delete is true then the child will be deleted too. Returns true if success.
   virtual int GetChildrenCount() const;
-  virtual nuiWidgetPtr GetChild(int index); ///< Returns the child which has the given index (first child = 0). Return NULL in case of faillure.
-  virtual nuiWidgetPtr GetChild(nuiSize X, nuiSize Y); ///< Returns the child which is under the pixel (X,Y) in this object or this if there is no such child. X and Y are given in the coordinate system of the parent object.
-  virtual nuiWidgetPtr GetChild(const nglString& rName, bool ResolveNameAsPath = true); ///< Find a child by its name property. Try to resolve path names like /window/fixed/toto or ../../tata if deepsearch is true
-  virtual bool Clear();///< Clear all children. By default the children are deleted unless Delete == false.
+  virtual nuiWidgetPtr GetChild(int index) const; ///< Returns the child which has the given index (first child = 0). Return NULL in case of faillure.
+  virtual nuiWidgetPtr GetChild(nuiSize X, nuiSize Y) const; ///< Returns the child which is under the pixel (X,Y) in this object or this if there is no such child. X and Y are given in the coordinate system of the parent object.
+  virtual nuiWidgetPtr GetChild(const nglString& rName, bool ResolveNameAsPath = true) const; ///< Find a child by its name property. Try to resolve path names like /window/fixed/toto or ../../tata if deepsearch is true
+
+  virtual nuiObject* GetObject(const nglString& rName) const;
+
+  virtual bool Clear();///< Clear all children.
 
   virtual nuiWidget::Iterator* GetFirstChild(bool DoRefCounting = false);
   virtual nuiWidget::ConstIterator* GetFirstChild(bool DoRefCounting = false) const;

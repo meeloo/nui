@@ -62,6 +62,9 @@ public:
   static int32 GetClassNameIndex(const nglString& rName);
   static const nglString& GetClassNameFromIndex(int32 index);
   static int32 GetClassCount();
+
+  virtual nuiObject* GetObject(const nglString& rName) const;
+
   //@}
   
   /** @name Properties system */
