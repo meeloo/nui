@@ -1407,6 +1407,12 @@
 		BCFE081F0E050AB90073662D /* nuiDialogSelectFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BCFE081B0E050AB90073662D /* nuiDialogSelectFile.cpp */; };
 		BCFE08240E050ACB0073662D /* nuiDialogSelectDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = BCFE08200E050ACB0073662D /* nuiDialogSelectDirectory.h */; };
 		BCFE08250E050ACB0073662D /* nuiDialogSelectFile.h in Headers */ = {isa = PBXBuildFile; fileRef = BCFE08210E050ACB0073662D /* nuiDialogSelectFile.h */; };
+		C389717E1C602474003F2232 /* nuiDebugServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C389717C1C602474003F2232 /* nuiDebugServer.cpp */; };
+		C389717F1C602474003F2232 /* nuiDebugServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C389717C1C602474003F2232 /* nuiDebugServer.cpp */; };
+		C38971801C602474003F2232 /* nuiDebugServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C389717C1C602474003F2232 /* nuiDebugServer.cpp */; };
+		C38971851C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
+		C38971861C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
+		C38971871C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
 		E50066D4115070A700CDD83E /* nuiVariant.h in Headers */ = {isa = PBXBuildFile; fileRef = E50066D2115070A700CDD83E /* nuiVariant.h */; };
 		E501C11913FD4561009FB677 /* hb-fallback-shape-private.hh in Headers */ = {isa = PBXBuildFile; fileRef = E501C11213FD4561009FB677 /* hb-fallback-shape-private.hh */; };
 		E501C11B13FD4561009FB677 /* hb-fallback-shape-private.hh in Headers */ = {isa = PBXBuildFile; fileRef = E501C11213FD4561009FB677 /* hb-fallback-shape-private.hh */; };
@@ -4016,6 +4022,8 @@
 		BCFE081B0E050AB90073662D /* nuiDialogSelectFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDialogSelectFile.cpp; path = src/Dialogs/nuiDialogSelectFile.cpp; sourceTree = SOURCE_ROOT; };
 		BCFE08200E050ACB0073662D /* nuiDialogSelectDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDialogSelectDirectory.h; path = include/nuiDialogSelectDirectory.h; sourceTree = SOURCE_ROOT; };
 		BCFE08210E050ACB0073662D /* nuiDialogSelectFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDialogSelectFile.h; path = include/nuiDialogSelectFile.h; sourceTree = SOURCE_ROOT; };
+		C389717C1C602474003F2232 /* nuiDebugServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDebugServer.cpp; path = Introspector/nuiDebugServer.cpp; sourceTree = "<group>"; };
+		C38971841C6024B6003F2232 /* nuiDebugServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDebugServer.h; path = include/nuiDebugServer.h; sourceTree = SOURCE_ROOT; };
 		E50066D2115070A700CDD83E /* nuiVariant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiVariant.h; path = include/nuiVariant.h; sourceTree = SOURCE_ROOT; };
 		E501C11213FD4561009FB677 /* hb-fallback-shape-private.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = "hb-fallback-shape-private.hh"; path = "harfbuzz/hb-fallback-shape-private.hh"; sourceTree = "<group>"; };
 		E501C11313FD4561009FB677 /* hb-fallback-shape.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "hb-fallback-shape.cc"; path = "harfbuzz/hb-fallback-shape.cc"; sourceTree = "<group>"; };
@@ -5806,6 +5814,8 @@
 				E5354C0A113832B8008F5402 /* nuiObjectInspector.cpp */,
 				E572AA091BD7DFD60093D57C /* nuiLayersInspector.h */,
 				E572AA0D1BD7DFF40093D57C /* nuiLayersInspector.cpp */,
+				C389717C1C602474003F2232 /* nuiDebugServer.cpp */,
+				C38971841C6024B6003F2232 /* nuiDebugServer.h */,
 			);
 			name = Introspector;
 			sourceTree = "<group>";
@@ -8525,6 +8535,7 @@
 				73F0849812E9BA0700656E84 /* nglImage.h in Headers */,
 				73F0849912E9BA0700656E84 /* nuiText.h in Headers */,
 				73F0849B12E9BA0700656E84 /* nuiEventRegistry.h in Headers */,
+				C38971871C6024B6003F2232 /* nuiDebugServer.h in Headers */,
 				73F0849C12E9BA0700656E84 /* nglConsole.h in Headers */,
 				73F0849E12E9BA0700656E84 /* nuiEditText.h in Headers */,
 				73F0849F12E9BA0700656E84 /* nuiSpline.h in Headers */,
@@ -9234,6 +9245,7 @@
 				E5429FED0C3F0A5900225219 /* nglIFile.h in Headers */,
 				E5429FEE0C3F0A5900225219 /* nuiD3DPainter.h in Headers */,
 				E5429FEF0C3F0A5900225219 /* nglDataObjects.h in Headers */,
+				C38971851C6024B6003F2232 /* nuiDebugServer.h in Headers */,
 				E5429FF00C3F0A5900225219 /* nuiShapeView.h in Headers */,
 				E5429FF10C3F0A5900225219 /* nuiTessellator.h in Headers */,
 				E5429FF20C3F0A5900225219 /* nglContext.h in Headers */,
@@ -9662,6 +9674,7 @@
 				E5D63FA41209AB9C009C26A9 /* nuiSplitter.h in Headers */,
 				E5D63FA51209AB9C009C26A9 /* nglVideoMode.h in Headers */,
 				E5D63FA61209AB9C009C26A9 /* nuiMainWindow.h in Headers */,
+				C38971861C6024B6003F2232 /* nuiDebugServer.h in Headers */,
 				E5D63FA71209AB9C009C26A9 /* nuiTexture.h in Headers */,
 				E5D63FA81209AB9C009C26A9 /* nuiTextureHelpers.h in Headers */,
 				E5D63FA91209AB9C009C26A9 /* nui.h in Headers */,
@@ -10830,6 +10843,7 @@
 				73F0861D12E9BA0700656E84 /* nuiTreeView.cpp in Sources */,
 				73F0861F12E9BA0700656E84 /* nglMath.cpp in Sources */,
 				73F0862012E9BA0700656E84 /* nuiButton.cpp in Sources */,
+				C38971801C602474003F2232 /* nuiDebugServer.cpp in Sources */,
 				73F0862112E9BA0700656E84 /* nglOStream.cpp in Sources */,
 				73F0862212E9BA0700656E84 /* nglPath_Unix.cpp in Sources */,
 				73F0862312E9BA0700656E84 /* ConvertUTF.cpp in Sources */,
@@ -11422,6 +11436,7 @@
 				E53645E30CDF7C8000838C78 /* nuiPopupView.cpp in Sources */,
 				E5D66E4F0CF433A4004783D4 /* nuiNativeResource.cpp in Sources */,
 				BC35D31A0CF5C55C002CE274 /* nuiAttributeEditor.cpp in Sources */,
+				C389717E1C602474003F2232 /* nuiDebugServer.cpp in Sources */,
 				BCCC980D0CF5D1F800677C8C /* nuiPercentAttributeEditor.cpp in Sources */,
 				BCF4F8240CF5E211009FEF20 /* nuiPointAttributeEditor.cpp in Sources */,
 				E5C2ED7A0CF648C90098B8BB /* nglVolume.cpp in Sources */,
@@ -11793,6 +11808,7 @@
 				E5D6430B1209AB9C009C26A9 /* nuiMainMenu.cpp in Sources */,
 				E5D6430C1209AB9C009C26A9 /* nuiHotKeyEditor.cpp in Sources */,
 				E5D6430D1209AB9C009C26A9 /* nuiDialogSelectDirectory.cpp in Sources */,
+				C389717F1C602474003F2232 /* nuiDebugServer.cpp in Sources */,
 				E5D6430E1209AB9C009C26A9 /* nuiDialogSelectFile.cpp in Sources */,
 				E5D6430F1209AB9C009C26A9 /* nuiMessageBox.cpp in Sources */,
 				E5D643101209AB9C009C26A9 /* nuiDefaultDecoration.cpp in Sources */,

@@ -180,7 +180,7 @@ void nuiWidget::InitAttributes()
   solver.dump();
 
   NGL_OUT("x = %f / y = %f\n", x.value(), y.value());
-
+  
   AddAttribute(new nuiAttribute<bool>
     (nglString("Enabled"), nuiUnitBoolean,
      nuiMakeDelegate(this, &nuiWidget::AttrIsEnabled),
