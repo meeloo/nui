@@ -383,7 +383,7 @@ bool nuiScrollView::SetRect(const nuiRect& rRect)
     hrange.SetPageSize(MAX(0, pagesize));
     hrange.SetPageIncrement(MAX(0, pagesize));
     hrange.SetIncrement(mHIncrement);
-    mXOffset = XOffset= 0.f;
+//    mXOffset = XOffset= 0.f;
     hrange.EnableEvents(false);
     hrange.SetValue(XOffset);
     hrange.EnableEvents(true);
@@ -414,7 +414,7 @@ bool nuiScrollView::SetRect(const nuiRect& rRect)
     vrange.SetPageSize(MAX(0, pagesize));
     vrange.SetPageIncrement(MAX(0, pagesize));
     vrange.SetIncrement(mVIncrement);
-    mYOffset = YOffset = 0.f;
+//    mYOffset = YOffset = 0.f;
     vrange.EnableEvents(false);
     vrange.SetValue(YOffset);
     vrange.EnableEvents(true);
@@ -1157,7 +1157,9 @@ void nuiScrollView::OnSmoothScrolling(const nuiEvent& rEvent)
   const nuiRange& rVRange = mpVertical->GetRange();
   const float XOffset = (float)rHRange.GetValue();
   const float YOffset = (float)rVRange.GetValue();
-  
+
+//  printf("ScrollView Timer ON: YSpeed: %.4f - YOffset: %.4f - mYOffset: %.4f\n", mSpeedY, YOffset, mYOffset);
+
   if (!mLeftClick)
   {
     mTimerOn = false;
