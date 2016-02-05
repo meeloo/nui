@@ -11,7 +11,7 @@
 
 enum nuiMessageDataType
 {
-  nuiMessageDataTypeString,
+  nuiMessageDataTypeString = 0,
   nuiMessageDataTypeBuffer,
   nuiMessageDataTypeInt8,
   nuiMessageDataTypeInt16,
@@ -237,6 +237,20 @@ public:
 private:
   bool Post(const nuiMessageData& rData);
   nuiTCPClient *mpTCPClient;
+  enum State
+  {
+    Waiting,
+    ReadType,
+    ReadSize,
+    ReadData
+  };
+  State mState = Waiting;
+  uint32 mRemainingDataChunks = 0;
+  uint32 mCurrentChunkSize = 0;
+  nuiMessageDataType mType;
+  std::vector<uint8> mChunck;
+  nuiMessage* mpCurrentMessage = nullptr;
+  bool Parse(std::vector<uint8>& rData);
 };
 
 class nuiDebugServer : nuiTCPServer
