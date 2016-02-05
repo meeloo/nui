@@ -81,18 +81,18 @@ void nuiTCPClient::SetNoDelay(bool set)
   setsockopt(mSocket, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(int));
 }
 
-int nuiTCPClient::Send(const nglString& rString)
+size_t nuiTCPClient::Send(const nglString& rString)
 {
   return Send((uint8*)rString.GetChars(), rString.GetLength());
 }
 
 
-int nuiTCPClient::Send(const std::vector<uint8>& rData)
+size_t nuiTCPClient::Send(const std::vector<uint8>& rData)
 {
   return Send(&rData[0], rData.size());
 }
 
-int nuiTCPClient::Send(const uint8* pData, int len)
+size_t nuiTCPClient::Send(const uint8* pData, size_t len)
 {
 #ifdef WIN32
   int res = send(mSocket, (const char*)pData, len, 0);
@@ -116,7 +116,7 @@ int nuiTCPClient::Send(const uint8* pData, int len)
 }
 
 
-int nuiTCPClient::ReceiveAvailable(std::vector<uint8>& rData)
+size_t nuiTCPClient::ReceiveAvailable(std::vector<uint8>& rData)
 {
   int PendingBytes = 0;
 #ifdef WIN32
@@ -153,7 +153,7 @@ int nuiTCPClient::ReceiveAvailable(std::vector<uint8>& rData)
   return res;
 }
 
-int nuiTCPClient::Receive(uint8* pData, int32 len)
+size_t nuiTCPClient::Receive(uint8* pData, size_t len)
 {
 #ifdef WIN32
   int res = recv(mSocket, (char*)pData, len, MSG_WAITALL);
@@ -172,7 +172,7 @@ int nuiTCPClient::Receive(uint8* pData, int32 len)
   return res;
 }
 
-int nuiTCPClient::Receive(std::vector<uint8>& rData)
+size_t nuiTCPClient::Receive(std::vector<uint8>& rData)
 {
   int res = Receive(&rData[0], rData.size());
 

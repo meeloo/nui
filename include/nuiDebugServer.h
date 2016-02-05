@@ -226,6 +226,19 @@ private:
   std::vector<nuiMessageData> mData;
 };
 
+class nuiMessageClient
+{
+public:
+  nuiMessageClient(nuiTCPClient* pTCPClient);
+
+  bool Post(const nuiMessage& rMessage);
+  nuiMessage* Read();
+
+private:
+  bool Post(const nuiMessageData& rData);
+  nuiTCPClient *mpTCPClient;
+};
+
 class nuiDebugServer : nuiTCPServer
 {
 public:

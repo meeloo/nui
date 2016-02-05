@@ -42,12 +42,12 @@ public:
   bool Connect(const nglString& rHost, int16 port);
   bool Connect(uint32 ipaddress, int16 port);
 
-  int Send(const std::vector<uint8>& rData);
-  int Send(const uint8* pData, int len);
-  int Send(const nglString& rString);
-  int ReceiveAvailable(std::vector<uint8>& rData); ///< Fill the rData vector with the data that is already available to read on the socket.
-  int Receive(std::vector<uint8>& rData); ///< Fill the buffer up to its current size.
-  int Receive(uint8* pData, int32 len); ///< Fill the buffer up to its current size.
+  size_t Send(const std::vector<uint8>& rData);
+  size_t Send(const uint8* pData, size_t len);
+  size_t Send(const nglString& rString);
+  size_t ReceiveAvailable(std::vector<uint8>& rData); ///< Fill the rData vector with the data that is already available to read on the socket.
+  size_t Receive(std::vector<uint8>& rData); ///< Fill the buffer up to its current size.
+  size_t Receive(uint8* pData, size_t len); ///< Fill the buffer up to its current size.
 
   bool IsConnected() const;
   bool IsWriteConnected() const;
