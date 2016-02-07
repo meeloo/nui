@@ -120,6 +120,64 @@ struct nuiMessageData
     mValue._double = value;
   }
 
+  nuiMessageData(nuiMessageDataType type, void* data, size_t size)
+  : mType(type)
+  {
+    switch (mType) {
+      case nuiMessageDataTypeBuffer:
+      {
+        if (!data)
+        {
+          mValue.Pointer._ptr = new uint8[size];
+          mValue.Pointer._size = size;
+          memcpy(mValue.Pointer._ptr, data, size);
+        }
+        else
+        {
+          mValue.Pointer._ptr = nullptr;
+          mValue.Pointer._size = 0;
+        }
+      }break;
+
+      case nuiMessageDataTypeString:
+      {
+        if (data)
+        {
+          mValue.Pointer._ptr = new uint8[size];
+          mValue.Pointer._size = size;
+          memcpy(mValue.Pointer._ptr, data, size);
+        }
+        else
+        {
+          mValue.Pointer._ptr = nullptr;
+          mValue.Pointer._size = 0;
+        }
+      }break;
+
+
+      default:
+      {
+        static uint8 datasizes[] = {
+          sizeof(uint32), //  nuiMessageDataTypeString,
+          sizeof(uint32), //  nuiMessageDataTypeBuffer,
+          sizeof(int8),   //  nuiMessageDataTypeInt8,
+          sizeof(int16),  //  nuiMessageDataTypeInt16,
+          sizeof(int32),  //  nuiMessageDataTypeInt32,
+          sizeof(int64),  //  nuiMessageDataTypeInt64,
+          sizeof(uint8),  //  nuiMessageDataTypeUInt8,
+          sizeof(uint16), //  nuiMessageDataTypeUInt16,
+          sizeof(uint32), //  nuiMessageDataTypeUInt32,
+          sizeof(uint64), //  nuiMessageDataTypeUInt64,
+          sizeof(float),  //  nuiMessageDataTypeFloat,
+          sizeof(double), //  nuiMessageDataTypeDouble
+        };
+
+        memcpy(&mValue, data, datasizes[mType]);
+        NGL_ASSERT(0);
+      }break;
+    }
+
+  }
 
   nuiMessageData(const nuiMessageData& rData)
   : mType(rData.mType)
@@ -217,6 +275,7 @@ public:
   void Add(uint64 value) { mData.push_back(value); }
   void Add(float value) { mData.push_back(value); }
   void Add(double value) { mData.push_back(value); }
+  void Add(const nuiMessageData& rData) { mData.push_back(rData); }
 
   size_t GetSize() const { return mData.size(); }
 
