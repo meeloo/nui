@@ -154,7 +154,13 @@ public:
     assert(nuiEventTargetBase::mpTarget != NULL);
     nuiEventTargetBase::Connect(rSource, nuiMakeDelegate((T*)mpTarget, pTargetFunc).GetMemento(), pUser);
   }
-  
+
+  void Connect(nuiEventSource& rSource, const std::function<void(const nuiEvent&)>& func)
+  {
+    assert(nuiEventTargetBase::mpTarget != NULL);
+    nuiEventTargetBase::Connect(rSource, func);
+  }
+
   void Disconnect(void (*pTargetFunc)(const nuiEvent&))
   {
     nuiEventTargetBase::Disconnect(nuiFastDelegate1<const nuiEvent&>(pTargetFunc).GetMemento());

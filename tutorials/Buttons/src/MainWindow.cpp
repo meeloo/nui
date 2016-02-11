@@ -258,13 +258,13 @@ void MainWindow::OnCreation()
   case 0:
     {
       nuiPosition pos[] = {
-        nuiTopLeft, nuiNoPosition, nuiTop, nuiTopRight,
+        nuiTopLeft, nuiTop, nuiTopRight,
         nuiLeft, nuiCenter, nuiRight,
         nuiBottomLeft, nuiBottom, nuiBottomRight,
         nuiNoPosition
       };
       const char* name[] = {
-        "TopLeft", NULL, "Top", "TopRight",
+        "TopLeft", "Top", "TopRight",
         "Left", "Center", "Right",
         "BottomLeft", "Bottom", "BottomRight",
         NULL
@@ -290,6 +290,8 @@ void MainWindow::OnCreation()
 //        anim->SetDuration(1.0f);
 //        prout->AddAnimation("Fade", anim);
 //        anim->Play(100000, eAnimLoopPingPong);
+
+        mEventSink.Connect(button->Activated, [=](const nuiEvent& event){ printf("pouet %p - %p\n", this, button); });
 
         AddChild(button);
       }
