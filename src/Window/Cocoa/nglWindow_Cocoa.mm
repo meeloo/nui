@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "nglWindow_Cocoa.h"
-#include "nglDragAndDrop_Cocoa.h"
+#include "Application/Cocoa/nglDragAndDrop_Cocoa.h"
 
 #import <Cocoa/Cocoa.h>
 #import <OpenGL/OpenGL.h>

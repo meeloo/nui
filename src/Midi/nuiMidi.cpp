@@ -161,7 +161,7 @@ nuiMidiOutPort* nuiMidiManager::GetOutPort(int32 PortIndex)
 //    Win32MidiAPI.RegisterWithManager(*this);
   }
 #elif (defined _CARBON_) || (defined _COCOA_) || (defined _UIKIT_)
-  #include "nuiMidi_CoreMidi.h"
+  #include "Midi/CoreMidi/nuiMidi_CoreMidi.h"
   void nuiMidiManager::RegisterAPIS()
   {
     CoreMidiAPI.Instance()->RegisterWithManager(*this);
