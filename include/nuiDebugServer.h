@@ -95,6 +95,7 @@ public:
 
   const nuiMessageData& GetData(size_t index) const { return mData[index]; }
 
+  nglString GetDescription() const;
 private:
   std::vector<nuiMessageData> mData;
 };

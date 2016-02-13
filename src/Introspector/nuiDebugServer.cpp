@@ -214,6 +214,62 @@ nuiMessageData::~nuiMessageData()
   }
 }
 
+///////////////////////////////// Message
+nuiMessage::nuiMessage()
+{
+
+}
+
+nuiMessage::~nuiMessage()
+{
+
+}
+
+nglString nuiMessage::GetDescription() const
+{
+  nglString tmp("[ ");
+
+  int i = 0;
+  for (const auto& data : mData)
+  {
+    if (i)
+      tmp.Add(", ");
+    switch (data.mType)
+    {
+      case nuiMessageDataTypeString:
+        tmp.Add("\"").Add(nglString((nglChar*)data.mValue.Pointer._ptr, data.mValue.Pointer._size)).Add("\"");
+        break;
+      case nuiMessageDataTypeBuffer:
+        tmp.Add("<").Add(data.mValue.Pointer._ptr).Add(" - ").Add((uint64)data.mValue.Pointer._size).Add(">");
+        break;
+      case nuiMessageDataTypeInt8:
+        tmp.Add(data.mValue._int8); break;
+      case nuiMessageDataTypeInt16:
+        tmp.Add(data.mValue._int16); break;
+      case nuiMessageDataTypeInt32:
+        tmp.Add(data.mValue._int32); break;
+      case nuiMessageDataTypeInt64:
+        tmp.Add(data.mValue._int64); break;
+      case nuiMessageDataTypeUInt8:
+        tmp.Add(data.mValue._uint8); break;
+      case nuiMessageDataTypeUInt16:
+        tmp.Add(data.mValue._uint16); break;
+      case nuiMessageDataTypeUInt32:
+        tmp.Add(data.mValue._uint32); break;
+      case nuiMessageDataTypeUInt64:
+        tmp.Add(data.mValue._uint64); break;
+      case nuiMessageDataTypeFloat:
+        tmp.Add(data.mValue._float); break;
+      case nuiMessageDataTypeDouble:
+        tmp.Add(data.mValue._double); break;
+      default:
+        tmp.Add("???"); break;
+    }
+  }
+  tmp.Add("]");
+
+  return tmp;
+}
 
 
 ///////////////////////////////// MessageClient
