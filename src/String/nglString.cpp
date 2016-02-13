@@ -1921,6 +1921,14 @@ nglString& nglString::Add(const nglChar* pString, int32 count)
   return *this;
 }
 
+nglString& nglString::Add(const nglChar* pString)
+{
+  mIsNull = false;
+  nglString tmp(pString);
+  Append(tmp);
+  return *this;
+}
+
 nglString& nglString::Add(const nglString& rString, int32 count)
 {
   mIsNull = false;

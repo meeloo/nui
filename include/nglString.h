@@ -467,7 +467,8 @@ public:
 	nglString& Add(float s, int32 precision = 8, nglFloatFormatFlag flags = Simple);
 	nglString& Add(double s, int32 precision = 8, nglFloatFormatFlag flags = Simple);
 	nglString& Add(const nglString& rString, int32 count = 1);
-  nglString& Add(const nglChar* pString, int32 count = 1);
+  nglString& Add(const nglChar* pString, int32 count);
+  nglString& Add(const nglChar* pString);
 	nglString& Add(void* pVoidPointer);
 	nglString& AddNewLine();
 
