@@ -22,7 +22,9 @@ enum nuiMessageDataType
   nuiMessageDataTypeUInt32,
   nuiMessageDataTypeUInt64,
   nuiMessageDataTypeFloat,
-  nuiMessageDataTypeDouble
+  nuiMessageDataTypeDouble,
+
+  nuiMessageDataTypeLast
 };
 
 
@@ -129,7 +131,7 @@ class nuiMessageClient
 {
 public:
   nuiMessageClient(nuiTCPClient* pTCPClient);
-  virtual ~nuiMessageClient();
+  virtual ~nuiMessageClient() { delete mpTCPClient; }
   
   bool Post(const nuiMessage& rMessage);
   nuiMessage* Read();
@@ -137,7 +139,6 @@ public:
 private:
   bool Post(const nuiMessageData& rData);
   nuiTCPClient *mpTCPClient;
-  bool Parse(std::vector<uint8>& rData);
 };
 
 

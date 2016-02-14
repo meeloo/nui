@@ -120,6 +120,7 @@ nuiMessageData::nuiMessageData(double value)
 nuiMessageData::nuiMessageData(nuiMessageDataType type, void* data, size_t size)
 : mType(type)
 {
+  NGL_ASSERT(mType < nuiMessageDataTypeLast);
   switch (mType) {
     case nuiMessageDataTypeBuffer:
     {
@@ -155,7 +156,6 @@ nuiMessageData::nuiMessageData(nuiMessageDataType type, void* data, size_t size)
     default:
     {
       memcpy(&mValue, data, datasizes[mType]);
-      NGL_ASSERT(0);
     }break;
   }
 
@@ -164,6 +164,7 @@ nuiMessageData::nuiMessageData(nuiMessageDataType type, void* data, size_t size)
 nuiMessageData::nuiMessageData(const nuiMessageData& rData)
 : mType(rData.mType)
 {
+  NGL_ASSERT(mType < nuiMessageDataTypeLast);
   if (rData.mType == nuiMessageDataTypeBuffer || rData.mType == nuiMessageDataTypeString)
   {
     mValue.Pointer._ptr = new uint8[rData.mValue.Pointer._size];
@@ -179,6 +180,7 @@ nuiMessageData::nuiMessageData(const nuiMessageData& rData)
 nuiMessageData::nuiMessageData(nuiMessageData&& rData)
 : mType(rData.mType)
 {
+  NGL_ASSERT(mType < nuiMessageDataTypeLast);
   if (rData.mType == nuiMessageDataTypeBuffer || rData.mType == nuiMessageDataTypeString)
   {
     mValue.Pointer._ptr = rData.mValue.Pointer._ptr;
@@ -194,6 +196,7 @@ nuiMessageData::nuiMessageData(nuiMessageData&& rData)
 nuiMessageData& nuiMessageData::operator= (nuiMessageData&& rData)
 {
   mType = rData.mType;
+  NGL_ASSERT(mType < nuiMessageDataTypeLast);
   if (rData.mType == nuiMessageDataTypeBuffer || rData.mType == nuiMessageDataTypeString)
   {
     mValue.Pointer._ptr = rData.mValue.Pointer._ptr;
@@ -308,6 +311,16 @@ void FixEndianness(nuiMessageDataType type, std::vector<uint8>& rData)
   }
 }
 
+nuiMessageParser::nuiMessageParser()
+{
+
+}
+
+nuiMessageParser::~nuiMessageParser()
+{
+
+}
+
 nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
 {
   if (!mpCurrentMessage)
@@ -361,6 +374,7 @@ nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
         if (mCurrentChunkSize == 0)
         {
           mCurrentChunkSize = le32_to_cpu(*(uint32*)&mChunck[0]); // We have the size of the data
+          mChunck.clear();
           mState = ReadData;
         }
       }break;
@@ -368,8 +382,9 @@ nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
       case ReadData:
       {
         uint32 toread = MIN(mCurrentChunkSize, rData.size() - offset);
+        size_t pos = mChunck.size();
         mChunck.resize(mChunck.size() + toread);
-        memcpy(&mChunck[mChunck.size()], &rData[offset], toread);
+        memcpy(&mChunck[pos], &rData[offset], toread);
         offset += toread;
         mCurrentChunkSize -= toread;
         
@@ -393,7 +408,6 @@ nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
             {
               nuiMessageData data(mType, &mChunck[0], mChunck.size());
               mpCurrentMessage->Add(data);
-              NGL_ASSERT(0);
             }break;
           }
           mChunck.clear();
@@ -454,7 +468,7 @@ bool nuiMessageParser::Build(const nuiMessageData& rData, std::vector<uint8>& rO
     case nuiMessageDataTypeString:
     case nuiMessageDataTypeBuffer:
     {
-      uint32 size = cpu_to_le32(rData.mValue._int32);
+      uint32 size = cpu_to_le32(rData.mValue.Pointer._size);
       add(rOut,(uint8*)&size, sizeof(size));
       add(rOut, rData.mValue.Pointer._ptr, rData.mValue.Pointer._size);
     } break;
