@@ -420,6 +420,103 @@ nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
   return pReturn;
 }
 
+static void add(std::vector<uint8>& rOut, uint8* pointer, size_t len)
+{
+  for (size_t i = 0; i < len; i++)
+    rOut.push_back(pointer[i]);
+}
+
+
+std::vector<uint8> nuiMessageParser::Build(nuiMessage* pMessage)
+{
+  std::vector<uint8> data;
+  size_t size = pMessage->GetSize();
+  uint8 count = (uint8)size;
+  add(data, &count, 1);
+  
+  for (size_t index = 0; index < size; index++)
+  {
+    if (!Build(pMessage->GetData(index), data))
+      return std::vector<uint8>();
+  }
+  return data;
+
+}
+
+
+bool nuiMessageParser::Build(const nuiMessageData& rData, std::vector<uint8>& rOut)
+{
+  uint8 type = rData.mType;
+  rOut.push_back(type);
+  
+  switch (rData.mType)
+  {
+    case nuiMessageDataTypeString:
+    case nuiMessageDataTypeBuffer:
+    {
+      uint32 size = cpu_to_le32(rData.mValue._int32);
+      add(rOut,(uint8*)&size, sizeof(size));
+      add(rOut, rData.mValue.Pointer._ptr, rData.mValue.Pointer._size);
+    } break;
+    case nuiMessageDataTypeInt8:
+    {
+      add(rOut, (uint8*)&rData.mValue._int8, 1);
+    } break;
+    case nuiMessageDataTypeInt16:
+    {
+      uint16 tmp = cpu_to_le16(rData.mValue._int16);
+      add(rOut, (uint8*)&tmp, sizeof(tmp));
+    } break;
+    case nuiMessageDataTypeInt32:
+    {
+      uint32 tmp = cpu_to_le32(rData.mValue._int32);
+      add(rOut, (uint8*)&tmp, sizeof(tmp));
+    } break;
+    case nuiMessageDataTypeInt64:
+    {
+      uint64 tmp = cpu_to_le64(rData.mValue._int64);
+      add(rOut, (uint8*)&tmp, sizeof(tmp));
+    } break;
+    case nuiMessageDataTypeUInt8:
+    {
+      add(rOut, (uint8*)&rData.mValue._uint8, 1);
+    } break;
+    case nuiMessageDataTypeUInt16:
+    {
+      uint16 tmp = cpu_to_le16(rData.mValue._uint16);
+      add(rOut, (uint8*)&tmp, sizeof(tmp));
+    } break;
+    case nuiMessageDataTypeUInt32:
+    {
+      uint32 tmp = cpu_to_le32(rData.mValue._uint32);
+      add(rOut, (uint8*)&tmp, sizeof(tmp));
+    } break;
+    case nuiMessageDataTypeUInt64:
+    {
+      uint64 tmp = cpu_to_le64(rData.mValue._uint64);
+      add(rOut, (uint8*)&tmp, sizeof(tmp));
+    } break;
+    case nuiMessageDataTypeFloat:
+    {
+      uint32 tmp = cpu_to_le32(rData.mValue._uint32);
+      add(rOut, (uint8*)&tmp, sizeof(tmp));
+    } break;
+    case nuiMessageDataTypeDouble:
+    {
+      uint64 tmp = cpu_to_le32(rData.mValue._uint64);
+      add(rOut, (uint8*)&tmp, sizeof(tmp));
+    } break;
+      
+    default:
+    {
+      NGL_ASSERT(0); // Data type not handled
+      return false;
+    } break;
+      
+  }
+  return true;
+}
+
 
 ///////////////////////////////// MessageClient
 // class nuiMessageClient

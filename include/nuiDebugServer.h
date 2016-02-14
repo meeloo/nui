@@ -106,9 +106,9 @@ public:
   nuiMessageParser();
   virtual ~nuiMessageParser();
   nuiMessage* Parse(const std::vector<uint8>& rData);
-  
+  std::vector<uint8> Build(nuiMessage* pMessage);
+  bool Build(const nuiMessageData& rData, std::vector<uint8>& rOut);
 private:
-  nuiTCPClient *mpTCPClient;
   enum State
   {
     Waiting,
