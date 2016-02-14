@@ -260,8 +260,14 @@ void MainWindow::OnCreation()
   msg.Add(10.0f);
   msg.Add(10.0);
   msg.Add(-10);
-  NGL_OUT("Message: %s\n", msg.GetDescription().GetChars());
-  
+  NGL_OUT("Input Message: %s\n", msg.GetDescription().GetChars());
+
+  nuiMessageParser parser;
+  std::vector<uint8> datamsg = parser.Build(&msg);
+  nuiMessage* pMsg = parser.Parse(datamsg);
+  NGL_OUT("Output Message: %s\n", pMsg->GetDescription().GetChars());
+
+
   int test = 0;
   switch (test)
   {
