@@ -100,16 +100,14 @@ private:
   std::vector<nuiMessageData> mData;
 };
 
-class nuiMessageClient
+class nuiMessageParser
 {
 public:
-  nuiMessageClient(nuiTCPClient* pTCPClient);
-
-  bool Post(const nuiMessage& rMessage);
-  nuiMessage* Read();
-
+  nuiMessageParser();
+  virtual ~nuiMessageParser();
+  nuiMessage* Parse(const std::vector<uint8>& rData);
+  
 private:
-  bool Post(const nuiMessageData& rData);
   nuiTCPClient *mpTCPClient;
   enum State
   {
@@ -124,6 +122,21 @@ private:
   nuiMessageDataType mType;
   std::vector<uint8> mChunck;
   nuiMessage* mpCurrentMessage = nullptr;
+};
+
+
+class nuiMessageClient
+{
+public:
+  nuiMessageClient(nuiTCPClient* pTCPClient);
+  virtual ~nuiMessageClient();
+  
+  bool Post(const nuiMessage& rMessage);
+  nuiMessage* Read();
+
+private:
+  bool Post(const nuiMessageData& rData);
+  nuiTCPClient *mpTCPClient;
   bool Parse(std::vector<uint8>& rData);
 };
 

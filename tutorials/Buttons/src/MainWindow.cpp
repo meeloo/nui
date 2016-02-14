@@ -21,6 +21,8 @@
 
 #include "nuiWidgetInspector.h"
 
+#include "nuiDebugServer.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 #include "nuiTableView.h"
 
@@ -252,6 +254,14 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
+  nuiMessage msg;
+  msg.Add("TestMessage");
+  msg.Add(10);
+  msg.Add(10.0f);
+  msg.Add(10.0);
+  msg.Add(-10);
+  NGL_OUT("Message: %s\n", msg.GetDescription().GetChars());
+  
   int test = 0;
   switch (test)
   {

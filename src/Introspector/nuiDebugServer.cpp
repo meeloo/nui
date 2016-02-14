@@ -28,7 +28,7 @@ static uint8 datasizes[] = {
 nuiMessageData::nuiMessageData(const nglString& rString)
 {
   mType = nuiMessageDataTypeString;
-  if (rString.IsNull())
+  if (!rString.IsNull())
   {
     mValue.Pointer._ptr = new uint8[rString.GetLength()];
     mValue.Pointer._size = rString.GetLength();
@@ -237,38 +237,187 @@ nglString nuiMessage::GetDescription() const
     switch (data.mType)
     {
       case nuiMessageDataTypeString:
-        tmp.Add("\"").Add(nglString((nglChar*)data.mValue.Pointer._ptr, data.mValue.Pointer._size)).Add("\"");
-        break;
+      {
+        nglString str((nglChar*)data.mValue.Pointer._ptr, data.mValue.Pointer._size);
+        tmp.Add("\"").Add(str).Add("\"");
+      } break;
       case nuiMessageDataTypeBuffer:
         tmp.Add("<").Add(data.mValue.Pointer._ptr).Add(" - ").Add((uint64)data.mValue.Pointer._size).Add(">");
         break;
       case nuiMessageDataTypeInt8:
-        tmp.Add(data.mValue._int8); break;
+        tmp.Add("<i8> ").Add(data.mValue._int8); break;
       case nuiMessageDataTypeInt16:
-        tmp.Add(data.mValue._int16); break;
+        tmp.Add("<i16> ").Add(data.mValue._int16); break;
       case nuiMessageDataTypeInt32:
-        tmp.Add(data.mValue._int32); break;
+        tmp.Add("<i32> ").Add(data.mValue._int32); break;
       case nuiMessageDataTypeInt64:
-        tmp.Add(data.mValue._int64); break;
+        tmp.Add("<i64> ").Add(data.mValue._int64); break;
       case nuiMessageDataTypeUInt8:
-        tmp.Add(data.mValue._uint8); break;
+        tmp.Add("<u8> ").Add(data.mValue._uint8); break;
       case nuiMessageDataTypeUInt16:
-        tmp.Add(data.mValue._uint16); break;
+        tmp.Add("<u16> ").Add(data.mValue._uint16); break;
       case nuiMessageDataTypeUInt32:
-        tmp.Add(data.mValue._uint32); break;
+        tmp.Add("<u32> ").Add(data.mValue._uint32); break;
       case nuiMessageDataTypeUInt64:
-        tmp.Add(data.mValue._uint64); break;
+        tmp.Add("<u64> ").Add(data.mValue._uint64); break;
       case nuiMessageDataTypeFloat:
-        tmp.Add(data.mValue._float); break;
+        tmp.Add("<f> ").Add(data.mValue._float); break;
       case nuiMessageDataTypeDouble:
-        tmp.Add(data.mValue._double); break;
+        tmp.Add("<d> ").Add(data.mValue._double); break;
       default:
         tmp.Add("???"); break;
     }
+    i++;
   }
-  tmp.Add("]");
+  tmp.Add(" ]");
 
   return tmp;
+}
+
+void FixEndianness(nuiMessageDataType type, std::vector<uint8>& rData)
+{
+  switch (type)
+  {
+    case nuiMessageDataTypeString:
+    case nuiMessageDataTypeBuffer:
+    case nuiMessageDataTypeInt8:
+    case nuiMessageDataTypeUInt8:
+    {
+    } break;
+      
+      
+    case nuiMessageDataTypeInt16:
+    case nuiMessageDataTypeUInt16:
+    {
+      le16_to_cpu_s((uint8*)&rData[0], rData.size() / 2);
+    } break;
+      
+    case nuiMessageDataTypeInt32:
+    case nuiMessageDataTypeUInt32:
+    case nuiMessageDataTypeFloat:
+    {
+      le32_to_cpu_s((uint64*)&rData[0], rData.size() / 4);
+    } break;
+      
+    case nuiMessageDataTypeInt64:
+    case nuiMessageDataTypeUInt64:
+    case nuiMessageDataTypeDouble:
+    {
+      le64_to_cpu_s((uint64*)&rData[0], rData.size() / 8);
+    } break;
+  }
+}
+
+nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
+{
+  if (!mpCurrentMessage)
+    mpCurrentMessage = new nuiMessage();
+  
+  uint32 offset = 0;
+  while (offset < rData.size())
+  {
+    switch (mState)
+    {
+      case Waiting:
+      {
+        mRemainingDataChunks = rData[offset];
+        offset++;
+        
+        mCurrentChunkSize = 0;
+        mState = ReadType;
+      }break;
+        
+      case ReadType:
+      {
+        mType = (nuiMessageDataType)rData[offset];
+        offset++;
+        
+        mCurrentChunkSize = datasizes[mType];
+        
+        switch (mType)
+        {
+          case nuiMessageDataTypeBuffer:
+          case nuiMessageDataTypeString:
+          {
+            mState = ReadSize;
+          }break;
+            
+          default:
+          {
+            mState = ReadData;
+          }break;
+        }
+      } break;
+        
+      case ReadSize:
+      {
+        uint32 toread = MIN(mCurrentChunkSize, rData.size() - offset);
+        for (uint32 i = 0; i < toread; i++)
+        {
+          mChunck.push_back(rData[offset+i]);
+        }
+        offset += toread;
+        mCurrentChunkSize -= toread;
+        if (mCurrentChunkSize == 0)
+        {
+          mCurrentChunkSize = le32_to_cpu(*(uint32*)&mChunck[0]); // We have the size of the data
+          mState = ReadData;
+        }
+      }break;
+        
+      case ReadData:
+      {
+        uint32 toread = MIN(mCurrentChunkSize, rData.size() - offset);
+        mChunck.resize(mChunck.size() + toread);
+        memcpy(&mChunck[mChunck.size()], &rData[offset], toread);
+        offset += toread;
+        mCurrentChunkSize -= toread;
+        
+        if (mCurrentChunkSize == 0)
+        {
+          FixEndianness(mType, mChunck);
+          mState = ReadType;
+          switch (mType) {
+            case nuiMessageDataTypeBuffer:
+            {
+              mpCurrentMessage->Add(&mChunck[0], mChunck.size());
+            }break;
+              
+            case nuiMessageDataTypeString:
+            {
+              mpCurrentMessage->Add(nglString((nglChar*)&mChunck[0], mChunck.size(), eUTF8));
+            }break;
+              
+              
+            default:
+            {
+              nuiMessageData data(mType, &mChunck[0], mChunck.size());
+              mpCurrentMessage->Add(data);
+              NGL_ASSERT(0);
+            }break;
+          }
+          mChunck.clear();
+          
+          mRemainingDataChunks--;
+          if (!mRemainingDataChunks)
+          {
+            nuiMessage* pMessage = mpCurrentMessage;
+            mpCurrentMessage = nullptr;
+            return pMessage;
+          }
+        }
+        break;
+      }
+        
+      default:
+      {
+        NGL_ASSERT(0);
+      }
+    }
+  }
+  nuiMessage* pReturn = mpCurrentMessage;
+  mpCurrentMessage = nullptr;
+  return pReturn;
 }
 
 
@@ -377,139 +526,6 @@ bool nuiMessageClient::Post(const nuiMessageData& rData)
 nuiMessage* nuiMessageClient::Read()
 {
   return nullptr;
-}
-
-void FixEndianness(nuiMessageDataType type, std::vector<uint8>& rData)
-{
-  switch (type)
-  {
-    case nuiMessageDataTypeString:
-    case nuiMessageDataTypeBuffer:
-    case nuiMessageDataTypeInt8:
-    case nuiMessageDataTypeUInt8:
-    {
-    } break;
-
-
-    case nuiMessageDataTypeInt16:
-    case nuiMessageDataTypeUInt16:
-    {
-      le16_to_cpu_s((uint8*)&rData[0], rData.size() / 2);
-    } break;
-
-    case nuiMessageDataTypeInt32:
-    case nuiMessageDataTypeUInt32:
-    case nuiMessageDataTypeFloat:
-    {
-      le32_to_cpu_s((uint64*)&rData[0], rData.size() / 4);
-    } break;
-
-    case nuiMessageDataTypeInt64:
-    case nuiMessageDataTypeUInt64:
-    case nuiMessageDataTypeDouble:
-    {
-      le64_to_cpu_s((uint64*)&rData[0], rData.size() / 8);
-    } break;
-  }
-}
-
-bool nuiMessageClient::Parse(std::vector<uint8>& rData)
-{
-  uint32 offset = 0;
-  while (offset < rData.size())
-  {
-    switch (mState)
-    {
-      case Waiting:
-      {
-        mRemainingDataChunks = rData[offset];
-        offset++;
-
-        mCurrentChunkSize = 0;
-        mState = ReadType;
-      }break;
-
-      case ReadType:
-      {
-        mType = (nuiMessageDataType)rData[offset];
-        offset++;
-
-        mCurrentChunkSize = datasizes[mType];
-
-        switch (mType)
-        {
-          case nuiMessageDataTypeBuffer:
-          case nuiMessageDataTypeString:
-          {
-            mState = ReadSize;
-          }break;
-            
-          default:
-          {
-            mState = ReadData;
-          }break;
-        }
-      } break;
-
-      case ReadSize:
-      {
-        uint32 toread = MIN(mCurrentChunkSize, rData.size() - offset);
-        for (uint32 i = 0; i < toread; i++)
-        {
-          mChunck.push_back(rData[offset+i]);
-        }
-        offset += toread;
-        mCurrentChunkSize -= toread;
-        if (mCurrentChunkSize == 0)
-        {
-          mCurrentChunkSize = le32_to_cpu(*(uint32*)&mChunck[0]); // We have the size of the data
-          mState = ReadData;
-        }
-      }break;
-
-      case ReadData:
-      {
-        uint32 toread = MIN(mCurrentChunkSize, rData.size() - offset);
-        mChunck.resize(mChunck.size() + toread);
-        memcpy(&mChunck[mChunck.size()], &rData[offset], toread);
-        offset += toread;
-        mCurrentChunkSize -= toread;
-
-        if (mCurrentChunkSize == 0)
-        {
-          FixEndianness(mType, mChunck);
-          mState = ReadType;
-          switch (mType) {
-            case nuiMessageDataTypeBuffer:
-            {
-              mpCurrentMessage->Add(&mChunck[0], mChunck.size());
-            }break;
-
-            case nuiMessageDataTypeString:
-            {
-              mpCurrentMessage->Add(nglString((nglChar*)&mChunck[0], mChunck.size(), eUTF8));
-            }break;
-
-
-            default:
-            {
-              nuiMessageData data(mType, &mChunck[0], mChunck.size());
-              mpCurrentMessage->Add(data);
-              NGL_ASSERT(0);
-            }break;
-          }
-          mChunck.clear();
-        }
-        break;
-      }
-
-      default:
-      {
-        NGL_ASSERT(0);
-      }
-    }
-  }
-  return true;
 }
 
 ///////////////////////////////// Debug Server
