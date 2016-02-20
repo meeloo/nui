@@ -61,6 +61,7 @@ class nuiSignal0 : public nuiSignal, private nuiNonCopyable
 public:
   typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
   typedef nuiFastDelegate0<DesiredRetType> Slot;
+  typedef std::function<DesiredRetType()> Function;
 
   nuiSignal0()
   {
@@ -91,13 +92,38 @@ public:
     
     for(uint i = 0; i < tmp.size(); i++)
       tmp[i]();
+
+    auto functions(mFunctions);
+    for (auto fun : functions)
+      fun();
   }
 
   bool IsConnected ()
   {
-    return (!mSlots.empty());
+    return (!mSlots.empty() || !mFunctions.empty());
   }
 
+  void Connect(const Function &function)
+  {
+    mFunctions.push_back(function);
+  }
+
+  void Disconnect(const Function &function)
+  {
+    auto it = mFunctions.begin();
+    auto end = mFunctions.end();
+    while (it != end)
+    {
+      if ((*it) == function)
+      {
+        mFunctions.erase(it);
+        break;
+      }
+      ++it;
+    }
+  }
+
+  
 private:
   void Connect(nuiSlotsSink &rSink, const Slot &rSlot)
   {
@@ -142,6 +168,7 @@ private:
 
 private:
   std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
+  std::vector< Function > mFunctions;
 };
 
 // N=1
@@ -152,6 +179,7 @@ class nuiSignal1 : public nuiSignal, nuiNonCopyable
 public:
   typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
   typedef nuiFastDelegate1<Param1, DesiredRetType> Slot;
+  typedef std::function<DesiredRetType(Param1)> Function;
 
   nuiSignal1()
   {
@@ -181,11 +209,35 @@ public:
     
     for(uint i = 0; i < tmp.size(); i++)
       tmp[i](param1);
+
+    auto functions(mFunctions);
+    for (auto fun : functions)
+      fun(param1);
   }
 
   bool IsConnected ()
   {
-    return (!mSlots.empty());
+    return (!mSlots.empty() || !mFunctions.empty());
+  }
+
+  void Connect(const Function &function)
+  {
+    mFunctions.push_back(function);
+  }
+
+  void Disconnect(const Function &function)
+  {
+    auto it = mFunctions.begin();
+    auto end = mFunctions.end();
+    while (it != end)
+    {
+      if ((*it) == function)
+      {
+        mFunctions.erase(it);
+        break;
+      }
+      ++it;
+    }
   }
 
 private:	
@@ -232,6 +284,7 @@ private:
 
 private:
   std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
+  std::vector< Function > mFunctions;
 };
 
 // N=2
@@ -242,6 +295,7 @@ class nuiSignal2 : public nuiSignal, nuiNonCopyable
 public:
   typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
   typedef nuiFastDelegate2<Param1, Param2, DesiredRetType> Slot;
+  typedef std::function<DesiredRetType(Param1, Param2)> Function;
 
   nuiSignal2()
   {
@@ -271,13 +325,39 @@ public:
     
     for(uint i = 0; i < tmp.size(); i++)
       tmp[i](param1, param2);
+
+    auto functions(mFunctions);
+    for (auto fun : functions)
+      fun(param1, param2);
   }
 
 
   bool IsConnected ()
   {
-    return (!mSlots.empty());
+    return (!mSlots.empty() || !mFunctions.empty());
   }
+
+  void Connect(const Function &function)
+  {
+    mFunctions.push_back(function);
+  }
+
+  void Disconnect(const Function &function)
+  {
+    auto it = mFunctions.begin();
+    auto end = mFunctions.end();
+    while (it != end)
+    {
+      if ((*it) == function)
+      {
+        mFunctions.erase(it);
+        break;
+      }
+      ++it;
+    }
+  }
+  
+  
 
 private:	
   void Connect(nuiSlotsSink &sink, const Slot &slot)
@@ -323,6 +403,7 @@ private:
 
 private:
   std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
+  std::vector< Function > mFunctions;
 };
 
 // N=3
@@ -333,6 +414,7 @@ class nuiSignal3 : public nuiSignal, nuiNonCopyable
 public:
   typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
   typedef nuiFastDelegate3<Param1, Param2, Param3, DesiredRetType> Slot;
+  typedef std::function<DesiredRetType(Param1, Param2, Param3)> Function;
 
   nuiSignal3()
   {
@@ -362,11 +444,35 @@ public:
     
     for(uint i = 0; i < tmp.size(); i++)
       tmp[i](param1, param2, param3);
+
+    auto functions(mFunctions);
+    for (auto fun : functions)
+      fun(param1, param2, param3);
   }
 
   bool IsConnected ()
   {
-    return (!mSlots.empty());
+    return (!mSlots.empty() || !mFunctions.empty());
+  }
+
+  void Connect(const Function &function)
+  {
+    mFunctions.push_back(function);
+  }
+
+  void Disconnect(const Function &function)
+  {
+    auto it = mFunctions.begin();
+    auto end = mFunctions.end();
+    while (it != end)
+    {
+      if ((*it) == function)
+      {
+        mFunctions.erase(it);
+        break;
+      }
+      ++it;
+    }
   }
 
 private:
@@ -412,7 +518,8 @@ private:
   }
 
 private:
-std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
+  std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
+  std::vector< Function > mFunctions;
 };
 
 
@@ -424,6 +531,7 @@ class nuiSignal4 : public nuiSignal, nuiNonCopyable
 public:
   typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
   typedef nuiFastDelegate4<Param1, Param2, Param3, Param4, DesiredRetType> Slot;
+  typedef std::function<DesiredRetType(Param1, Param2, Param3, Param4)> Function;
 
   nuiSignal4()
   {
@@ -453,12 +561,37 @@ public:
 
     for(uint i = 0; i < tmp.size(); i++)
       tmp[i](param1, param2, param3, param4);
+
+    auto functions(mFunctions);
+    for (auto fun : functions)
+      fun(param1, param2, param3, param4);
   }
 
   bool IsConnected ()
   {
-    return (!mSlots.empty());
+    return (!mSlots.empty() || !mFunctions.empty());
   }
+
+  void Connect(const Function &function)
+  {
+    mFunctions.push_back(function);
+  }
+
+  void Disconnect(const Function &function)
+  {
+    auto it = mFunctions.begin();
+    auto end = mFunctions.end();
+    while (it != end)
+    {
+      if ((*it) == function)
+      {
+        mFunctions.erase(it);
+        break;
+      }
+      ++it;
+    }
+  }
+
 
 private:
   void Connect(nuiSlotsSink &sink, const Slot &slot)
@@ -504,6 +637,7 @@ private:
 
 private:
   std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
+  std::vector< Function > mFunctions;
 };
 
 
@@ -515,6 +649,7 @@ class nuiSignal5 : public nuiSignal, nuiNonCopyable
 public:
   typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
   typedef nuiFastDelegate5<Param1, Param2, Param3, Param4, Param5, DesiredRetType> Slot;
+  typedef std::function<DesiredRetType(Param1, Param2, Param3, Param4, Param5)> Function;
 
   nuiSignal5()
   {
@@ -544,12 +679,38 @@ public:
 
       for(uint i = 0; i < tmp.size(); i++)
         tmp[i](param1, param2, param3, param4, param5);
+
+    auto functions(mFunctions);
+    for (auto fun : functions)
+      fun(param1, param2, param3, param4, param5);
   }
 
   bool IsConnected ()
   {
-    return (!mSlots.empty());
+    return (!mSlots.empty() || !mFunctions.empty());
   }
+
+  void Connect(const Function &function)
+  {
+    mFunctions.push_back(function);
+  }
+
+  void Disconnect(const Function &function)
+  {
+    auto it = mFunctions.begin();
+    auto end = mFunctions.end();
+    while (it != end)
+    {
+      if ((*it) == function)
+      {
+        mFunctions.erase(it);
+        break;
+      }
+      ++it;
+    }
+  }
+  
+  
 
 private:
   void Connect(nuiSlotsSink &sink, const Slot &slot)
@@ -595,6 +756,7 @@ private:
 
 private:
   std::vector< std::pair<Slot, nuiSlotsSink*> > mSlots;
+  std::vector< Function > mFunctions;
 };
 
 class nuiSlotsSink
