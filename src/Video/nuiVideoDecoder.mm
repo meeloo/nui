@@ -7,7 +7,8 @@
 
 #import "nui.h"
 #import <Cocoa/Cocoa.h>
-#import <QTKit/QTKit.h>
+//#import <QTKit/QTKit.h>
+#import <CoreVideo/CoreVideo.h>
 
 class nuiVideoDecoderPrivate
 {
@@ -76,8 +77,7 @@ bool nuiVideoDecoder::Init()
   MoviesTask([mpPrivate->mpMovie quickTimeMovie], 0); 
 #endif
   
-  QTTime qtDuration = [mpPrivate->mpMovie duration];  
-  mDuration = (double)(qtDuration.timeValue) / (double)(qtDuration.timeScale);
+  mDuration = [mpPrivate->mpMovie duration];
   
   NSImage* img = [mpPrivate->mpMovie currentFrameImage];
   mWidth = [img size].width;
@@ -100,10 +100,7 @@ double nuiVideoDecoder::GetPosition() const
   if (!IsValid())
     return -1.0;
   
-  QTTime CurrTime = [mpPrivate->mpMovie currentTime];
-  
-  double seconds = (double)(CurrTime.timeValue) / (double)(CurrTime.timeScale);
-  return seconds;
+  return [mpPrivate->mpMovie currentTime];
 }
 
 void nuiVideoDecoder::SetPosition(double TimePosition)
@@ -111,11 +108,7 @@ void nuiVideoDecoder::SetPosition(double TimePosition)
   if (!IsValid())
     return;
   
-  QTTime time;
-  time.timeScale = 1000;
-  time.flags = 0;
-  time.timeValue = TimePosition * time.timeScale;
-  [mpPrivate->mpMovie setCurrentTime:time];
+  [mpPrivate->mpMovie setCurrentTime:TimePosition];
 }
 
 bool nuiVideoDecoder::GoToNextFrame()
