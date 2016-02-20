@@ -1795,6 +1795,38 @@
 		E51E54AF0FF1237F00FDF3BE /* nglImageGIFCodec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E51E54AB0FF1237F00FDF3BE /* nglImageGIFCodec.cpp */; };
 		E51E565F0FF248AB00FDF3BE /* nuiHTMLHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = E51E565B0FF248AB00FDF3BE /* nuiHTMLHeader.h */; };
 		E51E56600FF248AB00FDF3BE /* nuiHTMLHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E51E565C0FF248AB00FDF3BE /* nuiHTMLHeader.cpp */; };
+		E52003901C78D3870031A12B /* nuiMessageData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E520038E1C78D3870031A12B /* nuiMessageData.cpp */; };
+		E52003911C78D3870031A12B /* nuiMessageData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E520038E1C78D3870031A12B /* nuiMessageData.cpp */; };
+		E52003921C78D3870031A12B /* nuiMessageData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E520038E1C78D3870031A12B /* nuiMessageData.cpp */; };
+		E52003931C78D3870031A12B /* nuiMessageData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E520038E1C78D3870031A12B /* nuiMessageData.cpp */; };
+		E520039A1C78D46C0031A12B /* nuiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003981C78D46C0031A12B /* nuiMessage.cpp */; };
+		E520039B1C78D46C0031A12B /* nuiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003981C78D46C0031A12B /* nuiMessage.cpp */; };
+		E520039C1C78D46C0031A12B /* nuiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003981C78D46C0031A12B /* nuiMessage.cpp */; };
+		E520039D1C78D46C0031A12B /* nuiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003981C78D46C0031A12B /* nuiMessage.cpp */; };
+		E52003A41C78D4DA0031A12B /* nuiMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003A21C78D4DA0031A12B /* nuiMessageParser.cpp */; };
+		E52003A51C78D4DA0031A12B /* nuiMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003A21C78D4DA0031A12B /* nuiMessageParser.cpp */; };
+		E52003A61C78D4DA0031A12B /* nuiMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003A21C78D4DA0031A12B /* nuiMessageParser.cpp */; };
+		E52003A71C78D4DA0031A12B /* nuiMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003A21C78D4DA0031A12B /* nuiMessageParser.cpp */; };
+		E52003AE1C78D5440031A12B /* nuiMessageClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003AC1C78D5440031A12B /* nuiMessageClient.cpp */; };
+		E52003AF1C78D5440031A12B /* nuiMessageClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003AC1C78D5440031A12B /* nuiMessageClient.cpp */; };
+		E52003B01C78D5440031A12B /* nuiMessageClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003AC1C78D5440031A12B /* nuiMessageClient.cpp */; };
+		E52003B11C78D5440031A12B /* nuiMessageClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52003AC1C78D5440031A12B /* nuiMessageClient.cpp */; };
+		E52003BA1C78D5C00031A12B /* nuiMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B61C78D5C00031A12B /* nuiMessage.h */; };
+		E52003BB1C78D5C00031A12B /* nuiMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B61C78D5C00031A12B /* nuiMessage.h */; };
+		E52003BC1C78D5C00031A12B /* nuiMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B61C78D5C00031A12B /* nuiMessage.h */; };
+		E52003BD1C78D5C00031A12B /* nuiMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B61C78D5C00031A12B /* nuiMessage.h */; };
+		E52003BE1C78D5C00031A12B /* nuiMessageClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B71C78D5C00031A12B /* nuiMessageClient.h */; };
+		E52003BF1C78D5C00031A12B /* nuiMessageClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B71C78D5C00031A12B /* nuiMessageClient.h */; };
+		E52003C01C78D5C00031A12B /* nuiMessageClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B71C78D5C00031A12B /* nuiMessageClient.h */; };
+		E52003C11C78D5C00031A12B /* nuiMessageClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B71C78D5C00031A12B /* nuiMessageClient.h */; };
+		E52003C21C78D5C00031A12B /* nuiMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B81C78D5C00031A12B /* nuiMessageData.h */; };
+		E52003C31C78D5C00031A12B /* nuiMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B81C78D5C00031A12B /* nuiMessageData.h */; };
+		E52003C41C78D5C00031A12B /* nuiMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B81C78D5C00031A12B /* nuiMessageData.h */; };
+		E52003C51C78D5C00031A12B /* nuiMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B81C78D5C00031A12B /* nuiMessageData.h */; };
+		E52003C61C78D5C00031A12B /* nuiMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B91C78D5C00031A12B /* nuiMessageParser.h */; };
+		E52003C71C78D5C00031A12B /* nuiMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B91C78D5C00031A12B /* nuiMessageParser.h */; };
+		E52003C81C78D5C00031A12B /* nuiMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B91C78D5C00031A12B /* nuiMessageParser.h */; };
+		E52003C91C78D5C00031A12B /* nuiMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = E52003B91C78D5C00031A12B /* nuiMessageParser.h */; };
 		E520BF2F1A9AACFE00777792 /* nuiNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E520BF2E1A9AACFE00777792 /* nuiNode.cpp */; };
 		E520BF301A9AACFE00777792 /* nuiNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E520BF2E1A9AACFE00777792 /* nuiNode.cpp */; };
 		E520BF311A9AACFE00777792 /* nuiNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E520BF2E1A9AACFE00777792 /* nuiNode.cpp */; };
@@ -4543,6 +4575,14 @@
 		E51E54F40FF12EB600FDF3BE /* gif_err.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gif_err.c; path = deps/ungif/gif_err.c; sourceTree = SOURCE_ROOT; };
 		E51E565B0FF248AB00FDF3BE /* nuiHTMLHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nuiHTMLHeader.h; sourceTree = "<group>"; };
 		E51E565C0FF248AB00FDF3BE /* nuiHTMLHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiHTMLHeader.cpp; sourceTree = "<group>"; };
+		E520038E1C78D3870031A12B /* nuiMessageData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiMessageData.cpp; sourceTree = "<group>"; };
+		E52003981C78D46C0031A12B /* nuiMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiMessage.cpp; sourceTree = "<group>"; };
+		E52003A21C78D4DA0031A12B /* nuiMessageParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiMessageParser.cpp; sourceTree = "<group>"; };
+		E52003AC1C78D5440031A12B /* nuiMessageClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiMessageClient.cpp; sourceTree = "<group>"; };
+		E52003B61C78D5C00031A12B /* nuiMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiMessage.h; path = include/nuiMessage.h; sourceTree = SOURCE_ROOT; };
+		E52003B71C78D5C00031A12B /* nuiMessageClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiMessageClient.h; path = include/nuiMessageClient.h; sourceTree = SOURCE_ROOT; };
+		E52003B81C78D5C00031A12B /* nuiMessageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiMessageData.h; path = include/nuiMessageData.h; sourceTree = SOURCE_ROOT; };
+		E52003B91C78D5C00031A12B /* nuiMessageParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiMessageParser.h; path = include/nuiMessageParser.h; sourceTree = SOURCE_ROOT; };
 		E520BF2E1A9AACFE00777792 /* nuiNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiNode.cpp; sourceTree = "<group>"; };
 		E520BF321A9AAD2000777792 /* nuiNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiNode.h; path = include/nuiNode.h; sourceTree = SOURCE_ROOT; };
 		E52411AB11CA8ED20025CA71 /* nuiURL_CoreFoundation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = nuiURL_CoreFoundation.mm; path = src/Net/CoreFoundation/nuiURL_CoreFoundation.mm; sourceTree = SOURCE_ROOT; };
@@ -6044,6 +6084,14 @@
 				56AFF75F0D745886003A6AF3 /* nuiHTTP.cpp */,
 				E5C3FA3014BDC5CC00F4FB96 /* nuiHTTPServer.h */,
 				E5C3FA3A14BDC60F00F4FB96 /* nuiHTTPServer.cpp */,
+				E520038E1C78D3870031A12B /* nuiMessageData.cpp */,
+				E52003B81C78D5C00031A12B /* nuiMessageData.h */,
+				E52003981C78D46C0031A12B /* nuiMessage.cpp */,
+				E52003B61C78D5C00031A12B /* nuiMessage.h */,
+				E52003A21C78D4DA0031A12B /* nuiMessageParser.cpp */,
+				E52003B91C78D5C00031A12B /* nuiMessageParser.h */,
+				E52003AC1C78D5440031A12B /* nuiMessageClient.cpp */,
+				E52003B71C78D5C00031A12B /* nuiMessageClient.h */,
 			);
 			path = Net;
 			sourceTree = "<group>";
@@ -9084,6 +9132,7 @@
 				73F0848112E9BA0700656E84 /* nglFile.h in Headers */,
 				73F0848212E9BA0700656E84 /* nui_all.h in Headers */,
 				73F0848312E9BA0700656E84 /* nuiAnimation.h in Headers */,
+				E52003C01C78D5C00031A12B /* nuiMessageClient.h in Headers */,
 				73F0848412E9BA0700656E84 /* nglQuaternion.h in Headers */,
 				73F0848512E9BA0700656E84 /* nuiScrollBar.h in Headers */,
 				73F0848612E9BA0700656E84 /* nuiPolyLine.h in Headers */,
@@ -9137,6 +9186,7 @@
 				73F084BB12E9BA0700656E84 /* zip.h in Headers */,
 				73F084BC12E9BA0700656E84 /* nuiFontInstance.h in Headers */,
 				73F084BD12E9BA0700656E84 /* nglInputDeviceInstance.h in Headers */,
+				E52003BC1C78D5C00031A12B /* nuiMessage.h in Headers */,
 				73F084BE12E9BA0700656E84 /* ConvertUTF.h in Headers */,
 				73F084C112E9BA0700656E84 /* nuiFastDelegate.h in Headers */,
 				73F084C212E9BA0700656E84 /* nuiSignalsSlots.h in Headers */,
@@ -9192,6 +9242,7 @@
 				73F084FB12E9BA0700656E84 /* nuiCSS.h in Headers */,
 				73F084FC12E9BA0700656E84 /* nuiStateDecoration.h in Headers */,
 				73F084FD12E9BA0700656E84 /* nuiCSV.h in Headers */,
+				E52003C81C78D5C00031A12B /* nuiMessageParser.h in Headers */,
 				73F084FE12E9BA0700656E84 /* nglUTFStringConv.h in Headers */,
 				73F084FF12E9BA0700656E84 /* nuiFontManager.h in Headers */,
 				73F0850012E9BA0700656E84 /* nuiSerializeContext.h in Headers */,
@@ -9345,6 +9396,7 @@
 				E533393513C373B60080C465 /* AtlasTexture.h in Headers */,
 				E5DE7A2813C3EAB80018CD6C /* ImageDraggedFile.h in Headers */,
 				E5ED550913FDE943004EFA83 /* nuiMidi.h in Headers */,
+				E52003C41C78D5C00031A12B /* nuiMessageData.h in Headers */,
 				E53B3E791407B070005AD549 /* nuiArchive.h in Headers */,
 				E5D37EE01413AEBB003CF2A3 /* nuiAttributeEditorPane.h in Headers */,
 				E5B006CA141EC86C003B61C9 /* nuiAttributeEditorBox.h in Headers */,
@@ -9946,6 +9998,7 @@
 				E542A0420C3F0A5900225219 /* nglMatrix.h in Headers */,
 				E542A0430C3F0A5900225219 /* ngl.h in Headers */,
 				E542A0440C3F0A5900225219 /* nuiButton.h in Headers */,
+				E52003BE1C78D5C00031A12B /* nuiMessageClient.h in Headers */,
 				E542A0450C3F0A5900225219 /* nglMachOPrefix.h in Headers */,
 				E542A0470C3F0A5900225219 /* nglCarbonDragAndDrop.h in Headers */,
 				E542A0490C3F0A5900225219 /* ngl_carbon.h in Headers */,
@@ -9953,6 +10006,7 @@
 				E542A04C0C3F0A5900225219 /* nglImageTGACodec.h in Headers */,
 				E542A04D0C3F0A5900225219 /* nglImagePPMCodec.h in Headers */,
 				E542A04E0C3F0A5900225219 /* ioapi.h in Headers */,
+				E52003C21C78D5C00031A12B /* nuiMessageData.h in Headers */,
 				E542A04F0C3F0A5900225219 /* nglImagePNGCodec.h in Headers */,
 				E542A0500C3F0A5900225219 /* main.h in Headers */,
 				E542A0510C3F0A5900225219 /* nglApplication.h in Headers */,
@@ -10054,6 +10108,7 @@
 				E5B916C40E8A6CFB00610715 /* nuiHyperLink.h in Headers */,
 				941A98CF0E8BF05C00CAFC3A /* nuiScrollBox.h in Headers */,
 				BCCFC4500E9E656B004A487E /* nuiKnob.h in Headers */,
+				E52003C61C78D5C00031A12B /* nuiMessageParser.h in Headers */,
 				BC19E19B0EA3AC210026CB6B /* nuiImageSequence.h in Headers */,
 				E5F9F7720EACB86D00F8D3A3 /* nuiPanose.h in Headers */,
 				61D085150EAFAA5400B73835 /* nuiSurface.h in Headers */,
@@ -10104,6 +10159,7 @@
 				E5901BED1043F2C200D3FD5F /* nuiToggleButton.h in Headers */,
 				E55A479D10531814002AB5CA /* nuiClampedValueAttributeEditor.h in Headers */,
 				E55A47C1105321F3002AB5CA /* nuiPopupValueAttributeEditor.h in Headers */,
+				E52003BA1C78D5C00031A12B /* nuiMessage.h in Headers */,
 				E55A47CA1053234C002AB5CA /* nuiComboAttributeEditor.h in Headers */,
 				4024359010568E550089BA0B /* nuiStopWatch.h in Headers */,
 				E58411CA1077451500E0CB45 /* nuiBindings.h in Headers */,
@@ -10399,6 +10455,7 @@
 				E5D640A11209AB9C009C26A9 /* nuiSizeAttributeEditor.h in Headers */,
 				E51DA3731847375000ADA1B0 /* nuiTaskThread.h in Headers */,
 				E5D640A21209AB9C009C26A9 /* nuiFontBrowser.h in Headers */,
+				E52003C71C78D5C00031A12B /* nuiMessageParser.h in Headers */,
 				E5D640A31209AB9C009C26A9 /* nglThreadChecker.h in Headers */,
 				E5D640A41209AB9C009C26A9 /* nuiIntrospector.h in Headers */,
 				E5D640A51209AB9C009C26A9 /* nuiWidgetInspector.h in Headers */,
@@ -10443,11 +10500,13 @@
 				E5D640CE1209AB9C009C26A9 /* nuiAudioDevice_CoreAudio.h in Headers */,
 				E5D640CF1209AB9C009C26A9 /* nuiUnicode.h in Headers */,
 				E5D640D01209AB9C009C26A9 /* nuiVersion.h in Headers */,
+				E52003C31C78D5C00031A12B /* nuiMessageData.h in Headers */,
 				E5D640D11209AB9C009C26A9 /* nuiAudioDecoder.h in Headers */,
 				E5D640D21209AB9C009C26A9 /* nuiChunksDefinitions.h in Headers */,
 				E5D640D31209AB9C009C26A9 /* ngl_carbon.h in Headers */,
 				E5D640D41209AB9C009C26A9 /* nuiSingleton.h in Headers */,
 				E5D640D51209AB9C009C26A9 /* nuiHTMLView.h in Headers */,
+				E52003BB1C78D5C00031A12B /* nuiMessage.h in Headers */,
 				E5D640D61209AB9C009C26A9 /* nuiCommandContainer.h in Headers */,
 				E5D640D71209AB9C009C26A9 /* nuiCommandManager.h in Headers */,
 				E5D640D81209AB9C009C26A9 /* nuiFileTree.h in Headers */,
@@ -10490,6 +10549,7 @@
 				E5D641061209AB9C009C26A9 /* nglCondition.h in Headers */,
 				E5D641071209AB9C009C26A9 /* nuiObjectInspector.h in Headers */,
 				E5D641081209AB9C009C26A9 /* nuiTypeTraits.h in Headers */,
+				E52003BF1C78D5C00031A12B /* nuiMessageClient.h in Headers */,
 				E5D641091209AB9C009C26A9 /* nuiVariant.h in Headers */,
 				E5D6410A1209AB9C009C26A9 /* nuiAttributeType.h in Headers */,
 				E5D6410B1209AB9C009C26A9 /* nuiScriptEngine.h in Headers */,
@@ -11129,6 +11189,7 @@
 				E5FB9A69147D5CEE001A1829 /* nuiApplication.h in Headers */,
 				E5FB9A6B147D5CEE001A1829 /* nuiTreeEvent.h in Headers */,
 				E5FB9A72147D5CEE001A1829 /* nglStream.h in Headers */,
+				E52003BD1C78D5C00031A12B /* nuiMessage.h in Headers */,
 				E5FB9A75147D5CEE001A1829 /* nglKeyboard.h in Headers */,
 				E5FB9A76147D5CEE001A1829 /* nglTimer.h in Headers */,
 				E5FB9A79147D5CEE001A1829 /* nuiInit.h in Headers */,
@@ -11144,6 +11205,7 @@
 				E5FB9A8B147D5CEE001A1829 /* nglIStream.h in Headers */,
 				E5FB9A8C147D5CEE001A1829 /* nglIOFile.h in Headers */,
 				E5FB9A91147D5CEE001A1829 /* nglEvent.h in Headers */,
+				E52003C51C78D5C00031A12B /* nuiMessageData.h in Headers */,
 				E5FB9A92147D5CEE001A1829 /* nuiXML.h in Headers */,
 				E5FB9A94147D5CEE001A1829 /* nglDeviceInfo.h in Headers */,
 				E5FB9A95147D5CEE001A1829 /* nglLog.h in Headers */,
@@ -11168,6 +11230,7 @@
 				E5FB9ABD147D5CEE001A1829 /* nuiFastDelegate.h in Headers */,
 				E5FB9ABE147D5CEE001A1829 /* nuiSignalsSlots.h in Headers */,
 				E5FB9AC0147D5CEE001A1829 /* nuiBindingManager.h in Headers */,
+				E52003C11C78D5C00031A12B /* nuiMessageClient.h in Headers */,
 				E5FB9AC9147D5CEE001A1829 /* nuiToken.h in Headers */,
 				E5FB9ACA147D5CEE001A1829 /* nglAtomic.h in Headers */,
 				E5FB9ACB147D5CEE001A1829 /* nglLockFreeFifo.h in Headers */,
@@ -11176,6 +11239,7 @@
 				E5FB9ACE147D5CEE001A1829 /* nglCriticalSection.h in Headers */,
 				E5FB9ACF147D5CEE001A1829 /* nglGuard.h in Headers */,
 				E5FB9AD0147D5CEE001A1829 /* nuiMessageQueue.h in Headers */,
+				E52003C91C78D5C00031A12B /* nuiMessageParser.h in Headers */,
 				E5FB9AD1147D5CEE001A1829 /* nglSyncEvent.h in Headers */,
 				E5FB9ADC147D5CEE001A1829 /* nuiNativeResource.h in Headers */,
 				E5FB9ADD147D5CEE001A1829 /* nuiAttribute.h in Headers */,
@@ -11454,6 +11518,7 @@
 				E587420D1A3E0F2B00016A80 /* nuiRenderThread.cpp in Sources */,
 				73F085B812E9BA0700656E84 /* nuiMetaPainter.cpp in Sources */,
 				73F085BA12E9BA0700656E84 /* nuiColumnTreeView.cpp in Sources */,
+				E52003921C78D3870031A12B /* nuiMessageData.cpp in Sources */,
 				73F085BB12E9BA0700656E84 /* nuiEvent.cpp in Sources */,
 				73F085BC12E9BA0700656E84 /* ngl3DSLoader.cpp in Sources */,
 				73F085BE12E9BA0700656E84 /* nglModule.cpp in Sources */,
@@ -11467,6 +11532,7 @@
 				73F085C512E9BA0700656E84 /* nuiFontInstance.cpp in Sources */,
 				73F085C612E9BA0700656E84 /* nglImageCodec.cpp in Sources */,
 				73F085C712E9BA0700656E84 /* nglTime.cpp in Sources */,
+				E52003B01C78D5440031A12B /* nuiMessageClient.cpp in Sources */,
 				73F085C812E9BA0700656E84 /* nuiObject.cpp in Sources */,
 				73F085C912E9BA0700656E84 /* nuiSlider.cpp in Sources */,
 				73F085CA12E9BA0700656E84 /* nuiGradient.cpp in Sources */,
@@ -11600,6 +11666,7 @@
 				73F0865C12E9BA0700656E84 /* nuiFontBrowser.cpp in Sources */,
 				73F0865D12E9BA0700656E84 /* nglThreadChecker.cpp in Sources */,
 				73F0866212E9BA0700656E84 /* nuiTreeHandleDecoration.cpp in Sources */,
+				E520039C1C78D46C0031A12B /* nuiMessage.cpp in Sources */,
 				73F0866312E9BA0700656E84 /* nuiBorderAttributeEditor.cpp in Sources */,
 				73F0866412E9BA0700656E84 /* nuiRangeAttributeEditor.cpp in Sources */,
 				73F0866512E9BA0700656E84 /* nglLightLock.cpp in Sources */,
@@ -11642,6 +11709,7 @@
 				73F0868B12E9BA0700656E84 /* nuiFileTree.cpp in Sources */,
 				73F0868C12E9BA0700656E84 /* nuiChunkSampleReader.cpp in Sources */,
 				73F0868D12E9BA0700656E84 /* nuiAiffReader.cpp in Sources */,
+				E52003A61C78D4DA0031A12B /* nuiMessageParser.cpp in Sources */,
 				73F0868E12E9BA0700656E84 /* nuiAiffWriter.cpp in Sources */,
 				73F0868F12E9BA0700656E84 /* nuiAttributeAnimation.cpp in Sources */,
 				73F0869012E9BA0700656E84 /* nuiRangeKnobAttributeEditor.cpp in Sources */,
@@ -12094,6 +12162,7 @@
 				E542A1420C3F0A5900225219 /* nglDataObjects_Carbon.cpp in Sources */,
 				E542A1430C3F0A5900225219 /* nuiFileList.cpp in Sources */,
 				E542A1440C3F0A5900225219 /* nglVideoMode_CoreFoundation.cpp in Sources */,
+				E52003AE1C78D5440031A12B /* nuiMessageClient.cpp in Sources */,
 				E542A1460C3F0A5900225219 /* nuiNotification.cpp in Sources */,
 				E542A1470C3F0A5900225219 /* nuiRange.cpp in Sources */,
 				E542A1480C3F0A5900225219 /* nuiList.cpp in Sources */,
@@ -12110,6 +12179,7 @@
 				E542A1550C3F0A5900225219 /* nglIZip.cpp in Sources */,
 				E542A1570C3F0A5900225219 /* nglIFile.cpp in Sources */,
 				E542A1590C3F0A5900225219 /* nglWindow.cpp in Sources */,
+				E520039A1C78D46C0031A12B /* nuiMessage.cpp in Sources */,
 				E542A15B0C3F0A5900225219 /* nuiPathOptimizer.cpp in Sources */,
 				E542A15D0C3F0A5900225219 /* nuiOutliner.cpp in Sources */,
 				E542A15E0C3F0A5900225219 /* nuiWidgetAnimation.cpp in Sources */,
@@ -12183,6 +12253,7 @@
 				E5D66E4F0CF433A4004783D4 /* nuiNativeResource.cpp in Sources */,
 				BC35D31A0CF5C55C002CE274 /* nuiAttributeEditor.cpp in Sources */,
 				C389717E1C602474003F2232 /* nuiDebugServer.cpp in Sources */,
+				E52003901C78D3870031A12B /* nuiMessageData.cpp in Sources */,
 				BCCC980D0CF5D1F800677C8C /* nuiPercentAttributeEditor.cpp in Sources */,
 				BCF4F8240CF5E211009FEF20 /* nuiPointAttributeEditor.cpp in Sources */,
 				E5C2ED7A0CF648C90098B8BB /* nglVolume.cpp in Sources */,
@@ -12214,6 +12285,7 @@
 				E5BCF2EB0D88226100D6EAEF /* nuiFontBrowser.cpp in Sources */,
 				BC0F70800DB3BC0100329939 /* nglThreadChecker.cpp in Sources */,
 				BCC51B9F0DC0D91800563B7E /* nuiIntrospector.cpp in Sources */,
+				E52003A41C78D4DA0031A12B /* nuiMessageParser.cpp in Sources */,
 				BCC51BA00DC0D91900563B7E /* nuiWidgetInspector.cpp in Sources */,
 				BCC51BEF0DC0E72300563B7E /* nuiThreadInspector.cpp in Sources */,
 				E554C6D70DC1478E00C5D69A /* nuiFontInspector.cpp in Sources */,
@@ -12447,6 +12519,7 @@
 				E5D6426E1209AB9C009C26A9 /* nuiTimer.cpp in Sources */,
 				E5D6426F1209AB9C009C26A9 /* nglIMemory.cpp in Sources */,
 				E5D642711209AB9C009C26A9 /* nuiTextureHelpers.cpp in Sources */,
+				E520039B1C78D46C0031A12B /* nuiMessage.cpp in Sources */,
 				E5D642721209AB9C009C26A9 /* nuiShapeView.cpp in Sources */,
 				E5D642731209AB9C009C26A9 /* nglLog.cpp in Sources */,
 				E5D642741209AB9C009C26A9 /* nuiScrollView.cpp in Sources */,
@@ -12525,6 +12598,7 @@
 				E5D642D01209AB9C009C26A9 /* nuiGradientDecoration.cpp in Sources */,
 				E5D642D11209AB9C009C26A9 /* nuiMetaDecoration.cpp in Sources */,
 				E5D642D21209AB9C009C26A9 /* nuiAudioConvert.cpp in Sources */,
+				E52003AF1C78D5440031A12B /* nuiMessageClient.cpp in Sources */,
 				E5D642D31209AB9C009C26A9 /* nuiAudioFifo.cpp in Sources */,
 				E5D642D41209AB9C009C26A9 /* nuiCSS.cpp in Sources */,
 				E5D642D51209AB9C009C26A9 /* nuiStateDecoration.cpp in Sources */,
@@ -12585,6 +12659,7 @@
 				E5D6432B1209AB9C009C26A9 /* nuiCommandContainer.cpp in Sources */,
 				E5D6432C1209AB9C009C26A9 /* nuiCommandManager.cpp in Sources */,
 				E5D6432D1209AB9C009C26A9 /* nuiFileTree.cpp in Sources */,
+				E52003A51C78D4DA0031A12B /* nuiMessageParser.cpp in Sources */,
 				E5D6432E1209AB9C009C26A9 /* nuiChunkSampleReader.cpp in Sources */,
 				E5D6432F1209AB9C009C26A9 /* nuiAiffReader.cpp in Sources */,
 				E5D643301209AB9C009C26A9 /* nuiAiffWriter.cpp in Sources */,
@@ -12666,6 +12741,7 @@
 				400C2F8F12DE09DA007472C4 /* nuiFileSound.cpp in Sources */,
 				400C2F9112DE09DA007472C4 /* nuiFileVoice.cpp in Sources */,
 				400C2F9312DE09DA007472C4 /* nuiMemorySound.cpp in Sources */,
+				E52003911C78D3870031A12B /* nuiMessageData.cpp in Sources */,
 				4017059D12E06460008769D5 /* nuiSynthSound.cpp in Sources */,
 				401705CD12E06878008769D5 /* nuiSynthVoice.cpp in Sources */,
 				E5345F3C12F3317500F435D9 /* TextureAtlas.cpp in Sources */,
@@ -13033,6 +13109,7 @@
 				E5FB9BB9147D5CEE001A1829 /* nuiTree.cpp in Sources */,
 				E5FB9BBA147D5CEE001A1829 /* nglContext.cpp in Sources */,
 				E5FB9BBD147D5CEE001A1829 /* nuiCommand.cpp in Sources */,
+				E52003B11C78D5440031A12B /* nuiMessageClient.cpp in Sources */,
 				E5FB9BC0147D5CEE001A1829 /* nuiEvent.cpp in Sources */,
 				E5FB9BC1147D5CEE001A1829 /* ngl3DSLoader.cpp in Sources */,
 				E5FB9BC2147D5CEE001A1829 /* nglModule.cpp in Sources */,
@@ -13052,6 +13129,7 @@
 				E5FB9BE5147D5CEE001A1829 /* nglVideoMode.cpp in Sources */,
 				E5FB9BE7147D5CEE001A1829 /* nglPath.cpp in Sources */,
 				E5FB9BE9147D5CEE001A1829 /* nglIZip.cpp in Sources */,
+				E520039D1C78D46C0031A12B /* nuiMessage.cpp in Sources */,
 				E5FB9BEB147D5CEE001A1829 /* nglIFile.cpp in Sources */,
 				E5FB9BEC147D5CEE001A1829 /* nglWindow.cpp in Sources */,
 				E5FB9BF1147D5CEE001A1829 /* nglIStream.cpp in Sources */,
@@ -13119,6 +13197,7 @@
 				E5FB9C91147D5CEE001A1829 /* nuiChunkSampleReader.cpp in Sources */,
 				E5FB9C92147D5CEE001A1829 /* nuiAiffReader.cpp in Sources */,
 				E5FB9C93147D5CEE001A1829 /* nuiAiffWriter.cpp in Sources */,
+				E52003A71C78D4DA0031A12B /* nuiMessageParser.cpp in Sources */,
 				E5FB9C99147D5CEE001A1829 /* nui.cpp in Sources */,
 				E5FB9C9A147D5CEE001A1829 /* nuiParser.cpp in Sources */,
 				E5FB9C9B147D5CEE001A1829 /* nuiRSS.cpp in Sources */,
@@ -13134,6 +13213,7 @@
 				E5FB9CB3147D5CEE001A1829 /* nuiScriptEngine.cpp in Sources */,
 				E5FB9CB4147D5CEE001A1829 /* nuiSpiderMonkey.cpp in Sources */,
 				E5FB9CB5147D5CEE001A1829 /* nuiMimeMultiPart.cpp in Sources */,
+				E52003931C78D3870031A12B /* nuiMessageData.cpp in Sources */,
 				E5FB9CB7147D5CEE001A1829 /* nuiNetworkHost.cpp in Sources */,
 				E5FB9CB8147D5CEE001A1829 /* nuiSocket.cpp in Sources */,
 				E5FB9CB9147D5CEE001A1829 /* nuiTCPClient.cpp in Sources */,
