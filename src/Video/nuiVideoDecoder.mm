@@ -7,7 +7,6 @@
 
 #import "nui.h"
 #import <Cocoa/Cocoa.h>
-//#import <QTKit/QTKit.h>
 #import <CoreVideo/CoreVideo.h>
 
 class nuiVideoDecoderPrivate
