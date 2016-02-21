@@ -17,8 +17,14 @@ public:
   {
   }
   
+  void OnCanRead()
+  {
+    mpProtocol->HandleMessagesAsync();
+  }
+  
 protected:
   nuiDebugServer* mpServer;
+  nuiProtocol *mpProtocol;
 };
 
 ///////////////////////////////// Debug Server
@@ -40,14 +46,28 @@ void nuiDebugServer::Start(int16 port)
     if (res)
     {
       mSocketPool.Add(this, nuiSocketPool::eStateChange);
+      mRunning = true;
+      
+      mpThread = new nglThreadFunction([=](){
+        while (mRunning)
+        {
+          mSocketPool.DispatchEvents(100);
+        }
+        
+        mSocketPool.Del(this);
+        Close();
+        delete mpThread;
+        mpThread = nullptr;
+      });
+      
+      mpThread->Start();
     }
   }
 }
 
 void nuiDebugServer::Stop()
 {
-  mSocketPool.Del(this);
-  Close();
+  mRunning = false;
 }
 
 nuiTCPClient* nuiDebugServer::OnCreateClient(nuiSocket::SocketType sock)

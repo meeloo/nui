@@ -24,4 +24,5 @@ private:
   nuiSocketPool mSocketPool;
     
   nglThreadFunction *mpThread = nullptr;
+  bool mRunning = false;
 };

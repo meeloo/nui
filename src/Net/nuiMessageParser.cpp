@@ -177,16 +177,16 @@ static void add(std::vector<uint8>& rOut, uint8* pointer, size_t len)
 }
 
 
-std::vector<uint8> nuiMessageParser::Build(nuiMessage* pMessage)
+std::vector<uint8> nuiMessageParser::Build(const nuiMessage& rMessage)
 {
   std::vector<uint8> data;
-  size_t size = pMessage->GetSize();
+  size_t size = rMessage.GetSize();
   uint8 count = (uint8)size;
   add(data, &count, 1);
 
   for (size_t index = 0; index < size; index++)
   {
-    if (!Build(pMessage->GetData(index), data))
+    if (!Build(rMessage.GetData(index), data))
       return std::vector<uint8>();
   }
   return data;

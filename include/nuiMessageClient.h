@@ -18,8 +18,12 @@ public:
   bool Post(const nuiMessage& rMessage);
   nuiMessage* Read();
 
+  void SetClient(nuiTCPClient* pTCPClient);
 private:
   bool Post(const nuiMessageData& rData);
   nuiTCPClient *mpTCPClient;
+  nuiMessageParser mParser;
+  std::vector<uint8> mOutData;
+  std::vector<uint8> mInData;
 };
 

@@ -15,7 +15,7 @@ public:
   nuiMessageParser();
   virtual ~nuiMessageParser();
   nuiMessage* Parse(const std::vector<uint8>& rData);
-  std::vector<uint8> Build(nuiMessage* pMessage);
+  std::vector<uint8> Build(const nuiMessage& rMessage);
   bool Build(const nuiMessageData& rData, std::vector<uint8>& rOut);
 private:
   enum State

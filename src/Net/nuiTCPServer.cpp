@@ -91,12 +91,18 @@ nuiTCPClient* nuiTCPServer::Accept()
 void nuiTCPServer::OnCanRead()
 {
   nuiTCPClient* pClient = Accept();
-  OnNewClient(pClient);
+  if (OnNewClient(pClient))
+  {
+    if (mpPool)
+    {
+      mpPool->Add(pClient, nuiSocketPool::eContinuous);
+    }
+  }
 }
 
-void nuiTCPServer::OnNewClient(nuiTCPClient* pClient)
+bool nuiTCPServer::OnNewClient(nuiTCPClient* pClient)
 {
-  // What can we do?
+  return true;
 }
 
 nuiTCPClient* nuiTCPServer::OnCreateClient(nuiSocket::SocketType sock)

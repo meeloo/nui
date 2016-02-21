@@ -26,7 +26,7 @@ public:
   nuiTCPClient* Accept();
   
   virtual nuiTCPClient* OnCreateClient(nuiSocket::SocketType sock);
-  virtual void OnNewClient(nuiTCPClient* pClient);
+  virtual bool OnNewClient(nuiTCPClient* pClient); // Return yes if the new client should be added to the server's stocket pool (if it has one).
 protected:
   virtual void OnCanRead();
 

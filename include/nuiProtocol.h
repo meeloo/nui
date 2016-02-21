@@ -249,6 +249,28 @@ public:
     mMethods[rMethodName] = new nuiProtocolFunction5<RT,T1,T2,T3,T4,T5>(rMethodName, rFunction);
   }
 
+  void HandleMessagesAsync()
+  {
+    nuiMessage* pMessage = Read();
+    while (pMessage)
+    {
+      nglString name(pMessage->GetData(0));
+      auto it = mMethods.find(name);
+      if (it != mMethods.end())
+      {
+        nuiProtocolFunctionBase* pFunction = it->second;
+        pFunction->Call(*pMessage);
+      }
+      delete pMessage;
+      pMessage = Read();
+    }
+  }
+  
+  void StopHandlingMessage()
+  {
+    mRunning = false;
+  }
+
   void HandleMessages()
   {
     mRunning = true;
@@ -266,12 +288,8 @@ public:
       delete pMessage;
     }
   }
-  
-  void StopHandlingMessage()
-  {
-    mRunning = false;
-  }
-  
+
+
 private:
   std::map<nglString, nuiProtocolFunctionBase*> mMethods;
   bool mRunning = false;
