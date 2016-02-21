@@ -144,6 +144,8 @@ typedef double nuiSize;
 #include "nuiMessage.h"
 #include "nuiMessageParser.h"
 #include "nuiMessageClient.h"
+#include "nuiProtocol.h"
+#include "nuiDebugServer.h"
 
 #include "nuiStopWatch.h"
 

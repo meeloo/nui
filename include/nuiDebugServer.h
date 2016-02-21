@@ -16,10 +16,12 @@ public:
   nuiDebugServer();
   virtual ~nuiDebugServer();
   
-  void Start(int port);
+  void Start(int16 port);
   void Stop();
   
 private:
-
   nuiTCPClient* OnCreateClient(nuiSocket::SocketType sock);
+  nuiSocketPool mSocketPool;
+    
+  nglThreadFunction *mpThread = nullptr;
 };

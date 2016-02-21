@@ -32,17 +32,22 @@ nuiDebugServer::~nuiDebugServer()
   
 }
 
-void nuiDebugServer::Start(int port)
+void nuiDebugServer::Start(int16 port)
 {
-  if (Bind("127.0.0.1", 1337))
+  if (Bind("127.0.0.1", port))
   {
     bool res = Listen();
+    if (res)
+    {
+      mSocketPool.Add(this, nuiSocketPool::eStateChange);
+    }
   }
 }
 
 void nuiDebugServer::Stop()
 {
-  
+  mSocketPool.Del(this);
+  Close();
 }
 
 nuiTCPClient* nuiDebugServer::OnCreateClient(nuiSocket::SocketType sock)
