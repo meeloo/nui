@@ -9,6 +9,21 @@
 #include "nuiDebugServer.h"
 #include "nuiTCPClient.h"
 
+class nuiDebugProtocol : public nuiProtocol
+{
+public:
+  nuiDebugProtocol(nuiTCPClient* pClient)
+  : nuiProtocol(pClient)
+  {
+    AddMethod("HelloWorld",
+    [=]()
+    {
+      printf("Hello world!\n");
+    });
+  }
+  
+};
+
 class nuiDebugClient : public nuiTCPClient
 {
 public:
@@ -23,8 +38,8 @@ public:
   }
   
 protected:
-  nuiDebugServer* mpServer;
-  nuiProtocol *mpProtocol;
+  nuiDebugServer* mpServer = nullptr;
+  nuiProtocol *mpProtocol = nullptr;
 };
 
 ///////////////////////////////// Debug Server
