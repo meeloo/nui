@@ -159,17 +159,17 @@ public:
 	/** @name Life cycle */
 	//@{
 	nglString();                                 ///< Creates a null string (contains no data).
-	explicit nglString(nglUChar Ch);                 ///< Creates a string with a single char. If \p nglChar is zero, the string is empty
   nglString(const nglChar* pSource);
-	nglString(const nglString& rSource);            ///< Copy constructor
-	nglString(const std::string& rSource, nglTextEncoding Encoding = eEncodingNative);       ///< Creates a string from a std::string
+  nglString(const nglString& rSource);            ///< Copy constructor
+  nglString(nglString&& rSource);            ///< Move constructor
+	explicit nglString(const std::string& rSource, nglTextEncoding Encoding = eEncodingNative);       ///< Creates a string from a std::string
 
-	nglString(const nglChar* pSource, nglTextEncoding Encoding);
+	explicit nglString(const nglChar* pSource, nglTextEncoding Encoding);
 	/*!<
 	Creates a string, importing from the null-terminated \a pSource byte array,
 	using the given \a Encoding. See Import() for more info.
 	*/
-	nglString(const nglChar* pSource, int32 Length, nglTextEncoding Encoding = eEncodingNative);
+	explicit nglString(const nglChar* pSource, int32 Length, nglTextEncoding Encoding = eEncodingNative);
 	/*!<
 	Creates a string, importing no more than \p Length chars from the
 	\p pSource string, using the given \p Encoding. See Import() for more info.

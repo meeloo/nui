@@ -52,7 +52,7 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
 
 
   nglString line;
-  nglString separationString(mSeparationChar);
+  nglString separationString; separationString.Append(mSeparationChar);
   std::vector<nglString> tokens;
   uint32 numlines = 0;
   uint32 numcols = 0;

@@ -465,12 +465,6 @@ nglString::nglString()
 {
 }
 
-nglString::nglString(nglUChar Ch)
-: mIsNull(false)
-{
-  Append(Ch);
-}
-
 //nglString::nglString(int32 integer)
 //{
 //  SetCInt(integer);
@@ -537,6 +531,12 @@ nglString::nglString(const nglChar* pSource, int32 Length, nglTextEncoding Encod
 
   Import(pSource, Length, Encoding);
   mIsNull = false;
+}
+
+nglString::nglString(nglString&& rSource)
+{
+  mString = std::move(rSource.mString);
+  mIsNull = rSource.mIsNull;
 }
 
 nglString::~nglString()
@@ -1553,21 +1553,21 @@ void nglString::DecodeUrl()
 
 void nglString::EncodeToXML()
 {
-  Replace(nglString((nglChar)'&'), nglString("&amp;"));
-  Replace(nglString((nglChar)'\"'), nglString("&quot;"));
-  Replace(nglString((nglChar)'\''), nglString("&apos;"));
-  Replace(nglString((nglChar)'<'), nglString("&lt;"));
-  Replace(nglString((nglChar)'>'), nglString("&gt;"));
+  Replace("&", "&amp;");
+  Replace("\"", "&quot;");
+  Replace("\'", "&apos;");
+  Replace("<", "&lt;");
+  Replace(">", "&gt;");
 }
 
 void nglString::DecodeFromXML()
 {
-  Replace(nglString("&amp;")  , nglString((nglChar)'&'));
-  Replace(nglString("&quot;") , nglString((nglChar)'\"'));
-  Replace(nglString("&apos;") , nglString((nglChar)'\''));
-  Replace(nglString("&lt;")   , nglString((nglChar)'<'));
-  Replace(nglString("&gt;")   , nglString((nglChar)'>'));
-  Replace(nglString("&eacute;"), nglString((nglChar)233));
+  Replace("&amp;"  , "&");
+  Replace("&quot;" , "\"");
+  Replace("&apos;" , "\'");
+  Replace("&lt;"   , "<");
+  Replace("&gt;"   , ">");
+  Replace("&eacute;", "\233");
 }
 
 void nglString::Unescape()
@@ -2929,7 +2929,7 @@ const nglString& nglString::operator+=(const nglString& rSource) { _OP_(rSource)
 
 // Concatenation
 #ifndef _DOXYGEN_
-#define _OP_(x, y) nglString result(x); result.Append(y); return result;
+#define _OP_(x, y) nglString result; result.Append(x); result.Append(y); return result;
 #endif
 nglString operator+(const nglString& rLeft, const nglUChar Right)     { _OP_(rLeft, Right)  }
 nglString operator+(const nglString& rLeft, const nglChar* pRight)   { _OP_(rLeft, pRight) }
@@ -2942,10 +2942,10 @@ nglString operator+(const nglChar* pLeft, const nglString& rRight)   { _OP_(pLef
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) == 0);
 #endif
-bool operator==(const nglString& rLeft, const nglUChar Right)     { _OP_(rLeft, nglString(Right))  }
+bool operator==(const nglString& rLeft, const nglUChar Right)     { return rLeft.GetLength() == 1 && rLeft[0] == Right; }
 bool operator==(const nglString& rLeft, const nglChar* pRight)   { _OP_(rLeft, pRight) }
 bool operator==(const nglString& rLeft, const nglString& rRight) { _OP_(rLeft, rRight) }
-bool operator==(const nglUChar Left, const nglString& rRight)     { _OP_(rRight, nglString(Left))  }
+bool operator==(const nglUChar Left, const nglString& rRight)     { return rRight.GetLength() == 1 && rRight[0] == Left; }
 bool operator==(const nglChar* pLeft, const nglString& rRight)   { _OP_(rRight, pLeft) }
 #undef _OP_
 
@@ -2953,18 +2953,18 @@ bool operator==(const nglChar* pLeft, const nglString& rRight)   { _OP_(rRight, 
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) != 0);
 #endif
-bool operator!=(const nglString& rLeft, const nglUChar Right)     { _OP_(rLeft, nglString(Right))  }
-bool operator!=(const nglString& rLeft, const nglChar* pRight)   { _OP_(rLeft, pRight) }
-bool operator!=(const nglString& rLeft, const nglString& rRight) { _OP_(rLeft, rRight) }
-bool operator!=(const nglUChar Left, const nglString& rRight)     { _OP_(rRight, nglString(Left))  }
-bool operator!=(const nglChar* pLeft, const nglString& rRight)   { _OP_(rRight, pLeft) }
+bool operator!=(const nglString& rLeft, const nglUChar Right)     { return !(rLeft == Right); }
+bool operator!=(const nglString& rLeft, const nglChar* pRight)   { return !(rLeft == pRight); }
+bool operator!=(const nglString& rLeft, const nglString& rRight) { return !(rLeft == rRight); }
+bool operator!=(const nglUChar Left, const nglString& rRight)     { return !(Left == rRight); }
+bool operator!=(const nglChar* pLeft, const nglString& rRight)   {return !(pLeft == rRight);}
 #undef _OP_
 
 // Comparison (less than)
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) < 0);
 #endif
-bool operator<(const nglString& rLeft, const nglUChar Right)      { _OP_(rLeft, nglString(Right))  }
+bool operator<(const nglString& rLeft, const nglUChar Right)      { nglString tmp; tmp.Append(Right); _OP_(rLeft, tmp) }
 bool operator<(const nglString& rLeft, const nglChar* pRight)    { _OP_(rLeft, pRight) }
 bool operator<(const nglString& rLeft, const nglString& rRight)  { _OP_(rLeft, rRight) }
 #undef _OP_
@@ -2972,7 +2972,7 @@ bool operator<(const nglString& rLeft, const nglString& rRight)  { _OP_(rLeft, r
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) > 0);
 #endif
-bool operator<(const nglUChar Left, const nglString& rRight)      { _OP_(rRight, nglString(Left))  }
+bool operator<(const nglUChar Left, const nglString& rRight)      { nglString tmp; tmp.Append(Left); _OP_(rRight, tmp) }
 bool operator<(const nglChar* pLeft, const nglString& rRight)    { _OP_(rRight, pLeft) }
 #undef _OP_
 
@@ -2980,7 +2980,7 @@ bool operator<(const nglChar* pLeft, const nglString& rRight)    { _OP_(rRight, 
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) <= 0);
 #endif
-bool operator<=(const nglString& rLeft, const nglUChar Right)     { _OP_(rLeft, nglString(Right))  }
+bool operator<=(const nglString& rLeft, const nglUChar Right)     { nglString tmp; tmp.Append(Right); _OP_(rLeft, tmp) }
 bool operator<=(const nglString& rLeft, const nglChar* pRight)   { _OP_(rLeft, pRight) }
 bool operator<=(const nglString& rLeft, const nglString& rRight) { _OP_(rLeft, rRight) }
 #undef _OP_
@@ -2988,7 +2988,7 @@ bool operator<=(const nglString& rLeft, const nglString& rRight) { _OP_(rLeft, r
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) >= 0);
 #endif
-bool operator<=(const nglUChar Left, const nglString& rRight)     { _OP_(rRight, nglString(Left))  }
+bool operator<=(const nglUChar Left, const nglString& rRight)     { nglString tmp; tmp.Append(Left); _OP_(rRight, tmp) }
 bool operator<=(const nglChar* pLeft, const nglString& rRight)   { _OP_(rRight, pLeft) }
 #undef _OP_
 
@@ -2996,7 +2996,7 @@ bool operator<=(const nglChar* pLeft, const nglString& rRight)   { _OP_(rRight, 
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) > 0);
 #endif
-bool operator>(const nglString& rLeft, const nglUChar Right)      { _OP_(rLeft, nglString(Right))  }
+bool operator>(const nglString& rLeft, const nglUChar Right)      { nglString tmp; tmp.Append(Right); _OP_(rLeft, tmp) }
 bool operator>(const nglString& rLeft, const nglChar* pRight)    { _OP_(rLeft, pRight) }
 bool operator>(const nglString& rLeft, const nglString& rRight)  { _OP_(rLeft, rRight) }
 #undef _OP_
@@ -3004,7 +3004,7 @@ bool operator>(const nglString& rLeft, const nglString& rRight)  { _OP_(rLeft, r
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) < 0);
 #endif
-bool operator>(const nglUChar Left, const nglString& rRight)      { _OP_(rRight, nglString(Left))  }
+bool operator>(const nglUChar Left, const nglString& rRight)      { nglString tmp; tmp.Append(Left); _OP_(rRight, tmp)  }
 bool operator>(const nglChar* pLeft, const nglString& rRight)    { _OP_(rRight, pLeft) }
 #undef _OP_
 
@@ -3012,7 +3012,7 @@ bool operator>(const nglChar* pLeft, const nglString& rRight)    { _OP_(rRight, 
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) >= 0);
 #endif
-bool operator>=(const nglString& rLeft, const nglUChar Right)     { _OP_(rLeft, nglString(Right))  }
+bool operator>=(const nglString& rLeft, const nglUChar Right)     { nglString tmp; tmp.Append(Right); _OP_(rLeft, tmp)  }
 bool operator>=(const nglString& rLeft, const nglChar* pRight)   { _OP_(rLeft, pRight) }
 bool operator>=(const nglString& rLeft, const nglString& rRight) { _OP_(rLeft, rRight) }
 #undef _OP_
@@ -3020,7 +3020,7 @@ bool operator>=(const nglString& rLeft, const nglString& rRight) { _OP_(rLeft, r
 #ifndef _DOXYGEN_
 #define _OP_(x, y) return (x.Compare(y) <= 0);
 #endif
-bool operator>=(const nglUChar Left, const nglString& rRight)     { _OP_(rRight, nglString(Left))  }
+bool operator>=(const nglUChar Left, const nglString& rRight)     { nglString tmp; tmp.Append(Left); _OP_(rRight, tmp)  }
 bool operator>=(const nglChar* pLeft, const nglString& rRight)   { _OP_(rRight, pLeft) }
 #undef _OP_
 
