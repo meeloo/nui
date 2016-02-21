@@ -25,8 +25,10 @@ public:
   
   nuiTCPClient* Accept();
   
-private:
   virtual nuiTCPClient* OnCreateClient(nuiSocket::SocketType sock);
+  virtual void OnNewClient(nuiTCPClient* pClient);
+protected:
+  virtual void OnCanRead();
 
   nglString GetDesc() const;
 
