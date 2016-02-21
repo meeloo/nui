@@ -155,6 +155,9 @@ void Application::OnInit()
   mpMainWindow->DBG_SetMouseOverInfo(DebugInfo);  mpMainWindow->DBG_SetMouseOverObject(DebugObject);
   mpMainWindow->SetState(nglWindow::eShow);
 
+  nuiDebugServer* pServer = new nuiDebugServer();
+  pServer->Start(31337);
+  
 }
 
 
