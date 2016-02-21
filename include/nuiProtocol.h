@@ -211,42 +211,42 @@ public:
   void AddMethod(const nglString& rMethodName, std::function<RT()> rFunction)
   {
     NGL_ASSERT(mMethods.find(rMethodName) == mMethods.end());
-    mMethods[rMethodName] = new nuiProtocolFunction0(rMethodName, rFunction);
+    mMethods[rMethodName] = new nuiProtocolFunction0<RT>(rMethodName, rFunction);
   }
 
   template <typename RT, typename T1>
   void AddMethod(const nglString& rMethodName, std::function<RT(T1)> rFunction)
   {
     NGL_ASSERT(mMethods.find(rMethodName) == mMethods.end());
-    mMethods[rMethodName] = new nuiProtocolFunction1(rMethodName, rFunction);
+    mMethods[rMethodName] = new nuiProtocolFunction1<RT,T1>(rMethodName, rFunction);
   }
 
   template <typename RT, typename T1, typename T2>
   void AddMethod(const nglString& rMethodName, std::function<RT(T1,T2)> rFunction)
   {
     NGL_ASSERT(mMethods.find(rMethodName) == mMethods.end());
-    mMethods[rMethodName] = new nuiProtocolFunction2(rMethodName, rFunction);
+    mMethods[rMethodName] = new nuiProtocolFunction2<RT,T1,T2>(rMethodName, rFunction);
   }
 
   template <typename RT, typename T1, typename T2, typename T3>
   void AddMethod(const nglString& rMethodName, std::function<RT(T1,T2,T3)> rFunction)
   {
     NGL_ASSERT(mMethods.find(rMethodName) == mMethods.end());
-    mMethods[rMethodName] = new nuiProtocolFunction3(rMethodName, rFunction);
+    mMethods[rMethodName] = new nuiProtocolFunction3<RT,T1,T2,T3>(rMethodName, rFunction);
   }
 
   template <typename RT, typename T1, typename T2, typename T3, typename T4>
   void AddMethod(const nglString& rMethodName, std::function<RT(T1,T2,T3,T4)> rFunction)
   {
     NGL_ASSERT(mMethods.find(rMethodName) == mMethods.end());
-    mMethods[rMethodName] = new nuiProtocolFunction4(rMethodName, rFunction);
+    mMethods[rMethodName] = new nuiProtocolFunction4<RT,T1,T2,T3,T4>(rMethodName, rFunction);
   }
 
   template <typename RT, typename T1, typename T2, typename T3, typename T4, typename T5>
   void AddMethod(const nglString& rMethodName, std::function<RT(T1,T2,T3,T4,T5)> rFunction)
   {
     NGL_ASSERT(mMethods.find(rMethodName) == mMethods.end());
-    mMethods[rMethodName] = new nuiProtocolFunction5(rMethodName, rFunction);
+    mMethods[rMethodName] = new nuiProtocolFunction5<RT,T1,T2,T3,T4,T5>(rMethodName, rFunction);
   }
 
   void HandleMessages()
@@ -256,11 +256,11 @@ public:
     while (mRunning)
     {
       nuiMessage* pMessage = Read();
-      nglString name(pMessage->GetData(0))
+      nglString name(pMessage->GetData(0));
       auto it = mMethods.find(name);
       if (it != mMethods.end())
       {
-        nuiProtocolFunctionBase* pFunction = it.second;
+        nuiProtocolFunctionBase* pFunction = it->second;
         pFunction->Call(*pMessage);
       }
       delete pMessage;
