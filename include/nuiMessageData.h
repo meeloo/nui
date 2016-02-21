@@ -27,7 +27,6 @@ enum nuiMessageDataType
   nuiMessageDataTypeLast
 };
 
-
 struct nuiMessageData
 {
   nuiMessageData(const nglString& rString);
@@ -47,8 +46,6 @@ struct nuiMessageData
   nuiMessageData(nuiMessageData&& rData);
   nuiMessageData& operator= (nuiMessageData&& rData);
   ~nuiMessageData();
-
-
 
   nuiMessageDataType mType;
   union
@@ -70,5 +67,134 @@ struct nuiMessageData
       size_t _size;
     } Pointer;
   } mValue;
+
+  operator nglString () const { return nglString((nglChar*)mValue.Pointer._ptr, (int32)mValue.Pointer._size); }
+  operator int8() const { return mValue._int8; }
+  operator int16() const { return mValue._int16; }
+  operator int32() const { return mValue._int32; }
+  operator int64() const { return mValue._int64; }
+  operator uint8() const { return mValue._uint8; }
+  operator uint16() const { return mValue._uint16; }
+  operator uint32() const { return mValue._uint32; }
+  operator uint64() const { return mValue._uint64; }
+  operator float() const { return mValue._float; }
+  operator double() const { return mValue._double; }
+};
+
+template <typename T>
+struct nuiMessageDataTypeTrait
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeLast;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<nglString>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeString;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<const nglString&>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeString;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<int8>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeInt8;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<int16>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeInt16;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<int32>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeInt32;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<int64>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeInt64;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<uint8>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeUInt8;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<uint16>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeUInt16;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<uint32>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeUInt32;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<uint64>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeUInt64;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<float>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeFloat;
+  }
+};
+
+template <>
+struct nuiMessageDataTypeTrait<double>
+{
+  static nuiMessageDataType GetType()
+  {
+    return nuiMessageDataTypeDouble;
+  }
 };
 

@@ -10,22 +10,6 @@
 #include "nui.h"
 
 
-class nuiProtocolClient : public nuiMessageClient
-{
-public:
-  nuiProtocolClient(nuiTCPClient* pTCPClient);
-
-  void AddMethod(const nglString& rMethodName);
-  void AddMethod(const nglString& rMethodName, nuiMessageDataType type1);
-  void AddMethod(const nglString& rMethodName, nuiMessageDataType type1, nuiMessageDataType type2);
-  void AddMethod(const nglString& rMethodName, nuiMessageDataType type1, nuiMessageDataType type2, nuiMessageDataType type3);
-  void AddMethod(const nglString& rMethodName, nuiMessageDataType type1, nuiMessageDataType type2, nuiMessageDataType type3, nuiMessageDataType type4);
-  void AddMethod(const nglString& rMethodName, nuiMessageDataType type1, nuiMessageDataType type2, nuiMessageDataType type3, nuiMessageDataType type4, nuiMessageDataType type5);
-  void AddMethod(const nglString& rMethodName, nuiMessageDataType type1, nuiMessageDataType type2, nuiMessageDataType type3, nuiMessageDataType type4, nuiMessageDataType type5, nuiMessageDataType type6);
-
-  
-};
-
 class nuiDebugServer : nuiTCPServer
 {
 public:
@@ -37,4 +21,5 @@ public:
   
 private:
 
+  nuiTCPClient* OnCreateClient(nuiSocket::SocketType sock);
 };
