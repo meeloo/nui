@@ -59,6 +59,9 @@ nuiMessageParser::~nuiMessageParser()
 
 nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
 {
+  if (!rData.size())
+    return nullptr;
+
   if (!mpCurrentMessage)
     mpCurrentMessage = new nuiMessage();
 
@@ -153,6 +156,8 @@ nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
           {
             nuiMessage* pMessage = mpCurrentMessage;
             mpCurrentMessage = nullptr;
+            mState = Waiting;
+
             return pMessage;
           }
         }

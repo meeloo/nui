@@ -128,6 +128,9 @@ void Application::OnInit()
     }
   }
 
+  nuiDebugServer* pServer = new nuiDebugServer();
+  pServer->Start(31337);
+
 
   /* Create the nglWindow (and thus a GL context, don't even try to
    *   instantiate the gui (or nglFont) before the nuiWin !)
@@ -155,9 +158,6 @@ void Application::OnInit()
   mpMainWindow->DBG_SetMouseOverInfo(DebugInfo);  mpMainWindow->DBG_SetMouseOverObject(DebugObject);
   mpMainWindow->SetState(nglWindow::eShow);
 
-  nuiDebugServer* pServer = new nuiDebugServer();
-  pServer->Start(31337);
-  
 }
 
 

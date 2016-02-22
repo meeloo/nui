@@ -40,5 +40,10 @@ private:
   
   nuiLabel* mpLabel;
   nuiEventSink<MainWindow> mEventSink;
+
+  nuiTCPClient* mpClient = nullptr;
+  nuiMessageClient* mpMessageClient = nullptr;
+  nuiMessageParser mParser;
+  nuiSocketPool mSocketPool;
 };
 

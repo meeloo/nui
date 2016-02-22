@@ -30,6 +30,7 @@ public:
   nuiDebugClient(nuiDebugServer *pServer, nuiSocket::SocketType sock)
   : nuiTCPClient(sock), mpServer(pServer)
   {
+    mpProtocol = new nuiDebugProtocol(this);
   }
   
   void OnCanRead()

@@ -27,7 +27,7 @@ bool nuiMessageClient::Post(const nuiMessage& rMessage)
 nuiMessage* nuiMessageClient::Read()
 {
   mInData.clear();
-  mpTCPClient->Receive(mInData);
+  mpTCPClient->ReceiveAvailable(mInData);
   nuiMessage* pMessage = mParser.Parse(mInData);
   return pMessage;
 }

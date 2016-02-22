@@ -252,12 +252,15 @@ public:
     nuiMessage* pMessage = Read();
     while (pMessage)
     {
-      nglString name(pMessage->GetData(0));
-      auto it = mMethods.find(name);
-      if (it != mMethods.end())
+      if (pMessage->GetSize())
       {
-        nuiProtocolFunctionBase* pFunction = it->second;
-        pFunction->Call(*pMessage);
+        nglString name(pMessage->GetData(0));
+        auto it = mMethods.find(name);
+        if (it != mMethods.end())
+        {
+          nuiProtocolFunctionBase* pFunction = it->second;
+          pFunction->Call(*pMessage);
+        }
       }
       delete pMessage;
       pMessage = Read();

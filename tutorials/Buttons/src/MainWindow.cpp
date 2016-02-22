@@ -236,7 +236,19 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 {
   SetDebugMode(true);
   //App->GetLog().SetLevel("nuiTexture", NGL_LOG_ALWAYS);
-  LoadCSS(_T("rsrc:/css/main.css"));  
+  LoadCSS(_T("rsrc:/css/main.css"));
+
+  mpClient = new nuiTCPClient();
+  if (mpClient->Connect("127.0.0.1", 31337))
+  {
+    mSocketPool.Add(mpClient, nuiSocketPool::eContinuous);
+    mpMessageClient = new nuiMessageClient(mpClient);
+    mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
+    {
+      mSocketPool.DispatchEvents(1);
+    });
+  }
+
 }
 
 MainWindow::~MainWindow()
@@ -307,7 +319,11 @@ void MainWindow::OnCreation()
 //        prout->AddAnimation("Fade", anim);
 //        anim->Play(100000, eAnimLoopPingPong);
 
-        mEventSink.Connect(button->Activated, [=](const nuiEvent& event){ printf("pouet %p - %p\n", this, button); });
+        mEventSink.Connect(button->Activated, [=](const nuiEvent& event)
+        {
+          printf("pouet %p - %p\n", this, button);
+          mpMessageClient->Post(nuiMessage("HelloWorld"));
+        });
 
         AddChild(button);
       }

@@ -13,6 +13,24 @@ class nuiMessage
 {
 public:
   nuiMessage();
+
+  nuiMessage(const nglString& rName) { Add(rName); }
+
+  template <typename T1>
+  nuiMessage(const nglString& rName, T1 p1) { Add(rName); Add(p1); }
+
+  template <typename T1, typename T2>
+  nuiMessage(const nglString& rName, T1 p1, T2 p2) { Add(rName); Add(p1); Add(p2);}
+
+  template <typename T1, typename T2, typename T3>
+  nuiMessage(const nglString& rName, T1 p1, T2 p2, T3 p3) { Add(rName); Add(p1); Add(p2); Add(p3);}
+
+  template <typename T1, typename T2, typename T3, typename T4>
+  nuiMessage(const nglString& rName, T1 p1, T2 p2, T3 p3, T4 p4) { Add(rName); Add(p1); Add(p2); Add(p3); Add(p4); }
+
+  template <typename T1, typename T2, typename T3, typename T4, typename T5>
+  nuiMessage(const nglString& rName, T1 p1, T2 p2, T3 p3, T4 p4, T5 p5) { Add(rName); Add(p1); Add(p2); Add(p3); Add(p4); Add(p5); }
+
   virtual ~nuiMessage();
 
   void Add(const nglString& rString) { mData.push_back(rString); }
