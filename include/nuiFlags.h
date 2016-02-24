@@ -197,7 +197,7 @@ nglString nuiGetVal (const nuiXMLNode* pNode, const nglString& Attr, const nglSt
 template <class T>
 bool nuiGet(const nuiXMLNode* pNode, const nglString& Attr, T& rVal)
 {
-  rVal = nuiGetVal(pNode, Attr, rVal);
+  rVal = (T)nuiGetVal(pNode, Attr, rVal);
   return true;
 }
 

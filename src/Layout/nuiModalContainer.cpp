@@ -82,8 +82,8 @@ bool nuiModalContainer::DispatchMouseClick(const nglMouseInfo& rInfo)
     nuiSize Y = rInfo.Y;
     GlobalToLocal(X,Y);
     nglMouseInfo info(rInfo);
-    info.X = X;
-    info.Y = Y;
+    info.X = ToNearest(X);
+    info.Y = ToNearest(Y);
     if (PreClicked(rInfo))
     {
       Grab();
