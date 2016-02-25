@@ -57,10 +57,10 @@ nuiMessageParser::~nuiMessageParser()
 
 }
 
-nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
+void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<void(nuiMessage*)> onNewMessage)
 {
   if (!rData.size())
-    return nullptr;
+    return;
 
   if (!mpCurrentMessage)
     mpCurrentMessage = new nuiMessage();
@@ -154,11 +154,10 @@ nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
           mRemainingDataChunks--;
           if (!mRemainingDataChunks)
           {
-            nuiMessage* pMessage = mpCurrentMessage;
-            mpCurrentMessage = nullptr;
+            onNewMessage(mpCurrentMessage);
+            mpCurrentMessage = new nuiMessage();
             mState = Waiting;
 
-            return pMessage;
           }
         }
         break;
@@ -170,9 +169,6 @@ nuiMessage* nuiMessageParser::Parse(const std::vector<uint8>& rData)
       }
     }
   }
-  nuiMessage* pReturn = mpCurrentMessage;
-  mpCurrentMessage = nullptr;
-  return pReturn;
 }
 
 static void add(std::vector<uint8>& rOut, uint8* pointer, size_t len)

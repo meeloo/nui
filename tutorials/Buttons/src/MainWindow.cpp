@@ -276,8 +276,10 @@ void MainWindow::OnCreation()
 
   nuiMessageParser parser;
   std::vector<uint8> datamsg = parser.Build(msg);
-  nuiMessage* pMsg = parser.Parse(datamsg);
-  NGL_OUT("Output Message: %s\n", pMsg->GetDescription().GetChars());
+  parser.Parse(datamsg, [](nuiMessage* pMessage)
+  {
+    NGL_OUT("Output Message: %s\n", pMessage->GetDescription().GetChars());
+  });
 
 
   int test = 0;
@@ -322,7 +324,20 @@ void MainWindow::OnCreation()
         mEventSink.Connect(button->Activated, [=](const nuiEvent& event)
         {
           printf("pouet %p - %p\n", this, button);
-          mpMessageClient->Post(nuiMessage("HelloWorld"));
+          switch (i % 3)
+          {
+            case 0:
+              mpMessageClient->Post(nuiMessage("HelloWorld"));
+              mpMessageClient->Post(nuiMessage("HelloWorld2", i));
+              break;
+            case 1:
+              mpMessageClient->Post(nuiMessage("HelloWorld"));
+              mpMessageClient->Post(nuiMessage("HelloWorld3", i));
+              break;
+            default:
+              mpMessageClient->Post(nuiMessage("HelloWorld"));
+              break;
+          }
         });
 
         AddChild(button);

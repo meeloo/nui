@@ -16,7 +16,7 @@ public:
   virtual ~nuiMessageClient() { delete mpTCPClient; }
 
   bool Post(const nuiMessage& rMessage);
-  nuiMessage* Read();
+  void Read(std::function<void(nuiMessage*)> onNewMessage);
 
   void SetClient(nuiTCPClient* pTCPClient);
 private:

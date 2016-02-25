@@ -16,6 +16,7 @@ public:
   virtual bool IsCompatible(const nuiMessage& rMessage) const = 0;
   virtual void Call(const nuiMessage& rMessage) const = 0;
   
+  const nglString& GetName() const { return mName; }
 protected:
   nglString mName;
 };
@@ -206,6 +207,12 @@ public:
   {
   }
   
+  void AddMethod(nuiProtocolFunctionBase* pProtocolFunction)
+  {
+    NGL_ASSERT(mMethods.find(pProtocolFunction->GetName()) == mMethods.end());
+    mMethods[pProtocolFunction->GetName()] = pProtocolFunction;
+  }
+  
   void AddMethod(const nglString& rMethodName, std::function<void()> rFunction)
   {
     NGL_ASSERT(mMethods.find(rMethodName) == mMethods.end());
@@ -247,11 +254,9 @@ public:
     mMethods[rMethodName] = new nuiProtocolFunction5<T1,T2,T3,T4,T5>(rMethodName, rFunction);
   }
 
-  void HandleMessagesAsync()
+  void HandleMessages()
   {
-    nuiMessage* pMessage = Read();
-    while (pMessage)
-    {
+    Read([&](nuiMessage* pMessage){
       if (pMessage->GetSize())
       {
         nglString name(pMessage->GetData(0));
@@ -263,8 +268,7 @@ public:
         }
       }
       delete pMessage;
-      pMessage = Read();
-    }
+    });
   }
   
   void StopHandlingMessage()
@@ -272,27 +276,63 @@ public:
     mRunning = false;
   }
 
-  void HandleMessages()
-  {
-    mRunning = true;
-    std::vector<uint8> data;
-    while (mRunning)
-    {
-      nuiMessage* pMessage = Read();
-      nglString name(pMessage->GetData(0));
-      auto it = mMethods.find(name);
-      if (it != mMethods.end())
-      {
-        nuiProtocolFunctionBase* pFunction = it->second;
-        pFunction->Call(*pMessage);
-      }
-      delete pMessage;
-    }
-  }
-
-
 private:
   std::map<nglString, nuiProtocolFunctionBase*> mMethods;
   bool mRunning = false;
 };
+
+// nui_make_function was lifted from http://stackoverflow.com/questions/27825559/why-is-there-no-stdmake-function
+// in order to have simpler protocol declarations:
+
+// For generic types that are functors, delegate to its 'operator()'
+template <typename T>
+struct function_traits
+: public function_traits<decltype(&T::operator())>
+{};
+
+// for pointers to member function
+template <typename ClassType, typename ReturnType, typename... Args>
+struct function_traits<ReturnType(ClassType::*)(Args...) const> {
+  enum { arity = sizeof...(Args) };
+  typedef std::function<ReturnType (Args...)> f_type;
+};
+
+// for pointers to member function
+template <typename ClassType, typename ReturnType, typename... Args>
+struct function_traits<ReturnType(ClassType::*)(Args...) > {
+  enum { arity = sizeof...(Args) };
+  typedef std::function<ReturnType (Args...)> f_type;
+};
+
+// for function pointers
+template <typename ReturnType, typename... Args>
+struct function_traits<ReturnType (*)(Args...)>  {
+  enum { arity = sizeof...(Args) };
+  typedef std::function<ReturnType (Args...)> f_type;
+};
+
+template <typename L>
+static typename function_traits<L>::f_type nui_make_function(L l){
+  return (typename function_traits<L>::f_type)(l);
+}
+
+//handles bind & multiple function call operator()'s
+template<typename ReturnType, typename... Args, class T>
+auto nui_make_function(T&& t)
+-> std::function<decltype(ReturnType(t(std::declval<Args>()...)))(Args...)>
+{return {std::forward<T>(t)};}
+
+//handles explicit overloads
+template<typename ReturnType, typename... Args>
+auto nui_make_function(ReturnType(*p)(Args...))
+-> std::function<ReturnType(Args...)> {
+  return {p};
+}
+
+//handles explicit overloads
+template<typename ReturnType, typename... Args, typename ClassType>
+auto nui_make_function(ReturnType(ClassType::*p)(Args...))
+-> std::function<ReturnType(Args...)> {
+  return {p};
+}
 

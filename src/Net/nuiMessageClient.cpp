@@ -24,12 +24,11 @@ bool nuiMessageClient::Post(const nuiMessage& rMessage)
   return (size != mpTCPClient->Send(&mOutData[0], size));
 }
 
-nuiMessage* nuiMessageClient::Read()
+void nuiMessageClient::Read(std::function<void(nuiMessage*)> onNewMessage)
 {
   mInData.clear();
   mpTCPClient->ReceiveAvailable(mInData);
-  nuiMessage* pMessage = mParser.Parse(mInData);
-  return pMessage;
+  mParser.Parse(mInData, onNewMessage);
 }
 
 void nuiMessageClient::SetClient(nuiTCPClient* pTCPClient)

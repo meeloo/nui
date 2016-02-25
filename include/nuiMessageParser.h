@@ -14,7 +14,7 @@ class nuiMessageParser
 public:
   nuiMessageParser();
   virtual ~nuiMessageParser();
-  nuiMessage* Parse(const std::vector<uint8>& rData);
+  void Parse(const std::vector<uint8>& rData, std::function<void(nuiMessage*)> onNewMessage);
   std::vector<uint8> Build(const nuiMessage& rMessage);
   bool Build(const nuiMessageData& rData, std::vector<uint8>& rOut);
 private:

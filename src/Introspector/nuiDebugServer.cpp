@@ -20,6 +20,19 @@ public:
     {
       printf("Hello world!\n");
     });
+
+    std::function<void(int32)> fn =
+    [=](int32 i)
+    {
+      printf("Hello world2 %d!\n", i);
+    };
+    AddMethod("HelloWorld2", fn);
+
+  
+    AddMethod("HelloWorld3", nui_make_function([](int32 i)
+              {
+                printf("Hello world3 %d!\n", i);
+              }));
   }
   
 };
@@ -35,7 +48,7 @@ public:
   
   void OnCanRead()
   {
-    mpProtocol->HandleMessagesAsync();
+    mpProtocol->HandleMessages();
   }
   
 protected:
