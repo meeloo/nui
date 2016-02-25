@@ -162,7 +162,7 @@ public:
   nglString(const nglChar* pSource);
   nglString(const nglString& rSource);            ///< Copy constructor
   nglString(nglString&& rSource);            ///< Move constructor
-	explicit nglString(const std::string& rSource, nglTextEncoding Encoding = eEncodingNative);       ///< Creates a string from a std::string
+	nglString(const std::string& rSource, nglTextEncoding Encoding = eEncodingNative);       ///< Creates a string from a std::string
 
 	explicit nglString(const nglChar* pSource, nglTextEncoding Encoding);
 	/*!<
