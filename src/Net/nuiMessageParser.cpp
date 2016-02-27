@@ -57,7 +57,7 @@ nuiMessageParser::~nuiMessageParser()
 
 }
 
-void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<void(nuiMessage*)> onNewMessage)
+void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<bool(nuiMessage*)> onNewMessage)
 {
   if (!rData.size())
     return;
@@ -154,7 +154,8 @@ void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<void
           mRemainingDataChunks--;
           if (!mRemainingDataChunks)
           {
-            onNewMessage(mpCurrentMessage);
+            if (!onNewMessage(mpCurrentMessage))
+              return;
             mpCurrentMessage = new nuiMessage();
             mState = Waiting;
 

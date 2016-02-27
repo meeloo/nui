@@ -88,6 +88,11 @@ struct nuiMessageDataTypeTrait
   {
     return nuiMessageDataTypeLast;
   }
+  
+  static nglString GetName()
+  {
+    return "???";
+  }
 };
 
 template <>
@@ -96,6 +101,11 @@ struct nuiMessageDataTypeTrait<nglString>
   static nuiMessageDataType GetType()
   {
     return nuiMessageDataTypeString;
+  }
+  
+  static nglString GetName()
+  {
+    return "String";
   }
 };
 
@@ -106,6 +116,11 @@ struct nuiMessageDataTypeTrait<const nglString&>
   {
     return nuiMessageDataTypeString;
   }
+  
+  static nglString GetName()
+  {
+    return "String";
+  }
 };
 
 template <>
@@ -114,6 +129,11 @@ struct nuiMessageDataTypeTrait<int8>
   static nuiMessageDataType GetType()
   {
     return nuiMessageDataTypeInt8;
+  }
+  
+  static nglString GetName()
+  {
+    return "int8";
   }
 };
 
@@ -124,6 +144,11 @@ struct nuiMessageDataTypeTrait<int16>
   {
     return nuiMessageDataTypeInt16;
   }
+  
+  static nglString GetName()
+  {
+    return "int16";
+  }
 };
 
 template <>
@@ -132,6 +157,11 @@ struct nuiMessageDataTypeTrait<int32>
   static nuiMessageDataType GetType()
   {
     return nuiMessageDataTypeInt32;
+  }
+  
+  static nglString GetName()
+  {
+    return "int32";
   }
 };
 
@@ -142,6 +172,11 @@ struct nuiMessageDataTypeTrait<int64>
   {
     return nuiMessageDataTypeInt64;
   }
+  
+  static nglString GetName()
+  {
+    return "int64";
+  }
 };
 
 template <>
@@ -150,6 +185,11 @@ struct nuiMessageDataTypeTrait<uint8>
   static nuiMessageDataType GetType()
   {
     return nuiMessageDataTypeUInt8;
+  }
+  
+  static nglString GetName()
+  {
+    return "uint8";
   }
 };
 
@@ -160,6 +200,11 @@ struct nuiMessageDataTypeTrait<uint16>
   {
     return nuiMessageDataTypeUInt16;
   }
+  
+  static nglString GetName()
+  {
+    return "uint16";
+  }
 };
 
 template <>
@@ -168,6 +213,11 @@ struct nuiMessageDataTypeTrait<uint32>
   static nuiMessageDataType GetType()
   {
     return nuiMessageDataTypeUInt32;
+  }
+  
+  static nglString GetName()
+  {
+    return "uint32";
   }
 };
 
@@ -178,6 +228,11 @@ struct nuiMessageDataTypeTrait<uint64>
   {
     return nuiMessageDataTypeUInt64;
   }
+  
+  static nglString GetName()
+  {
+    return "uint64";
+  }
 };
 
 template <>
@@ -187,6 +242,11 @@ struct nuiMessageDataTypeTrait<float>
   {
     return nuiMessageDataTypeFloat;
   }
+  
+  static nglString GetName()
+  {
+    return "float";
+  }
 };
 
 template <>
@@ -195,6 +255,11 @@ struct nuiMessageDataTypeTrait<double>
   static nuiMessageDataType GetType()
   {
     return nuiMessageDataTypeDouble;
+  }
+  
+  static nglString GetName()
+  {
+    return "double";
   }
 };
 

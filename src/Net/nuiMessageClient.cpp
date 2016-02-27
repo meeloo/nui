@@ -24,7 +24,7 @@ bool nuiMessageClient::Post(const nuiMessage& rMessage)
   return (size != mpTCPClient->Send(&mOutData[0], size));
 }
 
-void nuiMessageClient::Read(std::function<void(nuiMessage*)> onNewMessage)
+void nuiMessageClient::Read(std::function<bool(nuiMessage*)> onNewMessage)
 {
   mInData.clear();
   mpTCPClient->ReceiveAvailable(mInData);

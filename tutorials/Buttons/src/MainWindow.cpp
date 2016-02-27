@@ -279,6 +279,7 @@ void MainWindow::OnCreation()
   parser.Parse(datamsg, [](nuiMessage* pMessage)
   {
     NGL_OUT("Output Message: %s\n", pMessage->GetDescription().GetChars());
+    return true;
   });
 
 

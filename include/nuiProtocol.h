@@ -17,6 +17,7 @@ public:
   virtual void Call(const nuiMessage& rMessage) const = 0;
   
   const nglString& GetName() const { return mName; }
+  virtual nglString GetDescription() const = 0;
 protected:
   nglString mName;
 };
@@ -41,6 +42,13 @@ public:
     mFunction();
   }
   
+  nglString GetDescription() const
+  {
+    nglString desc;
+    desc.Add(mName).Add("()");
+    return desc;
+  }
+
 private:
   std::function<void()> mFunction;
 };
@@ -67,6 +75,14 @@ public:
     mFunction(rMessage.GetData(1));
   }
   
+  nglString GetDescription() const
+  {
+    nglString desc;
+    desc.Add(mName).Add("(");
+    desc.Add(nuiMessageDataTypeTrait<T1>::GetName());
+    desc.Add(")");
+    return desc;
+  }
 private:
   std::function<void(T1)> mFunction;
 };
@@ -95,6 +111,15 @@ public:
     mFunction(rMessage.GetData(1), rMessage.GetData(2));
   }
   
+  nglString GetDescription() const
+  {
+    nglString desc;
+    desc.Add(mName).Add("(");
+    desc.Add(nuiMessageDataTypeTrait<T1>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T2>::GetName());
+    desc.Add(")");
+    return desc;
+  }
 private:
   std::function<void(T1,T2)> mFunction;
 };
@@ -126,6 +151,16 @@ public:
     mFunction(rMessage.GetData(1), rMessage.GetData(2), rMessage.GetData(3));
   }
   
+  nglString GetDescription() const
+  {
+    nglString desc;
+    desc.Add(mName).Add("(");
+    desc.Add(nuiMessageDataTypeTrait<T1>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T2>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T3>::GetName());
+    desc.Add(")");
+    return desc;
+  }
 private:
   std::function<void(T1,T2,T3)> mFunction;
 };
@@ -159,6 +194,17 @@ public:
     mFunction(rMessage.GetData(1), rMessage.GetData(2), rMessage.GetData(3), rMessage.GetData(4));
   }
   
+  nglString GetDescription() const
+  {
+    nglString desc;
+    desc.Add(mName).Add("(");
+    desc.Add(nuiMessageDataTypeTrait<T1>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T2>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T3>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T4>::GetName());
+    desc.Add(")");
+    return desc;
+  }
 private:
   std::function<void(T1,T2,T3,T4)> mFunction;
 };
@@ -194,6 +240,18 @@ public:
     mFunction(rMessage.GetData(1), rMessage.GetData(2), rMessage.GetData(3), rMessage.GetData(4), rMessage.GetData(5));
   }
   
+  nglString GetDescription() const
+  {
+    nglString desc;
+    desc.Add(mName).Add("(");
+    desc.Add(nuiMessageDataTypeTrait<T1>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T2>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T3>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T4>::GetName()).Add(", ");
+    desc.Add(nuiMessageDataTypeTrait<T5>::GetName());
+    desc.Add(")");
+    return desc;
+  }
 private:
   std::function<void(T1,T2,T3,T4,T5)> mFunction;
 };
@@ -256,6 +314,16 @@ public:
 
   void HandleMessages()
   {
+    HandleMessages([](nuiMessage& msg, nuiProtocolFunctionBase* pBase)
+                   {
+                     NGL_OUT("Protocol Error: received message\n%s\nis incompatible with prototype\n%s\n", msg.GetDescription().GetChars(), pBase->GetDescription().GetChars());
+                   
+                     return false;
+                   });
+  }
+
+  void HandleMessages(std::function<bool(nuiMessage&, nuiProtocolFunctionBase*)> errorHandler)
+  {
     Read([&](nuiMessage* pMessage){
       if (pMessage->GetSize())
       {
@@ -264,10 +332,25 @@ public:
         if (it != mMethods.end())
         {
           nuiProtocolFunctionBase* pFunction = it->second;
-          pFunction->Call(*pMessage);
+          if (pFunction->IsCompatible(*pMessage))
+          {
+            pFunction->Call(*pMessage);
+          }
+          else
+          {
+            if (errorHandler)
+            {
+              if (!errorHandler(*pMessage, pFunction))
+              {
+                delete pMessage;
+                return false;
+              }
+            }
+          }
         }
       }
       delete pMessage;
+      return true;
     });
   }
   

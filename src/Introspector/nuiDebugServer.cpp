@@ -29,7 +29,7 @@ public:
     AddMethod("HelloWorld2", fn);
 
   
-    AddMethod("HelloWorld3", nui_make_function([](int32 i)
+    AddMethod("HelloWorld3", nui_make_function([](int32 i, float j, double k, nglString s)
               {
                 printf("Hello world3 %d!\n", i);
               }));
