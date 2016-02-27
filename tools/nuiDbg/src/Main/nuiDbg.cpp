@@ -6,7 +6,7 @@
 */
 #include "nui.h"
 #include "nuiInit.h"
-#include "Yapuka.h"
+#include "nuiDbg.h"
 #include "MainWindow.h"
 
 #include <string.h>
@@ -160,7 +160,7 @@ void nuiApp::OnInit()
   Info.Width = Width;
   Info.Height = Height;
   Info.Pos = nglWindowInfo::ePosCenter;
-  Info.Title = _T("Yapuka - A GUI element editor for NUI");
+  Info.Title = _T("nuiDbg - A GUI debugger for NUI");
   Info.XPos = 0;
   Info.YPos = 0;
         
