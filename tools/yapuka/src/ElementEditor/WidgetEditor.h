@@ -8,7 +8,6 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiSimpleContainer.h"
 #include "ElementEditor/ElementDesc.h"
 #include "Tools/ElementInspector.h"
 #include "nuiColumnTreeView.h"
@@ -26,13 +25,13 @@ public:
 	~WidgetInfo();
 
 	nuiWidget* GetWidget();
-	nuiSimpleContainer* GetContainer();
+	nuiWidget* GetContainer();
 	bool IsContainer();
 
 private:
 
 	nuiWidget* mpWidget;
-	nuiSimpleContainer* mpContainer;
+	nuiWidget* mpContainer;
 	bool mIsContainer;
 
 };
@@ -44,7 +43,7 @@ private:
 typedef nuiFastDelegate1<nuiWidget*> WidgetDelegate;
 
 
-class WidgetEditor : public nuiSimpleContainer
+class WidgetEditor : public nuiWidget
 {
 public:
  
@@ -86,8 +85,8 @@ private:
 	nuiTreeNode* mpTreeRoot;
 	nuiColumnTreeView* mpTreeMain;
 	
-	nuiSimpleContainer* mpTreeView;
-	nuiSimpleContainer* mpWidgetView;
+	nuiWidget* mpTreeView;
+	nuiWidget* mpWidgetView;
 	
 
 	static std::map<nglString, WidgetDelegate> mWidgetDelegates;

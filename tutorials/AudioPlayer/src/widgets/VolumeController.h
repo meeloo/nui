@@ -9,7 +9,7 @@
 
 #include "nui.h"
 
-class VolumeController : public nuiSimpleContainer
+class VolumeController : public nuiWidget
 {
 public:
   VolumeController(nuiAttrib<float>& rGainAttrib, nuiAttrib<bool>& rMuteAttrib);

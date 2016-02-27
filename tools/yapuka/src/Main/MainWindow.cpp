@@ -58,7 +58,7 @@ void MainWindow::OnClose()
 
 void MainWindow::OnCreation()
 {
-  nuiSimpleContainer* pMainCont = new nuiSimpleContainer();
+  nuiWidget* pMainCont = new nuiWidget();
   pMainCont->SetObjectName(_T("MainContainer"));
   AddChild(pMainCont);
 

@@ -8,7 +8,6 @@
 #include "ProjectGenerator/ProjectGenerator.h"
 #include "nuiVBox.h"
 #include "nuiHBox.h"
-#include "nuiSeparator.h"
 #include "Main/MainWindow.h"
 
 #include "nuiDialogSelectDirectory.h"
@@ -19,7 +18,7 @@
 
 
 ProjectGenerator::ProjectGenerator()
-: nuiSimpleContainer(), mEventSink(this)
+: nuiWidget(), mEventSink(this)
 {
   SetObjectName(_T("ProjectGenerator"));
   mpTimer = NULL;
@@ -40,15 +39,15 @@ ProjectGenerator::ProjectGenerator()
   
   pVBox->AddCell(BuildBlocSourceDirectory());
 
-  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
+//  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   pVBox->AddCell(BuildBlocProjectDirectory());
 
-  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
+//  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   pVBox->AddCell(BuildBlocOptions());
 
-  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
+//  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   pVBox->AddCell(BuildBlocButtons());
   
@@ -230,7 +229,7 @@ nuiWidget* ProjectGenerator::BuildBlocOptions()
   pBloc->SetCellPixels(0, 48);
   // check box
   mpCheckXcode = new nuiToggleButton();
-  mpCheckXcode->SetToken(new nuiToken<nuiImage*>(pIcon));
+  mpCheckXcode->SetToken(new nuiToken<nuiRef<nuiImage> >(pIcon));
   mEventSink.Connect(mpCheckXcode->ButtonPressed, &ProjectGenerator::OnIconUpdate, (void*)mpCheckXcode);
   mEventSink.Connect(mpCheckXcode->ButtonDePressed, &ProjectGenerator::OnIconUpdate, (void*)mpCheckXcode);
   mpCheckXcode->SetPressed(true);
@@ -253,7 +252,7 @@ nuiWidget* ProjectGenerator::BuildBlocOptions()
   pBloc->SetCellPixels(0, 48);
   // check box
   mpCheckVisualStudio2008 = new nuiToggleButton();
-  mpCheckVisualStudio2008->SetToken(new nuiToken<nuiImage*>(pIcon));
+  mpCheckVisualStudio2008->SetToken(new nuiToken<nuiRef<nuiImage> >(pIcon));
   mEventSink.Connect(mpCheckVisualStudio2008->ButtonPressed, &ProjectGenerator::OnIconUpdate, (void*)mpCheckVisualStudio2008);
   mEventSink.Connect(mpCheckVisualStudio2008->ButtonDePressed, &ProjectGenerator::OnIconUpdate, (void*)mpCheckVisualStudio2008);
   mpCheckVisualStudio2008->SetPressed(true);
@@ -273,10 +272,10 @@ nuiWidget* ProjectGenerator::BuildBlocOptions()
 void ProjectGenerator::OnIconUpdate(const nuiEvent& rEvent)
 {
   nuiToggleButton* pBtn = (nuiToggleButton*)rEvent.mpUser;
-  nuiImage* pIcon;
+  nuiRef<nuiImage> pIcon;
   nglString objectName;
   
-  nuiGetTokenValue<nuiImage*>(pBtn->GetToken(), pIcon);
+  nuiGetTokenValue<nuiRef<nuiImage> >(pBtn->GetToken(), pIcon);
   nuiGetTokenValue<nglString>(pIcon->GetToken(), objectName);
   
   if (!pBtn->IsPressed())
@@ -341,7 +340,7 @@ void ProjectGenerator::OnTimerTick(const nuiEvent& rEvent)
   {
     mNuiCheckProjectFile = true;
     mpNuiCheckProjectFile->SetText(_T("found"));
-    mpNuiCheckProjectFile->SetColor(eNormalTextFg, nuiColor(_T("green")));
+//    mpNuiCheckProjectFile->SetColor(eNormalTextFg, nuiColor(_T("green")));
 
     allOK &= true;
   }
@@ -349,7 +348,7 @@ void ProjectGenerator::OnTimerTick(const nuiEvent& rEvent)
   {
     mNuiCheckProjectFile = false;
     mpNuiCheckProjectFile->SetText(_T("not found!"));
-    mpNuiCheckProjectFile->SetColor(eNormalTextFg, nuiColor(_T("red")));
+//    mpNuiCheckProjectFile->SetColor(eNormalTextFg, nuiColor(_T("red")));
 
     allOK &= false;
   }
@@ -362,7 +361,7 @@ void ProjectGenerator::OnTimerTick(const nuiEvent& rEvent)
   {
     mNuiCheckTools = true;
     mpNuiCheckTools->SetText(_T("found"));
-    mpNuiCheckTools->SetColor(eNormalTextFg, nuiColor(_T("green")));
+//    mpNuiCheckTools->SetColor(eNormalTextFg, nuiColor(_T("green")));
 
     allOK &= true;
   }
@@ -370,7 +369,7 @@ void ProjectGenerator::OnTimerTick(const nuiEvent& rEvent)
   {
     mNuiCheckTools = false;
     mpNuiCheckTools->SetText(_T("not found!"));
-    mpNuiCheckTools->SetColor(eNormalTextFg, nuiColor(_T("red")));
+//    mpNuiCheckTools->SetColor(eNormalTextFg, nuiColor(_T("red")));
   
     allOK &= false;
   }
@@ -381,14 +380,14 @@ void ProjectGenerator::OnTimerTick(const nuiEvent& rEvent)
   {
     mNuiCheckTemplate = true;
     mpNuiCheckTemplate->SetText(_T("found"));
-    mpNuiCheckTemplate->SetColor(eNormalTextFg, nuiColor(_T("green")));
+//    mpNuiCheckTemplate->SetColor(eNormalTextFg, nuiColor(_T("green")));
     allOK &= true;
   }
   else
   {
     mNuiCheckTemplate = false;
     mpNuiCheckTemplate->SetText(_T("not found!"));
-    mpNuiCheckTemplate->SetColor(eNormalTextFg, nuiColor(_T("red")));
+//    mpNuiCheckTemplate->SetColor(eNormalTextFg, nuiColor(_T("red")));
     allOK &= false;
   }
   
@@ -700,10 +699,9 @@ bool ProjectGenerator::CopyDirectory(const nglPath& targetPath, const nglPath& s
   }
   
   
-  std::list<nglPath> children;
+  std::vector<nglPath> children;
   srcpath.GetChildren(&children);
-  std::list<nglPath>::iterator it;
-  for (it = children.begin(); it != children.end(); ++it)
+  for (auto it = children.begin(); it != children.end(); ++it)
   {
     const nglPath& srcpath = *it;
     

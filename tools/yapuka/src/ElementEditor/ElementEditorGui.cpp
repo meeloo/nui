@@ -13,21 +13,20 @@
 #include "nuiFileSelector.h"
 #include "nuiDialog.h"
 #include "nuiLabelRenamer.h"
-#include "nuiBackgroundPane.h"
 
 #include "ElementEditor/ElementEditor.h"
 #include "Main/Yapuka.h"
 
 
 ElementEditorGui::ElementEditorGui()
-: nuiSimpleContainer(), mEventSink(this)
+: nuiWidget(), mEventSink(this)
 {
   // Main box [menus + buttons, main area]
   nuiVBox* pVBox = new nuiVBox(2);
   pVBox->SetExpand(nuiExpandShrinkAndGrow);
   AddChild(pVBox);
   
-  nuiBackgroundPane* pBkg = new nuiBackgroundPane(eInnerBackground);
+  nuiWidget* pBkg = new nuiWidget();
   pVBox->SetCell(0, pBkg);
   pVBox->SetCellExpand(0, nuiExpandFixed);
 
@@ -73,7 +72,7 @@ ElementEditorGui::ElementEditorGui()
 	mpElementTree = new nuiTreeView(pMainTree);
   pListSV->AddChild(mpElementTree);
   
-  mpEditorContainer = new nuiSimpleContainer();
+  mpEditorContainer = new nuiWidget();
   pSplitter->AddChild(mpEditorContainer);
   
   mEventSink.Connect(pLoad->Activated, &ElementEditorGui::OnLoad);

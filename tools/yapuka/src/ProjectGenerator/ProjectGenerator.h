@@ -10,7 +10,7 @@
 #include "nui.h"
 #include "nuiToggleButton.h"
 
-class ProjectGenerator : public nuiSimpleContainer
+class ProjectGenerator : public nuiWidget
 {
 public:
   

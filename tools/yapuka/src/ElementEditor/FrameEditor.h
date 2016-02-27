@@ -8,7 +8,7 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiSimpleContainer.h"
+#include "nuiWidget.h"
 #include "nuiFrame.h"
 #include "nuiFrameView.h"
 #include "ElementEditor/ElementDesc.h"
@@ -18,7 +18,7 @@
 
 
 
-class FrameEditor : public nuiSimpleContainer
+class FrameEditor : public nuiWidget
 {
 public:
   FrameEditor(ElementDesc* pDesc, ElementInspector* pInspector);
@@ -60,7 +60,7 @@ private:
   nuiFrame* mpFrame;
   nuiFrameView* mpFrameView;
   nuiScrollView* mpFrameViewHolder;
-  nuiSimpleContainer* mpPictureHolder;
+  nuiWidget* mpPictureHolder;
 	nuiImage* mpImage;
   bool mDrawDndFrame;
   

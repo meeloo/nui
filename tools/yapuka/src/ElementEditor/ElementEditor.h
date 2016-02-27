@@ -8,14 +8,14 @@
 #pragma once
 
 #include "nui.h"
-#include "nuiSimpleContainer.h"
+#include "nuiWidget.h"
 #include "ElementDesc.h"
 
 
 class ElementInspector;
 class FrameEditor;
 
-class ElementEditor : public nuiSimpleContainer
+class ElementEditor : public nuiWidget
 {
 public:
   ElementEditor(ElementDesc* pDesc);

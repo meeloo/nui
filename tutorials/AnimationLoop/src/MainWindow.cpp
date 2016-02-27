@@ -49,7 +49,7 @@ void MainWindow::OnCreation()
                 nuiMakeDelegate(this, &MainWindow::SetProgress)));
   
   
-  nuiSimpleContainer* pContainer = (nuiSimpleContainer*)nuiBuilder::Get().CreateWidget(_T("MainContainer"));
+  nuiWidget* pContainer = (nuiWidget*)nuiBuilder::Get().CreateWidget(_T("MainContainer"));
   AddChild(pContainer);
   
   mpCountSlider = (nuiSlider*)pContainer->GetChild(_T("countSlider"));

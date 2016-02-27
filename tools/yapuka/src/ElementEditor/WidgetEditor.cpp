@@ -18,7 +18,7 @@ WidgetInfo::WidgetInfo(nuiWidget* pWidget, bool isContainer)
 	
 	if (mIsContainer)
 	{
-		mpContainer = (nuiSimpleContainer*) dynamic_cast <nuiSimpleContainer*> (pWidget);
+		mpContainer = (nuiWidget*) dynamic_cast <nuiWidget*> (pWidget);
 		mpWidget = NULL;
 	}
 	else
@@ -38,7 +38,7 @@ nuiWidget* WidgetInfo::GetWidget()
 	return mpWidget;
 }
 
-nuiSimpleContainer* WidgetInfo::GetContainer()
+nuiWidget* WidgetInfo::GetContainer()
 {
 	return mpContainer;
 }
@@ -121,8 +121,8 @@ WidgetEditor::WidgetEditor(ElementDesc* pDesc, ElementInspector* pInspector)
   pSplitter->SetMasterChild(false);
 	AddChild(pSplitter);
 	
-	mpTreeView = new nuiSimpleContainer();
-	mpWidgetView = new nuiSimpleContainer();
+	mpTreeView = new nuiWidget();
+	mpWidgetView = new nuiWidget();
 
 	
 	
@@ -175,7 +175,7 @@ void WidgetEditor::BuildTreeView(const nuiXMLNode* pXmlNode, nuiTreeNode* pParen
 //      
 //    nuiTreeNode* pNode = new nuiTreeNode(pWidget->GetProperty(_T("Class")));
 //    
-//    nuiSimpleContainer* pContainer = (nuiSimpleContainer*) dynamic_cast <nuiSimpleContainer*>(pWidget);
+//    nuiWidget* pContainer = (nuiWidget*) dynamic_cast <nuiWidget*>(pWidget);
 //    if (pContainer)
 //    {
 //      // store the relation (treenode->container)
@@ -231,7 +231,7 @@ void WidgetEditor::OnSelectionChanged(const nuiEvent& rEvent)
 	NGL_ASSERT(res == true);
 	
 	// the associated widget may be a container or a simple widget
-	nuiSimpleContainer* pSelectedContainer = pSelectionInfo->GetContainer();
+	nuiWidget* pSelectedContainer = pSelectionInfo->GetContainer();
 	if (pSelectedContainer == NULL)
 		pTargetedWidget = pSelectionInfo->GetWidget();
 	else 
@@ -336,7 +336,7 @@ void WidgetEditor::OnActivated(const nuiEvent& rEvent)
 	NGL_ASSERT(res == true);
 	
 	// the associated widget is not a container, it's a simple widget : stop the process
-	nuiSimpleContainer* pSelectedContainer = pSelectionInfo->GetContainer();
+	nuiWidget* pSelectedContainer = pSelectionInfo->GetContainer();
 	if (pSelectedContainer == NULL)
 	{
     if (DialogCantDo())
@@ -363,7 +363,7 @@ void WidgetEditor::OnActivated(const nuiEvent& rEvent)
 	
 	// is the new widget a Container or not?
 	bool isContainer = false;
-	nuiSimpleContainer* pContainer = (nuiSimpleContainer*) dynamic_cast <nuiSimpleContainer*> (pWidget);
+	nuiWidget* pContainer = (nuiWidget*) dynamic_cast <nuiWidget*> (pWidget);
 	if (pContainer)
 	{
 		isContainer = true;
@@ -464,7 +464,7 @@ void WidgetEditor::CommitWidgetChanges(nuiTreeNode* pTreeNode, nuiXMLNode* pXmlP
 		NGL_ASSERT(res == true);
 		
 		// the associated widget may be a a container or a simple widget
-		nuiSimpleContainer* pSelectedContainer = pSelectionInfo->GetContainer();
+		nuiWidget* pSelectedContainer = pSelectionInfo->GetContainer();
 		if (pSelectedContainer == NULL)
 			pWidget = pSelectionInfo->GetWidget();
 		else 

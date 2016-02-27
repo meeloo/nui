@@ -13,7 +13,6 @@
 #include <stdio.h>
 
 #include "nglConsole.h"
-#include "nuiWindow.h"
 #include "nuiText.h"
 
 #include "nuiNativeResourceVolume.h"
@@ -75,7 +74,7 @@ void nuiApp::OnInit()
   bool ShowFPS = false;
   bool PartialRedraw = true;
 //  nuiRenderer Renderer = eDirect3D;
-  nuiRenderer Renderer = eOpenGL;
+  nuiRenderer Renderer = eOpenGL2;
 //  nuiRenderer Renderer = eSoftware;
 
   // Accept NGL default options
@@ -118,7 +117,7 @@ void nuiApp::OnInit()
     else if (!arg.Compare(_T("--renderer")) || !arg.Compare(_T("-r"))) 
     {
       arg = GetArg(i+1);
-      if (!arg.Compare(_T("opengl"))) Renderer = eOpenGL;
+      if (!arg.Compare(_T("opengl"))) Renderer = eOpenGL2;
       else if (!arg.Compare(_T("direct3d"))) Renderer = eDirect3D;
       else if (!arg.Compare(_T("software"))) Renderer = eSoftware;
       i++;

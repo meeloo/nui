@@ -35,5 +35,9 @@
 	<string>1.0</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
 </dict>
 </plist>

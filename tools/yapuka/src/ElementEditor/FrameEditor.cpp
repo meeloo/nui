@@ -8,8 +8,6 @@
 #include "FrameEditor.h"
 #include "nuiVBox.h"
 #include "nuiHBox.h"
-#include "nuiSeparator.h"
-#include "nuiRectView.h"
 #include "Main/MainWindow.h"
 #include "Main/Yapuka.h"
 #include "Tools/ToolPaneAttributes.h"
@@ -31,14 +29,14 @@ FrameEditor::FrameEditor(ElementDesc* pDesc, ElementInspector* pInspector)
   nuiVBox* pBox = new nuiVBox();
   pBox->SetExpand(nuiExpandShrinkAndGrow);
   AddChild(pBox);
-  pBox->AddCell(new nuiSeparator(nuiHorizontal));
+//  pBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   nglString str;
   str.Add(_T("nuiFrame editor (")).Add(pDesc->GetName()).Add(_T(")"));
   nuiLabel* pLabel = new nuiLabel(str, nuiFont::GetFont(24));
   pLabel->SetTextColor(nuiColor(_T("lightgray")));
   pBox->AddCell(pLabel, nuiCenter);
-  pBox->AddCell(new nuiSeparator(nuiHorizontal));
+//  pBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   nuiSplitter* pSplitter = new nuiSplitter(nuiHorizontal, eModePixel);
   pSplitter->SetMasterChild(false);
@@ -49,7 +47,7 @@ FrameEditor::FrameEditor(ElementDesc* pDesc, ElementInspector* pInspector)
   pSplitter->SetHandlePos(200);
 
   // Frame view:
-  mpPictureHolder = new nuiSimpleContainer();
+  mpPictureHolder = new nuiWidget();
   nuiScrollView* pScrollView = new nuiScrollView();
   pScrollView->AddChild(mpPictureHolder);
   pSplitter->AddChild(pScrollView);
@@ -147,14 +145,14 @@ bool FrameEditor::Draw(nuiDrawContext* pContext)
   {
     nuiRect r(GetRect().Size());
     r.Grow(-2, -2);
-    nuiShape shp;
-    shp.AddRect(r);
+    nuiRef<nuiShape> shp;
+    shp->AddRect(r);
     pContext->SetLineWidth(4);
     pContext->SetStrokeColor(nuiColor(230, 230, 255));
-    pContext->DrawShape(&shp, eStrokeShape);
+    pContext->DrawShape(shp, eStrokeShape);
   }
 
-  nuiSimpleContainer::Draw(pContext);
+  nuiWidget::Draw(pContext);
   return true;
 }
 
@@ -166,12 +164,8 @@ void FrameEditor::UpdateFrameViews(bool CopyImageRect)
   mpFrameView->AddChild(new nuiLabel(_T("This frame should\nlook nice at any size."), nuiFont::GetFont(20)));
   pFixed->AddChild(mpFrameView);
   
-  nuiRectView* pFrameRectView = new nuiRectView(mpFrameView->GetIdealRect());
-  mSlotSink.Connect(pFrameRectView->RectChanged, nuiMakeDelegate(this, &FrameEditor::OnFrameViewRectChanged));
-	mEventSink.Connect(pFrameRectView->MovedMouse, &FrameEditor::OnFrameMouseMoved);
-	pFrameRectView->EnableMouseEvent(true);
+  nuiWidget* pFrameRectView = new nuiWidget();
 
-  pFrameRectView->SetColor(eShapeStroke, nuiColor(_T("blue")));
   mpFrameViewHolder->AddChild(pFrameRectView);
   
   nuiTexture* pTexture = mpFrame->GetTexture();
@@ -182,11 +176,7 @@ void FrameEditor::UpdateFrameViews(bool CopyImageRect)
   if (CopyImageRect)
     mpFrame->SetSourceClientRect(nuiRect(0, 0, pTexture->GetImage()->GetWidth(), pTexture->GetImage()->GetHeight()));
   
-  nuiRectView* pRectView = new nuiRectView(mpFrame->GetSourceClientRect());
-  mSlotSink.Connect(pRectView->RectChanged, nuiMakeDelegate(this, &FrameEditor::OnFrameRectChanged));
-	mEventSink.Connect(pRectView->MovedMouse, &FrameEditor::OnFrameMouseMoved);
-	pRectView->EnableMouseEvent(true);
-  pRectView->SetColor(eShapeStroke, nuiColor(_T("red")));
+  nuiWidget* pRectView = new nuiWidget();
   mpPictureHolder->AddChild(pRectView);
 
   mAttributeScale.Set(mScale);
