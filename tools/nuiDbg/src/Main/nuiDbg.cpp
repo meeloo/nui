@@ -18,7 +18,7 @@
 #include "nuiNativeResourceVolume.h"
 
 // Custom Widgets:
-#include "Main/ConfigView.h"
+#include "Main/ConfigViewController.h"
 // End of Custom Widgets:
 
 
@@ -151,6 +151,7 @@ void nuiApp::OnInit()
   }
 
 
+  RegisterCustomWidgets();
 
 /*
   Width = 512;
@@ -213,7 +214,7 @@ nuiDebugger& nuiApp::GetDebugger() const
 
 void nuiApp::RegisterCustomWidgets()
 {
-  NUI_ADD_WIDGET_CREATOR(ConfigView);
+  NUI_ADD_WIDGET_CREATOR(ConfigViewController);
 }
 
 

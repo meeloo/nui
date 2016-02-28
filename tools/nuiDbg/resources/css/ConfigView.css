@@ -1,0 +1,10 @@
+/////
+// ConfigView.css
+
++ConfigViewController ConfigView
+{
+  +nuiLabel
+  {
+    Text: "Prout";
+  }
+}

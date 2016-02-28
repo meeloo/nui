@@ -68,7 +68,7 @@ void MainWindow::OnCreation()
   nuiLabel* pLabel = new nuiLabel(nuiTR("Debugger"));
   pLabel->SetObjectName(_T("TabView::Title"));
   //    ProjectGenerator* pGenerator = new ProjectGenerator();
-  nuiWidget* pDebugger = new nuiWidget();
+  nuiWidget* pDebugger = nuiBuilder::Build("ConfigView");
 
   pTabView->AddTab(pLabel, pDebugger);
 
