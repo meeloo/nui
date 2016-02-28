@@ -67,6 +67,11 @@ void nuiEditText::InitAttributes()
                 nuiMakeDelegate(this, &nuiEditText::SetFollowModifications)));
 
 
+  AddAttribute(new nuiAttribute<const nglString&>
+               (nglString(_T("Text")), nuiUnitName,
+                nuiMakeDelegate(this, &nuiEditText::GetText),
+                nuiMakeDelegate(this, &nuiEditText::SetText)));
+  
 }
 
 
