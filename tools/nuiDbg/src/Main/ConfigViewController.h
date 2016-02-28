@@ -17,5 +17,6 @@ public:
 protected:
   virtual void Built();
   nuiEventSink<ConfigViewController> mEventSink;
+  nuiButton* mpConnect;
 };
 

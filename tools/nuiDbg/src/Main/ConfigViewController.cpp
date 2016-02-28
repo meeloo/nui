@@ -13,6 +13,7 @@
 ConfigViewController::ConfigViewController()
 : mEventSink(this)
 {
+  BindChild("Connect", mpConnect);
 }
 
 ConfigViewController::~ConfigViewController()
@@ -21,10 +22,9 @@ ConfigViewController::~ConfigViewController()
 
 void ConfigViewController::Built()
 {
-  nuiButton* pConnect = (nuiButton*)SearchForChild("Connect");
-  if (pConnect)
+  if (mpConnect)
   {
-    mEventSink.Connect(pConnect->Activated, [=](const nuiEvent& rEvent){
+    mEventSink.Connect(mpConnect->Activated, [=](const nuiEvent& rEvent){
       printf("Connect!\n");
     });
   }
