@@ -13,5 +13,9 @@ class ConfigViewController : public nuiWidget
 public:
   ConfigViewController();
   virtual ~ConfigViewController();
+
+protected:
+  virtual void Built();
+  nuiEventSink<ConfigViewController> mEventSink;
 };
 
