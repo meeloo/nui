@@ -13,11 +13,6 @@
 ConfigViewController::ConfigViewController()
 : mEventSink(this)
 {
-  BindChild("Connect", mpConnect);
-  BindChild("Server", mpServer);
-  BindChild("Port", mpPort);
-  BindChild("Port", mpTruc);
-  BindChild("Prort", mpBidule);
 }
 
 ConfigViewController::~ConfigViewController()
@@ -26,6 +21,12 @@ ConfigViewController::~ConfigViewController()
 
 void ConfigViewController::Built()
 {
+  BindChild("Connect", mpConnect);
+  BindChild("Server", mpServer);
+  BindChild("Port", mpPort);
+  BindChild("Port", mpTruc);
+  BindChild("Prort", mpBidule);
+
   if (mpConnect)
   {
     mEventSink.Connect(mpConnect->Activated, [=](const nuiEvent& rEvent){

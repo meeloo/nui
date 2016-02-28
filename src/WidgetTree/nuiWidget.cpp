@@ -721,7 +721,6 @@ nuiWidget::~nuiWidget()
 
 void nuiWidget::CallBuilt()
 {
-  RebindChildren();
   Built();
 }
 
@@ -6299,16 +6298,3 @@ void nuiWidget::BroadcastForceNoDrawToLayer()
   }
 }
 
-
-void nuiWidget::RebindChildren()
-{
-  for (auto it : mChildrenBindings)
-  {
-    const nglString& name(it.first);
-    nuiWidget* pWidget = SearchForChild(name);
-    if (!it.second(pWidget))
-    {
-      // Break? Error? Crash?
-    }
-  }
-}
