@@ -30,12 +30,15 @@ public:
     
 protected:
    MainWindow *win;
-  
+
+
 private:
   Preferences mPreferences;
   bool mFullVersion;
 
   nuiDebugger* mpDebugger;
+
+  void RegisterCustomWidgets();
 };
 
 nuiApp* GetApp();

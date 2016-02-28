@@ -17,6 +17,11 @@
 
 #include "nuiNativeResourceVolume.h"
 
+// Custom Widgets:
+#include "Main/ConfigView.h"
+// End of Custom Widgets:
+
+
 NGL_APP_CREATE(nuiApp);
 /*
 _NGL_GLOBALS(nuiApp)
@@ -204,6 +209,13 @@ nuiDebugger& nuiApp::GetDebugger() const
 {
   return *mpDebugger;
 }
+
+
+void nuiApp::RegisterCustomWidgets()
+{
+  NUI_ADD_WIDGET_CREATOR(ConfigView);
+}
+
 
 bool nuiApp::IsFullVersion()
 {

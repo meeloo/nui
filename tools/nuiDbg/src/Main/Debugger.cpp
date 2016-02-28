@@ -30,6 +30,7 @@ void nuiDebugger::Connect(const nglString& rAddress, int16 port)
   mpClient = new nuiTCPClient();
   if (mpClient->Connect(rAddress, port))
   {
+    StateChanged();
     mSocketPool.Add(mpClient, nuiSocketPool::eContinuous);
     mpMessageClient = new nuiMessageClient(mpClient);
     mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
@@ -49,3 +50,13 @@ void nuiDebugger::Disconnect()
 }
 
 
+nuiDebugger::State nuiDebugger::GetState() const
+{
+  if (!mpClient)
+    return eDbgState_Offline;
+
+  if (mpClient->IsConnected())
+    return eDbgState_Connected;
+
+  return eDbgState_Connecting;
+}
