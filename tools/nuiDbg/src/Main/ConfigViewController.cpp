@@ -16,6 +16,8 @@ ConfigViewController::ConfigViewController()
   BindChild("Connect", mpConnect);
   BindChild("Server", mpServer);
   BindChild("Port", mpPort);
+  BindChild("Port", mpTruc);
+  BindChild("Prort", mpBidule);
 }
 
 ConfigViewController::~ConfigViewController()

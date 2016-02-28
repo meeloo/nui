@@ -6308,7 +6308,7 @@ void nuiWidget::RebindChildren()
     nuiWidget* pWidget = SearchForChild(name);
     if (!it.second(pWidget))
     {
-      NGL_OUT("Unable to bind widget child '%s'\n", it.first.GetChars());
+      // Break? Error? Crash?
     }
   }
 }

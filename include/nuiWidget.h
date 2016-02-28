@@ -723,10 +723,21 @@ public:
   template <typename T>
   void BindChild(const nglString& rName, T*& rWidgetPointer)
   {
-    mChildrenBindings.insert(std::make_pair(rName, [&](nuiWidget* pChild){
+    nglString n(rName);
+    mChildrenBindings.insert(std::make_pair(rName, [n, &rWidgetPointer](nuiWidget* pChild){
+      if (!pChild)
+      {
+        NGL_OUT("Unable to bind child '%s': child not found\n", n.GetChars());
+        return false;
+      }
       T* pC = dynamic_cast<T*>(pChild);
       rWidgetPointer = pC;
-      return rWidgetPointer != nullptr;
+      if (!pC)
+      {
+        NGL_OUT("Unable to bind child '%s': child found but wrong type (%s)\n", n.GetChars(), pChild->GetObjectClass().GetChars());
+        return false;
+      }
+      return true;
     }));
   }
   

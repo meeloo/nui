@@ -20,5 +20,7 @@ protected:
   nuiButton* mpConnect;
   nuiEditText* mpServer;
   nuiEditText* mpPort;
+  nuiLabel* mpTruc;
+  nuiEditText* mpBidule;
 };
 
