@@ -333,7 +333,7 @@ void MainWindow::OnCreation()
               break;
             case 1:
               mpMessageClient->Post(nuiMessage("HelloWorld"));
-              mpMessageClient->Post(nuiMessage("HelloWorld3", i));
+              mpMessageClient->Post(nuiMessage("HelloWorld3", i, 1.1f, 1.2, "pouet!"));
               break;
             default:
               mpMessageClient->Post(nuiMessage("HelloWorld"));

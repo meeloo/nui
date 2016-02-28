@@ -31,7 +31,7 @@ public:
   
     AddMethod("HelloWorld3", nui_make_function([](int32 i, float j, double k, nglString s)
               {
-                printf("Hello world3 %d!\n", i);
+                printf("Hello world3 %d %f %f %s!\n", i, j, k, s.GetChars());
               }));
   }
   
