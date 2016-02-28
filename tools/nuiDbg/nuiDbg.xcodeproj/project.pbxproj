@@ -15,6 +15,7 @@
 		BC39AF5D0F8F70D000568C99 /* Preferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC39AF5A0F8F70D000568C99 /* Preferences.cpp */; };
 		BC39AF5E0F8F70D000568C99 /* MainWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC39AF5B0F8F70D000568C99 /* MainWindow.cpp */; };
 		BC6A09AD0EF92BAB00881ACF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BC6A09AB0EF92BAB00881ACF /* Info.plist */; };
+		C350859C1C826B24008BBA9C /* Debugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C350859A1C826B24008BBA9C /* Debugger.cpp */; };
 		C3537FC21C823C5F00A0CF16 /* libnuiCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC0CFD9A121455A70092C1F6 /* libnuiCocoa.a */; };
 		C3537FC31C823C5F00A0CF16 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3537FB71C81FE1400A0CF16 /* Cocoa.framework */; };
 		C3537FC41C823F1400A0CF16 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3537FB91C81FE3500A0CF16 /* CoreVideo.framework */; };
@@ -88,6 +89,8 @@
 		BC39AF5B0F8F70D000568C99 /* MainWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainWindow.cpp; path = src/Main/MainWindow.cpp; sourceTree = SOURCE_ROOT; };
 		BC6A09AB0EF92BAB00881ACF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		BCBCB1520DFD45B5002E8BC3 /* nui3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = nui3.xcodeproj; path = ../../nui3.xcodeproj; sourceTree = SOURCE_ROOT; };
+		C350859A1C826B24008BBA9C /* Debugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debugger.cpp; path = src/Main/Debugger.cpp; sourceTree = "<group>"; };
+		C350859B1C826B24008BBA9C /* Debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debugger.h; path = src/Main/Debugger.h; sourceTree = "<group>"; };
 		C3537FB71C81FE1400A0CF16 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		C3537FB91C81FE3500A0CF16 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -119,7 +122,9 @@
 				61A9DE490B833CB000BC506C /* dependancies */,
 				61A9DFB50B833DE500BC506C /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		61A9DE490B833CB000BC506C /* dependancies */ = {
 			isa = PBXGroup;
@@ -156,11 +161,13 @@
 			isa = PBXGroup;
 			children = (
 				BC39AF560F8F70D000568C99 /* nuiDbg.h */,
-				BC39AF570F8F70D000568C99 /* Preferences.h */,
 				BC39AF580F8F70D000568C99 /* nuiDbg.cpp */,
-				BC39AF590F8F70D000568C99 /* MainWindow.h */,
+				BC39AF570F8F70D000568C99 /* Preferences.h */,
 				BC39AF5A0F8F70D000568C99 /* Preferences.cpp */,
+				BC39AF590F8F70D000568C99 /* MainWindow.h */,
 				BC39AF5B0F8F70D000568C99 /* MainWindow.cpp */,
+				C350859B1C826B24008BBA9C /* Debugger.h */,
+				C350859A1C826B24008BBA9C /* Debugger.cpp */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -329,6 +336,7 @@
 			files = (
 				BC39AF5C0F8F70D000568C99 /* nuiDbg.cpp in Sources */,
 				BC39AF5D0F8F70D000568C99 /* Preferences.cpp in Sources */,
+				C350859C1C826B24008BBA9C /* Debugger.cpp in Sources */,
 				BC39AF5E0F8F70D000568C99 /* MainWindow.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

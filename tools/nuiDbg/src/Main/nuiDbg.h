@@ -10,8 +10,7 @@
 #include "nui.h"
 #include "Main/MainWindow.h"
 #include "Main/Preferences.h"
-
-
+#include "Main/Debugger.h"
 
 class nuiApp : public nuiApplication
 {
@@ -24,24 +23,22 @@ public:
 	MainWindow* GetMainWindow();
   
   
-  Preferences& GetPreferences()
-  {
-    return mPreferences;
-  }
+  Preferences& GetPreferences();
+  nuiDebugger& GetDebugger() const;
+  bool IsFullVersion();
   
-  bool IsFullVersion()
-  {
-    return mFullVersion;
-  }
-  
+    
 protected:
    MainWindow *win;
   
 private:
   Preferences mPreferences;
   bool mFullVersion;
+
+  nuiDebugger* mpDebugger;
 };
 
 nuiApp* GetApp();
 MainWindow* GetMainWindow();
 Preferences& GetPreferences();
+nuiDebugger& GetDebugger();

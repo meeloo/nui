@@ -15,10 +15,10 @@ public:
   nuiDebugProtocol(nuiTCPClient* pClient)
   : nuiProtocol(pClient)
   {
-    AddMethod("HelloWorld",
+    AddMethod("UpdateWindowList",
     [=]()
     {
-      printf("Hello world!\n");
+      
     });
 
     std::function<void(int32)> fn =

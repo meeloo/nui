@@ -65,6 +65,8 @@ void nuiApp::OnInit()
 {
   nuiInit(NULL);
 
+  mpDebugger = new nuiDebugger();
+  
   uint Width = 0, Height = 0;
   bool HasSize = false;
   mFullVersion = true;
@@ -193,6 +195,23 @@ MainWindow* nuiApp::GetMainWindow()
 	return win;
 }
 
+Preferences& nuiApp::GetPreferences()
+{
+  return mPreferences;
+}
+
+nuiDebugger& nuiApp::GetDebugger() const
+{
+  return *mpDebugger;
+}
+
+bool nuiApp::IsFullVersion()
+{
+  return mFullVersion;
+}
+
+
+
 
 nuiApp* GetApp()
 {
@@ -210,3 +229,9 @@ Preferences& GetPreferences()
 {
   return ((nuiApp*)App)->GetPreferences();
 }
+
+nuiDebugger& GetDebugger()
+{
+  return ((nuiApp*)App)->GetDebugger();
+}
+
