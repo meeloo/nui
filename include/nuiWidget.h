@@ -48,6 +48,7 @@ class nuiWidget : public nuiObject
 {
 protected:
   friend class nuiTopLevel;
+  friend class nuiWidgetCreator;
   class TestWidgetFunctor
   {
   public:
@@ -719,6 +720,12 @@ public:
   nuiLayer* GetParentLayer() const;
   //@}
 
+  template <typename T>
+  void BindChild(const nglString& rName, T*& rWidgetPointer)
+  {
+    mChildrenBindings.insert(std::make_pair(rName, (nuiWidget**)&rWidgetPointer));
+  }
+  
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
@@ -912,7 +919,11 @@ protected:
   void UpdateTopLevel();  
   void InternalSetLayerPolicy(nuiDrawPolicy policy);
 
-
+  void CallBuilt();
+  // Auto Bindings:
+  std::multimap<nglString, nuiWidget**> mChildrenBindings;
+  void RebindChildren();
+  ;
 };
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }

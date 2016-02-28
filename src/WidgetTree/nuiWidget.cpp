@@ -719,6 +719,13 @@ nuiWidget::~nuiWidget()
   nuiRenderThread::DestroyWidget(this);
 }
 
+void nuiWidget::CallBuilt()
+{
+  RebindChildren();
+  Built();
+}
+
+
 void nuiWidget::Built()
 {
   // ...
@@ -6292,3 +6299,13 @@ void nuiWidget::BroadcastForceNoDrawToLayer()
   }
 }
 
+
+void nuiWidget::RebindChildren()
+{
+  for (auto it : mChildrenBindings)
+  {
+    const nglString& name(it.first);
+    nuiWidget* pWidget = SearchForChild(name);
+    *it.second = pWidget;
+  }
+}
