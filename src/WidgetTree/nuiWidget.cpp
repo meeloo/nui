@@ -6306,6 +6306,9 @@ void nuiWidget::RebindChildren()
   {
     const nglString& name(it.first);
     nuiWidget* pWidget = SearchForChild(name);
-    *it.second = pWidget;
+    if (!it.second(pWidget))
+    {
+      NGL_OUT("Unable to bind widget child '%s'\n", it.first.GetChars());
+    }
   }
 }

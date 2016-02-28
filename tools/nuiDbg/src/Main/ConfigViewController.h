@@ -18,5 +18,7 @@ protected:
   virtual void Built();
   nuiEventSink<ConfigViewController> mEventSink;
   nuiButton* mpConnect;
+  nuiEditText* mpServer;
+  nuiEditText* mpPort;
 };
 

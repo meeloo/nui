@@ -723,7 +723,11 @@ public:
   template <typename T>
   void BindChild(const nglString& rName, T*& rWidgetPointer)
   {
-    mChildrenBindings.insert(std::make_pair(rName, (nuiWidget**)&rWidgetPointer));
+    mChildrenBindings.insert(std::make_pair(rName, [&](nuiWidget* pChild){
+      T* pC = dynamic_cast<T*>(pChild);
+      rWidgetPointer = pC;
+      return rWidgetPointer != nullptr;
+    }));
   }
   
 
@@ -921,7 +925,7 @@ protected:
 
   void CallBuilt();
   // Auto Bindings:
-  std::multimap<nglString, nuiWidget**> mChildrenBindings;
+  std::multimap<nglString, std::function<bool(nuiWidget*)> > mChildrenBindings;
   void RebindChildren();
   ;
 };

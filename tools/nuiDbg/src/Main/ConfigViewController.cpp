@@ -14,6 +14,8 @@ ConfigViewController::ConfigViewController()
 : mEventSink(this)
 {
   BindChild("Connect", mpConnect);
+  BindChild("Server", mpServer);
+  BindChild("Port", mpPort);
 }
 
 ConfigViewController::~ConfigViewController()
