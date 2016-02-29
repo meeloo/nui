@@ -17,10 +17,10 @@ public:
 protected:
   virtual void Built();
   nuiEventSink<ConfigViewController> mEventSink;
+  nuiSlotsSink mSlotSink;
   nuiButton* mpConnect;
   nuiEditText* mpServer;
   nuiEditText* mpPort;
-  nuiLabel* mpTruc;
-  nuiEditText* mpBidule;
+  nuiLabel* mpConnectLabel;
 };
 

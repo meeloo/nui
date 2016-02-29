@@ -22,15 +22,49 @@ ConfigViewController::~ConfigViewController()
 void ConfigViewController::Built()
 {
   BindChild("Connect", mpConnect);
+  BindChild("ConnectLabel", mpConnectLabel);
   BindChild("Server", mpServer);
   BindChild("Port", mpPort);
-  BindChild("Port", mpTruc);
-  BindChild("Prort", mpBidule);
 
   if (mpConnect)
   {
     mEventSink.Connect(mpConnect->Activated, [=](const nuiEvent& rEvent){
-      printf("Connect!\n");
+      GetDebugger().Disconnect();
+      
+      if (GetDebugger().GetState() == nuiDebugger::eDbgState_Connecting)
+      {
+        return;
+      }
+      
+      nglString server = mpServer->GetText();
+      int16 port = mpPort->GetText().GetInt();
+      printf("Connect %s:%d!\n", server.GetChars(), port);
+      GetDebugger().Connect(server, port);
+    });
+    
+    GetDebugger().StateChanged.Connect([&](nuiDebugger::State state){
+      switch (state)
+      {
+        case nuiDebugger::eDbgState_Connected:
+        {
+          mpServer->SetEnabled(false);
+          mpPort->SetEnabled(false);
+          mpConnectLabel->SetText("Disconnect");
+        }break;
+        case nuiDebugger::eDbgState_Offline:
+        {
+          mpServer->SetEnabled(true);
+          mpPort->SetEnabled(true);
+          mpConnectLabel->SetText("Connect");
+        }break;
+        case nuiDebugger::eDbgState_Connecting:
+        {
+          mpServer->SetEnabled(false);
+          mpPort->SetEnabled(false);
+          mpConnectLabel->SetText("Stop");
+        }break;
+          
+      }
     });
   }
 }

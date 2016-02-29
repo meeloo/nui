@@ -9,6 +9,6 @@
     +nuiEditText Server { Text: "127.0.0.1"; MinIdealWidth: 200; }
     +nuiLabel { Text: "Port:"; }
     +nuiEditText Port { Text: "31337"; MinIdealWidth: 100; }
-    +nuiButton Connect { +nuiLabel { Text:"Connect"; } }
+    +nuiButton Connect { +nuiLabel ConnectLabel { Text:"Connect"; } }
   }
 }

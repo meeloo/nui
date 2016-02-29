@@ -24,19 +24,24 @@ nuiDebugger::~nuiDebugger()
 
 void nuiDebugger::Connect(const nglString& rAddress, int16 port)
 {
-  NGL_ASSERT(!mpClient);
-  NGL_ASSERT(!mpMessageClient);
+  Disconnect();
   
   mpClient = new nuiTCPClient();
   if (mpClient->Connect(rAddress, port))
   {
-    StateChanged();
+    StateChanged(GetState());
     mSocketPool.Add(mpClient, nuiSocketPool::eContinuous);
     mpMessageClient = new nuiMessageClient(mpClient);
     mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
                        {
                          mSocketPool.DispatchEvents(1);
                        });
+  }
+  else
+  {
+    delete mpClient;
+    mpClient = nullptr;
+    StateChanged(GetState());
   }
 }
 

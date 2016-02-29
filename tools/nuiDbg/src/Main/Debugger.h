@@ -29,7 +29,7 @@ public:
 
   State GetState() const;
 
-  nuiSignal0<> StateChanged;
+  nuiSignal1<State> StateChanged;
 private:
   nuiTCPClient* mpClient = nullptr;
   nuiEventSink<nuiDebugger> mEventSink;

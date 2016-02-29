@@ -739,6 +739,23 @@ public:
     return true;
   }
   
+  template <typename T>
+  T* BindChild(const nglString& rName)
+  {
+    nuiWidget* pChild = SearchForChild(rName);
+    if (!pChild)
+    {
+      NGL_OUT("Unable to bind child '%s': child not found\n", rName.GetChars());
+      return nullptr;
+    }
+    T* pC = dynamic_cast<T*>(pChild);
+    if (!pC)
+    {
+      NGL_OUT("Unable to bind child '%s': child found but wrong type (%s)\n", rName.GetChars(), pChild->GetObjectClass().GetChars());
+      return nullptr;
+    }
+    return pC;
+  }
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
