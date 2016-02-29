@@ -15,6 +15,10 @@
 nuiDebugger::nuiDebugger()
 : mEventSink(this)
 {
+  mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
+                     {
+                       mSocketPool.DispatchEvents(1);
+                     });
 }
 
 nuiDebugger::~nuiDebugger()
@@ -25,24 +29,22 @@ nuiDebugger::~nuiDebugger()
 void nuiDebugger::Connect(const nglString& rAddress, int16 port)
 {
   Disconnect();
-  
+
   mpClient = new nuiTCPClient();
-  if (mpClient->Connect(rAddress, port))
-  {
+  mpClient->CanRead.Connect([&]{
+    mpClient->CanRead.DisconnectFunctions();
     StateChanged(GetState());
-    mSocketPool.Add(mpClient, nuiSocketPool::eContinuous);
     mpMessageClient = new nuiMessageClient(mpClient);
-    mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
-                       {
-                         mSocketPool.DispatchEvents(1);
-                       });
-  }
-  else
-  {
+  });
+
+  mpClient->ReadClosed.Connect([&]{
+    mpClient->ReadClosed.DisconnectFunctions();
     delete mpClient;
     mpClient = nullptr;
     StateChanged(GetState());
-  }
+  });
+
+  mpClient->Connect(rAddress, port, &mSocketPool, nuiSocketPool::eContinuous);
 }
 
 void nuiDebugger::Disconnect()

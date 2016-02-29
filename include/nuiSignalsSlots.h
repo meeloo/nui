@@ -123,7 +123,11 @@ public:
     }
   }
 
-  
+  void DisconnectFunctions()
+  {
+    mFunctions.clear();
+  }
+
 private:
   void Connect(nuiSlotsSink &rSink, const Slot &rSlot)
   {
@@ -240,7 +244,12 @@ public:
     }
   }
 
-private:	
+  void DisconnectFunctions()
+  {
+    mFunctions.clear();
+  }
+
+private:
   void Connect(nuiSlotsSink &sink, const Slot &slot)
   {
     mSlots.push_back(std::make_pair(slot, &sink));
@@ -357,7 +366,12 @@ public:
     }
   }
   
-  
+  void DisconnectFunctions()
+  {
+    mFunctions.clear();
+  }
+
+
 
 private:	
   void Connect(nuiSlotsSink &sink, const Slot &slot)
@@ -475,6 +489,11 @@ public:
     }
   }
 
+  void DisconnectFunctions()
+  {
+    mFunctions.clear();
+  }
+
 private:
   void Connect(nuiSlotsSink &sink, const Slot &slot)
   {
@@ -590,6 +609,11 @@ public:
       }
       ++it;
     }
+  }
+
+  void DisconnectFunctions()
+  {
+    mFunctions.clear();
   }
 
 
@@ -710,7 +734,12 @@ public:
     }
   }
   
-  
+  void DisconnectFunctions()
+  {
+    mFunctions.clear();
+  }
+
+
 
 private:
   void Connect(nuiSlotsSink &sink, const Slot &slot)
