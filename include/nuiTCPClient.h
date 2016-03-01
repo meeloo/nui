@@ -73,6 +73,8 @@ public:
   nuiSignal0<> CanWrite;
   nuiSignal0<> ReadClosed;
   nuiSignal0<> WriteClosed;
+  nuiSignal0<> Connected;
+  nuiSignal0<> ConnectError;
 
   void SetAutoDelete(bool set); ///< Delete the client when the send buffer is empty after a call to SendWriteBuffer()
   void SendWriteBuffer();

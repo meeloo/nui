@@ -116,12 +116,6 @@ nuiNetworkHost nuiNetworkHost::Resolve(const nglString& rService)
   return hosts[0];
 }
 
-void nuiNetworkHost::GetAddrInfo(const nglString& rService, std::function<void(struct addrinfo*)> funct) const
-{
-  
-}
-
-
 struct addrinfo* nuiNetworkHost::GetAddrInfo(const nglString& rService) const
 {
   struct addrinfo hints;

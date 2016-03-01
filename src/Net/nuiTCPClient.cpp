@@ -52,18 +52,49 @@ bool nuiTCPClient::Connect(const nuiNetworkHost& rHost, nuiSocketPool* pPool, nu
     return false;
 
   if (pPool)
-    pPool->Add(this, triggerMode);
+  {
+    // Async version:
+    nglThreadFunction* pThread = new nglThreadFunction([&](){
+      struct addrinfo* addr = nuiSocket::GetAddrInfo(rHost);
+      int res = connect(mSocket, addr->ai_addr, addr->ai_addrlen);
+      
+      UpdateIdle();
+      
+      freeaddrinfo(addr);
+      if (res)
+      {
+        DumpError(this, res, __FUNC__, "Connection error");
+        App->GetMainQueue().Post(nuiMakeTask<void>([&](){
+          ConnectError();
+        }));
+        return;
+      }
+      
+      mReadConnected = mWriteConnected = res == 0;
 
-  struct addrinfo* addr = nuiSocket::GetAddrInfo(rHost);
-  int res = connect(mSocket, addr->ai_addr, addr->ai_addrlen);
-  if (res)
-    DumpError(this, res, __FUNC__);
+      App->GetMainQueue().Post(nuiMakeTask<void>([&](){
+        Connected();
+        pPool->Add(this, triggerMode);
+      }));
+    });
+    pThread->SetAutoDelete(true);
+    mReadConnected = mWriteConnected = false;
+    pThread->Start();
+  }
+  else
+  {
+    // Sync version:
+    struct addrinfo* addr = nuiSocket::GetAddrInfo(rHost);
+    int res = connect(mSocket, addr->ai_addr, addr->ai_addrlen);
+    if (res)
+      DumpError(this, res, __FUNC__);
 
-  UpdateIdle();
+    UpdateIdle();
 
-  freeaddrinfo(addr);
+    freeaddrinfo(addr);
 
-  mReadConnected = mWriteConnected = res == 0;
+    mReadConnected = mWriteConnected = res == 0;
+  }
 
   return mReadConnected;
 }
