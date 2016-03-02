@@ -37,21 +37,22 @@ void nuiDebugger::Connect(const nglString& rAddress, int16 port)
   });
 
   mpClient->ReadClosed.Connect([&]{
-    mpClient->ReadClosed.DisconnectFunctions();
-    delete mpClient;
-    mpClient = nullptr;
-    StateChanged(GetState());
+    Disconnect();
   });
 
+  mpClient->ConnectError.Connect([&]{
+    Disconnect();
+  });
+  
   mpClient->Connect(rAddress, port, &mSocketPool, nuiSocketPool::eContinuous);
 }
 
 void nuiDebugger::Disconnect()
 {
-  mEventSink.DisconnectAll();
   delete mpMessageClient;
   mpMessageClient = nullptr;
   mpClient = nullptr;
+  StateChanged(GetState());
 }
 
 
