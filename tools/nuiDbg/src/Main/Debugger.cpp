@@ -15,13 +15,24 @@
 nuiDebugger::nuiDebugger()
 : nuiProtocol(nullptr), mEventSink(this)
 {
-  AddMethod("NewWindow",
-            [=](uint64 pointer, nglString name) )
+  AddMethod("NewWindow", nui_make_function(
+            [=](uint64 pointer, nglString name)
             {
               NGL_OUT("Remote: New Window: 0x%x / %s\n", pointer, name.GetChars());
-            });
+            }));
   
+  AddMethod("StartWindowList", nui_make_function(
+            [=](int32 count)
+  {
+    NGL_OUT("Remote: Start window list (%d windows)\n", count);
+  }));
 
+  
+  AddMethod("WindowListDone", nui_make_function(
+            [=]()
+  {
+    NGL_OUT("Remote: Window list done\n");
+  }));
   
   mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
                      {
@@ -43,7 +54,7 @@ void nuiDebugger::Connect(const nglString& rAddress, int16 port)
     mpMessageClient = new nuiMessageClient(mpClient);
     StateChanged(GetState());
 
-    mpMessageClient->Post(nuiMessage("UpdateWindowList", 1));
+    mpMessageClient->Post(nuiMessage("UpdateWindowList"));
   });
 
   mpClient->ReadClosed.Connect([&]{

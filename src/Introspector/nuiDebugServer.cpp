@@ -18,11 +18,15 @@ public:
     AddMethod("UpdateWindowList",
     [=]()
     {
-      auto windows = App->GetWindows();
+      NGL_OUT("Send window list\n");
+      auto windows = nuiMainWindow::GetWindows();
+      Post(nuiMessage("StartWindowList", (int32)windows.size()));
       for (auto win : windows)
       {
-        Post(nuiMessage("NewWindow", (uint64)win, win->GetTitle()))
+        Post(nuiMessage("NewWindow", (uint64)win, win->GetNGLWindow()->GetTitle()));
       }
+      Post(nuiMessage("WindowListDone"));
+      NGL_OUT("Window list sent\n");
     });
 
     std::function<void(int32)> fn =
