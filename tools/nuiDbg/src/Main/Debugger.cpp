@@ -13,8 +13,16 @@
 #include "Main/Debugger.h"
 
 nuiDebugger::nuiDebugger()
-: mEventSink(this)
+: nuiProtocol(nullptr), mEventSink(this)
 {
+  AddMethod("NewWindow",
+            [=](uint64 pointer, nglString name) )
+            {
+              NGL_OUT("Remote: New Window: 0x%x / %s\n", pointer, name.GetChars());
+            });
+  
+
+  
   mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
                      {
                        mSocketPool.DispatchEvents(1);
@@ -34,6 +42,8 @@ void nuiDebugger::Connect(const nglString& rAddress, int16 port)
   mpClient->Connected.Connect([&]{
     mpMessageClient = new nuiMessageClient(mpClient);
     StateChanged(GetState());
+
+    mpMessageClient->Post(nuiMessage("UpdateWindowList", 1));
   });
 
   mpClient->ReadClosed.Connect([&]{

@@ -10,7 +10,7 @@
 
 #pragma once
 
-class nuiDebugger
+class nuiDebugger : public nuiProtocol
 {
 public:
   enum State

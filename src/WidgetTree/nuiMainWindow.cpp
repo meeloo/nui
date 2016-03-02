@@ -1479,6 +1479,11 @@ void nuiMainWindow::DestroyAllWindows()
   NGL_ASSERT(mpWindows.empty());
 }
 
+const std::vector<nuiMainWindow*>& nuiMainWindow::GetWindows()
+{
+  return mpWindows;
+}
+
 float nuiMainWindow::GetScale() const
 {
   return mpNGLWindow->GetScale();
