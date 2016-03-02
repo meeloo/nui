@@ -54,7 +54,7 @@ bool nuiTCPClient::Connect(const nuiNetworkHost& rHost, nuiSocketPool* pPool, nu
   if (pPool)
   {
     // Async version:
-    nglThreadFunction* pThread = new nglThreadFunction([&](){
+    nglThreadFunction* pThread = new nglThreadFunction([=](){
       struct addrinfo* addr = nuiSocket::GetAddrInfo(rHost);
       int res = connect(mSocket, addr->ai_addr, addr->ai_addrlen);
       
@@ -72,9 +72,9 @@ bool nuiTCPClient::Connect(const nuiNetworkHost& rHost, nuiSocketPool* pPool, nu
       
       mReadConnected = mWriteConnected = res == 0;
 
-      App->GetMainQueue().Post(nuiMakeTask<void>([&](){
-        Connected();
+      App->GetMainQueue().Post(nuiMakeTask<void>([=](){
         pPool->Add(this, triggerMode);
+        Connected();
       }));
     });
     pThread->SetAutoDelete(true);

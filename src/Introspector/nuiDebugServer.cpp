@@ -44,6 +44,7 @@ public:
   : nuiTCPClient(sock), mpServer(pServer)
   {
     mpProtocol = new nuiDebugProtocol(this);
+    NGL_OUT("New debug client connected\n");
   }
   
   void OnCanRead()

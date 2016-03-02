@@ -32,8 +32,8 @@ void nuiDebugger::Connect(const nglString& rAddress, int16 port)
 
   mpClient = new nuiTCPClient();
   mpClient->Connected.Connect([&]{
-    StateChanged(GetState());
     mpMessageClient = new nuiMessageClient(mpClient);
+    StateChanged(GetState());
   });
 
   mpClient->ReadClosed.Connect([&]{
@@ -50,7 +50,6 @@ void nuiDebugger::Disconnect()
 {
   mEventSink.DisconnectAll();
   delete mpMessageClient;
-  delete mpClient;
   mpMessageClient = nullptr;
   mpClient = nullptr;
 }
