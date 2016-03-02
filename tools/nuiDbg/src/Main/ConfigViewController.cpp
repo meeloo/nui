@@ -29,12 +29,28 @@ void ConfigViewController::Built()
   if (mpConnect)
   {
     mEventSink.Connect(mpConnect->Activated, [=](const nuiEvent& rEvent){
-      GetDebugger().Disconnect();
+
       
-      if (GetDebugger().GetState() == nuiDebugger::eDbgState_Connecting)
+      switch (GetDebugger().GetState())
       {
-        return;
+        case nuiDebugger::eDbgState_Offline:
+        {
+        }break;
+
+        case nuiDebugger::eDbgState_Connecting:
+        case nuiDebugger::eDbgState_Connected:
+        {
+          GetDebugger().Disconnect();
+          mpServer->SetEnabled(true);
+          mpPort->SetEnabled(true);
+          mpConnectLabel->SetText("Connect");
+          return;
+        }break;
       }
+
+      mpServer->SetEnabled(true);
+      mpPort->SetEnabled(true);
+      mpConnectLabel->SetText("Stop");
       
       nglString server = mpServer->GetText();
       int16 port = mpPort->GetText().GetInt();
