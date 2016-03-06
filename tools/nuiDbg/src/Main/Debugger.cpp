@@ -74,7 +74,7 @@ void nuiDebugger::Connect(const nglString& rAddress, int16 port)
     mpMessageClient->Post(nuiMessage("UpdateWindowList"));
   });
 
-  pClient->Connect(rAddress, port, &mSocketPool, nuiSocketPool::eContinuous);
+  pClient->Connect(rAddress, port, &mSocketPool, nuiSocketPool::eStateChange);
 }
 
 void nuiDebugger::Disconnect()

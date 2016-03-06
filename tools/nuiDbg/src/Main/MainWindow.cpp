@@ -88,8 +88,6 @@ void MainWindow::OnCreation()
   pLabel->SetPosition(nuiTopRight);
   pLabel->SetObjectName(_T("VersionNumber"));
   pMainCont->AddChild(pLabel);
-
-//  GetDebugger().Connect("127.0.0.1", 31337);
 }
 
 

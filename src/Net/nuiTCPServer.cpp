@@ -95,7 +95,7 @@ void nuiTCPServer::OnCanRead()
   {
     if (mpPool)
     {
-      mpPool->Add(pClient, nuiSocketPool::eContinuous);
+      mpPool->Add(pClient, nuiSocketPool::eStateChange);
     }
   }
 }

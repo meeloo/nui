@@ -26,6 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "nuiTableView.h"
 
+
 class ButtonCellSource : public nuiCellSource
 {
 public:
@@ -238,16 +239,18 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
   //App->GetLog().SetLevel("nuiTexture", NGL_LOG_ALWAYS);
   LoadCSS(_T("rsrc:/css/main.css"));
 
+#if DUMMY_DEBUGGER
   mpClient = new nuiTCPClient();
   if (mpClient->Connect("127.0.0.1", 31337))
   {
-    mSocketPool.Add(mpClient, nuiSocketPool::eContinuous);
+    mSocketPool.Add(mpClient, nuiSocketPool::eStateChange);
     mpMessageClient = new nuiMessageClient(mpClient);
     mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
     {
       mSocketPool.DispatchEvents(1);
     });
   }
+#endif
 
 }
 
@@ -325,6 +328,7 @@ void MainWindow::OnCreation()
         mEventSink.Connect(button->Activated, [=](const nuiEvent& event)
         {
           printf("pouet %p - %p\n", this, button);
+#if DUMMY_DEBUGGER
           switch (i % 3)
           {
             case 0:
@@ -339,6 +343,7 @@ void MainWindow::OnCreation()
               mpMessageClient->Post(nuiMessage("HelloWorld"));
               break;
           }
+#endif
         });
 
         AddChild(button);

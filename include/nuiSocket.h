@@ -120,6 +120,7 @@ public:
   int DispatchEvents(int timeout_millisec);
 private:
   nglCriticalSection mCS;
+  double mLastIdlePurge = 0;
   std::set<nuiSocket*> mDeletedFromPool;
   std::set<nuiSocket*> mSockets;
 

@@ -59,7 +59,17 @@ public:
   {
     mpProtocol->HandleMessages();
   }
-  
+
+  void OnReadClosed()
+  {
+    delete this;
+  }
+
+  void OnWriteClosed()
+  {
+    delete this;
+  }
+
 protected:
   nuiDebugServer* mpServer = nullptr;
   nuiProtocol *mpProtocol = nullptr;

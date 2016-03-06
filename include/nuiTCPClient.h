@@ -38,9 +38,9 @@ public:
   nuiTCPClient();
   virtual ~nuiTCPClient();
 
-  bool Connect(const nuiNetworkHost& rHost, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eContinuous);
-  bool Connect(const nglString& rHost, int16 port, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eContinuous);
-  bool Connect(uint32 ipaddress, int16 port, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eContinuous);
+  bool Connect(const nuiNetworkHost& rHost, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eStateChange);
+  bool Connect(const nglString& rHost, int16 port, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eStateChange);
+  bool Connect(uint32 ipaddress, int16 port, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eStateChange);
 
   size_t Send(const std::vector<uint8>& rData);
   size_t Send(const uint8* pData, size_t len);
