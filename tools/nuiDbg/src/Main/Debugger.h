@@ -31,7 +31,6 @@ public:
 
   nuiSignal1<State> StateChanged;
 private:
-  nuiTCPClient* mpClient = nullptr;
   nuiEventSink<nuiDebugger> mEventSink;
   nuiSocketPool mSocketPool;
   nuiMessageClient *mpMessageClient = nullptr;

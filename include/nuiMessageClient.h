@@ -19,7 +19,8 @@ public:
   void Read(std::function<bool(nuiMessage*)> onNewMessage);
 
   void SetClient(nuiTCPClient* pTCPClient);
-private:
+
+protected:
   bool Post(const nuiMessageData& rData);
   nuiTCPClient *mpTCPClient;
   nuiMessageParser mParser;

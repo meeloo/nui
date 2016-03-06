@@ -33,6 +33,8 @@ void nuiMessageClient::Read(std::function<bool(nuiMessage*)> onNewMessage)
 
 void nuiMessageClient::SetClient(nuiTCPClient* pTCPClient)
 {
+  if (mpTCPClient == pTCPClient)
+    return;
   mpTCPClient = pTCPClient;
 }
 

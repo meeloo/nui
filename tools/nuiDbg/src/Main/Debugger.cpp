@@ -47,42 +47,51 @@ nuiDebugger::~nuiDebugger()
 
 void nuiDebugger::Connect(const nglString& rAddress, int16 port)
 {
-  Disconnect();
+  if (GetState() != eDbgState_Offline)
+    Disconnect();
 
-  mpClient = new nuiTCPClient();
-  mpClient->Connected.Connect([&]{
-    mpMessageClient = new nuiMessageClient(mpClient);
+  nuiTCPClient* pClient = new nuiTCPClient();
+  SetClient(pClient);
+  pClient->Connected.Connect([=]{
+    mpMessageClient = new nuiMessageClient(pClient);
     StateChanged(GetState());
 
+    pClient->CanRead.Connect([&]{
+      HandleMessages([&](nuiMessage&, nuiProtocolFunctionBase*){
+        NGL_OUT("Error\n");
+        return false;
+      });
+    });
+
+    pClient->ReadClosed.Connect([&]{
+      Disconnect();
+    });
+    
+    pClient->ConnectError.Connect([&]{
+      Disconnect();
+    });
+    
     mpMessageClient->Post(nuiMessage("UpdateWindowList"));
   });
 
-  mpClient->ReadClosed.Connect([&]{
-    Disconnect();
-  });
-
-  mpClient->ConnectError.Connect([&]{
-    Disconnect();
-  });
-  
-  mpClient->Connect(rAddress, port, &mSocketPool, nuiSocketPool::eContinuous);
+  pClient->Connect(rAddress, port, &mSocketPool, nuiSocketPool::eContinuous);
 }
 
 void nuiDebugger::Disconnect()
 {
   delete mpMessageClient;
   mpMessageClient = nullptr;
-  mpClient = nullptr;
+  SetClient(nullptr);
   StateChanged(GetState());
 }
 
 
 nuiDebugger::State nuiDebugger::GetState() const
 {
-  if (!mpClient)
+  if (!mpTCPClient)
     return eDbgState_Offline;
 
-  if (mpClient->IsConnected())
+  if (mpTCPClient->IsConnected())
     return eDbgState_Connected;
 
   return eDbgState_Connecting;
