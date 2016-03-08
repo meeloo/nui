@@ -10,6 +10,8 @@
 
 #pragma once
 
+
+
 class nuiDebugger : public nuiProtocol
 {
 public:
@@ -27,6 +29,9 @@ public:
   void Connect(const nglString& rAddress, int16 port); // "127.0.0.1", 31337
   void Disconnect();
 
+  void UpdateWindowList();
+  void UpdateLayerList(uint64 window);
+
   State GetState() const;
 
   nuiSignal1<State> StateChanged;
@@ -34,4 +39,6 @@ private:
   nuiEventSink<nuiDebugger> mEventSink;
   nuiSocketPool mSocketPool;
   nuiMessageClient *mpMessageClient = nullptr;
+
+
 };

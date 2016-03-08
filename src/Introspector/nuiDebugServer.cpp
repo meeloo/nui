@@ -29,18 +29,43 @@ public:
       NGL_OUT("Window list sent\n");
     });
 
-    std::function<void(int32)> fn =
-    [=](int32 i)
-    {
-      printf("Hello world2 %d!\n", i);
-    };
-    AddMethod("HelloWorld2", fn);
-
-  
-    AddMethod("HelloWorld3", nui_make_function([](int32 i, float j, double k, nglString s)
+    AddMethod("UpdateLayerList",
+              nui_make_function([=](uint64 window)
               {
-                printf("Hello world3 %d %f %f %s!\n", i, j, k, s.GetChars());
+                nuiMainWindow* pWindow = (nuiMainWindow*)window;
+                NGL_OUT("Send layer list for window %p\n", pWindow);
+                auto windows = nuiMainWindow::GetWindows();
+
+                auto it = std::find(windows.begin(), windows.end(), pWindow);
+                if (it == windows.end())
+                  return;
+
+                auto renderthread = pWindow->GetRenderThread();
+                auto layers = renderthread->GetStats();
+
+                Post(nuiMessage("StartLayerList", window, (int32)windows.size()));
+
+                for (auto layerstat : layers)
+                {
+                  Post(nuiMessage("NewLayer", window, (uint64)layerstat.first, layerstat.second.mName, layerstat.second.mTime, layerstat.second.mCount));
+                }
+                Post(nuiMessage("LayerListDone", window));
+                NGL_OUT("Layer list sent\n");
               }));
+    
+
+//    std::function<void(int32)> fn =
+//    [=](int32 i)
+//    {
+//      printf("Hello world2 %d!\n", i);
+//    };
+//    AddMethod("HelloWorld2", fn);
+//
+//  
+//    AddMethod("HelloWorld3", nui_make_function([](int32 i, float j, double k, nglString s)
+//              {
+//                printf("Hello world3 %d %f %f %s!\n", i, j, k, s.GetChars());
+//              }));
   }
   
 };

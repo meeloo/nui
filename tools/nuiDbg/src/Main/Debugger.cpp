@@ -15,6 +15,7 @@
 nuiDebugger::nuiDebugger()
 : nuiProtocol(nullptr), mEventSink(this)
 {
+  // Windows:
   AddMethod("NewWindow", nui_make_function(
             [=](uint64 pointer, nglString name)
             {
@@ -27,13 +28,37 @@ nuiDebugger::nuiDebugger()
     NGL_OUT("Remote: Start window list (%d windows)\n", count);
   }));
 
-  
   AddMethod("WindowListDone", nui_make_function(
             [=]()
   {
     NGL_OUT("Remote: Window list done\n");
   }));
+
+
+
+  // Layers:
+  AddMethod("NewLayer", nui_make_function(
+                                           [=](uint64 window, uint64 pointer, nglString name, double time, uint32 count)
+                                           {
+                                             NGL_OUT("Remote: New Layer: 0x%x / %s (%f / %d) (window = %p)\n", pointer, name.GetChars(), time, count, window);
+                                           }));
+
+  AddMethod("StartLayerList", nui_make_function(
+                                                 [=](uint64 window, int32 count)
+                                                 {
+                                                   NGL_OUT("Remote: Start layer list (%d layers) for window: %p\n", count, window);
+                                                 }));
   
+  
+  AddMethod("WindowLayerDone", nui_make_function(
+                                                [=](uint64 window)
+                                                {
+                                                  NGL_OUT("Remote: Layer list done (window = %p)\n", window);
+                                                }));
+  
+
+
+  //////////////////////////////////////////////////////////////////////
   mEventSink.Connect(nuiAnimation::GetTimer()->Tick, [=](const nuiEvent& rEvent)
                      {
                        mSocketPool.DispatchEvents(1);
@@ -71,7 +96,7 @@ void nuiDebugger::Connect(const nglString& rAddress, int16 port)
       Disconnect();
     });
     
-    mpMessageClient->Post(nuiMessage("UpdateWindowList"));
+    UpdateWindowList();
   });
 
   pClient->Connect(rAddress, port, &mSocketPool, nuiSocketPool::eStateChange);
@@ -95,4 +120,14 @@ nuiDebugger::State nuiDebugger::GetState() const
     return eDbgState_Connected;
 
   return eDbgState_Connecting;
+}
+
+void nuiDebugger::UpdateWindowList()
+{
+  mpMessageClient->Post(nuiMessage("UpdateWindowList"));
+}
+
+void nuiDebugger::UpdateLayerList(uint64 window)
+{
+  mpMessageClient->Post(nuiMessage("UpdateLayerList", window));
 }
