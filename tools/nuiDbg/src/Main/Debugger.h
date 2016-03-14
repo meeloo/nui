@@ -10,6 +10,43 @@
 
 #pragma once
 
+typedef uint64 nuiDbgID;
+
+class nuiDbgObject : public nuiObject
+{
+public:
+  nuiDbgObject(nuiDbgID ID, const nglString& rName = nglString::Null)
+  : nuiObject(rName), mID(ID)
+  {
+      AddAttribute(nuiMakeAttribute(this, mID, "ID"));
+  }
+
+
+  NUI_GETSET(nuiDbgID, ID);
+private:
+  nuiDbgID mID = 0;
+};
+
+
+class nuiDbgLayer : public nuiDbgObject
+{
+public:
+  nuiDbgLayer(nuiDbgID ID, const nglString& rName)
+  : nuiDbgObject(ID, rName)
+  {
+
+  }
+};
+
+class nuiDbgWindow : public nuiDbgObject
+{
+public:
+  nuiDbgWindow(nuiDbgID ID, const nglString& rName)
+  : nuiDbgObject(ID, rName)
+  {
+
+  }
+};
 
 
 class nuiDebugger : public nuiProtocol
@@ -39,6 +76,7 @@ private:
   nuiEventSink<nuiDebugger> mEventSink;
   nuiSocketPool mSocketPool;
   nuiMessageClient *mpMessageClient = nullptr;
+
 
 
 };

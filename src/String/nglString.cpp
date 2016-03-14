@@ -149,7 +149,7 @@ static void ngl_ftoa(double x, nglString& _String, int32 precision, nglFloatForm
 }
 
 
-static int ngl_getdigit(nglChar c)
+static int8 ngl_getdigit(nglChar c)
 {
   if (c >= '0' && c <= '9')
     return c - '0';
@@ -204,7 +204,7 @@ static double ngl_atof(const nglChar* str)
       c = ngl_getdigit(*pStr);
     }
 
-    if (count)
+    if (count != 0)
     {
       value += v / count;
     }
@@ -314,7 +314,7 @@ bool nglIsSpace (nglUChar a)
 }
 
 
-static inline nglChar nat_toupper(nglUChar a)
+static inline nglUChar nat_toupper(nglUChar a)
 {
   return towupper(a);
 }
@@ -1387,7 +1387,7 @@ nglString& nglString::ToUpper()
 {
   int32 len = GetLength();
   for (int32 i = 0; i < len; i++)
-    mString[i] = towupper(mString[i]);
+    mString[i] = (nglChar)towupper(mString[i]);
   return *this;
 }
 
@@ -1397,7 +1397,7 @@ nglString& nglString::ToUpper(int32 Index, int32 Length)
   if (Index + Length <= len)
     len = Length;
   for (int32 i = Index; i < len; i++)
-    mString[i] = towupper(mString[i]);
+    mString[i] = (nglChar)towupper(mString[i]);
   return *this;
 }
 
@@ -1405,7 +1405,7 @@ nglString& nglString::ToLower()
 {
   int32 len = GetLength();
   for (int32 i = 0; i < len; i++)
-    mString[i] = towlower(mString[i]);
+    mString[i] = (nglChar)towlower(mString[i]);
   return *this;
 }
 
@@ -1415,7 +1415,7 @@ nglString& nglString::ToLower(int32 Index, int32 Length)
   if (Index + Length <= len)
     len = Length;
   for (int32 i = Index; i < len; i++)
-    mString[i] = towlower(mString[i]);
+    mString[i] = (nglChar)towlower(mString[i]);
   return *this;
 }
 
@@ -1474,7 +1474,7 @@ char* nglString::EncodeUrl()
     }
   }
   free(pExportChars);
-  pResultChars[j] = NULL;
+  pResultChars[j] = 0;
   return pResultChars;
 }
 
@@ -1532,7 +1532,7 @@ void nglString::DecodeUrl()
       if (-1 != (int)(dec1 = Hex2Dec(*(pSrc + 1)))
           && -1 != (int)(dec2 = Hex2Dec(*(pSrc + 2))))
       {
-        *pEnd++ = (dec1 << 4) + dec2;
+        *pEnd++ = (nglChar)((dec1 << 4) + dec2);
         pSrc += 3;
         continue;
       }
@@ -1573,9 +1573,9 @@ void nglString::DecodeFromXML()
 void nglString::Unescape()
 {
   nglString res;
-  char* pExport = Export();
-  char* pRead = pExport;
-  char* pWrite = pExport;
+  nglChar* pExport = Export();
+  nglChar* pRead = pExport;
+  nglChar* pWrite = pExport;
 
   while (*pRead)
   {
@@ -1584,7 +1584,7 @@ void nglString::Unescape()
       pRead++;
 
       nglString number;
-      char c = *pRead++;
+      nglChar c = *pRead++;
       while (c >= '0' && c <= '9')
       {
         number += c;
@@ -1592,7 +1592,7 @@ void nglString::Unescape()
         c = *pRead;
       }
 
-      char unescaped = number.GetCInt();
+      nglChar unescaped = (nglChar)number.GetCInt();
       *pWrite++ += unescaped;
     }
     else
@@ -2109,8 +2109,8 @@ int32 nglString::CompareLeft(const nglChar* pSource, bool CaseSensitive) const
   int t = 0;
   do
   {
-    const nglChar c = towlower(mString[pos]);
-    const nglChar cc = towlower(pSource[pos]);
+    const nglUChar c = towlower(mString[pos]);
+    const nglUChar cc = towlower(pSource[pos]);
     if (!cc)
       return 0;
     t = cc - c;
@@ -2144,8 +2144,8 @@ int32 nglString::Find(nglChar Ch, int32 Index, int32 End,  bool CaseSensitive) c
   }
   else
   {
-    nglChar up = towupper(Ch);
-    nglChar lo = towlower(Ch);
+    nglUChar up = towupper(Ch);
+    nglUChar lo = towlower(Ch);
 
     while ((i < end) && (mString[i] != up) && (mString[i] != lo))
       i++;
@@ -2169,8 +2169,8 @@ int32 nglString::Find(nglChar Ch, int32 Index, bool CaseSensitive) const
   }
   else
   {
-    nglChar up = towupper(Ch);
-    nglChar lo = towlower(Ch);
+    nglUChar up = towupper(Ch);
+    nglUChar lo = towlower(Ch);
 
     while ((i < len) && (mString[i] != up) && (mString[i] != lo))
       i++;
@@ -2208,8 +2208,8 @@ int32 nglString::FindLast(nglChar Ch, int32 Index, bool CaseSensitive) const
   }
   else
   {
-    nglChar up = towupper(Ch);
-    nglChar lo = towlower(Ch);
+    nglUChar up = towupper(Ch);
+    nglUChar lo = towlower(Ch);
 
     while ((Index >= 0) && (mString[Index] != up) && (mString[Index] != lo))
       Index--;
@@ -2296,8 +2296,8 @@ int32 nglString::Contains(nglChar Ch, int32 Index, int32 End, bool CaseSensitive
   }
   else
   {
-    nglChar up = towupper(Ch);
-    nglChar lo = towlower(Ch);
+    nglUChar up = towupper(Ch);
+    nglUChar lo = towlower(Ch);
     int32 i;
 
     for (i = Index; i < end; i++)
@@ -2321,8 +2321,8 @@ int32 nglString::Contains(nglChar Ch, bool CaseSensitive) const
   }
   else
   {
-    nglChar up = towupper(Ch);
-    nglChar lo = towlower(Ch);
+    nglUChar up = towupper(Ch);
+    nglUChar lo = towlower(Ch);
     int32 i;
 
     for (i = 0; i < len; i++)
@@ -2439,7 +2439,7 @@ int32 nglString::Tokenize(std::vector<nglString>& rTokens, const nglString& rSep
 // Assignment
 const nglString& nglString::operator=(const nglUChar Ch)
 {
-  Copy(Ch);
+  Copy((nglChar)Ch);
   return *this;
 }
 
