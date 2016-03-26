@@ -20,12 +20,14 @@ nuiDebugger::nuiDebugger()
             [=](uint64 pointer, nglString name)
             {
               NGL_OUT("Remote: New Window: 0x%x / %s\n", pointer, name.GetChars());
+              AddWindow(new nuiDbgWindow(pointer, name));
             }));
   
   AddMethod("StartWindowList", nui_make_function(
             [=](int32 count)
   {
     NGL_OUT("Remote: Start window list (%d windows)\n", count);
+    ClearWindows();
   }));
 
   AddMethod("WindowListDone", nui_make_function(
@@ -41,12 +43,24 @@ nuiDebugger::nuiDebugger()
                                            [=](uint64 window, uint64 pointer, nglString name, double time, uint32 count)
                                            {
                                              NGL_OUT("Remote: New Layer: 0x%x / %s (%f / %d) (window = %p)\n", pointer, name.GetChars(), time, count, window);
+                                             auto windowit = mWindows.find(window);
+                                             if (windowit != mWindows.end())
+                                             {
+                                               nuiDbgWindow* pWindow = windowit->second;
+                                               pWindow->AddLayer(new nuiDbgLayer(pointer, name));
+                                             }
                                            }));
 
   AddMethod("StartLayerList", nui_make_function(
                                                  [=](uint64 window, int32 count)
                                                  {
                                                    NGL_OUT("Remote: Start layer list (%d layers) for window: %p\n", count, window);
+                                                   auto windowit = mWindows.find(window);
+                                                   if (windowit != mWindows.end())
+                                                   {
+                                                     nuiDbgWindow* pWindow = windowit->second;
+                                                     pWindow->ClearLayers();
+                                                   }
                                                  }));
   
   
@@ -131,3 +145,5 @@ void nuiDebugger::UpdateLayerList(uint64 window)
 {
   mpMessageClient->Post(nuiMessage("UpdateLayerList", window));
 }
+
+

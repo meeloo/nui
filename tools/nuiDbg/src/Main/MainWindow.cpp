@@ -67,16 +67,26 @@ void MainWindow::OnCreation()
 
   pTabView->SetChangeOnDrag(true);
 
-  nuiLabel* pLabel = new nuiLabel(nuiTR("Debugger"));
-  pLabel->SetObjectName("TabView::Title");
-  //    ProjectGenerator* pGenerator = new ProjectGenerator();
-  nuiWidget* pDebugger = nuiBuilder::Build("ConfigView");
+  {
+    nuiLabel* pLabel = new nuiLabel(nuiTR("Debugger"));
+    pLabel->SetObjectName("TabView::Title");
+    //    ProjectGenerator* pGenerator = new ProjectGenerator();
+    nuiWidget* pDebugger = nuiBuilder::Build("ConfigView");
 
-  pTabView->AddTab(pLabel, pDebugger);
+    pTabView->AddTab(pLabel, pDebugger);
+  }
+
+  {
+    nuiLabel* pLabel = new nuiLabel(nuiTR("Widgets tree"));
+    pLabel->SetObjectName("TabView::Title");
+    nuiWidget* pWidgetTree = nuiBuilder::Build("WidgetTree");
+
+    pTabView->AddTab(pLabel, pWidgetTree);
+  }
 
   if (GetApp()->IsFullVersion())
   {
-    pLabel = new nuiLabel(nuiTR("Element Editor"));
+    nuiLabel* pLabel = new nuiLabel(nuiTR("Element Editor"));
     pLabel->SetObjectName("TabView::Title");
     //        pTabView->AddTab(pLabel, new ElementEditorGui());
   }
@@ -86,10 +96,12 @@ void MainWindow::OnCreation()
   // nui version number
   nglString version;
   version.Format("nui %d.%d r%d %ls", NUI_VERSION_MAJOR, NUI_VERSION_MINOR, NUI_VERSION_RELEASE, NUI_VERSION_BETA.GetChars());
-  pLabel = new nuiLabel(version);
-  pLabel->SetPosition(nuiTopRight);
-  pLabel->SetObjectName("VersionNumber");
-  pMainCont->AddChild(pLabel);
+  {
+    nuiLabel* pLabel = new nuiLabel(version);
+    pLabel->SetPosition(nuiTopRight);
+    pLabel->SetObjectName("VersionNumber");
+    pMainCont->AddChild(pLabel);
+  }
 }
 
 

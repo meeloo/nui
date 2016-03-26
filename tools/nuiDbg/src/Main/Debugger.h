@@ -12,6 +12,8 @@
 
 typedef uint64 nuiDbgID;
 
+class nuiDebugger;
+
 class nuiDbgObject : public nuiObject
 {
 public:
@@ -36,6 +38,9 @@ public:
   {
 
   }
+
+private:
+  friend nuiDebugger;
 };
 
 class nuiDbgWindow : public nuiDbgObject
@@ -46,6 +51,45 @@ public:
   {
 
   }
+
+  std::vector<nuiRef<nuiDbgLayer> > GetLayers() const
+  {
+    std::vector<nuiRef<nuiDbgLayer> > layers;
+    layers.reserve(mLayers.size());
+    for (auto layer : mLayers)
+    {
+      layers.push_back(layer.second);
+    }
+
+    return layers;
+  }
+
+  nuiSignal0<> LayerListChanged;
+private:
+  friend nuiDebugger;
+  std::map<nuiDbgID, nuiRef<nuiDbgLayer> > mLayers;
+
+  void AddLayer(nuiDbgLayer* pLayer)
+  {
+    mLayers[pLayer->GetID()] = pLayer;
+    LayerListChanged();
+  }
+
+  void DelLayer(nuiDbgLayer* pLayer)
+  {
+    auto it = mLayers.find(pLayer->GetID());
+    if (it != mLayers.end())
+      mLayers.erase(it);
+    LayerListChanged();
+  }
+
+  void ClearLayers()
+  {
+    mLayers.clear();
+    LayerListChanged();
+  }
+
+
 };
 
 
@@ -71,12 +115,49 @@ public:
 
   State GetState() const;
 
+  std::vector<nuiRef<nuiDbgWindow> > GetWindows() const
+  {
+    std::vector<nuiRef<nuiDbgWindow> > Windows;
+    Windows.reserve(mWindows.size());
+    for (auto Window : mWindows)
+    {
+      Windows.push_back(Window.second);
+    }
+
+    return Windows;
+  }
+
   nuiSignal1<State> StateChanged;
+  nuiSignal0<> WindowListChanged;
+
+
 private:
   nuiEventSink<nuiDebugger> mEventSink;
   nuiSocketPool mSocketPool;
   nuiMessageClient *mpMessageClient = nullptr;
 
+  std::map<nuiDbgID, nuiRef<nuiDbgWindow> > mWindows;
 
+  void AddWindow(nuiDbgWindow* pWindow)
+  {
+    mWindows[pWindow->GetID()] = pWindow;
+    WindowListChanged();
+  }
+
+  void DelWindow(nuiDbgWindow* pWindow)
+  {
+    auto it = mWindows.find(pWindow->GetID());
+    if (it != mWindows.end())
+    {
+      mWindows.erase(it);
+      WindowListChanged();
+    }
+  }
+
+  void ClearWindows()
+  {
+    mWindows.clear();
+    WindowListChanged();
+  }
 
 };

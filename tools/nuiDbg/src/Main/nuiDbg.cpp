@@ -19,6 +19,7 @@
 
 // Custom Widgets:
 #include "Main/ConfigViewController.h"
+#include "Main/WidgetTreeController.h"
 // End of Custom Widgets:
 
 
@@ -215,6 +216,7 @@ nuiDebugger& nuiApp::GetDebugger() const
 void nuiApp::RegisterCustomWidgets()
 {
   NUI_ADD_WIDGET_CREATOR(ConfigViewController);
+  NUI_ADD_WIDGET_CREATOR(WidgetTreeController);
 }
 
 
