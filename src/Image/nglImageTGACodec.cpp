@@ -131,7 +131,7 @@ bool nglImageTGACodec::ReadHeader(nglIStream* pIStream,bool Peek)
 
     SendInfo(info);
   }
-//  NGL_OUT(_T("ReadHeader: %d x %d\n"), mHeader.Width, mHeader.Height);
+//  NGL_OUT("ReadHeader: %d x %d\n", mHeader.Width, mHeader.Height);
   return true;
 }
 

@@ -9,7 +9,7 @@
 
 nuiAttributeEditor::nuiAttributeEditor()
 {
-  SetObjectClass(_T("nuiAttributeEditor"));
+  SetObjectClass("nuiAttributeEditor");
 }
 
 nuiAttributeEditor::~nuiAttributeEditor()

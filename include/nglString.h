@@ -39,10 +39,10 @@ enum nglTextFormat
 /* Handy macros
 */
 #ifndef YESNO
-#define PLURAL(x)    (((x) > 1) ? _T("s") : _T(""))
-#define YESNO(x)     ((x) ? _T("yes") : _T("no"))
-#define TRUEFALSE(x) ((x) ? _T("true") : _T("false"))
-#define ONOFF(x)     ((x) ? _T("on") : _T("off"))
+#define PLURAL(x)    (((x) > 1) ? "s" : _T(""))
+#define YESNO(x)     ((x) ? "yes" : "no")
+#define TRUEFALSE(x) ((x) ? "true" : "false")
+#define ONOFF(x)     ((x) ? "on" : "off")
 
 #endif
 
@@ -440,7 +440,7 @@ public:
 	POSIX or ISOC99 format tags if you want to keep your program portable.
 
 	<b>Important</b> : the %%s tag refers to a Unicode string on \e all platforms
-	(ie. _T("hello") or mystring.GetChars()).
+	(ie. "hello" or mystring.GetChars()).
 	*/
 	nglString& Formatv(const nglString& rFormat, va_list Args);
 	nglString& Formatv(const nglChar* pFormat, va_list Args);

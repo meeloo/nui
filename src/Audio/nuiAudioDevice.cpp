@@ -12,9 +12,9 @@
 // Audio Device:
 nuiAudioDevice::nuiAudioDevice()
 {
-  mAPIName = _T("Unknown");
-  mName = _T("Unknown");
-  mManufacturer = _T("Unknown");
+  mAPIName = "Unknown";
+  mName = "Unknown";
+  mManufacturer = "Unknown";
 }
 
 nuiAudioDevice::~nuiAudioDevice()
@@ -207,13 +207,13 @@ nuiAudioDeviceManager::nuiAudioDeviceManager()
 
 void nuiAudioDeviceManager::RegisterAPI(const nglString& rAPIName, nuiAudioDeviceAPI* pAPI)
 {
-  NGL_LOG(_T("nuiAudioDeviceManager"), NGL_LOG_DEBUG, _T("RegisterAPI('%s') [0x%x]\n"), rAPIName.GetChars(), pAPI);
+  NGL_LOG("nuiAudioDeviceManager", NGL_LOG_DEBUG, "RegisterAPI('%s') [0x%x]\n", rAPIName.GetChars(), pAPI);
   nuiAudioAPIMap::const_iterator end = mAPIs.end();
   nuiAudioAPIMap::const_iterator it = mAPIs.find(rAPIName);
   if (it != end)
   {
     nuiAudioDeviceAPI* pOldAPI = it->second;
-    NGL_LOG(_T("nuiAudioDeviceManager"), NGL_LOG_DEBUG, _T("\tkilling previous entry for this API [0x%p]\n"), pOldAPI);
+    NGL_LOG("nuiAudioDeviceManager", NGL_LOG_DEBUG, "\tkilling previous entry for this API [0x%p]\n", pOldAPI);
     delete pOldAPI;
   }
   mAPIs[rAPIName] = pAPI;

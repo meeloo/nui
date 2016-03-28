@@ -21,7 +21,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 {
   SetDebugMode(true);
   
-  LoadCSS(_T("rsrc:/css/main.css"));
+  LoadCSS("rsrc:/css/main.css");
 }
 
 MainWindow::~MainWindow()
@@ -37,7 +37,7 @@ void MainWindow::OnCreation()
   
   // image in the first box's cell
   nuiImage* pImg = new nuiImage();
-  pImg->SetObjectName(_T("MyImage"));
+  pImg->SetObjectName("MyImage");
   pImg->SetPosition(nuiCenter);
   pLayoutBox->AddCell(pImg);
   pLayoutBox->SetCellExpand(pLayoutBox->GetNbCells()-1, nuiExpandShrinkAndGrow);
@@ -52,14 +52,14 @@ void MainWindow::OnCreation()
   mEventSink.Connect(pButton->Activated, &MainWindow::OnButtonClick);
   
   // label with border in the button (put the label string in the button's constructor if you don't need borders)
-  nuiLabel* pButtonLabel = new nuiLabel(_T("click!"));
+  nuiLabel* pButtonLabel = new nuiLabel("click!");
   pButtonLabel->SetPosition(nuiCenter);
   pButtonLabel->SetBorder(8,8);
   pButton->AddChild(pButtonLabel);
 
   // label with decoration in the third cell
-  mMyLabel = new nuiLabel(_T("my label"));
-  mMyLabel->SetObjectName(_T("MyLabel"));
+  mMyLabel = new nuiLabel("my label");
+  mMyLabel->SetObjectName("MyLabel");
   mMyLabel->SetPosition(nuiCenter);
   pLayoutBox->AddCell(mMyLabel);
   pLayoutBox->SetCellExpand(pLayoutBox->GetNbCells()-1, nuiExpandShrinkAndGrow);
@@ -71,7 +71,7 @@ void MainWindow::OnButtonClick(const nuiEvent& rEvent)
 {
   nglString message;
   double currentTime = nglTime();
-  message.Format(_T("click time: %.2f"), currentTime);
+  message.Format("click time: %.2f", currentTime);
   mMyLabel->SetText(message);
   
   // the event is caught and not broadcast
@@ -94,7 +94,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%ls'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
   
@@ -108,7 +108,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     return true;
   }
   
-  NGL_OUT(_T("%ls\n"), pCSS->GetErrorString().GetChars());
+  NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
   
   delete pCSS;
   return false;

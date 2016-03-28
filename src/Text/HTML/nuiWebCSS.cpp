@@ -176,8 +176,8 @@ static css_error ResolveUrl(void *pw, const char *base, lwc_string *rel, lwc_str
   std::string s(url.GetStdString());
   lwc_intern_string(s.c_str(), s.size(), abs);
   
-  //NGL_OUT(_T("CSS Resolve URL:\n\tbase '%s'\n"), b.GetChars());
-  //NGL_OUT(_T("\t-> '%s'\n"), url.GetChars());
+  //NGL_OUT("CSS Resolve URL:\n\tbase '%s'\n", b.GetChars());
+  //NGL_OUT("\t-> '%s'\n", url.GetChars());
   
   return CSS_OK;
 }
@@ -189,7 +189,7 @@ bool nuiCSSStyleSheet::IsValid() const
 
 nuiCSSStyleSheet::nuiCSSStyleSheet(const nglString& rURL, const nglString& rText, bool Inline, const nuiStyleSheetDoneDelegate& rDelegate)
 {
-  NGL_OUT(_T("Create StyleSheet from text%s\n"), Inline ? _T(" (inline)") : _T(""));
+  NGL_OUT("Create StyleSheet from text%s\n", Inline ? " (inline)" : _T(""));
   mpSheet = NULL;
   mURL = rURL;
   mInline = Inline;
@@ -197,14 +197,14 @@ nuiCSSStyleSheet::nuiCSSStyleSheet(const nglString& rURL, const nglString& rText
   mpStream = new nglIMemory(pText, strlen(pText));
   if (rDelegate)
     mSlotSink.Connect(Done, rDelegate);
-  Init(*mpStream, _T("UTF-8"));
+  Init(*mpStream, "UTF-8");
   delete mpStream;
   mpStream = NULL;
 }
 
 nuiCSSStyleSheet::nuiCSSStyleSheet(const nglString& rURL, nglIStream& rStream, bool Inline, const nglString& rCharset, const nuiStyleSheetDoneDelegate& rDelegate)
 {
-  NGL_OUT(_T("Create StyleSheet from stream (base '%s')%s\n"), rURL.GetChars(), Inline ? _T(" (inline)") : _T(""));
+  NGL_OUT("Create StyleSheet from stream (base '%s')%s\n", rURL.GetChars(), Inline ? " (inline)" : _T(""));
   mpSheet = NULL;
   mURL = rURL;
   mInline = Inline;
@@ -216,7 +216,7 @@ nuiCSSStyleSheet::nuiCSSStyleSheet(const nglString& rURL, nglIStream& rStream, b
 
 nuiCSSStyleSheet::nuiCSSStyleSheet(const nglString& rURL, const nuiStyleSheetDoneDelegate& rDelegate)
 {
-  NGL_OUT(_T("Create StyleSheet from URL '%s'\n"), rURL.GetChars());
+  NGL_OUT("Create StyleSheet from URL '%s'\n", rURL.GetChars());
   mpSheet = NULL;
   mURL = rURL;
   mInline = false;
@@ -228,20 +228,20 @@ nuiCSSStyleSheet::nuiCSSStyleSheet(const nglString& rURL, const nuiStyleSheetDon
 
 void nuiCSSStyleSheet::StreamDone(nuiAsyncIStream* pStream)
 {
-  //  App->GetLog().SetLevel(_T("StopWatch"), 50);
-  //  nuiStopWatch watch(_T("nuiHTMLView::StreamDone"));
+  //  App->GetLog().SetLevel("StopWatch", 50);
+  //  nuiStopWatch watch("nuiHTMLView::StreamDone");
   mpStream = NULL;
   mpSheet = NULL;
-  nglString enc = _T("utf-8");
+  nglString enc = "utf-8";
   const nuiHTTPResponse* pResponse = pStream->GetHTTPResponse();
   
   nglTextEncoding encoding = eEncodingUnknown;
   
   if (pResponse)
   {
-    //NGL_OUT(_T("\n\nHTTP Headers:\n%s\n\n"), pResponse->GetHeadersRep().GetChars());
+    //NGL_OUT("\n\nHTTP Headers:\n%s\n\n", pResponse->GetHeadersRep().GetChars());
     const nuiHTTPHeaderMap& rHeaders(pResponse->GetHeaders());
-    nuiHTTPHeaderMap::const_iterator it = rHeaders.find(_T("location"));
+    nuiHTTPHeaderMap::const_iterator it = rHeaders.find("location");
     if (it != rHeaders.end())
     {
       nglString newurl = it->second;
@@ -254,25 +254,25 @@ void nuiCSSStyleSheet::StreamDone(nuiAsyncIStream* pStream)
       {
         mURL = newurl;
       }
-      NGL_OUT(_T("\n\nNew CSS location: %s\n\n"), mURL.GetChars());
+      NGL_OUT("\n\nNew CSS location: %s\n\n", mURL.GetChars());
       
       mpStream = new nuiAsyncIStream(mURL, true, nuiMakeDelegate(this, &nuiCSSStyleSheet::StreamDone));
       return;
     }
     
-    it = rHeaders.find(_T("content-type"));
+    it = rHeaders.find("content-type");
     
     if (it != rHeaders.end())
     {  
       nglString contents(it->second);
       contents.ToUpper();
-      int32 pos = contents.Find(_T("CHARSET="));
+      int32 pos = contents.Find("CHARSET=");
       if (pos >= 0)
       {
         enc = contents.Extract(pos + 8);
         enc.Trim();
         encoding = nuiGetTextEncodingFromString(enc);
-        //NGL_OUT(_T("\n\nHTTP Encoding: %s - %d\n\n"), enc.GetChars(), encoding);
+        //NGL_OUT("\n\nHTTP Encoding: %s - %d\n\n", enc.GetChars(), encoding);
         
       }
     }
@@ -285,7 +285,7 @@ void nuiCSSStyleSheet::StreamDone(nuiAsyncIStream* pStream)
 
 void nuiCSSStyleSheet::Init(nglIStream& rStream, const nglString& charset)
 {
-  //NGL_OUT(_T("Init CSS '%s'\n"), mURL.GetChars());
+  //NGL_OUT("Init CSS '%s'\n", mURL.GetChars());
   mpSheet = NULL;
   
   size_t len, origlen;
@@ -341,7 +341,7 @@ void nuiCSSStyleSheet::Init(nglIStream& rStream, const nglString& charset)
     if (error == CSS_OK)
     {
       nglString urlstr (lwc_string_data(url), lwc_string_length(url));
-      NGL_OUT(_T("CSS Import Request '%s'\n"), urlstr.GetChars());
+      NGL_OUT("CSS Import Request '%s'\n", urlstr.GetChars());
       nuiCSSStyleSheet* pImport = new nuiCSSStyleSheet(urlstr, nuiMakeDelegate(this, &nuiCSSStyleSheet::ImportDone));
       mpImports.push_back(pImport);
       
@@ -359,7 +359,7 @@ void nuiCSSStyleSheet::ImportDone(nuiCSSStyleSheet* pImport)
   if (pImport->IsValid())
   {
     css_stylesheet_register_import(mpSheet, pImport->mpSheet);
-    NGL_OUT(_T("CSS Import done '%s'\n"), mURL.GetChars());
+    NGL_OUT("CSS Import done '%s'\n", mURL.GetChars());
 
     lwc_string *url;
     uint64_t media;
@@ -370,7 +370,7 @@ void nuiCSSStyleSheet::ImportDone(nuiCSSStyleSheet* pImport)
     if (error == CSS_OK)
     {
       nglString urlstr (lwc_string_data(url), lwc_string_length(url));
-      NGL_OUT(_T("CSS Import Request '%s'\n"), urlstr.GetChars());
+      NGL_OUT("CSS Import Request '%s'\n", urlstr.GetChars());
       nuiCSSStyleSheet* pImport = new nuiCSSStyleSheet(urlstr, nuiMakeDelegate(this, &nuiCSSStyleSheet::ImportDone));
       mpImports.push_back(pImport);
       
@@ -384,7 +384,7 @@ void nuiCSSStyleSheet::ImportDone(nuiCSSStyleSheet* pImport)
   }
   else
   {
-    NGL_OUT(_T("CSS Import failed '%s'\n"), mURL.GetChars());
+    NGL_OUT("CSS Import failed '%s'\n", mURL.GetChars());
   }
   
 }
@@ -472,12 +472,12 @@ void nuiCSSEngine::Test()
   "}";
   
   nglIMemory mem(css, strlen(css));
-  nuiCSSStyleSheet* pSheet = CreateStyleSheet(_T("http://prout.com/bleh.css"), mem, false);
+  nuiCSSStyleSheet* pSheet = CreateStyleSheet("http://prout.com/bleh.css", mem, false);
   delete pSheet;
 #endif
   
-  nuiCSSStyleSheet* pSheet = CreateStyleSheet(_T("http://redmine.libnui.net/themes/mariposa/stylesheets/application.css?1251500354"));
-  //nuiCSSStyleSheet* pSheet = CreateStyleSheet(_T("http://redmine.libnui.net/stylesheets/application.css"));
+  nuiCSSStyleSheet* pSheet = CreateStyleSheet("http://redmine.libnui.net/themes/mariposa/stylesheets/application.css?1251500354");
+  //nuiCSSStyleSheet* pSheet = CreateStyleSheet("http://redmine.libnui.net/stylesheets/application.css");
   
 }
 
@@ -636,7 +636,7 @@ nuiColor nuiCSSStyle::GetColor() const
   uint8 b = (uint8)(col >> 8);
   uint8 a = (uint8)255;
   nuiColor color(r, g, b, a);
-  //NGL_OUT(_T("computed color: %s\n"), color.GetValue().GetChars());
+  //NGL_OUT("computed color: %s\n", color.GetValue().GetChars());
   return color;
 }
 
@@ -652,7 +652,7 @@ nuiColor nuiCSSStyle::GetBgColor() const
   uint8 b = (uint8)(col >> 8);
   uint8 a = (uint8)255;
   nuiColor color(r, g, b, a);
-  //NGL_OUT(_T("computed bg color: %s\n"), color.GetValue().GetChars());
+  //NGL_OUT("computed bg color: %s\n", color.GetValue().GetChars());
   return color;
 }
 
@@ -1431,7 +1431,7 @@ css_error node_presentational_hint(void *pw, void *node, uint32_t property, css_
         }
       }
     }
-    else if (n->GetName().Compare(_T("body"), false) == 0)
+    else if (n->GetName().Compare("body", false) == 0)
     {
       pCol = n->GetAttribute(nuiHTMLAttrib::eAttrib_TEXT);
     }
@@ -1461,7 +1461,7 @@ css_error node_presentational_hint(void *pw, void *node, uint32_t property, css_
   {
     char *url;
     url_func_result res;
-    nuiHTMLAttrib* bg = n->GetAttribute(_T("background"));
+    nuiHTMLAttrib* bg = n->GetAttribute("background");
     if (bg == NULL)
       return CSS_PROPERTY_NOT_SET;
     

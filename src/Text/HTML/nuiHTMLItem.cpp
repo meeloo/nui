@@ -49,7 +49,7 @@ void nuiHTMLItem::CallDraw(nuiDrawContext* pContext)
   nglString id;
   nuiHTMLAttrib* pAttrib = mpNode->GetAttribute(nuiHTMLAttrib::eAttrib_ID);
   if (pAttrib)
-    id.Add(_T(" id='")).Add(pAttrib->GetValue()).Add(_T("'"));
+    id.Add(" id='").Add(pAttrib->GetValue()).Add("'");
   printf("nuiHTMLItem::CallDraw <%s%s> %s\n", mpNode->GetName().GetChars(), id.GetChars(), mRect.GetValue().GetChars());
 #endif
 

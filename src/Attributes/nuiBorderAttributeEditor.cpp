@@ -12,7 +12,7 @@ nuiBorderAttributeEditor::nuiBorderAttributeEditor(const nuiAttrib<nuiBorder>& r
 	: nuiAttributeEditor(),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiBorderAttributeEditor"));
+	SetObjectClass("nuiBorderAttributeEditor");
 	
 	nglString contents;
 	mAttribute.Format(contents);
@@ -29,7 +29,7 @@ nuiBorderAttributeEditor::nuiBorderAttributeEditor(const nuiAttrib<const nuiBord
 	: nuiAttributeEditor(),
     mConstAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiBorderAttributeEditor"));
+	SetObjectClass("nuiBorderAttributeEditor");
 	
 	nglString contents;
 	mConstAttribute.Format(contents);

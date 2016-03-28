@@ -145,7 +145,7 @@ bool ngl3DSLoader::Load (int VerboseLevel)
   if (ReadHeader())
   {
 #ifdef _DEBUG_
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("%d camera%s, %d light%s, %d material%s, %d vertices, %d faces"),
+    NGL_LOG("3ds", NGL_LOG_INFO, "%d camera%s, %d light%s, %d material%s, %d vertices, %d faces",
       mCameraCnt, PLURAL(mCameraCnt),
       mLightCnt, PLURAL(mLightCnt),
       mMaterialCnt, PLURAL(mMaterialCnt),
@@ -176,16 +176,16 @@ bool ngl3DSLoader::OnHeader(bool Is3DS, nglSize Size)
 bool ngl3DSLoader::OnMaterial (const ngl3DSMaterial& rMat)
 {
   if (!(mVerbose & NGL_3DSLOADER_LOGITEM)) return true;
-  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG("3ds", NGL_LOG_INFO, "\n");
 
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("[OnMaterial]\n"));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("name    : '%s'\n"), rMat.mpName);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("ambient : %s\n"), Print(rMat.mAmbient));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("diffuse : %s\n"), Print(rMat.mDiffuse));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("specular: %s\n"), Print(rMat.mSpecular));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("shininess   : factor=%.3f  strength=%.3f\n"), rMat.mShiny, rMat.mShinyStrength);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("transparency: factor=%.3f  falloff=%.3f\n"), rMat.mTransp, rMat.mTranspFalloff);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("shading : %s\n"), pg3DSShadingStr[rMat.mShading]);
+  NGL_LOG("3ds", NGL_LOG_INFO, "[OnMaterial]\n");
+  NGL_LOG("3ds", NGL_LOG_INFO, "name    : '%s'\n", rMat.mpName);
+  NGL_LOG("3ds", NGL_LOG_INFO, "ambient : %s\n", Print(rMat.mAmbient));
+  NGL_LOG("3ds", NGL_LOG_INFO, "diffuse : %s\n", Print(rMat.mDiffuse));
+  NGL_LOG("3ds", NGL_LOG_INFO, "specular: %s\n", Print(rMat.mSpecular));
+  NGL_LOG("3ds", NGL_LOG_INFO, "shininess   : factor=%.3f  strength=%.3f\n", rMat.mShiny, rMat.mShinyStrength);
+  NGL_LOG("3ds", NGL_LOG_INFO, "transparency: factor=%.3f  falloff=%.3f\n", rMat.mTransp, rMat.mTranspFalloff);
+  NGL_LOG("3ds", NGL_LOG_INFO, "shading : %s\n", pg3DSShadingStr[rMat.mShading]);
   int i;
   for (i=0; i<2; i++)
   if (*rMat.mpTexture[i].mpName != 0)
@@ -194,13 +194,13 @@ bool ngl3DSLoader::OnMaterial (const ngl3DSMaterial& rMat)
 
     if (tex.mUsed)
     {
-      NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("texture[%d]:\n"), i);
-      NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  name     : '%s'\n"), tex.mpName);
-      NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  UV scale : %.3f x %.3f\n"), tex.mUScale, tex.mVScale);
-      NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  UF offset: %.3f , %.3f\n"), tex.mUOffset, tex.mVOffset);
+      NGL_LOG("3ds", NGL_LOG_INFO, "texture[%d]:\n", i);
+      NGL_LOG("3ds", NGL_LOG_INFO, "  name     : '%s'\n", tex.mpName);
+      NGL_LOG("3ds", NGL_LOG_INFO, "  UV scale : %.3f x %.3f\n", tex.mUScale, tex.mVScale);
+      NGL_LOG("3ds", NGL_LOG_INFO, "  UF offset: %.3f , %.3f\n", tex.mUOffset, tex.mVOffset);
     }
   }
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  NGL_LOG("3ds", NGL_LOG_INFO, "\n");
   return true;
 }
 
@@ -209,13 +209,13 @@ bool ngl3DSLoader::OnMesh (const ngl3DSMesh& rMesh)
   uint i;
 
   if (!(mVerbose & NGL_3DSLOADER_LOGITEM)) return true;
-  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG("3ds", NGL_LOG_INFO, "\n");
 
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("[OnMesh]\n"));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("name     : '%s'\n"), rMesh.mpName);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("vertices : %d\n"), rMesh.mVertexCnt);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("faces    : %d\n"), rMesh.mFaceCnt);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("materials: %d\n"), rMesh.mMaterialCnt);
+  NGL_LOG("3ds", NGL_LOG_INFO, "[OnMesh]\n");
+  NGL_LOG("3ds", NGL_LOG_INFO, "name     : '%s'\n", rMesh.mpName);
+  NGL_LOG("3ds", NGL_LOG_INFO, "vertices : %d\n", rMesh.mVertexCnt);
+  NGL_LOG("3ds", NGL_LOG_INFO, "faces    : %d\n", rMesh.mFaceCnt);
+  NGL_LOG("3ds", NGL_LOG_INFO, "materials: %d\n", rMesh.mMaterialCnt);
   if (rMesh.mpSmoothing)
   {
     uint32 accum = 0;
@@ -223,57 +223,57 @@ bool ngl3DSLoader::OnMesh (const ngl3DSMesh& rMesh)
 
     for (i = 0; i < rMesh.mFaceCnt; i++) accum |= rMesh.mpSmoothing[i];
     for (i = 0; i < 32; i++) if ((accum >> i) & 0x1) count++;
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("smoothing: %d group%s\n"), count, (count > 1) ? _T("s") : _T(""));
+    NGL_LOG("3ds", NGL_LOG_INFO, "smoothing: %d group%s\n", count, (count > 1) ? "s" : _T(""));
   }
   for (i=0; i < rMesh.mMaterialCnt; i++)
   {
     ngl3DSFaceMaterial& fmat = rMesh.mpMaterial[i];
 
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  '%s': %d faces\n"), fmat.mpMaterialName, fmat.mFaceCnt);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  '%s': %d faces\n", fmat.mpMaterialName, fmat.mFaceCnt);
   }
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("local ref     :\n"));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  X: %s\n"), Print(rMesh.mpLocalRef[0]));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  Y: %s\n"), Print(rMesh.mpLocalRef[1]));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  Z: %s\n"), Print(rMesh.mpLocalRef[2]));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  O: %s\n"), Print(rMesh.mpLocalRef[3]));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  NGL_LOG("3ds", NGL_LOG_INFO, "local ref     :\n");
+  NGL_LOG("3ds", NGL_LOG_INFO, "  X: %s\n", Print(rMesh.mpLocalRef[0]));
+  NGL_LOG("3ds", NGL_LOG_INFO, "  Y: %s\n", Print(rMesh.mpLocalRef[1]));
+  NGL_LOG("3ds", NGL_LOG_INFO, "  Z: %s\n", Print(rMesh.mpLocalRef[2]));
+  NGL_LOG("3ds", NGL_LOG_INFO, "  O: %s\n", Print(rMesh.mpLocalRef[3]));
+  NGL_LOG("3ds", NGL_LOG_INFO, "\n");
   return true;
 }
 
 bool ngl3DSLoader::OnLight (const ngl3DSLight& rLight)
 {
   if (!(mVerbose & NGL_3DSLOADER_LOGITEM)) return true;
-  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG("3ds", NGL_LOG_INFO, "\n");
 
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("[OnLight]\n"));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("name      : '%s'\n"), rLight.mpName);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("type      : %s\n"), (rLight.mType == e3DSLightOmni) ? "omni" : "spot");
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("pos       : %s\n"), Print(rLight.mPos));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("color     : %s\n"), Print(rLight.mColor));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("range     : %.1f -> %.1f\n"), rLight.mRangeStart, rLight.mRangeEnd);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("multiplier: %.1f\n"), rLight.mMultiplier);
+  NGL_LOG("3ds", NGL_LOG_INFO, "[OnLight]\n");
+  NGL_LOG("3ds", NGL_LOG_INFO, "name      : '%s'\n", rLight.mpName);
+  NGL_LOG("3ds", NGL_LOG_INFO, "type      : %s\n", (rLight.mType == e3DSLightOmni) ? "omni" : "spot");
+  NGL_LOG("3ds", NGL_LOG_INFO, "pos       : %s\n", Print(rLight.mPos));
+  NGL_LOG("3ds", NGL_LOG_INFO, "color     : %s\n", Print(rLight.mColor));
+  NGL_LOG("3ds", NGL_LOG_INFO, "range     : %.1f -> %.1f\n", rLight.mRangeStart, rLight.mRangeEnd);
+  NGL_LOG("3ds", NGL_LOG_INFO, "multiplier: %.1f\n", rLight.mMultiplier);
   if (rLight.mType == e3DSLightSpot)
   {
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("target    : %s\n"), Print(rLight.mTarget));
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("hotspot   : %.1f\n"), rLight.mHotspot);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("falloff   : %.1f\n"), rLight.mFalloff);
+    NGL_LOG("3ds", NGL_LOG_INFO, "target    : %s\n", Print(rLight.mTarget));
+    NGL_LOG("3ds", NGL_LOG_INFO, "hotspot   : %.1f\n", rLight.mHotspot);
+    NGL_LOG("3ds", NGL_LOG_INFO, "falloff   : %.1f\n", rLight.mFalloff);
   }
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  NGL_LOG("3ds", NGL_LOG_INFO, "\n");
   return true;
 }
 
 bool ngl3DSLoader::OnCamera (const ngl3DSCamera& rCam)
 {
   if (!(mVerbose & NGL_3DSLOADER_LOGITEM)) return true;
-  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG("3ds", NGL_LOG_INFO, "\n");
 
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("[OnCamera]\n"));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("name  : '%s'\n"), rCam.mpName);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("pos   : %s\n"), Print(rCam.mPos));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("target: %s\n"), Print(rCam.mTarget));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("roll  : %.1f\n"), rCam.mRoll);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("lens  : %.1f mm\n"), rCam.mLens);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  NGL_LOG("3ds", NGL_LOG_INFO, "[OnCamera]\n");
+  NGL_LOG("3ds", NGL_LOG_INFO, "name  : '%s'\n", rCam.mpName);
+  NGL_LOG("3ds", NGL_LOG_INFO, "pos   : %s\n", Print(rCam.mPos));
+  NGL_LOG("3ds", NGL_LOG_INFO, "target: %s\n", Print(rCam.mTarget));
+  NGL_LOG("3ds", NGL_LOG_INFO, "roll  : %.1f\n", rCam.mRoll);
+  NGL_LOG("3ds", NGL_LOG_INFO, "lens  : %.1f mm\n", rCam.mLens);
+  NGL_LOG("3ds", NGL_LOG_INFO, "\n");
   return true;
 }
 
@@ -286,36 +286,36 @@ bool ngl3DSLoader::OnScene (const ngl3DSScene& rScene)
   };
 
   if (!(mVerbose & NGL_3DSLOADER_LOGITEM)) return true;
-  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  if (mVerbose & NGL_3DSLOADER_LOGCHUNK) NGL_LOG("3ds", NGL_LOG_INFO, "\n");
 
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("[OnScene]\n"));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("version     : 3DSr%d\n"), rScene.mVersion);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("master scale: %.3f\n"), rScene.mMasterScale);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("ambient     : %s\n"), Print(rScene.mAmbient));
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("background  : %s - %s\n"), Print(rScene.mpBgColor[0]), Print(rScene.mpBgColor[1]));
+  NGL_LOG("3ds", NGL_LOG_INFO, "[OnScene]\n");
+  NGL_LOG("3ds", NGL_LOG_INFO, "version     : 3DSr%d\n", rScene.mVersion);
+  NGL_LOG("3ds", NGL_LOG_INFO, "master scale: %.3f\n", rScene.mMasterScale);
+  NGL_LOG("3ds", NGL_LOG_INFO, "ambient     : %s\n", Print(rScene.mAmbient));
+  NGL_LOG("3ds", NGL_LOG_INFO, "background  : %s - %s\n", Print(rScene.mpBgColor[0]), Print(rScene.mpBgColor[1]));
 
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("fog         :%s\n"), rScene.mFog.mUsed ? "" : " none");
+  NGL_LOG("3ds", NGL_LOG_INFO, "fog         :%s\n", rScene.mFog.mUsed ? "" : " none");
   if (rScene.mFog.mUsed)
   {
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  near plane  : %.3f\n"), rScene.mFog.mNearPlane);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  near density: %.1f%%\n"), rScene.mFog.mNearDensity);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  far plane   : %.3f\n"), rScene.mFog.mFarPlane);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  far density : %.1f%%\n"), rScene.mFog.mFarDensity);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  backgnd     : %s\n"), rScene.mFog.mIsBackground ? "yes" : "no");
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  color       : %s\n"), Print(rScene.mFog.mColor));
+    NGL_LOG("3ds", NGL_LOG_INFO, "  near plane  : %.3f\n", rScene.mFog.mNearPlane);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  near density: %.1f%%\n", rScene.mFog.mNearDensity);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  far plane   : %.3f\n", rScene.mFog.mFarPlane);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  far density : %.1f%%\n", rScene.mFog.mFarDensity);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  backgnd     : %s\n", rScene.mFog.mIsBackground ? "yes" : "no");
+    NGL_LOG("3ds", NGL_LOG_INFO, "  color       : %s\n", Print(rScene.mFog.mColor));
   }
 
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("layer fog   :%s\n"), rScene.mLayerFog.mUsed ? "" : " none");
+  NGL_LOG("3ds", NGL_LOG_INFO, "layer fog   :%s\n", rScene.mLayerFog.mUsed ? "" : " none");
   if (rScene.mLayerFog.mUsed)
   {
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  bottom : %.1f%%\n"), rScene.mLayerFog.mBottom);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  top    : %.1f%%\n"), rScene.mLayerFog.mTop);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  density: %.1f%%\n"), rScene.mLayerFog.mDensity);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  falloff: %s\n"), layertype_str[rScene.mLayerFog.mFalloff]);
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  backgnd: %s\n"), rScene.mLayerFog.mIsBackground ? "yes" : "no");
-    NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("  color  : %s\n"), Print(rScene.mLayerFog.mColor));
+    NGL_LOG("3ds", NGL_LOG_INFO, "  bottom : %.1f%%\n", rScene.mLayerFog.mBottom);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  top    : %.1f%%\n", rScene.mLayerFog.mTop);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  density: %.1f%%\n", rScene.mLayerFog.mDensity);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  falloff: %s\n", layertype_str[rScene.mLayerFog.mFalloff]);
+    NGL_LOG("3ds", NGL_LOG_INFO, "  backgnd: %s\n", rScene.mLayerFog.mIsBackground ? "yes" : "no");
+    NGL_LOG("3ds", NGL_LOG_INFO, "  color  : %s\n", Print(rScene.mLayerFog.mColor));
   }
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("\n"));
+  NGL_LOG("3ds", NGL_LOG_INFO, "\n");
   return true;
 }
 
@@ -345,7 +345,7 @@ void ngl3DSLoader::Log (uint Level, const char* pText, ...)
   va_start (args, pText);
   vsprintf(buffer, pText, args);
   va_end (args);
-  NGL_LOG(_T("3ds"), NGL_LOG_INFO, _T("%s%s\n"), level_str[Level], buffer);
+  NGL_LOG("3ds", NGL_LOG_INFO, "%s%s\n", level_str[Level], buffer);
 }
 
 char* ngl3DSLoader::Print (const ngl3DSColor& rColor)

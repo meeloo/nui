@@ -28,11 +28,11 @@ bool nglApplication::ParseDefaultArgs()
   {
     nglString arg = GetArg(i);
 
-    if (arg == _T("--log-level"))
+    if (arg == "--log-level")
     {
       // Check --log-level parameter consistency
       if (((i+1) >= GetArgCount()) ||      // not enough args
-          (!GetArg(i+1).Compare(_T("-"), 0, 1)))  // this can't be a parameter
+          (!GetArg(i+1).Compare("-", 0, 1)))  // this can't be a parameter
       {
         result = false;
         i++;
@@ -54,10 +54,10 @@ bool nglApplication::ParseDefaultArgs()
             nglString opt = (*alias).Extract (colon + 1);
             (*alias).Delete (colon);
 
-            if (opt == _T("error"))   verbose = NGL_LOG_ERROR; else
-            if (opt == _T("warning")) verbose = NGL_LOG_WARNING; else
-            if (opt == _T("info"))    verbose = NGL_LOG_INFO; else
-            if (opt == _T("debug"))   verbose = NGL_LOG_DEBUG; else
+            if (opt == "error")   verbose = NGL_LOG_ERROR; else
+            if (opt == "warning") verbose = NGL_LOG_WARNING; else
+            if (opt == "info")    verbose = NGL_LOG_INFO; else
+            if (opt == "debug")   verbose = NGL_LOG_DEBUG; else
               verbose = opt.GetInt();
           }
 
@@ -69,11 +69,11 @@ bool nglApplication::ParseDefaultArgs()
       }
     }
     else
-    if (arg == _T("--log-output"))
+    if (arg == "--log-output")
     {
       // Check --log-output parameter consistency
       if (((i+1) >= GetArgCount()) ||      // not enough args
-          (!GetArg(i+1).Compare(_T("-"), 0, 1)))  // this can't be a parameter
+          (!GetArg(i+1).Compare("-", 0, 1)))  // this can't be a parameter
       {
         result = false;
         i++;
@@ -95,16 +95,16 @@ bool nglApplication::ParseDefaultArgs()
             nglString opt = (*alias).Extract (colon + 1);
             (*alias).Delete (colon);
 
-            if ((*alias) == _T("con"))
+            if ((*alias) == "con")
             {
-              if ((opt == _T("on"))  || (opt == _T("yes")) || (opt == _T("1")))
+              if ((opt == "on")  || (opt == "yes") || (opt == "1"))
                 GetLog().UseConsole (true);
               else
-              if ((opt == _T("off")) || (opt == _T("no"))  || (opt == _T("0")))
+              if ((opt == "off") || (opt == "no")  || (opt == "0"))
                 GetLog().UseConsole (false);
             }
             else
-            if (((*alias) == _T("file")) || ((*alias) == _T("file+")))
+            if (((*alias) == "file") || ((*alias) == "file+"))
             {
               nglOFile* ostream = new nglOFile (nglPath (opt), (*alias)[4] == _T('+') ? eOFileAppend : eOFileCreate);
               if (ostream)
@@ -123,13 +123,13 @@ bool nglApplication::ParseDefaultArgs()
       }
     }
     else
-    if (arg == _T("--no-debug"))
+    if (arg == "--no-debug")
     {
       SetDebug(false);
       DelArg(i);
     }
     else
-    if (arg == _T("--help") || arg == _T("-h"))
+    if (arg == "--help" || arg == "-h")
     {
       PrintUsage();
       // Keep this (very) common option for user's sake
@@ -145,12 +145,12 @@ bool nglApplication::ParseDefaultArgs()
 
 void nglApplication::PrintUsage()
 {
-  NGL_OUT(_T("NGL default options :\n") \
-    _T("\n") \
-    _T("  --log-level all[:<level>],domain[:<level>],...   Set per-domain log levels\n") \
-    _T("  --log-output con:<yes|no>,file:<path>,...        Control/add log outputs\n") \
-    _T("  --no-debug                                       Don't run NGL_DEBUG() statements\n") \
-    _T("  --help, -h                                       This help\n\n"));
+  NGL_OUT("NGL default options :\n" \
+    "\n" \
+    "  --log-level all[:<level>],domain[:<level>],...   Set per-domain log levels\n" \
+    "  --log-output con:<yes|no>,file:<path>,...        Control/add log outputs\n" \
+    "  --no-debug                                       Don't run NGL_DEBUG() statements\n" \
+    "  --help, -h                                       This help\n\n");
 }
 
 

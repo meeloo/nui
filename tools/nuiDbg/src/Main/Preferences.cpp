@@ -8,7 +8,7 @@
 #include "Preferences.h"
 
 
-Preferences::Preferences() : mXml(_T("nuiDbgPreferences"))
+Preferences::Preferences() : mXml("nuiDbgPreferences")
 {
     nglPath prefPath(ePathUserPreferences);
     
@@ -174,7 +174,7 @@ bool Preferences::GetBool(const nglString& rKey, const nglString& rName, bool& s
         return false;
     
     nglString value = pNode->GetAttribute(rName);
-    if (!value.Compare(_T("false")))
+    if (!value.Compare("false"))
         store = false;
     else
         store = true;

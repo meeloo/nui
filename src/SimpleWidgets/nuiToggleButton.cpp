@@ -68,12 +68,12 @@ nuiToggleButton::~nuiToggleButton()
 void nuiToggleButton::InitAttributes()
 {
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("CheckBox")), nuiUnitBoolean,
+               (nglString("CheckBox"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiToggleButton::GetDisplayAsCheckBox),
                 nuiMakeDelegate(this, &nuiToggleButton::SetDisplayAsCheckBox)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("FrameBox")), nuiUnitBoolean,
+               (nglString("FrameBox"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiToggleButton::GetDisplayAsFrameBox),
                 nuiMakeDelegate(this, &nuiToggleButton::SetDisplayAsFrameBox)));
 }
@@ -95,7 +95,7 @@ void nuiToggleButton::SetDefaultCheckSize(nuiSize CheckSize)
 // Rendering:
 bool nuiToggleButton::Draw(nuiDrawContext* pContext)
 {
-  //NGL_OUT(_T("0x%x nuitoggleButton::Draw(%d)\n"), this, GetState(false));
+  //NGL_OUT("0x%x nuitoggleButton::Draw(%d)\n", this, GetState(false));
 
   nuiDecoration* pDeco = GetDecoration();
 

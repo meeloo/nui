@@ -16,5 +16,5 @@
 
 void nglTimer::OnTick(nglTime Elapsed)
 {
-  NGL_DEBUG( NGL_LOG(_T("timer"), NGL_LOG_INFO, _T("tick [period: %.3fs, elapsed: %.3fs]"), (double)GetPeriod(), (double)Elapsed); )
+  NGL_DEBUG( NGL_LOG("timer", NGL_LOG_INFO, "tick [period: %.3fs, elapsed: %.3fs]", (double)GetPeriod(), (double)Elapsed); )
 }

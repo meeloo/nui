@@ -126,7 +126,7 @@ void nuiHTMLNode::SetFromNode(const void* _tdoc, const void* _tnod, nglTextEncod
   if (tidyNodeGetValue(tdoc, tnod, &buf))
   {
     mText.Import((const char*)buf.bp, (int32)buf.size, encoding);
-    //NGL_OUT(_T("<%s> %s\n"), mName.GetChars(), mText.GetChars());
+    //NGL_OUT("<%s> %s\n", mName.GetChars(), mText.GetChars());
   }
   tidyBufFree(&buf);
   
@@ -260,8 +260,8 @@ void nuiHTMLNode::GetSimpleText(nglString& rString) const
   if (!mText.IsNull())
   {
     rString += mText;
-//    NGL_OUT(_T("text: %s\n"), mText.GetChars());
-//    NGL_OUT(_T("tmp: %s\n"), rString.GetChars());
+//    NGL_OUT("text: %s\n", mText.GetChars());
+//    NGL_OUT("tmp: %s\n", rString.GetChars());
   }
   
   uint32 count = GetNbChildren();
@@ -371,15 +371,15 @@ static nglString GetEncodingString(TidyNode tnod)
     if (attr_content && attr_httpequiv)
     {
       nglString contenttype(tidyAttrValue(attr_content));
-      if (contenttype.Compare(_T("content-type"), false) != 0)
+      if (contenttype.Compare("content-type", false) != 0)
       {
         // bleh...
       }
       nglString encoding(tidyAttrValue(attr_content));
-      //NGL_OUT(_T("content found in the tree: %s"), encoding.GetChars());
-      int32 col = encoding.Find(_T("charset="));
+      //NGL_OUT("content found in the tree: %s", encoding.GetChars());
+      int32 col = encoding.Find("charset=");
       encoding = encoding.Extract(col + 8);
-      //NGL_OUT(_T("encoding found in the tree: %s"), encoding.GetChars());
+      //NGL_OUT("encoding found in the tree: %s", encoding.GetChars());
       return encoding;
     }
   }
@@ -501,7 +501,7 @@ static int32 GetRootPart(const nglString& rStr)
 	}
   
   // Find the protocol name:
-  int col = rStr.Find(_T("://"), 0, true);
+  int col = rStr.Find("://", 0, true);
   
   return MIN(col + 3, rStr.GetLength());
 }
@@ -527,20 +527,20 @@ static bool Canonize(nglString& rStr)
       // Ignore '.'
     }
     else
-      if (((slash - last_slash) == 2) && (!rStr.Compare(_T(".."), last_slash, 2)))
+      if (((slash - last_slash) == 2) && (!rStr.Compare("..", last_slash, 2)))
       {
         // Interpret '..'
         int32 prev_slash = canon.FindLast(_T('/'));
         if (prev_slash < root_part)
           prev_slash = root_part;
         
-        if (!canon.IsEmpty() && canon.Compare(_T(".."), canon.GetLength() - 2, 2))
+        if (!canon.IsEmpty() && canon.Compare("..", canon.GetLength() - 2, 2))
           canon.Delete(prev_slash);
         else
         {
           if (canon.GetLength() > root_part)
             canon += _T('/');
-          canon += _T("..");
+          canon += "..";
         }
       }
       else
@@ -569,7 +569,7 @@ void nuiHTML::GetAbsoluteURL(const nglString& rBaseURL, nglString& url)
   else if (url[0] == '/')
   {
     // Site absolute
-    int32 col = rBaseURL.Find(_T("://"));
+    int32 col = rBaseURL.Find("://");
     if (col > 0)
     {
       int32 end = rBaseURL.Find('/', col + 3);
@@ -587,7 +587,7 @@ void nuiHTML::GetAbsoluteURL(const nglString& rBaseURL, nglString& url)
     }
     else
     {
-      url = rBaseURL + _T("/") + url;
+      url = rBaseURL + "/" + url;
     }
   }
   

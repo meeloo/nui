@@ -14,7 +14,7 @@
 #include "nuiEvent.h"
 #include "nuiEventRegistry.h"
 
-#define NUIHOTKEYS_XML_NODEID _T("HotKeys")
+#define NUIHOTKEYS_XML_NODEID "HotKeys"
 
 typedef uint32 nuiKeyModifier;
 

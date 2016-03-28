@@ -32,9 +32,9 @@ FrameEditor::FrameEditor(ElementDesc* pDesc, ElementInspector* pInspector)
 //  pBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   nglString str;
-  str.Add(_T("nuiFrame editor (")).Add(pDesc->GetName()).Add(_T(")"));
+  str.Add("nuiFrame editor (").Add(pDesc->GetName()).Add(")");
   nuiLabel* pLabel = new nuiLabel(str, nuiFont::GetFont(24));
-  pLabel->SetTextColor(nuiColor(_T("lightgray")));
+  pLabel->SetTextColor(nuiColor("lightgray"));
   pBox->AddCell(pLabel, nuiCenter);
 //  pBox->AddCell(new nuiSeparator(nuiHorizontal));
   
@@ -68,7 +68,7 @@ FrameEditor::FrameEditor(ElementDesc* pDesc, ElementInspector* pInspector)
 
   if (!mpFrame)
   {
-    mpFrameViewHolder->AddChild(new nuiLabel(_T("Drop an image file here...")));
+    mpFrameViewHolder->AddChild(new nuiLabel("Drop an image file here..."));
   }
   
   mDrawDndFrame = false;
@@ -81,7 +81,7 @@ void FrameEditor::InitAttributes()
 	mScale = 4.0f;
 
   mpAttributeScale = new nuiAttribute<float>
-  (nglString(_T("Zoom")), nuiUnitPercent,
+  (nglString("Zoom"), nuiUnitPercent,
    nuiAttribute<float>::GetterDelegate(this, &FrameEditor::GetScale), 
    nuiAttribute<float>::SetterDelegate(this, &FrameEditor::SetScale),
 	 nuiRange(4.0f, 1.0f, 8.0f, 1.0f, 0.0f, 0.0f));
@@ -99,9 +99,9 @@ FrameEditor::~FrameEditor()
 
 nglDropEffect FrameEditor::OnCanDrop(nglDragAndDrop* pDragObject, nuiSize X, nuiSize Y)
 {
-  if (pDragObject->IsTypeSupported(_T("ngl/Files")))
+  if (pDragObject->IsTypeSupported("ngl/Files"))
   {
-    nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType(_T("ngl/Files"));
+    nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType("ngl/Files");
     const std::list<nglString>& rFiles(pFiles->GetFiles());
   
     pDragObject->SetDesiredDropEffect(eDropEffectLink);
@@ -123,7 +123,7 @@ void FrameEditor::OnDropped(nglDragAndDrop* pDragObject, nuiSize X, nuiSize Y, n
 {
   mDrawDndFrame = false;
 
-  nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType(_T("ngl/Files"));
+  nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType("ngl/Files");
   const std::list<nglString>&rFiles(pFiles->GetFiles());
   
   nglPath imgpath = rFiles.front();
@@ -161,7 +161,7 @@ void FrameEditor::UpdateFrameViews(bool CopyImageRect)
   nuiFixed* pFixed = new nuiFixed();
   mpFrameViewHolder->AddChild(pFixed);
   mpFrameView = new nuiFrameView(mpFrame);
-  mpFrameView->AddChild(new nuiLabel(_T("This frame should\nlook nice at any size."), nuiFont::GetFont(20)));
+  mpFrameView->AddChild(new nuiLabel("This frame should\nlook nice at any size.", nuiFont::GetFont(20)));
   pFixed->AddChild(mpFrameView);
   
   nuiWidget* pFrameRectView = new nuiWidget();
@@ -183,8 +183,8 @@ void FrameEditor::UpdateFrameViews(bool CopyImageRect)
 	
 	
 	// load attributes editors in inspector	
-	mAttributeRect = nuiAttrib<const nuiRect&>(mpFrame->GetAttribute(_T("ClientRect")));
-	mAttributeColor = nuiAttrib<const nuiColor&>(mpFrame->GetAttribute(_T("Color")));
+	mAttributeRect = nuiAttrib<const nuiRect&>(mpFrame->GetAttribute("ClientRect"));
+	mAttributeColor = nuiAttrib<const nuiColor&>(mpFrame->GetAttribute("Color"));
 	
 	
 	std::list<nuiAttribBase> attributes;
@@ -192,14 +192,14 @@ void FrameEditor::UpdateFrameViews(bool CopyImageRect)
 	attributes.push_back(GetMainWindow()->mAttributeMouseCoord);
 	attributes.push_back(mAttributeScale);
 	
-	ToolPaneAttributes* pTPA = new ToolPaneAttributes(_T("Information"), attributes);
+	ToolPaneAttributes* pTPA = new ToolPaneAttributes("Information", attributes);
 	mpInspector->AddToolpane(pTPA);
 
 	attributes.clear();
 	attributes.push_back(mAttributeRect);
 	attributes.push_back(mAttributeColor);
 
-	ToolPaneAttributes* pTPA2 = new ToolPaneAttributes(_T("Frame"), attributes);
+	ToolPaneAttributes* pTPA2 = new ToolPaneAttributes("Frame", attributes);
 	mpInspector->AddToolpane(pTPA2);
 	
 	
@@ -247,7 +247,7 @@ void FrameEditor::CommitChanges()
   nuiXMLNode* pNode = new nuiXMLNode(_T(""));
   //#FIXME!!! Serialization API is deprecated
   //mpFrame->Serialize(pNode);
-  pNode->SetAttribute(_T("Name"), mpDesc->GetName());
+  pNode->SetAttribute("Name", mpDesc->GetName());
   mpDesc->SetXML(pNode);
 }
 

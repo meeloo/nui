@@ -15,9 +15,9 @@ nuiHTMLContext::nuiHTMLContext()
   
   mVSpace = 0;
   
-  mpFontRequest->SetName(_T("arial"), 0.8f);
-  mpFontRequest->SetGenericName(_T("sans-serif"), 0.8f);
-  mpFontRequest->SetStyle(_T("regular"), 0.5f);
+  mpFontRequest->SetName("arial", 0.8f);
+  mpFontRequest->SetGenericName("sans-serif", 0.8f);
+  mpFontRequest->SetStyle("regular", 0.5f);
   mpFontRequest->SetProportionnal(1.0f);
   
   mpFontRequest->SetScalable(1.0f);

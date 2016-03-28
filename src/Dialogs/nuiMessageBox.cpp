@@ -17,7 +17,7 @@ nuiMessageBox::nuiMessageBox(nuiWidget * pParent, const nglString& rTitle, const
 : nuiModalContainer(pParent), mpBtnBox(NULL), mSink(this)
 {
   nuiLabel* pMessage = new nuiLabel(rMessage);
-  pMessage->SetObjectName(_T("nuiMessageBox::Message"));
+  pMessage->SetObjectName("nuiMessageBox::Message");
   Init(rTitle, pMessage, type, showIcon);
 }
 
@@ -30,7 +30,7 @@ nuiMessageBox::nuiMessageBox(nuiWidget * pParent, const nglString& rTitle, nuiWi
 
 void nuiMessageBox::Init(const nglString& rTitle, nuiWidget* pContents, nuiMessageBoxType type, bool showIcon)
 {
-  SetObjectClass(_T("nuiMessageBox"));
+  SetObjectClass("nuiMessageBox");
   mType = type;
   
   mKeyDown = false;
@@ -40,17 +40,17 @@ void nuiMessageBox::Init(const nglString& rTitle, nuiWidget* pContents, nuiMessa
 
   nuiVBox* pVBox = new nuiVBox();
   pVBox->SetExpand(nuiExpandShrinkAndGrow);
-  pVBox->SetObjectName(_T("nuiMessageBox::Client"));
+  pVBox->SetObjectName("nuiMessageBox::Client");
   AddChild(pVBox);
   
   nuiLabel* pTitle = new nuiLabel(rTitle);
-  pTitle->SetObjectName(_T("nuiMessageBox::Title"));
-  pTitle->SetObjectClass(_T("nuiMessageBox::Title"));
+  pTitle->SetObjectName("nuiMessageBox::Title");
+  pTitle->SetObjectClass("nuiMessageBox::Title");
   pVBox->AddCell(pTitle);
   
   nuiHBox* pHBox = new nuiHBox(2);
   pHBox->SetExpand(nuiExpandShrinkAndGrow);
-  pHBox->SetObjectName(_T("nuiMessageBox::Contents"));
+  pHBox->SetObjectName("nuiMessageBox::Contents");
   pVBox->AddCell(pHBox);
   pVBox->SetCellExpand(pVBox->GetNbCells()-1, nuiExpandShrinkAndGrow);
 
@@ -58,7 +58,7 @@ void nuiMessageBox::Init(const nglString& rTitle, nuiWidget* pContents, nuiMessa
   {
     nuiWidget* pIcon = new nuiWidget();
     nglString objectName;
-    objectName.Format(_T("nuiMessageBox::Icon"), rTitle.GetChars());
+    objectName.Format("nuiMessageBox::Icon", rTitle.GetChars());
     pIcon->SetObjectName(objectName);
     pHBox->SetCell(0, pIcon, nuiCenter);
   }
@@ -67,7 +67,7 @@ void nuiMessageBox::Init(const nglString& rTitle, nuiWidget* pContents, nuiMessa
   pHBox->SetCellExpand(1, nuiExpandShrinkAndGrow);
   
   mpBtnBox = new nuiHBox();
-  mpBtnBox->SetObjectName(_T("nuiMessageBox::ButtonBox"));
+  mpBtnBox->SetObjectName("nuiMessageBox::ButtonBox");
   pVBox->AddCell(mpBtnBox);
 
   mpBtnBox->AddCell(NULL);
@@ -134,9 +134,9 @@ nuiMessageBox::Button nuiMessageBox::Do(nuiWidget * pParent, const nglString& rT
 nuiWidget* nuiMessageBox::CreateOK()
 {
   nuiButton* pButton = new nuiButton();
-  pButton->SetObjectName(_T("nuiMessageBox::Button"));
+  pButton->SetObjectName("nuiMessageBox::Button");
   
-  nuiLabel* pButtonLabel = new nuiLabel(_T("OK <ENTER>"));
+  nuiLabel* pButtonLabel = new nuiLabel("OK <ENTER>");
   pButton->AddChild(pButtonLabel);
   
   mSink.Connect(pButton->Activated, &nuiMessageBox::OnOK);
@@ -147,9 +147,9 @@ nuiWidget* nuiMessageBox::CreateOK()
 nuiWidget* nuiMessageBox::CreateCancel()
 {
   nuiButton* pButton = new nuiButton();
-  pButton->SetObjectName(_T("nuiMessageBox::Button"));  
+  pButton->SetObjectName("nuiMessageBox::Button");  
   
-  nuiLabel* pButtonLabel = new nuiLabel(_T("Cancel <ESC>"));
+  nuiLabel* pButtonLabel = new nuiLabel("Cancel <ESC>");
   pButton->AddChild(pButtonLabel);
   
   mSink.Connect(pButton->Activated, &nuiMessageBox::OnCancel);
@@ -160,9 +160,9 @@ nuiWidget* nuiMessageBox::CreateCancel()
 nuiWidget* nuiMessageBox::CreateYes()
 {
   nuiButton* pButton = new nuiButton();
-  pButton->SetObjectName(_T("nuiMessageBox::Button"));
+  pButton->SetObjectName("nuiMessageBox::Button");
   
-  nuiLabel* pButtonLabel = new nuiLabel(_T("Yes <Y>"));
+  nuiLabel* pButtonLabel = new nuiLabel("Yes <Y>");
   pButton->AddChild(pButtonLabel);
   
   mSink.Connect(pButton->Activated, &nuiMessageBox::OnOK);
@@ -173,9 +173,9 @@ nuiWidget* nuiMessageBox::CreateYes()
 nuiWidget* nuiMessageBox::CreateNo()
 {
   nuiButton* pButton = new nuiButton();
-  pButton->SetObjectName(_T("nuiMessageBox::Button"));
+  pButton->SetObjectName("nuiMessageBox::Button");
   
-  nuiLabel* pButtonLabel = new nuiLabel(_T("No <N>"));
+  nuiLabel* pButtonLabel = new nuiLabel("No <N>");
   pButton->AddChild(pButtonLabel);
   
   mSink.Connect(pButton->Activated, &nuiMessageBox::OnCancel);
@@ -186,9 +186,9 @@ nuiWidget* nuiMessageBox::CreateNo()
 nuiWidget* nuiMessageBox::CreateRetry()
 {
   nuiButton* pButton = new nuiButton();
-  pButton->SetObjectName(_T("nuiMessageBox::Button"));
+  pButton->SetObjectName("nuiMessageBox::Button");
   
-  nuiLabel* pButtonLabel = new nuiLabel(_T("Retry"));
+  nuiLabel* pButtonLabel = new nuiLabel("Retry");
   pButton->AddChild(pButtonLabel);
   
   mSink.Connect(pButton->Activated, &nuiMessageBox::OnRetry);
@@ -199,7 +199,7 @@ nuiWidget* nuiMessageBox::CreateRetry()
 nuiWidget* nuiMessageBox::CreateCustom(const nglString& rName, Button btn)
 {
   nuiButton* pButton = new nuiButton();
-  pButton->SetObjectName(_T("nuiMessageBox::Button"));
+  pButton->SetObjectName("nuiMessageBox::Button");
   
   nuiLabel* pButtonLabel = new nuiLabel(rName);
   pButton->AddChild(pButtonLabel);
@@ -212,7 +212,7 @@ nuiWidget* nuiMessageBox::CreateCustom(const nglString& rName, Button btn)
 nuiWidget* nuiMessageBox::CreateCustom(nuiWidget* pWidget, Button btn)
 {
   nuiButton* pButton = new nuiButton();
-  pButton->SetObjectName(_T("nuiMessageBox::Button"));
+  pButton->SetObjectName("nuiMessageBox::Button");
   pButton->AddChild(pWidget);
   
   mSink.Connect(pButton->Activated, &nuiMessageBox::OnCustom, (void*)btn);

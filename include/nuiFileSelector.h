@@ -105,9 +105,9 @@ public:
     eColumn
   };
   
-  nuiFileSelector(const nglPath& rPath, const nglPath& rRootPath, const nglString& rFilter = _T("*"), nuiEditLine* pEntry = NULL, bool showHiddenFiles = false, DisplayMode mode = eColumn, bool ShowVolumes = true, bool Opened = true);
+  nuiFileSelector(const nglPath& rPath, const nglPath& rRootPath, const nglString& rFilter = "*", nuiEditLine* pEntry = NULL, bool showHiddenFiles = false, DisplayMode mode = eColumn, bool ShowVolumes = true, bool Opened = true);
   nuiFileSelector(const nglPath& rPath, const nglPath& rRootPath, const std::list<nglString>& rFilters, nuiEditLine* pEntry = NULL, bool showHiddenFiles = false, DisplayMode mode = eColumn, bool ShowVolumes = true, bool Opened = true);
-  nuiFileSelector(const nglPath& rPath, const nglString& rFilter = _T("*"), nuiEditLine* pEntry = NULL, bool showHiddenFiles = false, DisplayMode mode = eColumn, bool ShowVolumes = true, bool Opened = true);
+  nuiFileSelector(const nglPath& rPath, const nglString& rFilter = "*", nuiEditLine* pEntry = NULL, bool showHiddenFiles = false, DisplayMode mode = eColumn, bool ShowVolumes = true, bool Opened = true);
   nuiFileSelector(const nglPath& rPath, const std::list<nglString>& rFilters, nuiEditLine* pEntry = NULL, bool showHiddenFiles = false, DisplayMode mode = eColumn, bool ShowVolumes = true, bool Opened = true);
   /*!< Creates a file selector instance
     \param pParent container

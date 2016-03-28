@@ -364,20 +364,20 @@ static NSString* GetApplicationName(void)
 
 - (void) dealloc
 {
-//  NGL_OUT(_T("[nglNSApplication dealloc]\n"));
+//  NGL_OUT("[nglNSApplication dealloc]\n");
   [super dealloc];
 }
 
 - (BOOL) openURL: (NSURL*) pUrl
 {
-  //NGL_OUT(_T("[nglNSApplication openURL]\n"));
+  //NGL_OUT("[nglNSApplication openURL]\n");
   [super openURL: pUrl];
   return true;
 }
 
 - (void) sendEvent: (NSEvent*) pEvent
 {
-//NGL_DEBUG( NGL_OUT(_T("[nglNSApplication sendEvent]\n")) );
+//NGL_DEBUG( NGL_OUT("[nglNSApplication sendEvent]\n") );
   [super sendEvent: pEvent];
 }
 
@@ -397,7 +397,7 @@ static NSString* GetApplicationName(void)
 
 - (void) applicationDidFinishLaunching:       (NSApplication*) pNSApplication
 {
-  //NGL_OUT(_T("[nglNSApplicationDelegate applicationDidFinishLaunching]\n"));
+  //NGL_OUT("[nglNSApplicationDelegate applicationDidFinishLaunching]\n");
   NGL_ASSERT(App);
   
   objCCallOnInit(pNSApplication);
@@ -430,7 +430,7 @@ static NSString* GetApplicationName(void)
 
 - (void) applicationDidBecomeActive:          (NSNotification*) pNotification
 {
-  NGL_DEBUG( NGL_OUT(_T("[nglNSApplicationDelegate applicationDidBecomeActive]\n")); )
+  NGL_DEBUG( NGL_OUT("[nglNSApplicationDelegate applicationDidBecomeActive]\n"); )
   NGL_ASSERT(App);
   NSApplication* pNSApplication = [pNotification object];
   if (pNSApplication != nil)
@@ -457,7 +457,7 @@ static NSString* GetApplicationName(void)
 
 - (void) applicationDidEnterBackground:         (NSNotification*) pNotification
 {
-  NGL_DEBUG( NGL_OUT(_T("[nglNSApplicationDelegate applicationDidEnterBackground]\n")); )
+  NGL_DEBUG( NGL_OUT("[nglNSApplicationDelegate applicationDidEnterBackground]\n"); )
   NGL_ASSERT(App);
 	
   NSApplication* pNSApplication = [pNotification object];
@@ -485,12 +485,12 @@ static NSString* GetApplicationName(void)
 
 - (void) applicationSignificantTimeChange:    (NSNotification*) pNotification
 {
-  //NGL_OUT(_T("[nglNSApplicationDelegate applicationSignificantTimeChange]\n"));
+  //NGL_OUT("[nglNSApplicationDelegate applicationSignificantTimeChange]\n");
 }
 
 - (void) applicationWillTerminate:            (NSNotification*) pNotification
 {
-  //	NGL_DEBUG( NGL_OUT(_T("[nglNSApplicationDelegate applicationWillTerminate]\n")) );
+  //	NGL_DEBUG( NGL_OUT("[nglNSApplicationDelegate applicationWillTerminate]\n") );
   
 	objCCallOnWillExit();
   
@@ -548,7 +548,7 @@ static NSString* GetApplicationName(void)
 
 //- (void) dealloc
 //{
-//  //NGL_OUT(_T("[nglNSApplicationDelegate dealloc]\n"));
+//  //NGL_OUT("[nglNSApplicationDelegate dealloc]\n");
 //  [super dealloc];
 //}
 
@@ -563,7 +563,7 @@ static NSString* GetApplicationName(void)
 
 const nglChar* gpApplicationErrorTable[] =
 {
-/*  0 */ _T("No error"),
+/*  0 */ "No error",
   NULL
 };
 
@@ -610,7 +610,7 @@ int nglApplication::Main(int argc, const char** argv)
 
   Init(argc, argv);
 
-  //GetLog().SetLevel(_T("window"), 100);
+  //GetLog().SetLevel("window", 100);
   
   nglNSApplication *applicationObject = (nglNSApplication *)[nglNSApplication sharedApplication];
 

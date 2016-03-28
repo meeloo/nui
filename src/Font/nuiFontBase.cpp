@@ -112,7 +112,7 @@ public:
     bool res = GetSize(ftsize);
     if (res)
     {
-      NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_WARNING, "Couldn't change font size"); )
+      NGL_DEBUG( NGL_LOG("font", NGL_LOG_WARNING, "Couldn't change font size"); )
       return NULL;
     }
     
@@ -137,21 +137,21 @@ const nglChar* nuiGetCharMapName (FT_CharMap CharMap)
 {
   switch (CharMap->encoding)
   {
-    case FT_ENCODING_NONE           : return _T("None");
-    case FT_ENCODING_UNICODE        : return _T("Unicode");
-    case FT_ENCODING_MS_SYMBOL      : return _T("Symbol");
-    case FT_ENCODING_MS_SJIS        : return _T("SJIS (Japanese)");
-    case FT_ENCODING_MS_GB2312      : return _T("GB2312 (Simplified Chinese)");
-    case FT_ENCODING_MS_BIG5        : return _T("Big5 (Traditional Chinese)");
-    case FT_ENCODING_MS_WANSUNG     : return _T("Wansung (Korean)");
-    case FT_ENCODING_MS_JOHAB       : return _T("Johab (Korean, complete Hangeul)");
-    case FT_ENCODING_ADOBE_LATIN_1  : return _T("Latin 1");
-    case FT_ENCODING_ADOBE_STANDARD : return _T("Adobe Standard");
-    case FT_ENCODING_ADOBE_EXPERT   : return _T("Adobe Expert");
-    case FT_ENCODING_ADOBE_CUSTOM   : return _T("Adobe Custom");
-    case FT_ENCODING_APPLE_ROMAN    : return _T("Apple Roman");
+    case FT_ENCODING_NONE           : return "None";
+    case FT_ENCODING_UNICODE        : return "Unicode";
+    case FT_ENCODING_MS_SYMBOL      : return "Symbol";
+    case FT_ENCODING_MS_SJIS        : return "SJIS (Japanese)";
+    case FT_ENCODING_MS_GB2312      : return "GB2312 (Simplified Chinese)";
+    case FT_ENCODING_MS_BIG5        : return "Big5 (Traditional Chinese)";
+    case FT_ENCODING_MS_WANSUNG     : return "Wansung (Korean)";
+    case FT_ENCODING_MS_JOHAB       : return "Johab (Korean, complete Hangeul)";
+    case FT_ENCODING_ADOBE_LATIN_1  : return "Latin 1";
+    case FT_ENCODING_ADOBE_STANDARD : return "Adobe Standard";
+    case FT_ENCODING_ADOBE_EXPERT   : return "Adobe Expert";
+    case FT_ENCODING_ADOBE_CUSTOM   : return "Adobe Custom";
+    case FT_ENCODING_APPLE_ROMAN    : return "Apple Roman";
     default:
-      return _T("Unknown");
+      return "Unknown";
   }
 }
 
@@ -183,8 +183,8 @@ using namespace std;
 
 static const nglChar* gpFontErrorTable[] =
 {
-  /*  0 */ _T("No error"),
-  /*  1 */ _T("Something bad happened"),
+  /*  0 */ "No error",
+  /*  1 */ "Something bad happened",
   NULL
 };
 
@@ -193,7 +193,7 @@ static const nglChar* gpFontErrorTable[] =
 //class nuiFontDesc
 nuiFontDesc::nuiFontDesc(const nglPath& rPath, int32 Face)
 {
-  //  NGL_OUT(_T("Scanning font '%s' face %d\n"), rPath.GetChars(), Face);
+  //  NGL_OUT("Scanning font '%s' face %d\n", rPath.GetChars(), Face);
   FT_Byte* pBuffer = NULL;
   
   mValid = false;
@@ -262,12 +262,12 @@ nuiFontDesc::nuiFontDesc(const nglPath& rPath, int32 Face)
     nglString str;
     uint8* pBytes = (uint8*)&mPanoseBytes;
     for (uint i = 0; i < 10; i++)
-      str.Add(pBytes[i]).Add(_T(" "));
-    //NGL_DEBUG( NGL_OUT(_T("\tpanose bytes: %s\n"), str.GetChars()); )
+      str.Add(pBytes[i]).Add(" ");
+    //NGL_DEBUG( NGL_OUT("\tpanose bytes: %s\n", str.GetChars()); )
   }
   else
   {
-    //NGL_DEBUG( NGL_OUT(_T("Warning: font '%s' has no panose information.\n"), mPath.GetChars()); )
+    //NGL_DEBUG( NGL_OUT("Warning: font '%s' has no panose information.\n", mPath.GetChars()); )
     memset(&mPanoseBytes, 0, 10);
   }
   
@@ -307,7 +307,7 @@ nuiFontDesc::nuiFontDesc(const nglPath& rPath, int32 Face)
     glyphcount++;
     if (rangestart >= 0 && (prevcharcode != charcode - 1))
     {
-      //NGL_OUT(_T("\nrange: %d to %d (%d glyphs)\n"), rangestart, prevcharcode, prevcharcode - rangestart + 1);
+      //NGL_OUT("\nrange: %d to %d (%d glyphs)\n", rangestart, prevcharcode, prevcharcode - rangestart + 1);
       rangecount++;
       
       mGlyphs.push_back(std::make_pair(rangestart, prevcharcode));
@@ -323,7 +323,7 @@ nuiFontDesc::nuiFontDesc(const nglPath& rPath, int32 Face)
 
   if (prevcharcode > 0)
   {
-    //NGL_OUT(_T("last range: %d to %d (%d glyphs)\n"), rangestart, prevcharcode, prevcharcode - rangestart + 1);
+    //NGL_OUT("last range: %d to %d (%d glyphs)\n", rangestart, prevcharcode, prevcharcode - rangestart + 1);
     rangecount++;
     mGlyphs.push_back(std::make_pair(rangestart, prevcharcode));
   }
@@ -660,11 +660,11 @@ const nglChar* nuiFontInfo_UnitName(nuiFontUnit Unit)
 {
   switch (Unit)
   {
-    case eFontUnitEM   : return _T("font unit (EM)");
-    case eFontUnitPoint: return _T("point");
-    case eFontUnitPixel: return _T("pixel");
+    case eFontUnitEM   : return "font unit (EM)";
+    case eFontUnitPoint: return "point";
+    case eFontUnitPixel: return "pixel";
     default:
-      return _T("?");
+      return "?";
   }
 }
 
@@ -681,24 +681,24 @@ void nuiFontInfo::Dump (uint Level) const
 {
   if (!pFont)
   {
-    NGL_LOG(_T("font"), Level, _T("Invalid font info"));
+    NGL_LOG("font", Level, "Invalid font info");
     return;
   }
   
-  NGL_LOG(_T("font"), Level, _T("Font info"));
+  NGL_LOG("font", Level, "Font info");
   nuiFontInstance* ifont = nuiFontInstance::Lookup(pFont->mpFace->Desc.face_id);
   if (ifont)
   {
-    NGL_LOG(_T("font"), Level, _T("  source   : %s"), ifont->GetPath().GetChars());
-    NGL_LOG(_T("font"), Level, _T("  face     : %d"), ifont->GetFace());
+    NGL_LOG("font", Level, "  source   : %s", ifont->GetPath().GetChars());
+    NGL_LOG("font", Level, "  face     : %d", ifont->GetFace());
   }
-  NGL_LOG(_T("font"), Level, _T("  family   : %s"), FamilyName.GetChars());
-  NGL_LOG(_T("font"), Level, _T("  style    : %s"), StyleName.GetChars());
-  NGL_LOG(_T("font"), Level, _T("  scalable : %s"), YESNO(IsScalable));
-  NGL_LOG(_T("font"), Level, _T("  bold     : %s"), YESNO(IsBold));
-  NGL_LOG(_T("font"), Level, _T("  monospace: %s"), YESNO(IsMonospace));
-  NGL_LOG(_T("font"), Level, _T("  italic   : %s"), YESNO(IsItalic));
-  NGL_LOG(_T("font"), Level, _T("  glyph cnt: %d"), GlyphCount);
+  NGL_LOG("font", Level, "  family   : %s", FamilyName.GetChars());
+  NGL_LOG("font", Level, "  style    : %s", StyleName.GetChars());
+  NGL_LOG("font", Level, "  scalable : %s", YESNO(IsScalable));
+  NGL_LOG("font", Level, "  bold     : %s", YESNO(IsBold));
+  NGL_LOG("font", Level, "  monospace: %s", YESNO(IsMonospace));
+  NGL_LOG("font", Level, "  italic   : %s", YESNO(IsItalic));
+  NGL_LOG("font", Level, "  glyph cnt: %d", GlyphCount);
   
   int i = 0;
   const nglChar* map_name;
@@ -712,30 +712,30 @@ void nuiFontInfo::Dump (uint Level) const
     i++;
   }
   if (i == 0)
-    avail_map += _T(" (none)");
-  NGL_LOG(_T("font"), Level, _T("  charmaps :%s"), avail_map.GetChars());
+    avail_map += " (none)";
+  NGL_LOG("font", Level, "  charmaps :%s", avail_map.GetChars());
   
-  NGL_LOG(_T("font"), Level, _T("  Global metrics, in `%s' units"), nuiFontInfo_UnitName(Unit));
+  NGL_LOG("font", Level, "  Global metrics, in `%s' units", nuiFontInfo_UnitName(Unit));
   if (IsScalable)
   {
-    NGL_LOG(_T("font"), Level, _T("    bbox     : [%.1f %.1f]x[%.1f %.1f]"), BBoxMinX, BBoxMaxX, BBoxMinY, BBoxMaxY);
-    NGL_LOG(_T("font"), Level, _T("    ascender : %.1f"), Ascender);
-    NGL_LOG(_T("font"), Level, _T("    descender: %.1f"), Descender);
-    NGL_LOG(_T("font"), Level, _T("    height   : %.1f"), Height);
-    NGL_LOG(_T("font"), Level, _T("    adv max W: %.1f"), AdvanceMaxW);
-    NGL_LOG(_T("font"), Level, _T("    adv max H: %.1f"), AdvanceMaxH);
-    NGL_LOG(_T("font"), Level, _T("    under pos: %.1f"), UnderlinePos);
-    NGL_LOG(_T("font"), Level, _T("    under thk: %.1f"), UnderlineThick);
+    NGL_LOG("font", Level, "    bbox     : [%.1f %.1f]x[%.1f %.1f]", BBoxMinX, BBoxMaxX, BBoxMinY, BBoxMaxY);
+    NGL_LOG("font", Level, "    ascender : %.1f", Ascender);
+    NGL_LOG("font", Level, "    descender: %.1f", Descender);
+    NGL_LOG("font", Level, "    height   : %.1f", Height);
+    NGL_LOG("font", Level, "    adv max W: %.1f", AdvanceMaxW);
+    NGL_LOG("font", Level, "    adv max H: %.1f", AdvanceMaxH);
+    NGL_LOG("font", Level, "    under pos: %.1f", UnderlinePos);
+    NGL_LOG("font", Level, "    under thk: %.1f", UnderlineThick);
   }
   else
   {
-    NGL_LOG(_T("font"), Level, _T("    height : %.1f"), Height);
+    NGL_LOG("font", Level, "    height : %.1f", Height);
   }
   
-  NGL_LOG(_T("font"), Level, _T("  Current settings"));
-  NGL_LOG(_T("font"), Level, _T("    res.   : %.0fdpi"), pFont->GetResolution());
-  NGL_LOG(_T("font"), Level, _T("    size   : %.1fpt / %.0fpx"), pFont->GetSize(eFontUnitPoint), pFont->GetSize(eFontUnitPixel));
-  NGL_LOG(_T("font"), Level, _T("    charmap: %s"), pFont->GetCharMapName(pFont->GetCharMap()));
+  NGL_LOG("font", Level, "  Current settings");
+  NGL_LOG("font", Level, "    res.   : %.0fdpi", pFont->GetResolution());
+  NGL_LOG("font", Level, "    size   : %.1fpt / %.0fpx", pFont->GetSize(eFontUnitPoint), pFont->GetSize(eFontUnitPixel));
+  NGL_LOG("font", Level, "    charmap: %s", pFont->GetCharMapName(pFont->GetCharMap()));
 }
 
 
@@ -756,21 +756,21 @@ void nuiGlyphInfo::Dump (uint Level) const
 {
   if (Index == 0)
   {
-    NGL_LOG(_T("font"), Level, _T("Invalid glyph info"));
+    NGL_LOG("font", Level, "Invalid glyph info");
     return;
   }
   
   if (Index < 0)
   {
-    NGL_LOG(_T("font"), Level, _T("Multiple glyph info (%d item%s) :"), -Index, PLURAL(-Index));
+    NGL_LOG("font", Level, "Multiple glyph info (%d item%s) :", -Index, PLURAL(-Index));
   }
   else
   {
-    NGL_LOG(_T("font"), Level, _T("Glyph #%d info :"), Index);
+    NGL_LOG("font", Level, "Glyph #%d info :", Index);
   }
-  NGL_LOG(_T("font"), Level, _T("  size    : %.1f x %.1f"), Width, Height);
-  NGL_LOG(_T("font"), Level, _T("  bearing : %.1f x %.1f"), BearingX, BearingY);
-  NGL_LOG(_T("font"), Level, _T("  advance : %.1f x %.1f"), AdvanceX, AdvanceY);
+  NGL_LOG("font", Level, "  size    : %.1f x %.1f", Width, Height);
+  NGL_LOG("font", Level, "  bearing : %.1f x %.1f", BearingX, BearingY);
+  NGL_LOG("font", Level, "  advance : %.1f x %.1f", AdvanceX, AdvanceY);
 }
 
 
@@ -822,13 +822,13 @@ nuiFontBase::~nuiFontBase()
 {
   delete mpFace;
 
-  //NGL_OUT(_T("DestroyFont: %p\n"), this);
+  //NGL_OUT("DestroyFont: %p\n", this);
   Textures::iterator it;
   Textures::iterator end = mTextures.end();
   for(it = mTextures.begin(); it != end; ++it)
   {
     nuiTexture* pTexture = *it;
-    //NGL_OUT(_T("DestroyFontTexture: %p / %p\n"), this, pTexture);
+    //NGL_OUT("DestroyFontTexture: %p / %p\n", this, pTexture);
     pTexture->Release();
   }
   mTextures.clear();
@@ -1254,7 +1254,7 @@ int nuiFontBase::GetGlyphIndexes (const nglUChar* pSource, int SourceLength, uin
       (face->charmap->encoding == ft_encoding_none))
   {
 #ifdef DBG_INDEX
-    NGL_OUT(_T("GetGlyphIndexes => Font encoding = none, using chars as glyph indices\n"));
+    NGL_OUT("GetGlyphIndexes => Font encoding = none, using chars as glyph indices\n");
 #endif
     int i;
     
@@ -1270,10 +1270,10 @@ int nuiFontBase::GetGlyphIndexes (const nglUChar* pSource, int SourceLength, uin
   int done = 0;
   
 #ifdef DBG_INDEX
-  NGL_OUT(_T("GetGlyphIndexes('"));
+  NGL_OUT("GetGlyphIndexes('");
   int i;
-  for (i = 0; i < SourceLength; i++) NGL_OUT(_T("%lc"), pSource[i]);
-  NGL_OUT(_T("' [%d], 0x%p [%d])\n"), SourceLength, pIndexes, IndexesLength);
+  for (i = 0; i < SourceLength; i++) NGL_OUT("%lc", pSource[i]);
+  NGL_OUT("' [%d], 0x%p [%d])\n", SourceLength, pIndexes, IndexesLength);
 #endif
   
   {
@@ -1282,7 +1282,7 @@ int nuiFontBase::GetGlyphIndexes (const nglUChar* pSource, int SourceLength, uin
     {
       *pIndexes++ = FTC_CMapCache_Lookup (gFTCMapCache, face_id, mCharMap, *pSource++);
 #ifdef DBG_INDEX
-      //      NGL_OUT(_T(" %d -> %d"), pSource[-1], pIndexes[-1]);
+      //      NGL_OUT(" %d -> %d", pSource[-1], pIndexes[-1]);
 #endif
       todo--;
     }
@@ -1304,7 +1304,7 @@ int32 nuiFontBase::GetGlyphIndex(nglUChar Source, nglUChar VariationSelector) co
       (face->charmap->encoding == ft_encoding_none))
   {
 #ifdef DBG_INDEX
-    NGL_OUT(_T("GetGlyphIndexes => Font encoding = none, using chars as glyph indices\n"));
+    NGL_OUT("GetGlyphIndexes => Font encoding = none, using chars as glyph indices\n");
 #endif
     return Source;
   }
@@ -1557,39 +1557,39 @@ bool nuiFontBase::Init()
   // Build a FT library instance if necessary
   if (!gFTLibrary)
   {
-    NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Initializing FreeType library")); )
+    NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Initializing FreeType library"); )
     error = FT_Init_FreeType (&gFTLibrary);
     if (error)
     {
-      NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Unable to initialize the FreeType library")); )
-      //SetError (_T("font"), NGL_FONT_EINIT);
+      NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Unable to initialize the FreeType library"); )
+      //SetError ("font", NGL_FONT_EINIT);
       return false;
     }
     App->AddExit (OnExit);
 #ifdef _DEBUG_
     FT_Int major, minor, patch;
     FT_Library_Version(gFTLibrary, &major, &minor, &patch);
-    NGL_LOG(_T("font"), NGL_LOG_DEBUG, _T("  version %d.%d.%d"), major, minor, patch);
+    NGL_LOG("font", NGL_LOG_DEBUG, "  version %d.%d.%d", major, minor, patch);
 #endif // _DEBUG_
     
-    NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Initializing FreeType cache (%d KB)"), FTCACHE_MAX_BYTES/1024); )
+    NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Initializing FreeType cache (%d KB)", FTCACHE_MAX_BYTES/1024); )
     // Use freetype defaults : (library, max_faces, max_sizes, max_bytes, [...])
     error = FTC_Manager_New (gFTLibrary, NGL_FTCACHE_MAX_FACES, NGL_FTCACHE_MAX_SIZES, NGL_FTCACHE_MAX_BYTES, nuiFontInstance::FaceRequestHandler, NULL, &gFTCacheManager);
-    NGL_DEBUG( if (error) NGL_LOG(_T("font"), NGL_LOG_WARNING, _T("Couldn't create face cache manager (FreeType error: %d)"), error); )
+    NGL_DEBUG( if (error) NGL_LOG("font", NGL_LOG_WARNING, "Couldn't create face cache manager (FreeType error: %d)", error); )
     
     if (gFTCacheManager)
     {
-      NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO + 1, _T("  adding charmap cache")); )
+      NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO + 1, "  adding charmap cache"); )
       error = FTC_CMapCache_New (gFTCacheManager, &gFTCMapCache);
-      NGL_DEBUG( if (error) NGL_LOG(_T("font"), NGL_LOG_WARNING, _T("Couldn't create charmap cache (FreeType error: %d)"), error); )
+      NGL_DEBUG( if (error) NGL_LOG("font", NGL_LOG_WARNING, "Couldn't create charmap cache (FreeType error: %d)", error); )
       
-      NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO + 1, _T("  adding image cache")); )
+      NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO + 1, "  adding image cache"); )
       error = FTC_ImageCache_New (gFTCacheManager, &gFTImageCache);
-      NGL_DEBUG( if (error) NGL_LOG(_T("font"), NGL_LOG_WARNING, _T("Couldn't create image cache (FreeType error: %d)"), error); )
+      NGL_DEBUG( if (error) NGL_LOG("font", NGL_LOG_WARNING, "Couldn't create image cache (FreeType error: %d)", error); )
       
-      NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO + 1, _T("  adding small bitmap cache")); )
+      NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO + 1, "  adding small bitmap cache"); )
       error = FTC_SBitCache_New(gFTCacheManager, &gFTSBitmapCache);
-      NGL_DEBUG( if (error) NGL_LOG(_T("font"), NGL_LOG_WARNING, _T("Couldn't create small bitmap cache (FreeType error: %d)"), error); )
+      NGL_DEBUG( if (error) NGL_LOG("font", NGL_LOG_WARNING, "Couldn't create small bitmap cache (FreeType error: %d)", error); )
     }
   }
   
@@ -1599,7 +1599,7 @@ bool nuiFontBase::Init()
 bool nuiFontBase::Load (const nglPath& rPath, uint Face, float Size)
 {
   // Load face from file spec
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Loading logical font '%s' (face %d)"), rPath.GetNodeName().GetChars(), Face); )
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Loading logical font '%s' (face %d)", rPath.GetNodeName().GetChars(), Face); )
   mpFace->SetFontInstance(new nuiFontInstance(rPath, Face));
   mpFace->Desc.face_id = nuiFontInstance::Install(mpFace->GetFontInstance());
   
@@ -1609,7 +1609,7 @@ bool nuiFontBase::Load (const nglPath& rPath, uint Face, float Size)
 bool nuiFontBase::Load (const uint8* pBase, int32 BufferSize, uint Face, bool StaticBuffer, float Size)
 {
   // Load face from memory
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Loading logical font at %p (face %d, size %f, %d bytes)"), pBase, Face, Size, BufferSize); )
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Loading logical font at %p (face %d, size %f, %d bytes)", pBase, Face, Size, BufferSize); )
   mpFace->SetFontInstance(new nuiFontInstance(pBase, BufferSize, Face, StaticBuffer));
   mpFace->Desc.face_id = nuiFontInstance::Install(mpFace->GetFontInstance());
   
@@ -1622,7 +1622,7 @@ bool nuiFontBase::Load (FaceID ID, float Size)
 #ifdef _DEBUG_
   nuiFontInstance* ifont = nuiFontInstance::Lookup((FTC_FaceID)ID);
   if (ifont)
-    NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Copying logical font '%s' (face %d)"), ifont->GetPath().GetNodeName().GetChars(), ifont->GetFace());
+    NGL_LOG("font", NGL_LOG_INFO, "Copying logical font '%s' (face %d)", ifont->GetPath().GetNodeName().GetChars(), ifont->GetFace());
 #endif
   
   mpFace->Desc.face_id = (FTC_FaceID)ID;
@@ -1638,7 +1638,7 @@ bool nuiFontBase::LoadFinish(float Size)
    */
   if (FTC_Manager_LookupFace (gFTCacheManager, mpFace->Desc.face_id, &mpFace->Face) != FT_Err_Ok)
   {
-    //SetError(_T("font"), NGL_FONT_ELOAD);
+    //SetError("font", NGL_FONT_ELOAD);
     return false;
   }
   
@@ -1657,7 +1657,7 @@ bool nuiFontBase::LoadFinish(float Size)
   /* Initialize some global info fields
    */
   mFamilyName.Import (face->family_name);
-  if (mFamilyName == _T("LastResort"))
+  if (mFamilyName == "LastResort")
     mLastResort = true;
   mStyleName.Import (face->style_name);
   mUnitsPerEM = (float)face->units_per_EM;
@@ -1672,7 +1672,7 @@ bool nuiFontBase::LoadFinish(float Size)
   }
   else
   {
-    NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_WARNING, _T("Warning: font '%s (%s)' has no panose information.\n"), mFamilyName.GetChars(), mStyleName.GetChars()); )
+    NGL_DEBUG( NGL_LOG("font", NGL_LOG_WARNING, "Warning: font '%s (%s)' has no panose information.\n", mFamilyName.GetChars(), mStyleName.GetChars()); )
     memset(&mPanoseBytes, 0, 10);
     mHasPanoseInfo = false;
   }
@@ -1693,7 +1693,7 @@ bool nuiFontBase::LoadFinish(float Size)
 #endif
   mCharMap = FT_Get_Charmap_Index(face->charmap);
   
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_DEBUG, _T("  selected charmap   : %s (#%d)"), GetCharMapName(), GetCharMap()); )
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_DEBUG, "  selected charmap   : %s (#%d)", GetCharMapName(), GetCharMap()); )
   
   mValid = true;
 
@@ -1737,13 +1737,13 @@ void nuiFontBase::OnExit()
   
   if (gFTCacheManager)
   {
-    NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Releasing FreeType cache")); )
+    NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Releasing FreeType cache"); )
     FTC_Manager_Done (gFTCacheManager);
     gFTCacheManager = NULL;
   }
   if (gFTLibrary)
   {
-    NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Releasing FreeType library")); )
+    NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Releasing FreeType library"); )
     FT_Done_FreeType (gFTLibrary);
     gFTLibrary = NULL;
   }
@@ -1799,7 +1799,7 @@ nuiTexture *nuiFontBase::AllocateTexture(int size)
   pTexture->SetWrapT(GL_CLAMP);
 #endif
 
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Allocated new font texture (%d x %d) %s"), size, size, GetObjectName().GetChars()); )
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Allocated new font texture (%d x %d) %s", size, size, GetObjectName().GetChars()); )
 
   return pTexture;
 }
@@ -1863,7 +1863,7 @@ bool nuiFontBase::CopyBitmapToTexture(const GlyphBitmap &rBitmap, nuiTexture *pT
 
   default:
     {
-      NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_WARNING, _T("nuiFont: unsupported input bitmap pixel depth (%d)"), rBitmap.Depth); )
+      NGL_DEBUG( NGL_LOG("font", NGL_LOG_WARNING, "nuiFont: unsupported input bitmap pixel depth (%d)", rBitmap.Depth); )
         return false;
     }
   }

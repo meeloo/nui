@@ -41,8 +41,8 @@ using namespace std;
 
 const nglChar* gpApplicationErrorTable[] =
 {
-/*  0 */ _T("No error"),
-/*  1 */ _T("Couldn't open the default X display. Is the DISPLAY environment variable set ?"),
+/*  0 */ "No error",
+/*  1 */ "Couldn't open the default X display. Is the DISPLAY environment variable set ?",
   NULL
 };
 

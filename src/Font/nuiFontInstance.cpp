@@ -35,7 +35,7 @@ nuiFontInstance::nuiFontInstance (const FT_Byte* pBase, FT_Long Size, uint Face,
 {
   //NGL_DEBUG( NGL_LOG("font", NGL_LOG_DEBUG, "nuiFontInstance::nuiFontInstance 0x%x (memory %d - %d)\n", this, Size, Face);)
   nglString fake;
-  fake.Format(_T("/memory/%p,0x%x"), pBase, Size);
+  fake.Format("/memory/%p,0x%x", pBase, Size);
 
   mPath     = fake;
   mFace     = Face;
@@ -96,7 +96,7 @@ FTC_FaceID nuiFontInstance::Install(nuiFontInstance * pInstance)
 
   // Not matching installed font : create (copy), install and return it
   pInstance->Acquire();
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_DEBUG, _T("Install '%s' %d"), pInstance->mPath.GetPathName().GetChars(), pInstance->mFace); )
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_DEBUG, "Install '%s' %d", pInstance->mPath.GetPathName().GetChars(), pInstance->mFace); )
   gFontList.insert(pInstance);
   return (FTC_FaceID)pInstance;
 }
@@ -116,7 +116,7 @@ FTC_FaceID nuiFontInstance::Uninstall(nuiFontInstance * pInstance)
       int32 f = font->mFace;
       if (!font->Release())
       {
-        NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_DEBUG, _T("Uninstall '%s' %d"), p.GetChars(), f); )
+        NGL_DEBUG( NGL_LOG("font", NGL_LOG_DEBUG, "Uninstall '%s' %d", p.GetChars(), f); )
         gFontList.erase(it);
       }
       
@@ -152,7 +152,7 @@ FT_Error nuiFontInstance::FaceRequestHandler (FTC_FaceID FaceID, FT_Library pLib
 
 FT_Error nuiFontInstance::OnFaceRequest (FT_Library pLibrary, FT_Pointer pData, FT_Face* pFace)
 {
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_DEBUG, _T("Hard loading '%s'"), mPath.GetPathName().GetChars(), mFace); )
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_DEBUG, "Hard loading '%s'", mPath.GetPathName().GetChars(), mFace); )
 
   if (!mpMemBase) // We were given a file path
   {
@@ -190,19 +190,19 @@ FT_Error nuiFontInstance::OnFaceRequest (FT_Library pLibrary, FT_Pointer pData, 
 
 void nuiFontInstance::Dump()
 {
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("nuiFontInstance::Dump\n"));)
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "nuiFontInstance::Dump\n");)
 
   FontListType::iterator i;
   nuiFontInstance* pFontInstance = NULL;
   uint s = gFontList.size();
   uint c = 0;
   
-  NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Dumping font instances (%d)\n"), s);)
+  NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Dumping font instances (%d)\n", s);)
     
   for (i = gFontList.begin(); i != gFontList.end(); ++i)
   {
     pFontInstance = *i;
-    NGL_DEBUG( NGL_LOG(_T("font"), NGL_LOG_INFO, _T("installed font instance %d/%d: 0x%x\n"), c, s, pFontInstance);)
+    NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "installed font instance %d/%d: 0x%x\n", c, s, pFontInstance);)
     c++;
   }
 }
@@ -218,7 +218,7 @@ void nuiFontInstance::OnExit()
   nuiFontInstance* pFontInstance = NULL;
   uint c = 0;
   
-  NGL_DEBUG( uint cnt = gFontList.size(); NGL_LOG(_T("font"), NGL_LOG_INFO, _T("Releasing %d installed font%s"), cnt, PLURAL(cnt)); )
+  NGL_DEBUG( uint cnt = gFontList.size(); NGL_LOG("font", NGL_LOG_INFO, "Releasing %d installed font%s", cnt, PLURAL(cnt)); )
 
   for (i = gFontList.begin(); i != gFontList.end(); ++i)
   {

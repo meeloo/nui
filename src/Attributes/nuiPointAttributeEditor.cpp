@@ -12,7 +12,7 @@ nuiPointAttributeEditor::nuiPointAttributeEditor(const nuiAttrib<nuiPoint>& rAtt
 	: nuiAttributeEditor(),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiPointAttributeEditor"));
+	SetObjectClass("nuiPointAttributeEditor");
 	
 	nglString contents;
 	mAttribute.Format(contents);

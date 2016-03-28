@@ -72,7 +72,7 @@ int i = 0;
 while (nglVideoMode::Get(i, mode))
 {
   i++;
-  NGL_OUT(_T("Mode #%d: %dx%dx%d - vertical refreh: %d Hz"), i,
+  NGL_OUT("Mode #%d: %dx%dx%d - vertical refreh: %d Hz", i,
     mode.GetWidth(), pmode.GetHeight(), pmode.GetDepth(), pmode.GetVFrequency());
 }
 \endcode

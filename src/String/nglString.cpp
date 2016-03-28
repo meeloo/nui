@@ -650,7 +650,7 @@ nglUChar nglString::GetNextUChar(int32& Index) const
       UChar |= c & 0x3F;
     }
   }
-  //NGL_OUT(_T("%lc"), UChar);
+  //NGL_OUT("%lc", UChar);
 
   return UChar;
 }
@@ -1949,7 +1949,7 @@ nglString& nglString::Add(void* pVoidPointer)
 nglString& nglString::AddNewLine()
 {
   mIsNull = false;
-  Append(_T("\n"));
+  Append("\n");
   return *this;
 }
 
@@ -2747,7 +2747,7 @@ void nglString::ToCanonicalDecomposition()
 
  */
 
-static const std::string base64_chars = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 
 static inline bool is_base64(nglChar c)
@@ -2782,7 +2782,7 @@ void nglString::EncodeBase64(const uint8* bytes_to_encode, unsigned int in_len)
       chars_in_line++;
       if (chars_in_line > 60)
       {
-        Add(_T("\r\n"));
+        Add("\r\n");
         chars_in_line = 0;
       }
     }
@@ -2805,7 +2805,7 @@ void nglString::EncodeBase64(const uint8* bytes_to_encode, unsigned int in_len)
       chars_in_line++;
       if (chars_in_line > 60)
       {
-        Add(_T("\r\n"));
+        Add("\r\n");
         chars_in_line = 0;
       }
     }
@@ -2815,7 +2815,7 @@ void nglString::EncodeBase64(const uint8* bytes_to_encode, unsigned int in_len)
       chars_in_line++;
       if (chars_in_line > 60)
       {
-        Add(_T("\r\n"));
+        Add("\r\n");
         chars_in_line = 0;
       }
 

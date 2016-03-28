@@ -12,7 +12,7 @@ nuiZoomBar::nuiZoomBar(nuiOrientation Orientation, const nuiRange& rRange, float
 mPageSizeMin(PageSizeMin),
 mUnzoomAfterBound(false)
 {
-  SetObjectClass(_T("nuiZoomBar")); 
+  SetObjectClass("nuiZoomBar"); 
 
   
   SetThumbSideSize(SideSize);

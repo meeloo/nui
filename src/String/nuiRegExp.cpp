@@ -239,7 +239,7 @@ public:
 
 void CRegErrorHandler::regerror( const nglChar* s ) const
 {
-  NGL_OUT(_T("regerror: %s\n"), s );
+  NGL_OUT("regerror: %s\n", s );
   m_szError = s;
 }
 

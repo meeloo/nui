@@ -45,10 +45,10 @@ void nuiSocket::DumpError(const nuiSocket* pSocket, int err, const char* msg, ..
     m.Formatv(msg, args);
     va_end(args);
 
-    NGL_OUT(_T("[%s] Socket Error (%p %d): %s\n"), m.GetChars(), pSocket, pSocket?pSocket->GetSocket():0, error.GetChars());
+    NGL_OUT("[%s] Socket Error (%p %d): %s\n", m.GetChars(), pSocket, pSocket?pSocket->GetSocket():0, error.GetChars());
   }
   else
-    NGL_OUT(_T("Socket Error (%p, %d): %s\n"), pSocket, pSocket?pSocket->GetSocket():0, error.GetChars());
+    NGL_OUT("Socket Error (%p, %d): %s\n", pSocket, pSocket?pSocket->GetSocket():0, error.GetChars());
 }
 
 void nuiSocket::DumpError(const nuiSocket* pSocket, int err)

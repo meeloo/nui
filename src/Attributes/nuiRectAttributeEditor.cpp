@@ -12,7 +12,7 @@ nuiRectAttributeEditor::nuiRectAttributeEditor(const nuiAttrib<nuiRect>& rAttrib
 	: nuiAttributeEditor(),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiRectAttributeEditor"));
+	SetObjectClass("nuiRectAttributeEditor");
 	
 	nglString contents;
 	mAttribute.Format(contents);
@@ -29,7 +29,7 @@ nuiRectAttributeEditor::nuiRectAttributeEditor(const nuiAttrib<const nuiRect&>& 
 	: nuiAttributeEditor(),
     mConstAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiRectAttributeEditor"));
+	SetObjectClass("nuiRectAttributeEditor");
 	
 	nglString contents;
 	mConstAttribute.Format(contents);

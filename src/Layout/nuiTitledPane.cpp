@@ -14,13 +14,13 @@ nuiTitledPane::nuiTitledPane(nuiWidget* pTitleWidget)
 : nuiVBox(2)
 {
   SetExpand(nuiExpandShrinkAndGrow);
-  SetObjectClass(_T("nuiTitledPane"));
+  SetObjectClass("nuiTitledPane");
   
   SetCellExpand(1, nuiExpandShrinkAndGrow);
 
   
 	if (!pTitleWidget)
-    SetTitle(_T("unnamed titledpane"));
+    SetTitle("unnamed titledpane");
 	else
     SetTitle(pTitleWidget);
 }
@@ -31,7 +31,7 @@ nuiTitledPane::nuiTitledPane(const nglString& rText)
 : nuiVBox(2)
 {
   SetExpand(nuiExpandShrinkAndGrow);
-  SetObjectClass(_T("nuiTitledPane"));
+  SetObjectClass("nuiTitledPane");
   SetTitle(rText);
 }
 
@@ -40,7 +40,7 @@ nuiTitledPane::nuiTitledPane(nuiLabelAttribute* pLabel)
 : nuiVBox(2)
 {
   SetExpand(nuiExpandShrinkAndGrow);
-  SetObjectClass(_T("nuiTitledPane"));
+  SetObjectClass("nuiTitledPane");
   SetTitle(pLabel);
 }
 
@@ -67,7 +67,7 @@ void nuiTitledPane::SetTitle(const nglString& rTitle, nuiPosition position)
   nuiLabel* label = new nuiLabel(rTitle, nuiFont::GetFont (12));
   SetCell(0, label, position);
   
-  label->SetObjectName(_T("nuiTitledPane::Title"));
+  label->SetObjectName("nuiTitledPane::Title");
   
   InvalidateLayout();
 }	

@@ -11,7 +11,7 @@ nuiDialog::nuiDialog(nuiWidget* pParent)
   mpLayoutContainer(NULL), mpGlobalGrid(NULL), mpButtonsGrid(NULL),  
   mResult(eDialogAccepted), mpButtonOk(NULL), mpButtonCancel(NULL), mpButtonApply(NULL), mpPane(NULL), mpDefaultButton(NULL)
 {
-  if (SetObjectClass(_T("nuiDialog")))
+  if (SetObjectClass("nuiDialog"))
     InitAttributes();
   ///< Calls InitDialog() just after this ctor(), needed to enable virtual calls
 }
@@ -34,12 +34,12 @@ void nuiDialog::InitDialog(nuiWidget* pLayoutContainer, uint32 buttons)
   SetDefaultAnimations();
 
   // Register Hot Keys:
-  RegisterHotKeyKey(_T("CancelDialog"), NK_ESC, 0, false, false, _T("Cancel dialog"));
-  mSink.Connect( GetHotKeyEvent(_T("CancelDialog")), &nuiDialog::OnCancel);
-  RegisterHotKeyKey(_T("AcceptDialog"), NK_ENTER, 0, false, false, _T("Accept dialog"));
-  mSink.Connect( GetHotKeyEvent(_T("AcceptDialog")), &nuiDialog::OnAccept );
-  RegisterHotKeyKey(_T("AcceptDialogAlt"), NK_PAD_ENTER, 0, false, false, _T("Accept dialog (alternate)"));
-  mSink.Connect( GetHotKeyEvent(_T("AcceptDialogAlt")), &nuiDialog::OnAccept );  
+  RegisterHotKeyKey("CancelDialog", NK_ESC, 0, false, false, "Cancel dialog");
+  mSink.Connect( GetHotKeyEvent("CancelDialog"), &nuiDialog::OnCancel);
+  RegisterHotKeyKey("AcceptDialog", NK_ENTER, 0, false, false, "Accept dialog");
+  mSink.Connect( GetHotKeyEvent("AcceptDialog"), &nuiDialog::OnAccept );
+  RegisterHotKeyKey("AcceptDialogAlt", NK_PAD_ENTER, 0, false, false, "Accept dialog (alternate)");
+  mSink.Connect( GetHotKeyEvent("AcceptDialogAlt"), &nuiDialog::OnAccept );  
 }
 
 void nuiDialog::InitDialog(const nglString& rMessage, nuiWidget* pLayoutContainer, uint32 buttons)
@@ -53,8 +53,8 @@ void nuiDialog::InitDialog(const nglString& rMessage, nuiWidget* pLayoutContaine
 
 void nuiDialog::InitDialog(nuiLabel* pLabel, nuiWidget* pLayoutContainer, uint32 buttons)
 {
-  pLabel->SetObjectClass(_T("nuiDialog::Title"));
-  pLabel->SetObjectName(_T("nuiDialog::Title"));
+  pLabel->SetObjectClass("nuiDialog::Title");
+  pLabel->SetObjectName("nuiDialog::Title");
 
   InitDialog(pLayoutContainer, buttons);
 
@@ -68,7 +68,7 @@ void nuiDialog::InitDialog(nuiLabel* pLabel, nuiWidget* pLayoutContainer, uint32
 void nuiDialog::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Decoration")), nuiUnitName,
+               (nglString("Decoration"), nuiUnitName,
                 nuiAttribute<const nglString&>::GetterDelegate(this, &nuiDialog::GetDecorationName),
                 nuiAttribute<const nglString&>::SetterDelegate(this, &nuiDialog::SetDecoration)));
 }
@@ -100,13 +100,13 @@ void nuiDialog::CreateGrids()
   mpLayoutContainer->AddChild(mpGlobalGrid);
   mpGlobalGrid->SetColumnExpand(0,  nuiExpandShrinkAndGrow);
   mpGlobalGrid->SetRowExpand(0,     nuiExpandShrinkAndGrow);
-  mpGlobalGrid->SetObjectName(_T("GlobalGrid"));
+  mpGlobalGrid->SetObjectName("GlobalGrid");
 
   mpButtonsGrid = new nuiGrid(1, 1);
   mpButtonsGrid->SetRowExpand(0, nuiExpandShrinkAndGrow);
   mpButtonsGrid->SetPosition(nuiRight);
   mpGlobalGrid->SetCell(0,2, mpButtonsGrid);
-  mpButtonsGrid->SetObjectName(_T("ButtonsGrid"));
+  mpButtonsGrid->SetObjectName("ButtonsGrid");
 }
 
 void nuiDialog::SetContents(nuiWidget * pWidget, nuiPosition Position)
@@ -126,15 +126,15 @@ void nuiDialog::SetDefaultButtons(uint32 buttons)
 
   if (buttons & eDialogButtonOk)
   {
-    AddButton(_T("Ok"), eDialogButtonOk);
+    AddButton("Ok", eDialogButtonOk);
   }
   if (buttons & eDialogButtonCancel)
   {
-    AddButton(_T("Cancel"), eDialogButtonCancel);
+    AddButton("Cancel", eDialogButtonCancel);
   }
   if (buttons & eDialogButtonApply)
   {
-    AddButton(_T("Apply"), eDialogButtonApply);
+    AddButton("Apply", eDialogButtonApply);
   }
 }
 
@@ -161,7 +161,7 @@ nuiButton* nuiDialog::AddButton(const nglString& rButtonLabel, DialogButtonType 
 {
   nuiButton* pButton = new nuiButton(rButtonLabel);
 //  pButton->SetObjectName(rButtonLabel);
-  pButton->SetObjectName(_T("nuiDialog::Button"));
+  pButton->SetObjectName("nuiDialog::Button");
 
   if (button & eDialogButtonCustom)
   {
@@ -279,7 +279,7 @@ void nuiDialog::SetDefaultAnimations()
 //  SetMatrix(m);
 //  SetAlpha(0);
 
-  AddAnimation(_T("SHOW"), pMetaAnim);
+  AddAnimation("SHOW", pMetaAnim);
 
   pMetaAnim = new nuiMetaAnimation();
   nuiAnimation* pHideFade = new nuiFadeOutWidgetAnim(this, 0.3, false);
@@ -290,14 +290,14 @@ void nuiDialog::SetDefaultAnimations()
   pHideScale->SetEasing(&nuiEasingSinusStartSlow);
   pHideFade->SetEasing(&nuiEasingSinusStartFast);
   
-  AddAnimation(_T("TRASH"), pMetaAnim);
+  AddAnimation("TRASH", pMetaAnim);
 }
 
 nuiWidget* nuiDialog::CreateDefaultLayout()
 {
   mpPane = new nuiWidget();
-  mpPane->SetObjectClass(_T("nuiDialog::Pane"));
-  mpPane->SetObjectName(_T("nuiDialog::Pane"));
+  mpPane->SetObjectClass("nuiDialog::Pane");
+  mpPane->SetObjectName("nuiDialog::Pane");
 
   nuiDefaultDecoration::Dialog(mpPane);
   

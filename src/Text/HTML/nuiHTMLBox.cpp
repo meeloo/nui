@@ -102,12 +102,12 @@ float nuiHTMLBox::LayoutLine(uint32& start, uint32& count, float& y, float& h, n
       r.RoundToAbove();
       pIt->SetLayout(r);
       
-      //NGL_OUT(_T("<%s> %s\n"), pIt->GetNode()->GetName().GetChars(), r.GetValue().GetChars());
+      //NGL_OUT("<%s> %s\n", pIt->GetNode()->GetName().GetChars(), r.GetValue().GetChars());
       if (DEBUG_LAYOUT)
       {
         for (uint32 bleh = 0; bleh < GetDepth(); bleh++)
           printf("  ");
-        NGL_OUT(_T("<%s> %d %p\n"), pIt->GetNode()->GetName().GetChars(), j, pIt);
+        NGL_OUT("<%s> %d %p\n", pIt->GetNode()->GetName().GetChars(), j, pIt);
       }
       
       x += ToAbove(r.GetWidth());
@@ -130,7 +130,7 @@ float nuiHTMLBox::LayoutLine(uint32& start, uint32& count, float& y, float& h, n
       {
         for (uint32 bleh = 0; bleh < GetDepth(); bleh++)
           printf("  ");
-        NGL_OUT(_T("skipping <%s> %d %p\n"), pIt->GetNode()->GetName().GetChars(), j, pIt);
+        NGL_OUT("skipping <%s> %d %p\n", pIt->GetNode()->GetName().GetChars(), j, pIt);
       }
     }
     
@@ -151,7 +151,7 @@ void nuiHTMLBox::Layout(nuiHTMLContext& rContext)
   nglString id;
   nuiHTMLAttrib* pAttrib = mpNode->GetAttribute(nuiHTMLAttrib::eAttrib_ID);
   if (pAttrib)
-    id.Add(_T(" id='")).Add(pAttrib->GetValue()).Add(_T("'"));
+    id.Add(" id='").Add(pAttrib->GetValue()).Add("'");
   printf("nuiHTMLBox::Layout <%s%s> %s (%d items)\n", mpNode->GetName().GetChars(), id.GetChars(), mRect.GetValue().GetChars(), mItems.size());
 
   if (mpNode->GetTagType() == nuiHTMLNode::eTag_LI)
@@ -209,7 +209,7 @@ void nuiHTMLBox::Layout(nuiHTMLContext& rContext)
             for (uint32 bleh = 0; bleh < GetDepth(); bleh++)
               printf("  ");
             printf("fixed layout for item %d (%p)\n", i, pItem);
-            NGL_OUT(_T("  <%s> %d %p\n"), pItem->GetNode()->GetName().GetChars(), i, pItem);
+            NGL_OUT("  <%s> %d %p\n", pItem->GetNode()->GetName().GetChars(), i, pItem);
           }
         }
         break;
@@ -229,7 +229,7 @@ void nuiHTMLBox::Layout(nuiHTMLContext& rContext)
             for (uint32 bleh = 0; bleh < GetDepth(); bleh++)
               printf("  ");
             printf("absolute layout for item %d (%p)\n", i, pItem);
-            NGL_OUT(_T("  <%s> %d %p\n"), pItem->GetNode()->GetName().GetChars(), i, pItem);
+            NGL_OUT("  <%s> %d %p\n", pItem->GetNode()->GetName().GetChars(), i, pItem);
           }
         }
         break;

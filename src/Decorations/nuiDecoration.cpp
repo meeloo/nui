@@ -9,7 +9,7 @@
 
 nuiDecoration::nuiDecoration(const nglString& rName)
 {
-  if (SetObjectClass(_T("nuiDecoration")))
+  if (SetObjectClass("nuiDecoration"))
     InitAttributes();
 
   SetObjectName(rName);
@@ -29,24 +29,24 @@ nuiDecoration::nuiDecoration(const nglString& rName)
 void nuiDecoration::InitAttributes()
 {
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("EnableBorder")), nuiUnitBoolean,
+               (nglString("EnableBorder"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiDecoration::IsBorderEnabled),
                 nuiMakeDelegate(this, &nuiDecoration::EnableBorder)));
   
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("UseWidgetAlpha")), nuiUnitNone,
+               (nglString("UseWidgetAlpha"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiDecoration::IsWidgetAlphaUsed),
                 nuiMakeDelegate(this, &nuiDecoration::UseWidgetAlpha)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("RedrawOnHover")), nuiUnitNone,
+               (nglString("RedrawOnHover"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiDecoration::GetRedrawOnHover),
                 nuiMakeDelegate(this, &nuiDecoration::RedrawOnHover)));
   
   
   AddAttribute(new nuiAttribute<nuiDecorationLayer>
-               (nglString(_T("Layer")), nuiUnitNone,
+               (nglString("Layer"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiDecoration::GetLayer), 
                 nuiMakeDelegate(this, &nuiDecoration::SetLayer)));
   
@@ -112,7 +112,7 @@ nuiDecoration* nuiDecoration::Get(const nglString& rName, bool silent)
   if (it == end)
   {
 //    if (!silent)
-//      NGL_OUT(_T("nuiDecoration warning : could not retrieve '%s'\n"), rName.GetChars());
+//      NGL_OUT("nuiDecoration warning : could not retrieve '%s'\n", rName.GetChars());
     return NULL;
   }
   
@@ -237,13 +237,13 @@ nuiRect nuiDecoration::GetMaximumClientRect(const nuiWidget* pWidget) const
 
 bool ShouldSkipAttrib(const nglString& rName)
 {
-  return rName == _T("Class") || rName == _T("Name");
+  return rName == "Class" || rName == "Name";
 }
 
 nglString nuiDecoration::GetCSSDeclaration() const
 {
   nglString decl;
-  decl.Add(_T("@")).Add(GetObjectClass()).Add(_T(" ")).Add(GetObjectName()).AddNewLine().Add(_T("{")).AddNewLine();
+  decl.Add("@").Add(GetObjectClass()).Add(" ").Add(GetObjectName()).AddNewLine().Add("{").AddNewLine();
   
   // build attributes list
   std::map<nglString, nuiAttribBase> attributes;
@@ -274,7 +274,7 @@ nglString nuiDecoration::GetCSSDeclaration() const
           for (uint32 i = 0; i < count; i++)
           {
             Base.ToString(i, str);
-            value.Add(i).Add(_T(":")).Add(str).Add("\t");
+            value.Add(i).Add(":").Add(str).Add("\t");
           }
           value.Trim(_T('\t'));
         }
@@ -289,7 +289,7 @@ nglString nuiDecoration::GetCSSDeclaration() const
             for (uint32 j = 0; j < MIN(10, countj); j++)
             {
               Base.ToString(i, j, str);
-              value.Add(i).Add(",").Add(j).Add(_T(":")).Add(str).Add("\t");
+              value.Add(i).Add(",").Add(j).Add(":").Add(str).Add("\t");
             }
           }
           value.Trim(_T('\t'));
@@ -298,17 +298,17 @@ nglString nuiDecoration::GetCSSDeclaration() const
       }
 
       if (value.Find(' ') >= 0)
-        value = nglString(_T("\"")).Add(value).Add(_T("\""));
+        value = nglString("\"").Add(value).Add("\"");
       if (value.IsEmpty())
-        value = _T("\"\"");
-      decl.Add(_T("  ")).Add(Base.GetName()).Add(_T(" : ")).Add(value).Add(_T(";")).AddNewLine();
+        value = "\"\"";
+      decl.Add("  ").Add(Base.GetName()).Add(" : ").Add(value).Add(";").AddNewLine();
     }
     
     ++it_a;
     i++;
   }
   
-  decl.Add(_T("}")).AddNewLine().AddNewLine();
+  decl.Add("}").AddNewLine().AddNewLine();
   return decl;
 }
 
@@ -318,7 +318,7 @@ nuiAttributeEditor* nuiDecoration::GetAttributeEditor(void* pTarget, nuiAttribut
   DecorationMap::const_iterator it = mDecorations.begin();
   DecorationMap::const_iterator end = mDecorations.end();
   
-  values.push_back(std::make_pair(_T("-- None --"), nglString::Null));
+  values.push_back(std::make_pair("-- None --", nglString::Null));
   while (it != end)
   {
     values.push_back(std::make_pair(it->first, it->first));
@@ -381,14 +381,14 @@ void nuiDecoration::AddDecorationType(const nglString& rDecorationTypeName, cons
 
 void nuiDecoration::InitDecorationEngine()
 {
-  nuiDecoration::AddDecorationType(_T("nuiFrame"),                      &nuiCreateDecoration<nuiFrame>);
-  nuiDecoration::AddDecorationType(_T("nuiBorderDecoration"),           &nuiCreateDecoration<nuiBorderDecoration>);
-  nuiDecoration::AddDecorationType(_T("nuiColorDecoration"),            &nuiCreateDecoration<nuiColorDecoration>);
-  nuiDecoration::AddDecorationType(_T("nuiImageDecoration"),            &nuiCreateDecoration<nuiImageDecoration>);
-  nuiDecoration::AddDecorationType(_T("nuiGradientDecoration"),         &nuiCreateDecoration<nuiGradientDecoration>);
-  nuiDecoration::AddDecorationType(_T("nuiStateDecoration"),            &nuiCreateDecoration<nuiStateDecoration>);
-  nuiDecoration::AddDecorationType(_T("nuiTreeHandleDecoration"),       &nuiCreateDecoration<nuiTreeHandleDecoration>);
-  nuiDecoration::AddDecorationType(_T("nuiMetaDecoration"),             &nuiCreateDecoration<nuiMetaDecoration>);
+  nuiDecoration::AddDecorationType("nuiFrame",                      &nuiCreateDecoration<nuiFrame>);
+  nuiDecoration::AddDecorationType("nuiBorderDecoration",           &nuiCreateDecoration<nuiBorderDecoration>);
+  nuiDecoration::AddDecorationType("nuiColorDecoration",            &nuiCreateDecoration<nuiColorDecoration>);
+  nuiDecoration::AddDecorationType("nuiImageDecoration",            &nuiCreateDecoration<nuiImageDecoration>);
+  nuiDecoration::AddDecorationType("nuiGradientDecoration",         &nuiCreateDecoration<nuiGradientDecoration>);
+  nuiDecoration::AddDecorationType("nuiStateDecoration",            &nuiCreateDecoration<nuiStateDecoration>);
+  nuiDecoration::AddDecorationType("nuiTreeHandleDecoration",       &nuiCreateDecoration<nuiTreeHandleDecoration>);
+  nuiDecoration::AddDecorationType("nuiMetaDecoration",             &nuiCreateDecoration<nuiMetaDecoration>);
 }
 
 std::map<nglString, nuiDecoration::DecorationCreatorFunction> nuiDecoration::mDecorationCreators;
@@ -400,7 +400,7 @@ void nuiDecoration::ExitDecorationEngine()
   {
     DecorationMap::iterator it = mDecorations.begin();
     nuiDecoration* pDeco = it->second;
-    //NGL_OUT(_T("Releasing decoration %p '%s'\n"), pDeco, pDeco->GetObjectName().GetChars());
+    //NGL_OUT("Releasing decoration %p '%s'\n", pDeco, pDeco->GetObjectName().GetChars());
     pDeco->Release();
   }
   mDecorationCreators.clear();

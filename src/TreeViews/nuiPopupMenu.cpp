@@ -30,7 +30,7 @@ mDelayTime(DELAY_TIME),
 mpOldFocused(NULL)
 {
   mTrashRemoval = false;
-  SetObjectClass(_T("nuiPopupMenu"));
+  SetObjectClass("nuiPopupMenu");
   nuiRect r = rRect;
 
   nuiTopLevel* pTop = NULL;
@@ -1435,7 +1435,7 @@ bool nuiPopupMenu::KeyDown(const nglKeyEvent& rEvent)
 
       nuiTreeNodePtr pNode = NULL;
       uint count = pParent->GetChildrenCount();
-      NGL_OUT(_T("Start search\n"));
+      NGL_OUT("Start search\n");
       for (uint i = 0; i < count && !pNode; i++)
       {
         nuiTreeNodePtr pN = (nuiTreeNodePtr)pParent->GetChild((i + index) % count);

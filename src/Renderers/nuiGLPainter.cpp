@@ -378,32 +378,32 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
     mpContext->BeginSession();
     const char* ext0 = (const char*)glGetString(GL_EXTENSIONS);
     nglString exts(ext0);
-    //NGL_OUT(_T("Extensions: %s\n"), exts.GetChars());
+    //NGL_OUT("Extensions: %s\n", exts.GetChars());
 
 
-    mpContext->CheckExtension(_T("GL_VERSION_1_2"));
+    mpContext->CheckExtension("GL_VERSION_1_2");
     nuiCheckForGLErrors();
-    mpContext->CheckExtension(_T("GL_VERSION_1_3"));
+    mpContext->CheckExtension("GL_VERSION_1_3");
     nuiCheckForGLErrors();
-    mpContext->CheckExtension(_T("GL_VERSION_1_4"));
+    mpContext->CheckExtension("GL_VERSION_1_4");
     nuiCheckForGLErrors();
-    mpContext->CheckExtension(_T("GL_VERSION_1_5"));
+    mpContext->CheckExtension("GL_VERSION_1_5");
     nuiCheckForGLErrors();
-    mpContext->CheckExtension(_T("GL_VERSION_2_0"));
+    mpContext->CheckExtension("GL_VERSION_2_0");
     nuiCheckForGLErrors();
-    mpContext->CheckExtension(_T("GL_ARB_vertex_buffer_object"));
+    mpContext->CheckExtension("GL_ARB_vertex_buffer_object");
     nuiCheckForGLErrors();
-    mpContext->CheckExtension(_T("GL_EXT_framebuffer_object"));
+    mpContext->CheckExtension("GL_EXT_framebuffer_object");
     nuiCheckForGLErrors();
 
-    mpContext->CheckExtension(_T("GL_ARB_framebuffer_object"));
+    mpContext->CheckExtension("GL_ARB_framebuffer_object");
     nuiCheckForGLErrors();
 
     if (mpContext->CheckExtension("GL_ARB_texture_non_power_of_two")  || mpContext->CheckExtension("GL_APPLE_texture_2D_limited_npot"))
     {
       mCanRectangleTexture = 1;
     }
-    else if (mpContext->CheckExtension(_T("GL_EXT_texture_rectangle")) || mpContext->CheckExtension(_T("GL_ARB_texture_rectangle")) || mpContext->CheckExtension(_T("GL_NV_texture_rectangle")))
+    else if (mpContext->CheckExtension("GL_EXT_texture_rectangle") || mpContext->CheckExtension("GL_ARB_texture_rectangle") || mpContext->CheckExtension("GL_NV_texture_rectangle"))
     {
       mCanRectangleTexture = 2;
     }
@@ -905,7 +905,7 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, i
       nuiCheckForGLErrors();
     }
 
-    //NGL_OUT(_T("Change texture to 0x%x (%s)\n"), pTexture, pTexture?pTexture->GetSource().GetChars() : nglString::Empty.GetChars());
+    //NGL_OUT("Change texture to 0x%x (%s)\n", pTexture, pTexture?pTexture->GetSource().GetChars() : nglString::Empty.GetChars());
     mFinalState.mpTexture[slot] = pTexture ;
 
     if (mFinalState.mpTexture[slot])
@@ -922,7 +922,7 @@ void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, i
       nuiCheckForGLErrors();
     }
 
-    //NGL_OUT(_T("Change texture type from 0x%x to 0x%x\n"), outtarget, intarget);
+    //NGL_OUT("Change texture type from 0x%x to 0x%x\n", outtarget, intarget);
 
     if (!mUseShaders)
     {
@@ -1062,7 +1062,7 @@ void nuiGLPainter::Clear(bool color, bool depth, bool stencil)
  */
 
 
-#define LOGENUM(XXX) case XXX: { NGL_OUT(_T("%s\n"), #XXX); } break;
+#define LOGENUM(XXX) case XXX: { NGL_OUT("%s\n", #XXX); } break;
 
 void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
 {
@@ -1534,7 +1534,7 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
     }
   }
 
-  //NGL_OUT(_T("Apply Target: 0x%x\n"), target);
+  //NGL_OUT("Apply Target: 0x%x\n", target);
   nglImage* pImage = pTexture->GetImage();
 
   {
@@ -1553,7 +1553,7 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
       glGenTextures(1, (GLuint*)&info.mTexture);
 
-      //NGL_OUT(_T("nuiGLPainter::UploadTexture 0x%x : '%s' / %d\n"), pTexture, pTexture->GetSource().GetChars(), info.mTexture);
+      //NGL_OUT("nuiGLPainter::UploadTexture 0x%x : '%s' / %d\n", pTexture, pTexture->GetSource().GetChars(), info.mTexture);
       nuiCheckForGLErrors();
       firstload = true;
       reload = true;
@@ -1869,7 +1869,7 @@ void nuiGLPainter::_DestroyTexture(nuiTexture* pTexture)
   {
     return;
   }
-  //NGL_OUT(_T("nuiGLPainter::DestroyTexture 0x%x : '%s' / %d\n"), pTexture, pTexture->GetSource().GetChars(), info.mTexture);
+  //NGL_OUT("nuiGLPainter::DestroyTexture 0x%x : '%s' / %d\n", pTexture, pTexture->GetSource().GetChars(), info.mTexture);
 
   glDeleteTextures(1, (GLuint*)&info.mTexture);
 }
@@ -2557,40 +2557,40 @@ bool nuiCheckForGLErrorsReal()
       break;
       
     case GL_INVALID_ENUM:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("An unacceptable value is specified for an enumerated argument. The offending function is ignored, having no side effect other than to set the error flag."));
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "An unacceptable value is specified for an enumerated argument. The offending function is ignored, having no side effect other than to set the error flag.");
       break;
     case GL_INVALID_VALUE:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("A numeric argument is out of range. The offending function is ignored, having no side effect other than to set the error flag."));
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "A numeric argument is out of range. The offending function is ignored, having no side effect other than to set the error flag.");
       break;
     case GL_INVALID_OPERATION:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("The specified operation is not allowed in the current state. The offending function is ignored, having no side effect other than to set the error flag."));
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "The specified operation is not allowed in the current state. The offending function is ignored, having no side effect other than to set the error flag.");
       break;
     case GL_STACK_OVERFLOW:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("This function would cause a stack overflow. The offending function is ignored, having no side effect other than to set the error flag."));
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "This function would cause a stack overflow. The offending function is ignored, having no side effect other than to set the error flag.");
       break;
     case GL_STACK_UNDERFLOW:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("This function would cause a stack underflow. The offending function is ignored, having no side effect other than to set the error flag."));
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "This function would cause a stack underflow. The offending function is ignored, having no side effect other than to set the error flag.");
       break;
     case GL_OUT_OF_MEMORY:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("There is not enough memory left to execute the function. The state of OpenGL is undefined, except for the state of the error flags, after this error is recorded."));
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "There is not enough memory left to execute the function. The state of OpenGL is undefined, except for the state of the error flags, after this error is recorded.");
       break;
     case GL_INVALID_FRAMEBUFFER_OPERATION:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("Attempt to read from or write/render to a framebuffer that is not complete."));
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "Attempt to read from or write/render to a framebuffer that is not complete.");
       break;
 #ifdef GL_CONTEXT_LOST
     case GL_CONTEXT_LOST:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("OpenGL context has been lost, due to a graphics card reset."));
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "OpenGL context has been lost, due to a graphics card reset.");
       break;
 #endif
           
     default:
-      NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, _T("Unkown error %d 0x%x."), err, err);
+      NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "Unkown error %d 0x%x.", err, err);
       break;
   }
 #else
   if (err)
   {
-    NGL_LOG(_T("nuiGLPainter"), NGL_LOG_ERROR, "OpenGL error %d/0x%x %s", err, err, (char *)gluErrorString(err));
+    NGL_LOG("nuiGLPainter", NGL_LOG_ERROR, "OpenGL error %d/0x%x %s", err, err, (char *)gluErrorString(err));
   }
   
 #endif

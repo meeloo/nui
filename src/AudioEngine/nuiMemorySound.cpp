@@ -65,7 +65,7 @@ bool nuiMemorySound::LoadSamples(nglIStream* pSStream)
       pReader = new nuiAudioDecoder(*pStream);
       if (!pReader->GetInfo(info))
       {
-        NGL_OUT(_T("Can't load this audio file: %s (reader can't be created)\n"), mPath.GetNodeName().GetChars());
+        NGL_OUT("Can't load this audio file: %s (reader can't be created)\n", mPath.GetNodeName().GetChars());
         delete pReader;
         if (!pSStream)
           delete pStream;

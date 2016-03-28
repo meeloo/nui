@@ -146,11 +146,11 @@ int64 nglIStream::ReadText(nglString& rLine, nglTextFormat* pFormat)
     rLine += line;
     
     if (lineFormat == eTextDOS)
-      rLine += _T("\r\n");
+      rLine += "\r\n";
     else if (lineFormat == eTextUnix)
-      rLine += _T("\n");
+      rLine += "\n";
     else if (lineFormat == eTextMac)
-      rLine += _T("\r");
+      rLine += "\r";
     
     done += bytes;
   }

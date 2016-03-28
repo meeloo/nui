@@ -13,7 +13,7 @@ nuiColorAttributeEditor::nuiColorAttributeEditor(const nuiAttrib<nuiColor>& rAtt
     mEventSink(this),
     mAttribute(rAttribute)
 {
-  SetObjectClass(_T("nuiColorAttributeEditor"));
+  SetObjectClass("nuiColorAttributeEditor");
   Init(mAttribute.Get());
 	// the visual object of the property need to be warned when the property value has been set without a user control
   if (mAttribute.GetDimension() == 0)
@@ -27,7 +27,7 @@ nuiColorAttributeEditor::nuiColorAttributeEditor(const nuiAttrib<const nuiColor&
     mEventSink(this),
     mConstAttribute(rAttribute)
 {
-  SetObjectClass(_T("nuiColorAttributeEditor"));
+  SetObjectClass("nuiColorAttributeEditor");
   Init(mConstAttribute.Get());
 	// the visual object of the property need to be warned when the property value has been set without a user control
   if (mConstAttribute.GetDimension() == 0)
@@ -55,7 +55,7 @@ void nuiColorAttributeEditor::Init(const nuiColor& rColor)
 	nuiHBox* hbox = new nuiHBox(2);
 	AddChild(hbox);
 	
-	hbox->SetCell(0, new nuiLabel(_T("color")));
+	hbox->SetCell(0, new nuiLabel("color"));
 	hbox->SetCellExpand(0, nuiExpandShrinkAndGrow);
 	
   mpButton = new nuiButton();

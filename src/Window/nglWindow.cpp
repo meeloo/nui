@@ -59,34 +59,34 @@ nglWindowInfo::nglWindowInfo(uint UserWidth, uint UserHeight, bool IsFullScreen)
 
 void nglWindowInfo::Dump (uint Level) const
 {
-  NGL_LOG(_T("window"), Level, _T("Window info :"));
+  NGL_LOG("window", Level, "Window info :");
 
-  NGL_LOG(_T("window"), Level, _T("  title     : '%s'"), Title.GetChars());
+  NGL_LOG("window", Level, "  title     : '%s'", Title.GetChars());
 
   const nglChar* pos = _T("");
   switch (Pos)
   {
-    case ePosUser  : pos = _T("user defined"); break;
-    case ePosCenter: pos = _T("centered on screen"); break;
-    case ePosMouse : pos = _T("centered on mouse pointer"); break;
-    case ePosAuto  : pos = _T("auto"); break;
+    case ePosUser  : pos = "user defined"; break;
+    case ePosCenter: pos = "centered on screen"; break;
+    case ePosMouse : pos = "centered on mouse pointer"; break;
+    case ePosAuto  : pos = "auto"; break;
   }
-  NGL_LOG(_T("window"), Level, _T("  pos       : %d,%d (creation hint: %s)"), XPos, YPos, pos);
-  NGL_LOG(_T("window"), Level, _T("  size      : %dx%d"), Width, Height);
+  NGL_LOG("window", Level, "  pos       : %d,%d (creation hint: %s)", XPos, YPos, pos);
+  NGL_LOG("window", Level, "  size      : %dx%d", Width, Height);
 
   nglString buffer(_T(""));
-  if (Flags & nglWindow::NoResize)   buffer += _T(" NoResize");
-  if (Flags & nglWindow::NoBorder)   buffer += _T(" NoBorder");
-  if (Flags & nglWindow::FullScreen) buffer += _T(" FullScreen");
-  NGL_LOG(_T("window"), Level, _T("  flags     :%s"), buffer.IsEmpty() ? _T(" none") : buffer.GetChars());
+  if (Flags & nglWindow::NoResize)   buffer += " NoResize";
+  if (Flags & nglWindow::NoBorder)   buffer += " NoBorder";
+  if (Flags & nglWindow::FullScreen) buffer += " FullScreen";
+  NGL_LOG("window", Level, "  flags     :%s", buffer.IsEmpty() ? " none" : buffer.GetChars());
 
   buffer.Wipe();
-  if (Events & nglWindow::MouseEvents) buffer += _T(" mouse");
-  if (Events & nglWindow::KeyEvents) buffer += _T(" keyboard");
-  NGL_LOG(_T("window"), Level, _T("  events    :%s"), buffer.IsEmpty() ? _T(" none") : buffer.GetChars());
+  if (Events & nglWindow::MouseEvents) buffer += " mouse";
+  if (Events & nglWindow::KeyEvents) buffer += " keyboard";
+  NGL_LOG("window", Level, "  events    :%s", buffer.IsEmpty() ? " none" : buffer.GetChars());
 
-  NGL_LOG(_T("window"), Level, _T("  mouse mode: %s"), MouseMode == nglMouseInfo::eAbsolute ? _T("absolute") : _T("relative"));
-  NGL_LOG(_T("window"), Level, _T("  key repeat: %s"), YESNO(KeyRepeat));
+  NGL_LOG("window", Level, "  mouse mode: %s", MouseMode == nglMouseInfo::eAbsolute ? "absolute" : "relative");
+  NGL_LOG("window", Level, "  key repeat: %s", YESNO(KeyRepeat));
 }
 
 
@@ -103,7 +103,7 @@ void nglWindow::ParseArgs (nglContextInfo& rContext, nglWindowInfo& rInfo) /* st
   {
     nglString opt = App->GetArg(i);
 
-    if (opt == _T("--geometry") && (i+1) < App->GetArgCount())
+    if (opt == "--geometry" && (i+1) < App->GetArgCount())
     {
       std::vector<nglString> tokens;
 
@@ -117,17 +117,17 @@ void nglWindow::ParseArgs (nglContextInfo& rContext, nglWindowInfo& rInfo) /* st
       }
     }
     else
-    if (opt == _T("--fullscreen"))
+    if (opt == "--fullscreen")
     {
       rInfo.Flags |= nglWindow::FullScreen;
     }
     else
-    if (opt == _T("--help") || opt == _T("-h"))
+    if (opt == "--help" || opt == "-h")
     {
-      NGL_OUT(_T("Window options :\n") \
-                 _T("\n") \
-                 _T("  --geometry <width>x<height>  window size or fullscreen resolution\n") \
-                 _T("  --fullscreen                 go fullscreen (fallback as window mode)\n\n"));
+      NGL_OUT("Window options :\n" \
+                 "\n" \
+                 "  --geometry <width>x<height>  window size or fullscreen resolution\n" \
+                 "  --fullscreen                 go fullscreen (fallback as window mode)\n\n");
     }
 
     i++;
@@ -276,7 +276,7 @@ bool nglWindow::GetAutoRotation() const
 
 void nglWindow::CallOnCreation()
 {
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Creation\n")); )
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Creation\n"); )
   // Dump the context:
   Dump(NGL_LOG_DEBUG);
   // Set all keys as not pressed
@@ -289,19 +289,19 @@ void nglWindow::CallOnCreation()
 
 void nglWindow::CallOnDestruction()
 {
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Destruction\n")); )
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Destruction\n"); )
   OnDestruction();
 }
 
 void nglWindow::CallOnActivation()
 {
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Activation\n")); )
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Activation\n"); )
   OnActivation();
 }
 
 void nglWindow::CallOnDesactivation()
 {
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Desactivation\n")); )
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Desactivation\n"); )
   // Keyboard keys are released when loosing focus
   memset (mpKeyState, 0, sizeof(bool)*NGL_KEY_MAX);
   OnDesactivation();
@@ -309,14 +309,14 @@ void nglWindow::CallOnDesactivation()
 
 void nglWindow::CallOnClose()
 {
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Close\n")); )
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Close\n"); )
   OnClose();
 }
 
 void nglWindow::CallOnPaint()
 {
-  //nuiStopWatch watch(_T("nglWindow::CallOnPaint"));
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Paint\n")); )
+  //nuiStopWatch watch("nglWindow::CallOnPaint");
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Paint\n"); )
   OnPaint();
 
   nglTime now;
@@ -326,7 +326,7 @@ void nglWindow::CallOnPaint()
     double v = (now - mFPSDelay);
     double c = mFPSCount;
     mFPS = c / v;
-    //NGL_LOG(_T("fps"), NGL_LOG_DEBUG, _T("FPS: %f (%f seconds - %d frames)\n"), mFPS, v, ToNearest(c));
+    //NGL_LOG("fps", NGL_LOG_DEBUG, "FPS: %f (%f seconds - %d frames)\n", mFPS, v, ToNearest(c));
 
     mFPSCount = 0;
     mFPSDelay = now;
@@ -336,13 +336,13 @@ void nglWindow::CallOnPaint()
 
 void nglWindow::CallOnState (StateInfo State)
 {
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("State: %s"), (State == eVisible) ? _T("visible") : _T("hidden")); )
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "State: %s", (State == eVisible) ? "visible" : "hidden"); )
   OnState (State);
 }
 
 void nglWindow::CallOnResize (uint Width, uint Height)
 {
-  NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Resize: %dx%d"), Width, Height);
+  NGL_LOG("window", NGL_LOG_DEBUG, "Resize: %dx%d", Width, Height);
   mpPainter->SetSize(Width, Height);
   OnResize (Width, Height);
 #ifdef _COCOA_
@@ -355,7 +355,7 @@ void nglWindow::CallOnResize (uint Width, uint Height)
 bool nglWindow::CallOnKeyDown (const nglKeyEvent& rEvent)
 {
 #ifdef _DEBUG_
-  //NGL_LOG(_T("window"), NGL_LOG_DEBUG, isprint(Char) ? _T("KeyDn: code=%d char='%c'") : _T("KeyDn: code=%d char=%d"), Key, Char);
+  //NGL_LOG("window", NGL_LOG_DEBUG, isprint(Char) ? "KeyDn: code=%d char='%c'" : "KeyDn: code=%d char=%d", Key, Char);
 #endif // _DEBUG_
   if (rEvent.mKey > 0)
     mpKeyState[rEvent.mKey-1] = true;
@@ -365,7 +365,7 @@ bool nglWindow::CallOnKeyDown (const nglKeyEvent& rEvent)
 bool nglWindow::CallOnKeyUp (const nglKeyEvent& rEvent)
 {
 #ifdef _DEBUG_
-  //NGL_LOG(_T("window"), NGL_LOG_DEBUG, isprint(Char) ? _T("KeyUp: code=%d char='%c'") : _T("KeyDn: code=%d char=%d"), Key, Char);
+  //NGL_LOG("window", NGL_LOG_DEBUG, isprint(Char) ? "KeyUp: code=%d char='%c'" : "KeyDn: code=%d char=%d", Key, Char);
 #endif // _DEBUG_
   if (rEvent.mKey > 0)
     mpKeyState[rEvent.mKey-1] = false;
@@ -375,7 +375,7 @@ bool nglWindow::CallOnKeyUp (const nglKeyEvent& rEvent)
 bool nglWindow::CallOnTextInput (const nglString& rUnicodeString)
 {
 #ifdef _DEBUG_
-  NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("TextInput: '%s' [%d chars]"), rUnicodeString.GetChars(), rUnicodeString.GetLength());
+  NGL_LOG("window", NGL_LOG_DEBUG, "TextInput: '%s' [%d chars]", rUnicodeString.GetChars(), rUnicodeString.GetLength());
 #endif // _DEBUG_
   return OnTextInput(rUnicodeString);
 }
@@ -383,51 +383,51 @@ bool nglWindow::CallOnTextInput (const nglString& rUnicodeString)
 void nglWindow::CallOnTextInputCancelled ()
 {
 #ifdef _DEBUG_
-  NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("TextInputCancelled"));
+  NGL_LOG("window", NGL_LOG_DEBUG, "TextInputCancelled");
 #endif // _DEBUG_
   OnTextInputCancelled();
 }
 
 bool nglWindow::CallOnMouseWheel(nglMouseInfo& rInfo)
 {
-  //nuiStopWatch watch(_T("nglWindow::CallOnMouseWheel"));
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Wheel: %d,%d (%d,%d) button=%x"), rInfo.X, rInfo.Y, rInfo.DeltaX, rInfo.DeltaY, rInfo.Buttons); )
+  //nuiStopWatch watch("nglWindow::CallOnMouseWheel");
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Wheel: %d,%d (%d,%d) button=%x", rInfo.X, rInfo.Y, rInfo.DeltaX, rInfo.DeltaY, rInfo.Buttons); )
   return OnMouseWheel (rInfo);
 }
 
 
 bool nglWindow::CallOnMouseClick (nglMouseInfo& rInfo)
 {
-  //nuiStopWatch watch(_T("nglWindow::CallOnMouseClick"));
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Clic: %d,%d  button=%x"), rInfo.X, rInfo.Y, rInfo.Buttons); )
+  //nuiStopWatch watch("nglWindow::CallOnMouseClick");
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Clic: %d,%d  button=%x", rInfo.X, rInfo.Y, rInfo.Buttons); )
   return OnMouseClick (rInfo);
 }
 
 bool nglWindow::CallOnMouseUnclick (nglMouseInfo& rInfo)
 {
-  //nuiStopWatch watch(_T("nglWindow::CallOnMouseUnclick"));
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Unclic: %d,%d  button=%x"), rInfo.X, rInfo.Y, rInfo.Buttons); )
+  //nuiStopWatch watch("nglWindow::CallOnMouseUnclick");
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Unclic: %d,%d  button=%x", rInfo.X, rInfo.Y, rInfo.Buttons); )
   return OnMouseUnclick (rInfo);
 }
 
 bool nglWindow::CallOnMouseCanceled (nglMouseInfo& rInfo)
 {
-  //nuiStopWatch watch(_T("nglWindow::CallOnMouseCanceled"));
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Canceled: %d,%d  button=%x"), rInfo.X, rInfo.Y, rInfo.Buttons); )
+  //nuiStopWatch watch("nglWindow::CallOnMouseCanceled");
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Canceled: %d,%d  button=%x", rInfo.X, rInfo.Y, rInfo.Buttons); )
   return OnMouseCanceled (rInfo);
 }
 
 bool nglWindow::CallOnMouseMove (nglMouseInfo& rInfo)
 {
-  //nuiStopWatch watch(_T("nglWindow::CallOnMouseMove"));
-  NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Motion: %d,%d"), rInfo.X, rInfo.Y); )
+  //nuiStopWatch watch("nglWindow::CallOnMouseMove");
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Motion: %d,%d", rInfo.X, rInfo.Y); )
   return OnMouseMove (rInfo);
 }
 
 bool nglWindow::CallOnRotation(uint Angle)
 {
-  //nuiStopWatch watch(_T("nglWindow::CallOnRotation"));
-  //NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_DEBUG, _T("Rotation: %d"), Angle); )
+  //nuiStopWatch watch("nglWindow::CallOnRotation");
+  //NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Rotation: %d", Angle); )
   if (GetAutoRotation())
   {
     if (OnRotation(Angle))

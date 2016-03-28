@@ -52,12 +52,12 @@ nglString nglVideoMode::Dump() const
   nglString str;
   uint freq = GetFrequency();
 
-  str.Format(_T("%dx%dx%d"), GetWidth(), GetHeight(), GetDepth());
+  str.Format("%dx%dx%d", GetWidth(), GetHeight(), GetDepth());
   if (freq)
   {
     nglString freq_str;
     
-    freq_str.Format(_T(" (%d Hz)"), freq);
+    freq_str.Format(" (%d Hz)", freq);
     str += freq_str;
   }
   return str;

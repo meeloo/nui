@@ -10,15 +10,15 @@
 nuiPane::nuiPane(const nuiColor& rFillColor, const nuiColor& rStrokeColor, nuiShapeMode ShapeMode, nuiBlendFunc BlendFunc)
  : nuiWidget()
 {
-  if (SetObjectClass(_T("nuiPane")))
+  if (SetObjectClass("nuiPane"))
   {
     AddAttribute(new nuiAttribute<const nuiColor&>
-                 (nglString(_T("FillColor")), nuiUnitColor,
+                 (nglString("FillColor"), nuiUnitColor,
                   nuiMakeDelegate(this, &nuiPane::GetFillColor),
                   nuiMakeDelegate(this, &nuiPane::SetFillColor)));                
     
     AddAttribute(new nuiAttribute<const nuiColor&>
-                 (nglString(_T("StrokeColor")), nuiUnitColor,
+                 (nglString("StrokeColor"), nuiUnitColor,
                   nuiMakeDelegate(this, &nuiPane::GetStrokeColor),
                   nuiMakeDelegate(this, &nuiPane::SetStrokeColor)));                
   }
@@ -193,7 +193,7 @@ nuiRect nuiPane::CalcIdealSize()
     pItem->SetLayoutConstraint(constraint);
     nuiRect t = pItem->GetIdealRect();
     temp.Union(t,temp); // Dummy call. Only the side effect is important: the object recalculates its layout.
-    //NGL_OUT(_T("    PaneItem rect %s\n"), t.GetValue().GetChars());
+    //NGL_OUT("    PaneItem rect %s\n", t.GetValue().GetChars());
   }
   delete pIt;
 
@@ -205,6 +205,6 @@ nuiRect nuiPane::CalcIdealSize()
 
   temp.MoveTo(0,0);
 
-  //NGL_OUT(_T("    Pane rect %s\n"), mIdealRect.GetValue().GetChars());
+  //NGL_OUT("    Pane rect %s\n", mIdealRect.GetValue().GetChars());
   return temp;
 }

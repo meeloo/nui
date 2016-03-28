@@ -123,7 +123,7 @@ void nuiBuilder::Uninit()
 
 void nuiBuilder::SetHandler(const nglString& ClassName, nuiCreateWidgetFn pHandler)
 {
-  //wprintf(_T("Adding Widget handler: %s\n"), ClassName.GetChars());
+  //wprintf("Adding Widget handler: %s\n", ClassName.GetChars());
   NGL_ASSERT(mBuilderMap.find(ClassName) == mBuilderMap.end());
   NGL_ASSERT(mCreatorMap.find(ClassName) == mCreatorMap.end());
   nuiWidgetDesc desc(ClassName, pHandler);
@@ -267,12 +267,12 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
   std::map<nglString, nglString> ParamDictionary(mDefaultDictionary);
   ParamDictionary.insert(rParamDictionary.begin(), rParamDictionary.end());
   
-//  NGL_LOG(_T("nuiWidgetCreator"), NGL_LOG_DEBUG, _T("\nBuild %s / %s\n"), mClassName.GetChars(), mObjectName.GetChars());
+//  NGL_LOG("nuiWidgetCreator", NGL_LOG_DEBUG, "\nBuild %s / %s\n", mClassName.GetChars(), mObjectName.GetChars());
 //  std::map<nglString, nglString>::iterator it = ParamDictionary.begin();
 //  std::map<nglString, nglString>::iterator end = ParamDictionary.end();
 //  while (it != end)
 //  {
-//    NGL_LOG(_T("nuiWidgetCreator"), NGL_LOG_DEBUG, _T("\t%s - %s\n"), it->first.GetChars(), it->second.GetChars());
+//    NGL_LOG("nuiWidgetCreator", NGL_LOG_DEBUG, "\t%s - %s\n", it->first.GetChars(), it->second.GetChars());
 //    ++it;
 //  }
   
@@ -282,7 +282,7 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
   nuiWidget* pWidget = pBuilder->CreateWidget(classname, ParamDictionary);
   if (!pWidget)
   {
-    NGL_LOG(_T("nuiWidgetCreator"), NGL_LOG_ERROR, _T("Error while creating a %s named %s (translated to %s - %s"), 
+    NGL_LOG("nuiWidgetCreator", NGL_LOG_ERROR, "Error while creating a %s named %s (translated to %s - %s", 
             mClassName.GetChars(), mObjectName.GetChars(),
             classname.GetChars(), objectname.GetChars());
     return NULL;

@@ -24,11 +24,11 @@ nuiDialogSelectDirectory::nuiDialogSelectDirectory(nuiMainWindow* pParent, const
   mEventSink.Connect(mpSelector->OK, &nuiDialogSelectDirectory::OnSelectorOK);
   
   nuiLabel* pTitle = new nuiLabel(rTitle);
-  pTitle->SetObjectName(_T("nuiDialog::Title"));
+  pTitle->SetObjectName("nuiDialog::Title");
   InitDialog(pTitle, NULL, nuiDialog::eDialogButtonOk + nuiDialog::eDialogButtonCancel);
   
-  nuiButton* pButton = new nuiButton(_T("New Folder"));
-  pButton->SetObjectName(_T("nuiDialog::Button"));
+  nuiButton* pButton = new nuiButton("New Folder");
+  pButton->SetObjectName("nuiDialog::Button");
   AddButton(pButton, nuiDialog::eDialogButtonCustom);
   mEventSink.Connect(pButton->Activated, &nuiDialogSelectDirectory::OnCreateNewFolder);
   
@@ -94,7 +94,7 @@ void nuiDialogSelectDirectory::OnCreateNewFolder(const nuiEvent& rEvent)
   mpCreateEditLine->SetPosition(nuiFillHorizontal);
   pContainer->AddChild(mpCreateEditLine);
   
-  mpCreateDialog->InitDialog(_T("CREATE A NEW FOLDER"), NULL, nuiDialog::eDialogButtonOk + nuiDialog::eDialogButtonCancel);
+  mpCreateDialog->InitDialog("CREATE A NEW FOLDER", NULL, nuiDialog::eDialogButtonOk + nuiDialog::eDialogButtonCancel);
   
   mpCreateDialog->SetContents(pContainer);
   mpCreateDialog->SetDefaultPos();

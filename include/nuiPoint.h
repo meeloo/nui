@@ -107,7 +107,7 @@ public:
 /*
     if (!res)
     {
-      NGL_OUT(_T("Invalid point: {%f, %f, %f, %f}\n"), Elt[0], Elt[1], Elt[2], Elt[3]);
+      NGL_OUT("Invalid point: {%f, %f, %f, %f}\n", Elt[0], Elt[1], Elt[2], Elt[3]);
       _asm
       {
         int 3;

@@ -1270,7 +1270,7 @@ void nuiDrawContext::DrawShade(const nuiRect& rSourceRect, const nuiRect& rShade
 
   nuiSize ShadeSize = rSourceRect.mLeft - rShadeRect.mLeft;
 
-  nuiTexture* pShade = ::nuiTexture::GetTexture(nglString(_T("NUI_Shade_LUT")));
+  nuiTexture* pShade = ::nuiTexture::GetTexture(nglString("NUI_Shade_LUT"));
 
   if (!pShade)
   {
@@ -1298,7 +1298,7 @@ void nuiDrawContext::DrawShade(const nuiRect& rSourceRect, const nuiRect& rShade
     info.mPixelFormat = eImagePixelRGBA;
 
     pShade = nuiTexture::GetTexture(info, true);
-    pShade->SetSource(_T("NUI_Shade_LUT"));
+    pShade->SetSource("NUI_Shade_LUT");
 
     NGL_ASSERT(pShade);
 
@@ -1584,7 +1584,7 @@ void nuiDrawContext::DrawWindowShade(const nuiRect& rRect, const nuiColor& rColo
 
 void nuiDrawContext::DrawMenuWindow(nuiWidget* pWidget, const nuiRect& rRect)
 {
-  nuiFrame* pFrame = (nuiFrame*)nuiDecoration::Get(_T("nuiDefaultDecorationPopupMenu"));
+  nuiFrame* pFrame = (nuiFrame*)nuiDecoration::Get("nuiDefaultDecorationPopupMenu");
   NGL_ASSERT(pFrame);
 
   nuiRect rect;
@@ -1601,9 +1601,9 @@ void nuiDrawContext::DrawTreeHandle(const nuiRect& rRect, bool IsOpened, nuiSize
 {
   nuiFrame* pDeco = NULL;
   if (IsOpened)
-    pDeco = (nuiFrame*)nuiDecoration::Get(_T("nuiDefaultDecorationArrowOpen"));
+    pDeco = (nuiFrame*)nuiDecoration::Get("nuiDefaultDecorationArrowOpen");
   else
-    pDeco = (nuiFrame*)nuiDecoration::Get(_T("nuiDefaultDecorationArrowClose"));
+    pDeco = (nuiFrame*)nuiDecoration::Get("nuiDefaultDecorationArrowClose");
   if (pDeco)
   {
     const nuiRect& rectSrc = pDeco->GetIdealClientRect(NULL);
@@ -1651,7 +1651,7 @@ void nuiDrawContext::DrawTreeHandle(const nuiRect& rRect, bool IsOpened, nuiSize
 
 void nuiDrawContext::DrawSelectionBackground(nuiWidget* pWidget, const nuiRect& rRect)
 {
-  nuiDecoration* pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationSelectionBackground"));
+  nuiDecoration* pDeco = nuiDecoration::Get("nuiDefaultDecorationSelectionBackground");
   if (!pDeco)
     return;
 
@@ -1662,7 +1662,7 @@ void nuiDrawContext::DrawSelectionBackground(nuiWidget* pWidget, const nuiRect& 
 
 void nuiDrawContext::DrawSelectionForeground(nuiWidget* pWidget, const nuiRect& rRect)
 {
-  nuiDecoration* pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationSelectionForeground"));
+  nuiDecoration* pDeco = nuiDecoration::Get("nuiDefaultDecorationSelectionForeground");
   if (!pDeco)
     return;
 
@@ -1691,9 +1691,9 @@ void nuiDrawContext::DrawScrollBarBackground(nuiScrollBar* pScroll)
 
   nuiDecoration* pDeco = NULL;
   if (pScroll->GetOrientation() == nuiVertical)
-    pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationScrollBarVerticalBkg"));
+    pDeco = nuiDecoration::Get("nuiDefaultDecorationScrollBarVerticalBkg");
   else
-    pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationScrollBarHorizontalBkg"));
+    pDeco = nuiDecoration::Get("nuiDefaultDecorationScrollBarHorizontalBkg");
   NGL_ASSERT(pDeco);
 
   nuiRect rectDest(0.0f, 0.0f, rRect.GetWidth(), rRect.GetHeight());
@@ -1706,9 +1706,9 @@ void nuiDrawContext::DrawScrollBarForeground(nuiScrollBar* pScroll)
 {
   nuiDecoration* pDeco = NULL;
   if (pScroll->GetOrientation() == nuiVertical)
-    pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationScrollBarVerticalHdl"));
+    pDeco = nuiDecoration::Get("nuiDefaultDecorationScrollBarVerticalHdl");
   else
-    pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationScrollBarHorizontalHdl"));
+    pDeco = nuiDecoration::Get("nuiDefaultDecorationScrollBarHorizontalHdl");
   NGL_ASSERT(pDeco);
 
   nuiRect rRect = pScroll->GetThumbRect();
@@ -1728,7 +1728,7 @@ void nuiDrawContext::DrawSliderBackground(nuiSlider* pSlider)
 
   if (pSlider->GetOrientation() == nuiVertical)
   {
-    pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationSliderVerticalBkg"));
+    pDeco = nuiDecoration::Get("nuiDefaultDecorationSliderVerticalBkg");
     if (!pDeco)
       return;
     nuiSize x = (int)((rect.GetWidth() - pDeco->GetIdealClientRect(pSlider).GetWidth()) / 2);
@@ -1737,7 +1737,7 @@ void nuiDrawContext::DrawSliderBackground(nuiSlider* pSlider)
   }
   else
   {
-    pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationSliderHorizontalBkg"));
+    pDeco = nuiDecoration::Get("nuiDefaultDecorationSliderHorizontalBkg");
     if (!pDeco)
       return;
     nuiSize y = (int)((rect.GetHeight() - pDeco->GetIdealClientRect(pSlider).GetHeight()) / 2);
@@ -1763,7 +1763,7 @@ void nuiDrawContext::DrawSliderForeground(nuiSlider* pSlider)
 
   if (pSlider->GetOrientation() == nuiVertical)
   {
-    pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationSliderVerticalHdl"));
+    pDeco = nuiDecoration::Get("nuiDefaultDecorationSliderVerticalHdl");
 
     if (pDeco)
     {
@@ -1779,7 +1779,7 @@ void nuiDrawContext::DrawSliderForeground(nuiSlider* pSlider)
   }
   else
   {
-    pDeco = nuiDecoration::Get(_T("nuiDefaultDecorationSliderHorizontalHdl"));
+    pDeco = nuiDecoration::Get("nuiDefaultDecorationSliderHorizontalHdl");
     if (pDeco)
     {
       const nuiRect& srcRect = pDeco->GetIdealClientRect(pSlider);

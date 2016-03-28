@@ -8,7 +8,7 @@
 #include "nui.h"
 #include "nuiAudioDevice_CoreAudio.h"
 
-#define API_NAME _T("CoreAudio")
+#define API_NAME "CoreAudio"
 
 #ifdef _DEBUG
   #define nui_verify_noerr(errorCode)        \
@@ -107,7 +107,7 @@ nuiAudioDevice_CoreAudio::nuiAudioDevice_CoreAudio(AudioDeviceID id)
 {
   mDeviceID = id;
   
-  mAPIName = _T("CoreAudio");
+  mAPIName = "CoreAudio";
   
   char buf[1024];
   UInt32 maxlen = 1024;
@@ -504,9 +504,9 @@ nglString nuiAudioDevice_CoreAudio::GetChannelName(bool IsInput, int32 index) co
   
   nglString str;
   if (IsInput)
-    str.CFormat(_T("%s:in[%d]"), mName.GetChars(), index + 1);
+    str.CFormat("%s:in[%d]", mName.GetChars(), index + 1);
   else
-    str.CFormat(_T("%s:out[%d]"), mName.GetChars(), index + 1);
+    str.CFormat("%s:out[%d]", mName.GetChars(), index + 1);
   return str; 
 }  
 

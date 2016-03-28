@@ -36,7 +36,7 @@ nuiNode::~nuiNode()
 void nuiNode::Init()
 {
   CheckValid();
-  if (SetObjectClass(_T("nuiNode")))
+  if (SetObjectClass("nuiNode"))
   {
     InitAttributes();
   }
@@ -65,41 +65,41 @@ void nuiNode::Init()
 void nuiNode::InitAttributes()
 {
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("X")), nuiUnitCustom,
+               (nglString("X"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiNode::GetX),
                 nuiMakeDelegate(this, &nuiNode::SetX)));
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("Y")), nuiUnitCustom,
+               (nglString("Y"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiNode::GetY),
                 nuiMakeDelegate(this, &nuiNode::SetY)));
 
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("Angle")), nuiUnitCustom,
+               (nglString("Angle"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiNode::GetAngle),
                 nuiMakeDelegate(this, &nuiNode::SetAngle)));
 
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("Scale")), nuiUnitCustom,
+               (nglString("Scale"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiNode::GetScale),
                 nuiMakeDelegate(this, &nuiNode::SetScale)));
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("ScaleX")), nuiUnitCustom,
+               (nglString("ScaleX"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiNode::GetScaleX),
                 nuiMakeDelegate(this, &nuiNode::SetScaleX)));
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("ScaleY")), nuiUnitCustom,
+               (nglString("ScaleY"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiNode::GetScaleY),
                 nuiMakeDelegate(this, &nuiNode::SetScaleY)));
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("Color")), nuiUnitColor,
+               (nglString("Color"), nuiUnitColor,
                 nuiMakeDelegate(this, &nuiNode::GetColor),
                 nuiMakeDelegate(this, &nuiNode::SetColor)));
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("Alpha")), nuiUnitCustom,
+               (nglString("Alpha"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiNode::GetAlpha),
                 nuiMakeDelegate(this, &nuiNode::SetAlpha)));
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("Blending")), nuiUnitCustom,
+               (nglString("Blending"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiNode::GetBlending),
                 nuiMakeDelegate(this, &nuiNode::SetBlending)));
 

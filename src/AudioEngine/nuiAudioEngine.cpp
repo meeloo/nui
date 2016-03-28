@@ -23,9 +23,9 @@ nuiAudioEngine::nuiAudioEngine(double SampleRate, int32 BufferSize, ChannelConfi
   mMute(false),
   mPan(0),
   mPlaying(true),
-  mCs(_T("nuiAudioEngineCriticalSection"))
+  mCs("nuiAudioEngineCriticalSection")
 {  
-  if (SetObjectClass(_T("nuiAudioEngine")))
+  if (SetObjectClass("nuiAudioEngine"))
     InitAttributes();
   
   mpOutAudioDevice = NULL;
@@ -46,31 +46,31 @@ nuiAudioEngine::~nuiAudioEngine()
 void nuiAudioEngine::InitAttributes()
 { 
   nuiAttribute<float>* pGainAttrib = new nuiAttribute<float>
-  (nglString(_T("gain")), nuiUnitCustom,
+  (nglString("gain"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiAudioEngine::GetGain),
    nuiMakeDelegate(this, &nuiAudioEngine::SetGain));  
   AddAttribute(pGainAttrib);
   
   nuiAttribute<float>* pGainDbAttrib = new nuiAttribute<float>
-               (nglString(_T("gainDb")), nuiUnitCustom,
+               (nglString("gainDb"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiAudioEngine::GetGainDb),
                 nuiMakeDelegate(this, &nuiAudioEngine::SetGainDb));  
   AddAttribute(pGainDbAttrib);
   
   nuiAttribute<bool>* pMuteAttrib = new nuiAttribute<bool>
-               (nglString(_T("mute")), nuiUnitCustom,
+               (nglString("mute"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiAudioEngine::IsMuted),
                 nuiMakeDelegate(this, &nuiAudioEngine::SetMute));
   AddAttribute(pMuteAttrib);
   
   nuiAttribute<float>* pPanAttrib = new nuiAttribute<float>
-  (nglString(_T("pan")), nuiUnitCustom,
+  (nglString("pan"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiAudioEngine::GetPan),
    nuiMakeDelegate(this, &nuiAudioEngine::SetPan));  
   AddAttribute(pPanAttrib);
   
   nuiAttribute<bool>* pPlayAttrib = new nuiAttribute<bool>
-  (nglString(_T("play")), nuiUnitCustom,
+  (nglString("play"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiAudioEngine::IsPlaying),
    nuiMakeDelegate(this, &nuiAudioEngine::SetPlay));
   AddAttribute(pPlayAttrib);
@@ -81,7 +81,7 @@ bool nuiAudioEngine::AudioInit(ChannelConfig inputConfig)
 {
   mpOutAudioDevice = nuiAudioDeviceManager::Get().GetDefaultOutputDevice();
 
-  NGL_OUT(_T("Default output: %s\n"), mpOutAudioDevice->GetName().GetChars());
+  NGL_OUT("Default output: %s\n", mpOutAudioDevice->GetName().GetChars());
 
   bool res = ActivateOutputDevice();
   
@@ -276,7 +276,7 @@ void nuiAudioEngine::ProcessAudioOutput(const std::vector<const float*>& rInput,
   
 #ifdef AUDIO_LOG
   nglPath path(ePathUserDesktop);
-  path+= nglString(_T("AudioLog"));
+  path+= nglString("AudioLog");
   nglOFile* pFile = new nglOFile(path, eOFileAppend);
   if (pFile)
   {
@@ -300,7 +300,7 @@ void nuiAudioEngine::ProcessAudioOutput(const std::vector<const float*>& rInput,
     }
     double endTime = nglTime();
     double diff = endTime - beginTime;
-    NGL_OUT(_T("AUDIO_PROFILE [%.2f] : %.3fms\n"), endTime, diff * 1000.f);
+    NGL_OUT("AUDIO_PROFILE [%.2f] : %.3fms\n", endTime, diff * 1000.f);
 #endif
     
    

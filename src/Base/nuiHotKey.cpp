@@ -9,46 +9,46 @@ nglString ModifiersToString(nuiKeyModifier mod)
   if (mod &  nuiShiftKey)
   {
 #ifdef _CARBON_
-    res += _T("\u21e7");
+    res += "\u21e7";
 #else
-    res += _T("_SHIFT_");
+    res += "_SHIFT_";
 #endif
   }
   
   if (mod &  nuiControlKey)
   {
 #ifdef _CARBON_
-    res += _T("\u2303");
+    res += "\u2303";
 #else
-    res += _T("_CTRL_");
+    res += "_CTRL_";
 #endif
   }
   
   if (mod &  nuiAltKey)
   {
 #ifdef _CARBON_
-    res += _T("\u2325");
+    res += "\u2325";
 #else
-    res += _T("_ALT_");
+    res += "_ALT_";
 #endif
   }
   
   if (mod &  nuiMetaKey)
   {
 #ifdef _CARBON_
-    res += _T("\u2318");
+    res += "\u2318";
 #elif defined _WIN32_
     // #FIXME: the following unicode will only show the windows logo with the wingdings font
-    //res += _T("\uf8ff");
-    res += _T("_WIN_");
+    //res += "\uf8ff";
+    res += "_WIN_";
 #else
-    res += _T("_META_");
+    res += "_META_";
 #endif
   }
   
   if (mod &  nuiMenuKey)
   {
-    res += _T("_MENU_");
+    res += "_MENU_";
   }
   
   return res;

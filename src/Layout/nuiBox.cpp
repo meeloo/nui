@@ -10,47 +10,47 @@
 void nuiBox::InitBoxAttributes()
 {
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("CellMaxGrow")), nuiUnitSize,
+               (nglString("CellMaxGrow"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiBox::GetCellMaxGrow),
                 nuiMakeDelegate(this, &nuiBox::SetCellMaxGrow),
                 nuiMakeDelegate(this, &nuiBox::GetBoxDimensionRange)));
 
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("CellMaxPixels")), nuiUnitSize,
+               (nglString("CellMaxPixels"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiBox::GetCellMaxPixels),
                 nuiMakeDelegate(this, &nuiBox::SetCellMaxPixels),
                 nuiMakeDelegate(this, &nuiBox::GetBoxDimensionRange)));
   
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("CellMinPixels")), nuiUnitSize,
+               (nglString("CellMinPixels"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiBox::GetCellMinPixels),
                 nuiMakeDelegate(this, &nuiBox::SetCellMinPixels),
                 nuiMakeDelegate(this, &nuiBox::GetBoxDimensionRange)));
   
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("CellMaxShrink")), nuiUnitSize,
+               (nglString("CellMaxShrink"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiBox::GetCellMaxShrink),
                 nuiMakeDelegate(this, &nuiBox::SetCellMaxShrink),
                 nuiMakeDelegate(this, &nuiBox::GetBoxDimensionRange)));
   
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("CellPixels")), nuiUnitSize,
+               (nglString("CellPixels"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiBox::GetCellPixels),
                 nuiMakeDelegate(this, &nuiBox::SetCellPixels),
                 nuiMakeDelegate(this, &nuiBox::GetBoxDimensionRange)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("EqualizeCells")), nuiUnitBoolean,
+               (nglString("EqualizeCells"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiBox::GetEqualizeCells),
                 nuiMakeDelegate(this, &nuiBox::SetEqualizeCells)));                
   
   AddAttribute(new nuiAttribute<nuiExpandMode>
-               (nglString(_T("Expand")), nuiUnitExpand,
+               (nglString("Expand"), nuiUnitExpand,
                 nuiMakeDelegate(this, &nuiBox::GetExpand),
                 nuiMakeDelegate(this, &nuiBox::SetExpand)));                
   
   AddAttribute(new nuiAttribute<nuiExpandMode>
-               (nglString(_T("CellExpand")), nuiUnitExpand,
+               (nglString("CellExpand"), nuiUnitExpand,
                 nuiMakeDelegate(this, &nuiBox::GetCellExpand),
                 nuiMakeDelegate(this, &nuiBox::_SetCellExpand),
                 nuiMakeDelegate(this, &nuiBox::GetBoxDimensionRange)));

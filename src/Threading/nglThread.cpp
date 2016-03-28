@@ -9,7 +9,7 @@
 #include "nui.h"
 
 std::map<nglThread::ID,nglThread*> nglGlobalThreadMap;
-nglCriticalSection nglGlobalThreadMapCS(_T("nglThread_nglGlobalThreadMapCS"));
+nglCriticalSection nglGlobalThreadMapCS("nglThread_nglGlobalThreadMapCS");
 
 const nglString& nglThread::GetName() const
 {

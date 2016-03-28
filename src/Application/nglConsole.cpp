@@ -213,7 +213,7 @@ void nglConsole::Input (nglString& rLine)
   #else
 
   rLine.TrimRight();
-  if (mUseHExpansion && (!rLine.Compare(_T("!"), 0, 1)))
+  if (mUseHExpansion && (!rLine.Compare("!", 0, 1)))
   {
     list<nglString*>::iterator h_entry;
     list<nglString*>::iterator h_end = mHistory.end();
@@ -223,10 +223,10 @@ void nglConsole::Input (nglString& rLine)
     for (h_entry = mHistory.begin(); h_entry != h_end; ++h_entry)
       if (*h_entry)
       {
-        if ((!base.Compare(_T("!"), 0, 1)) ||  // "!!" (repeat last)
+        if ((!base.Compare("!", 0, 1)) ||  // "!!" (repeat last)
             (!(*h_entry)->Compare (base, 0, size, mHistoryCase)))
         {
-          NGL_OUT(_T("%s\n"), (nglChar*)(*h_entry));
+          NGL_OUT("%s\n", (nglChar*)(*h_entry));
           OnInput (**h_entry);
           return;
         }
@@ -319,7 +319,7 @@ void nglConsole::Outputv (const nglChar* pFormat, va_list Args)
 #ifdef _WIN32_
     OutputDebugString(out.GetChars());
 #elif !defined _ANDROID_
-    printf(_T("%s\n"), out.GetChars());
+    printf("%s\n", out.GetChars());
 #else
     LOGI("%s", out.GetChars());
 #endif

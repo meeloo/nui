@@ -68,7 +68,7 @@ nuiTexture* nuiTexture::GetTexture (nglImageInfo& rInfo, bool Clone)
   else
   {
     nglString name;
-    name.Format(_T("Info 0x%x"),&rInfo);
+    name.Format("Info 0x%x",&rInfo);
     nuiTextureMap::iterator it = mpTextures.find(name);
     if (it == mpTextures.end())
       pTexture = new nuiTexture(rInfo,Clone);
@@ -86,7 +86,7 @@ nuiTexture* nuiTexture::GetTexture (const nglImage& rImage)
 {
   nuiTexture* pTexture = NULL;
   nglString name;
-  name.Format(_T("Image 0x%x"),&rImage);
+  name.Format("Image 0x%x",&rImage);
   nuiTextureMap::iterator it = mpTextures.find(name);
   if (it == mpTextures.end())
     pTexture = new nuiTexture(rImage);
@@ -103,7 +103,7 @@ nuiTexture* nuiTexture::GetTexture (nglImage* pImage, bool OwnImage)
 {
   nuiTexture* pTexture = NULL;
   nglString name;
-  name.Format(_T("Image 0x%x"),pImage);
+  name.Format("Image 0x%x",pImage);
   nuiTextureMap::iterator it = mpTextures.find(name);
   if (it == mpTextures.end())
     pTexture = new nuiTexture(pImage,OwnImage);
@@ -159,7 +159,7 @@ nuiTexture* nuiTexture::BindTexture(GLuint TextureID, GLenum Target)
 {
   nuiTexture* pTexture = NULL;
   nglString name;
-  name.Format(_T("TextureID %d %d"), TextureID, Target);
+  name.Format("TextureID %d %d", TextureID, Target);
   nuiTextureMap::iterator it = mpTextures.find(name);
   if (it == mpTextures.end())
     pTexture = new nuiTexture(TextureID, Target);
@@ -215,7 +215,7 @@ static void GetAllImages(std::vector<AtlasElem>& rElements, const nglPath& rPath
         {
           nglString ext(p.GetExtension());
           nglString res(path);
-          res.Add(_T("@2x.")).Add(ext);
+          res.Add("@2x.").Add(ext);
           nglPath pp = res;
           if (pp.Exists() && pp.IsLeaf()) // Does the retina version exists?
           {
@@ -229,7 +229,7 @@ static void GetAllImages(std::vector<AtlasElem>& rElements, const nglPath& rPath
           }
           
         }
-        else if (path.GetRight(3) == _T("@2x"))
+        else if (path.GetRight(3) == "@2x")
         {
           // Skip this retina texture as we are not on a retina device...
         }
@@ -283,7 +283,7 @@ static void GetAllImages(std::vector<AtlasElem>& rElements, const nglPath& rPath
             nw = pTrimmed->GetWidth();
             nh = pTrimmed->GetHeight();
             float gain = (float)(ow*oh - nw*nh) / (float)(ow*oh);
-            NGL_OUT(_T("Trim %s\n\t\t%d x %d -> %d x %d (%d pixels -> %2.2fpcf gained)\n"), p.GetChars(), ow, oh, nw, nh, ow*oh - nw*nh, 100.0 * gain);
+            NGL_OUT("Trim %s\n\t\t%d x %d -> %d x %d (%d pixels -> %2.2fpcf gained)\n", p.GetChars(), ow, oh, nw, nh, ow*oh - nw*nh, 100.0 * gain);
           }
           
           delete pImage;
@@ -303,19 +303,19 @@ static void GetAllImages(std::vector<AtlasElem>& rElements, const nglPath& rPath
 
 bool nuiTexture::CreateAtlasFromPath(const nglPath& rPath, int32 MaxTextureSize, int32 ForceAtlasSize, bool AutoTrim)
 {
-  //NGL_OUT(_T("nuiTexture::CreateAtlasFromPath(rPath = '%s', MaxTextureSize = %d, ForceAtlasSize = %d, AutoTrim = '%s')\n"), rPath.GetChars(), MaxTextureSize, ForceAtlasSize, YESNO(AutoTrim));
+  //NGL_OUT("nuiTexture::CreateAtlasFromPath(rPath = '%s', MaxTextureSize = %d, ForceAtlasSize = %d, AutoTrim = '%s')\n", rPath.GetChars(), MaxTextureSize, ForceAtlasSize, YESNO(AutoTrim));
   MaxTextureSize *= nuiGetScaleFactor();
   ForceAtlasSize *= nuiGetScaleFactor();
   int32 offset = 0;
   if (ForceAtlasSize)
     offset = 1;
 
-  //App->GetLog().SetLevel(_T("StopWatch"), 100);
-  //nuiStopWatch watch(_T("Create atlas"));
+  //App->GetLog().SetLevel("StopWatch", 100);
+  //nuiStopWatch watch("Create atlas");
   std::vector<AtlasElem> images;
   
   GetAllImages(images, rPath, MaxTextureSize, ForceAtlasSize, AutoTrim);
-  //watch.AddIntermediate(_T("Got all images"));
+  //watch.AddIntermediate("Got all images");
   
   TEXTURE_PACKER::TexturePacker* packer = TEXTURE_PACKER::createTexturePacker();
   packer->setTextureCount(images.size() + offset);
@@ -331,7 +331,7 @@ bool nuiTexture::CreateAtlasFromPath(const nglPath& rPath, int32 MaxTextureSize,
   
   int32 width = 0, height = 0;
   int unused_area = packer->packTextures(width, height, true, true);
-  //watch.AddIntermediate(_T("Packed textures"));
+  //watch.AddIntermediate("Packed textures");
 
   // Create image buffer:
   nglImageInfo info(width, height, 32);
@@ -354,7 +354,7 @@ bool nuiTexture::CreateAtlasFromPath(const nglPath& rPath, int32 MaxTextureSize,
       rElem.mpImage = pImg;
     }
 
-    NGL_OUT(_T("{%d, %d, %d, %d} %s %s\n"), x, y, w, h, TRUEFALSE(rotated), rElem.mPath.GetChars());
+    NGL_OUT("{%d, %d, %d, %d} %s %s\n", x, y, w, h, TRUEFALSE(rotated), rElem.mPath.GetChars());
     
     nglCopyImage(pAtlas->GetImage()->GetBuffer(), x, y, width, height, info.mBitDepth, rElem.mpImage->GetBuffer(), rElem.mpImage->GetWidth(), rElem.mpImage->GetHeight(), rElem.mpImage->GetBitDepth(), false, false);
     nuiTexture* pTex = nuiTexture::CreateTextureProxy(rElem.mPath.GetPathName(), rPath.GetPathName(), nuiRect(x, y, w, h), rotated);
@@ -363,7 +363,7 @@ bool nuiTexture::CreateAtlasFromPath(const nglPath& rPath, int32 MaxTextureSize,
 
   TEXTURE_PACKER::releaseTexturePacker(packer);
 
-  //watch.AddIntermediate(_T("Done"));
+  //watch.AddIntermediate("Done");
   return true;
 }
 
@@ -380,7 +380,7 @@ nuiTexture* nuiTexture::GetAATexture()
 {
   nuiTexture* pTexture = NULL;
 #ifndef __NUI_NO_AA__
-  nuiTextureMap::iterator it = mpTextures.find(_T("nuiTextureAA"));
+  nuiTextureMap::iterator it = mpTextures.find("nuiTextureAA");
   if (it == mpTextures.end())
   {
     nglImageInfo info(true);
@@ -396,7 +396,7 @@ nuiTexture* nuiTexture::GetAATexture()
     memset(buffer, 0, pdb * pdb * info.mBytesPerPixel);
     glAAGenerateAABuffer(0, 0, buffer);
     pTexture = nuiTexture::GetTexture(info);
-    pTexture->SetSource(_T("nuiTextureAA"));
+    pTexture->SetSource("nuiTextureAA");
     pTexture->SetWrapS(GL_REPEAT);
     pTexture->SetWrapT(GL_REPEAT);
     pTexture->EnableAutoMipMap(true);
@@ -484,7 +484,7 @@ void nuiTexture::ForceReloadAll(bool Rebind)
 nuiTexture::nuiTexture(nglIStream* pInput, nglImageCodec* pCodec)
   : nuiObject(), mTextureID(0), mTarget(0), mRotated(false)
 {
-  if (SetObjectClass(_T("nuiTexture")))
+  if (SetObjectClass("nuiTexture"))
     InitAttributes();
   mpImage = new nglImage(pInput, pCodec);
   mpProxyTexture = NULL;
@@ -495,8 +495,8 @@ nuiTexture::nuiTexture(nglIStream* pInput, nglImageCodec* pCodec)
 
   static uint count = 0;
   nglString name;
-  name.Format(_T("Stream #%d"),count);
-  SetProperty(_T("Source"),name);
+  name.Format("Stream #%d",count);
+  SetProperty("Source",name);
   mpTextures[name] = this;
 
   Init();
@@ -505,7 +505,7 @@ nuiTexture::nuiTexture(nglIStream* pInput, nglImageCodec* pCodec)
 nuiTexture::nuiTexture (const nglPath& rPath, nglImageCodec* pCodec)
 : nuiObject(), mTextureID(0), mTarget(0), mRotated(false)
 {
-  if (SetObjectClass(_T("nuiTexture")))
+  if (SetObjectClass("nuiTexture"))
     InitAttributes();
 
   mpImage = NULL;
@@ -518,7 +518,7 @@ nuiTexture::nuiTexture (const nglPath& rPath, nglImageCodec* pCodec)
   {
     nglString ext(p.GetExtension());
     nglString res(path);
-    res.Add(_T("@2x.")).Add(ext);
+    res.Add("@2x.").Add(ext);
     p = res;
     mpImage = new nglImage(p, pCodec);
     if (mpImage && mpImage->IsValid())
@@ -531,7 +531,7 @@ nuiTexture::nuiTexture (const nglPath& rPath, nglImageCodec* pCodec)
       mpImage = NULL;
     }
   }
-  else if (path.GetRight(3) == _T("@2x"))
+  else if (path.GetRight(3) == "@2x")
   {
     scale = 2.0;
   }
@@ -547,7 +547,7 @@ nuiTexture::nuiTexture (const nglPath& rPath, nglImageCodec* pCodec)
   mForceReload = false;
   mRetainBuffer = mRetainBuffers;
 
-  SetProperty(_T("Source"),rPath.GetPathName());
+  SetProperty("Source",rPath.GetPathName());
   mpTextures[rPath.GetPathName()] = this;
 
   Init();
@@ -557,7 +557,7 @@ nuiTexture::nuiTexture (const nglPath& rPath, nglImageCodec* pCodec)
 nuiTexture::nuiTexture (nglImageInfo& rInfo, bool Clone)
 : nuiObject(), mTextureID(0), mTarget(0), mRotated(false)
 {
-  if (SetObjectClass(_T("nuiTexture")))
+  if (SetObjectClass("nuiTexture"))
     InitAttributes();
   mpImage = new nglImage(rInfo, eClone);
   mpSurface = NULL;
@@ -569,10 +569,10 @@ nuiTexture::nuiTexture (nglImageInfo& rInfo, bool Clone)
   static uint count = 0;
   nglString name;
   if (Clone)
-    name.Format(_T("ClonedInfo #%d"),count++);
+    name.Format("ClonedInfo #%d",count++);
   else 
-    name.Format(_T("Info 0x%x"),&rInfo);
-  SetProperty(_T("Source"),name);
+    name.Format("Info 0x%x",&rInfo);
+  SetProperty("Source",name);
   mpTextures[name] = this;
 
   Init();
@@ -581,7 +581,7 @@ nuiTexture::nuiTexture (nglImageInfo& rInfo, bool Clone)
 nuiTexture::nuiTexture (const nglImage& rImage)
 : nuiObject(), mTextureID(0), mTarget(0), mRotated(false)
 {
-  if (SetObjectClass(_T("nuiTexture")))
+  if (SetObjectClass("nuiTexture"))
     InitAttributes();
   mpImage = new nglImage(rImage);
   mpSurface = NULL;
@@ -591,8 +591,8 @@ nuiTexture::nuiTexture (const nglImage& rImage)
   mRetainBuffer = mRetainBuffers;
 
   nglString name;
-  name.Format(_T("Image 0x%x"),mpImage);
-  SetProperty(_T("Source"),name);
+  name.Format("Image 0x%x",mpImage);
+  SetProperty("Source",name);
   mpTextures[name] = this;
 
   Init();
@@ -601,7 +601,7 @@ nuiTexture::nuiTexture (const nglImage& rImage)
 nuiTexture::nuiTexture (nglImage* pImage, bool OwnImage)
 : nuiObject(), mTextureID(0), mTarget(0), mRotated(false)
 {
-  if (SetObjectClass(_T("nuiTexture")))
+  if (SetObjectClass("nuiTexture"))
     InitAttributes();
   mpImage = pImage;
   mpSurface = NULL;
@@ -611,8 +611,8 @@ nuiTexture::nuiTexture (nglImage* pImage, bool OwnImage)
   mRetainBuffer = mRetainBuffers;
 
   nglString name;
-  name.Format(_T("Image 0x%x"),mpImage);
-  SetProperty(_T("Source"),name);
+  name.Format("Image 0x%x",mpImage);
+  SetProperty("Source",name);
   mpTextures[name] = this;
 
   Init();
@@ -622,7 +622,7 @@ nuiTexture::nuiTexture(nuiSurface* pSurface)
 : nuiObject(), mTextureID(0), mTarget(0), mRotated(false)
 {
   NGL_ASSERT(pSurface != nullptr);
-  if (SetObjectClass(_T("nuiTexture")))
+  if (SetObjectClass("nuiTexture"))
     InitAttributes();
 
   mpImage = NULL;
@@ -642,7 +642,7 @@ nuiTexture::nuiTexture(nuiSurface* pSurface)
 nuiTexture::nuiTexture(GLuint TextureID, GLenum Target)
 : nuiObject(), mTextureID(TextureID), mTarget(Target), mRotated(false)
 {
-  if (SetObjectClass(_T("nuiTexture")))
+  if (SetObjectClass("nuiTexture"))
     InitAttributes();
   
   mpImage = NULL;
@@ -653,8 +653,8 @@ nuiTexture::nuiTexture(GLuint TextureID, GLenum Target)
   mRetainBuffer = false;
   
   nglString name;
-  name.Format(_T("TextureID %d %d"), mTextureID, mTarget);
-  SetProperty(_T("Source"), name);
+  name.Format("TextureID %d %d", mTextureID, mTarget);
+  SetProperty("Source", name);
   mpTextures[name] = this;
  
   Init();
@@ -663,7 +663,7 @@ nuiTexture::nuiTexture(GLuint TextureID, GLenum Target)
 nuiTexture::nuiTexture(const nglString& rName, const nglString& rSourceTextureID, const nuiRect& rProxyRect, bool RotateRight)
 : nuiObject(), mTextureID(0), mTarget(0), mRotated(RotateRight)
 {
-  if (SetObjectClass(_T("nuiTexture")))
+  if (SetObjectClass("nuiTexture"))
     InitAttributes();
   
   mpImage = NULL;
@@ -677,7 +677,7 @@ nuiTexture::nuiTexture(const nglString& rName, const nglString& rSourceTextureID
   mRetainBuffer = false;
   
   nglString name = rName;
-  SetProperty(_T("Source"), name);
+  SetProperty("Source", name);
   mpTextures[name] = this;
   
   Init();
@@ -760,7 +760,7 @@ void nuiTexture::Init()
   mRealWidthPOT = mRealWidth;
   mRealHeightPOT = mRealHeight;
 
-  NGL_DEBUG(NGL_LOG("nuiTexture", NGL_LOG_INFO, "nuiTexture::Init() (0x%x - [%f %f] source='%s') COUNT: %d\n", this, mRealWidth, mRealHeight, GetProperty(_T("Source")).GetChars(), mpTextures.size());)
+  NGL_DEBUG(NGL_LOG("nuiTexture", NGL_LOG_INFO, "nuiTexture::Init() (0x%x - [%f %f] source='%s') COUNT: %d\n", this, mRealWidth, mRealHeight, GetProperty("Source").GetChars(), mpTextures.size());)
 
   if (mRealWidth > 0 && mRealHeight > 0)
   // Find the nearest bounding power of two size:
@@ -835,7 +835,7 @@ nuiTexture::~nuiTexture()
   
   TexturesChanged();
 
-  NGL_DEBUG(NGL_LOG("nuiTexture", NGL_LOG_INFO, "nuiTexture::~nuiTexture(0x%x - [%f %f] source='%s') COUNT : %d\n", this, mRealWidth, mRealHeight, GetProperty(_T("Source")).GetChars(), mpTextures.size());)
+  NGL_DEBUG(NGL_LOG("nuiTexture", NGL_LOG_INFO, "nuiTexture::~nuiTexture(0x%x - [%f %f] source='%s') COUNT : %d\n", this, mRealWidth, mRealHeight, GetProperty("Source").GetChars(), mpTextures.size());)
 }
 
 void nuiTexture::ForceReload(bool Rebind)
@@ -899,7 +899,7 @@ void nuiTexture::ImageToTextureCoord(nuiSize& x, nuiSize& y) const
 {
   if (mpProxyTexture)
   {
-    //NGL_OUT(_T("%s\n???  %f, %f (rotated: %s)\n"), GetSource().GetChars(), x, y, YESNO(mRotated));
+    //NGL_OUT("%s\n???  %f, %f (rotated: %s)\n", GetSource().GetChars(), x, y, YESNO(mRotated));
     if (mRotated)
     {
       // Rotate coords 90¡ to the right
@@ -913,11 +913,11 @@ void nuiTexture::ImageToTextureCoord(nuiSize& x, nuiSize& y) const
     x += mProxyRect.Left();
     y += mProxyRect.Top();
 
-    //NGL_OUT(_T("  -> %f, %f\n"), x, y);
+    //NGL_OUT("  -> %f, %f\n", x, y);
     
     mpProxyTexture->ImageToTextureCoord(x, y);
     
-    //NGL_OUT(_T("     %f, %f\n"), x, y);
+    //NGL_OUT("     %f, %f\n", x, y);
 
     return;
   }
@@ -1050,8 +1050,8 @@ void nuiTexture::SetRetainBuffer(bool Retain)
 
 bool nuiTexture::SetSource(const nglString& rName)
 {
-  mpTextures.erase(GetProperty(_T("Source")));
-  SetProperty(_T("Source"), rName);
+  mpTextures.erase(GetProperty("Source"));
+  SetProperty("Source", rName);
   mpTextures[rName] = this;
   TexturesChanged();
   return true;
@@ -1059,7 +1059,7 @@ bool nuiTexture::SetSource(const nglString& rName)
 
 nglString nuiTexture::GetSource() const
 {
-  return GetProperty(_T("Source"));
+  return GetProperty("Source");
 }
 
 uint32 nuiTexture::GetWidth() const
@@ -1126,83 +1126,83 @@ nglImagePixelFormat nuiTexture::GetPixelFormat() const
 void nuiTexture::InitAttributes()
 {
 //  AddAttribute(new nuiAttribute<uint32>
-//               (nglString(_T("MinFilter")), nuiUnitCustom,
+//               (nglString("MinFilter"), nuiUnitCustom,
 //                nuiMakeDelegate(this, &nuiTexture::GetMinFilter),
 //                nuiMakeDelegate(this, &nuiTexture::SetMinFilter)));
 //  
 //  AddAttribute(new nuiAttribute<uint32>
-//               (nglString(_T("MagFilter")), nuiUnitCustom,
+//               (nglString("MagFilter"), nuiUnitCustom,
 //                nuiMakeDelegate(this, &nuiTexture::GetMagFilter),
 //                nuiMakeDelegate(this, &nuiTexture::SetMagFilter)));
 //  
 //  AddAttribute(new nuiAttribute<uint32>
-//               (nglString(_T("WrapS")), nuiUnitCustom,
+//               (nglString("WrapS"), nuiUnitCustom,
 //                nuiMakeDelegate(this, &nuiTexture::GetWrapS),
 //                nuiMakeDelegate(this, &nuiTexture::SetWrapS)));
 //  
 //  AddAttribute(new nuiAttribute<uint32>
-//               (nglString(_T("WrapT")), nuiUnitCustom,
+//               (nglString("WrapT"), nuiUnitCustom,
 //                nuiMakeDelegate(this, &nuiTexture::GetWrapT),
 //                nuiMakeDelegate(this, &nuiTexture::SetWrapT)));
 
   AddAttribute(new nuiAttribute<uint32>
-               (nglString(_T("Width")), nuiUnitPixels,
+               (nglString("Width"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiTexture::GetWidth)));
   
   AddAttribute(new nuiAttribute<uint32>
-               (nglString(_T("Height")), nuiUnitPixels,
+               (nglString("Height"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiTexture::GetHeight)));
   
   AddAttribute(new nuiAttribute<uint32>
-               (nglString(_T("UnscaledWidth")), nuiUnitPixels,
+               (nglString("UnscaledWidth"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiTexture::GetUnscaledWidth)));
   
   AddAttribute(new nuiAttribute<uint32>
-               (nglString(_T("UnscaledHeight")), nuiUnitPixels,
+               (nglString("UnscaledHeight"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiTexture::GetUnscaledHeight)));
   
   AddAttribute(new nuiAttribute<uint32>
-               (nglString(_T("WidthPOT")), nuiUnitPixels,
+               (nglString("WidthPOT"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiTexture::GetWidthPOT)));
   
   AddAttribute(new nuiAttribute<uint32>
-               (nglString(_T("HeightPOT")), nuiUnitPixels,
+               (nglString("HeightPOT"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiTexture::GetHeightPOT)));
   
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("Scale")), nuiUnitCustom,
+               (nglString("Scale"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiTexture::GetScale),
                 nuiMakeDelegate(this, &nuiTexture::SetScale)));
   
   //  AddAttribute(new nuiAttribute<uint32>
-//               (nglString(_T("EnvMode")), nuiUnitCustom,
+//               (nglString("EnvMode"), nuiUnitCustom,
 //                nuiMakeDelegate(this, &nuiTexture::GetEnvMode)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("AutoMipMap")), nuiUnitBoolean,
+               (nglString("AutoMipMap"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiTexture::GetAutoMipMap),
                 nuiMakeDelegate(this, &nuiTexture::EnableAutoMipMap)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("RetainBuffer")), nuiUnitBoolean,
+               (nglString("RetainBuffer"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiTexture::IsBufferRetained),
                 nuiMakeDelegate(this, &nuiTexture::SetRetainBuffer)));
   
 //  AddAttribute(new nuiAttribute<const nglString&>
-//               (nglString(_T("Source")), nuiUnitBoolean,
+//               (nglString("Source"), nuiUnitBoolean,
 //                nuiMakeDelegate(this, &nuiTexture::SetSource),
 //                nuiMakeDelegate(this, &nuiTexture::GetSource)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("UpToDate")), nuiUnitBoolean,
+               (nglString("UpToDate"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiTexture::IsUptoDate)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("IsPowerOfTwo")), nuiUnitBoolean,
+               (nglString("IsPowerOfTwo"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiTexture::IsPowerOfTwo)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("IsValid")), nuiUnitBoolean,
+               (nglString("IsValid"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiTexture::IsValid)));
   
 }

@@ -654,17 +654,17 @@ mat1 = mat1 * mat2;
 
     if (pTitle)
     {
-      NGL_LOG(_T("math"), Level, _T("%s :"), pTitle);
+      NGL_LOG("math", Level, "%s :", pTitle);
     }
     for (i = 0; i < 4; i++)
     {
-      NGL_LOG(_T("math"), Level, _T("[ %8.3f %8.3f %8.3f %8.3f ] "), (T)(*this)(i,0), (T)(*this)(i,1), (T)(*this)(i,2), (T)(*this)(i,3));
+      NGL_LOG("math", Level, "[ %8.3f %8.3f %8.3f %8.3f ] ", (T)(*this)(i,0), (T)(*this)(i,1), (T)(*this)(i,2), (T)(*this)(i,3));
     }
   }
 
   bool GetValue(nglString& rDump) const
   {
-    rDump.CFormat(_T("{ %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f }"),
+    rDump.CFormat("{ %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f }",
                   (T)Array[ 0], (T)Array[ 1], (T)Array[ 2], (T)Array[ 3], 
                   (T)Array[ 4], (T)Array[ 5], (T)Array[ 6], (T)Array[ 7], 
                   (T)Array[ 8], (T)Array[ 9], (T)Array[10], (T)Array[11], 

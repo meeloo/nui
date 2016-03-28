@@ -163,7 +163,7 @@ void nuiSoftwarePainter::DrawArray(nuiRenderArray* pArray)
   switch (pArray->GetMode())
   {
   case GL_POINTS:
-    //NGL_OUT(_T("GL_POINTS Not Implemented\n"));
+    //NGL_OUT("GL_POINTS Not Implemented\n");
     break;
   case GL_LINES:
     DrawLines(pArray);
@@ -190,7 +190,7 @@ void nuiSoftwarePainter::DrawArray(nuiRenderArray* pArray)
 //    DrawQuadStrip(pArray);
 //    break;
 //  case GL_POLYGON:
-//    //NGL_OUT(_T("GL_POLYGON Not Implemented\n"));
+//    //NGL_OUT("GL_POLYGON Not Implemented\n");
 //    break;
   }
 

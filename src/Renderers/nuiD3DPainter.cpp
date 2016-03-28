@@ -95,85 +95,85 @@ public:
     case D3D_OK:
       break;
     case D3DERR_WRONGTEXTUREFORMAT:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Wrong Texture format."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Wrong Texture format.");
       break;
     case D3DERR_UNSUPPORTEDCOLOROPERATION:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Unsupported color operation."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Unsupported color operation.");
       break;
     case D3DERR_UNSUPPORTEDCOLORARG:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Unsupported color arguments."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Unsupported color arguments.");
       break;
     case D3DERR_UNSUPPORTEDALPHAOPERATION:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Unsupported alpha operation."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Unsupported alpha operation.");
       break;
     case D3DERR_UNSUPPORTEDALPHAARG:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Unsupported alpha arguments."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Unsupported alpha arguments.");
       break;
     case D3DERR_TOOMANYOPERATIONS:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Too many operations."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Too many operations.");
       break;
     case D3DERR_CONFLICTINGTEXTUREFILTER:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Conflicting texture filters."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Conflicting texture filters.");
       break;
     case D3DERR_UNSUPPORTEDFACTORVALUE:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Unsupported factor value."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Unsupported factor value.");
       break;
     case D3DERR_CONFLICTINGRENDERSTATE:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Conflicting render state."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Conflicting render state.");
       break;
     case D3DERR_UNSUPPORTEDTEXTUREFILTER:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Unsupported texture filter."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Unsupported texture filter.");
       break;
     case D3DERR_CONFLICTINGTEXTUREPALETTE:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Conflicting texture palette."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Conflicting texture palette.");
       break;
     case D3DERR_DRIVERINTERNALERROR:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Driver internal error."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Driver internal error.");
       break;
     case D3DERR_NOTFOUND:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Not found."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Not found.");
       break;
     case D3DERR_MOREDATA:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : More data."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : More data.");
       break;
     case D3DERR_DEVICELOST:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Device lost."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Device lost.");
       break;
     case D3DERR_DEVICENOTRESET:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Device not reset."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Device not reset.");
       break;
     case D3DERR_NOTAVAILABLE:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Not avaiable."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Not avaiable.");
       break;
     case D3DERR_OUTOFVIDEOMEMORY:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Out of video memory."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Out of video memory.");
       break;
     case D3DERR_INVALIDDEVICE:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Invalid device."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Invalid device.");
       break;
     case D3DERR_INVALIDCALL:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Invalid call."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Invalid call.");
       break;
     case D3DERR_DRIVERINVALIDCALL:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Driver invalid call."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Driver invalid call.");
       break;
     case D3DERR_WASSTILLDRAWING:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Was still drawing."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Was still drawing.");
       break;
       //#FIXME
 #ifdef D3DERR_DEVICEREMOVED
     case D3DERR_DEVICEREMOVED:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Device removed."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Device removed.");
       break;
 #endif
       //#FIXME
 #ifdef D3DERR_DEVICEHUNG
     case D3DERR_DEVICEHUNG:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("D3D Error : Device hung."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "D3D Error : Device hung.");
       break;
 #endif
     default:
-      NGL_LOG(_T("nuiD3DPainter"), NGL_LOG_ERROR, _T("Unknown Direct3D Error."));
+      NGL_LOG("nuiD3DPainter", NGL_LOG_ERROR, "Unknown Direct3D Error.");
       break;
 
       /* non géré
@@ -300,7 +300,7 @@ void nuiD3DPainter::StartRendering()
   }
 
   nuiPainter::StartRendering();
-  //NGL_OUT(_T("StartRendering (%d x %d)\n"), mWidth, mHeight);
+  //NGL_OUT("StartRendering (%d x %d)\n", mWidth, mHeight);
 //   D3DVIEWPORT9 vp;
 //   vp.X = 0;
 //   vp.Y = 0;
@@ -381,12 +381,12 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //if (drawArrayCount > 3)
   //  return;
   //return;
-  //NGL_OUT(_T("--------------"));
+  //NGL_OUT("--------------");
   PROFILE_CHRONO_IN(1);
 #ifdef NUI_PROFILE_DIRECTX
   setStateCount ++;
 #endif
-  //NGL_OUT(_T("SetState() "));
+  //NGL_OUT("SetState() ");
   NUI_RETURN_IF_RENDERING_DISABLED;
   LPDIRECT3DDEVICE9 pDev = mpContext->GetDirect3DDevice();
   HRESULTChecker hr = S_OK;
@@ -397,7 +397,7 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //#ifdef BLENDING_ENABLED
   if (ForceApply || mpState->mBlending != rState.mBlending)
   {
-    //NGL_OUT(_T("Blending Value %d "), mpState->mBlending);
+    //NGL_OUT("Blending Value %d ", mpState->mBlending);
     mpState->mBlending = rState.mBlending;
     if (mpState->mBlending)
     {
@@ -424,13 +424,13 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   #ifdef STENCIL_ENABLED
   if (ForceApply || mpState->mStencilMode != rState.mStencilMode || mpState->mStencilValue != rState.mStencilValue)
   {
-    //NGL_OUT(_T("Stencil mode"));
+    //NGL_OUT("Stencil mode");
     mpState->mStencilMode = rState.mStencilMode;
     mpState->mStencilValue = rState.mStencilValue;
     switch (mpState->mStencilMode)
     {
     case nuiIgnoreStencil:
-      NGL_OUT(_T("nuiIgnoreStencil Value %d "), mpState->mStencilValue);
+      NGL_OUT("nuiIgnoreStencil Value %d ", mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILENABLE, FALSE);
       hr = pDev->SetRenderState(D3DRS_STENCILMASK, 0);
       hr = pDev->SetRenderState(D3DRS_STENCILREF, mpState->mStencilValue);
@@ -442,7 +442,7 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
       break;
 
     case nuiReadStencil:
-      NGL_OUT(_T("nuiReadStencil Value %d "), mpState->mStencilValue);
+      NGL_OUT("nuiReadStencil Value %d ", mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILENABLE, TRUE);
       hr = pDev->SetRenderState(D3DRS_STENCILMASK, 0);
       hr = pDev->SetRenderState(D3DRS_STENCILREF, mpState->mStencilValue);
@@ -454,7 +454,7 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
       break;
 
     case nuiAddToStencil:
-      NGL_OUT(_T("nuiAddToStencil Value %d "), mpState->mStencilValue);
+      NGL_OUT("nuiAddToStencil Value %d ", mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILENABLE, TRUE);
       hr = pDev->SetRenderState(D3DRS_STENCILMASK, ~0);
       hr = pDev->SetRenderState(D3DRS_STENCILREF, mpState->mStencilValue);
@@ -466,7 +466,7 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
       break;
 
     case nuiBlendToStencil:
-      NGL_OUT(_T("nuiBlendToStencil Value %d "), mpState->mStencilValue);
+      NGL_OUT("nuiBlendToStencil Value %d ", mpState->mStencilValue);
       hr = pDev->SetRenderState(D3DRS_STENCILENABLE, TRUE);
       hr = pDev->SetRenderState(D3DRS_STENCILMASK, ~0);
       hr = pDev->SetRenderState(D3DRS_STENCILREF, mpState->mStencilValue);
@@ -491,7 +491,7 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //#ifdef COLORBUFFER_ENABLED
   if (ForceApply || mpState->mColorBuffer != rState.mColorBuffer)
   {
-    //NGL_OUT(_T("ColorBuffer Value %d "), mpState->mColorBuffer);
+    //NGL_OUT("ColorBuffer Value %d ", mpState->mColorBuffer);
     mpState->mColorBuffer = rState.mColorBuffer;
     if (mpState->mColorBuffer == GL_TRUE)
     {
@@ -512,7 +512,7 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
 
   if (mClip.mEnabled)    
   {
-    //NGL_OUT(_T("Clipping mode"));
+    //NGL_OUT("Clipping mode");
     //PROFILE_CHRONO_IN(22);
     hr = pDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
     nuiRect clip(mClip);
@@ -522,7 +522,7 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
       ToBelow(clip.Top() + clip.GetHeight())};
     hr = pDev->SetScissorRect(&r);
     //PROFILE_CHRONO_OUT(22);
-    //NGL_OUT(_T("Clip {%f, %f, %f, %f} "), mClip.mLeft, mClip.mTop, mClip.GetWidth(), mClip.GetHeight());
+    //NGL_OUT("Clip {%f, %f, %f, %f} ", mClip.mLeft, mClip.mTop, mClip.GetWidth(), mClip.GetHeight());
   }
   else
   {
@@ -580,7 +580,7 @@ void nuiD3DPainter::SetState(const nuiRenderState& rState, bool ForceApply)
 
 
   PROFILE_CHRONO_OUT(1);
-  //NGL_OUT(_T("--------------"));
+  //NGL_OUT("--------------");
 }
 
 
@@ -725,7 +725,7 @@ void nuiD3DPainter::SetSize(uint32 w, uint32 h)
       if(FAILED(pDev->Reset(&presParams)))
       {
         //FIXME : lost device ?
-        //MessageBox(NULL, _T("Reset() failed!"), _T("CheckDevice()"), MB_OK);
+        //MessageBox(NULL, "Reset() failed!", "CheckDevice()", MB_OK);
         return;//false;
       }
     }
@@ -766,7 +766,7 @@ void nuiD3DPainter::ClearColor()
 
   HRESULTChecker hr = pDev->Clear(1, &rectClear, D3DCLEAR_TARGET | D3DCLEAR_STENCIL | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(a, r, g, b), 1.0f, 0);
 
-  //NGL_OUT(_T("D3D::Clear()\n"));
+  //NGL_OUT("D3D::Clear()\n");
 #ifdef AUDIBLE_CLEAR
   ::Beep(440,1);
 #endif
@@ -779,13 +779,13 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
 {
   //if (drawArrayCount > 3)
   //  return;
-  //NGL_OUT(_T("--------------"));
+  //NGL_OUT("--------------");
 #ifdef NUI_PROFILE_DIRECTX
   drawArrayCount ++;
 #endif
   PROFILE_CHRONO_IN(2);
   HRESULTChecker hr = S_OK;
-  //NGL_OUT(_T("DrawArray() "));
+  //NGL_OUT("DrawArray() ");
 
   if (!mEnableDrawArray)
   {
@@ -826,7 +826,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
     c = mpState->mStrokeColor;
     primitivecount = size;
     translate_hack = true;
-    //NGL_OUT(_T("Primitive : Point list %d "), size);
+    //NGL_OUT("Primitive : Point list %d ", size);
     break;
 
   case GL_LINES:
@@ -834,7 +834,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
     c = mpState->mStrokeColor;
     primitivecount = size/2;
     translate_hack = true;
-    //NGL_OUT(_T("Primitive : Line list %d "), size);
+    //NGL_OUT("Primitive : Line list %d ", size);
     break;
 
   case GL_LINE_LOOP:
@@ -844,7 +844,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
     c = mpState->mStrokeColor;
     primitivecount = size-1;
     translate_hack = true;
-    //NGL_OUT(_T("Primitive : Line loop %d "), size);
+    //NGL_OUT("Primitive : Line loop %d ", size);
     break;
 
   case GL_LINE_STRIP:
@@ -852,21 +852,21 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
     c = mpState->mStrokeColor;
     primitivecount = size-1;
     translate_hack = true;
-    //NGL_OUT(_T("Primitive : Line strip %d "), size);
+    //NGL_OUT("Primitive : Line strip %d ", size);
     break;
 
   case GL_TRIANGLES:
     primtype = D3DPT_TRIANGLELIST;
     c = mpState->mFillColor;
     primitivecount = size/3;
-    //NGL_OUT(_T("Primitive : Triangle list %d "), size);
+    //NGL_OUT("Primitive : Triangle list %d ", size);
     break;
 
   case GL_TRIANGLE_STRIP:
     primtype = D3DPT_TRIANGLESTRIP;
     c = mpState->mFillColor;
     primitivecount = size-2;
-    //NGL_OUT(_T("Primitive : Triangle strip %d "), size);
+    //NGL_OUT("Primitive : Triangle strip %d ", size);
     //return; //@@@
     break;
 
@@ -874,25 +874,25 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
     primtype = D3DPT_TRIANGLEFAN;
     c = mpState->mFillColor;
     primitivecount = size-1;
-    //NGL_OUT(_T("Primitive : Triangle fan %d "), size);
+    //NGL_OUT("Primitive : Triangle fan %d ", size);
     break;
 
   case GL_QUADS:
-    NGL_OUT(_T("Primitive : Quads %d "), size);
+    NGL_OUT("Primitive : Quads %d ", size);
     NGL_ASSERT(0);
     break;
 
   case GL_QUAD_STRIP:
-    NGL_OUT(_T("Primitive : Quad strip %d "), size);
+    NGL_OUT("Primitive : Quad strip %d ", size);
     NGL_ASSERT(0);
     break;
 
   case GL_POLYGON:
-    NGL_OUT(_T("Primitive : Polygon %d "), size);
+    NGL_OUT("Primitive : Polygon %d ", size);
     NGL_ASSERT(0);
     break;
   default:
-    NGL_OUT(_T("ERROR : Unknown Primitive !"));
+    NGL_OUT("ERROR : Unknown Primitive !");
     NGL_ASSERT(0);
     break;
   }
@@ -903,19 +903,19 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
 #ifdef DIRECTX_FULL_LOG
   if (mpState->mTexturing)
   {
-    NGL_OUT(_T("TEXTURING ENABLED"));
+    NGL_OUT("TEXTURING ENABLED");
   }
   else
   {
-    NGL_OUT(_T("TEXTURING DISABLED"));
+    NGL_OUT("TEXTURING DISABLED");
   }
   if (pArray->IsArrayEnabled(nuiRenderArray::eColor))
   {
-    NGL_OUT(_T("COLOR ARRAY ENABLED"));
+    NGL_OUT("COLOR ARRAY ENABLED");
   }
   else
   {
-    NGL_OUT(_T("COLOR ARRAY NOT ENABLED"));
+    NGL_OUT("COLOR ARRAY NOT ENABLED");
   }
 #endif
 
@@ -1042,7 +1042,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           c = mpState->mStrokeColor;
           primitivecount = size;
           translate_hack = true;
-          //NGL_OUT(_T("Primitive : Point list %d "), size);
+          //NGL_OUT("Primitive : Point list %d ", size);
           break;
           
         case GL_LINES:
@@ -1050,7 +1050,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           c = mpState->mStrokeColor;
           primitivecount = size/2;
           translate_hack = true;
-          //NGL_OUT(_T("Primitive : Line list %d "), size);
+          //NGL_OUT("Primitive : Line list %d ", size);
           break;
           
         case GL_LINE_LOOP:
@@ -1060,7 +1060,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           c = mpState->mStrokeColor;
           primitivecount = size-1;
           translate_hack = true;
-          //NGL_OUT(_T("Primitive : Line loop %d "), size);
+          //NGL_OUT("Primitive : Line loop %d ", size);
           break;
           
         case GL_LINE_STRIP:
@@ -1068,21 +1068,21 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           c = mpState->mStrokeColor;
           primitivecount = size-1;
           translate_hack = true;
-          //NGL_OUT(_T("Primitive : Line strip %d "), size);
+          //NGL_OUT("Primitive : Line strip %d ", size);
           break;
           
         case GL_TRIANGLES:
           primtype = D3DPT_TRIANGLELIST;
           c = mpState->mFillColor;
           primitivecount = size/3;
-          //NGL_OUT(_T("Primitive : Triangle list %d "), size);
+          //NGL_OUT("Primitive : Triangle list %d ", size);
           break;
           
         case GL_TRIANGLE_STRIP:
           primtype = D3DPT_TRIANGLESTRIP;
           c = mpState->mFillColor;
           primitivecount = size-2;
-          //NGL_OUT(_T("Primitive : Triangle strip %d "), size);
+          //NGL_OUT("Primitive : Triangle strip %d ", size);
           //return; //@@@
           break;
           
@@ -1090,25 +1090,25 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
           primtype = D3DPT_TRIANGLEFAN;
           c = mpState->mFillColor;
           primitivecount = size-1;
-          //NGL_OUT(_T("Primitive : Triangle fan %d "), size);
+          //NGL_OUT("Primitive : Triangle fan %d ", size);
           break;
           
         case GL_QUADS:
-          NGL_OUT(_T("Primitive : Quads %d "), size);
+          NGL_OUT("Primitive : Quads %d ", size);
           NGL_ASSERT(0);
           break;
           
         case GL_QUAD_STRIP:
-          NGL_OUT(_T("Primitive : Quad strip %d "), size);
+          NGL_OUT("Primitive : Quad strip %d ", size);
           NGL_ASSERT(0);
           break;
           
         case GL_POLYGON:
-          NGL_OUT(_T("Primitive : Polygon %d "), size);
+          NGL_OUT("Primitive : Polygon %d ", size);
           NGL_ASSERT(0);
           break;
         default:
-          NGL_OUT(_T("ERROR : Unknown Primitive !"));
+          NGL_OUT("ERROR : Unknown Primitive !");
           NGL_ASSERT(0);
           break;
       }
@@ -1130,7 +1130,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
 
 #endif
   PROFILE_CHRONO_OUT(2);
-  //NGL_OUT(_T("--------------"));
+  //NGL_OUT("--------------");
 
   pArray->Release();
 }
@@ -1141,7 +1141,7 @@ void nuiD3DPainter::DrawArray(nuiRenderArray* pArray)
 void nuiD3DPainter::BeginSession()
 {
 #ifdef DIRECTX_FULL_LOG
-  NGL_OUT(_T("BeginSession"));
+  NGL_OUT("BeginSession");
 #endif
   /*
   CheckForGLErrors();
@@ -1156,7 +1156,7 @@ void nuiD3DPainter::EndSession()
 {
   // Bleh!
 #ifdef DIRECTX_FULL_LOG
-  NGL_OUT(_T("EndSession"));
+  NGL_OUT("EndSession");
 #endif
   PROFILE_CHRONO_OUT(0);
   PROFILE_CHRONO_LOG(0, "******3D FRAME : start rendering->end session");
@@ -1168,8 +1168,8 @@ void nuiD3DPainter::EndSession()
   PROFILE_CHRONO_LOG(2, "Render array");
   PROFILE_CHRONO_RESET(2);
 #ifdef NUI_PROFILE_DIRECTX
-  NGL_OUT(_T("DRAWARRAY COUNT : %d"), drawArrayCount);
-  NGL_OUT(_T("SETSTATE COUNT : %d"), setStateCount);
+  NGL_OUT("DRAWARRAY COUNT : %d", drawArrayCount);
+  NGL_OUT("SETSTATE COUNT : %d", setStateCount);
 #endif
 }
 
@@ -1307,7 +1307,7 @@ void nuiD3DPainter::UploadTexture(nuiTexture* pTexture)
     }
   }
 
-  //NGL_OUT(_T("Apply Target: 0x%x\n"), target);
+  //NGL_OUT("Apply Target: 0x%x\n", target);
   nglImage* pImage = pTexture->GetImage();
   {
     bool firstload = false;
@@ -1396,7 +1396,7 @@ void nuiD3DPainter::UploadTexture(nuiTexture* pTexture)
 
       if (IsTextureFormatSupported(pDev, d3dTextureFormat))
       {
-        NGL_OUT(_T("CreateTexture format %d\n"), d3dTextureFormat);
+        NGL_OUT("CreateTexture format %d\n", d3dTextureFormat);
         //we have to (re)create the texture
         //(0 Levels means all the mipmaps chain)
         hr = pDev->CreateTexture(Width, Height, 0, D3DUSAGE_DYNAMIC|D3DUSAGE_AUTOGENMIPMAP, d3dTextureFormat, D3DPOOL_DEFAULT, &info.mpTexture, NULL);
@@ -1580,33 +1580,33 @@ void nuiD3DPainter::ApplyTextureFiltering(LPDIRECT3DDEVICE9 pDev, GLuint minfilt
   switch (minfilter)
   {
   case GL_NEAREST:
-    //NGL_OUT(_T("MINFILTER GL_NEAREST"));
+    //NGL_OUT("MINFILTER GL_NEAREST");
     hr = pDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
     hr = pDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 
     break;
   case GL_LINEAR:
-    //NGL_OUT(_T("MINFILTER GL_LINEAR"));
+    //NGL_OUT("MINFILTER GL_LINEAR");
     hr = pDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
     hr = pDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
     break;
   case GL_NEAREST_MIPMAP_NEAREST:
-    //NGL_OUT(_T("MINFILTER GL_NEAREST_MIPMAP_NEAREST"));
+    //NGL_OUT("MINFILTER GL_NEAREST_MIPMAP_NEAREST");
     hr = pDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
     hr = pDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
     break;
   case GL_LINEAR_MIPMAP_NEAREST:
-    //NGL_OUT(_T("MINFILTER GL_LINEAR_MIPMAP_NEAREST"));
+    //NGL_OUT("MINFILTER GL_LINEAR_MIPMAP_NEAREST");
     hr = pDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
     hr = pDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
     break;
   case GL_NEAREST_MIPMAP_LINEAR:
-    //NGL_OUT(_T("MINFILTER GL_NEAREST_MIPMAP_LINEAR"));
+    //NGL_OUT("MINFILTER GL_NEAREST_MIPMAP_LINEAR");
     hr = pDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
     hr = pDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
     break;
   case GL_LINEAR_MIPMAP_LINEAR:
-    //NGL_OUT(_T("MINFILTER GL_LINEAR_MIPMAP_LINEAR"));
+    //NGL_OUT("MINFILTER GL_LINEAR_MIPMAP_LINEAR");
     hr = pDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
     hr = pDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
     break;
@@ -1617,15 +1617,15 @@ void nuiD3DPainter::ApplyTextureFiltering(LPDIRECT3DDEVICE9 pDev, GLuint minfilt
   switch (magfilter)
   {
   case GL_NEAREST:
-    //NGL_OUT(_T("MAGFILTER GL_NEAREST"));
+    //NGL_OUT("MAGFILTER GL_NEAREST");
     pDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
     break;
   case GL_LINEAR:
-    //NGL_OUT(_T("MAGFILTER GL_LINEAR"));
+    //NGL_OUT("MAGFILTER GL_LINEAR");
     pDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
     break;
   default:
-    //NGL_OUT(_T("MAGFILTER default !"));
+    //NGL_OUT("MAGFILTER default !");
     pDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
     return;
     break;
@@ -1732,7 +1732,7 @@ void nuiD3DPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply)
     {
       hr = pDev->SetTexture(0, NULL); //disable texturing
     }
-    //NGL_OUT(_T("Change texture from 0x%x to 0x%x\n"), outtarget, intarget);
+    //NGL_OUT("Change texture from 0x%x to 0x%x\n", outtarget, intarget);
   } 
 }
 
@@ -1750,7 +1750,7 @@ void nuiD3DPainter::CreateSurface(nuiSurface* pSurface)
 
 void nuiD3DPainter::SetSurface(nuiSurface* pSurface)
 {
-  NGL_OUT(_T("SetSurface(0x%x)\n"), pSurface);
+  NGL_OUT("SetSurface(0x%x)\n", pSurface);
 //  if (pSurface)
 //  {
 //    if (mpSurface)

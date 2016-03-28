@@ -22,7 +22,7 @@ public:
     nglAtomic val = ngl_atomic_inc(mRefCount);
     if (mTrace)
     {
-      NGL_OUT(_T("Acquire object %p (%d)\n"), this, val);
+      NGL_OUT("Acquire object %p (%d)\n", this, val);
     }
     OnAcquired();
     return val;
@@ -43,14 +43,14 @@ public:
 
     if (mTrace)
     {
-      NGL_OUT(_T("Release object %p (%d - %d)\n"), this, val, mRefCount);
+      NGL_OUT("Release object %p (%d - %d)\n", this, val, mRefCount);
     }
 
     if (val == 0)
     {
       if (mTrace)
       {
-        NGL_OUT(_T("Delete object %p %d\n"), this, mRefCount);
+        NGL_OUT("Delete object %p %d\n", this, mRefCount);
       }
       
       

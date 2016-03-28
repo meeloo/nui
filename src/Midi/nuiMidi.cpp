@@ -174,13 +174,13 @@ nuiMidiOutPort* nuiMidiManager::GetOutPort(int32 PortIndex)
 
 void nuiMidiManager::RegisterAPI(const nglString& rAPIName, nuiMidiPortAPI* pAPI)
 {
-  NGL_LOG(_T("nuiMidiManager"), NGL_LOG_DEBUG, _T("RegisterAPI('%s') [0x%x]\n"), rAPIName.GetChars(), pAPI);
+  NGL_LOG("nuiMidiManager", NGL_LOG_DEBUG, "RegisterAPI('%s') [0x%x]\n", rAPIName.GetChars(), pAPI);
   nuiMidiAPIMap::const_iterator end = mAPIs.end();
   nuiMidiAPIMap::const_iterator it = mAPIs.find(rAPIName);
   if (it != end)
   {
     nuiMidiPortAPI* pOldAPI = it->second;
-    NGL_LOG(_T("nuiMidiManager"), NGL_LOG_DEBUG, _T("\tkilling previous entry for this API [0x%p]\n"), pOldAPI);
+    NGL_LOG("nuiMidiManager", NGL_LOG_DEBUG, "\tkilling previous entry for this API [0x%p]\n", pOldAPI);
     delete pOldAPI;
   }
   mAPIs[rAPIName] = pAPI;

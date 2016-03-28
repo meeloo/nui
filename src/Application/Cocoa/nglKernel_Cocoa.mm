@@ -25,7 +25,7 @@ using namespace std;
 
 const nglChar* gpKernelErrorTable[] =
 {
-/*  0 */ _T("No error"),
+/*  0 */ "No error",
   NULL
 };
 
@@ -91,7 +91,7 @@ void objCCallOnInitWithURL(void* pUIApplication, const nglString &url)
 {
 	NGL_ASSERT(App);
 	App->mpNSApplication = pUIApplication;
-	App->AddArg(_T("--openurl"));
+	App->AddArg("--openurl");
 	App->AddArg(url);
 	App->CallOnInit();
 }
@@ -107,17 +107,17 @@ void objCCallOnExit(int Code)
   NGL_ASSERT(App);
   App->CallOnExit(Code);
 /*
-NGL_OUT(_T("objCCallOnExit trying to release our window\n"));
+NGL_OUT("objCCallOnExit trying to release our window\n");
 ///< release our Window
 NGL_ASSERT(App->mpNSApplication);
 UIWindow* pWindow = [(UIApplication*)App->mpNSApplication keyWindow];
 NGL_ASSERT(pWindow);
 if (pWindow) {
-  NGL_OUT(_T("objCCallOnExit about to release our window\n"));
+  NGL_OUT("objCCallOnExit about to release our window\n");
   [pWindow release];
 }
 
-NGL_OUT(_T("objCCallOnExit App->CallOnExit\n"));
+NGL_OUT("objCCallOnExit App->CallOnExit\n");
 */
  }
 
@@ -130,7 +130,7 @@ NGL_OUT(_T("objCCallOnExit App->CallOnExit\n"));
 void nglKernel::GetClipboard(nglString& rClipBoard)
 {
   // #FIXME
-  rClipBoard = _T("*clipboard code not implemented*");
+  rClipBoard = "*clipboard code not implemented*";
 }
 
 bool nglKernel::SetClipboard(const nglString& rString)

@@ -13,7 +13,7 @@ nuiList::nuiList(nuiOrientation Orientation)
   : nuiWidget(),
     mEventSink(this)
 {
-  SetObjectClass(_T("nuiList"));
+  SetObjectClass("nuiList");
   mBorderSize = mDefaultBorderSize;
   mOrientation = Orientation;
   mMultiSelectable = false;
@@ -44,8 +44,8 @@ nuiList::nuiList(nuiOrientation Orientation)
 
 void nuiList::InitProperties()
 {  
-  AddEvent(_T("ListClicked"), Clicked);
-  AddEvent(_T("ListDoubleClicked"), DoubleClicked);
+  AddEvent("ListClicked", Clicked);
+  AddEvent("ListDoubleClicked", DoubleClicked);
   NUI_ADD_EVENT(Activated);
   NUI_ADD_EVENT(SelectionChanged);
 }
@@ -885,7 +885,7 @@ bool nuiList::PopulateFiles(const nglPath& rPath)
     if ((*it).IsLeaf())
     {
       nuiLabel* pLabel = new nuiLabel((*it).GetNodeName());
-      pLabel->SetProperty(_T("Path"),(*it).GetAbsolutePath().GetPathName());
+      pLabel->SetProperty("Path",(*it).GetAbsolutePath().GetPathName());
       AddChild(pLabel);
     }
   }
@@ -906,13 +906,13 @@ bool nuiList::PopulateDirs(const nglPath& rPath)
   {
     if (!(*it).IsLeaf())
     {
-      nuiLabel* pLabel = new nuiLabel(_T("[ ")+(*it).GetNodeName()+_T(" ]"));
-      pLabel->SetProperty(_T("Path"),(*it).GetAbsolutePath().GetPathName());
+      nuiLabel* pLabel = new nuiLabel("[ "+(*it).GetNodeName()+" ]");
+      pLabel->SetProperty("Path",(*it).GetAbsolutePath().GetPathName());
       AddChild(pLabel);
     }
   }
 
-  SetProperty(_T("Path"),rPath.GetAbsolutePath().GetPathName());
+  SetProperty("Path",rPath.GetAbsolutePath().GetPathName());
   return true;
 }
 
@@ -931,8 +931,8 @@ bool nuiList::Populate(const nglPath& rPath, bool Files, bool Dirs)
     {
       if (!(*it).IsLeaf())
       {
-        nuiLabel* pLabel = new nuiLabel(_T("[ ")+(*it).GetNodeName()+_T(" ]"));
-        pLabel->SetProperty(_T("Path"),(*it).GetAbsolutePath().GetPathName());
+        nuiLabel* pLabel = new nuiLabel("[ "+(*it).GetNodeName()+" ]");
+        pLabel->SetProperty("Path",(*it).GetAbsolutePath().GetPathName());
         AddChild(pLabel);
       }
     }
@@ -945,13 +945,13 @@ bool nuiList::Populate(const nglPath& rPath, bool Files, bool Dirs)
       if ((*it).IsLeaf())
       {
         nuiLabel* pLabel = new nuiLabel((*it).GetNodeName());
-        pLabel->SetProperty(_T("Path"),(*it).GetAbsolutePath().GetPathName());
+        pLabel->SetProperty("Path",(*it).GetAbsolutePath().GetPathName());
         AddChild(pLabel);
       }
     }
   }
 
-  SetProperty(_T("Path"),rPath.GetAbsolutePath().GetPathName());
+  SetProperty("Path",rPath.GetAbsolutePath().GetPathName());
   return true;
 }
 

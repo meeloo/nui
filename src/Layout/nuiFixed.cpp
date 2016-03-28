@@ -10,7 +10,7 @@
 nuiFixed::nuiFixed()
   : nuiWidget()
 {
-  SetObjectClass(_T("nuiFixed"));
+  SetObjectClass("nuiFixed");
 }
 
 nuiFixed::~nuiFixed()

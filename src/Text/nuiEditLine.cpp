@@ -12,7 +12,7 @@ using namespace std;
 nuiEditLine::nuiEditLine(const nglString& rText)
 : nuiEditText(rText)
 {
-  if (SetObjectClass(_T("nuiEditLine")))
+  if (SetObjectClass("nuiEditLine"))
     InitAttributes();
   mMaxDisplayedChar = 0;
 }
@@ -20,7 +20,7 @@ nuiEditLine::nuiEditLine(const nglString& rText)
 void nuiEditLine::InitAttributes()
 {
   AddAttribute(new nuiAttribute<int>
-               (nglString(_T("CharacterCountLimit")), nuiUnitNone,
+               (nglString("CharacterCountLimit"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiEditLine::GetCharacterCountLimit),
                 nuiMakeDelegate(this, &nuiEditLine::LimitCharacterCount)));
 }

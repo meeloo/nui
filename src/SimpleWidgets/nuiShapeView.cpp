@@ -12,7 +12,7 @@
 nuiShapeView::nuiShapeView(nuiShape* pShape)
 : nuiWidget()
 {
-  SetObjectClass(_T("nuiShapeView"));
+  SetObjectClass("nuiShapeView");
   mpShape = pShape;
   pShape->Acquire();
   mShapeMode = eStrokeShape;

@@ -32,29 +32,29 @@ MainMenu::MainMenu()
   
   
   // root item for the menu bar. it's not displayed
-  nuiMainMenuItem* pRoot = new nuiMainMenuItem(_T("MainMenuRoot")); 
+  nuiMainMenuItem* pRoot = new nuiMainMenuItem("MainMenuRoot"); 
   
   // create the main menu object, you'll have to register it from the main window
   SetRoot(pRoot);
   
   
-  nuiMainMenuItem* pMenu1 = new nuiMainMenuItem(_T("Menu1"));
+  nuiMainMenuItem* pMenu1 = new nuiMainMenuItem("Menu1");
   pRoot->AddChild(pMenu1);
-  nuiMainMenuItem* pMenu2 = new nuiMainMenuItem(_T("Menu2"));
+  nuiMainMenuItem* pMenu2 = new nuiMainMenuItem("Menu2");
   pRoot->AddChild(pMenu2);
   
   
   //***********************************************************
   // menu 1
   //
-  nuiMainMenuItem* pItem = new nuiMainMenuItem(_T("First Command"));
+  nuiMainMenuItem* pItem = new nuiMainMenuItem("First Command");
   pMenu1->AddChild(pItem);
   mEventSink.Connect(pItem->Activated, &MainMenu::OnMenuCommand, (void*)eMenu1Cmd1);
 
   pItem = new nuiMainMenuItem(_T(""), eItemSeparator);
   pMenu1->AddChild(pItem);
   
-  pItem = new nuiMainMenuItem(_T("Second Command"));
+  pItem = new nuiMainMenuItem("Second Command");
   pMenu1->AddChild(pItem);
   mEventSink.Connect(pItem->Activated, &MainMenu::OnMenuCommand, (void*)eMenu1Cmd2);
   
@@ -63,15 +63,15 @@ MainMenu::MainMenu()
   // menu 2
   //
 
-  mpUndo = new nuiMainMenuItem(_T("Undo"));
+  mpUndo = new nuiMainMenuItem("Undo");
   pMenu2->AddChild(mpUndo);
   mEventSink.Connect(mpUndo->Activated, &MainMenu::OnMenuCommand, (void*)eMenu2Undo);
   
-  mpRedo = new nuiMainMenuItem(_T("Redo"));
+  mpRedo = new nuiMainMenuItem("Redo");
   pMenu2->AddChild(mpRedo);
   mEventSink.Connect(mpRedo->Activated, &MainMenu::OnMenuCommand, (void*)eMenu2Redo);
   
-  mpRepeat = new nuiMainMenuItem(_T("Repeat"));
+  mpRepeat = new nuiMainMenuItem("Repeat");
   pMenu2->AddChild(mpRepeat);
   mEventSink.Connect(mpRepeat->Activated, &MainMenu::OnMenuCommand, (void*)eMenu2Repeat);
   
@@ -95,12 +95,12 @@ MainMenu::~MainMenu()
 
 void MainMenu::Init()
 {
-  mCommands[eMenu1Cmd1] = _T("FirstCommandRef");
-  mCommands[eMenu1Cmd2] = _T("SecondCommandRef");
+  mCommands[eMenu1Cmd1] = "FirstCommandRef";
+  mCommands[eMenu1Cmd2] = "SecondCommandRef";
 
-  mCommands[eMenu2Undo] = _T("Undo");
-  mCommands[eMenu2Redo] = _T("Redo");
-  mCommands[eMenu2Repeat] = _T("Repeat");  
+  mCommands[eMenu2Undo] = "Undo";
+  mCommands[eMenu2Redo] = "Redo";
+  mCommands[eMenu2Repeat] = "Repeat";  
 }
 
 
@@ -167,30 +167,30 @@ void MainMenu::OnCommandChanged(const nuiEvent& rEvent)
   
   // update Undo MenuItem text
   mpUndo->SetEnabled(canundo);
-  nglString undotext = _T("Undo");
+  nglString undotext = "Undo";
   if (canundo && pLastDoneCmd)
   {
-    undotext.Add(_T(" '")).Add(pLastDoneCmd->GetDescription()).Add(_T("'"));
+    undotext.Add(" '").Add(pLastDoneCmd->GetDescription()).Add("'");
   }
   SetItemText(mpUndo, undotext);
   
   
   // update Redo MenuItem text
   mpRedo->SetEnabled(canredo);
-  nglString redotext = _T("Redo");
+  nglString redotext = "Redo";
   if (canredo && pLastUndoneCmd)
   {
-    redotext.Add(_T(" '")).Add(pLastUndoneCmd->GetDescription()).Add(_T("'"));
+    redotext.Add(" '").Add(pLastUndoneCmd->GetDescription()).Add("'");
   }
   SetItemText(mpRedo, redotext);
   
   
   // update Repeat MenuItem text
   mpRepeat->SetEnabled(canrepeat);
-  nglString repeattext = _T("Repeat");
+  nglString repeattext = "Repeat";
   if (canrepeat && pLastDoneCmd)
   {
-    repeattext.Add(_T(" '")).Add(pLastDoneCmd->GetDescription()).Add(_T("'"));
+    repeattext.Add(" '").Add(pLastDoneCmd->GetDescription()).Add("'");
   }
   SetItemText(mpRepeat, repeattext);
   

@@ -44,7 +44,7 @@ class nuiMetaPainterInspector : public nuiWidget
 ///////// nuiWidgetInspectorNode:
 
 nuiWidgetInspectorNode::nuiWidgetInspectorNode(nuiWidget* pTarget)
-: nuiTreeNode(pTarget ? (pTarget->GetObjectClass() + nglString(_T(" - ")) + pTarget->GetObjectName()) : nglString(_T("Empty")), false, false),
+: nuiTreeNode(pTarget ? (pTarget->GetObjectClass() + nglString(" - ") + pTarget->GetObjectName()) : nglString("Empty"), false, false),
 mInspectorNodeSink(this),
 mpTarget(pTarget),
 mpTree(NULL)
@@ -66,9 +66,9 @@ void nuiWidgetInspectorNode::UpdateInfos(const nuiEvent& rEvent)
   
   nglString str = mpTarget->GetObjectClass() + nglString(" - ") + mpTarget->GetObjectName();
   if (mpTarget->HasGrab())
-    str.Insert(_T("[Grab] "), 0);
+    str.Insert("[Grab] ", 0);
   if (mpTarget->HasFocus())
-    str.Insert(_T("[Focus] "), 0);
+    str.Insert("[Focus] ", 0);
 
   const nuiMetaPainter* pCache = mpTarget->GetRenderCache();
   if (pCache)
@@ -77,7 +77,7 @@ void nuiWidgetInspectorNode::UpdateInfos(const nuiEvent& rEvent)
     uint32 verts = pCache->GetVertices();
     uint32 batches = pCache->GetBatches();
     nglString s;
-    s.CFormat(_T(" (%d Vertices / %d arrays)\n"), verts, rops);
+    s.CFormat(" (%d Vertices / %d arrays)\n", verts, rops);
     str.Add(s);
   }
   
@@ -142,7 +142,7 @@ nuiWidgetInspector::nuiWidgetInspector(nuiWidget* pTarget)
 : nuiWidget(),
 mInspectorSink(this)
 {
-  SetObjectClass(_T("nuiWidgetInspector"));
+  SetObjectClass("nuiWidgetInspector");
   mpTarget = pTarget;
   
   // decoration
@@ -200,7 +200,7 @@ class nuiWidgetProxy : public nuiWidget
     nuiWidgetProxy(nuiWidget* pTarget)
     : nuiWidget()
     {
-      SetObjectClass(_T("nuiWidgetProxy"));
+      SetObjectClass("nuiWidgetProxy");
       mpTarget = pTarget;
     }
 
@@ -231,7 +231,7 @@ class nuiWidgetProxy : public nuiWidget
       {
         nuiFont* pFont = nuiFont::GetFont(24.0f);
         pContext->SetFont(pFont, true);
-        pContext->DrawText(0, 0, _T("No widget"));
+        pContext->DrawText(0, 0, "No widget");
       }
       return true;
     }
@@ -358,7 +358,7 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
     {
       if (i)
       {
-        text.Add(_T(" <-- "));
+        text.Add(" <-- ");
       }
       text.Add(classes[i]);
     }
@@ -379,22 +379,22 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
     text = mpTarget->GetUserRect().GetValue();
     mpUserRect->SetText(text);
     
-    text = mpTarget->HasUserSize()?_T("true"):_T("false");
+    text = mpTarget->HasUserSize()?"true":"false";
     mpHasUserSize->SetText(text);
     
-    text = mpTarget->HasUserPos()?_T("true"):_T("false");
+    text = mpTarget->HasUserPos()?"true":"false";
     mpHasUserPos->SetText(text);
     
     text = mpTarget->GetRect().GetValue();
     mpRect->SetText(text);
     
-    text = mpTarget->GetNeedLayout()?_T("true"):_T("false");
+    text = mpTarget->GetNeedLayout()?"true":"false";
     mpNeedLayout->SetText(text);
     
-    text = mpTarget->GetNeedSelfRedraw()?_T("true"):_T("false");
+    text = mpTarget->GetNeedSelfRedraw()?"true":"false";
     mpNeedSelfRedraw->SetText(text);
     
-    text = mpTarget->GetNeedIdealRect()?_T("true"):_T("false");
+    text = mpTarget->GetNeedIdealRect()?"true":"false";
     mpNeedIdealRectCalc->SetText(text);
     
     nuiRect rect(mpTarget->GetRect().Size());
@@ -408,7 +408,7 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
       for (int k = 0; k < 4; k++)
       {
         text.SetCFloat(mat(j,k));
-        mpMatrix->SetCell(j, k, new nuiLabel(text, nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL"))));
+        mpMatrix->SetCell(j, k, new nuiLabel(text, nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL")));
       }
     }
 
@@ -455,7 +455,7 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
               for (uint32 i = 0; i < count; i++)
               {
                 Base.ToString(i, str);
-                value.Add(i).Add(_T(":")).Add(str).Add("\t");
+                value.Add(i).Add(":").Add(str).Add("\t");
               }
               value.Trim(_T('\t'));
             }
@@ -470,7 +470,7 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
                 for (uint32 j = 0; j < MIN(10, countj); j++)
                 {
                   Base.ToString(i, j, str);
-                  value.Add(i).Add(",").Add(j).Add(_T(":")).Add(str).Add("\t");
+                  value.Add(i).Add(",").Add(j).Add(":").Add(str).Add("\t");
                 }
               }
               value.Trim(_T('\t'));
@@ -535,106 +535,106 @@ void nuiWidgetInfo::BuildInfo()
 
     //pBox->SetExpand(nuiExpandShrinkAndGrow);
     
-    nuiLabel* pLabel = new nuiLabel(_T("Name"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    nuiLabel* pLabel = new nuiLabel("Name");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpName = new nuiLabel();
-    mpName->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpName->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpName);
     
-    pLabel = new nuiLabel(_T("Class"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Class");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpClass = new nuiLabel();
-    mpClass->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpClass->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpClass);
     
-    pLabel = new nuiLabel(_T("C++ Type"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("C++ Type");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpCType = new nuiLabel();
-    mpCType->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpCType->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpCType);
     
 #ifndef __GNUC__
-    pLabel = new nuiLabel(_T("C++ Raw Type"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("C++ Raw Type");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpCRawType = new nuiLabel();
     pBox->SetCell(1, index++, mpCRawType);
-    mpName->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpName->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
 #endif
     
-    pLabel = new nuiLabel(_T("Ideal Rect"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Ideal Rect");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpIdealRect = new nuiLabel();
-    mpIdealRect->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpIdealRect->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpIdealRect);
     
-    pLabel = new nuiLabel(_T("User Rect"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("User Rect");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpUserRect = new nuiLabel();
-    mpUserRect->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpUserRect->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpUserRect);
     
-    pLabel = new nuiLabel(_T("Has User Size"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Has User Size");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpHasUserSize = new nuiLabel();
-    mpHasUserSize->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpHasUserSize->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpHasUserSize);
     
-    pLabel = new nuiLabel(_T("Has User Pos"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Has User Pos");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpHasUserPos = new nuiLabel();
-    mpHasUserPos->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpHasUserPos->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpHasUserPos);
     
     
-    pLabel = new nuiLabel(_T("Rect"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Rect");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpRect = new nuiLabel();
-    mpRect->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpRect->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpRect);
     
-    pLabel = new nuiLabel(_T("Need Layout"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Need Layout");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpNeedLayout = new nuiLabel();
-    mpNeedLayout->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpNeedLayout->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpNeedLayout);
     
-    pLabel = new nuiLabel(_T("Need Render"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Need Render");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     
-    pLabel = new nuiLabel(_T("Need Redraw"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Need Redraw");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpNeedSelfRedraw = new nuiLabel();
-    mpNeedSelfRedraw->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpNeedSelfRedraw->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpNeedSelfRedraw);
     
-    pLabel = new nuiLabel(_T("Need Ideal Rect"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Need Ideal Rect");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpNeedIdealRectCalc = new nuiLabel();
-    mpNeedIdealRectCalc->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpNeedIdealRectCalc->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpNeedIdealRectCalc);
     
-    pLabel = new nuiLabel(_T("Global Rect"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Global Rect");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpGlobalRect = new nuiLabel();
-    mpGlobalRect->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    mpGlobalRect->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpGlobalRect);
     
-    pLabel = new nuiLabel(_T("Matrix"));
-    pLabel->SetFont(nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+    pLabel = new nuiLabel("Matrix");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);
     mpMatrix = new nuiGrid(4, 4);
     pBox->SetCell(1, index++, mpMatrix);
@@ -646,7 +646,7 @@ void nuiWidgetInfo::BuildInfo()
     nuiFolderPane* pSPane = new nuiFolderPane();
     pSPane->AddChild(pBox);
     
-    pLabel = new nuiLabel(_T("Standard"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
+    pLabel = new nuiLabel("Standard", nuiFont::GetFont("INTROSPECTOR_FONT_BOLD"));
 //    pLabel->SetNormalTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
 //    pLabel->SetSelectedTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
     pSPane->SetTitleWithHandle(pLabel);
@@ -661,7 +661,7 @@ void nuiWidgetInfo::BuildInfo()
     mpAttributeGrid->SetColumnExpand(1, nuiExpandShrinkAndGrow);
     
     nuiFolderPane* pAPane = new nuiFolderPane();
-    nuiLabel* pLabel3 = new nuiLabel(_T("Attributes"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
+    nuiLabel* pLabel3 = new nuiLabel("Attributes", nuiFont::GetFont("INTROSPECTOR_FONT_BOLD"));
 //    pLabel3->SetNormalTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
 //    pLabel3->SetSelectedTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
     pAPane->SetTitleWithHandle(pLabel3);
@@ -674,8 +674,8 @@ void nuiWidgetInfo::BuildInfo()
     
     
     // Widget rendering
-    nuiFolderPane* pProxyPane = new nuiFolderPane(_T("Rendering"), true);
-    nuiLabel* pLabel4 = new nuiLabel(_T("Rendering"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
+    nuiFolderPane* pProxyPane = new nuiFolderPane("Rendering", true);
+    nuiLabel* pLabel4 = new nuiLabel("Rendering", nuiFont::GetFont("INTROSPECTOR_FONT_BOLD"));
 //    pLabel4->SetNormalTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
 //    pLabel4->SetSelectedTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
     pProxyPane->SetTitleWithHandle(pLabel4);
@@ -683,9 +683,9 @@ void nuiWidgetInfo::BuildInfo()
       pProxyPane->GetTitle()->SetDecoration(pTitlePaneDeco, eDecorationBorder);
     
     
-    nuiDecoration* pDeco = nuiDecoration::Get(_T("InspectorRenderingDeco"));
+    nuiDecoration* pDeco = nuiDecoration::Get("InspectorRenderingDeco");
     if (!pDeco)
-      pDeco = new nuiColorDecoration(_T("InspectorRenderingDeco"), nuiRect(0,0,0,0),  nuiColor(255, 255, 255, 255));
+      pDeco = new nuiColorDecoration("InspectorRenderingDeco", nuiRect(0,0,0,0),  nuiColor(255, 255, 255, 255));
     pProxyPane->SetDecoration(pDeco);
     
     mpProxy = new nuiWidgetProxy(mpTarget);
@@ -697,8 +697,8 @@ void nuiWidgetInfo::BuildInfo()
 
     {
       // Widget rendering list
-      nuiFolderPane* pCachePane = new nuiFolderPane(_T("Render cache"), true);
-      nuiLabel* pLabel = new nuiLabel(_T("Render Cache"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
+      nuiFolderPane* pCachePane = new nuiFolderPane("Render cache", true);
+      nuiLabel* pLabel = new nuiLabel("Render Cache", nuiFont::GetFont("INTROSPECTOR_FONT_BOLD"));
 //      pLabel->SetNormalTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
 //      pLabel->SetSelectedTextFg(INTROSPECTOR_COLOR_FOLDERPANE_TITLE);
       pCachePane->SetTitleWithHandle(pLabel);
@@ -707,9 +707,9 @@ void nuiWidgetInfo::BuildInfo()
         pCachePane->GetTitle()->SetDecoration(pTitlePaneDeco, eDecorationBorder);
       
       
-      nuiDecoration* pDeco = nuiDecoration::Get(_T("InspectorRenderingDeco"));
+      nuiDecoration* pDeco = nuiDecoration::Get("InspectorRenderingDeco");
       if (!pDeco)
-        pDeco = new nuiColorDecoration(_T("InspectorRenderingDeco"), nuiRect(0,0,0,0),  nuiColor(255, 255, 255, 255));
+        pDeco = new nuiColorDecoration("InspectorRenderingDeco", nuiRect(0,0,0,0),  nuiColor(255, 255, 255, 255));
       pProxyPane->SetDecoration(pDeco);
       
       mpPainterInspector = new nuiMetaPainterInspector();
@@ -728,7 +728,7 @@ void nuiWidgetInfo::BuildInfo()
   }
   
   {    
-    nuiLabel* pLabel = new nuiLabel(_T("No widget Selected"));
+    nuiLabel* pLabel = new nuiLabel("No widget Selected");
     pLabel->SetPosition(nuiCenter);
 //    mpDummy->AddChild(pLabel);
   }

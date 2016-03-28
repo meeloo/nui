@@ -66,19 +66,19 @@ void nuiHotKeyEditor::ConnectTopLevel()
   mpTopLevel = GetTopLevel();
   
   mpMainVBox = new nuiVBox();
-  mpMainVBox->SetObjectName(_T("nuiHotKeyEditor_MainVBox"));
+  mpMainVBox->SetObjectName("nuiHotKeyEditor_MainVBox");
   mpMainVBox->SetExpand(nuiExpandGrow);
   
   // Column Headers
   mpColumnHeadersHBox = new nuiHBox(2);
-  mpColumnHeadersHBox->SetObjectName(_T("nuiHotKeyEditor_ColumnHeaders"));
+  mpColumnHeadersHBox->SetObjectName("nuiHotKeyEditor_ColumnHeaders");
   
-  nuiLabel* pDescriptionColHeader = new nuiLabel(_T("Description"));
-  pDescriptionColHeader->SetObjectName(_T("nuiHotKeyEditor_DescriptionColumnHeaderLabel"));
+  nuiLabel* pDescriptionColHeader = new nuiLabel("Description");
+  pDescriptionColHeader->SetObjectName("nuiHotKeyEditor_DescriptionColumnHeaderLabel");
   mpColumnHeadersHBox->SetCell(0, pDescriptionColHeader, nuiCenter);
   
-  nuiLabel* pShortcutColHeader = new nuiLabel(_T("Shortcut"));
-  pShortcutColHeader->SetObjectName(_T("nuiHotKeyEditor_ShortcutColumnHeaderLabel"));
+  nuiLabel* pShortcutColHeader = new nuiLabel("Shortcut");
+  pShortcutColHeader->SetObjectName("nuiHotKeyEditor_ShortcutColumnHeaderLabel");
   mpColumnHeadersHBox->SetCell(1, pShortcutColHeader, nuiCenter);
   
   mpColumnHeadersHBox->SetCellExpand(0, nuiExpandGrow);
@@ -89,7 +89,7 @@ void nuiHotKeyEditor::ConnectTopLevel()
   mpMainVBox->AddCell(mpColumnHeadersHBox);
   
   mpHotKeysGrid = new nuiGrid();
-  mpHotKeysGrid->SetObjectName(_T("nuiHotKeyEditor_HotKeys Grid"));
+  mpHotKeysGrid->SetObjectName("nuiHotKeyEditor_HotKeys Grid");
   
   // retrieve toplevel hotkeys and initialize the user hotkeys map
   const std::map<nglString, nuiHotKey*>& pTopLevelHotKeys = mpTopLevel->GetHotKeys();
@@ -121,11 +121,11 @@ void nuiHotKeyEditor::FillHotKeysGrid()
     nuiHotKey* pHotKey = pUserHotKeysIt->second;
     
     nuiLabel* pDescriptionLabel = new nuiLabel(pHotKey->GetDescription());
-    pDescriptionLabel->SetObjectName(_T("nuiHotKeyEditor_DescriptionCell"));
+    pDescriptionLabel->SetObjectName("nuiHotKeyEditor_DescriptionCell");
     mpHotKeysGrid->SetCell(0, row, pDescriptionLabel, nuiFill);
     
     nuiLabel* pHotKeyLabel = new nuiLabel(pHotKey->ShortcutToString());
-    pHotKeyLabel->SetObjectName(_T("nuiHotKeyEditor_ShortcutCell"));
+    pHotKeyLabel->SetObjectName("nuiHotKeyEditor_ShortcutCell");
     pHotKeyLabel->SetToken(new nuiToken<nglString>(name));
     mpHotKeysGrid->SetCell(1, row, pHotKeyLabel, nuiFill);
     
@@ -165,7 +165,7 @@ void nuiHotKeyEditor::OnCellClicked(const nuiEvent& rEvent)
     {
       // the cell was already selected, enter edit mode
       mpEditLabel = pLabel;
-      mpEditLabel->SetText(_T("....."));
+      mpEditLabel->SetText(".....");
     }
     else // the cell was inactive, cancel everything in progress and select this one
     {
@@ -344,7 +344,7 @@ bool nuiHotKeyEditor::Import(nuiXMLNode* pInputNode)
   nglString nodeName = pInputNode->GetName();
   if (nodeName.Compare(NUIHOTKEYS_XML_NODEID))
   {
-    NGL_OUT(_T("Not a hotkeys node\n : %s"), nodeName.GetChars());
+    NGL_OUT("Not a hotkeys node\n : %s", nodeName.GetChars());
     return false;
   }
   
@@ -371,11 +371,11 @@ bool nuiHotKeyEditor::Import(nuiXMLNode* pInputNode)
   for (pImportHotKeysIt = pHotKeysList.begin(); pImportHotKeysIt != pHotKeysList.end(); ++pImportHotKeysIt)
   {
     nuiXMLNode* pNode = *pImportHotKeysIt;
-    nglString name = pNode->GetAttribute(_T("Name"));
-    nglString description = pNode->GetAttribute(_T("Description"));
-    nuiKeyModifier modifiers = pNode->GetAttribute(_T("Modifiers")).GetUInt();
-    bool hasPriority = pNode->GetAttribute(_T("Priority")).Compare(_T("true")) ? false : true;
-    bool isOnKeyUp = pNode->GetAttribute(_T("OnKeyUp")).Compare(_T("true")) ? false : true;
+    nglString name = pNode->GetAttribute("Name");
+    nglString description = pNode->GetAttribute("Description");
+    nuiKeyModifier modifiers = pNode->GetAttribute("Modifiers").GetUInt();
+    bool hasPriority = pNode->GetAttribute("Priority").Compare("true") ? false : true;
+    bool isOnKeyUp = pNode->GetAttribute("OnKeyUp").Compare("true") ? false : true;
     
     // if that hotkey has been modified, but changes haven't been applied yet, delete it first
     std::map<nglString, nuiHotKey*>::iterator pUserHotKeysIt = mpUserHotKeys.find(name);
@@ -388,11 +388,11 @@ bool nuiHotKeyEditor::Import(nuiXMLNode* pInputNode)
       }
     }
     
-    bool isHotKeyKey = pNode->GetAttribute(_T("IsHotKeyKey")).Compare(_T("true")) ? false : true;
+    bool isHotKeyKey = pNode->GetAttribute("IsHotKeyKey").Compare("true") ? false : true;
     
     if (isHotKeyKey)
     {
-      nglKeyCode trigger = pNode->GetAttribute(_T("Trigger_KeyCode")).GetUInt();
+      nglKeyCode trigger = pNode->GetAttribute("Trigger_KeyCode").GetUInt();
       nuiHotKeyKey* pHotKeyKey = new nuiHotKeyKey(trigger, modifiers, hasPriority, isOnKeyUp);
       pHotKeyKey->SetName(name);
       pHotKeyKey->SetDescription(description);
@@ -400,7 +400,7 @@ bool nuiHotKeyEditor::Import(nuiXMLNode* pInputNode)
     }
     else
     {
-      nglString trig = pNode->GetAttribute(_T("Trigger_Char"));
+      nglString trig = pNode->GetAttribute("Trigger_Char");
       nglChar trigger = (nglChar)trig.GetCInt();
       nuiHotKeyChar* pHotKeyChar = new nuiHotKeyChar(trigger, modifiers, hasPriority, isOnKeyUp);
       pHotKeyChar->SetName(name);
@@ -431,25 +431,25 @@ nuiXMLNode* nuiHotKeyEditor::Serialize(nuiXMLNode* pParentNode) const
     
     if (pUserHotKeyKey)
     {
-      nuiXMLNode* pNode = new nuiXMLNode(_T("HotKey"), pHotKeysNode);
-      pNode->SetAttribute(_T("Name"), name);
-      pNode->SetAttribute(_T("Description"), pUserHotKeyKey->GetDescription());
-      pNode->SetAttribute(_T("IsHotKeyKey"), true);
-      pNode->SetAttribute(_T("Trigger_KeyCode"), (int64)pUserHotKeyKey->GetTrigger());
-      pNode->SetAttribute(_T("Modifiers"), (int64)pUserHotKeyKey->GetModifiers());
-      pNode->SetAttribute(_T("Priority"), pUserHotKeyKey->HasPriority());
-      pNode->SetAttribute(_T("OnKeyUp"), pUserHotKeyKey->IsOnKeyUp());
+      nuiXMLNode* pNode = new nuiXMLNode("HotKey", pHotKeysNode);
+      pNode->SetAttribute("Name", name);
+      pNode->SetAttribute("Description", pUserHotKeyKey->GetDescription());
+      pNode->SetAttribute("IsHotKeyKey", true);
+      pNode->SetAttribute("Trigger_KeyCode", (int64)pUserHotKeyKey->GetTrigger());
+      pNode->SetAttribute("Modifiers", (int64)pUserHotKeyKey->GetModifiers());
+      pNode->SetAttribute("Priority", pUserHotKeyKey->HasPriority());
+      pNode->SetAttribute("OnKeyUp", pUserHotKeyKey->IsOnKeyUp());
     }
     else if (pUserHotKeyChar)
     {
-      nuiXMLNode* pNode = new nuiXMLNode(_T("HotKey"), pHotKeysNode);
-      pNode->SetAttribute(_T("Name"), name);
-      pNode->SetAttribute(_T("Description"), pUserHotKeyChar->GetDescription());
-      pNode->SetAttribute(_T("IsHotKeyKey"), false);
-      pNode->SetAttribute(_T("Trigger_Char"), (int64)pUserHotKeyChar->GetTrigger());
-      pNode->SetAttribute(_T("Modifiers"), (int64)pUserHotKeyChar->GetModifiers());
-      pNode->SetAttribute(_T("Priority"), pUserHotKeyChar->HasPriority());
-      pNode->SetAttribute(_T("OnKeyUp"), pUserHotKeyChar->IsOnKeyUp());
+      nuiXMLNode* pNode = new nuiXMLNode("HotKey", pHotKeysNode);
+      pNode->SetAttribute("Name", name);
+      pNode->SetAttribute("Description", pUserHotKeyChar->GetDescription());
+      pNode->SetAttribute("IsHotKeyKey", false);
+      pNode->SetAttribute("Trigger_Char", (int64)pUserHotKeyChar->GetTrigger());
+      pNode->SetAttribute("Modifiers", (int64)pUserHotKeyChar->GetModifiers());
+      pNode->SetAttribute("Priority", pUserHotKeyChar->HasPriority());
+      pNode->SetAttribute("OnKeyUp", pUserHotKeyChar->IsOnKeyUp());
     }
     else
     {
@@ -472,7 +472,7 @@ bool nuiHotKeyEditor::LoadFromStream(nglIStream* pInput)
   }
   else
   {
-    NGL_OUT(_T("Couldn't load hotkeys from file\n"));
+    NGL_OUT("Couldn't load hotkeys from file\n");
     delete pXML;
     
     return false;
@@ -481,7 +481,7 @@ bool nuiHotKeyEditor::LoadFromStream(nglIStream* pInput)
 
 bool nuiHotKeyEditor::SaveToStream(nglOStream* pOutput) const
 {
-  nuiXML* pHotKeysXML = new nuiXML(_T("HotKeys_XML_File"));
+  nuiXML* pHotKeysXML = new nuiXML("HotKeys_XML_File");
   nuiXMLNode* pHotKeyNode = Serialize(pHotKeysXML);
   if (pHotKeysXML->Save(*pOutput))
   {
@@ -492,7 +492,7 @@ bool nuiHotKeyEditor::SaveToStream(nglOStream* pOutput) const
   }
   else
   {
-    NGL_OUT(_T("Couldn't save hotkeys to file\n"));
+    NGL_OUT("Couldn't save hotkeys to file\n");
     delete pHotKeysXML;
     
     return false;

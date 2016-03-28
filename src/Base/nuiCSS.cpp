@@ -27,7 +27,7 @@ nuiCSSAction_SetAttribute::~nuiCSSAction_SetAttribute()
 
 void nuiCSSAction_SetAttribute::ApplyAction(nuiObject* pObject)
 {
-  //NGL_OUT(_T("CSS Action on class %s attrib[%s] <- '%s'\n"), pObject->GetObjectClass().GetChars(), mAttribute.GetChars(), mValue.GetChars());
+  //NGL_OUT("CSS Action on class %s attrib[%s] <- '%s'\n", pObject->GetObjectClass().GetChars(), mAttribute.GetChars(), mValue.GetChars());
   
   nuiAttribBase Attribute = pObject->GetAttribute(mAttribute);  
   if (Attribute.IsValid())
@@ -228,7 +228,7 @@ public:
       mLine++;
     }
 
-    //NGL_OUT(_T("%lc"), mChar);
+    //NGL_OUT("%lc", mChar);
     
     return true;
   }
@@ -595,7 +595,7 @@ public:
   {
     nuiObject* pObj = mrCSS.CreateObject(rType, rName);
 
-    if (!pObj && (rType == _T("nuiFont") || rType.Compare(_T("font"), false) == 0))
+    if (!pObj && (rType == "nuiFont" || rType.Compare("font", false) == 0))
     {
       nuiFontRequest* fontrequest = new nuiFontRequest();
       ApplyActionsToObject(fontrequest);
@@ -730,11 +730,11 @@ public:
       if (!SkipBlank())
         return false;
       
-      if (symbol == _T("Path"))
+      if (symbol == "Path")
       {
         AtlasPath = value;
       }
-      else if (symbol == _T("TextureName"))
+      else if (symbol == "TextureName")
       {
         if (count)
         {
@@ -744,34 +744,34 @@ public:
         TextureName = value;
         count++;
       }
-      else if (symbol == _T("Alias"))
+      else if (symbol == "Alias")
       {
         if (count)
         {
           nuiTexture::CreateTextureProxy(value, AtlasPath, Rect, Rotated);
         }
       }
-      else if (symbol == _T("Rect"))
+      else if (symbol == "Rect")
       {
         Rect.SetValue(value);
       }
-      else if (symbol == _T("Rotated"))
+      else if (symbol == "Rotated")
       {
         Rotated = nuiGetBool(value, false);
       }
-      else if (symbol == _T("AutoTrim"))
+      else if (symbol == "AutoTrim")
       {
         AutoTrim = nuiGetBool(value, false);
       }
-      else if (symbol == _T("MaxTextureSize"))
+      else if (symbol == "MaxTextureSize")
       {
         MaxTextureSize = value.GetCInt();
       }
-      else if (symbol == _T("Size"))
+      else if (symbol == "Size")
       {
         AtlasSize = value.GetCInt();
       }
-      else if (symbol == _T("AutoScan"))
+      else if (symbol == "AutoScan")
       {
         nuiTexture::CreateAtlasFromPath(value, MaxTextureSize, AtlasSize, AutoTrim);
       }
@@ -816,7 +816,7 @@ public:
       nglString type;
       if (!GetSymbol(type))
         return false;
-      if (type.Compare(_T("include")))
+      if (type.Compare("include"))
         return false;
       
       if (!SkipBlank())
@@ -831,7 +831,7 @@ public:
       
       if (name.IsEmpty())
       {
-        //NGL_OUT(_T("a css included filename is empty!\n"));
+        //NGL_OUT("a css included filename is empty!\n");
         return false;
       }
       
@@ -847,7 +847,7 @@ public:
       // check file
       if (!includePath.Exists())
       {
-        NGL_OUT(_T("Could not find CSS source file '%s'\n"), includePath.GetChars());
+        NGL_OUT("Could not find CSS source file '%s'\n", includePath.GetChars());
         return false;
       }
       
@@ -855,11 +855,11 @@ public:
       nglIStream* pF = includePath.OpenRead();
       if (!pF)
       {
-        NGL_OUT(_T("Unable to open CSS source file '%s'\n"), includePath.GetChars());
+        NGL_OUT("Unable to open CSS source file '%s'\n", includePath.GetChars());
         return false;
       }
 
-      //NGL_OUT(_T("CSS Include: '%s'\n"), includePath.GetChars());
+      //NGL_OUT("CSS Include: '%s'\n", includePath.GetChars());
       // launch included file parsing
       nglFileOffset s = pF->Available();
       std::vector<uint8> cache;
@@ -873,12 +873,12 @@ public:
       if (!lexer.Load())
       {
         nglString tmp;
-        tmp.CFormat(_T("Error (file '%s') line %d (%d): %s"), includePath.GetChars(), lexer.GetLine(), lexer.GetColumn(), lexer.GetErrorStr().GetChars() );
+        tmp.CFormat("Error (file '%s') line %d (%d): %s", includePath.GetChars(), lexer.GetLine(), lexer.GetColumn(), lexer.GetErrorStr().GetChars() );
         SetError(tmp);
         return false;
       }
       uint32 cc = mrCSS.GetRulesCount();
-      //NGL_OUT(_T("\tNew css rules: %d\n"), cc - c);
+      //NGL_OUT("\tNew css rules: %d\n", cc - c);
       return true;
     }
     else if (mChar == _T('+'))
@@ -937,7 +937,7 @@ public:
     
     if (!SkipBlank())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       Clear();
       return NULL;
     }
@@ -963,38 +963,38 @@ public:
     // Eat the global variable $
     if (!GetChar())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return false;
     }
     
     nglString variable;
     if (!GetSymbol(variable))
     {
-      SetError(_T("expected a symbol"));
+      SetError("expected a symbol");
       return false;
     }
     
     if (!SkipBlank())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return false;        
     }
     
     if (mChar != _T('='))
     {
-      SetError(_T("expected ="));
+      SetError("expected =");
       return false;        
     }
     
     if (!GetChar())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return false;
     }
     
     if (!SkipBlank())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return false;        
     }
     
@@ -1011,25 +1011,25 @@ public:
     
     if (!res)
     {
-      SetError(_T("Error while looking for symbol or string action"));
+      SetError("Error while looking for symbol or string action");
       return false;
     }
     
     if (!SkipBlank())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return false;        
     }
     
     if (mChar != _T(';'))
     {
-      SetError(_T("expected ';'"));
+      SetError("expected ';'");
       return false;        
     }
     
     if (!GetChar())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return false;
     }
     
@@ -1044,13 +1044,13 @@ public:
     nglString type;
     if (!GetSymbol(type))
     {
-      SetError(_T("expected a symbol"));
+      SetError("expected a symbol");
       return NULL;
     }
     
     if (!SkipBlank())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return NULL;
     }
     
@@ -1062,7 +1062,7 @@ public:
     }
     else if (!GetSymbol(name))
     {
-      SetError(_T("expected a symbol"));
+      SetError("expected a symbol");
       return NULL;
     }
     else
@@ -1073,39 +1073,39 @@ public:
     
     if (!SkipBlank())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return NULL;
     }
     
     // special case. create color
     if (mChar == _T('='))
     {
-      if ((type == _T("nuiColor")) || !type.Compare(_T("color"), false))
+      if ((type == "nuiColor") || !type.Compare("color", false))
       {
         if (!CreateColor(name))
         {
           nglString str;
-          str.CFormat(_T("Unable to parse a color with name '%s'"), name.GetChars());
+          str.CFormat("Unable to parse a color with name '%s'", name.GetChars());
           SetError(str);
           return NULL;
         }
       }
-      else if (!type.Compare(_T("var"), false))
+      else if (!type.Compare("var", false))
       {
         if (!CreateVariable(name))
         {
           nglString str;
-          str.CFormat(_T("Unable to parse a variable with name '%s'"), name.GetChars());
+          str.CFormat("Unable to parse a variable with name '%s'", name.GetChars());
           SetError(str);
           return NULL;
         }
       }
-      else if (!type.Compare(_T("textureatlas"), false) || !type.Compare(_T("atlas"), false))
+      else if (!type.Compare("textureatlas", false) || !type.Compare("atlas", false))
       {
         if (!ReadTextureAtlas(name))
         {
           nglString str;
-          str.CFormat(_T("Unable to parse an atlas definition for %s"), name.GetChars());
+          str.CFormat("Unable to parse an atlas definition for %s", name.GetChars());
           SetError(str);
           return NULL;
         }
@@ -1117,7 +1117,7 @@ public:
     // create an object
     if (mChar != _T('{'))
     {
-      SetError(_T("'{' expected"));
+      SetError("'{' expected");
       return NULL;
     }
     
@@ -1132,7 +1132,7 @@ public:
     if (!pObj)
     {
       nglString str;
-      str.CFormat(_T("Unable to create an object of type '%s' and name '%s'"), type.GetChars(), name.GetChars());
+      str.CFormat("Unable to create an object of type '%s' and name '%s'", type.GetChars(), name.GetChars());
       SetError(str);
       return NULL;
     }
@@ -1162,13 +1162,13 @@ public:
     {
       if (!GetChar())
       {
-        SetError(_T("Unexpected end of file"));
+        SetError("Unexpected end of file");
         return false;
       }
       
       if (!SkipBlank())
       {
-        SetError(_T("Unexpected end of file"));
+        SetError("Unexpected end of file");
         return false;
       }      
       
@@ -1176,32 +1176,32 @@ public:
       nglString key;
       if (!GetSymbol(key))
       {
-        SetError(_T("error while looking for a symbol"));
+        SetError("error while looking for a symbol");
         return false;
       }
       
       if (!SkipBlank())
       {
-        SetError(_T("Unexpected end of file"));
+        SetError("Unexpected end of file");
         return false;
       }
       
       // Read ':'
       if (mChar != _T(':'))
       {
-        SetError(_T("Expected ':'"));
+        SetError("Expected ':'");
         return false;
       }
       
       if (!GetChar())
       {
-        SetError(_T("Unexpected end of file"));
+        SetError("Unexpected end of file");
         return false;
       }
       
       if (!SkipBlank())
       {
-        SetError(_T("Unexpected end of file"));
+        SetError("Unexpected end of file");
         return false;
       }
       
@@ -1219,14 +1219,14 @@ public:
 
       if (!res)
       {
-        SetError(_T("error while looking for a value"));
+        SetError("error while looking for a value");
         return false;
       }
       
       // SkipBlank
       if (!SkipBlank())
       {
-        SetError(_T("expected ')' or ';'"));
+        SetError("expected ')' or ';'");
         return false;
       }
       
@@ -1238,7 +1238,7 @@ public:
       
     if (!GetChar() && !SkipBlank())
     {
-      SetError(_T("Unexpected end of file"));
+      SetError("Unexpected end of file");
       return false;
     }
     
@@ -1255,19 +1255,19 @@ public:
 
     if (!SkipBlank())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return NULL;        
     }
     
     if (!GetSymbol(type))
     {
-      SetError(_T("expected a widget type"));
+      SetError("expected a widget type");
       return NULL;
     }
     
     if (!SkipBlank())
     {
-      SetError(_T("unexpected end of file"));
+      SetError("unexpected end of file");
       return NULL;        
     }
 
@@ -1295,7 +1295,7 @@ public:
         }
         else
         {
-          SetError(_T("syntax error while looking for a symbol or '('"));
+          SetError("syntax error while looking for a symbol or '('");
           return NULL;        
         }
       }
@@ -1303,7 +1303,7 @@ public:
       {
         if (!SkipBlank())
         {
-          SetError(_T("unexpected end of file"));
+          SetError("unexpected end of file");
           return NULL;        
         }
 
@@ -1316,14 +1316,14 @@ public:
 
       if (!SkipBlank())
       {
-        SetError(_T("unexpected end of file"));
+        SetError("unexpected end of file");
         return NULL;        
       }
     }
     else if (!level)
     {
       // The root widget creator MUST have a name
-      SetError(_T("The root widget creator MUST have a name"));
+      SetError("The root widget creator MUST have a name");
       return NULL;
     }
     
@@ -1341,14 +1341,14 @@ public:
 
     if (mChar != _T('{'))
     {
-      SetError(_T("'{' expected"));
+      SetError("'{' expected");
       return NULL;        
     }
 
     // Skip {
     if (!GetChar() || !SkipBlank())
     {
-      SetError(_T("unexpected end of file while looking for }"));
+      SetError("unexpected end of file while looking for }");
       return NULL;
     }
 
@@ -1359,7 +1359,7 @@ public:
     {
       if (!SkipBlank())
       {
-        SetError(_T("unexpected end of file"));
+        SetError("unexpected end of file");
         delete pCreator;
         return NULL;        
       }
@@ -1368,14 +1368,14 @@ public:
       {
         if (!GetChar())
         {
-          SetError(_T("expecting [ or a symbol"));
+          SetError("expecting [ or a symbol");
           delete pCreator;
           return NULL;
         }
         
         if (!SkipBlank())
         {
-          SetError(_T("unexpected end of file"));
+          SetError("unexpected end of file");
           delete pCreator;
           return NULL;        
         }
@@ -1396,7 +1396,7 @@ public:
           // Skip blank
           if (!SkipBlank())
           {
-            SetError(_T("unexpected end of file while looking for indices"));
+            SetError("unexpected end of file while looking for indices");
             delete pCreator;
             return NULL;        
           }
@@ -1410,7 +1410,7 @@ public:
             // Skip blank
             if (!SkipBlank())
             {
-              SetError(_T("unexpected end of file while looking for ]"));
+              SetError("unexpected end of file while looking for ]");
               delete pCreator;
               return NULL;        
             }
@@ -1419,7 +1419,7 @@ public:
           // Eat ]
           if (!GetChar())
           {
-            SetError(_T("expecting ]"));
+            SetError("expecting ]");
             delete pCreator;
             return NULL;
           }
@@ -1427,7 +1427,7 @@ public:
           // SkipBlank
           if (!SkipBlank())
           {
-            SetError(_T("unexpected end of file while looking for ]"));
+            SetError("unexpected end of file while looking for ]");
             delete pCreator;
             return NULL;        
           }
@@ -1449,7 +1449,7 @@ public:
         
         if (!SkipBlank())
         {
-          SetError(_T("unexpected end of file"));
+          SetError("unexpected end of file");
           delete pCreator;
           return NULL;        
         }
@@ -1464,7 +1464,7 @@ public:
         res = ReadAction(LValue, RValue, Operator, i0, i1);
         if (!res)
         {
-          SetError(_T("error while reading an assignment"));
+          SetError("error while reading an assignment");
           delete pCreator;
           return NULL;
         }
@@ -1481,13 +1481,13 @@ public:
         {
           if (!GetChar()) // Eat the equal sign
           {
-            SetError(_T("Missing event actions"));
+            SetError("Missing event actions");
             return NULL;
           }
 
           if (!SkipBlank())
           {
-            SetError(_T("unexpected end of file"));
+            SetError("unexpected end of file");
             delete pCreator;
             return NULL;
           }
@@ -1497,7 +1497,7 @@ public:
           {
             if (!SkipBlank())
             {
-              SetError(_T("unexpected end of file"));
+              SetError("unexpected end of file");
               delete pCreator;
               return NULL;
             }
@@ -1510,7 +1510,7 @@ public:
             res = ReadAction(LValue, RValue, Operator, i0, i1);
             if (!res)
             {
-              SetError(_T("error while reading an assignment"));
+              SetError("error while reading an assignment");
               delete pCreator;
               return NULL;
             }
@@ -1522,14 +1522,14 @@ public:
             }
             else
             {
-              SetError(_T("recursive event action prohibited"));
+              SetError("recursive event action prohibited");
               delete pCreator;
               return NULL;
             }
 
             if (!SkipBlank())
             {
-              SetError(_T("unexpected end of file"));
+              SetError("unexpected end of file");
               delete pCreator;
               return NULL;
             }
@@ -1539,13 +1539,13 @@ public:
           if (!GetChar()) // Eat }
           {
             delete pActionHolder;
-            SetError(_T("unexpected end of file"));
+            SetError("unexpected end of file");
             return NULL;
           }
 
           if (!SkipBlank())
           {
-            SetError(_T("unexpected end of file"));
+            SetError("unexpected end of file");
             delete pCreator;
             return NULL;
           }
@@ -1556,7 +1556,7 @@ public:
 
         if (!SkipBlank())
         {
-          SetError(_T("unexpected end of file"));
+          SetError("unexpected end of file");
           delete pCreator;
           return NULL;
         }
@@ -1567,7 +1567,7 @@ public:
     
     if (!GetChar()) // Eat the }
     {
-      SetError(_T("Missing widget creator declaration end"));
+      SetError("Missing widget creator declaration end");
       delete pCreator;
       return NULL;
     }
@@ -1630,7 +1630,7 @@ public:
       nglString str;
       if (!GetQuoted(str))
       {
-        SetError(_T("Error while looking for a quoted string"));
+        SetError("Error while looking for a quoted string");
         return NULL;
       }
       
@@ -1641,14 +1641,14 @@ public:
       // Read a global variable name
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for a global variable name"));
+        SetError("End of file while looking for a global variable name");
         return NULL;
       }
       
       nglString variable;
       if (!GetSymbol(variable))
       {
-        SetError(_T("Error while looking for a global variable name"));
+        SetError("Error while looking for a global variable name");
         return NULL;
       }
         
@@ -1657,13 +1657,13 @@ public:
                 
       if (mChar != _T('='))
       {
-        SetError(_T("Missing global variable matching operator ('=')"));
+        SetError("Missing global variable matching operator ('=')");
         return NULL;
       }
         
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for a global variable value"));
+        SetError("End of file while looking for a global variable value");
         return NULL;
       }
         
@@ -1675,7 +1675,7 @@ public:
       {
         if (!GetQuoted(str))
         {
-          SetError(_T("Error while looking for a quoted string"));
+          SetError("Error while looking for a quoted string");
           return NULL;
         }
       }
@@ -1683,7 +1683,7 @@ public:
       {
         if (!GetSymbol(str))
         {
-          SetError(_T("Error while looking for a match value"));
+          SetError("Error while looking for a match value");
           return NULL;
         }
       }
@@ -1699,7 +1699,7 @@ public:
       // Read a symbol (-> property name)
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for a property name"));
+        SetError("End of file while looking for a property name");
         return NULL;
       }
 
@@ -1716,7 +1716,7 @@ public:
           op = _T('$');
           if (!GetChar())
           {
-            SetError(_T("End of file while looking for a global variable name"));
+            SetError("End of file while looking for a global variable name");
             return NULL;
           }
           
@@ -1724,7 +1724,7 @@ public:
         
         if (!GetSymbol(property))
         {
-          SetError(_T("Error while looking for a property name"));
+          SetError("Error while looking for a property name");
           return NULL;
         }
         
@@ -1741,13 +1741,13 @@ public:
         
         if (!op)
         {
-          SetError(_T("Missing matching operator ('=' or ':')"));
+          SetError("Missing matching operator ('=' or ':')");
           return NULL;
         }
         
         if (!GetChar())
         {
-          SetError(_T("End of file while looking for a propery value"));
+          SetError("End of file while looking for a propery value");
           return NULL;
         }
         
@@ -1759,7 +1759,7 @@ public:
         {
           if (!GetQuoted(str))
           {
-            SetError(_T("Error while looking for a quoted string"));
+            SetError("Error while looking for a quoted string");
             return NULL;
           }
         }
@@ -1767,7 +1767,7 @@ public:
         {
           if (!GetSymbol(str))
           {
-            SetError(_T("Error while looking for a match value"));
+            SetError("Error while looking for a match value");
             return NULL;
           }
         }
@@ -1786,7 +1786,7 @@ public:
       
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for the end of a propery checker"));
+        SetError("End of file while looking for the end of a propery checker");
         return NULL;
       }
       
@@ -1796,7 +1796,7 @@ public:
       // Pass all wigdets
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for a matcher expression"));
+        SetError("End of file while looking for a matcher expression");
         return NULL;
       }
       pMatcher = new nuiWidgetJokerMatcher();
@@ -1806,7 +1806,7 @@ public:
       // Go to parent matcher
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for a matcher expression"));
+        SetError("End of file while looking for a matcher expression");
         return NULL;
       }
       pMatcher = new nuiWidgetParentMatcher();
@@ -1816,7 +1816,7 @@ public:
       // Find a parent that matches the test
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for a matcher expression"));
+        SetError("End of file while looking for a matcher expression");
         return NULL;
       }
       
@@ -1831,13 +1831,13 @@ public:
 
       if (mChar != _T(')'))
       {
-        SetError(_T("missing parenthesis at the end of a matcher expression"));
+        SetError("missing parenthesis at the end of a matcher expression");
         return NULL;
       }
 
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for a matcher expression"));
+        SetError("End of file while looking for a matcher expression");
         return NULL;
       }
       
@@ -1849,7 +1849,7 @@ public:
       // Read a static test matcher
       if (!GetChar())
       {
-        SetError(_T("End of file while looking for a matcher expression"));
+        SetError("End of file while looking for a matcher expression");
         return NULL;
       }
       pMatcher = new nuiWidgetStaticMatcher();
@@ -1860,7 +1860,7 @@ public:
       nglString str;
       if (!GetSymbol(str))
       {
-        SetError(_T("Error while looking for a widget class name"));
+        SetError("Error while looking for a widget class name");
         return NULL;
       }
       pMatcher = new nuiWidgetClassMatcher(str);
@@ -1874,19 +1874,19 @@ public:
   {
     if (!SkipBlank())
     {
-      SetError(_T("Missing action list"));
+      SetError("Missing action list");
       return false;
     }
     
     if (mChar != _T('{'))
     {
-      SetError(_T("Missing action list"));
+      SetError("Missing action list");
       return false;
     }
     
     if (!GetChar())
     {
-      SetError(_T("Missing action list or '}'"));
+      SetError("Missing action list or '}'");
       return false;
     }
     
@@ -1894,19 +1894,19 @@ public:
     {
       if (!ReadAction())
       {
-        SetError(_T("Expecting an action or '}'"));
+        SetError("Expecting an action or '}'");
         return false;
       }
       if (!SkipBlank())
       {
-        SetError(_T("Unexpected end of file while looking for an action or '}'"));
+        SetError("Unexpected end of file while looking for an action or '}'");
         return false;
       }
     }
     
     if (!GetChar())
     {
-      SetError(_T("Missing action list end"));
+      SetError("Missing action list end");
       return false;
     }
     
@@ -1923,7 +1923,7 @@ public:
     
     if (!SkipBlank())
     {
-      SetError(_T("Missing action"));
+      SetError("Missing action");
       return false;
     }
     
@@ -1932,7 +1932,7 @@ public:
     {
       if (!SkipBlank())
       {
-        SetError(_T("Missing '{' or action."));
+        SetError("Missing '{' or action.");
         return false;
       }
       
@@ -1963,7 +1963,7 @@ public:
     
     if (!SkipBlank())
     {
-      SetError(_T("Missing action"));
+      SetError("Missing action");
       return false;
     }
     
@@ -1973,14 +1973,14 @@ public:
       res = GetLSymbol(symbol);
       if (!res)
       {
-        SetError(_T("Missing symbol name (l-value)"));
+        SetError("Missing symbol name (l-value)");
         return false;
       }
     }
 
     if (!SkipBlank())
     {
-      SetError(_T("Missing action operator ('=')"));
+      SetError("Missing action operator ('=')");
       return false;
     }
     
@@ -1988,7 +1988,7 @@ public:
     {
       if (!GetChar() || !SkipBlank())
       {
-        SetError(_T("End of file while looking for a index ([x])"));
+        SetError("End of file while looking for a index ([x])");
         return false;
       }
  
@@ -1996,7 +1996,7 @@ public:
       {
         if (!GetChar() || !SkipBlank())
         {
-          SetError(_T("End of file while looking for a index ([x])"));
+          SetError("End of file while looking for a index ([x])");
           return false;
         }
       }
@@ -2004,7 +2004,7 @@ public:
       nglString idx;
       if (!GetIntValue(idx))
       {
-        SetError(_T("Error while looking for a index ([x])"));
+        SetError("Error while looking for a index ([x])");
         return false;
       }
 
@@ -2012,7 +2012,7 @@ public:
       
       if (!SkipBlank())
       {
-        SetError(_T("End of file while looking for an index or ']'"));
+        SetError("End of file while looking for an index or ']'");
         return false;
       }
 
@@ -2021,7 +2021,7 @@ public:
         nglString idx;
         if (!GetIntValue(idx))
         {
-          SetError(_T("Error while looking for an index ([x])"));
+          SetError("Error while looking for an index ([x])");
           return false;
         }
         
@@ -2029,20 +2029,20 @@ public:
         
         if (!SkipBlank())
         {
-          SetError(_T("End of file while looking for ']'"));
+          SetError("End of file while looking for ']'");
           return false;
         }
       }
 
       if (mChar != _T(']'))
       {
-        SetError(_T("Error while looking for ']'"));
+        SetError("Error while looking for ']'");
         return false;
       }
  
       if (!GetChar() || !SkipBlank())
       {
-        SetError(_T("Error while looking for an operator"));
+        SetError("Error while looking for an operator");
         return false;
       }
       
@@ -2062,19 +2062,19 @@ public:
 
     if (!op)
     {
-      SetError(_T("Missing action operator ('=', ':') ok '{'"));
+      SetError("Missing action operator ('=', ':') ok '{'");
       return false;
     }
     
     if (!GetChar()) // Eat the equal sign
     {
-      SetError(_T("Missing action right side"));
+      SetError("Missing action right side");
       return false;
     }
     
     if (!SkipBlank())
     {
-      SetError(_T("Missing action right side"));
+      SetError("Missing action right side");
       return false;
     }
     
@@ -2090,25 +2090,25 @@ public:
     
     if (!res)
     {
-      SetError(_T("Error while looking for symbol or string action"));
+      SetError("Error while looking for symbol or string action");
       return false;
     }
     
     if (!SkipBlank())
     {
-      SetError(_T("Missing action separator (';')"));
+      SetError("Missing action separator (';')");
       return false;
     }    
     
     if (mChar != _T(';'))
     {
-      SetError(_T("Missing semi colon at the end of the action"));
+      SetError("Missing semi colon at the end of the action");
       return false;
     }
     
     if (!GetChar()) // Eat the semi colon
     {
-      SetError(_T("Missing semi colon at the end of the action"));
+      SetError("Missing semi colon at the end of the action");
       return false;
     }
 
@@ -2312,11 +2312,11 @@ bool nuiCSS::Load(nglIStream& rStream, const nglPath& rSourcePath)
   cssLexer lexer(&mem, *this, rSourcePath);
   if (!lexer.Load())
   {
-    mErrorString.CFormat(_T("Error line %d (%d): %s"), lexer.GetLine(), lexer.GetColumn(), lexer.GetErrorStr().GetChars() );
-    NGL_OUT(_T("Error loading css:\n%s\n"), mErrorString.GetChars());
+    mErrorString.CFormat("Error line %d (%d): %s", lexer.GetLine(), lexer.GetColumn(), lexer.GetErrorStr().GetChars() );
+    NGL_OUT("Error loading css:\n%s\n", mErrorString.GetChars());
     return false;
   }
-  //NGL_OUT(_T("Loaded %d css rules\n"), GetRulesCount());
+  //NGL_OUT("Loaded %d css rules\n", GetRulesCount());
   return true;
 }
 

@@ -29,7 +29,7 @@ bool nglContextInfo::Enum(uint Index, nglContextInfo& rInfo)
   EGLint numConfigs;
   if (!eglGetConfigs(display, 0, 0, &numConfigs))
     return false;
-  NGL_OUT(_T("%d egl configs\n"), numConfigs);
+  NGL_OUT("%d egl configs\n", numConfigs);
   if (Index >= numConfigs)
     return false;
 
@@ -94,7 +94,7 @@ bool nglContextInfo::Enum(uint Index, nglContextInfo& rInfo)
   rInfo.TargetAPI = eTargetAPI_OpenGL;
 /*
   NGL_OUT(
-    _T("config %d: rgba=%d:%d:%d:%d(%d), ds=%d:%d, caveat=%04x, native=%d, level=%d, surface=%04x, visual=%04x, id=%d\n"),
+    "config %d: rgba=%d:%d:%d:%d(%d), ds=%d:%d, caveat=%04x, native=%d, level=%d, surface=%04x, visual=%04x, id=%d\n",
     Index, redBits, greenBits, blueBits, alphaBits, bufferSize, depthSize, stencilSize, caveat, native, level, surfaceType, visualType, visualID
   );
 */
@@ -103,20 +103,20 @@ bool nglContextInfo::Enum(uint Index, nglContextInfo& rInfo)
 
 const nglChar* gpContextErrorTable[] =
 {
-/*  0 */ _T("No error"),
-/*  1 */ _T("No context match your request"),
-/*  2 */ _T("GL rendering context creation failed"),
-/*  3 */ _T("Couldn't bind GL context to the system window"),
+/*  0 */ "No error",
+/*  1 */ "No context match your request",
+/*  2 */ "GL rendering context creation failed",
+/*  3 */ "Couldn't bind GL context to the system window",
          NULL
 };
 
 #if 0
 const nglChar* gpEAGLErrorTable[] =
 {
-/* kEAGLErrorSuccess */           _T("No error"),
-/* kEAGLErrorInvalidParameter */  _T("Function parameter is not legal"),
-/* kEAGLErrorInvalidOperation */  _T("Requested operation is not legal"),
-/* kEAGLErrorOutOfMemory */       _T("Implementation ran out of memory"),
+/* kEAGLErrorSuccess */           "No error",
+/* kEAGLErrorInvalidParameter */  "Function parameter is not legal",
+/* kEAGLErrorInvalidOperation */  "Requested operation is not legal",
+/* kEAGLErrorOutOfMemory */       "Implementation ran out of memory",
                                   NULL
 };
 #endif

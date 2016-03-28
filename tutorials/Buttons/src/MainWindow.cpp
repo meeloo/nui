@@ -79,28 +79,28 @@ public:
     pBox->SetExpand(nuiExpandShrinkAndGrow);
 
     // a simple togglebutton
-    nuiToggleButton* pBtn = new nuiToggleButton(_T("toggleButton"));
-    pBtn->SetObjectName(_T("MyButton"));
+    nuiToggleButton* pBtn = new nuiToggleButton("toggleButton");
+    pBtn->SetObjectName("MyButton");
     pBox->AddCell(pBtn);
     
-    pBtn = new nuiToggleButton(_T("toggleButton"));
-    pBtn->SetObjectName(_T("MyButton"));
+    pBtn = new nuiToggleButton("toggleButton");
+    pBtn->SetObjectName("MyButton");
     pBox->AddCell(pBtn);
 
-    pBtn = new nuiToggleButton(_T("toggleButton"));
-    pBtn->SetObjectName(_T("MyButton"));
+    pBtn = new nuiToggleButton("toggleButton");
+    pBtn->SetObjectName("MyButton");
     pBox->AddCell(pBtn);
 
-    pBtn = new nuiToggleButton(_T("toggleButton"));
-    pBtn->SetObjectName(_T("MyButton"));
+    pBtn = new nuiToggleButton("toggleButton");
+    pBtn->SetObjectName("MyButton");
     pBox->AddCell(pBtn);
 
-    pBtn = new nuiToggleButton(_T("toggleButton"));
-    pBtn->SetObjectName(_T("MyButton"));
+    pBtn = new nuiToggleButton("toggleButton");
+    pBtn->SetObjectName("MyButton");
     pBox->AddCell(pBtn);
 
     pBtn = new nuiToggleButton();
-    pBtn->SetObjectName(_T("MyButton"));
+    pBtn->SetObjectName("MyButton");
     pBox->AddCell(pBtn, nuiCenter);
     return pBox;
   }
@@ -237,7 +237,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 {
   SetDebugMode(true);
   //App->GetLog().SetLevel("nuiTexture", NGL_LOG_ALWAYS);
-  LoadCSS(_T("rsrc:/css/main.css"));
+  LoadCSS("rsrc:/css/main.css");
 
 #if DUMMY_DEBUGGER
   mpClient = new nuiTCPClient();
@@ -528,36 +528,36 @@ nuiWidget* MainWindow::Tutorial_Buttons()
   //pBox->EnableSurface(true);
   
   // a simple button
-  nuiButton* pBtn = new nuiButton(_T("button"));
-  pBtn->SetObjectName(_T("MyButton"));
+  nuiButton* pBtn = new nuiButton("button");
+  pBtn->SetObjectName("MyButton");
   mEventSink.Connect(pBtn->Activated, &MainWindow::OnButtonPressed, (void*)TAG_BUTTON1);
   pBox->AddCell(pBtn, nuiCenter);
 
   // a simple button filling the box's cell
-  pBtn = new nuiButton(_T("button"));
-  pBtn->SetObjectName(_T("MyButton"));
+  pBtn = new nuiButton("button");
+  pBtn->SetObjectName("MyButton");
   pBox->AddCell(pBtn, nuiFill);
   mEventSink.Connect(pBtn->Activated, &MainWindow::OnButtonPressed, (void*)TAG_BUTTON2);
 
 
   // a button with an image
-  nglImage pImg(_T("rsrc:/decorations/button1.png"));
+  nglImage pImg("rsrc:/decorations/button1.png");
   pBtn = new nuiButton(pImg);
-  pBtn->SetObjectName(_T("MyButton"));
+  pBtn->SetObjectName("MyButton");
   pBox->AddCell(pBtn);
   mEventSink.Connect(pBtn->Activated, &MainWindow::OnButtonPressed, (void*)TAG_BUTTON3);
 
 
   // a roll-over button using decorations
-  nuiGradientDecoration* pDecoUp = new nuiGradientDecoration(_T("DecoUp"), nuiColor(192,192,192), nuiColor(128,128,128), 1, nuiColor(0,0,0), eStrokeAndFillShape);
-  nuiColorDecoration* pDecoUpHover = new nuiColorDecoration(_T("DecoUpHover"), nuiColor(255,0,0,128), 1, nuiColor(0,0,0));
-  nuiFrame* pFrame = new nuiFrame(_T("DecoDown"), _T("rsrc:/decorations/button1.png"), nuiRect(0,0,57,54));
+  nuiGradientDecoration* pDecoUp = new nuiGradientDecoration("DecoUp", nuiColor(192,192,192), nuiColor(128,128,128), 1, nuiColor(0,0,0), eStrokeAndFillShape);
+  nuiColorDecoration* pDecoUpHover = new nuiColorDecoration("DecoUpHover", nuiColor(255,0,0,128), 1, nuiColor(0,0,0));
+  nuiFrame* pFrame = new nuiFrame("DecoDown", "rsrc:/decorations/button1.png", nuiRect(0,0,57,54));
 
   // create a nuiStateDecoration using the three previous decorations for the rollover's three states : up, hover and done
-  nuiStateDecoration* pStateDeco = new nuiStateDecoration(_T("Deco"), _T("DecoUp"), _T("DecoDown"), _T("DecoUpHover"));
+  nuiStateDecoration* pStateDeco = new nuiStateDecoration("Deco", "DecoUp", "DecoDown", "DecoUpHover");
 
   pBtn = new nuiButton(pStateDeco);
-  pBtn->SetObjectName(_T("MyButton"));
+  pBtn->SetObjectName("MyButton");
   pBtn->SetUserSize(40,40);
   pBox->AddCell(pBtn, nuiCenter);
   mEventSink.Connect(pBtn->Activated, &MainWindow::OnButtonPressed, (void*)TAG_BUTTON4);
@@ -585,15 +585,15 @@ nuiWidget* MainWindow::Tutorial_ToggleButtons()
   nuiHBox* pBox = new nuiHBox(0);
 
   // a simple togglebutton
-  nuiToggleButton* pBtn = new nuiToggleButton(_T("toggleButton"));
-  pBtn->SetObjectName(_T("MyButton"));
+  nuiToggleButton* pBtn = new nuiToggleButton("toggleButton");
+  pBtn->SetObjectName("MyButton");
   pBox->AddCell(pBtn);
   mEventSink.Connect(pBtn->ButtonPressed, &MainWindow::OnTogglePressed, (void*)TAG_BUTTON1);
   mEventSink.Connect(pBtn->ButtonDePressed, &MainWindow::OnTogglePressed, (void*)TAG_BUTTON2);
 
   // a togglebutton, with a "checkbox" look : leave the button without any child
   pBtn = new nuiToggleButton();
-  pBtn->SetObjectName(_T("MyButton"));
+  pBtn->SetObjectName("MyButton");
   pBox->AddCell(pBtn, nuiCenter);
   mEventSink.Connect(pBtn->ButtonPressed, &MainWindow::OnTogglePressed, (void*)TAG_BUTTON3);
   mEventSink.Connect(pBtn->ButtonDePressed, &MainWindow::OnTogglePressed, (void*)TAG_BUTTON4);
@@ -618,11 +618,11 @@ nuiWidget* MainWindow::Tutorial_RadioButtons1()
   for (int index = 0; index < 3; index++)                // will create 3 radiobuttons,
   {
     nglString tmp;
-    tmp.Format(_T("Radio %d"), index);
+    tmp.Format("Radio %d", index);
     nuiRadioButton* pRadioBut = new nuiRadioButton(tmp);// with text inside
-    pRadioBut->SetObjectName(_T("MyButton"));
+    pRadioBut->SetObjectName("MyButton");
     pBox->AddCell(pRadioBut);
-    pRadioBut->SetGroup(_T("radios"));                  // set the radio group for group behavior
+    pRadioBut->SetGroup("radios");                  // set the radio group for group behavior
 
     // will send an event in the ::OnRadioPressed receiver when the radiobutton is 'activated'
     mEventSink.Connect(pRadioBut->Activated, &MainWindow::OnRadioPressed, (void*)index);  // index is given as a user parameter to recognise the button
@@ -641,10 +641,10 @@ nuiWidget* MainWindow::Tutorial_RadioButtons2()
   for (int index = 0; index < 3; index++)
   {
     nuiRadioButton* pRadioBut = new nuiRadioButton(); // leave it without any child : it'll get a class "radio" look
-    pRadioBut->SetObjectName(_T("MyButton"));
+    pRadioBut->SetObjectName("MyButton");
     pRadioBut->SetPosition(nuiCenter);
     pBox->AddCell(pRadioBut);
-    pRadioBut->SetGroup(_T("radios2"));
+    pRadioBut->SetGroup("radios2");
 
     mEventSink.Connect(pRadioBut->Activated, &MainWindow::OnRadioPressed, (void*)index);
   }
@@ -714,16 +714,16 @@ void MainWindow::OnButtonPressed(const nuiEvent& rEvent)
   switch (tag)
   {
     case TAG_BUTTON1:
-      msg = _T("a simple button\nwith a 'nuiCenter' position");
+      msg = "a simple button\nwith a 'nuiCenter' position";
       break;
     case TAG_BUTTON2:
-      msg = _T("the same simple button\nbut with a 'nuiFill' position");
+      msg = "the same simple button\nbut with a 'nuiFill' position";
       break;
     case TAG_BUTTON3:
-      msg = _T("a simple button\nwith an image inside");
+      msg = "a simple button\nwith an image inside";
       break;
     case TAG_BUTTON4:
-      msg = _T("a rollover button\nusing three decorations");
+      msg = "a rollover button\nusing three decorations";
       break;
   }
 
@@ -741,16 +741,16 @@ void MainWindow::OnTogglePressed(const nuiEvent& rEvent)
   switch (tag)
   {
     case TAG_TOGGLEBUTTON1:
-      msg = _T("a simple togglebutton, pressed");
+      msg = "a simple togglebutton, pressed";
       break;
     case TAG_TOGGLEBUTTON2:
-      msg = _T("a simple togglebutton, released");
+      msg = "a simple togglebutton, released";
       break;
     case TAG_TOGGLEBUTTON3:
-      msg = _T("a checkbox, pressed");
+      msg = "a checkbox, pressed";
       break;
     case TAG_TOGGLEBUTTON4:
-      msg = _T("a checkbox, released");
+      msg = "a checkbox, released";
       break;
   }
 
@@ -766,7 +766,7 @@ void MainWindow::OnRadioPressed(const nuiEvent& rEvent)
   int64 index = (int64)rEvent.mpUser;
 
   nglString msg;
-  msg.Format(_T("radio button #%d"), index);
+  msg.Format("radio button #%d", index);
   mpLabel->SetText(msg);
 
   rEvent.Cancel();
@@ -788,7 +788,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%ls'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
   
@@ -802,7 +802,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     return true;
   }
   
-  NGL_OUT(_T("%ls\n"), pCSS->GetErrorString().GetChars());
+  NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
   
   delete pCSS;
   return false;

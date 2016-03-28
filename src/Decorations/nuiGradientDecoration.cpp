@@ -17,7 +17,7 @@ nuiGradientDecoration::nuiGradientDecoration(const nglString& rName)
   mShapeMode(eFillShape),
   mOrientation(nuiVertical)
 {
-  if (SetObjectClass(_T("nuiGradientDecoration")))
+  if (SetObjectClass("nuiGradientDecoration"))
     InitAttributes();
   mGradientType = nuiGradient2Colors;
   mUserOffsets = false;
@@ -34,7 +34,7 @@ nuiGradientDecoration::nuiGradientDecoration(const nglString& rName, const nuiRe
   mShapeMode(shapeMode),
   mOrientation(orientation)
 {
-  if (SetObjectClass(_T("nuiGradientDecoration")))
+  if (SetObjectClass("nuiGradientDecoration"))
     InitAttributes();
 
   mClientRect = rClientRect;
@@ -55,7 +55,7 @@ nuiGradientDecoration::nuiGradientDecoration(const nglString& rName, const nuiRe
   mShapeMode(shapeMode),
   mOrientation(orientation)
 {
-  if (SetObjectClass(_T("nuiGradientDecoration")))
+  if (SetObjectClass("nuiGradientDecoration"))
     InitAttributes();
 
   mClientRect = rClientRect;
@@ -74,7 +74,7 @@ nuiGradientDecoration::nuiGradientDecoration(const nglString& rName, const nuiCo
   mShapeMode(shapeMode),
   mOrientation(orientation)
 {
-  if (SetObjectClass(_T("nuiGradientDecoration")))
+  if (SetObjectClass("nuiGradientDecoration"))
     InitAttributes();
 
   mClientRect = rClientRect;
@@ -95,7 +95,7 @@ nuiGradientDecoration::nuiGradientDecoration(const nglString& rName, const nuiCo
   mShapeMode(shapeMode),
   mOrientation(orientation)
 {
-  if (SetObjectClass(_T("nuiGradientDecoration")))
+  if (SetObjectClass("nuiGradientDecoration"))
     InitAttributes();
 
   mClientRect = rClientRect;
@@ -114,82 +114,82 @@ nuiGradientDecoration::~nuiGradientDecoration()
 void nuiGradientDecoration::InitAttributes()
 {
   nuiAttribute<const nuiRect&>* AttributeRect = new nuiAttribute<const nuiRect&>
-   (nglString(_T("ClientRect")), nuiUnitNone,
+   (nglString("ClientRect"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiGradientDecoration::GetSourceClientRect),
     nuiMakeDelegate(this, &nuiGradientDecoration::SetSourceClientRect));
-  AddAttribute(_T("ClientRect"), AttributeRect);
+  AddAttribute("ClientRect", AttributeRect);
 
   nuiAttribute<nuiOrientation>* AttributeOrientation = new nuiAttribute<nuiOrientation>
-  (nglString(_T("Orientation")), nuiUnitNone,
+  (nglString("Orientation"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiGradientDecoration::GetOrientation),
     nuiMakeDelegate(this, &nuiGradientDecoration::SetOrientation));
-  AddAttribute(_T("Orientation"), AttributeOrientation);
+  AddAttribute("Orientation", AttributeOrientation);
 
   nuiAttribute<uint32>* StrokeSize= new nuiAttribute<uint32>
-  (nglString(_T("StrokeSize")), nuiUnitPixels,
+  (nglString("StrokeSize"), nuiUnitPixels,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetStrokeSize),
    nuiMakeDelegate(this, &nuiGradientDecoration::SetStrokeSize));
-	AddAttribute(_T("StrokeSize"), StrokeSize);
+	AddAttribute("StrokeSize", StrokeSize);
   
   nuiAttribute<const nuiColor&>* Color1 = new nuiAttribute<const nuiColor&>
-  (nglString(_T("Color1")), nuiUnitColor,
+  (nglString("Color1"), nuiUnitColor,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetColor1), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetColor1));
-	AddAttribute(_T("Color1"), Color1);
+	AddAttribute("Color1", Color1);
   
   nuiAttribute<const nuiColor&>* Color2 = new nuiAttribute<const nuiColor&>
-  (nglString(_T("Color2")), nuiUnitColor,
+  (nglString("Color2"), nuiUnitColor,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetColor2), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetColor2));
-	AddAttribute(_T("Color2"), Color2);
+	AddAttribute("Color2", Color2);
   
   nuiAttribute<const nuiColor&>* Color3 = new nuiAttribute<const nuiColor&>
-  (nglString(_T("Color3")), nuiUnitColor,
+  (nglString("Color3"), nuiUnitColor,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetColor3), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetColor3));
-	AddAttribute(_T("Color3"), Color3);
+	AddAttribute("Color3", Color3);
   
   nuiAttribute<const nuiColor&>* Color4 = new nuiAttribute<const nuiColor&>
-  (nglString(_T("Color4")), nuiUnitColor,
+  (nglString("Color4"), nuiUnitColor,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetColor4), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetColor4));
-	AddAttribute(_T("Color4"), Color4);
+	AddAttribute("Color4", Color4);
   
   nuiAttribute<const nuiColor&>* StrokeColor = new nuiAttribute<const nuiColor&>
-  (nglString(_T("StrokeColor")), nuiUnitColor,
+  (nglString("StrokeColor"), nuiUnitColor,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetStrokeColor), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetStrokeColor));
-	AddAttribute(_T("StrokeColor"), StrokeColor);
+	AddAttribute("StrokeColor", StrokeColor);
   
   
   AddAttribute(new nuiAttribute<nuiShapeMode>
-  (nglString(_T("ShapeMode")), nuiUnitNone,
+  (nglString("ShapeMode"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetShapeMode), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetShapeMode)));
   
   nuiAttribute<double>* Offset1 = new nuiAttribute<double>
-  (nglString(_T("Offset1")), nuiUnitPercent,
+  (nglString("Offset1"), nuiUnitPercent,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetOffset1), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetOffset1));
-	AddAttribute(_T("Offset1"), Offset1);
+	AddAttribute("Offset1", Offset1);
 
   nuiAttribute<double>* Offset2 = new nuiAttribute<double>
-  (nglString(_T("Offset2")), nuiUnitPercent,
+  (nglString("Offset2"), nuiUnitPercent,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetOffset2), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetOffset2));
-	AddAttribute(_T("Offset2"), Offset2);
+	AddAttribute("Offset2", Offset2);
 
   nuiAttribute<double>* Offset3 = new nuiAttribute<double>
-  (nglString(_T("Offset3")), nuiUnitPercent,
+  (nglString("Offset3"), nuiUnitPercent,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetOffset3), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetOffset3));
-	AddAttribute(_T("Offset3"), Offset3);
+	AddAttribute("Offset3", Offset3);
 
   nuiAttribute<double>* Offset4 = new nuiAttribute<double>
-  (nglString(_T("Offset4")), nuiUnitPercent,
+  (nglString("Offset4"), nuiUnitPercent,
    nuiMakeDelegate(this, &nuiGradientDecoration::GetOffset4), 
    nuiMakeDelegate(this, &nuiGradientDecoration::SetOffset4));
-	AddAttribute(_T("Offset4"), Offset4);
+	AddAttribute("Offset4", Offset4);
 }
 
 void nuiGradientDecoration::InitOffsets()

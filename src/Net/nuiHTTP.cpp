@@ -28,8 +28,8 @@ nglString nuiHTTPMessage::GetHeadersRep() const
   nuiHTTPHeaderMap::const_iterator end = mHeaders.end();
   for (nuiHTTPHeaderMap::const_iterator it = mHeaders.begin(); it != end; ++it)
   {
-    str.Append(it->first + _T(": ") + it->second);
-    str.Add(_T("\r\n"));
+    str.Append(it->first + ": " + it->second);
+    str.Add("\r\n");
   }
   return str;
 }
@@ -140,7 +140,7 @@ void nuiHTTPRequest_Thread::Cancel()
 }
 
 nuiHTTPRequest_Thread::nuiHTTPRequest_Thread(nuiHTTPRequest* pRequest, const nuiHTTPRequest::Delegate& rDelegate)
-: nuiCommand(_T("nuiHTTPRequest_Thread"), _T("HTTP Threaded Request Reply Command"), false, false, false),
+: nuiCommand("nuiHTTPRequest_Thread", "HTTP Threaded Request Reply Command", false, false, false),
   mpRequest(pRequest), mDelegate(rDelegate), mpResponse(NULL), mCancel(false)
 {
   Start();
@@ -162,7 +162,7 @@ void nuiHTTPRequest_Thread::OnStart()
     return;
   }
   
-  nuiNotification* pNotif = new nuiNotification(_T("nuiHTTPRequest_Thread"));
+  nuiNotification* pNotif = new nuiNotification("nuiHTTPRequest_Thread");
   pNotif->SetToken(new nuiToken<nuiCommand*>(this, true));
   App->Post(pNotif);
 }

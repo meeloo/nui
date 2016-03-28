@@ -10,41 +10,41 @@
 // Get enum from string desc:
 nuiPosition nuiGetPosition (const nglString& Position, nuiPosition Default)
 {
-  if (!Position.Compare(_T("Left"),false))
+  if (!Position.Compare("Left",false))
     return nuiLeft;
-  else if (!Position.Compare(_T("Right"),false))
+  else if (!Position.Compare("Right",false))
     return nuiRight;
-  else if (!Position.Compare(_T("Top"),false))
+  else if (!Position.Compare("Top",false))
     return nuiTop;
-  else if (!Position.Compare(_T("Bottom"),false))
+  else if (!Position.Compare("Bottom",false))
     return nuiBottom;
-  else if (!Position.Compare(_T("TopLeft"),false))
+  else if (!Position.Compare("TopLeft",false))
     return nuiTopLeft;
-  else if (!Position.Compare(_T("TopRight"),false))
+  else if (!Position.Compare("TopRight",false))
     return nuiTopRight;
-  else if (!Position.Compare(_T("BottomLeft"),false))
+  else if (!Position.Compare("BottomLeft",false))
     return nuiBottomLeft;
-  else if (!Position.Compare(_T("BottomRight"),false))
+  else if (!Position.Compare("BottomRight",false))
     return nuiBottomRight;
-  else if (!Position.Compare(_T("Center"),false))
+  else if (!Position.Compare("Center",false))
     return nuiCenter;
-  else if (!Position.Compare(_T("Tile"),false))
+  else if (!Position.Compare("Tile",false))
     return nuiTile;
-  else if (!Position.Compare(_T("Fill"),false))
+  else if (!Position.Compare("Fill",false))
     return nuiFill;
-  else if (!Position.Compare(_T("FillHorizontal"),false))
+  else if (!Position.Compare("FillHorizontal",false))
     return nuiFillHorizontal;
-  else if (!Position.Compare(_T("FillVertical"),false))
+  else if (!Position.Compare("FillVertical",false))
     return nuiFillVertical;
-  else if (!Position.Compare(_T("FillLeft"),false))
+  else if (!Position.Compare("FillLeft",false))
     return nuiFillLeft;
-  else if (!Position.Compare(_T("FillRight"),false))
+  else if (!Position.Compare("FillRight",false))
     return nuiFillRight;
-  else if (!Position.Compare(_T("FillTop"),false))
+  else if (!Position.Compare("FillTop",false))
     return nuiFillTop;
-  else if (!Position.Compare(_T("FillBottom"),false))
+  else if (!Position.Compare("FillBottom",false))
     return nuiFillBottom;
-  else if (!Position.Compare(_T("None"),false))
+  else if (!Position.Compare("None",false))
     return nuiNoPosition;
 
   return Default;
@@ -55,49 +55,49 @@ nglString nuiGetPosition (nuiPosition Value)
   switch (Value)
   {
   case nuiLeft:
-    return _T("Left");
+    return "Left";
   case nuiRight:
-    return _T("Right");
+    return "Right";
   case nuiTop:
-    return _T("Top");
+    return "Top";
   case nuiBottom:
-    return _T("Bottom");
+    return "Bottom";
   case nuiFillLeft:
-    return _T("FillLeft");
+    return "FillLeft";
   case nuiFillRight:
-    return _T("FillRight");
+    return "FillRight";
   case nuiFillTop:
-    return _T("FillTop");
+    return "FillTop";
   case nuiFillBottom:
-    return _T("FillBottom");
+    return "FillBottom";
   case nuiTopLeft:
-    return _T("TopLeft");
+    return "TopLeft";
   case nuiTopRight:
-    return _T("TopRight");
+    return "TopRight";
   case nuiBottomLeft:
-    return _T("BottomLeft");
+    return "BottomLeft";
   case nuiBottomRight:
-    return _T("BottomRight");
+    return "BottomRight";
   case nuiCenter:
-    return _T("Center");
+    return "Center";
   case nuiTile:
-    return _T("Tile");
+    return "Tile";
   case nuiFill:
-    return _T("Fill");
+    return "Fill";
   case nuiFillHorizontal:
-    return _T("FillHorizontal");
+    return "FillHorizontal";
   case nuiFillVertical:
-    return _T("FillVertical");
+    return "FillVertical";
   default:
-    return _T("None"); // Default?
+    return "None"; // Default?
   }
 }
 
 nuiDirection nuiGetDirection (const nglString& Direction, nuiDirection Default)
 {
-  if (!Direction.Compare(_T("Forward"),false))
+  if (!Direction.Compare("Forward",false))
     return nuiForward;
-  else if (!Direction.Compare(_T("Backward"),false))
+  else if (!Direction.Compare("Backward",false))
     return nuiBackward;
   return Default;
 }
@@ -107,23 +107,23 @@ nglString nuiGetDirection (nuiDirection Value)
   switch (Value)
   {
   case nuiForward:
-    return _T("Forward");
+    return "Forward";
   case nuiBackward:
-    return _T("Backward");
+    return "Backward";
   default:
-    return _T("Forward");
+    return "Forward";
   }
 }
 
 nuiAlignment nuiGetAlignment (const nglString& Alignment, nuiAlignment Default)
 {
-  if (!Alignment.Compare(_T("Begin"),false))
+  if (!Alignment.Compare("Begin",false))
     return eBegin;
-  else if (!Alignment.Compare(_T("End"),false))
+  else if (!Alignment.Compare("End",false))
     return eEnd;
-  else if (!Alignment.Compare(_T("Center"),false))
+  else if (!Alignment.Compare("Center",false))
     return eCenter;
-  else if (!Alignment.Compare(_T("Justify"),false))
+  else if (!Alignment.Compare("Justify",false))
     return eJustify;
   return Default;
 }
@@ -133,23 +133,23 @@ nglString nuiGetAlignment (nuiAlignment Value)
   switch (Value)
   {
     case eBegin:
-      return _T("Begin");
+      return "Begin";
     case eEnd:
-      return _T("End");
+      return "End";
     case eCenter:
-      return _T("Center");
+      return "Center";
     case eJustify:
-      return _T("Justify");
+      return "Justify";
     default:
-      return _T("Begin");
+      return "Begin";
   }
 }
 
 nuiOrientation nuiGetOrientation (const nglString& Orientation, nuiOrientation Default)
 {
-  if (!Orientation.Compare(_T("Horizontal"),false))
+  if (!Orientation.Compare("Horizontal",false))
     return nuiHorizontal;
-  else if (!Orientation.Compare(_T("Vertical"),false))
+  else if (!Orientation.Compare("Vertical",false))
     return nuiVertical;
   return Default;
 }
@@ -159,18 +159,18 @@ nglString nuiGetOrientation (nuiOrientation Value)
   switch (Value)
   {
   case nuiHorizontal:
-    return _T("Horizontal");
+    return "Horizontal";
   case nuiVertical:
   default:
-    return _T("Vertical");
+    return "Vertical";
   }
 }
   
 bool nuiGetBool (const nglString& rBool, bool Default)
 {
-  if (!rBool.Compare(_T("true"),false))
+  if (!rBool.Compare("true",false))
     return true;
-  else if (!rBool.Compare(_T("false"),false))
+  else if (!rBool.Compare("false",false))
     return false;
 
   return Default;
@@ -278,30 +278,30 @@ nuiAlignment nuiGetAlignment (const nuiXMLNode* pNode, const nglString& Attr, nu
 // Get enum from standard xml attrib:
 nuiPosition nuiGetPosition (const nuiXMLNode* pNode, nuiPosition Default)
 {
-  if (!pNode->HasAttribute(_T("Position")))
+  if (!pNode->HasAttribute("Position"))
     return Default;
-  return nuiGetPosition(pNode->GetAttribute(_T("Position")),Default);
+  return nuiGetPosition(pNode->GetAttribute("Position"),Default);
 }
 
 nuiDirection nuiGetDirection (const nuiXMLNode* pNode, nuiDirection Default)
 {
-  if (!pNode->HasAttribute(_T("Direction")))
+  if (!pNode->HasAttribute("Direction"))
     return Default;
-  return nuiGetDirection(pNode->GetAttribute(_T("Direction")),Default);
+  return nuiGetDirection(pNode->GetAttribute("Direction"),Default);
 }
 
 nuiOrientation nuiGetOrientation (const nuiXMLNode* pNode, nuiOrientation Default)
 {
-  if (!pNode->HasAttribute(_T("Orientation")))
+  if (!pNode->HasAttribute("Orientation"))
     return Default;
-  return nuiGetOrientation(pNode->GetAttribute(_T("Orientation")),Default);
+  return nuiGetOrientation(pNode->GetAttribute("Orientation"),Default);
 }
 
 nuiAlignment nuiGetAlignment (const nuiXMLNode* pNode, nuiAlignment Default)
 {
-  if (!pNode->HasAttribute(_T("Alignment")))
+  if (!pNode->HasAttribute("Alignment"))
     return Default;
-  return nuiGetAlignment(pNode->GetAttribute(_T("Alignment")), Default);
+  return nuiGetAlignment(pNode->GetAttribute("Alignment"), Default);
 }
 
 // Values helpers:

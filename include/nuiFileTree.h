@@ -35,14 +35,14 @@ You just have to use the following labels as object names in your css file.
  
 */
 
-#define ROOTPATH_ALLVOLUMES _T("*:")
+#define ROOTPATH_ALLVOLUMES "*:"
 
 
 class nuiFileTree : public nuiFileSelectorBase
 {
 public:
   
-  nuiFileTree(const nglPath& rPath, const nglPath& rRootPath, const nglString& rFilter = _T("*"), bool showHiddenFiles = false);
+  nuiFileTree(const nglPath& rPath, const nglPath& rRootPath, const nglString& rFilter = "*", bool showHiddenFiles = false);
   nuiFileTree(const nglPath& rPath, const nglPath& rRootPath, const std::list<nglString>& rFilters, bool showHiddenFiles = false);
   virtual ~nuiFileTree();
   

@@ -12,7 +12,7 @@ nuiPathAttributeEditor::nuiPathAttributeEditor(const nuiAttrib<nglPath>& rAttrib
 	: nuiAttributeEditor(),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiPathAttributeEditor"));
+	SetObjectClass("nuiPathAttributeEditor");
 	
 //	nglString contents;
 //	mpAttribute->Format(contents);

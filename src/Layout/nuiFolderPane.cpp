@@ -14,7 +14,7 @@
 nuiFolderPane::nuiFolderPane(nuiWidget* pTitleWidget, bool opened)
 : nuiTitledPane()
 {
-  SetObjectClass(_T("nuiFolderPane"));
+  SetObjectClass("nuiFolderPane");
   SetTitleWithHandle(pTitleWidget, nuiLeft);
   Init(opened);
 }
@@ -24,7 +24,7 @@ nuiFolderPane::nuiFolderPane(nuiWidget* pTitleWidget, bool opened)
 nuiFolderPane::nuiFolderPane(const nglString& rText, bool opened)
 : nuiTitledPane()
 {
-  SetObjectClass(_T("nuiFolderPane"));
+  SetObjectClass("nuiFolderPane");
   SetTitleWithHandle(rText, nuiLeft);
   Init(opened);
   
@@ -34,7 +34,7 @@ nuiFolderPane::nuiFolderPane(const nglString& rText, bool opened)
 nuiFolderPane::nuiFolderPane(nuiLabelAttribute* pLabel, bool opened)
 : nuiTitledPane()
 {
-  SetObjectClass(_T("nuiFolderPane"));
+  SetObjectClass("nuiFolderPane");
   SetTitleWithHandle(pLabel, nuiLeft);
   Init(opened);
   
@@ -175,7 +175,7 @@ void nuiFolderPane::SetTitle(const nglString& rTitle, nuiPosition position)
   if (mIsOpened)
     label->SetSelected(true);
   
-  label->SetObjectName(_T("nuiFolderPane::Title"));  
+  label->SetObjectName("nuiFolderPane::Title");  
       
   InvalidateLayout();
 }	
@@ -194,7 +194,7 @@ void nuiFolderPane::SetTitle(nuiWidget* pTitleWidget, nuiPosition position)
 void nuiFolderPane::SetTitleWithHandle(const nglString& rTitle, nuiPosition position)
 {
   nuiLabel* pLabel = new nuiLabel(rTitle);
-  pLabel->SetObjectName(_T("nuiFolderPane::TitleLabel"));
+  pLabel->SetObjectName("nuiFolderPane::TitleLabel");
   SetTitleWithHandle(pLabel, position);
 }
 
@@ -204,16 +204,16 @@ void nuiFolderPane::SetTitleWithHandle(nuiWidget* pTitleWidget, nuiPosition posi
   nuiHBox* pTitleBox = new nuiHBox(0);
   nuiWidget* pPaneHandle = new nuiWidget();
   
-  nuiTreeHandleDecoration* pHandleDeco = (nuiTreeHandleDecoration*)nuiDecoration::Get(_T("nuiFolderPaneTreeHandleDecoration"));
+  nuiTreeHandleDecoration* pHandleDeco = (nuiTreeHandleDecoration*)nuiDecoration::Get("nuiFolderPaneTreeHandleDecoration");
   if (!pHandleDeco)
-    pHandleDeco = new nuiTreeHandleDecoration(_T("nuiFolderPaneTreeHandleDecoration"), nuiColor(140,140,140), 8, nuiBorder(3,0,5,0));
+    pHandleDeco = new nuiTreeHandleDecoration("nuiFolderPaneTreeHandleDecoration", nuiColor(140,140,140), 8, nuiBorder(3,0,5,0));
 
   pPaneHandle->SetDecoration(pHandleDeco, eDecorationBorder);
   pTitleBox->AddCell(pPaneHandle);
   
   pTitleBox->AddCell(pTitleWidget);
   
-  pTitleBox->SetObjectName(_T("nuiFolderPane::Title"));  
+  pTitleBox->SetObjectName("nuiFolderPane::Title");  
   
   SetTitle(pTitleBox);
 }

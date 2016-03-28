@@ -17,10 +17,10 @@ nuiColorSelector::nuiColorSelector(const nuiColor& rInitialColor, const std::vec
   mNumColors(20),
   mSink(this)
 {
-  SetObjectClass(_T("nuiColorSelector"));
+  SetObjectClass("nuiColorSelector");
   
   mpMainBox = new nuiVBox(0);
-  mpMainBox->SetObjectName(_T("nuiColorSelector::MainBox"));
+  mpMainBox->SetObjectName("nuiColorSelector::MainBox");
   mpMainBox->SetExpand(nuiExpandShrinkAndGrow);
   AddChild(mpMainBox);
 
@@ -29,25 +29,25 @@ nuiColorSelector::nuiColorSelector(const nuiColor& rInitialColor, const std::vec
   mpColorPane->SetUserSize(20.f, 20.f);
   mpMainBox->AddCell(mpColorPane, nuiLeft);
   
-  nuiMetaDecoration* pMetaDeco = new nuiMetaDecoration(_T("dnuiColorSelector::ColorPane"));
+  nuiMetaDecoration* pMetaDeco = new nuiMetaDecoration("dnuiColorSelector::ColorPane");
   mpColorPane->SetDecoration(pMetaDeco, eDecorationBorder);
   
-  nuiFrame* pFrame = (nuiFrame*)nuiDecoration::Get(_T("nuiDefaultDecorationCheckerboardSmall"));
+  nuiFrame* pFrame = (nuiFrame*)nuiDecoration::Get("nuiDefaultDecorationCheckerboardSmall");
   NGL_ASSERT(pFrame);
   pMetaDeco->AddDecoration(pFrame);
 
-  mpColorPaneDeco = new nuiColorDecoration(_T("dnuiColorSelector::ColorPane::ColorDeco"), mCurrentColor, 1, nuiColor(0,0,0));
+  mpColorPaneDeco = new nuiColorDecoration("dnuiColorSelector::ColorPane::ColorDeco", mCurrentColor, 1, nuiColor(0,0,0));
   pMetaDeco->AddDecoration(mpColorPaneDeco);
 
   
   mpTabView = new nuiTabView(nuiTop);
-  mpTabView->SetObjectName(_T("nuiColorSelector::TabView"));
+  mpTabView->SetObjectName("nuiColorSelector::TabView");
   mSink.Connect(mpTabView->TabSelect, &nuiColorSelector::OnTabSelected);
   mpMainBox->AddCell(mpTabView);
   
-  mpTabView->AddTab(_T("RGB"), Tab_RGB());
-  mpTabView->AddTab(_T("HSV"), Tab_HSV());
-  mpTabView->AddTab(_T("Swatches"), Tab_Swatches());
+  mpTabView->AddTab("RGB", Tab_RGB());
+  mpTabView->AddTab("HSV", Tab_HSV());
+  mpTabView->AddTab("Swatches", Tab_Swatches());
     
   switch (mode)
   {
@@ -74,14 +74,14 @@ nuiWidget* nuiColorSelector::Tab_RGB()
   mpRgbGrid->SetBorder(0,0,10,10);
     
   nuiPane* pPane = new nuiPane(nuiColor(1.f, 1.f, 1.f, 1.f), nuiColor(0.f, 0.f, 0.f, 1.f), eStrokeShape);
-  nuiLabel* pLabel = new nuiLabel(_T("RGB"));
+  nuiLabel* pLabel = new nuiLabel("RGB");
   pLabel->SetBorder(2.f, 1.f);
   pPane->AddChild(pLabel);
   
-  mpRgbGrid->SetCell(0, 0, new nuiLabel(_T("r:")));
-  mpRgbGrid->SetCell(0, 1, new nuiLabel(_T("g:")));
-  mpRgbGrid->SetCell(0, 2, new nuiLabel(_T("b:")));
-  mpRgbGrid->SetCell(0, 3, new nuiLabel(_T("a:")));
+  mpRgbGrid->SetCell(0, 0, new nuiLabel("r:"));
+  mpRgbGrid->SetCell(0, 1, new nuiLabel("g:"));
+  mpRgbGrid->SetCell(0, 2, new nuiLabel("b:"));
+  mpRgbGrid->SetCell(0, 3, new nuiLabel("a:"));
   
   mpRedSlider = new nuiSlider(nuiHorizontal, nuiRange(red, 0.f, 1.f));
   mpRgbGrid->SetCell(1, 0, mpRedSlider);
@@ -144,14 +144,14 @@ nuiWidget* nuiColorSelector::Tab_HSV()
   mpHsvGrid->SetBorder(0,0,10,10);
   
   nuiPane* pPane = new nuiPane(nuiColor(1.f, 1.f, 1.f, 1.f), nuiColor(0.f, 0.f, 0.f, 1.f), eStrokeShape);
-  nuiLabel* pLabel = new nuiLabel(_T("HSV"));
+  nuiLabel* pLabel = new nuiLabel("HSV");
   pLabel->SetBorder(2.f, 1.f);
   pPane->AddChild(pLabel);
   
-  mpHsvGrid->SetCell(0, 0, new nuiLabel(_T("h:")));
-  mpHsvGrid->SetCell(0, 1, new nuiLabel(_T("s:")));
-  mpHsvGrid->SetCell(0, 2, new nuiLabel(_T("v:")));
-  mpHsvGrid->SetCell(0, 3, new nuiLabel(_T("a:")));
+  mpHsvGrid->SetCell(0, 0, new nuiLabel("h:"));
+  mpHsvGrid->SetCell(0, 1, new nuiLabel("s:"));
+  mpHsvGrid->SetCell(0, 2, new nuiLabel("v:"));
+  mpHsvGrid->SetCell(0, 3, new nuiLabel("a:"));
   
   mpHueSlider = new nuiSlider(nuiHorizontal, nuiRange(h, 0.f, 1.f));
   mpHsvGrid->SetCell(1, 0, mpHueSlider);

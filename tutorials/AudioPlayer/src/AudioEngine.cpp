@@ -22,9 +22,9 @@ AudioEngine::AudioEngine(double SampleRate, uint32 BufferSize)
   mBufferSize(BufferSize),
   mGain(1.f),
   mMute(false),
-  mCs(_T("AudioEngineCriticalSection"))
+  mCs("AudioEngineCriticalSection")
 {  
-  if (SetObjectClass(_T("AudioEngine")))
+  if (SetObjectClass("AudioEngine"))
   {
     InitAttributes();
   }
@@ -55,22 +55,22 @@ AudioEngine::~AudioEngine()
 void AudioEngine::InitAttributes()
 {
   AddAttribute(new nuiAttribute<uint64>
-               (nglString(_T("position")), nuiUnitCustom,
+               (nglString("position"), nuiUnitCustom,
                 nuiMakeDelegate(this, &AudioEngine::GetPosition),
                 nuiMakeDelegate(this, &AudioEngine::SetPosition)));
   
   AddAttribute(new nuiAttribute<uint64>
-               (nglString(_T("length")), nuiUnitCustom,
+               (nglString("length"), nuiUnitCustom,
                 nuiMakeDelegate(this, &AudioEngine::GetSampleFrames)));
   
   nuiAttribute<float>* pGainAttrib = new nuiAttribute<float>
-               (nglString(_T("gain")), nuiUnitCustom,
+               (nglString("gain"), nuiUnitCustom,
                 nuiMakeDelegate(this, &AudioEngine::GetGainDb),
                 nuiMakeDelegate(this, &AudioEngine::SetGainDb));  
   AddAttribute(pGainAttrib);
   
   nuiAttribute<bool>* pMuteAttrib = new nuiAttribute<bool>
-               (nglString(_T("mute")), nuiUnitCustom,
+               (nglString("mute"), nuiUnitCustom,
                 nuiMakeDelegate(this, &AudioEngine::IsMute),
                 nuiMakeDelegate(this, &AudioEngine::SetMute));
   AddAttribute(pMuteAttrib);
@@ -122,7 +122,7 @@ void AudioEngine::Process(const std::vector<const float*>& rInput, const std::ve
   nglCriticalSectionGuard guard(mCs);
   uint32 read = mpReader->ReadDE(temp, SampleFrames, eSampleFloat32);
   if (read == 0)
-    NGL_OUT(_T("audio file (%ls) finished\n"), mInPath.GetNodeName().GetChars());
+    NGL_OUT("audio file (%ls) finished\n", mInPath.GetNodeName().GetChars());
   
   if (pTemp)
   {
@@ -156,14 +156,14 @@ bool AudioEngine::LoadFile(nglPath FilePath)
 {
   if (!FilePath.Exists())
   {
-    NGL_OUT(_T("Can't load this audio file: %ls\n"), FilePath.GetNodeName().GetChars());
+    NGL_OUT("Can't load this audio file: %ls\n", FilePath.GetNodeName().GetChars());
     return false;
   }
   
   nglIStream* pStream = FilePath.OpenRead();
   if (!pStream)
   {
-    NGL_OUT(_T("Can't load this audio file: %ls\n"), FilePath.GetNodeName().GetChars());
+    NGL_OUT("Can't load this audio file: %ls\n", FilePath.GetNodeName().GetChars());
     return false;
   }
   
@@ -172,7 +172,7 @@ bool AudioEngine::LoadFile(nglPath FilePath)
   bool valid = pReader->GetInfo(info);
   if (!valid)
   {
-    NGL_OUT(_T("Can't load this audio file: %ls\n"), FilePath.GetNodeName().GetChars());
+    NGL_OUT("Can't load this audio file: %ls\n", FilePath.GetNodeName().GetChars());
     delete pReader;
     delete pStream;
     return false;
@@ -189,7 +189,7 @@ bool AudioEngine::LoadFile(nglPath FilePath)
   mpReader = pReader;  
   mInPath = FilePath;
   mInfo = info;
-  NGL_OUT(_T("audio file loaded: %ls\n"), mInPath.GetNodeName().GetChars());
+  NGL_OUT("audio file loaded: %ls\n", mInPath.GetNodeName().GetChars());
   return true;
 }
 

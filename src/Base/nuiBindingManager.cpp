@@ -20,7 +20,7 @@ void TestVariant()
   nuiVariant s1(12);
   nuiVariant s2(12.34);
   nuiVariant s3(-10);
-  nuiVariant s4(nglString(_T("ProutString")));
+  nuiVariant s4(nglString("ProutString"));
   nuiVariant s5(new nuiObject());
   nuiVariant s6(new nuiWidget());
 
@@ -32,12 +32,12 @@ void TestVariant()
   nuiWidget* pW1 = s5;
   nuiWidget* pW2 = s6;
 
-  NGL_OUT(_T("sizeof nuiVariant: %d\n"), sizeof(nuiVariant));
+  NGL_OUT("sizeof nuiVariant: %d\n", sizeof(nuiVariant));
 }
 
 void TestBinding()
 {
-  nuiClass* pClass = nuiBindingManager::GetManager().GetClass(_T("nuiWidget"));
+  nuiClass* pClass = nuiBindingManager::GetManager().GetClass("nuiWidget");
 
   if (!pClass)
     return;
@@ -53,7 +53,7 @@ void TestBinding()
 
   {
     std::vector<nuiFunction*> Methods;
-    pClass->GetMethods(_T("GetObjectClass"), Methods);
+    pClass->GetMethods("GetObjectClass", Methods);
     NGL_ASSERT(!Methods.empty());
     nuiFunction* pMethod = Methods[0];
     nuiCallContext context;
@@ -61,12 +61,12 @@ void TestBinding()
     pMethod->Run(context);
     nuiVariant result = context.GetResult();
     nglString res = result;
-    NGL_OUT(_T("GetObjectClass result: %s\n"), res.GetChars());
+    NGL_OUT("GetObjectClass result: %s\n", res.GetChars());
   }
   
   {
     std::vector<nuiFunction*> Methods;
-    pClass->GetMethods(_T("SetObjectName"), Methods);
+    pClass->GetMethods("SetObjectName", Methods);
     NGL_ASSERT(!Methods.empty());
     nuiFunction* pMethod = Methods[0];
     nuiCallContext context;
@@ -77,7 +77,7 @@ void TestBinding()
   
   {
     std::vector<nuiFunction*> Methods;
-    pClass->GetMethods(_T("GetObjectName"), Methods);
+    pClass->GetMethods("GetObjectName", Methods);
     NGL_ASSERT(!Methods.empty());
     nuiFunction* pMethod = Methods[0];
     nuiCallContext context;
@@ -85,12 +85,12 @@ void TestBinding()
     pMethod->Run(context);
     nuiVariant result = context.GetResult();
     nglString res = result;
-    NGL_OUT(_T("GetObjectName result: %s\n"), res.GetChars());
+    NGL_OUT("GetObjectName result: %s\n", res.GetChars());
   }
   
   {
     std::vector<nuiFunction*> Methods;
-    pClass->GetMethods(_T("Trash"), Methods);
+    pClass->GetMethods("Trash", Methods);
     NGL_ASSERT(!Methods.empty());
     nuiFunction* pMethod = Methods[0];
     nuiCallContext context;
@@ -188,7 +188,7 @@ static void BuildTypeListString(uint StartIndex, const std::vector<nglString>& r
   for (uint i = StartIndex; i < rArgs.size(); i++)
   {
     if (i != StartIndex)
-      rString.Add(_T(", "));
+      rString.Add(", ");
 
     rString.Add(rArgs[i]);
   }
@@ -225,7 +225,7 @@ void nuiClass::Dump(nglString& rString) const
   rString.Wipe();
 
   // Class header:
-  rString.Add(_T("class ")).Add(mName).AddNewLine();
+  rString.Add("class ").Add(mName).AddNewLine();
 
   // Dump inheritances:
   {
@@ -236,13 +236,13 @@ void nuiClass::Dump(nglString& rString) const
     {
       nuiClass* pClass = *it;
 
-      rString.Add(_T("\t: public ")).Add(pClass->GetName()).AddNewLine();
+      rString.Add("\t: public ").Add(pClass->GetName()).AddNewLine();
 
       ++it;
     }
   }
 
-  rString.Add(_T("{")).AddNewLine().Add(_T("public: // Construtors:")).AddNewLine();
+  rString.Add("{").AddNewLine().Add("public: // Construtors:").AddNewLine();
 
   // Dump Ctors:
   {
@@ -256,12 +256,12 @@ void nuiClass::Dump(nglString& rString) const
       pTypeContainer->DumpArgs(argstypes);
       nglString args;
       BuildTypeListString(1, argstypes, args);
-      rString.Add(_T("\t")).Add(mName).Add(_T("(")).Add(args).Add(_T(");")).AddNewLine();
+      rString.Add("\t").Add(mName).Add("(").Add(args).Add(");").AddNewLine();
       ++it;
     }
   }
 
-  rString.AddNewLine().Add(_T("public: // Methods:")).AddNewLine();
+  rString.AddNewLine().Add("public: // Methods:").AddNewLine();
   // Dump methods:
   {
     std::multimap<nglString, nuiFunction*>::const_iterator it = mMethods.begin();
@@ -275,12 +275,12 @@ void nuiClass::Dump(nglString& rString) const
       pTypeContainer->DumpArgs(argstypes);
       nglString args;
       BuildTypeListString(1, argstypes, args);
-      rString.Add(_T("\t")).Add(argstypes[0]).Add(" ").Add(name).Add(_T("(")).Add(args).Add(_T(");")).AddNewLine();
+      rString.Add("\t").Add(argstypes[0]).Add(" ").Add(name).Add("(").Add(args).Add(");").AddNewLine();
       ++it;
     }
   }
 
-  rString.Add(_T("};\n"));
+  rString.Add("};\n");
 }
 
 
@@ -361,7 +361,7 @@ void nuiBindingManager::Dump(nglString& rString) const
       pTypeContainer->DumpArgs(argstypes);
       nglString args;
       BuildTypeListString(1, argstypes, args);
-      rString.Add(argstypes[0]).Add(" ").Add(name).Add(_T("(")).Add(args).Add(_T(");")).AddNewLine();
+      rString.Add(argstypes[0]).Add(" ").Add(name).Add("(").Add(args).Add(");").AddNewLine();
       ++it;
     }
   }

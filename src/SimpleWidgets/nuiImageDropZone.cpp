@@ -10,7 +10,7 @@
 
 nuiImageDropZone::nuiImageDropZone(const nglPath& rImagePath)
 {
-  SetObjectClass(_T("nuiImageDropZone"));
+  SetObjectClass("nuiImageDropZone");
 
 	mPath = rImagePath;
 	mpImage = new nuiImage(rImagePath);
@@ -21,7 +21,7 @@ nuiImageDropZone::nuiImageDropZone(const nglPath& rImagePath)
 
 nuiImageDropZone::nuiImageDropZone(const nglPath& rPath, nuiTexture* pTex)
 {
-  SetObjectClass(_T("nuiImageDropZone"));
+  SetObjectClass("nuiImageDropZone");
   
 	mPath = rPath;
 	mpImage = new nuiImage(pTex);
@@ -53,9 +53,9 @@ nuiImage* nuiImageDropZone::GetImage()
 
 nglDropEffect nuiImageDropZone::OnCanDrop(nglDragAndDrop* pDragObject, nuiSize X, nuiSize Y)
 {
-  if (pDragObject->IsTypeSupported(_T("ngl/Files")))
+  if (pDragObject->IsTypeSupported("ngl/Files"))
   {
-    nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType(_T("ngl/Files"));
+    nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType("ngl/Files");
     const std::list<nglString>&rFiles(pFiles->GetFiles());
     
 //    printf("dragged files: %d\n", rFiles.size());
@@ -85,7 +85,7 @@ void nuiImageDropZone::OnDropped(nglDragAndDrop* pDragObject, nuiSize X, nuiSize
 {
   mDrawDndFrame = false;
 
-  nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType(_T("ngl/Files"));
+  nglDataFilesObject* pFiles = (nglDataFilesObject*)pDragObject->GetType("ngl/Files");
   const std::list<nglString>&rFiles(pFiles->GetFiles());
 
   printf("dropped files: %lu\n", rFiles.size());

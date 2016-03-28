@@ -86,7 +86,7 @@ bool nuiInitBindings()
   nuiBindClass(nuiWidget);
   nuiInheritFrom(nuiWidget);
   //nuiAddMethod(GetChild, nuiWidget::GetChild);
-  pClass->AddMethod(_T("GetChild"), new nuiFunction(&nuiWidget::GetChild));
+  pClass->AddMethod("GetChild", new nuiFunction(&nuiWidget::GetChild));
   nuiAddMethod(GetChildrenCount, nuiWidget::GetChildrenCount);
   nuiAddMethod(GetNextFocussableChild, nuiWidget::GetNextFocussableChild);
   nuiAddMethod(GetPreviousFocussableChild, nuiWidget::GetPreviousFocussableChild);
@@ -145,7 +145,7 @@ bool nuiInitBindings()
 
   nglString str;
   nuiBindingManager::GetManager().Dump(str);
-  NGL_OUT(_T("Binding manager dump:\n%s\n"), str.GetChars());
+  NGL_OUT("Binding manager dump:\n%s\n", str.GetChars());
   
   return true;
 }

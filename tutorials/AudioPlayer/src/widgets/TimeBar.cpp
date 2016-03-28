@@ -17,7 +17,7 @@ TimeBar::TimeBar(nuiAttrib<uint64>& rPositionAttrib, nuiAttrib<uint64>& rLengthA
   mLengthAttrib(rLengthAttrib),
   mSampleRate(SampleRate)
 {
-  SetObjectClass(_T("TimeBar"));
+  SetObjectClass("TimeBar");
   
   nuiHBox* pHBox = new nuiHBox();
   AddChild(pHBox);

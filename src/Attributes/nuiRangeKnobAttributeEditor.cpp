@@ -12,7 +12,7 @@ nuiRangeKnobAttributeEditor::nuiRangeKnobAttributeEditor(const nuiAttrib<const n
     mEventSink(this),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiRangeKnobAttributeEditor"));
+	SetObjectClass("nuiRangeKnobAttributeEditor");
   
   mpKnob = NULL;
   mRange = mAttribute.Get();

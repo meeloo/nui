@@ -163,10 +163,10 @@ private:
   {
   public:
     TransitionAnimation_Alpha(nuiWidget* pTarget, TransitionType transition, float start, float end)
-    : TransitionAttributeAnimation(pTarget, _T("Alpha"), start, end, mEasings[transition], mDurations[transition])
+    : TransitionAttributeAnimation(pTarget, "Alpha", start, end, mEasings[transition], mDurations[transition])
     {};
     TransitionAnimation_Alpha(nuiWidget* pTarget, float start, float end, const nuiEasingMethod& rEasing, float duration)
-    : TransitionAttributeAnimation(pTarget, _T("Alpha"), start, end, rEasing, duration)
+    : TransitionAttributeAnimation(pTarget, "Alpha", start, end, rEasing, duration)
     {};
     virtual ~TransitionAnimation_Alpha(){};
   };
@@ -177,7 +177,7 @@ private:
   {
   public:
     TransitionAnimation_Position(nuiWidget* pTarget, TransitionType transition, float start, float end)
-    : TransitionAttributeAnimation(pTarget, _T(".AnimPosition"), start, end, mEasings[transition], mDurations[transition])
+    : TransitionAttributeAnimation(pTarget, ".AnimPosition", start, end, mEasings[transition], mDurations[transition])
     {};
     virtual ~TransitionAnimation_Position(){};
   };

@@ -65,7 +65,7 @@ public:
   : mStartValue(0),
   mEndValue(0)
   {
-    if (SetObjectClass(_T("nuiAttributeAnim")))
+    if (SetObjectClass("nuiAttributeAnim"))
     {
       // Init atributes
     }
@@ -75,7 +75,7 @@ public:
   : mStartValue(start),
   mEndValue(end)
   {
-    if (SetObjectClass(_T("nuiAttributeAnim")))
+    if (SetObjectClass("nuiAttributeAnim"))
     {
       // Init atributes
     }

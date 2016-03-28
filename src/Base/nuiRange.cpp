@@ -514,7 +514,7 @@ bool nuiRange::AreEventsEnabled()
 void nuiRange::ToString(nglString& str)
 {
 //double Value, double Min, double Max, double Increment, double PageIncrement, double PageSize, double Origin
-  str.CFormat(_T("[%g %g %g %g %g %g %g]"), 
+  str.CFormat("[%g %g %g %g %g %g %g]", 
     mValue, mMinimum, mMaximum, mIncrement, mPageIncrement, mPageSize, mOrigin);
 }
 

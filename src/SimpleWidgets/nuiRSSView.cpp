@@ -11,7 +11,7 @@
 nuiRSSView::nuiRSSView(const nglString& rURL, int32 SecondsBetweenUpdates, nglIStream* pOriginalStream, bool ForceNoHTML)
 : mViewSink(this)
 {
-  if (SetObjectClass(_T("nuiRSSView")))
+  if (SetObjectClass("nuiRSSView"))
   {
     InitAttributes();
   }
@@ -48,37 +48,37 @@ bool nuiRSSView::SetRect(const nuiRect& rRect)
 void nuiRSSView::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Font")), nuiUnitName,
+               (nglString("Font"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiRSSView::_GetFont), 
                 nuiMakeDelegate(this, &nuiRSSView::_SetFont)));
   
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("TextColor")), nuiUnitNone,
+               (nglString("TextColor"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiRSSView::GetTextColor), 
                 nuiMakeDelegate(this, &nuiRSSView::SetTextColor)));
   
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("URL")), nuiUnitName,
+               (nglString("URL"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiRSSView::GetURL), 
                 nuiMakeDelegate(this, &nuiRSSView::SetURL)));
   
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("ItemWidget")), nuiUnitName,
+               (nglString("ItemWidget"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiRSSView::GetItemWidget), 
                 nuiMakeDelegate(this, &nuiRSSView::SetItemWidget)));
   
   AddAttribute(new nuiAttribute<int32>
-               (nglString(_T("MaxItems")), nuiUnitNone,
+               (nglString("MaxItems"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiRSSView::GetMaxItems), 
                 nuiMakeDelegate(this, &nuiRSSView::SetMaxItems)));
   
   AddAttribute(new nuiAttribute<nuiExpandMode>
-               (nglString(_T("Expand")), nuiUnitPixels,
+               (nglString("Expand"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiRSSView::GetExpand), 
                 nuiMakeDelegate(this, &nuiRSSView::SetExpand)));
   
   AddAttribute(new nuiAttribute<int32>
-               (nglString(_T("RefreshRate")), nuiUnitSeconds,
+               (nglString("RefreshRate"), nuiUnitSeconds,
                 nuiMakeDelegate(this, &nuiRSSView::GetRefreshRate), 
                 nuiMakeDelegate(this, &nuiRSSView::SetRefreshRate)));
   
@@ -117,12 +117,12 @@ void nuiRSSView::Update(const nuiEvent& rEvent)
     {
       // Contents is valid HTML
       html.GetSimpleText(text);
-      //NGL_OUT(_T("%d - Could parse HTML tags:\n%s\n"), i, text.GetChars());
+      //NGL_OUT("%d - Could parse HTML tags:\n%s\n", i, text.GetChars());
     }
     else
     {
       text = rItem.GetDescription();
-      //NGL_OUT(_T("%d - Couldn't parse HTML tags:\n%s\n"), i, text.GetChars());
+      //NGL_OUT("%d - Couldn't parse HTML tags:\n%s\n", i, text.GetChars());
     }
 
     
@@ -134,13 +134,13 @@ void nuiRSSView::Update(const nuiEvent& rEvent)
       
       
   //    nuiLabel* pLabel = new nuiLabel(text);
-  //    pLabel->SetObjectName(_T("nuiRSSView::Description"));
+  //    pLabel->SetObjectName("nuiRSSView::Description");
   //    pLabel->SetWrapping(true);
       if (!mForceNoHTML && res)
       {
         nuiHTMLView* pLabel = new nuiHTMLView(480);
         pLabel->SetText(desc);
-        pLabel->SetObjectClass(_T("nuiRSSContents"));
+        pLabel->SetObjectClass("nuiRSSContents");
         if (!mFont.IsNull())
           pLabel->_SetFont(mFont);
         pLabel->SetTextColor(mTextColor);
@@ -149,7 +149,7 @@ void nuiRSSView::Update(const nuiEvent& rEvent)
       else
       {
         nuiLabel* pLabel = new nuiLabel(text);
-        pLabel->SetObjectClass(_T("nuiRSSContents"));
+        pLabel->SetObjectClass("nuiRSSContents");
         pLabel->SetWrapping(true);
         pPane->AddChild(pLabel);
       }
@@ -162,44 +162,44 @@ void nuiRSSView::Update(const nuiEvent& rEvent)
 //        text = desc;
 //      }
 
-      NGL_OUT(_T("AGENDA: %s\n"), rItem.GetTitle().GetChars());
+      NGL_OUT("AGENDA: %s\n", rItem.GetTitle().GetChars());
       std::map<nglString, nglString> dictionnary;
-      dictionnary[_T("ItemText")] = text;
-      dictionnary[_T("ItemHTML")] = desc;
-      dictionnary[_T("Title")] = rItem.GetTitle();
-      dictionnary[_T("Link")] = rItem.GetLink();
-      dictionnary[_T("Description")] = rItem.GetDescription();
-      dictionnary[_T("Author")] = rItem.GetAuthor();
-      dictionnary[_T("Category")] = rItem.GetCategory();
-      dictionnary[_T("CategoryDomain")] = rItem.GetCategoryDomain();
-      dictionnary[_T("Comments")] = rItem.GetComments();
-      dictionnary[_T("EnclosureURL")] = rItem.GetEnclosureURL();
-      dictionnary[_T("EnclosureType")] = rItem.GetEnclosureType();
-      dictionnary[_T("GUID")] = rItem.GetGUID();
-      dictionnary[_T("PublishingDate")] = rItem.GetPublishingDate();
-      dictionnary[_T("SourceURL")] = rItem.GetSourceURL();
-      dictionnary[_T("ImageURL")] = rItem.GetImageURL();
+      dictionnary["ItemText"] = text;
+      dictionnary["ItemHTML"] = desc;
+      dictionnary["Title"] = rItem.GetTitle();
+      dictionnary["Link"] = rItem.GetLink();
+      dictionnary["Description"] = rItem.GetDescription();
+      dictionnary["Author"] = rItem.GetAuthor();
+      dictionnary["Category"] = rItem.GetCategory();
+      dictionnary["CategoryDomain"] = rItem.GetCategoryDomain();
+      dictionnary["Comments"] = rItem.GetComments();
+      dictionnary["EnclosureURL"] = rItem.GetEnclosureURL();
+      dictionnary["EnclosureType"] = rItem.GetEnclosureType();
+      dictionnary["GUID"] = rItem.GetGUID();
+      dictionnary["PublishingDate"] = rItem.GetPublishingDate();
+      dictionnary["SourceURL"] = rItem.GetSourceURL();
+      dictionnary["ImageURL"] = rItem.GetImageURL();
       if (!rItem.GetImageURL().IsEmpty())
       {
         nglString imagehtml;
-        imagehtml.CFormat(_T("<img src=\"%s\" alt=\"%s\"/>"), rItem.GetImageURL().GetChars(), rItem.GetImageTitle().GetChars());
-        NGL_OUT(_T("ImageHTML: %s\n"), imagehtml.GetChars());
-        dictionnary[_T("ImageHTML")] = imagehtml;
+        imagehtml.CFormat("<img src=\"%s\" alt=\"%s\"/>", rItem.GetImageURL().GetChars(), rItem.GetImageTitle().GetChars());
+        NGL_OUT("ImageHTML: %s\n", imagehtml.GetChars());
+        dictionnary["ImageHTML"] = imagehtml;
       }
       else
       {
         nglString imagehtml;
-        imagehtml.CFormat(_T("<img src=\"%s\" alt=\"%s\"/>"), rItem.GetLink().GetChars(), _T(""));
-        imagehtml.Replace(_T("https"), _T("http"));
-        NGL_OUT(_T("ImageHTML (from link): %s\n"), imagehtml.GetChars());
-        dictionnary[_T("ImageHTML")] = imagehtml;
+        imagehtml.CFormat("<img src=\"%s\" alt=\"%s\"/>", rItem.GetLink().GetChars(), _T(""));
+        imagehtml.Replace("https", "http");
+        NGL_OUT("ImageHTML (from link): %s\n", imagehtml.GetChars());
+        dictionnary["ImageHTML"] = imagehtml;
       }
       if (!rItem.GetEnclosureURL().IsEmpty())
       {
         nglString enclosurehtml;
-        enclosurehtml.CFormat(_T("<img src=\"%s\" alt=\"enclosure\"/>"), rItem.GetEnclosureURL().GetChars());
-        NGL_OUT(_T("EnclosureHTML: %s\n"), enclosurehtml.GetChars());
-        dictionnary[_T("EnclosureHTML")] = enclosurehtml;
+        enclosurehtml.CFormat("<img src=\"%s\" alt=\"enclosure\"/>", rItem.GetEnclosureURL().GetChars());
+        NGL_OUT("EnclosureHTML: %s\n", enclosurehtml.GetChars());
+        dictionnary["EnclosureHTML"] = enclosurehtml;
       }
       nuiWidget* pWidget = nuiBuilder::Get().CreateWidget(mItemWidget, dictionnary);
       if (pWidget)

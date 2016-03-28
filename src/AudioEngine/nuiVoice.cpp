@@ -24,7 +24,7 @@ nuiVoice::nuiVoice(nuiSound* pSound)
   mFadeOutPosition(0),
   mFadeOutLength(0)
 {
-  if (SetObjectClass(_T("nuiVoice")))
+  if (SetObjectClass("nuiVoice"))
     InitAttributes();
   
   if (mpSound)
@@ -65,43 +65,43 @@ nuiVoice& nuiVoice::operator=(const nuiVoice& rVoice)
 void nuiVoice::InitAttributes()
 {
   nuiAttribute<float>* pGainAttrib = new nuiAttribute<float>
-  (nglString(_T("gain")), nuiUnitCustom,
+  (nglString("gain"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiVoice::GetGain),
    nuiMakeDelegate(this, &nuiVoice::SetGain));  
   AddAttribute(pGainAttrib);
   
   nuiAttribute<float>* pGainDbAttrib = new nuiAttribute<float>
-  (nglString(_T("gainDb")), nuiUnitCustom,
+  (nglString("gainDb"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiVoice::GetGainDb),
    nuiMakeDelegate(this, &nuiVoice::SetGainDb));  
   AddAttribute(pGainDbAttrib);
   
   nuiAttribute<bool>* pMuteAttrib = new nuiAttribute<bool>
-  (nglString(_T("mute")), nuiUnitCustom,
+  (nglString("mute"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiVoice::IsMute),
    nuiMakeDelegate(this, &nuiVoice::SetMute));
   AddAttribute(pMuteAttrib);
   
   nuiAttribute<float>* pPanAttrib = new nuiAttribute<float>
-  (nglString(_T("pan")), nuiUnitCustom,
+  (nglString("pan"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiVoice::GetPan),
    nuiMakeDelegate(this, &nuiVoice::SetPan));  
   AddAttribute(pPanAttrib);
   
   nuiAttribute<bool>* pPlayAttrib = new nuiAttribute<bool>
-  (nglString(_T("play")), nuiUnitCustom,
+  (nglString("play"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiVoice::IsPlaying),
    nuiMakeDelegate(this, &nuiVoice::SetPlay));
   AddAttribute(pPlayAttrib);
   
   nuiAttribute<bool>* pLoopAttrib = new nuiAttribute<bool>
-  (nglString(_T("loop")), nuiUnitCustom,
+  (nglString("loop"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiVoice::IsLooping),
    nuiMakeDelegate(this, &nuiVoice::SetLoop));
   AddAttribute(pLoopAttrib);
   
   nuiAttribute<int64>* pPosAttrib = new nuiAttribute<int64>
-  (nglString(_T("position")), nuiUnitCustom,
+  (nglString("position"), nuiUnitCustom,
    nuiMakeDelegate(this, &nuiVoice::GetPosition),
    nuiMakeDelegate(this, &nuiVoice::SetPosition));
   AddAttribute(pPosAttrib);
@@ -173,7 +173,7 @@ void nuiVoice::ProcessInternal(const std::vector<float*>& rOutput, int32 SampleF
   // if the input and output have not the same channel configuration, we only support mono input with stereo output
   if ((inChannels != outChannels) && (inChannels != 1 || outChannels != 2))
   {
-    NGL_OUT(_T("channel format  unsupported: in = %d  out = %d\n"), inChannels, outChannels);
+    NGL_OUT("channel format  unsupported: in = %d  out = %d\n", inChannels, outChannels);
     NGL_ASSERT(0);
   }
   

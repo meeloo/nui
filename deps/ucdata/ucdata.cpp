@@ -1700,7 +1700,7 @@ main()
     }
     
     {
-      uint32_t* str = _T("é");
+      uint32_t* str = "é";
       int32_t i = 0;
       uint32_t* res = NULL;
       uint32_t len = wcslen(str);

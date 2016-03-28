@@ -14,9 +14,9 @@ nuiGenericAttributeEditor::nuiGenericAttributeEditor(const nuiAttribBase& rAttri
   mAttribute(rAttribute),
   mAutoPollForChanges(false)
 {
-	SetObjectClass(_T("nuiGenericAttributeEditor"));
+	SetObjectClass("nuiGenericAttributeEditor");
 	
-	//NGL_OUT(_T("Generic Attrib editor '%s': '%s'\n"), rAttribute.GetName().GetChars(), contents.GetChars());
+	//NGL_OUT("Generic Attrib editor '%s': '%s'\n", rAttribute.GetName().GetChars(), contents.GetChars());
   mpLabel = new nuiLabel();
   AddChild(mpLabel);
 	if (!mAttribute.IsReadOnly())
@@ -40,7 +40,7 @@ void nuiGenericAttributeEditor::OnAttributeChanged(const nuiEvent& rEvent)
   
   if (!mAttribute.CanGet())
   {
-    mpLabel->SetText(_T("Write only attribute"));
+    mpLabel->SetText("Write only attribute");
     return;
   }
   
@@ -58,7 +58,7 @@ void nuiGenericAttributeEditor::OnAttributeChanged(const nuiEvent& rEvent)
 //        {
 //          mAttribute.FromString(i, pRenamer->GetText());
 //        }
-        mpLabel->SetText(_T("MultiDimension attribute not supported"));
+        mpLabel->SetText("MultiDimension attribute not supported");
 
       }
       break;
@@ -72,7 +72,7 @@ void nuiGenericAttributeEditor::OnAttributeChanged(const nuiEvent& rEvent)
 //          
 //        }
 //      }
-      mpLabel->SetText(_T("MultiDimension attribute not supported"));
+      mpLabel->SetText("MultiDimension attribute not supported");
     }
       break;
   }

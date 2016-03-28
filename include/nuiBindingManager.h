@@ -33,7 +33,7 @@ public:
   {
     if (mName.IsNull())
     {
-      mName.Add(typeid(Class).name()).Add(_T("&"));
+      mName.Add(typeid(Class).name()).Add("&");
     }
     return mName.GetChars();
   }
@@ -47,7 +47,7 @@ public:
   {
     if (mName.IsNull())
     {
-      mName.Add(_T("const ")).Add(typeid(Class).name()).Add(_T("&"));
+      mName.Add("const ").Add(typeid(Class).name()).Add("&");
     }
     return mName.GetChars();
   }
@@ -61,7 +61,7 @@ public:
   {
     if (mName.IsNull())
     {
-      mName.Add(typeid(Class).name()).Add(_T("*"));
+      mName.Add(typeid(Class).name()).Add("*");
     }
     return mName.GetChars();
   }
@@ -79,7 +79,7 @@ template <> class nuiVariantTrait<int>
 public:  
   static const nglChar* GetName()
   {
-    return _T("int");
+    return "int";
   }
 };
 
@@ -88,7 +88,7 @@ template <> class nuiVariantTrait<void>
 public:  
   static const nglChar* GetName()
   {
-    return _T("void");
+    return "void";
   }
 };
 
@@ -97,7 +97,7 @@ template <> class nuiVariantTrait<float>
 public:  
   static const nglChar* GetName()
   {
-    return _T("float");
+    return "float";
   }
 };
 
@@ -107,7 +107,7 @@ template <> class nuiVariantTrait<nglString>
 public:  
   static const nglChar* GetName()
   {
-    return _T("nglString");
+    return "nglString";
   }
 };
 

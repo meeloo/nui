@@ -10,7 +10,7 @@
 nuiImageSequence::nuiImageSequence()
 : mFrameIndex(0)
 {
-  if (SetObjectClass(_T("nuiImageSequence")))
+  if (SetObjectClass("nuiImageSequence"))
     InitAttributes();
   mColor = nuiColor(255,255,255);
   mInterpolated = true;
@@ -26,7 +26,7 @@ nuiImageSequence::nuiImageSequence()
 nuiImageSequence::nuiImageSequence(uint32 nbFrames, nglImage* pImage, nuiOrientation orientation)
 : mFrameIndex(0), mFramesInSingleFile(true)
 {
-  if (SetObjectClass(_T("nuiImageSequence")))
+  if (SetObjectClass("nuiImageSequence"))
     InitAttributes();
   mInterpolated = true;
   mNbFrames = nbFrames;
@@ -42,7 +42,7 @@ nuiImageSequence::nuiImageSequence(uint32 nbFrames, const nglPath& rTexturePath,
 : mFrameIndex(0), mFramesInSingleFile(framesInSingleFile),
 mTexturePath(rTexturePath)
 {
-  if (SetObjectClass(_T("nuiImageSequence")))
+  if (SetObjectClass("nuiImageSequence"))
     InitAttributes();
 	
   if (mFramesInSingleFile)
@@ -66,36 +66,36 @@ mTexturePath(rTexturePath)
 void nuiImageSequence::InitAttributes()
 {
   nuiAttribute<const nuiColor&>* AttributeColor = new nuiAttribute<const nuiColor&>
-  (nglString(_T("Color")), nuiUnitNone,
+  (nglString("Color"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiImageSequence::GetColor), 
    nuiMakeDelegate(this, &nuiImageSequence::SetColor));
   
   nuiAttribute<const nglPath&>* AttributeTexture = new nuiAttribute<const nglPath&>
-  (nglString(_T("Texture")), nuiUnitNone,
+  (nglString("Texture"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiImageSequence::GetTexturePath), 
    nuiMakeDelegate(this, &nuiImageSequence::SetTexturePath));
   
   nuiAttribute<bool>* AttributeInterpolation = new nuiAttribute<bool>
-  (nglString(_T("Interpolation")), nuiUnitBoolean,
+  (nglString("Interpolation"), nuiUnitBoolean,
    nuiMakeDelegate(this, &nuiImageSequence::IsInterpolated),
    nuiMakeDelegate(this, &nuiImageSequence::SetInterpolated));
   
   nuiAttribute<uint32>* AttributeNbFrames = new nuiAttribute<uint32>
-  (nglString(_T("NbFrames")), nuiUnitNone,
+  (nglString("NbFrames"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiImageSequence::GetNbFrames),
    nuiMakeDelegate(this, &nuiImageSequence::SetNbFrames));
   
   nuiAttribute<nuiOrientation>* AttributeOrientation = new nuiAttribute<nuiOrientation>
-  (nglString(_T("Orientation")), nuiUnitNone,
+  (nglString("Orientation"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiImageSequence::GetOrientation),
    nuiMakeDelegate(this, &nuiImageSequence::SetOrientation));
   
-	AddAttribute(_T("Color"), AttributeColor);
-	AddAttribute(_T("Texture"), AttributeTexture);
-	AddAttribute(_T("Interpolation"), AttributeInterpolation);
+	AddAttribute("Color", AttributeColor);
+	AddAttribute("Texture", AttributeTexture);
+	AddAttribute("Interpolation", AttributeInterpolation);
   
-	AddAttribute(_T("NbFrames"), AttributeNbFrames);
-  AddAttribute(_T("Orientation"), AttributeOrientation);
+	AddAttribute("NbFrames", AttributeNbFrames);
+  AddAttribute("Orientation", AttributeOrientation);
 }
 
 
@@ -151,7 +151,7 @@ bool nuiImageSequence::CreateTextures()
     for (uint32 i = 0; i < mNbFrames; i++)
     {
       nglString filename;
-      filename.CFormat(_T("%s/%d.png"), mTexturePath.GetChars(), i);
+      filename.CFormat("%s/%d.png", mTexturePath.GetChars(), i);
       nglPath path(filename);
       nuiTexture* pTex = nuiTexture::GetTexture(path, NULL);
       //pTex->SetTrace(true);

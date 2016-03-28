@@ -111,7 +111,7 @@ void DumpContexts()
   nglContextInfo info;
   uint index = 0;
 
-  NGL_LOG(_T("context"), NGL_LOG_INFO, _T("Enumerating available GL contexts :"));
+  NGL_LOG("context", NGL_LOG_INFO, "Enumerating available GL contexts :");
   while (nglContextInfo::Enum(index++, info))
     info.Dump(NGL_LOG_INFO);
 }
@@ -181,11 +181,11 @@ public:
     server sides) and prepares it for use. Example :
 
 \code
-if (HasExtension(_T("GL_ARB_texture_compression")))
+if (HasExtension("GL_ARB_texture_compression"))
 {
   GLint value;
   glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB, &value);
-  NGL_OUT(_T("%d texture compression formats supported"), value);
+  NGL_OUT("%d texture compression formats supported", value);
 }
 \endcode
 

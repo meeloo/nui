@@ -22,7 +22,7 @@ nuiSlider::nuiSlider(nuiOrientation orientation, const nuiRange& rRange)
 mRange(rRange),
 mSliderSink(this)
 {
-  if (SetObjectClass(_T("nuiSlider")))
+  if (SetObjectClass("nuiSlider"))
     InitAttributes();
   
   mOrientation = orientation;
@@ -53,23 +53,23 @@ mSliderSink(this)
 
 void nuiSlider::InitAttributes()
 {
-  AddAttribute(new nuiAttribute<float>(nglString(_T("HandleOffset")), nuiUnitPixels,
+  AddAttribute(new nuiAttribute<float>(nglString("HandleOffset"), nuiUnitPixels,
                                        nuiMakeDelegate(this, &nuiSlider::GetHandleOffset),
                                        nuiMakeDelegate(this, &nuiSlider::SetHandleOffset)));
   
-  AddAttribute(new nuiAttribute<float>(nglString(_T("HandlePosMin")), nuiUnitPixels,
+  AddAttribute(new nuiAttribute<float>(nglString("HandlePosMin"), nuiUnitPixels,
                                        nuiMakeDelegate(this, &nuiSlider::GetHandlePosMin),
                                        nuiMakeDelegate(this, &nuiSlider::SetHandlePosMin)));
   
-  AddAttribute(new nuiAttribute<float>(nglString(_T("HandlePosMax")), nuiUnitPixels,
+  AddAttribute(new nuiAttribute<float>(nglString("HandlePosMax"), nuiUnitPixels,
                                        nuiMakeDelegate(this, &nuiSlider::GetHandlePosMax),
                                        nuiMakeDelegate(this, &nuiSlider::SetHandlePosMax)));
 
-  AddAttribute(new nuiAttribute<nuiOrientation>(nglString(_T("Orientation")), nuiUnitOrientation,
+  AddAttribute(new nuiAttribute<nuiOrientation>(nglString("Orientation"), nuiUnitOrientation,
                                        nuiMakeDelegate(this, &nuiSlider::GetOrientation),
                                        nuiMakeDelegate(this, &nuiSlider::SetOrientation)));
 
-  AddAttribute(new nuiAttribute<bool>(_T("AutoAdjustHandle"), nuiUnitBoolean,
+  AddAttribute(new nuiAttribute<bool>("AutoAdjustHandle", nuiUnitBoolean,
     nuiMakeDelegate(this, &nuiSlider::GetAutoAdjustHandle),
     nuiMakeDelegate(this, &nuiSlider::SetAutoAdjustHandle)));
 }
@@ -297,7 +297,7 @@ bool nuiSlider::MouseMoved  (const nglMouseInfo& rInfo)
     x = rInfo.X - mClickX;
     y = mClickY - rInfo.Y;
     
-    //NGL_OUT(_T("MouseMoved : %.2f %.2f     %.2f %.2f\n"), X, Y,x,y);
+    //NGL_OUT("MouseMoved : %.2f %.2f     %.2f %.2f\n", X, Y,x,y);
     
     
     nuiSize start = mClickValue;
@@ -468,7 +468,7 @@ nuiSize nuiSlider::GetHandlePosMax()
   return mHandlePosMax;
 }
 
-static const nglString tmp(_T("HandleOffset"));
+static const nglString tmp("HandleOffset");
 
 void nuiSlider::AdjustHandle()
 {

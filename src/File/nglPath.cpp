@@ -37,7 +37,7 @@ using namespace std;
 #define _T(X) X
 #endif
 
-const nglChar nglPath::PortableCharset[] = _T("/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_");
+const nglChar nglPath::PortableCharset[] = "/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 
 const nglPathVolume::VolumeFlags nglPathVolume::All        = 0xFFFFFFFF;
 const nglPathVolume::VolumeFlags nglPathVolume::ReadOnly   = (1 << 0);
@@ -115,7 +115,7 @@ nglPath::nglPath (nglPathBase Base)
 				getcwd (buffer, PATH_MAX);
 				#endif
 				//       if (errno == ERANGE)
-				//         NGL_LOG("path", NGL_LOG_ERROR, _T("nglPath(ePathCurrent): path might have been truncated"));
+				//         NGL_LOG("path", NGL_LOG_ERROR, "nglPath(ePathCurrent): path might have been truncated");
 				buffer[PATH_MAX] = '\0';
 				InternalSetPath(buffer);
 			}
@@ -144,7 +144,7 @@ nglPath::nglPath (nglPathBase Base)
         #elif defined (_ANDROID_)
         InternalSetPath("/sdcard");
         #else
-        InternalSetPath(_T("/tmp"));
+        InternalSetPath("/tmp");
         #endif
       }
       break;
@@ -551,20 +551,20 @@ bool nglPath::Canonize()
 			// Ignore '.'
 		}
 		else
-			if (((slash - last_slash) == 2) && (!mPathName.Compare(_T(".."), last_slash, 2)))
+			if (((slash - last_slash) == 2) && (!mPathName.Compare("..", last_slash, 2)))
 			{
 				// Interpret '..'
 				int32 prev_slash = canon.FindLast(_T('/'));
 				if (prev_slash < root_part)
 					prev_slash = root_part;
 
-				if (!canon.IsEmpty() && canon.Compare(_T(".."), canon.GetLength() - 2, 2))
+				if (!canon.IsEmpty() && canon.Compare("..", canon.GetLength() - 2, 2))
 					canon.Delete(prev_slash);
 				else
 				{
 					if (canon.GetLength() > root_part)
 						canon += _T('/');
-					canon += _T("..");
+					canon += "..";
 				}
 			}
 			else
@@ -653,7 +653,7 @@ void nglPath::Split(std::vector<nglString>& rElements)
 {
   rElements.clear();
   if (IsAbsolute())
-    rElements.push_back(_T("/"));
+    rElements.push_back("/");
   mPathName.Tokenize(rElements);
 }
 
@@ -742,12 +742,12 @@ bool nglPath::GetInfo(nglPathInfo& rInfo) const
   // output debug
 /*
 wchar_t prout[1024];
-  swprintf(&prout[0], 1024,_T("\n\nFILE '%s'\naccess seconds %d  Minutes %d   Hours %d   Day %d   Month %d   Year %d   WeekDay %d   DST %d\n"),
+  swprintf(&prout[0], 1024,"\n\nFILE '%s'\naccess seconds %d  Minutes %d   Hours %d   Day %d   Month %d   Year %d   WeekDay %d   DST %d\n",
     GetChars(), accessTimeInfo.Seconds, accessTimeInfo.Minutes, accessTimeInfo.Hours, accessTimeInfo.Day, accessTimeInfo.Month, accessTimeInfo.Year, accessTimeInfo.WeekDay, accessTimeInfo.DST);
  
   OutputDebugString(&prout[0]);
 
-  swprintf(&prout[0], 1024,_T("mod seconds %d  Minutes %d   Hours %d   Day %d   Month %d   Year %d   WeekDay %d   DST %d\n"),
+  swprintf(&prout[0], 1024,"mod seconds %d  Minutes %d   Hours %d   Day %d   Month %d   Year %d   WeekDay %d   DST %d\n",
     modTimeInfo.Seconds, modTimeInfo.Minutes, modTimeInfo.Hours, modTimeInfo.Day, modTimeInfo.Month, modTimeInfo.Year, modTimeInfo.WeekDay, modTimeInfo.DST);
  
   OutputDebugString(&prout[0]);
@@ -766,7 +766,7 @@ wchar_t prout[1024];
  	return true;
 
 #else
-  if ((mPathName.GetLeft(4) == _T("/net")) || (mPathName.GetLeft(4) == _T("/home")))
+  if ((mPathName.GetLeft(4) == "/net") || (mPathName.GetLeft(4) == "/home"))
   {
     rInfo.Exists	 = false;
     rInfo.IsLeaf   = true;
@@ -879,7 +879,7 @@ bool nglPath::IsVisible() const
 bool nglPath::IsBundle() const
 {
   nglPath p(*this);
-  p += nglPath(_T("contents/Info.plist"));
+  p += nglPath("contents/Info.plist");
   nglPathInfo info;
   p.GetInfo(info);
   return info.Exists && info.IsLeaf;
@@ -1103,7 +1103,7 @@ len = mPathName.GetLength();
 for (i = 0; i < len; i++)
 if (strchr (ValidChars, mPathName[i]) == NULL)
 {
-NGL_DEBUG( NGL_LOG("path", NGL_LOG_WARNING, _T("Warning: path contains non portable chars (%s)"), (nglChar*)mPathName); )
+NGL_DEBUG( NGL_LOG("path", NGL_LOG_WARNING, "Warning: path contains non portable chars (%s)", (nglChar*)mPathName); )
 return false;
 }
 return true;
@@ -1140,7 +1140,7 @@ bool nglPath::InternalSetPath(const nglChar* pPath)
 			(mPathName[1] == _T(':')) &&
 			((mPathName.GetLength() == 2) || (mPathName[2] != L'/')))
 		{
-			mPathName+= _T("/");
+			mPathName+= "/";
 			/*      
 			// Disabled by MeeLoo: this part is hacky at best and it really prevents to make any sense in a GUI because then Win32 path are NEVER behaving in the same way as other pathes and forces so many kludges...
 			// Ackward X:[file.abc] where you should read X:<X drive own current path>[/file.abc]
@@ -1172,7 +1172,7 @@ bool nglPath::InternalSetPath(const nglChar* pPath)
 		mPathName.TrimRight(_T('/'));
 
 #if DEBUG_NGLPATH
-  NGL_OUT(_T("[nglPath::InternalSetPath] '%s' [Exists %d]\n"), mPathName.GetChars(), Exists());
+  NGL_OUT("[nglPath::InternalSetPath] '%s' [Exists %d]\n", mPathName.GetChars(), Exists());
   //NGL_ASSERT(Exists());
 #endif
 	return true;
@@ -1247,11 +1247,11 @@ nglString nglPath::GetMimeType() const
 	unsigned char value[1025];
 	HKEY key;
 	unsigned long type = REG_SZ;
-	nglString path(_T(".")+GetExtension());
+	nglString path("."+GetExtension());
 	RegOpenKeyEx(HKEY_CLASSES_ROOT,path.GetChars(),0,KEY_READ,&key);
 	if (RegQueryValueEx(
 		key,
-		_T("Content Type"),
+		"Content Type",
 		NULL,
 		&type,
 		value,
@@ -1341,9 +1341,9 @@ bool nglGetDriveInfo(nglChar* name, nglPathVolume& rVol)
 	if (*lpVolumeNameBuffer)
   {
     rVol.mComment = lpVolumeNameBuffer;
-    rVol.mComment += _T(" (");
+    rVol.mComment += " (";
     rVol.mComment += RootPathName;
-    rVol.mComment += _T(")");
+    rVol.mComment += ")";
   }
   else
   {
@@ -1512,7 +1512,7 @@ nglString nglPath::GetVolumeName() const
     nglString name(mPathName.Extract(0, rootpart));
     name.Trim(_T('/'));
     name.Trim(_T(':'));
-    //wprintf(_T("GetVolumeName(\"%s\") -> \"%s\"\n"), GetChars(), name.GetChars());
+    //wprintf("GetVolumeName(\"%s\" -> \"%s\"\n"), GetChars(), name.GetChars());
     return name;
   }
   
@@ -1565,10 +1565,10 @@ bool nglPath::MakeRelativeTo(const nglPath& rOriginal)
   if (!common) // not the same Volume, can't be relative
     return false;
   
-  nglPath RelativePath(_T("./"));
+  nglPath RelativePath("./");
   while (NumRootTokens > common)
   {
-    RelativePath += nglPath(_T("../"));
+    RelativePath += nglPath("../");
     NumRootTokens--;
   }
   // now that we are common, insert tokens until we reach the Path

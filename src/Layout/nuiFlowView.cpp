@@ -46,7 +46,7 @@ nuiRect nuiFlowView::CalcIdealSize()
 
   if (GetDebug())
   {
-    NGL_OUT(_T("nuiFlowView::CalcIdealSize[%f]: %s\n"), mCurrentIdealWidth, idealsize.GetValue().GetChars());
+    NGL_OUT("nuiFlowView::CalcIdealSize[%f]: %s\n", mCurrentIdealWidth, idealsize.GetValue().GetChars());
   }
 
   return idealsize;

@@ -63,9 +63,9 @@ public:
   {
     mCanSave = true;
     mCanLoad = true;
-    mName = _T("PPM");
-    mExtensions.push_back(_T(".ppm"));
-    mInfo = _T("Simple PPM codec");
+    mName = "PPM";
+    mExtensions.push_back(".ppm");
+    mInfo = "Simple PPM codec";
   }
 
   virtual nglImageCodec* CreateInstance()

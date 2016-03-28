@@ -13,19 +13,19 @@ nuiNavigationButton::nuiNavigationButton(nuiBarButtonSystemItem systemItem)
 : nuiButton()
 {
   nglString text;
-  SetObjectClass(_T("nuiNavigationButton"));
+  SetObjectClass("nuiNavigationButton");
   //LBDEBUG TODO
   
   switch (systemItem)
   {
-    case eBarButtonSystemItemDone: text = _T("Done"); break;
-    case eBarButtonSystemItemCancel: text = _T("Cancel"); break;
-    case eBarButtonSystemItemEdit: text = _T("Edit"); break;
-    case eBarButtonSystemItemSave: text = _T("Save"); break;
-    case eBarButtonSystemItemAdd: text = _T("Add"); break;
-    case eBarButtonSystemItemReply: text = _T("Reply"); break;
-    case eBarButtonSystemItemUndo: text = _T("Undo"); break;
-    case eBarButtonSystemItemRedo: text = _T("Redo"); break;
+    case eBarButtonSystemItemDone: text = "Done"; break;
+    case eBarButtonSystemItemCancel: text = "Cancel"; break;
+    case eBarButtonSystemItemEdit: text = "Edit"; break;
+    case eBarButtonSystemItemSave: text = "Save"; break;
+    case eBarButtonSystemItemAdd: text = "Add"; break;
+    case eBarButtonSystemItemReply: text = "Reply"; break;
+    case eBarButtonSystemItemUndo: text = "Undo"; break;
+    case eBarButtonSystemItemRedo: text = "Redo"; break;
     default:
       break;
   }
@@ -63,13 +63,13 @@ nuiNavigationButton::nuiNavigationButton(nuiBarButtonSystemItem systemItem)
 nuiNavigationButton::nuiNavigationButton()
 : nuiButton()
 {
-  SetObjectClass(_T("nuiNavigationButton"));
+  SetObjectClass("nuiNavigationButton");
 }
 
 nuiNavigationButton::nuiNavigationButton(const nglString& rText)
 : nuiButton()
 {
-  SetObjectClass(_T("nuiNavigationButton"));
+  SetObjectClass("nuiNavigationButton");
   nuiLabel* pLabel = new nuiLabel(rText);
   AddChild(pLabel);
 }
@@ -78,7 +78,7 @@ nuiNavigationButton::nuiNavigationButton(const nglString& rText)
 nuiNavigationButton::nuiNavigationButton(nuiTexture* pIconTexture)
 : nuiButton()
 {
-  SetObjectClass(_T("nuiNavigationButton"));
+  SetObjectClass("nuiNavigationButton");
   AddChild(new nuiImage(pIconTexture));
 }
 

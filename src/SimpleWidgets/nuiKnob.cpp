@@ -19,7 +19,7 @@ nuiKnob::nuiKnob(const nuiRange& rRange)
   : nuiWidget(),
     mKnobSink(this)
 {
-  if (SetObjectClass(_T("nuiKnob")))
+  if (SetObjectClass("nuiKnob"))
     InitAttributes();
   Init(rRange);
 }
@@ -28,7 +28,7 @@ nuiKnob::nuiKnob(const nuiRange& rRange, nuiImageSequence* pImageSequence)
 : nuiWidget(),
 mKnobSink(this)
 {
-  if (SetObjectClass(_T("nuiKnob")))
+  if (SetObjectClass("nuiKnob"))
     InitAttributes();
   Init(rRange);
   SetImageSequence(pImageSequence);
@@ -64,17 +64,17 @@ void nuiKnob::Init(const nuiRange& rRange)
 void nuiKnob::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglPath&>
-  (nglString(_T("Sequence")), nuiUnitNone,
+  (nglString("Sequence"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiKnob::GetSequencePath), 
    nuiMakeDelegate(this, &nuiKnob::SetSequencePath)));
   
   AddAttribute(new nuiAttribute<uint32>
-  (nglString(_T("NbFrames")), nuiUnitNone,
+  (nglString("NbFrames"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiKnob::GetNbFrames),
    nuiMakeDelegate(this, &nuiKnob::SetNbFrames)));
   
   AddAttribute(new nuiAttribute<nuiOrientation>
-  (nglString(_T("Orientation")), nuiUnitNone,
+  (nglString("Orientation"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiKnob::GetOrientation),
    nuiMakeDelegate(this, &nuiKnob::SetOrientation)));
   

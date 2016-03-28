@@ -34,10 +34,10 @@ bool nglContextInfo::Enum (uint Index, nglContextInfo& rInfo)
 
 const nglChar* gpContextErrorTable[] =
 {
-/*  0 */ _T("No error"),
-/*  1 */ _T("No context match your request"),
-/*  2 */ _T("GL rendering context creation failed"),
-/*  3 */ _T("Couldn't bind GL context to the system window"),
+/*  0 */ "No error",
+/*  1 */ "No context match your request",
+/*  2 */ "GL rendering context creation failed",
+/*  3 */ "Couldn't bind GL context to the system window",
          NULL
 };
 
@@ -188,7 +188,7 @@ bool nglContext::Build(WindowRef Win, const nglContextInfo& rInfo, const nglCont
 
     if (!Format)
     {
-      SetError(_T("context"), NGL_CONTEXT_ENOMATCH);
+      SetError("context", NGL_CONTEXT_ENOMATCH);
       return false;
     }
   }
@@ -229,7 +229,7 @@ bool nglContext::Build(WindowRef Win, const nglContextInfo& rInfo, const nglCont
   aglDestroyPixelFormat(Format);
   if (!mCtx)
   {
-    SetError(_T("context"), NGL_CONTEXT_EGLCTX);
+    SetError("context", NGL_CONTEXT_EGLCTX);
     /*
     switch (err)
     {
@@ -253,7 +253,7 @@ bool nglContext::Build(WindowRef Win, const nglContextInfo& rInfo, const nglCont
   /* Attach the context to the window */
   if (!aglSetDrawable(mCtx, GetWindowPort (Win)))
   {
-    SetError(_T("context"), NGL_CONTEXT_EBIND);
+    SetError("context", NGL_CONTEXT_EBIND);
     return false;
   }
 

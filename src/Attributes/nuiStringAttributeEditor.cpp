@@ -13,7 +13,7 @@ nuiStringAttributeEditor::nuiStringAttributeEditor(const nuiAttrib<nglString>& r
     mEventSink(this),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiStringAttributeEditor"));
+	SetObjectClass("nuiStringAttributeEditor");
 	
 	nglString contents;
 	mAttribute.Format(contents);
@@ -42,7 +42,7 @@ nuiStringAttributeEditor::nuiStringAttributeEditor(const nuiAttrib<const nglStri
     mEventSink(this),
     mConstAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiStringAttributeEditor"));
+	SetObjectClass("nuiStringAttributeEditor");
 	
 	nglString contents;
 	mConstAttribute.Format(contents);

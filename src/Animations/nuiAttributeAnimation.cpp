@@ -13,7 +13,7 @@ nuiAttributeAnimationBase::nuiAttributeAnimationBase()
   mCaptureEndOnPlay(false),
   mpTarget(NULL)
 {
-  if (SetObjectClass(_T("nuiAttributeAnimationBase")))
+  if (SetObjectClass("nuiAttributeAnimationBase"))
   {
     // Init atributes
   }
@@ -69,7 +69,7 @@ nuiAttributeAnimation::nuiAttributeAnimation()
 : mStartValue(0),
   mEndValue(0)
 {
-  if (SetObjectClass(_T("nuiAttributeAnimation")))
+  if (SetObjectClass("nuiAttributeAnimation"))
   {
     // Init atributes
   }
@@ -167,7 +167,7 @@ void nuiAttributeAnimation::OnFrame()
 //// nuiColorAttributeAnimation:
 nuiColorAttributeAnimation::nuiColorAttributeAnimation()
 {
-  if (SetObjectClass(_T("nuiColorAttributeAnimation")))
+  if (SetObjectClass("nuiColorAttributeAnimation"))
   {
     // Init atributes
   }
@@ -251,7 +251,7 @@ void nuiColorAttributeAnimation::OnFrame()
   
   nuiColor col(r, g, b, a);
 
-//  NGL_OUT(_T("ColorAnim: pos[%.4f] %s\n"), pos, col.GetValue().GetChars());
+//  NGL_OUT("ColorAnim: pos[%.4f] %s\n", pos, col.GetValue().GetChars());
 
   nuiAttribBase attrib(mpTarget->GetAttribute(mTarget));
   NGL_ASSERT(attrib.IsValid());
@@ -287,7 +287,7 @@ void nuiColorAttributeAnimation::OnFrame()
 //// nuiRectAttributeAnimation:
 nuiRectAttributeAnimation::nuiRectAttributeAnimation()
 {
-  if (SetObjectClass(_T("nuiRectAttributeAnimation")))
+  if (SetObjectClass("nuiRectAttributeAnimation"))
   {
     // Init atributes
   }
@@ -395,7 +395,7 @@ void nuiRectAttributeAnimation::OnFrame()
   if (mAutoRound)
     rect.RoundToNearest();
   
-  //NGL_OUT(_T("rect anim: %s\n"), rect.GetValue().GetChars());
+  //NGL_OUT("rect anim: %s\n", rect.GetValue().GetChars());
   nuiAttribBase attrib(mpTarget->GetAttribute(mTarget));
   
   nuiAttrib<nuiRect> rect_attrib(attrib);
@@ -490,7 +490,7 @@ bool nuiRectAttributeAnimation::GetAutoRound() const
 //// nuiMatrixAttributeAnimation:
 nuiMatrixAttributeAnimation::nuiMatrixAttributeAnimation()
 {
-  if (SetObjectClass(_T("nuiMatrixAttributeAnimation")))
+  if (SetObjectClass("nuiMatrixAttributeAnimation"))
   {
     // Init atributes
   }
@@ -567,7 +567,7 @@ void nuiMatrixAttributeAnimation::OnFrame()
 
   nglString frameValueStr;
   frameValue.GetValue(frameValueStr);
-//  NGL_OUT(_T("MatrixAnim: pos[%.4f] %s\n"), pos, frameValueStr.GetChars());
+//  NGL_OUT("MatrixAnim: pos[%.4f] %s\n", pos, frameValueStr.GetChars());
   
   nuiAttribBase attrib(mpTarget->GetAttribute(mTarget));
   NGL_ASSERT(attrib.IsValid());
@@ -590,7 +590,7 @@ void nuiMatrixAttributeAnimation::OnFrame()
 //// nuiRotateMatrixAttributeAnimation:
 nuiRotateMatrixAttributeAnimation::nuiRotateMatrixAttributeAnimation()
 {
-  if (SetObjectClass(_T("nuiRotateMatrixAttributeAnimation")))
+  if (SetObjectClass("nuiRotateMatrixAttributeAnimation"))
   {
     // Init atributes
   }

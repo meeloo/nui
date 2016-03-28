@@ -23,7 +23,7 @@ nuiFont* nuiFont::GetFont(const nglPath& rPath, nuiSize size, int face, const ng
   nglString id = rID.IsEmpty() ? GetUniqueID(rPath.GetPathName(), size, face) : rID;
   NGL_ASSERT(!id.IsEmpty());
   
-  //NGL_OUT(_T("nuiFont::GetFont1 %s\n"), id.GetChars());
+  //NGL_OUT("nuiFont::GetFont1 %s\n", id.GetChars());
 
   if (mpFonts.find(id) == mpFonts.end())
   {
@@ -64,7 +64,7 @@ nuiFont* nuiFont::GetFont(const nglString& rName, uint8* pBuffer, uint BufferSiz
   nglString id = rID.IsEmpty() ? GetUniqueID(rName, Size, Face) : rID;
   NGL_ASSERT(!id.IsEmpty());
 
-  //NGL_OUT(_T("nuiFont::GetFont2 %s\n"), id.GetChars());
+  //NGL_OUT("nuiFont::GetFont2 %s\n", id.GetChars());
 
   if (mpFonts.find(id) == mpFonts.end())
   {
@@ -94,12 +94,12 @@ nuiFont* nuiFont::GetFont(nuiXMLNode* pNode, const nglString& rID)
   DEBUG_FORCE_DEFAULT_FONT;
 
   nuiFont* pFont= NULL;
-  nglString id = rID.IsEmpty() ? GetUniqueID(nuiGetString(pNode, _T("Source")), nuiGetVal(pNode, _T("Size"), 0.0f), nuiGetVal(pNode, _T("Face"), 0)) : rID;
+  nglString id = rID.IsEmpty() ? GetUniqueID(nuiGetString(pNode, "Source"), nuiGetVal(pNode, "Size", 0.0f), nuiGetVal(pNode, "Face", 0)) : rID;
   NGL_ASSERT(!id.IsEmpty());
 
-  //NGL_OUT(_T("nuiFont::GetFont3 %s\n"), id.GetChars());
+  //NGL_OUT("nuiFont::GetFont3 %s\n", id.GetChars());
 
-  nglPath path(nuiGetString(pNode, _T("Source")));
+  nglPath path(nuiGetString(pNode, "Source"));
   if (mpFonts.find(id) == mpFonts.end())
   {
     if (path.Exists() & path.IsLeaf())
@@ -126,8 +126,8 @@ nuiFont* nuiFont::GetFont(nuiXMLNode* pNode, const nglString& rID)
 
   // there was an error loading the font...
   float s = 10;
-  if (pNode->HasAttribute(_T("Size")))
-    s = pNode->GetAttribute(_T("Size")).GetCFloat();
+  if (pNode->HasAttribute("Size"))
+    s = pNode->GetAttribute("Size").GetCFloat();
 
   return GetFont(s);
 }
@@ -136,7 +136,7 @@ nuiFont* nuiFont::GetFont(const nglString& rId)
 {
   DEBUG_FORCE_DEFAULT_FONT;
 
-  //NGL_OUT(_T("nuiFont::GetFont4 %s\n"), rId.GetChars());
+  //NGL_OUT("nuiFont::GetFont4 %s\n", rId.GetChars());
 
   std::map<nglString,nuiFont*, nglString::LessFunctor>::iterator it = mpFonts.find(rId);
   if (it == mpFonts.end())
@@ -159,10 +159,10 @@ nuiFont* nuiFont::GetFont(nuiSize size, const nglString& rID)
   NGL_ASSERT(size);
   nuiFont* pFont= NULL;
   int face = 0;
-  nglString id = rID.IsEmpty()?GetUniqueID(_T("NGL Default Font"), size, face) : rID;
+  nglString id = rID.IsEmpty()?GetUniqueID("NGL Default Font", size, face) : rID;
   NGL_ASSERT(!id.IsEmpty());
 
-  //NGL_OUT(_T("nuiFont::GetFont4 %s\n"), id.GetChars());
+  //NGL_OUT("nuiFont::GetFont4 %s\n", id.GetChars());
 
   if (mpFonts.find(id) == mpFonts.end())
   { 
@@ -189,17 +189,17 @@ nuiFont::nuiFont(const nglPath& rPath, nuiSize size, int face, const nglString& 
 {
   NGL_ASSERT(size);
   NGL_ASSERT(!rID.IsEmpty());
-  //  NGL_OUT(_T("Creating nuiFont 0x%x."), this);
-  SetObjectClass(_T("nuiFont"));
-  SetProperty(_T("FontID"),rID);
+  //  NGL_OUT("Creating nuiFont 0x%x.", this);
+  SetObjectClass("nuiFont");
+  SetProperty("FontID",rID);
   mPermanent = false;
 
-  SetProperty(_T("Source"),rPath.GetPathName());
+  SetProperty("Source",rPath.GetPathName());
   nglString tmp;
-  tmp.CFormat(_T("%f"),size);
-  SetProperty(_T("Size"),tmp);
-  tmp.CFormat(_T("%d"),face);
-  SetProperty(_T("Face"),tmp);
+  tmp.CFormat("%f",size);
+  SetProperty("Size",tmp);
+  tmp.CFormat("%d",face);
+  SetProperty("Face",tmp);
   mpFonts[rID] = this;
   
   //SetSize(size);
@@ -210,19 +210,19 @@ nuiFont::nuiFont(const nglPath& rPath, nuiSize size, int face, const nglString& 
 nuiFont::nuiFont(const nglString& rName, uint8* pBuffer, uint BufferSize, nuiSize Size, int Face, const nglString& rID)
 : nuiFontBase(pBuffer, BufferSize, Face, false, Size)
 {
-//  NGL_OUT(_T("Creating nuiFont 0x%x."), this);
+//  NGL_OUT("Creating nuiFont 0x%x.", this);
   NGL_ASSERT(Size);
   NGL_ASSERT(!rID.IsEmpty());
-  SetObjectClass(_T("nuiFont"));
-  SetProperty(_T("FontID"),rID);
+  SetObjectClass("nuiFont");
+  SetProperty("FontID",rID);
   mPermanent = false;
 
-  SetProperty(_T("Source"),rName);
+  SetProperty("Source",rName);
   nglString tmp;
-  tmp.CFormat(_T("%f"),Size);
-  SetProperty(_T("Size"),tmp);
-  tmp.CFormat(_T("%d"),Face);
-  SetProperty(_T("Face"),tmp);
+  tmp.CFormat("%f",Size);
+  SetProperty("Size",tmp);
+  tmp.CFormat("%d",Face);
+  SetProperty("Face",tmp);
   mpFonts[rID] = this;
   //SetSize(Size);
 
@@ -230,20 +230,20 @@ nuiFont::nuiFont(const nglString& rName, uint8* pBuffer, uint BufferSize, nuiSiz
 }
 
 nuiFont::nuiFont (nuiXMLNode* pNode, const nglString& rID)
-: nuiFontBase(nglPath(nuiGetString(pNode, _T("Source"))), 0)
+: nuiFontBase(nglPath(nuiGetString(pNode, "Source")), 0)
 {
   NGL_ASSERT(!rID.IsEmpty());
-//  NGL_OUT(_T("Creating nuiFont 0x%x."), this);
-  nuiSize size = nuiGetVal(pNode, _T("Size"), 0.0f);
+//  NGL_OUT("Creating nuiFont 0x%x.", this);
+  nuiSize size = nuiGetVal(pNode, "Size", 0.0f);
 
-  SetObjectClass(_T("nuiFont"));
-  SetProperty(_T("FontID"),rID);
+  SetObjectClass("nuiFont");
+  SetProperty("FontID",rID);
   mPermanent = false;
-  SetPermanent(nuiGetBool(pNode, _T("Permanent"), false));
+  SetPermanent(nuiGetBool(pNode, "Permanent", false));
 
-  SetProperty(_T("Source"), nuiGetString(pNode, _T("Source")));
-  SetProperty(_T("Size"), nuiGetString(pNode, _T("Size"), _T("0")));
-  SetProperty(_T("Face"), nuiGetString(pNode, _T("Face"), _T("0")));
+  SetProperty("Source", nuiGetString(pNode, "Source"));
+  SetProperty("Size", nuiGetString(pNode, "Size", "0"));
+  SetProperty("Face", nuiGetString(pNode, "Face", "0"));
   mpFonts[rID] = this;
   SetSize(size);
   FontListChanged();
@@ -254,17 +254,17 @@ nuiFont::nuiFont (nuiSize size, int face, const nglString& rID)
 {
   NGL_ASSERT(size);
   NGL_ASSERT(!rID.IsEmpty());
-  //  NGL_OUT(_T("Creating nuiFont 0x%x."), this);
-  SetObjectClass(_T("nuiFont"));
-  SetProperty(_T("FontID"),rID);
+  //  NGL_OUT("Creating nuiFont 0x%x.", this);
+  SetObjectClass("nuiFont");
+  SetProperty("FontID",rID);
   mPermanent = false;
 
-  SetProperty(_T("Source"), _T("NGL Default Font"));
+  SetProperty("Source", "NGL Default Font");
   nglString tmp;
-  tmp.CFormat(_T("%f"),size);
-  SetProperty(_T("Size"),tmp);
-  tmp.CFormat(_T("%d"),face);
-  SetProperty(_T("Face"),tmp);
+  tmp.CFormat("%f",size);
+  SetProperty("Size",tmp);
+  tmp.CFormat("%d",face);
+  SetProperty("Face",tmp);
   mpFonts[rID] = this;
 
   //SetSize(size);
@@ -276,7 +276,7 @@ nuiFont::nuiFont (nuiSize size, int face, const nglString& rID)
 
 nuiFont::~nuiFont()
 {
-  mpFonts.erase(GetProperty(_T("FontID")));
+  mpFonts.erase(GetProperty("FontID"));
   FontListChanged();
 }
 
@@ -289,8 +289,8 @@ bool nuiFont::Apply(nuiDrawContext* pContext)
 nglString nuiFont::GetUniqueID(const nglString& rFace, nuiSize size, int face)
 {
   nglString id = rFace;
-  id.Add(_T(" ")).Add(face).Add(" ").Add(size);
-  //id.CFormat(_T("%f %d %s"),size, face, rFace.GetChars());
+  id.Add(" ").Add(face).Add(" ").Add(size);
+  //id.CFormat("%f %d %s",size, face, rFace.GetChars());
   NGL_ASSERT(!id.IsEmpty());
   return id;
 }

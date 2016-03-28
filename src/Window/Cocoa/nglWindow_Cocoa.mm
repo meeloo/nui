@@ -25,10 +25,10 @@
 
 const nglChar* gpWindowErrorTable[] =
 {
-  /*  0 */ _T("No error"),
-  /*  1 */ _T("System window creation failed"),
-  /*  2 */ _T("Full screen video mode unavailable"),
-  /*  3 */ _T("Properties out of range"),
+  /*  0 */ "No error",
+  /*  1 */ "System window creation failed",
+  /*  2 */ "Full screen video mode unavailable",
+  /*  3 */ "Properties out of range",
   NULL
 };
 
@@ -667,7 +667,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
     const nglString& rMime = it->first;
     const nglDataObject* pObject = it->second;
     
-    if (rMime == _T("ngl/Files"))
+    if (rMime == "ngl/Files")
     {
       const nglDataFilesObject* pFiles = dynamic_cast<const nglDataFilesObject*>(pObject);
       const std::list<nglString>& rFiles = pFiles->GetFiles();
@@ -760,7 +760,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   //    const nglString& rMime = it->first;
   //    const nglDataObject* pObject = it->second;
   //
-  //    if (rMime == _T("ngl/Files"))
+  //    if (rMime == "ngl/Files")
   //    {
   //      const nglDataFilesObject* pFiles = dynamic_cast<const nglDataFilesObject*>(pObject);
   //      const std::list<nglString>& rFiles = pFiles->GetFiles();
@@ -773,11 +773,11 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   //
   //      NSDraggingItem* pItem = [NSDraggingItem create];
   //    }
-  //    else if (_T("ngl/PromiseFiles"))
+  //    else if ("ngl/PromiseFiles")
   //    {
   //
   //    }
-  //    else if (_T("ngl/Text"))
+  //    else if ("ngl/Text")
   //    {
   //
   //    }
@@ -1095,11 +1095,11 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 {
   mIsReady = false;
   //[self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
-  App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypeText, nglDataTextObject::Create);
-  App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypePlainText, nglDataTextObject::Create);
-  App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), kUTTypeUTF8PlainText, nglDataTextObject::Create);
-  App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Files"), "public.file-url", nglDataFilesObject::Create);
-  //App->GetDataTypesRegistry().RegisterDataType(_T("ngl/PromiseFiles"), kDragFlavorTypePromiseHFS, nglDataFilesObject::Create);
+  App->GetDataTypesRegistry().RegisterDataType("ngl/Text", kUTTypeText, nglDataTextObject::Create);
+  App->GetDataTypesRegistry().RegisterDataType("ngl/Text", kUTTypePlainText, nglDataTextObject::Create);
+  App->GetDataTypesRegistry().RegisterDataType("ngl/Text", kUTTypeUTF8PlainText, nglDataTextObject::Create);
+  App->GetDataTypesRegistry().RegisterDataType("ngl/Files", "public.file-url", nglDataFilesObject::Create);
+  //App->GetDataTypesRegistry().RegisterDataType("ngl/PromiseFiles", kDragFlavorTypePromiseHFS, nglDataFilesObject::Create);
 
   mState = eHide;
   mAngle = 0;
@@ -1183,7 +1183,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   
   if (rContext.TargetAPI != eTargetAPI_OpenGL && rContext.TargetAPI != eTargetAPI_OpenGL2)
   {
-    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("bad renderer"));
+    NGL_LOG("window", NGL_LOG_INFO, "bad renderer");
     NGL_ASSERT(0);
     return;
   }
@@ -1259,7 +1259,7 @@ uint nglWindow::GetHeight () const
 
 bool nglWindow::SetSize (uint Width, uint Height)
 {
-  NGL_OUT(_T("nglWindow::SetSize(%d, %d)\n"), Width, Height);
+  NGL_OUT("nglWindow::SetSize(%d, %d)\n", Width, Height);
   mWidth  = Width;
   mHeight = Height;
   CallOnResize(Width, Height);
@@ -1392,7 +1392,7 @@ void nglWindow::AcquireTimer()
 
   if (!mpCFRunLoopTimer)
   {
-    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("Couldn't start runloop timer"));
+    NGL_LOG("window", NGL_LOG_INFO, "Couldn't start runloop timer");
     NGL_ASSERT(0);
   }
 
@@ -1451,12 +1451,12 @@ void nglWindow::AcquireDisplayLink()
   
   if (kCVReturnSuccess != CVDisplayLinkCreateWithActiveCGDisplays(&mDisplayLink))
   {
-    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkCreateWithActiveCGDisplays returned an error"));
+    NGL_LOG("window", NGL_LOG_INFO, "CVDisplayLinkCreateWithActiveCGDisplays returned an error");
     NGL_ASSERT(0);
   }
   if (kCVReturnSuccess != CVDisplayLinkSetOutputCallback(mDisplayLink, &CVDisplayLinkCallback, this))
   {
-    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkSetOutputCallback returned an error"));
+    NGL_LOG("window", NGL_LOG_INFO, "CVDisplayLinkSetOutputCallback returned an error");
     NGL_ASSERT(0);
   }
 
@@ -1467,13 +1467,13 @@ void nglWindow::AcquireDisplayLink()
 
   if (kCVReturnSuccess != CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat))
   {
-    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext returned an error"));
+    NGL_LOG("window", NGL_LOG_INFO, "CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext returned an error");
     NGL_ASSERT(0);
   }
 
   if (kCVReturnSuccess != CVDisplayLinkStart(mDisplayLink))
   {
-    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("CVDisplayLinkStart returned an error"));
+    NGL_LOG("window", NGL_LOG_INFO, "CVDisplayLinkStart returned an error");
     NGL_ASSERT(0);
   }
 //  NGL_OUT("Installed display link for window %p\n", this);
@@ -1501,7 +1501,7 @@ void nglWindow::BeginSession()
   NGL_ASSERT(mCurrentThread == 0 || mCurrentThread == threadid);
   mCurrentThread = threadid;
 #ifdef _DEBUG_WINDOW_
-  NGL_LOG(_T("window"), NGL_LOG_INFO, _T("BeginSession\n"));
+  NGL_LOG("window", NGL_LOG_INFO, "BeginSession\n");
 #endif
   NGL_ASSERT(mpNSGLContext);
   [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
@@ -1515,7 +1515,7 @@ void nglWindow::EndSession()
   mCurrentThread = 0;
   
 #ifdef _DEBUG_WINDOW_
-  NGL_LOG(_T("window"), NGL_LOG_INFO, _T("EndSession\n"));
+  NGL_LOG("window", NGL_LOG_INFO, "EndSession\n");
 #endif
 
   NGL_ASSERT(mpNSGLContext);
@@ -1627,13 +1627,13 @@ bool nglWindow::GetResolution(float& rHorizontal, float& rVertical) const
 void nglWindow::EnterModalState()
 {
   SetState(eShow);
-  NGL_OUT(_T("nglWindow::EnterModalState NOT IMPLEMENTED YET!"));
+  NGL_OUT("nglWindow::EnterModalState NOT IMPLEMENTED YET!");
 //  NGL_ASSERT(!"Not Implemented");
 }
 
 void nglWindow::ExitModalState()
 {
-  NGL_OUT(_T("nglWindow::ExitModalState NOT IMPLEMENTED YET!"));
+  NGL_OUT("nglWindow::ExitModalState NOT IMPLEMENTED YET!");
 //  NGL_ASSERT(!"Not Implemented");  
 }
 

@@ -15,14 +15,14 @@ VolumeController::VolumeController(nuiAttrib<float>& rGainAttrib, nuiAttrib<bool
   mMuteAttrib(rMuteAttrib),
   mEventSink(this)
 {
-  SetObjectClass(_T("VolumeController"));
+  SetObjectClass("VolumeController");
   
   nuiHBox* pHBox = new nuiHBox();
   AddChild(pHBox);
   
   {
-    mpBtn = new nuiToggleButton(_T("mute"));
-    mpBtn->SetObjectClass(_T("MuteButton"));
+    mpBtn = new nuiToggleButton("mute");
+    mpBtn->SetObjectClass("MuteButton");
     mEventSink.Connect(mpBtn->Clicked, &VolumeController::OnBtnClicked);
     pHBox->AddCell(mpBtn);
   }
@@ -30,7 +30,7 @@ VolumeController::VolumeController(nuiAttrib<float>& rGainAttrib, nuiAttrib<bool
   {
     nuiRange range(mGainAttrib.Get(), -50, 6, 0.5, 2.0, 0.0);
     mpSlider = new nuiSlider(nuiHorizontal, range);
-    mpSlider->SetObjectClass(_T("GainSlider"));
+    mpSlider->SetObjectClass("GainSlider");
     mEventSink.Connect(mpSlider->GetRange().Changed, &VolumeController::OnSliderChanged);
     pHBox->AddCell(mpSlider);
   }

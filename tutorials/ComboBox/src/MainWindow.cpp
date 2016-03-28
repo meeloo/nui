@@ -24,9 +24,9 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 #endif
   
 #ifdef _WIN32_
-  LoadCSS(_T("rsrc:/css/MXEditor-Win32.css"));
+  LoadCSS("rsrc:/css/MXEditor-Win32.css");
 #else
-  LoadCSS(_T("rsrc:/css/main.css"));
+  LoadCSS("rsrc:/css/main.css");
 #endif  
 }
 
@@ -38,12 +38,12 @@ void MainWindow::OnCreation()
 {
   // build combo choices tree
   nuiTreeNodePtr pNode = NULL;
-  nuiTreeNodePtr pTree = new nuiTreeNode(_T("Root"), true);
+  nuiTreeNodePtr pTree = new nuiTreeNode("Root", true);
   for (uint i = 0; i < 10; i++)
   {
     nglString str;
-    str.Format(_T("Choice #%d"), i);
-    pNode = new nuiTreeNode(new nuiLabel(str,_T("Tutorial::Label")), false);
+    str.Format("Choice #%d", i);
+    pNode = new nuiTreeNode(new nuiLabel(str,"Tutorial::Label"), false);
     pTree->AddChild(pNode);
   }
   
@@ -51,8 +51,8 @@ void MainWindow::OnCreation()
   for (uint i = 0; i < 10; i++)
   {
     nglString str;
-    str.Format(_T("Choice %c"), (char)(_T('A') + i));
-    nuiTreeNode* pNode2 = new nuiTreeNode(new nuiLabel(str,_T("Tutorial::Label")), false);
+    str.Format("Choice %c", (char)(_T('A') + i));
+    nuiTreeNode* pNode2 = new nuiTreeNode(new nuiLabel(str,"Tutorial::Label"), false);
     pNode->AddChild(pNode2);
   }
   
@@ -72,8 +72,8 @@ void MainWindow::OnCreation()
   pPane->SetUserWidth(280);
   pPane->SetUserHeight(40);
   AddChild(pPane);
-  mpLabel = new nuiLabel(_T(" "));
-  mpLabel->SetObjectName(_T("Tutorial::Label"));
+  mpLabel = new nuiLabel(" ");
+  mpLabel->SetObjectName("Tutorial::Label");
   pPane->AddChild(mpLabel);
 
 }
@@ -87,7 +87,7 @@ void MainWindow::OnComboChanged(const nuiEvent& rEvent)
   uint32 index = pCombo->GetValue();
   
   nglString msg;
-  msg.Format(_T("the user choice is:\n '%ls' (index %d)"), pLabel->GetText().GetChars(), index);
+  msg.Format("the user choice is:\n '%ls' (index %d)", pLabel->GetText().GetChars(), index);
   mpLabel->SetText(msg);
   
   rEvent.Cancel();
@@ -109,7 +109,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%ls'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
   
@@ -123,7 +123,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     return true;
   }
   
-  NGL_OUT(_T("%ls\n"), pCSS->GetErrorString().GetChars());
+  NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
   
   delete pCSS;
   return false;

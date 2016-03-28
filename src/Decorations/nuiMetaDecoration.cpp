@@ -12,7 +12,7 @@
 nuiMetaDecoration::nuiMetaDecoration(const nglString& rName)
 : nuiDecoration(rName)
 {
-  if (SetObjectClass(_T("nuiMetaDecoration")))
+  if (SetObjectClass("nuiMetaDecoration"))
     InitAttributes();
 
 }
@@ -28,7 +28,7 @@ nuiMetaDecoration::~nuiMetaDecoration()
 void nuiMetaDecoration::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("Decoration")), nuiUnitNone,
+   (nglString("Decoration"), nuiUnitNone,
     nuiAttribute<const nglString&>::GetterDelegate(this, &nuiMetaDecoration::GetDecoration),
     nuiAttribute<const nglString&>::SetterDelegate(this, &nuiMetaDecoration::AddDecoration)));
   

@@ -9,7 +9,7 @@
 
 nuiPopupView::nuiPopupView(nuiWidget* pWidget, nuiSize X, nuiSize Y)
 {
-  SetObjectClass(_T("nuiPopupView"));
+  SetObjectClass("nuiPopupView");
 
   mpPopupDecoration = NULL;
   

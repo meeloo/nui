@@ -25,7 +25,7 @@ nglLog::nglLog (bool UseConsole)
   mDefaultLevel = NGL_LOG_DEFAULT;
   mStampFlags = DomainStamp;
   mUseConsole = UseConsole;
-  mDomainFormat = _T("%s: ");
+  mDomainFormat = "%s: ";
   mDomainFormatLen = 0;
 }
 
@@ -127,7 +127,7 @@ void nglLog::SetLevel (const nglChar* pDomain, int Level)
   if (!pDomain)
     return;
 
-  if (strcmp(pDomain, _T("all")) == 0)
+  if (strcmp(pDomain, "all") == 0)
   {
     // NGL_OUT("nglLog::SetLevel setting ALL LEVELS");
     mLock.LockRead();
@@ -215,12 +215,12 @@ void nglLog::Logv (const nglChar* pDomain, int Level, const nglChar* pText, va_l
     mPrefix.Wipe();
     if (mStampFlags & DateStamp)
     {
-      mBody.Format(_T("%.2d/%.2d/%.2d "), stamp.Year - 100, stamp.Month, stamp.Day);
+      mBody.Format("%.2d/%.2d/%.2d ", stamp.Year - 100, stamp.Month, stamp.Day);
       mPrefix += mBody;
     }
     if (mStampFlags & TimeStamp)
     {
-      mBody.Format(_T("%.2d:%.2d:%.2d "), stamp.Hours, stamp.Minutes, stamp.Seconds);
+      mBody.Format("%.2d:%.2d:%.2d ", stamp.Hours, stamp.Minutes, stamp.Seconds);
       mPrefix += mBody;
     }
     if (mStampFlags & DomainStamp)
@@ -235,7 +235,7 @@ void nglLog::Logv (const nglChar* pDomain, int Level, const nglChar* pText, va_l
         if (dom_len > mDomainFormatLen)
         {
           mDomainFormatLen = dom_len;
-          mDomainFormat.Format(_T("%%-%ds: "), mDomainFormatLen);
+          mDomainFormat.Format("%%-%ds: ", mDomainFormatLen);
         }
       }
 
@@ -283,13 +283,13 @@ void nglLog::Dump (int Level) const
   DomainList::const_iterator dom = mDomainList.begin();
   DomainList::const_iterator end = mDomainList.end();
 
-  nglString text = _T("# Log domains usage statistics :\n");
+  nglString text = "# Log domains usage statistics :\n";
   nglString format;
   Output(text);
 
   for (; dom != end; dom++)
   {
-    format.Format(_T("#   %s %%d\n"), mDomainFormat.GetChars());
+    format.Format("#   %s %%d\n", mDomainFormat.GetChars());
     text.Format(format.GetChars(), (*dom).Name.GetChars(), (*dom).Count);
     Output(text);
   }

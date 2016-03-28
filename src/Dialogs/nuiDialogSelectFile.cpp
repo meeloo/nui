@@ -32,8 +32,8 @@ void nuiDialogSelectFile::Init(nuiMainWindow* pParent, const nglString& rTitle, 
   pEditContainer->SetBorder(16,16,10,0);
   
   mpEditLine = new nuiEditLine();
-  mpEditLine->SetObjectName(_T("nuiDialog::EditLine"));
-  mpEditLine->SetObjectClass(_T("nuiDialog::EditLine"));
+  mpEditLine->SetObjectName("nuiDialog::EditLine");
+  mpEditLine->SetObjectClass("nuiDialog::EditLine");
   mpEditLine->SetNormalTextFg(nuiColor(64,64,64));
 //  mpEditLine->SetSelectedTextFg(nuiColor(64,64,64));
   pEditContainer->AddChild(mpEditLine);
@@ -65,8 +65,8 @@ void nuiDialogSelectFile::Init(nuiMainWindow* pParent, const nglString& rTitle, 
 
   
   nuiLabel* pTitle = new nuiLabel(rTitle);
-//  pTitle->SetObjectName(_T("nuiDialogSelectFile::Title"));
-//  pTitle->SetObjectClass(_T("nuiDialogSelectFile::Title"));
+//  pTitle->SetObjectName("nuiDialogSelectFile::Title");
+//  pTitle->SetObjectClass("nuiDialogSelectFile::Title");
   
   nuiWidget* pLayoutPane = new nuiWidget();
   pLayoutPane->SetObjectClass("nuiDialog::Pane");
@@ -79,8 +79,8 @@ void nuiDialogSelectFile::Init(nuiMainWindow* pParent, const nglString& rTitle, 
     
 
   
-  nuiButton* pButton = new nuiButton(_T("New Folder"));
-  pButton->SetObjectName(_T("nuiDialog::Button"));
+  nuiButton* pButton = new nuiButton("New Folder");
+  pButton->SetObjectName("nuiDialog::Button");
   AddButton(pButton, nuiDialog::eDialogButtonCustom);
   mEventSink.Connect(pButton->Activated, &nuiDialogSelectFile::OnCreateNewFolder);
   
@@ -134,7 +134,7 @@ void nuiDialogSelectFile::OnCreateNewFolder(const nuiEvent& rEvent)
   mpCreateEditLine->SetPosition(nuiFillHorizontal);
   pContainer->AddChild(mpCreateEditLine);
   
-  mpCreateDialog->InitDialog(_T("CREATE A NEW FOLDER"), NULL, nuiDialog::eDialogButtonOk + nuiDialog::eDialogButtonCancel);
+  mpCreateDialog->InitDialog("CREATE A NEW FOLDER", NULL, nuiDialog::eDialogButtonOk + nuiDialog::eDialogButtonCancel);
   
   mpCreateDialog->SetContents(pContainer);
   mpCreateDialog->SetDefaultPos();
@@ -142,7 +142,7 @@ void nuiDialogSelectFile::OnCreateNewFolder(const nuiEvent& rEvent)
   
   mpCreateEditLine->Focus();
   
-  NGL_OUT(_T("new folder \n"));
+  NGL_OUT("new folder \n");
   
   rEvent.Cancel();
 }

@@ -69,7 +69,7 @@ bool nuiColor::SetValue(const nglString& rString)
     }
   }
 
-  NGL_LOG(_T("nuiWidgetCreator"), NGL_LOG_WARNING, _T("nuiColor warning : could not find any color definition from '%s'\n"), rString.GetChars());
+  NGL_LOG("nuiWidgetCreator", NGL_LOG_WARNING, "nuiColor warning : could not find any color definition from '%s'\n", rString.GetChars());
 
   return false;
 }

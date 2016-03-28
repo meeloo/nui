@@ -20,7 +20,7 @@
  */
 
 MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo )
-  : nuiMainWindow(rContextInfo, rInfo, NULL, nglPath((_T("../data")))),
+  : nuiMainWindow(rContextInfo, rInfo, NULL, nglPath(("../data"))),
 	mWinSink(this)
 {
 
@@ -29,7 +29,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 
 	InitAttributes();	
   
-  LoadCSS(_T("rsrc:/css/yapuka.css"));
+  LoadCSS("rsrc:/css/yapuka.css");
 }
 
 
@@ -37,7 +37,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 void MainWindow::InitAttributes()
 {
   mpAttributeMouseCoord = new nuiAttribute<nuiPoint>
-  (nglString(_T("Mouse Coordinates")), nuiUnitPixels,
+  (nglString("Mouse Coordinates"), nuiUnitPixels,
    nuiAttribute<nuiPoint>::GetterDelegate(this, &MainWindow::GetMouseCoord), 
    nuiAttribute<nuiPoint>::SetterDelegate(this, &MainWindow::SetMouseCoord));
   mAttributeMouseCoord = nuiAttribBase(this, mpAttributeMouseCoord);
@@ -59,7 +59,7 @@ void MainWindow::OnClose()
 void MainWindow::OnCreation()
 {
   nuiWidget* pMainCont = new nuiWidget();
-  pMainCont->SetObjectName(_T("MainContainer"));
+  pMainCont->SetObjectName("MainContainer");
   AddChild(pMainCont);
 
   nuiTabView* pTabView = new nuiTabView(nuiTop);
@@ -68,14 +68,14 @@ void MainWindow::OnCreation()
   pTabView->SetChangeOnDrag(true);
   
   nuiLabel* pLabel = new nuiLabel(nuiTR("Project Generator"));
-  pLabel->SetObjectName(_T("TabView::Title"));
+  pLabel->SetObjectName("TabView::Title");
   ProjectGenerator* pGenerator = new ProjectGenerator();
   pTabView->AddTab(pLabel, pGenerator);
   
   if (GetApp()->IsFullVersion())
   {
     pLabel = new nuiLabel(nuiTR("Element Editor"));
-    pLabel->SetObjectName(_T("TabView::Title"));
+    pLabel->SetObjectName("TabView::Title");
     pTabView->AddTab(pLabel, new ElementEditorGui());
   }
 
@@ -83,10 +83,10 @@ void MainWindow::OnCreation()
   
   // nui version number
   nglString version;
-  version.Format(_T("nui %d.%d r%d %ls"), NUI_VERSION_MAJOR, NUI_VERSION_MINOR, NUI_VERSION_RELEASE, NUI_VERSION_BETA.GetChars());
+  version.Format("nui %d.%d r%d %ls", NUI_VERSION_MAJOR, NUI_VERSION_MINOR, NUI_VERSION_RELEASE, NUI_VERSION_BETA.GetChars());
   pLabel = new nuiLabel(version);
   pLabel->SetPosition(nuiTopRight);
-  pLabel->SetObjectName(_T("VersionNumber"));
+  pLabel->SetObjectName("VersionNumber");
   pMainCont->AddChild(pLabel);
 }
 
@@ -97,7 +97,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%ls'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
   
@@ -110,7 +110,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     return true;
   }
   
-  NGL_OUT(_T("%ls\n"), pCSS->GetErrorString().GetChars());
+  NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
   
   delete pCSS;
   return false;

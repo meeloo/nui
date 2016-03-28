@@ -10,7 +10,7 @@
 nuiTreeBase::nuiTreeBase()
 : mTreeNodeEventSink(this)
 {
-  SetObjectClass(_T("nuiTreeBase"));
+  SetObjectClass("nuiTreeBase");
   mpParent = NULL;
   mpAutoSort = NULL;
 }

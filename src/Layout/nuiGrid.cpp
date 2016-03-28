@@ -15,7 +15,7 @@
 nuiGrid::nuiGrid(uint32 nbcolumns, uint32 nbrows)
 : nuiWidget()
 {
-  if (SetObjectClass(_T("nuiGrid")))
+  if (SetObjectClass("nuiGrid"))
     InitAttributes();
 
   mEqualizeColumns = false;
@@ -32,41 +32,41 @@ void nuiGrid::InitAttributes()
 {
   // VerticalSpacing in "common sens" corresponds to DefaultHSpacing in "nuiGrid sens". It's better for css understanding
   AddAttribute(new nuiAttribute<nuiSize>
-   (nglString(_T("VerticalSpacing")), nuiUnitSize,
+   (nglString("VerticalSpacing"), nuiUnitSize,
     nuiMakeDelegate(this, &nuiGrid::GetDefaultHSpacing),
     nuiMakeDelegate(this, &nuiGrid::SetDefaultHSpacing)));                
                 
   // HorizontalSpacing in "common sens" corresponds to DefaultVSpacing in "nuiGrid sens". It's better for css understanding
   AddAttribute(new nuiAttribute<nuiSize>
-   (nglString(_T("HorizontalSpacing")), nuiUnitSize,
+   (nglString("HorizontalSpacing"), nuiUnitSize,
     nuiMakeDelegate(this, &nuiGrid::GetDefaultVSpacing),
     nuiMakeDelegate(this, &nuiGrid::SetDefaultVSpacing)));                
 
   // Spacing is a shorcut for both HorizontalSpacing and VerticalSpacing
   AddAttribute(new nuiAttribute<nuiSize>
-   (nglString(_T("Spacing")), nuiUnitSize,
+   (nglString("Spacing"), nuiUnitSize,
     nuiMakeDelegate(this, &nuiGrid::GetDefaultSpacing),
     nuiMakeDelegate(this, &nuiGrid::SetDefaultSpacing)));                
 
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("ColumnSpacing")), nuiUnitSize,
+               (nglString("ColumnSpacing"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiGrid::GetColumnSpacing),
                 nuiMakeDelegate(this, &nuiGrid::SetColumnSpacing),
                 nuiMakeDelegate(this, &nuiGrid::GetColumnDimensionRange)));                
   
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("RowSpacing")), nuiUnitSize,
+               (nglString("RowSpacing"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiGrid::GetRowSpacing),
                 nuiMakeDelegate(this, &nuiGrid::SetRowSpacing),
                 nuiMakeDelegate(this, &nuiGrid::GetRowDimensionRange)));                
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("EqualizeRows")), nuiUnitSize,
+               (nglString("EqualizeRows"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiGrid::GetEqualizeRows),
                 nuiMakeDelegate(this, &nuiGrid::SetEqualizeRows)));                
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("EqualizeColumns")), nuiUnitSize,
+               (nglString("EqualizeColumns"), nuiUnitSize,
                 nuiMakeDelegate(this, &nuiGrid::GetEqualizeColumns),
                 nuiMakeDelegate(this, &nuiGrid::SetEqualizeColumns)));                
 }
@@ -469,8 +469,8 @@ bool nuiGrid::SetRect(const nuiRect& rRect)
     sizeX = mWidths[col];
     
     // if (GetDebug())
-    //     printf("  nuiGrid::SetRect [0x%x '%s'] - column %d size: %f\n", this, GetProperty(_T("Name")).GetChars(), col, sizeX);
-    //NGL_OUT(_T("  nuiGrid::SetRect [0x%x '%s'] - row %d column %d size: %f\n"), this, GetProperty(_T("Name")).GetChars(), row, col, sizeX);
+    //     printf("  nuiGrid::SetRect [0x%x '%s'] - column %d size: %f\n", this, GetProperty("Name").GetChars(), col, sizeX);
+    //NGL_OUT("  nuiGrid::SetRect [0x%x '%s'] - row %d column %d size: %f\n", this, GetProperty("Name").GetChars(), row, col, sizeX);
     
     std::vector<nuiWidget*>::const_iterator row_end = (*col_it).end();
     for (row_it = (*col_it).begin(); row_it != row_end; ++row_it)
@@ -1204,7 +1204,7 @@ bool nuiGrid::Draw(nuiDrawContext *pContext)
 {
   if (GetDebug())
   {
-    NGL_OUT(_T("nuiGrid::Draw 0x%p\n"), this);
+    NGL_OUT("nuiGrid::Draw 0x%p\n", this);
   }
 
   if (mDisplayWidgetBoundingRect)

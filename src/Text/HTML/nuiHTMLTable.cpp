@@ -51,9 +51,9 @@ nuiHTMLTable::nuiHTMLTable(nuiHTMLNode* pNode, nuiHTMLNode* pAnchor, bool Inline
         mColumns[cols].mRequestedSizeUnit = ePixels;
         mColumns[cols].mRequestedSize = v.GetCFloat();
         
-        if (v.Contains(_T("%")))
+        if (v.Contains("%"))
           mColumns[cols].mRequestedSizeUnit = ePercentage;
-        else if (v.Contains(_T("*")))
+        else if (v.Contains("*"))
           mColumns[cols].mRequestedSizeUnit = eProportional;
       }
 
@@ -522,11 +522,11 @@ void nuiHTMLTable::Cell::SetContents(nuiHTMLNode* pNode, nuiHTMLItem* pItem)
     const nglString &v(pAttrib->GetValue());
     mRequestedWidth = v.GetCFloat();
     
-    if (v.Contains(_T("%")))
+    if (v.Contains("%"))
       mRequestedWidthUnit = ePercentage;
-    else if (v.Contains(_T("*")))
+    else if (v.Contains("*"))
       mRequestedWidthUnit = eProportional;
-    else if (v.Contains(_T("px"), false))
+    else if (v.Contains("px", false))
       mRequestedWidthUnit = ePixels;
   }
   
@@ -536,11 +536,11 @@ void nuiHTMLTable::Cell::SetContents(nuiHTMLNode* pNode, nuiHTMLItem* pItem)
     const nglString &v(pAttrib->GetValue());
     mRequestedHeight = v.GetCFloat();
     
-    if (v.Contains(_T("%")))
+    if (v.Contains("%"))
       mRequestedHeightUnit = ePercentage;
-    else if (v.Contains(_T("*")))
+    else if (v.Contains("*"))
       mRequestedHeightUnit = eProportional;
-    else if (v.Contains(_T("px"), false))
+    else if (v.Contains("px", false))
       mRequestedHeightUnit = ePercentage;
   }
   
@@ -549,23 +549,23 @@ void nuiHTMLTable::Cell::SetContents(nuiHTMLNode* pNode, nuiHTMLItem* pItem)
   {
     nglString v(pAttrib->GetValue());
     v.Trim();
-    if (v.Compare(_T("void"), false) == 0)
+    if (v.Compare("void", false) == 0)
       mFrame = eVoid;
-    else if (v.Compare(_T("above"), false) == 0)
+    else if (v.Compare("above", false) == 0)
       mFrame = eAbove;
-    else if (v.Compare(_T("below"), false) == 0)
+    else if (v.Compare("below", false) == 0)
       mFrame = eBelow;
-    else if (v.Compare(_T("hsides"), false) == 0)
+    else if (v.Compare("hsides", false) == 0)
       mFrame = eHSides;
-    else if (v.Compare(_T("vsides"), false) == 0)
+    else if (v.Compare("vsides", false) == 0)
       mFrame = eVSides;
-    else if (v.Compare(_T("lhs"), false) == 0)
+    else if (v.Compare("lhs", false) == 0)
       mFrame = eLHS;
-    else if (v.Compare(_T("rhs"), false) == 0)
+    else if (v.Compare("rhs", false) == 0)
       mFrame = eRHS;
-    else if (v.Compare(_T("box"), false) == 0)
+    else if (v.Compare("box", false) == 0)
       mFrame = eBox;
-    else if (v.Compare(_T("border"), false) == 0)
+    else if (v.Compare("border", false) == 0)
       mFrame = eBorder;
   }
 
@@ -575,15 +575,15 @@ void nuiHTMLTable::Cell::SetContents(nuiHTMLNode* pNode, nuiHTMLItem* pItem)
   {
     nglString v(pAttrib->GetValue());
     v.Trim();
-    if (v.Compare(_T("none"), false) == 0)
+    if (v.Compare("none", false) == 0)
       mRules = eNone;
-    else if (v.Compare(_T("groups"), false) == 0)
+    else if (v.Compare("groups", false) == 0)
       mRules = eGroups;
-    else if (v.Compare(_T("rows"), false) == 0)
+    else if (v.Compare("rows", false) == 0)
       mRules = eRows;
-    else if (v.Compare(_T("cols"), false) == 0)
+    else if (v.Compare("cols", false) == 0)
       mRules = eCols;
-    else if (v.Compare(_T("all"), false) == 0)
+    else if (v.Compare("all", false) == 0)
       mRules = eAll;
   }
   */

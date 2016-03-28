@@ -97,13 +97,13 @@ nglPath nuiGetNativeResourcePath()
   if (!p.Exists() || p.IsLeaf())
   {
     p = nglPath(ePathApp);
-    NGL_OUT(_T("application path: %s\n"), p.GetChars());
+    NGL_OUT("application path: %s\n", p.GetChars());
     p = p.GetParent();
-    NGL_OUT(_T("application folder: %s\n"), p.GetChars());
-    p = p + nglPath(_T("resources"));
-    NGL_OUT(_T("Couldn't find global resource path, looking for it next to the application: %s\n"), p.GetChars());
+    NGL_OUT("application folder: %s\n", p.GetChars());
+    p = p + nglPath("resources");
+    NGL_OUT("Couldn't find global resource path, looking for it next to the application: %s\n", p.GetChars());
   }
-  NGL_OUT(_T("NUI_RESOURCE_PATH: %s\n"), p.GetChars());
+  NGL_OUT("NUI_RESOURCE_PATH: %s\n", p.GetChars());
   return p;
 }
 #endif //_LINUX_
@@ -125,7 +125,7 @@ nuiNativeResource::nuiNativeResource(const nglPath& rPath)
   nglString str(rPath.GetPathName());
   str.TrimLeft(_T('/'));
   str.ToUpper();
-  HRSRC Resource = FindResource(App->GetHInstance(), str.GetChars(), _T("NUI_RESOURCE"));
+  HRSRC Resource = FindResource(App->GetHInstance(), str.GetChars(), "NUI_RESOURCE");
 
   if (Resource == NULL)
   {
@@ -161,7 +161,7 @@ nuiNativeResource::nuiNativeResource(const nglPath& rPath)
   {
     mpIStream = resourcePath.OpenRead();
     if (!mpIStream)
-      NGL_OUT(_T("nuiNativeResource opening failed with path '%s'\n"), resourcePath.GetChars());
+      NGL_OUT("nuiNativeResource opening failed with path '%s'\n", resourcePath.GetChars());
     NGL_ASSERT(mpIStream);
     mValid = true;
   }
@@ -171,7 +171,7 @@ nuiNativeResource::nuiNativeResource(const nglPath& rPath)
   nglString dir = rPath.GetParentName();
   nglString file = rPath.GetNodeName();
 
-  dir.TrimLeft(_T("/"));
+  dir.TrimLeft("/");
 
   char* dirChar = dir.Export();
   char* fileChar = file.Export();
@@ -194,7 +194,7 @@ nuiNativeResource::nuiNativeResource(const nglPath& rPath)
         if (dir.IsEmpty())
           resource = file;
         else
-          resource = dir + nglString(_T("/")) + file;
+          resource = dir + nglString("/") + file;
         char* resourceChar = resource.Export();
         pAsset = AAssetManager_open(pManager, resourceChar, AASSET_MODE_BUFFER);
         free(resourceChar);
@@ -248,12 +248,12 @@ BOOL CALLBACK ResEnumerator(HMODULE hModule, LPCTSTR lpszType, LPTSTR lpszName, 
 
 bool nuiNativeResource::GetResourcesList(std::vector<nglPath>& rResources)
 {
-  return EnumResourceNames(App->GetHInstance(), _T("NUI_RESOURCE"), &::ResEnumerator, (LONG_PTR)&rResources) != FALSE;
+  return EnumResourceNames(App->GetHInstance(), "NUI_RESOURCE", &::ResEnumerator, (LONG_PTR)&rResources) != FALSE;
 }
 #elif defined (_ANDROID_)
 bool nuiNativeResource::GetResourcesList(std::vector<nglPath>& rResources)
 {
-  nuiNativeResource resourcesList(_T("resource.android"));
+  nuiNativeResource resourcesList("resource.android");
   nglString line;
   int64 read = resourcesList.ReadLine(line);
   while (read)
@@ -266,11 +266,11 @@ bool nuiNativeResource::GetResourcesList(std::vector<nglPath>& rResources)
 #else
 void RecurseChildren(std::vector<nglPath>& rResources, nglPath ResPath, nglPath BasePath)
 {
-//wprintf(_T("Enum resources BasePath '%s'\n"), BasePath.GetChars());
+//wprintf("Enum resources BasePath '%s'\n", BasePath.GetChars());
   if (BasePath.IsLeaf())
   {
     nglString str(ResPath.GetPathName());
-    //wprintf(_T("Added '%s'\n"), str.GetChars());
+    //wprintf("Added '%s'\n", str.GetChars());
     rResources.push_back(str);
     return;
   }

@@ -26,11 +26,11 @@ nuiMatrixNode::~nuiMatrixNode()
 
 void nuiMatrixNode::Init()
 {
-  if (SetObjectClass(_T("nuiMatrixNode")))
+  if (SetObjectClass("nuiMatrixNode"))
   {
     // Create attributes
     AddAttribute(new nuiAttribute<const nuiMatrix&>
-                 (nglString(_T("Matrix")), nuiUnitMatrix,
+                 (nglString("Matrix"), nuiUnitMatrix,
                   nuiMakeDelegate(this, &nuiMatrixNode::GetMatrix),
                   nuiMakeDelegate(this, &nuiMatrixNode::SetMatrix)));
   }
@@ -102,16 +102,16 @@ nuiMatrixNode_Rotation::nuiMatrixNode_Rotation(float Angle, float Xaxis, float Y
 
 void nuiMatrixNode_Rotation::Init()
 {
-  if (SetObjectClass(_T("nuiMatrixNode_Rotation")))
+  if (SetObjectClass("nuiMatrixNode_Rotation"))
   {
     // Create attributes
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("Angle")), nuiUnitNone,
+                 (nglString("Angle"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiMatrixNode_Rotation::GetAngle),
                   nuiMakeDelegate(this, &nuiMatrixNode_Rotation::SetAngle)));
 
     AddAttribute(new nuiAttribute<const nglVectorf&>
-                 (nglString(_T("Axis")), nuiUnitVector,
+                 (nglString("Axis"), nuiUnitVector,
                   nuiMakeDelegate(this, &nuiMatrixNode_Rotation::GetAxis),
                   nuiMakeDelegate(this, &nuiMatrixNode_Rotation::SetAxis)));
   }
@@ -177,22 +177,22 @@ nuiMatrixNode_Translation::nuiMatrixNode_Translation(float X, float Y, float Z)
 
 void nuiMatrixNode_Translation::Init()
 {
-  if (SetObjectClass(_T("nuiMatrixNode_Translation")))
+  if (SetObjectClass("nuiMatrixNode_Translation"))
   {
     AddAttribute(new nuiAttribute<const nglVectorf&>
-                 (nglString(_T("Vector")), nuiUnitVector,
+                 (nglString("Vector"), nuiUnitVector,
                   nuiMakeDelegate(this, &nuiMatrixNode_Translation::GetVector),
                   nuiMakeDelegate(this, &nuiMatrixNode_Translation::SetVector)));
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("X")), nuiUnitNone,
+                 (nglString("X"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiMatrixNode_Translation::GetX),
                   nuiMakeDelegate(this, &nuiMatrixNode_Translation::SetX)));
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("Y")), nuiUnitNone,
+                 (nglString("Y"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiMatrixNode_Translation::GetY),
                   nuiMakeDelegate(this, &nuiMatrixNode_Translation::SetY)));
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("Z")), nuiUnitVector,
+                 (nglString("Z"), nuiUnitVector,
                   nuiMakeDelegate(this, &nuiMatrixNode_Translation::GetZ),
                   nuiMakeDelegate(this, &nuiMatrixNode_Translation::SetZ)));
   }
@@ -273,27 +273,27 @@ nuiMatrixNode_Scale::nuiMatrixNode_Scale(float X, float Y, float Z)
 
 void nuiMatrixNode_Scale::Init()
 {
-  if (SetObjectClass(_T("nuiMatrixNode_Scale")))
+  if (SetObjectClass("nuiMatrixNode_Scale"))
   {
     AddAttribute(new nuiAttribute<const nglVectorf&>
-                 (nglString(_T("Scale")), nuiUnitVector,
+                 (nglString("Scale"), nuiUnitVector,
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::GetScaleVector),
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::SetScaleVector)));
     
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("Scale")), nuiUnitNone,
+                 (nglString("Scale"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::GetScale),
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::SetScale)));
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("X")), nuiUnitNone,
+                 (nglString("X"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::GetX),
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::SetX)));
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("Y")), nuiUnitNone,
+                 (nglString("Y"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::GetY),
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::SetY)));
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("Z")), nuiUnitVector,
+                 (nglString("Z"), nuiUnitVector,
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::GetZ),
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::SetZ)));
   }
@@ -389,11 +389,11 @@ nuiMatrixNode_Pivot::nuiMatrixNode_Pivot(float Angle, float X, float Y, float Z,
 
 void nuiMatrixNode_Pivot::Init()
 {
-  if (SetObjectClass(_T("nuiMatrixNode_Pivot")))
+  if (SetObjectClass("nuiMatrixNode_Pivot"))
   {
     // Create attributes
     AddAttribute(new nuiAttribute<const nglVectorf&>
-                 (nglString(_T("Pivot")), nuiUnitVector,
+                 (nglString("Pivot"), nuiUnitVector,
                   nuiMakeDelegate(this, &nuiMatrixNode_Pivot::GetPivot),
                   nuiMakeDelegate(this, &nuiMatrixNode_Pivot::SetPivot)));
   }

@@ -12,7 +12,7 @@ nuiZoomView::nuiZoomView(nuiScrollBar *pHorizontalScrollbar, nuiScrollBar *pVert
 : nuiWidget(),
   mSVSink(this)
 {
-  SetObjectClass(_T("nuiZoomView"));
+  SetObjectClass("nuiZoomView");
 
   mAlwaysDisplayVScrollbar = false;
   mAlwaysDisplayHScrollbar = false;

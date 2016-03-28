@@ -11,7 +11,7 @@
 #include "nuiXML.h"
 
 
-#define PREFERENCES_NUI_DBG _T("nuiDbg")
+#define PREFERENCES_NUI_DBG "nuiDbg"
 
 class Preferences
 {

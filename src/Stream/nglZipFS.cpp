@@ -485,7 +485,7 @@ nglZipFS::Node::~Node()
 
 nglZipFS::Node* nglZipFS::Node::Find(const nglPath& rPath) const
 {
-  if (rPath.GetPathName() == _T("") || rPath.GetPathName() == _T(".")  || rPath.GetPathName() == _T("/"))
+  if (rPath.GetPathName() == "" || rPath.GetPathName() == "."  || rPath.GetPathName() == "/")
     return (nglZipFS::Node*)this;
   std::list<nglPath> elems;
   nglZipPath::Decompose(rPath, elems);
@@ -505,7 +505,7 @@ nglZipFS::Node* nglZipFS::Node::Find(const nglPath& rPath) const
 
 nglZipFS::Node* nglZipFS::Node::Find(const nglString& path) const
 {
-  if (path == _T("") || path == _T(".")  || path == _T("/"))
+  if (path == "" || path == "."  || path == "/")
     return (nglZipFS::Node*)this;
   std::vector<nglZipFS::Node*>::const_iterator it;
   std::vector<nglZipFS::Node*>::const_iterator end = mpChildren.end();
@@ -526,7 +526,7 @@ bool nglZipFS::GetPathInfo(const nglPath& rPath, nglPathInfo& rInfo)
 {
   nglString p(rPath.GetVolumeLessPath());
   p.TrimLeft(_T('/'));
-  //wprintf(_T("trimed path '%s'\n"), p.GetChars());
+  //wprintf("trimed path '%s'\n", p.GetChars());
   nglPath path(p);
 
   Node* pChild = mRoot.Find(path); 
@@ -560,7 +560,7 @@ nglIStream* nglZipFS::OpenRead(const nglPath& rPath)
 {
   nglString p(rPath.GetVolumeLessPath());
   p.TrimLeft(_T('/'));
-  //wprintf(_T("trimed path '%s'\n"), p.GetChars());
+  //wprintf("trimed path '%s'\n", p.GetChars());
   nglPath path(p);
   Node* pNode = mRoot.Find(path);
   if (!pNode)
@@ -595,7 +595,7 @@ bool nglZipFS::GetChildren(const nglPath& rPath, std::vector<nglPath>& rChildren
 {
   nglString p(rPath.GetVolumeLessPath());
   p.TrimLeft(_T('/'));
-  //wprintf(_T("trimed path '%s'\n"), p.GetChars());
+  //wprintf("trimed path '%s'\n", p.GetChars());
   nglPath path(p);
   Node* pNode = mRoot.Find(path);
   if (!pNode)

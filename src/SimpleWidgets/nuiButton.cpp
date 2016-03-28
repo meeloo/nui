@@ -19,7 +19,7 @@ nuiButton::nuiButton()
 : nuiWidget(),
   mEventSink(this)
 {
-  if (SetObjectClass(_T("nuiButton")))
+  if (SetObjectClass("nuiButton"))
   {
     InitAttributes();
   }
@@ -48,7 +48,7 @@ nuiButton::nuiButton()
 nuiButton::nuiButton(const nglString& rText)
   : nuiWidget(), mEventSink(this)
 {
-  if (SetObjectClass(_T("nuiButton")))
+  if (SetObjectClass("nuiButton"))
   {
     InitAttributes();
   }
@@ -80,7 +80,7 @@ nuiButton::nuiButton(const nglString& rText)
 nuiButton::nuiButton(const nglImage& rImage)
   : nuiWidget(), mEventSink(this)
 {
-  if (SetObjectClass(_T("nuiButton")))
+  if (SetObjectClass("nuiButton"))
   {
     InitAttributes();
   }
@@ -113,7 +113,7 @@ nuiButton::nuiButton(const nglImage& rImage)
 nuiButton::nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired)
 : nuiWidget(), mEventSink(this)
 {
-  if (SetObjectClass(_T("nuiButton")))
+  if (SetObjectClass("nuiButton"))
   {
     InitAttributes();
   }
@@ -160,26 +160,26 @@ nuiButton::~nuiButton()
 void nuiButton::InitAttributes()
 {
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("Pressed")), nuiUnitBoolean,
+               (nglString("Pressed"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiButton::IsPressed),
                 nuiMakeDelegate(this, &nuiButton::SetPressed)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("AutoRepeat")), nuiUnitBoolean,
+               (nglString("AutoRepeat"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiButton::GetAutoRepeat),
                 nuiMakeDelegate(this, &nuiButton::EnableAutoRepeat)));
 
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("AutoRepeatDelay")), nuiUnitSeconds,
+               (nglString("AutoRepeatDelay"), nuiUnitSeconds,
                 nuiMakeDelegate(this, &nuiButton::GetAutoRepeatDelay),
                 nuiMakeDelegate(this, &nuiButton::SetAutoRepeatDelay)));
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("AutoRepeatMinDelay")), nuiUnitSeconds,
+               (nglString("AutoRepeatMinDelay"), nuiUnitSeconds,
                 nuiMakeDelegate(this, &nuiButton::GetAutoRepeatMinDelay),
                 nuiMakeDelegate(this, &nuiButton::SetAutoRepeatMinDelay)));
   
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("ActivationOffset")), nuiUnitPixels,
+               (nglString("ActivationOffset"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiButton::GetActivationOffset),
                 nuiMakeDelegate(this, &nuiButton::SetActivationOffset)));
 }

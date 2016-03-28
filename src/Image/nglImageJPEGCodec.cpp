@@ -396,7 +396,7 @@ boolean empty_output_buffer (j_compress_ptr cinfo)
   if ( dest->outStream->Write(dest->buffer, OUTPUT_BUF_SIZE, 1) !=
       (size_t) OUTPUT_BUF_SIZE)
       {
-        NGL_LOG(_T("image"), NGL_LOG_ERROR, _T("error: JERR_FILE_WRITE"));
+        NGL_LOG("image", NGL_LOG_ERROR, "error: JERR_FILE_WRITE");
         return false;
       }
 
@@ -425,7 +425,7 @@ void term_destination (j_compress_ptr cinfo)
   if (datacount > 0) {
     if ((size_t)(dest->outStream->Write(dest->buffer, datacount, 1)) != datacount)
     {
-      NGL_LOG(_T("image"), NGL_LOG_ERROR, _T("error: JERR_FILE_WRITE"));
+      NGL_LOG("image", NGL_LOG_ERROR, "error: JERR_FILE_WRITE");
     }
   }
 }
@@ -561,8 +561,8 @@ boolean fill_input_buffer (j_decompress_ptr cinfo)
   if (nbytes <= 0) 
   {
     if (src->start_of_file)  /* Treat empty input file as fatal error */
-      NGL_LOG(_T("image"), NGL_LOG_ERROR, _T("error: JERR_INPUT_EMPTY"));
-    NGL_LOG(_T("image"), NGL_LOG_WARNING, _T("warning: JWRN_JPEG_EOF"));
+      NGL_LOG("image", NGL_LOG_ERROR, "error: JERR_INPUT_EMPTY");
+    NGL_LOG("image", NGL_LOG_WARNING, "warning: JWRN_JPEG_EOF");
     /* Insert a fake EOI marker */
     src->buffer[0] = (JOCTET) 0xFF;
     src->buffer[1] = (JOCTET) JPEG_EOI;

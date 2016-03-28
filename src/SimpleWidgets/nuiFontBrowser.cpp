@@ -11,7 +11,7 @@
 nuiFontBrowser::nuiFontBrowser()
 : mSink(this)
 {
-  SetObjectClass(_T("nuiFontBrowser"));
+  SetObjectClass("nuiFontBrowser");
   
   mFontSize = 14;
   mpFontDesc = NULL;
@@ -20,15 +20,15 @@ nuiFontBrowser::nuiFontBrowser()
   
   nuiSplitter* pBox = new nuiSplitter(nuiHorizontal);
   AddChild(pBox);
-  pBox->SetObjectName(_T("nuiFontBrowser_MainBox"));
+  pBox->SetObjectName("nuiFontBrowser_MainBox");
   //pBox->SetExpand(nuiExpandShrinkAndGrow);
 
   nuiHBox* pPreview = new nuiHBox();
   pBox->AddChild(pPreview);
   
   nuiScrollView* pScroll = new nuiScrollView();
-  pScroll->SetObjectName(_T("nuiFontBrowser_PreviewScroller"));
-  mpPreviewLabel = new nuiLabel(_T("ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n01234567890!@#$%^&*(){}[]\\|/?<>,.:"));
+  pScroll->SetObjectName("nuiFontBrowser_PreviewScroller");
+  mpPreviewLabel = new nuiLabel("ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n01234567890!@#$%^&*(){}[]\\|/?<>,.:");
   mpPreviewLabel->SetFont(nuiFont::GetFont(mFontSize));
   mpPreviewLabel->SetPosition(nuiCenter);
   pScroll->AddChild(mpPreviewLabel);
@@ -93,7 +93,7 @@ nuiFontBrowser::nuiFontBrowser()
     while (it != end)
     {
       nuiLabel* pLabel = new nuiLabel(it->first);
-      pLabel->SetProperty(_T("FontName"), it->first);
+      pLabel->SetProperty("FontName", it->first);
       mpFontList->AddChild(pLabel);
       
       ++it;
@@ -117,7 +117,7 @@ void nuiFontBrowser::OnFontChanged(const nuiEvent& rEvent)
   nuiWidget* pLabel = mpFontList->GetSelected();
   if (pLabel)
   {
-    FontMap::const_iterator it = mFonts.find(pLabel->GetProperty(_T("FontName")));
+    FontMap::const_iterator it = mFonts.find(pLabel->GetProperty("FontName"));
     const FontStyleMap& rMap(it->second);
     FontStyleMap::const_iterator sit = rMap.begin();
     FontStyleMap::const_iterator send = rMap.end();
@@ -126,7 +126,7 @@ void nuiFontBrowser::OnFontChanged(const nuiEvent& rEvent)
     while (sit != send)
     {
       nuiLabel* pFontStyle = new nuiLabel(sit->first);
-      pFontStyle->SetProperty(_T("FontStyle"), sit->first);
+      pFontStyle->SetProperty("FontStyle", sit->first);
       mpStyleList->AddChild(pFontStyle);
 
       ++sit;
@@ -148,8 +148,8 @@ void nuiFontBrowser::OnStyleChanged(const nuiEvent& rEvent)
   nuiWidget* pStyleLabel = mpStyleList->GetSelected();
   if (pFontLabel && pStyleLabel)
   {
-    const nglString& rFontName(pFontLabel->GetProperty(_T("FontName")));
-    const nglString& rFontStyle(pStyleLabel->GetProperty(_T("FontStyle")));
+    const nglString& rFontName(pFontLabel->GetProperty("FontName"));
+    const nglString& rFontStyle(pStyleLabel->GetProperty("FontStyle"));
     SetFont(rFontName, rFontStyle, mFontSize);
     FontChanged();
   }

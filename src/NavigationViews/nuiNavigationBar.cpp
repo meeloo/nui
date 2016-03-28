@@ -10,7 +10,7 @@
 nuiNavigationBar::nuiNavigationBar()
 : nuiHBox(3), mEventSink(this)
 {
-  SetObjectClass(_T("nuiNavigationBar"));
+  SetObjectClass("nuiNavigationBar");
   
   nuiHBox::SetCellExpand(0, nuiExpandFixed);
   nuiHBox::SetCellExpand(1, nuiExpandShrinkAndGrow);
@@ -80,8 +80,8 @@ void nuiNavigationBar::SetTitle(const nglString& rTitle)
   nuiLabel* pLabel = new nuiLabel(rTitle);
   
   nuiFontRequest* pRequest = new nuiFontRequest();
-//  Request.SetName(_T("Helvetica"), 1.f);
-  pRequest->SetGenericName(_T("sans-serif"), 1.f);
+//  Request.SetName("Helvetica", 1.f);
+  pRequest->SetGenericName("sans-serif", 1.f);
   pRequest->MustHaveSize(14, 1.f);
   pRequest->SetBold(true, 1.f);
   pLabel->SetFont(nuiFontManager::GetManager().GetFont(*pRequest));
@@ -93,7 +93,7 @@ void nuiNavigationBar::SetTitle(const nglString& rTitle)
 
 void nuiNavigationBar::SetBackNavigationItem(bool set)
 {
-  nuiNavigationButton* pButton = new nuiNavigationButton(_T("Back"));
+  nuiNavigationButton* pButton = new nuiNavigationButton("Back");
   nuiDefaultDecoration::NavigationButton(pButton, mBarStyle, true /*leftyButton*/);  
   nuiHBox::SetCell(0, pButton);
 }

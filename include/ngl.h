@@ -349,9 +349,9 @@ typedef wchar_t nglUChar;
 /*!< Portable string declaration macro
   Use for literals to support both <i>char</i> and <i>wide char</i> modes :
   \code
-  const nglChar* my_string_value = _T("Example");
+  const nglChar* my_string_value = "Example";
   nglString my_string = my_string_value;
-  nglString my_string(_T("Example"));
+  nglString my_string("Example");
   \endcode
 */
 

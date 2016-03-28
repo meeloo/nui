@@ -142,6 +142,7 @@ private:
   {
     mWindows[pWindow->GetID()] = pWindow;
     WindowListChanged();
+    UpdateLayerList(pWindow->GetID());
   }
 
   void DelWindow(nuiDbgWindow* pWindow)

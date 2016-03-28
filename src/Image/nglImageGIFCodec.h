@@ -35,9 +35,9 @@ public:
   {
     mCanSave = false;
     mCanLoad = true;
-    mName = _T("Simple GIF loader");
-    mExtensions.push_back(_T(".gif"));
-    mInfo = _T("This codec is based on libungif");
+    mName = "Simple GIF loader";
+    mExtensions.push_back(".gif");
+    mInfo = "This codec is based on libungif";
   }
 
   virtual nglImageCodec* CreateInstance()

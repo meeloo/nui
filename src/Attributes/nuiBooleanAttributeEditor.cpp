@@ -13,7 +13,7 @@ nuiBooleanAttributeEditor::nuiBooleanAttributeEditor(const nuiAttrib<bool>& rAtt
     mEventSink(this),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiBooleanAttributeEditor"));
+	SetObjectClass("nuiBooleanAttributeEditor");
 	
 	mpBtn = new nuiToggleButton();
 	mpBtn->SetDisplayAsCheckBox(true);

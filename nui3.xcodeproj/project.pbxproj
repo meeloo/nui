@@ -5394,7 +5394,7 @@
 		E5816B340C3CECAA00902DFE /* pngwrite.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pngwrite.c; path = deps/libpng/pngwrite.c; sourceTree = SOURCE_ROOT; };
 		E5816B350C3CECAA00902DFE /* pngwtran.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pngwtran.c; path = deps/libpng/pngwtran.c; sourceTree = SOURCE_ROOT; };
 		E5816B360C3CECAA00902DFE /* pngwutil.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pngwutil.c; path = deps/libpng/pngwutil.c; sourceTree = SOURCE_ROOT; };
-		E5816C770C3CECAB00902DFE /* ngl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ngl.h; path = include/ngl.h; sourceTree = SOURCE_ROOT; };
+		E5816C770C3CECAB00902DFE /* ngl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ngl.h; path = include/ngl.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		E5816C780C3CECAB00902DFE /* ngl3DSLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ngl3DSLoader.h; path = include/ngl3DSLoader.h; sourceTree = SOURCE_ROOT; };
 		E5816C790C3CECAB00902DFE /* ngl_all.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ngl_all.h; path = include/ngl_all.h; sourceTree = SOURCE_ROOT; };
 		E5816C7A0C3CECAB00902DFE /* ngl_glext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ngl_glext.h; path = include/ngl_glext.h; sourceTree = SOURCE_ROOT; };
@@ -5592,7 +5592,7 @@
 		E5816D9F0C3CECAB00902DFE /* nuiUserArea.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nuiUserArea.cpp; path = src/Layout/nuiUserArea.cpp; sourceTree = SOURCE_ROOT; };
 		E5816DA20C3CECAB00902DFE /* nuiZoomView.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nuiZoomView.cpp; path = src/Layout/nuiZoomView.cpp; sourceTree = SOURCE_ROOT; };
 		E5816DA40C3CECAB00902DFE /* nglMath.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nglMath.cpp; path = src/Math/nglMath.cpp; sourceTree = SOURCE_ROOT; };
-		E5816DA60C3CECAB00902DFE /* AAPrimitives.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = AAPrimitives.cpp; path = src/Renderers/AAPrimitives.cpp; sourceTree = SOURCE_ROOT; };
+		E5816DA60C3CECAB00902DFE /* AAPrimitives.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = AAPrimitives.cpp; path = src/Renderers/AAPrimitives.cpp; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		E5816DA70C3CECAB00902DFE /* AAPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AAPrimitives.h; path = src/Renderers/AAPrimitives.h; sourceTree = SOURCE_ROOT; };
 		E5816DAB0C3CECAB00902DFE /* nuiArc.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = nuiArc.cpp; sourceTree = "<group>"; };
 		E5816DAC0C3CECAB00902DFE /* nuiContour.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = nuiContour.cpp; sourceTree = "<group>"; };
@@ -5656,7 +5656,7 @@
 		E5816E080C3CECAB00902DFE /* nglTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nglTimer.cpp; path = src/Time/nglTimer.cpp; sourceTree = SOURCE_ROOT; };
 		E5816E0E0C3CECAB00902DFE /* nuiColumnTreeView.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nuiColumnTreeView.cpp; path = src/TreeViews/nuiColumnTreeView.cpp; sourceTree = SOURCE_ROOT; };
 		E5816E100C3CECAB00902DFE /* nuiTreeView.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nuiTreeView.cpp; path = src/TreeViews/nuiTreeView.cpp; sourceTree = SOURCE_ROOT; };
-		E5816E130C3CECAB00902DFE /* ngl3DSLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = ngl3DSLoader.cpp; path = src/Utils/ngl3DSLoader.cpp; sourceTree = SOURCE_ROOT; };
+		E5816E130C3CECAB00902DFE /* ngl3DSLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = ngl3DSLoader.cpp; path = src/Utils/ngl3DSLoader.cpp; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		E5816E140C3CECAB00902DFE /* nglError.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nglError.cpp; path = src/Utils/nglError.cpp; sourceTree = SOURCE_ROOT; };
 		E5816E170C3CECAB00902DFE /* nuiMainWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nuiMainWindow.cpp; path = src/WidgetTree/nuiMainWindow.cpp; sourceTree = SOURCE_ROOT; };
 		E5816E180C3CECAB00902DFE /* nuiTopLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = nuiTopLevel.cpp; path = src/WidgetTree/nuiTopLevel.cpp; sourceTree = SOURCE_ROOT; };

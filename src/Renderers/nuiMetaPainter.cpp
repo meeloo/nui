@@ -734,25 +734,25 @@ static const nglChar* GetGLMode(GLenum mode)
 {
   switch (mode)
   {
-    case GL_POINTS: return _T("GL_POINTS");
-    case GL_LINES: return _T("GL_LINES");
-    case GL_LINE_LOOP: return _T("GL_LINE_LOOP");
-    case GL_LINE_STRIP: return _T("GL_LINE_STRIP");
-    case GL_TRIANGLES: return _T("GL_TRIANGLES");
-    case GL_TRIANGLE_FAN: return _T("GL_TRIANGLE_FAN");
-    case GL_TRIANGLE_STRIP: return _T("GL_TRIANGLE_STRIP");
+    case GL_POINTS: return "GL_POINTS";
+    case GL_LINES: return "GL_LINES";
+    case GL_LINE_LOOP: return "GL_LINE_LOOP";
+    case GL_LINE_STRIP: return "GL_LINE_STRIP";
+    case GL_TRIANGLES: return "GL_TRIANGLES";
+    case GL_TRIANGLE_FAN: return "GL_TRIANGLE_FAN";
+    case GL_TRIANGLE_STRIP: return "GL_TRIANGLE_STRIP";
 #ifndef _OPENGL_ES_
-    case GL_QUADS: return _T("GL_QUADS");
-    case GL_QUAD_STRIP: return _T("GL_QUAD_STRIP");
-    case GL_POLYGON: return _T("GL_POLYGON");
+    case GL_QUADS: return "GL_QUADS";
+    case GL_QUAD_STRIP: return "GL_QUAD_STRIP";
+    case GL_POLYGON: return "GL_POLYGON";
 #endif
   }
-  return _T("unknown");
+  return "unknown";
 }
 
 nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
 {
-  nglString str = _T("???");
+  nglString str = "???";
   mOperationPos = GetOffsetFromOperationIndex(OperationIndex);
   
   OpCode code = FetchOpCode();
@@ -762,7 +762,7 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
       {
         int32 w = FetchInt();
         int32 h = FetchInt();
-        str.CFormat(_T("SetSize(%d, %d)"), w, h);
+        str.CFormat("SetSize(%d, %d)", w, h);
       }
       break;
     case eStartRendering:
@@ -770,14 +770,14 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         nuiSize x, y;
         FetchFloat(x);
         FetchFloat(y);
-        str.CFormat(_T("StartRendering(%f, %f)"), x, y);
+        str.CFormat("StartRendering(%f, %f)", x, y);
       }
       break;
     case eSetState:
       {
         FetchInt();
         bool force = FetchInt();
-        str.CFormat(_T("SetState(%s)"), TRUEFALSE(force));
+        str.CFormat("SetState(%s)", TRUEFALSE(force));
       }
       break;
     case eDrawArray:
@@ -787,7 +787,7 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         const nglChar* pMode = GetGLMode(pArray->GetMode());
         float bounds[6];
         pArray->GetBounds(bounds);
-        str.CFormat(_T("DrawArray 0x%x (size %d mode:%s) (%f , %f)->(%f, %f)"), pArray, pArray->GetVertices().size(), pMode, bounds[0], bounds[1], bounds[3], bounds[4]);
+        str.CFormat("DrawArray 0x%x (size %d mode:%s) (%f , %f)->(%f, %f)", pArray, pArray->GetVertices().size(), pMode, bounds[0], bounds[1], bounds[3], bounds[4]);
       }
       break;
     case eClear:
@@ -800,18 +800,18 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
       }
       break;
     case eBeginSession:
-      str = _T("BeginSession");
+      str = "BeginSession";
       break;
     case eEndSession:
-      str = _T("EndSession");
+      str = "EndSession";
       break;
     case eDrawWidget:
       {
         nuiWidget* pS = (nuiWidget*)FetchPointer();
 //        nglString clss(pS->GetObjectClass());
 //        nglString name(pS->GetObjectName());
-//        str.CFormat(_T("DrawWidget 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
-        str.CFormat(_T("DrawWidget %p"), pS);
+//        str.CFormat("DrawWidget 0x%x / '%s - %s'", pS, clss.GetChars(), name.GetChars());
+        str.CFormat("DrawWidget %p", pS);
       }
       break;
     case eDrawLayer:
@@ -819,8 +819,8 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         nuiLayer* pS = (nuiLayer*)FetchPointer();
 //        nglString clss(pS->GetObjectClass());
 //        nglString name(pS->GetObjectName());
-//        str.CFormat(_T("DrawLayer 0x%x / '%s - %s'"), pS, clss.GetChars(), name.GetChars());
-        str.CFormat(_T("DrawLayer %p"), pS);
+//        str.CFormat("DrawLayer 0x%x / '%s - %s'", pS, clss.GetChars(), name.GetChars());
+        str.CFormat("DrawLayer %p", pS);
       }
       break;
     case eSetSurface:
@@ -853,7 +853,7 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         FetchBuffer(m.Array, sizeof(nuiSize), 16);
         nglString v;
         m.GetValue(v);
-        str = _T("LoadMatrix") + v;
+        str = "LoadMatrix" + v;
       }
       break;
     case eMultMatrix:
@@ -862,14 +862,14 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         FetchBuffer(m.Array, sizeof(nuiSize), 16);
         nglString v;
         m.GetValue(v);
-        str = _T("MultMatrix") + v;
+        str = "MultMatrix" + v;
       }
       break;
     case ePopMatrix:
-      str = _T("PopMatrix");
+      str = "PopMatrix";
       break;
     case ePushMatrix:
-      str = _T("PushMatrix");
+      str = "PushMatrix";
       break;
       
       
@@ -884,7 +884,7 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         FetchBuffer(m.Array, sizeof(nuiSize), 16);
         nglString v;
         m.GetValue(v);
-        str.CFormat(_T("LoadProjectionMatrix(%f, %f, %f, %f) / %s"), a, b, c, d, v.GetChars());
+        str.CFormat("LoadProjectionMatrix(%f, %f, %f, %f) / %s", a, b, c, d, v.GetChars());
       }
       break;
     case eMultProjectionMatrix:
@@ -893,24 +893,24 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         FetchBuffer(m.Array, sizeof(nuiSize), 16);
         nglString v;
         m.GetValue(v);
-        str = _T("MultProjectionMatrix") + v;
+        str = "MultProjectionMatrix" + v;
       }
       break;
     case ePopProjectionMatrix:
-      str = _T("PopProjectionMatrix");
+      str = "PopProjectionMatrix";
       break;
     case ePushProjectionMatrix:
-      str = _T("PushProjectionMatrix");
+      str = "PushProjectionMatrix";
       break;
       
       
       
       
     case ePushClipping:
-      str = _T("PushClipping");
+      str = "PushClipping";
       break;
     case ePopClipping:
-      str = _T("PopClipping");
+      str = "PopClipping";
       break;
     case eClip:
       {
@@ -919,24 +919,24 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
         FetchFloat(b);
         FetchFloat(c);
         FetchFloat(d);
-        str.CFormat(_T("Clip(%f, %f, %f, %f)"), a, b, c, d);
+        str.CFormat("Clip(%f, %f, %f, %f)", a, b, c, d);
       }
       break;
     case eResetClipRect:
-      str = _T("ResetClipRect");
+      str = "ResetClipRect";
       break;
     case eEnableClipping:
-      str.CFormat(_T("EnableClipping(%s)"), TRUEFALSE(FetchInt()));
+      str.CFormat("EnableClipping(%s)", TRUEFALSE(FetchInt()));
       break;
     case eBreak:
-      str = _T("Break");
+      str = "Break";
       break;
     default:
-      str.CFormat(_T("Unknown operation %d"), code);
+      str.CFormat("Unknown operation %d", code);
       break;
   }
   
-  return nglString().Add(OperationIndex).Add(_T(": ")).Add(str);
+  return nglString().Add(OperationIndex).Add(": ").Add(str);
 }
 
 void nuiMetaPainter::SetName(const nglString& rName)

@@ -12,10 +12,10 @@
 nuiPopupValueAttributeEditor::nuiPopupValueAttributeEditor(const nuiAttrib<uint32>& rAttribute, const nuiRange& rRange)
 : nuiAttributeEditor(), mAttribute(rAttribute), mRange(rRange), mEventSink(this)
 {
-  SetObjectClass(_T("nuiPopupValueAttributeEditor"));
+  SetObjectClass("nuiPopupValueAttributeEditor");
   
   mpEditLine = new nuiEditLine();
-  mpEditLine->SetObjectName(_T("NameAttributeEditor::EditLine"));
+  mpEditLine->SetObjectName("NameAttributeEditor::EditLine");
   
   AddChild(mpEditLine);
   

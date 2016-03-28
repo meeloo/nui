@@ -47,7 +47,7 @@ public:
   {
     nglString Class(typeid(ValueType).name());
     
-    if (SetObjectClass(_T("nuiHTMLStyleValue<") + Class + (_T(">"))))
+    if (SetObjectClass("nuiHTMLStyleValue<" + Class + (">")))
     {
       
     }

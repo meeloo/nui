@@ -13,7 +13,7 @@
 nuiText::nuiText(const nglString& rText)
   : nuiEditText(rText)
 {
-  SetObjectClass(_T("nuiText"));
+  SetObjectClass("nuiText");
   SetEditable(false);
 }
 

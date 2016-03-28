@@ -307,13 +307,13 @@ public:
     switch (NbElements)
     {
       case 1:
-        rDump.CFormat(_T("{ %f }"), (T)Elt[0]);
+        rDump.CFormat("{ %f }", (T)Elt[0]);
         break;
       case 2:
-        rDump.CFormat(_T("{ %f %f }"), (T)Elt[0], (T)Elt[1]);
+        rDump.CFormat("{ %f %f }", (T)Elt[0], (T)Elt[1]);
         break;
       default:
-        rDump.CFormat(_T("{ %f %f %f }"), (T)Elt[0], (T)Elt[1], (T)Elt[2]);
+        rDump.CFormat("{ %f %f %f }", (T)Elt[0], (T)Elt[1], (T)Elt[2]);
         break;
     }
     return true;
@@ -321,7 +321,7 @@ public:
 
   bool SetValue(const nglString& rValue)
   {
-    //rDump.CFormat(_T("{ %8.3f %8.3f %8.3f }"), (T)Elt[0], (T)Elt[1], (T)Elt[2]);
+    //rDump.CFormat("{ %8.3f %8.3f %8.3f }", (T)Elt[0], (T)Elt[1], (T)Elt[2]);
 
     nglString val = rValue;
 
@@ -571,9 +571,9 @@ public:
   /// Display the vector's scalar values in the log
   void Dump (uint Level = 0, const nglChar* pTitle = NULL) const
   {
-    NGL_LOG(_T("math"), Level, _T("%s%s[ %8.3f %8.3f %8.3f %8.3f ]"),
+    NGL_LOG("math", Level, "%s%s[ %8.3f %8.3f %8.3f %8.3f ]",
       pTitle ? pTitle : _T(""),
-      pTitle ? _T(" = ") : _T(""),
+      pTitle ? " = " : _T(""),
       (T)Elt[0], (T)Elt[1], (T)Elt[2], (T)Elt[3]);
   }
 
@@ -590,16 +590,16 @@ public:
     switch (NbElements)
     {
       case 1:
-        rDump.CFormat(_T("{ %f }"), (T)Elt[0]);
+        rDump.CFormat("{ %f }", (T)Elt[0]);
         break;
       case 2:
-        rDump.CFormat(_T("{ %f %f }"), (T)Elt[0], (T)Elt[1]);
+        rDump.CFormat("{ %f %f }", (T)Elt[0], (T)Elt[1]);
         break;
       case 3:
-        rDump.CFormat(_T("{ %f %f %f }"), (T)Elt[0], (T)Elt[1], (T)Elt[2]);
+        rDump.CFormat("{ %f %f %f }", (T)Elt[0], (T)Elt[1], (T)Elt[2]);
         break;
       default:
-        rDump.CFormat(_T("{ %f %f %f %f }"), (T)Elt[0], (T)Elt[1], (T)Elt[2], (T)Elt[3]);
+        rDump.CFormat("{ %f %f %f %f }", (T)Elt[0], (T)Elt[1], (T)Elt[2], (T)Elt[3]);
         break;
     }
     return true;
@@ -607,7 +607,7 @@ public:
   
   bool SetValue(const nglString& rValue)
   {
-    //rDump.CFormat(_T("{ %8.3f %8.3f %8.3f %8.3f }"), (T)Elt[0], (T)Elt[1], (T)Elt[2], (T)Elt[3]);
+    //rDump.CFormat("{ %8.3f %8.3f %8.3f %8.3f }", (T)Elt[0], (T)Elt[1], (T)Elt[2], (T)Elt[3]);
 
     nglString val = rValue;
     

@@ -72,7 +72,7 @@ void nuiObject::Init(const nglString& rObjectName)
       bool first = mInheritanceMap[c] < -1;
       mInheritanceMap[c] = GetObjectClassNameIndex();
       
-      //	const nglString propname = _T("Class");
+      //	const nglString propname = "Class";
       //  mProperties[propname] = obj;
       
       mClassNameIndex = c;
@@ -83,8 +83,8 @@ void nuiObject::Init(const nglString& rObjectName)
       {
         // Enable this to debug your tooltips and classes
         nglString tt;
-        tt.Add(GetObjectClass()).Add(_T(" - ")).Add(GetObjectName());
-        SetProperty(_T("ToolTip"), tt);
+        tt.Add(GetObjectClass()).Add(" - ").Add(GetObjectName());
+        SetProperty("ToolTip", tt);
       }
 #endif
       if (first)
@@ -111,17 +111,17 @@ void nuiObject::Init(const nglString& rObjectName)
 void nuiObject::InitAttributes()
 {
   nuiAttribute<const nglString&>* AttributeClass = new nuiAttribute<const nglString&>
-  (nglString(_T("Class")), nuiUnitName,
+  (nglString("Class"), nuiUnitName,
    nuiAttribute<const nglString&>::GetterDelegate(this, &nuiObject::GetObjectClass));
 
 
   nuiAttribute<const nglString&>* AttributeName = new nuiAttribute<const nglString&>
-  (nglString(_T("Name")), nuiUnitName,
+  (nglString("Name"), nuiUnitName,
    nuiAttribute<const nglString&>::GetterDelegate(this, &nuiObject::GetObjectName),
    nuiAttribute<const nglString&>::SetterDelegate(this, &nuiObject::SetObjectName));
 
-	AddAttribute(_T("Class"), AttributeClass);
-	AddAttribute(_T("Name"), AttributeName);
+	AddAttribute("Class", AttributeClass);
+	AddAttribute("Name", AttributeName);
 }
 
 
@@ -222,8 +222,8 @@ void nuiObject::SetObjectName(const nglString& rName)
   {
     // Enable this to debug your tooltips and classes
     nglString tt;
-    tt.Add(GetObjectClass()).Add(_T(" - ")).Add(GetObjectName());
-    SetProperty(_T("ToolTip"), tt);
+    tt.Add(GetObjectClass()).Add(" - ").Add(GetObjectName());
+    SetProperty("ToolTip", tt);
   }
 #endif
 
@@ -242,7 +242,7 @@ bool nuiObject::SetObjectClass(const nglString& rClass)
   bool first = mInheritanceMap[c] < -1;
   mInheritanceMap[c] = GetObjectClassNameIndex();
 
-//	const nglString propname = _T("Class");
+//	const nglString propname = "Class";
 //  mProperties[propname] = rClass;
 
   mClassNameIndex = c;
@@ -253,8 +253,8 @@ bool nuiObject::SetObjectClass(const nglString& rClass)
   {
     // Enable this to debug your tooltips and classes
     nglString tt;
-    tt.Add(GetObjectClass()).Add(_T(" - ")).Add(GetObjectName());
-    SetProperty(_T("ToolTip"), tt);
+    tt.Add(GetObjectClass()).Add(" - ").Add(GetObjectName());
+    SetProperty("ToolTip", tt);
   }
 #endif
   return first;
@@ -309,9 +309,9 @@ bool nuiObject::HasProperty(const char* pName) const
 void nuiObject::SetProperty (const nglString& rName, const nglString& rValue)
 {
   CheckValid();
-//  if (rName == _T("ToolTip") && GetObjectClass() == _T("HelpLabel"))
+//  if (rName == "ToolTip" && GetObjectClass() == "HelpLabel")
 //  {
-//    NGL_OUT(_T("nuiObject::SetProperty for %p %s / %s = %s\n"), this, GetObjectClass().GetChars(), GetObjectName().GetChars(), rValue.GetChars());
+//    NGL_OUT("nuiObject::SetProperty for %p %s / %s = %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars(), rValue.GetChars());
 //  }
 
   nuiAttribBase attrib(GetAttribute(rName));

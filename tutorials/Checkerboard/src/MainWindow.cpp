@@ -35,7 +35,7 @@ void MainWindow::OnCreation()
   AddChild(pWidget);
 
   // create a checkerboard decoration and assign it to the widget
-  nuiCheckerboardDecoration* pDeco = new nuiCheckerboardDecoration(_T("checker1"));
+  nuiCheckerboardDecoration* pDeco = new nuiCheckerboardDecoration("checker1");
   pDeco->SetBackgroundColor(nuiColor(255,255,255));
   pDeco->SetTileColor(nuiColor(180,180,180));
   pDeco->SetTilesPerLine(8);

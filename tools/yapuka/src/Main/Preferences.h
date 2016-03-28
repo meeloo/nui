@@ -11,7 +11,7 @@
 #include "nuiXML.h"
 
 
-#define PREFERENCES_PROJECTGENERATOR _T("ProjectGenerator")
+#define PREFERENCES_PROJECTGENERATOR "ProjectGenerator"
 
 class Preferences
 {

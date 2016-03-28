@@ -11,7 +11,7 @@
 nuiHBox::nuiHBox(uint32 nbcells)
 : nuiBox(nbcells, 1)
 {
-  if (SetObjectClass(_T("nuiHBox")))
+  if (SetObjectClass("nuiHBox"))
     InitAttributes();
 }
 
@@ -27,13 +27,13 @@ void nuiHBox::InitAttributes()
 
   // HorizontalSpacing in "common sens" corresponds to DefaultVSpacing in "nuiGrid sens". It's better for css understanding
   AddAttribute(new nuiAttribute<nuiSize>
-   (nglString(_T("HorizontalSpacing")), nuiUnitSize,
+   (nglString("HorizontalSpacing"), nuiUnitSize,
     nuiAttribute<nuiSize>::GetterDelegate(this, &nuiHBox::GetDefaultSpacing),
     nuiAttribute<nuiSize>::SetterDelegate(this, &nuiHBox::SetDefaultSpacing)));                
 
   // Spacing is a shorcut for VerticalSpacing, in nuiVBox
   AddAttribute(new nuiAttribute<nuiSize>
-   (nglString(_T("Spacing")), nuiUnitSize,
+   (nglString("Spacing"), nuiUnitSize,
     nuiAttribute<nuiSize>::GetterDelegate(this, &nuiHBox::GetDefaultSpacing),
     nuiAttribute<nuiSize>::SetterDelegate(this, &nuiHBox::SetDefaultSpacing)));                
 

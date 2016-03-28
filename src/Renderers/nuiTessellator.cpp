@@ -289,9 +289,9 @@ void nuiTessellator::InternalTessEnd()
 void nuiTessellator::InternalTessError(GLenum ErrNo)
 {
 #ifdef __NUI_NO_GL__
-  NGL_OUT(_T("nui_glu tessellation error\n"));
+  NGL_OUT("nui_glu tessellation error\n");
 #elsif !defined(_OPENGL_ES_)
-  NGL_OUT(_T("nui_glu tessellation error: %s\n"), gluErrorString(ErrNo));
+  NGL_OUT("nui_glu tessellation error: %s\n", gluErrorString(ErrNo));
 #endif
 }
 

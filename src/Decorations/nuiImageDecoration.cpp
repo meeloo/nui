@@ -15,7 +15,7 @@ nuiImageDecoration::nuiImageDecoration(const nglString& rName)
   mRepeatX(false),
   mRepeatY(false)
 {
-  if (SetObjectClass(_T("nuiImageDecoration")))
+  if (SetObjectClass("nuiImageDecoration"))
     InitAttributes();
 }
 
@@ -28,7 +28,7 @@ nuiImageDecoration::nuiImageDecoration(const nglString& rName, nuiTexture* pText
   mRepeatX(false),
   mRepeatY(false)
 {
-  if (SetObjectClass(_T("nuiImageDecoration")))
+  if (SetObjectClass("nuiImageDecoration"))
     InitAttributes();
 }
 
@@ -41,7 +41,7 @@ nuiImageDecoration::nuiImageDecoration(const nglString& rName, const nglPath& rT
   mRepeatX(false),
   mRepeatY(false)
 {
-  if (SetObjectClass(_T("nuiImageDecoration")))
+  if (SetObjectClass("nuiImageDecoration"))
     InitAttributes();
 	
   mpTexture = nuiTexture::GetTexture(rTexturePath);
@@ -53,32 +53,32 @@ nuiImageDecoration::nuiImageDecoration(const nglString& rName, const nglPath& rT
 void nuiImageDecoration::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nuiRect&>
-               (nglString(_T("ClientRect")), nuiUnitNone,
+               (nglString("ClientRect"), nuiUnitNone,
                 nuiAttribute<const nuiRect&>::GetterDelegate(this, &nuiImageDecoration::GetSourceClientRect),
                 nuiAttribute<const nuiRect&>::SetterDelegate(this, &nuiImageDecoration::SetSourceClientRect)));
   
   AddAttribute(new nuiAttribute<nglPath>
-               (nglString(_T("Texture")), nuiUnitNone,
+               (nglString("Texture"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiImageDecoration::GetTexturePath), 
                 nuiMakeDelegate(this, &nuiImageDecoration::SetTexturePath)));
   
   AddAttribute(new nuiAttribute<nuiPosition>
-               (nglString(_T("Position")), nuiUnitPosition,
+               (nglString("Position"), nuiUnitPosition,
                 nuiMakeDelegate(this, &nuiImageDecoration::GetPosition), 
                 nuiMakeDelegate(this, &nuiImageDecoration::SetPosition)));
   
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("Color")), nuiUnitNone,
+               (nglString("Color"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiImageDecoration::GetColor), 
                 nuiMakeDelegate(this, &nuiImageDecoration::SetColor)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("RepeatX")), nuiUnitBoolean,
+               (nglString("RepeatX"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiImageDecoration::GetRepeatX), 
                 nuiMakeDelegate(this, &nuiImageDecoration::SetRepeatX)));  
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("RepeatY")), nuiUnitBoolean,
+               (nglString("RepeatY"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiImageDecoration::GetRepeatY), 
                 nuiMakeDelegate(this, &nuiImageDecoration::SetRepeatY)));  
 }
@@ -160,7 +160,7 @@ void nuiImageDecoration::SetTexturePath(nglPath path)
   mpTexture = nuiTexture::GetTexture(path);
   if (!mpTexture || !mpTexture->IsValid())
   {
-    NGL_OUT(_T("nuiImageDecoration::SetTexturePath warning : could not load graphic resource '%s'\n"), path.GetChars());
+    NGL_OUT("nuiImageDecoration::SetTexturePath warning : could not load graphic resource '%s'\n", path.GetChars());
     return;
   }
   
@@ -294,7 +294,7 @@ void nuiImageDecoration::GetBorders(const nuiWidget* pWidget, float& rLeft, floa
 {
   if (!mpTexture)
   {
-    NGL_OUT(_T("nuiImageDecoration::mpTexture should not be NULL!"));
+    NGL_OUT("nuiImageDecoration::mpTexture should not be NULL!");
     NGL_ASSERT(mpTexture);
     return;
   }

@@ -15,7 +15,7 @@
 //class nuiRSSItem
 nuiRSSItem::nuiRSSItem(const nuiXMLNode* pNode)
 {
-  if (pNode->GetName().Compare(_T("entry"), false) == 0)
+  if (pNode->GetName().Compare("entry", false) == 0)
   {
     // This is an Atom feed
     STARTELEM(pNode);
@@ -32,7 +32,7 @@ nuiRSSItem::nuiRSSItem(const nuiXMLNode* pNode)
     GETELEM("id", mGUID)
     GETELEM("updated", mPublishingDate)
     GETELEM("source", mSourceURL)
-    if (name == _T("image"))
+    if (name == "image")
     {
       STARTELEM(pN);
       GETELEM("url", mImageURL)
@@ -40,14 +40,14 @@ nuiRSSItem::nuiRSSItem(const nuiXMLNode* pNode)
       GETELEM("link", mImageLink)
       ENDELEM;
     }
-    else if (name == _T("enclosure"))
+    else if (name == "enclosure")
     {
       nglString str(pN->GetAttribute("length"));
       mEnclosureLength = str.GetCInt();
       mEnclosureURL = pN->GetAttribute("url");
       mEnclosureType = pN->GetAttribute("type");
     }
-    if (name == _T("category"))
+    if (name == "category")
     {
       STARTELEM(pN);
       GETELEM("domain", mCategoryDomain)
@@ -68,7 +68,7 @@ nuiRSSItem::nuiRSSItem(const nuiXMLNode* pNode)
     GETELEM("pubDate", mPublishingDate)
     GETELEM("source", mSourceURL)
     
-    if (name == _T("image"))
+    if (name == "image")
     {
       STARTELEM(pN);
       GETELEM("url", mImageURL)
@@ -76,14 +76,14 @@ nuiRSSItem::nuiRSSItem(const nuiXMLNode* pNode)
       GETELEM("link", mImageLink)
       ENDELEM;
     }
-    else if (name == _T("enclosure"))
+    else if (name == "enclosure")
     {
       nglString str(pN->GetAttribute("length"));
       mEnclosureLength = str.GetCInt();
       mEnclosureURL = pN->GetAttribute("url");
       mEnclosureType = pN->GetAttribute("type");
     }
-    if (name == _T("category"))
+    if (name == "category")
     {
       STARTELEM(pN);
       GETELEM("domain", mCategoryDomain)
@@ -346,12 +346,12 @@ bool nuiRSS::UpdateFromXML(nuiXMLNode* pXML)
   if (!pXML)
     return false;
 
-  if (pXML->GetName() != _T("rss") && pXML->GetName() != _T("feed"))
+  if (pXML->GetName() != "rss" && pXML->GetName() != "feed")
     return false;
   
   mItems.clear();
   
-  if (pXML->GetName() == _T("rss"))
+  if (pXML->GetName() == "rss")
   {
     for (int32 j = 0; j < pXML->GetChildrenCount(); j++)
     {
@@ -360,7 +360,7 @@ bool nuiRSS::UpdateFromXML(nuiXMLNode* pXML)
         return false;
       
       printf("xml item: '%s'\n", pNode->GetName().GetChars());
-      if (pNode->GetName() == _T("channel"))
+      if (pNode->GetName() == "channel")
       {
         
         STARTELEM(pNode);
@@ -383,7 +383,7 @@ bool nuiRSS::UpdateFromXML(nuiXMLNode* pXML)
         GETELEM("rating", mRating);
         GETELEM("skipHours", mSkipHours);
         GETELEM("skipDays", mSkipDays);
-        if (name == _T("item"))
+        if (name == "item")
         {
           mItems.push_back(nuiRSSItem(pN));
         }
@@ -396,12 +396,12 @@ bool nuiRSS::UpdateFromXML(nuiXMLNode* pXML)
       
     }
   }
-  else if (pXML->GetName() == _T("feed"))
+  else if (pXML->GetName() == "feed")
   {
     nuiXMLNode* pNode = pXML;
     printf("xml item: '%s'\n", pNode->GetName().GetChars());
     
-    if (pNode->GetName() == _T("feed"))
+    if (pNode->GetName() == "feed")
     {
       
       STARTELEM(pNode);
@@ -424,7 +424,7 @@ bool nuiRSS::UpdateFromXML(nuiXMLNode* pXML)
       //GETELEM("rating", mRating);
       //GETELEM("skipHours", mSkipHours);
       //GETELEM("skipDays", mSkipDays);
-      if (name == _T("entry"))
+      if (name == "entry")
       {
         mItems.push_back(nuiRSSItem(pN));
       }
@@ -443,7 +443,7 @@ void nuiRSS::StartHTTPThread()
 {
   mUpdating = true;
   nglString url(mRSSURL);
-  url.Replace(_T("feed://"), _T("http://"));
+  url.Replace("feed://", "http://");
   nuiHTTPRequest request(url);
   nuiHTTPResponse* pResponse = request.SendRequest();
   if (!pResponse)

@@ -517,7 +517,7 @@ public:
 
   bool GetValue(nglString& rDump) const
   {
-    rDump.CFormat(_T("{ %f %f %f %f }"), (T)Array[0], (T)Array[1], (T)Array[2], (T)Array[3]);
+    rDump.CFormat("{ %f %f %f %f }", (T)Array[0], (T)Array[1], (T)Array[2], (T)Array[3]);
     return true;
   }
 

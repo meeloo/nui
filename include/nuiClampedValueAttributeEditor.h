@@ -33,7 +33,7 @@ public:
     else
       mName = mAttribute.GetName();
     
-    SetObjectClass(_T("nuiClampedValueAttributeEditor"));
+    SetObjectClass("nuiClampedValueAttributeEditor");
     
     mpKnob = NULL;
     mpLabel = NULL;
@@ -57,7 +57,7 @@ public:
   mIndexed(true),
   mIndex(index)
   {
-    SetObjectClass(_T("nuiClampedValueAttributeEditor"));
+    SetObjectClass("nuiClampedValueAttributeEditor");
     
     mpKnob = NULL;
     mpLabel = NULL;

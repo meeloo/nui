@@ -21,7 +21,7 @@
 nuiThreadInspector::nuiThreadInspector()
   : mEventSink(this)
 {
-  if (SetObjectClass(_T("nuiThreadInspector")))
+  if (SetObjectClass("nuiThreadInspector"))
     InitAttributes();
       
   // decoration
@@ -55,27 +55,27 @@ nuiThreadInspector::~nuiThreadInspector()
 void nuiThreadInspector::InitAttributes()
 {
   AddAttribute(new nuiAttribute<bool>
-   (nglString(_T("Running")), nuiUnitOnOff,
+   (nglString("Running"), nuiUnitOnOff,
     nuiAttribute<bool>::GetterDelegate(this, &nuiThreadInspector::IsRunning),
     nuiAttribute<bool>::SetterDelegate(this, &nuiThreadInspector::SetRunning)));
   
   AddAttribute(new nuiAttribute<bool>
-   (nglString(_T("Updating")), nuiUnitOnOff,
+   (nglString("Updating"), nuiUnitOnOff,
     nuiAttribute<bool>::GetterDelegate(this, &nuiThreadInspector::IsUpdating),
     nuiAttribute<bool>::SetterDelegate(this, &nuiThreadInspector::SetUpdating)));
   
   AddAttribute(new nuiAttribute<const nuiRange&>
-   (nglString(_T("Frequency")), nuiUnitSeconds,
+   (nglString("Frequency"), nuiUnitSeconds,
     nuiAttribute<const nuiRange&>::GetterDelegate(this, &nuiThreadInspector::GetFrequency),
     nuiAttribute<const nuiRange&>::SetterDelegate(this, &nuiThreadInspector::SetFrequency)));
   
   AddAttribute(new nuiAttribute<bool>
-   (nglString(_T("ShowLongLock")), nuiUnitOnOff,
+   (nglString("ShowLongLock"), nuiUnitOnOff,
     nuiAttribute<bool>::GetterDelegate(this, &nuiThreadInspector::GetShowLongLock),
     nuiAttribute<bool>::SetterDelegate(this, &nuiThreadInspector::SetShowLongLock)));
     
   AddAttribute(new nuiAttribute<const nuiRange&>
-   (nglString(_T("LongLockTreshold")), nuiUnitSeconds,
+   (nglString("LongLockTreshold"), nuiUnitSeconds,
     nuiAttribute<const nuiRange&>::GetterDelegate(this, &nuiThreadInspector::GetLongLockTreshold),
     nuiAttribute<const nuiRange&>::SetterDelegate(this, &nuiThreadInspector::SetLongLockTreshold)));
   
@@ -113,18 +113,18 @@ void nuiThreadInspector::Build()
   pGrid->SetColumnExpand(2, nuiExpandFixed);
   pGrid->SetColumnExpand(3, nuiExpandShrinkAndGrow);
   
-  nuiLabel* pLabel = new nuiLabel(_T("ThreadChecker"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
+  nuiLabel* pLabel = new nuiLabel("ThreadChecker", nuiFont::GetFont("INTROSPECTOR_FONT_BOLD"));
 //  pLabel->SetColor(eNormalTextFg, INTROSPECTOR_COLOR_GRID_TITLE);
   pLabel->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_GRID_TITLE), eDecorationBorder);
   pGrid->SetCell(0,0, pLabel);
 
-  pLabel = new nuiLabel(_T(""), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
+  pLabel = new nuiLabel(""), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD"));
   pLabel->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_GRID_TITLE), eDecorationBorder);
   pGrid->SetCell(1,0, pLabel);
-  pLabel = new nuiLabel(_T(""), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
+  pLabel = new nuiLabel(""), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD"));
   pLabel->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_GRID_TITLE), eDecorationBorder);
   pGrid->SetCell(2,0, pLabel);
-  pLabel = new nuiLabel(_T(""), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD")));
+  pLabel = new nuiLabel(""), nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD"));
   pLabel->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_GRID_TITLE), eDecorationBorder);
   pGrid->SetCell(3,0, pLabel);
 
@@ -137,9 +137,9 @@ void nuiThreadInspector::Build()
   // Running
   row++;
   pGrid->AddRows(row, 1);
-  pLabel = new nuiLabel(_T("Running"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  pLabel = new nuiLabel("Running", nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
   pGrid->SetCell(0,1, pLabel);
-  nuiAttribBase Base = GetAttribute(_T("Running"));
+  nuiAttribBase Base = GetAttribute("Running");
   nuiAttributeEditor* pEditor = Base.GetEditor();
   pEditor->SetBorder(2, 2);
   pGrid->SetCell(1,1, pEditor, nuiCenter);
@@ -148,9 +148,9 @@ void nuiThreadInspector::Build()
   // Updating
   row++;
   pGrid->AddRows(row, 1);
-  pLabel = new nuiLabel(_T("Updating"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  pLabel = new nuiLabel("Updating", nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
   pGrid->SetCell(0,2, pLabel);
-  Base = GetAttribute(_T("Updating"));
+  Base = GetAttribute("Updating");
   pEditor = Base.GetEditor();
   pEditor->SetBorder(2, 2);
   pGrid->SetCell(1,2, pEditor, nuiCenter);
@@ -158,18 +158,18 @@ void nuiThreadInspector::Build()
   // read-only updates count
   row++;
   pGrid->AddRows(row, 1);
-  pLabel = new nuiLabel(_T("Update Count"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  pLabel = new nuiLabel("Update Count", nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
   pGrid->SetCell(0,3, pLabel);
-  mpUpdateCount = new nuiLabel("0", nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  mpUpdateCount = new nuiLabel("0", nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
   pGrid->SetCell(1,3, mpUpdateCount);
 
   // update frequency
   row++;
   mFrequency = nuiRange(1.f, 0.f, 1.f, 0.1f, 0.f, 0.f);
   pGrid->AddRows(row, 1);
-  pLabel = new nuiLabel(_T("Update Frequency"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  pLabel = new nuiLabel("Update Frequency", nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
   pGrid->SetCell(0,4, pLabel);
-  nuiAttrib<const nuiRange&> Att(GetAttribute(_T("Frequency")));
+  nuiAttrib<const nuiRange&> Att(GetAttribute("Frequency"));
   Att.Set(mFrequency); //init
   pEditor = Att.GetEditor();
   pEditor->SetBorder(2, 2);
@@ -182,9 +182,9 @@ void nuiThreadInspector::Build()
   //
   
   // show long lock
-  pLabel = new nuiLabel(_T("Show Long Locks"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  pLabel = new nuiLabel("Show Long Locks", nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
   pGrid->SetCell(2,1, pLabel);
-  Base = GetAttribute(_T("ShowLongLock"));
+  Base = GetAttribute("ShowLongLock");
   pEditor = Base.GetEditor();
   pEditor->SetBorder(2, 2);
   pGrid->SetCell(3,1, pEditor, nuiCenter);
@@ -192,9 +192,9 @@ void nuiThreadInspector::Build()
 
   // long lock treshold
   mLongLockTreshold = nuiRange(10.f, 0.f, 60.f, 1.f, 0.f, 0.f);
-  pLabel = new nuiLabel(_T("Long Lock Treshold"), nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  pLabel = new nuiLabel("Long Lock Treshold", nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
   pGrid->SetCell(2,2, pLabel);
-  Att = nuiAttrib<const nuiRange&>(GetAttribute(_T("LongLockTreshold")));
+  Att = nuiAttrib<const nuiRange&>(GetAttribute("LongLockTreshold"));
   Att.Set(mLongLockTreshold); // init
   pEditor = Att.GetEditor();
   pEditor->SetBorder(2, 2);
@@ -218,7 +218,7 @@ void nuiThreadInspector::BuildThreadTree()
   std::map<nglThread::ID, std::list<nglThreadState> >::iterator it;
   nglThreadChecker::GetStates(states);
   
-  mpTree = nuiAutoRelease(new nuiTreeNode(_T("Threads")));
+  mpTree = nuiAutoRelease(new nuiTreeNode("Threads"));
   
   nuiTreeView* pTree = new nuiTreeView(mpTree);
   mpMainBox->SetCell(1, pTree);
@@ -273,8 +273,8 @@ nuiTreeNode* nuiThreadInspector::CreateNodeFromThread(nglThread::ID ID)
   
   // thread's name
   nglString label;
-  label.Format(_T("thread '%s' [0x%x]"), threadName.GetChars(), ID);
-  pBox->AddCell(new nuiLabel(label,  nuiFont::GetFont(_T("INTROSPECTOR_FONT_BOLD"))));
+  label.Format("thread '%s' [0x%x]", threadName.GetChars(), ID);
+  pBox->AddCell(new nuiLabel(label,  nuiFont::GetFont("INTROSPECTOR_FONT_BOLD")));
 
   return pNode;
 }
@@ -293,26 +293,26 @@ nuiTreeNode* nuiThreadInspector::CreateNodeFromLock(const nglThreadState& rState
   
   // lock's name
   nglString tmp;
-  tmp.Format(_T("%s '%s' [0x%x]"), 
+  tmp.Format("%s '%s' [0x%x]", 
     rState.GetLockPointer()->GetLabel().GetChars(), 
     rState.GetLockPointer()->GetName().GetChars(), rState.GetLockPointer());
-  nuiLabel* pLabel = new nuiLabel(tmp, nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL")));
+  nuiLabel* pLabel = new nuiLabel(tmp, nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
   pLabel->UseEllipsis(true);
   pBox->AddCell(pLabel);
   pBox->SetCellPixels(COL_NAME, COL_SIZE_NAME);
 
   // lock's state
-  tmp.Format(_T("- %s -"), rState.GetStateToString().GetChars());
-  pBox->AddCell(new nuiLabel(tmp, nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL"))));
+  tmp.Format("- %s -", rState.GetStateToString().GetChars());
+  pBox->AddCell(new nuiLabel(tmp, nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL")));
   pBox->SetCellPixels(COL_STATE, COL_SIZE_STATE);
   
   // lock's state time
-  tmp.Format(_T("%.3fs"), rState.GetTimeLength(mCurrentTime));
-  pBox->AddCell(new nuiLabel(tmp, nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL"))));
+  tmp.Format("%.3fs", rState.GetTimeLength(mCurrentTime));
+  pBox->AddCell(new nuiLabel(tmp, nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL")));
   pBox->SetCellPixels(COL_TIME, COL_SIZE_TIME);
   
   // lock's warning
-  pBox->AddCell(new nuiLabel(_T(""), nuiFont::GetFont(_T("INTROSPECTOR_FONT_NORMAL"))));
+  pBox->AddCell(new nuiLabel("", nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL")));
   pBox->SetCellPixels(COL_WARNING, COL_SIZE_WARNING);
   
   return pNode;
@@ -409,11 +409,11 @@ void nuiThreadInspector::SetNodeFromLock(nuiTreeNode* pLockNode, const nglThread
   nuiHBox* pBox = (nuiHBox*)pLockNode->GetElement();
   
   nglString tmp;
-  tmp.Format(_T("- %s -"), rState.GetStateToString().GetChars());
+  tmp.Format("- %s -", rState.GetStateToString().GetChars());
   nuiLabel* pLabel = (nuiLabel*)pBox->GetCell(COL_STATE);
   pLabel->SetText(tmp);
   
-  tmp.Format(_T("%.3fs"), rState.GetTimeLength(mCurrentTime));
+  tmp.Format("%.3fs", rState.GetTimeLength(mCurrentTime));
   pLabel = (nuiLabel*)pBox->GetCell(COL_TIME);
   pLabel->SetText(tmp);
 
@@ -422,9 +422,9 @@ void nuiThreadInspector::SetNodeFromLock(nuiTreeNode* pLockNode, const nglThread
 
   if (rState.GetWarning() != nglThreadState::eWarningNone)
   {
-    nuiDecoration* pDeco = nuiDecoration::Get(_T("THREADINSPECTOR_DECO_WARNING"));
+    nuiDecoration* pDeco = nuiDecoration::Get("THREADINSPECTOR_DECO_WARNING");
     if (!pDeco)
-      pDeco = new nuiColorDecoration(_T("THREADINSPECTOR_DECO_WARNING"), nuiRect(2, 2, 0, 0), nuiColor(240,0,0));
+      pDeco = new nuiColorDecoration("THREADINSPECTOR_DECO_WARNING", nuiRect(2, 2, 0, 0), nuiColor(240,0,0));
     pLabel->SetDecoration(pDeco, eDecorationBorder);
   }
   else

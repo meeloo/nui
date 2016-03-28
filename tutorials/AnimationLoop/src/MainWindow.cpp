@@ -28,9 +28,9 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 #endif
   
 #ifdef NUI_IPHONE
-  LoadCSS(_T("rsrc:/css/style-iPhone.css"));
+  LoadCSS("rsrc:/css/style-iPhone.css");
 #else
-  LoadCSS(_T("rsrc:/css/style.css"));
+  LoadCSS("rsrc:/css/style.css");
 #endif
 
 }
@@ -44,39 +44,39 @@ void MainWindow::OnCreation()
   mProgress = 0;
   
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("AnimProgress")), nuiUnitNone,
+               (nglString("AnimProgress"), nuiUnitNone,
                 nuiMakeDelegate(this, &MainWindow::GetProgress), 
                 nuiMakeDelegate(this, &MainWindow::SetProgress)));
   
   
-  nuiWidget* pContainer = (nuiWidget*)nuiBuilder::Get().CreateWidget(_T("MainContainer"));
+  nuiWidget* pContainer = (nuiWidget*)nuiBuilder::Get().CreateWidget("MainContainer");
   AddChild(pContainer);
   
-  mpCountSlider = (nuiSlider*)pContainer->GetChild(_T("countSlider"));
+  mpCountSlider = (nuiSlider*)pContainer->GetChild("countSlider");
   nuiRange& rRange = mpCountSlider->GetRange();
   rRange.SetValue(1);
   rRange.SetRange(1, 10);
   rRange.SetIncrement(1);
   rRange.SetPageIncrement(2);
-  mpCountValLabel = (nuiLabel*)pContainer->GetChild(_T("countValueLabel"));
+  mpCountValLabel = (nuiLabel*)pContainer->GetChild("countValueLabel");
   mEventSink.Connect(mpCountSlider->InteractiveValueChanged, &MainWindow::OnCountSliderChanged);
   OnCountSliderChanged(NULL);
   
   
-  mpLoopCombo = (nuiComboBox*)pContainer->GetChild(_T("loopCombo"));
+  mpLoopCombo = (nuiComboBox*)pContainer->GetChild("loopCombo");
   
-  nuiTreeNode* pTree = new nuiTreeNode(_T("loop"));
-  nuiTreeNode* pNode = new nuiTreeNode(_T("forward"));
+  nuiTreeNode* pTree = new nuiTreeNode("loop");
+  nuiTreeNode* pNode = new nuiTreeNode("forward");
   pTree->AddChild(pNode);
-  pNode = new nuiTreeNode(_T("reverse"));
+  pNode = new nuiTreeNode("reverse");
   pTree->AddChild(pNode);
-  pNode = new nuiTreeNode(_T("ping pong"));
+  pNode = new nuiTreeNode("ping pong");
   pTree->AddChild(pNode);
   
   mpLoopCombo->SetTree(pTree);
   mpLoopCombo->SetSelected((uint32)0);
   
-  mpGoButton = (nuiButton*)pContainer->GetChild(_T("goButton"));
+  mpGoButton = (nuiButton*)pContainer->GetChild("goButton");
   mEventSink.Connect(mpGoButton->Activated, &MainWindow::OnGoButtonClick);
   
   mEventSink.Connect(nuiAnimation::GetTimer()->Tick, &MainWindow::OnTimerTick);
@@ -111,7 +111,7 @@ void MainWindow::OnGoButtonClick(const nuiEvent& rEvent)
   
   nuiAttributeAnimation* pAnim = new nuiAttributeAnimation();
   pAnim->SetTargetObject(this);
-  pAnim->SetTargetAttribute(_T("AnimProgress"));
+  pAnim->SetTargetAttribute("AnimProgress");
   pAnim->SetStartValue(0);
   pAnim->SetEndValue(1);
   pAnim->SetEasing(nuiEasingCubic);
@@ -162,7 +162,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%ls'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
   
@@ -176,7 +176,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     return true;
   }
   
-  NGL_OUT(_T("%ls\n"), pCSS->GetErrorString().GetChars());
+  NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
   
   delete pCSS;
   return false;

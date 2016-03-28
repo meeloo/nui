@@ -35,7 +35,7 @@ int nuiPath::AddVertexOptim(const nuiPoint& rPoint)
 {
   if (!rPoint.IsValid())
   {
-    NGL_OUT(_T("Invalid path point: {%f, %f, %f, %f}\n"), rPoint[0], rPoint[1], rPoint[2], rPoint[3]);
+    NGL_OUT("Invalid path point: {%f, %f, %f, %f}\n", rPoint[0], rPoint[1], rPoint[2], rPoint[3]);
     NGL_ASSERT(false);
   }
   if (mVertices.empty() || !(rPoint == mVertices.back()))

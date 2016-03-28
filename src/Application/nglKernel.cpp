@@ -348,7 +348,7 @@ void nglKernel::CallOnInit()
   //TimedPrint("ucdata_init_static took %f seconds\n", then - now);
 
 #ifndef _MINUI3_
-  NGL_DEBUG( NGL_LOG(_T("kernel"), NGL_LOG_INFO, _T("Init (%d parameter%s)"), GetArgCount(), (GetArgCount() > 1) ? _T("s") : _T("")); )
+  NGL_DEBUG( NGL_LOG("kernel", NGL_LOG_INFO, "Init (%d parameter%s)", GetArgCount(), (GetArgCount() > 1) ? "s" : _T("")); )
   nglVolume* pResources = new nuiNativeResourceVolume();
   nglVolume::Mount(pResources);
 #endif
@@ -364,7 +364,7 @@ void nglKernel::CallOnInit()
 
 void nglKernel::CallOnExit(int Code)
 {
-  NGL_DEBUG( NGL_LOG(_T("kernel"), NGL_LOG_INFO, _T("Exit (code: %d)"), Code); )
+  NGL_DEBUG( NGL_LOG("kernel", NGL_LOG_INFO, "Exit (code: %d)", Code); )
   OnExit (Code);
   nuiAnimation::ReleaseTimer();
 }

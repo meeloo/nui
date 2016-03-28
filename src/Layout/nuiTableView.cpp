@@ -76,26 +76,26 @@ void nuiTableView::SetSource(nuiCellSource* pSource, bool OwnSource)
 
 void nuiTableView::InitAttributes()
 {
-  AddAttribute(new nuiAttribute<bool>(nglString(_T("EnableSelection")), nuiUnitBoolean,
+  AddAttribute(new nuiAttribute<bool>(nglString("EnableSelection"), nuiUnitBoolean,
                                       nuiMakeDelegate(this, &nuiTableView::IsSelectionEnabled),
                                       nuiMakeDelegate(this, &nuiTableView::EnableSelection)));
-//  AddAttribute(new nuiAttribute<bool>(nglString(_T("EnableMultiSelection")), nuiUnitBoolean,
+//  AddAttribute(new nuiAttribute<bool>(nglString("EnableMultiSelection"), nuiUnitBoolean,
 //                                      nuiMakeDelegate(this, &nuiTableView::IsMultiSelectionEnabled),
 //                                      nuiMakeDelegate(this, &nuiTableView::EnableSelection)));
-  AddAttribute(new nuiAttribute<nuiSize>(nglString(_T("CellHeight")), nuiUnitPixels,
+  AddAttribute(new nuiAttribute<nuiSize>(nglString("CellHeight"), nuiUnitPixels,
                                          nuiMakeDelegate(this, &nuiTableView::GetCellHeight),
                                          nuiMakeDelegate(this, &nuiTableView::SetCellHeight)));
-  AddAttribute(new nuiAttribute<bool>(nglString(_T("DrawSeparators")), nuiUnitBoolean,
+  AddAttribute(new nuiAttribute<bool>(nglString("DrawSeparators"), nuiUnitBoolean,
                                          nuiMakeDelegate(this, &nuiTableView::GetDrawSeparators),
                                          nuiMakeDelegate(this, &nuiTableView::SetDrawSeparators)));
-  AddAttribute(new nuiAttribute<const nuiColor&>(nglString(_T("SeparatorColor")), nuiUnitColor,
+  AddAttribute(new nuiAttribute<const nuiColor&>(nglString("SeparatorColor"), nuiUnitColor,
                                          nuiMakeDelegate(this, &nuiTableView::GetSeparatorColor),
                                          nuiMakeDelegate(this, &nuiTableView::SetSeparatorColor)));
 
-  AddAttribute(new nuiAttribute<nuiSize>(nglString(_T("SeparatorOffset")), nuiUnitSize,
+  AddAttribute(new nuiAttribute<nuiSize>(nglString("SeparatorOffset"), nuiUnitSize,
                                          nuiMakeDelegate(this, &nuiTableView::GetSeparatorOffset),
                                          nuiMakeDelegate(this, &nuiTableView::SetSeparatorOffset)));
-  AddAttribute(new nuiAttribute<nuiSize>(nglString(_T("SeparatorWidth")), nuiUnitSize,
+  AddAttribute(new nuiAttribute<nuiSize>(nglString("SeparatorWidth"), nuiUnitSize,
                                          nuiMakeDelegate(this, &nuiTableView::GetSeparatorWidth),
                                          nuiMakeDelegate(this, &nuiTableView::SetSeparatorWidth)));
 }

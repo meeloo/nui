@@ -144,7 +144,7 @@ struct addrinfo* nuiNetworkHost::GetAddrInfo(const nglString& rService) const
   else if (mIPSet)
   {
     uint8* ip = (uint8*)&mIP;
-    h.CFormat(_T("%d.%d.%d.%d"), ip[0], ip[1], ip[2], ip[3]);
+    h.CFormat("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
   }
 
   char* hh = NULL;
@@ -196,7 +196,7 @@ struct addrinfo* nuiNetworkHost::GetAddrInfo(const nglString& rService) const
 #endif
     }
 
-    NGL_LOG(_T("network"), 0, _T("nuiNetworkHost::Resolve error: %s\n"), err.GetChars());
+    NGL_LOG("network", 0, "nuiNetworkHost::Resolve error: %s\n", err.GetChars());
   }
 
 

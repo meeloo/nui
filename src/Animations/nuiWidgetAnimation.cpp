@@ -271,13 +271,13 @@ void nuiFadeWidgetAnim::Play(int32 Count, nuiAnimLoop LoopMode)
 
 void nuiFadeWidgetAnim::OnFrame()
 {
-  //NGL_OUT(_T("nuiFadeWidgetAnim::OnFrame()\n"));
+  //NGL_OUT("nuiFadeWidgetAnim::OnFrame()\n");
   nuiSize t = (nuiSize)GetPosition();
   nuiSize tt = 1.0f - t;
 
   float ratio = tt * mSourceAlpha + t * mDestinationAlpha;
 
-//  NGL_OUT(_T("nuiFadeWidgetAnim::OnFrame() [%f %f/%f a=%f]\n"), t, tt, Duration, ratio);
+//  NGL_OUT("nuiFadeWidgetAnim::OnFrame() [%f %f/%f a=%f]\n", t, tt, Duration, ratio);
 
   mpTarget->SetAlpha(ratio);
 }

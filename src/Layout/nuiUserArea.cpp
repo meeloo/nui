@@ -11,7 +11,7 @@
 nuiUserArea::nuiUserArea()
  : nuiWidget() 
 {
-  SetObjectClass(_T("nuiUserArea"));
+  SetObjectClass("nuiUserArea");
   mInterceptMouse = false;
   mPrepareGLContext = false;
   

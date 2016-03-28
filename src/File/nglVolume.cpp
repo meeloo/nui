@@ -68,7 +68,7 @@ void nglVolume::Mount(nglVolume* pVolume)
   uint32 i = 2;
   while (it != mVolumes.end())
   {
-    name.CFormat(_T("%s (%d)"), pVolume->GetName().GetChars(), i);
+    name.CFormat("%s (%d)", pVolume->GetName().GetChars(), i);
     i++;
     it = mVolumes.find(name);
   }
@@ -117,7 +117,7 @@ void nglVolume::GetVolumes(std::vector<nglPathVolume>& rVolumes, uint64 Flags)
 
 
 nglVolume::VolumeMap nglVolume::mVolumes;
-nglCriticalSection nglVolume::mCS(_T("nglVolumeCS"));
+nglCriticalSection nglVolume::mCS("nglVolumeCS");
 
 /// deprecated
 bool nglVolume::GetChildren(const nglPath& rPath, std::vector<nglPath>* pChildren)

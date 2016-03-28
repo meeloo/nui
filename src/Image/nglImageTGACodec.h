@@ -70,9 +70,9 @@ public:
   {
     mCanSave = false;
     mCanLoad = true;
-    mName = _T("Simple TGA loader");
-    mExtensions.push_back(_T(".tga"));
-    mInfo = _T("NGL image codec sample code");
+    mName = "Simple TGA loader";
+    mExtensions.push_back(".tga");
+    mInfo = "NGL image codec sample code";
   }
 
   virtual nglImageCodec* CreateInstance()

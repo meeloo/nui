@@ -11,7 +11,7 @@
 nuiSerializeContext::nuiSerializeContext(nuiXMLNode* pNode, nuiSerializeOperation Operation, bool recursive)
 : nuiObject()
 {
-  SetObjectClass(_T("nuiSerializeContext"));
+  SetObjectClass("nuiSerializeContext");
   mpNode = pNode;
   mRecursive = recursive;
   mOperation = Operation;

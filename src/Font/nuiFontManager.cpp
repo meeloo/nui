@@ -97,7 +97,7 @@ nuiFontRequest::nuiFontRequest(nuiFontBase* pOriginalFont, bool ForcePanoseOnlyF
   mMustHaveSizes(std::set<int32>()),
   mPanose(nuiPanose())
 {
-  if (SetObjectClass(_T("nuiFontRequest")))
+  if (SetObjectClass("nuiFontRequest"))
     InitAttributes();
   
   if (nuiFontRequest::gGenericNamesForFonts.empty())
@@ -106,107 +106,107 @@ nuiFontRequest::nuiFontRequest(nuiFontBase* pOriginalFont, bool ForcePanoseOnlyF
     // http://www.w3.org/TR/2002/WD-css3-fonts-20020802/#generic-font-families
     
     // latin serif
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Times"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Times New Roman"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Bodoni"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Garamond"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Minion Web"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("ITC Stone Serif"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Georgia"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Bitstream Cyberbit"));
+    nuiFontRequest::AddGenericNameForFont("serif", "Times");
+    nuiFontRequest::AddGenericNameForFont("serif", "Times New Roman");
+    nuiFontRequest::AddGenericNameForFont("serif", "Bodoni");
+    nuiFontRequest::AddGenericNameForFont("serif", "Garamond");
+    nuiFontRequest::AddGenericNameForFont("serif", "Minion Web");
+    nuiFontRequest::AddGenericNameForFont("serif", "ITC Stone Serif");
+    nuiFontRequest::AddGenericNameForFont("serif", "Georgia");
+    nuiFontRequest::AddGenericNameForFont("serif", "Bitstream Cyberbit");
     // cyrillic serif
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Adobe Minion Cyrillic"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Excelcior Cyrillic Upright"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Monotype Albion 70"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("ER Bukinst"));
+    nuiFontRequest::AddGenericNameForFont("serif", "Adobe Minion Cyrillic");
+    nuiFontRequest::AddGenericNameForFont("serif", "Excelcior Cyrillic Upright");
+    nuiFontRequest::AddGenericNameForFont("serif", "Monotype Albion 70");
+    nuiFontRequest::AddGenericNameForFont("serif", "ER Bukinst");
     // hebrew serif
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("New Peninim"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Raanana"));
+    nuiFontRequest::AddGenericNameForFont("serif", "New Peninim");
+    nuiFontRequest::AddGenericNameForFont("serif", "Raanana");
     // japanese serif
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Ryumin Light-KL"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Kyokasho ICA"));
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Futo Min A101"));
+    nuiFontRequest::AddGenericNameForFont("serif", "Ryumin Light-KL");
+    nuiFontRequest::AddGenericNameForFont("serif", "Kyokasho ICA");
+    nuiFontRequest::AddGenericNameForFont("serif", "Futo Min A101");
     // cherokee serif
-    nuiFontRequest::AddGenericNameForFont(_T("serif"), _T("Lo Cicero Cherokee"));
+    nuiFontRequest::AddGenericNameForFont("serif", "Lo Cicero Cherokee");
     
     // latin sans-serif
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Trebuchet"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("ITC Avant Garde Gothic"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Arial"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Verdana"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Univers"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Futura"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("ITC Stone Sans"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Gill Sans"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Akzidenz Grotesk"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Helvetica"));
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Trebuchet");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "ITC Avant Garde Gothic");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Arial");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Verdana");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Univers");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Futura");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "ITC Stone Sans");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Gill Sans");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Akzidenz Grotesk");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Helvetica");
     // greek sans-serif
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Attika"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Typiko New Era"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Tahoma"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Monotype Gill Sans 571"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Helvetica Greek"));
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Attika");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Typiko New Era");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Tahoma");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Monotype Gill Sans 571");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Helvetica Greek");
     // cyrillic sans-serif
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Helvetica Cyrillic"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("ER Univers"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Lucida Sans Unicode"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Bastion"));
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Helvetica Cyrillic");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "ER Univers");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Lucida Sans Unicode");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Bastion");
     // hebrew sans-serif
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Arial Hebrew"));
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Arial Hebrew");
     // japanese sans-serif
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Shin Go"));
-    nuiFontRequest::AddGenericNameForFont(_T("sans-serif"), _T("Heisei Kaku Gothic W5"));
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Shin Go");
+    nuiFontRequest::AddGenericNameForFont("sans-serif", "Heisei Kaku Gothic W5");
     
     // latin cursive
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Caflisch Script"));
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Comic Sans MS"));
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Adobe Poetica"));
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Sanvito"));
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Ex Ponto"));
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Snell Roundhand"));
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Apple Chancery"));
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Zapf-Chancery"));
+    nuiFontRequest::AddGenericNameForFont("cursive", "Caflisch Script");
+    nuiFontRequest::AddGenericNameForFont("cursive", "Comic Sans MS");
+    nuiFontRequest::AddGenericNameForFont("cursive", "Adobe Poetica");
+    nuiFontRequest::AddGenericNameForFont("cursive", "Sanvito");
+    nuiFontRequest::AddGenericNameForFont("cursive", "Ex Ponto");
+    nuiFontRequest::AddGenericNameForFont("cursive", "Snell Roundhand");
+    nuiFontRequest::AddGenericNameForFont("cursive", "Apple Chancery");
+    nuiFontRequest::AddGenericNameForFont("cursive", "Zapf-Chancery");
     // cyrillic cursive
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("ER Architekt"));
+    nuiFontRequest::AddGenericNameForFont("cursive", "ER Architekt");
     // hebrew cursive
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Corsiva"));
+    nuiFontRequest::AddGenericNameForFont("cursive", "Corsiva");
     // arabic cursive
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("DecoType Naskh"));
-    nuiFontRequest::AddGenericNameForFont(_T("cursive"), _T("Monotype Urdu 507"));
+    nuiFontRequest::AddGenericNameForFont("cursive", "DecoType Naskh");
+    nuiFontRequest::AddGenericNameForFont("cursive", "Monotype Urdu 507");
     
     // latin fantasy
-    nuiFontRequest::AddGenericNameForFont(_T("fantasy"), _T("Alpha Geometrique"));
-    nuiFontRequest::AddGenericNameForFont(_T("fantasy"), _T("Critter"));
-    nuiFontRequest::AddGenericNameForFont(_T("fantasy"), _T("Cottonwood"));
-    nuiFontRequest::AddGenericNameForFont(_T("fantasy"), _T("FB Reactor"));
-    nuiFontRequest::AddGenericNameForFont(_T("fantasy"), _T("Studz"));
-    nuiFontRequest::AddGenericNameForFont(_T("fantasy"), _T("Nina"));
-    nuiFontRequest::AddGenericNameForFont(_T("fantasy"), _T("Papyrus"));
+    nuiFontRequest::AddGenericNameForFont("fantasy", "Alpha Geometrique");
+    nuiFontRequest::AddGenericNameForFont("fantasy", "Critter");
+    nuiFontRequest::AddGenericNameForFont("fantasy", "Cottonwood");
+    nuiFontRequest::AddGenericNameForFont("fantasy", "FB Reactor");
+    nuiFontRequest::AddGenericNameForFont("fantasy", "Studz");
+    nuiFontRequest::AddGenericNameForFont("fantasy", "Nina");
+    nuiFontRequest::AddGenericNameForFont("fantasy", "Papyrus");
     
     // latin monospace
-    nuiFontRequest::AddGenericNameForFont(_T("monospace"), _T("Courier"));
-    nuiFontRequest::AddGenericNameForFont(_T("monospace"), _T("Courier New"));
-    nuiFontRequest::AddGenericNameForFont(_T("monospace"), _T("Prestige"));
-    nuiFontRequest::AddGenericNameForFont(_T("monospace"), _T("Everson Mono"));
+    nuiFontRequest::AddGenericNameForFont("monospace", "Courier");
+    nuiFontRequest::AddGenericNameForFont("monospace", "Courier New");
+    nuiFontRequest::AddGenericNameForFont("monospace", "Prestige");
+    nuiFontRequest::AddGenericNameForFont("monospace", "Everson Mono");
     // cyrillic monospace
-    nuiFontRequest::AddGenericNameForFont(_T("monospace"), _T("ER Kurier"));
+    nuiFontRequest::AddGenericNameForFont("monospace", "ER Kurier");
     // japanese monospace
-    nuiFontRequest::AddGenericNameForFont(_T("monospace"), _T("Osaka Monospaced"));
+    nuiFontRequest::AddGenericNameForFont("monospace", "Osaka Monospaced");
     
     // add default fonts for each system
 #ifdef _WIN32_FONTS_
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("serif")] = _T("Times New Roman");
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("sans-serif")] = _T("Arial");
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("cursive")] = _T("Comic Sans MS");
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("fantasy")] = _T("Nina");
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("monospace")] = _T("Courier New");
+    nuiFontRequest::gDefaultFontsForGenericNames["serif"] = "Times New Roman";
+    nuiFontRequest::gDefaultFontsForGenericNames["sans-serif"] = "Arial";
+    nuiFontRequest::gDefaultFontsForGenericNames["cursive"] = "Comic Sans MS";
+    nuiFontRequest::gDefaultFontsForGenericNames["fantasy"] = "Nina";
+    nuiFontRequest::gDefaultFontsForGenericNames["monospace"] = "Courier New";
 #endif
 #ifdef _CARBON_FONTS_
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("serif")] = _T("Times");
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("sans-serif")] = _T("Helvetica");
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("cursive")] = _T("Apple Chancery");
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("fantasy")] = _T("Papyrus");
-    nuiFontRequest::gDefaultFontsForGenericNames[_T("monospace")] = _T("Courier");
+    nuiFontRequest::gDefaultFontsForGenericNames["serif"] = "Times";
+    nuiFontRequest::gDefaultFontsForGenericNames["sans-serif"] = "Helvetica";
+    nuiFontRequest::gDefaultFontsForGenericNames["cursive"] = "Apple Chancery";
+    nuiFontRequest::gDefaultFontsForGenericNames["fantasy"] = "Papyrus";
+    nuiFontRequest::gDefaultFontsForGenericNames["monospace"] = "Courier";
 #endif
   }
   
@@ -279,67 +279,67 @@ void nuiFontRequest::InitAttributes()
 {
   // Name
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Name")), nuiUnitName,
+               (nglString("Name"), nuiUnitName,
                 nuiFastDelegate0<const nglString&>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetName)));
   
   // GenericName
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("GenericName")), nuiUnitName,
+               (nglString("GenericName"), nuiUnitName,
                 nuiFastDelegate0<const nglString&>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetGenericName)));
     
   // Style
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Style")), nuiUnitName,
+               (nglString("Style"), nuiUnitName,
                 nuiFastDelegate0<const nglString&>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetStyle)));
   
   // Face
   AddAttribute(new nuiAttribute<int32>
-               (nglString(_T("Face")), nuiUnitNone,
+               (nglString("Face"), nuiUnitNone,
                 nuiFastDelegate0<int32>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetFace)));
   
   // Size
   AddAttribute(new nuiAttribute<int32>
-               (nglString(_T("Size")), nuiUnitPixels,
+               (nglString("Size"), nuiUnitPixels,
                 nuiFastDelegate0<int32>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetSize)));
   
   // Italic
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("Italic")), nuiUnitName,
+               (nglString("Italic"), nuiUnitName,
                 nuiFastDelegate0<bool>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetItalic)));
   
   // Bold
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("Bold")), nuiUnitName,
+               (nglString("Bold"), nuiUnitName,
                 nuiFastDelegate0<bool>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetBold)));
   
   // Proportionnal
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("Proportionnal")), nuiUnitName,
+               (nglString("Proportionnal"), nuiUnitName,
                 nuiFastDelegate0<bool>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetProportionnal)));
   
   // Monospace
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("Monospace")), nuiUnitName,
+               (nglString("Monospace"), nuiUnitName,
                 nuiFastDelegate0<bool>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetMonospace)));
   
   // Scalable
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("Scalable")), nuiUnitName,
+               (nglString("Scalable"), nuiUnitName,
                 nuiFastDelegate0<bool>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetScalable)));
   
   // Panose
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Panose")), nuiUnitName,
+               (nglString("Panose"), nuiUnitName,
                 nuiFastDelegate0<const nglString&>(),
                 nuiMakeDelegate(this, &nuiFontRequest::_SetPanose)));
 }
@@ -615,29 +615,29 @@ void nuiFontManager::AddSystemFolders()
 void nuiFontManager::GetSystemFolders(std::map<nglString, nglPath>& rFolders)
 {
 #ifdef FONT_TEST_HACK
-  rFolders[_T("System0")] = _T("/System/Library/Fonts/Cache/");
+  rFolders["System0"] = "/System/Library/Fonts/Cache/";
 #elif (defined _CARBON_) || (defined _COCOA_)
-  rFolders[_T("System0")] = _T("/System/Library/Fonts/");
-  rFolders[_T("System1")] = _T("/Library/Fonts/");
-  rFolders[_T("System2")] = _T("~/Library/Fonts/");
+  rFolders["System0"] = "/System/Library/Fonts/";
+  rFolders["System1"] = "/Library/Fonts/";
+  rFolders["System2"] = "~/Library/Fonts/";
 #elif TARGET_IPHONE_SIMULATOR
-  rFolders[_T("System0")] = _T("/System/Library/Fonts/");
-  //rFolders[_T("System1")] = _T("/Library/Fonts/");
+  rFolders["System0"] = "/System/Library/Fonts/";
+  //rFolders["System1"] = "/Library/Fonts/";
 #elif (defined _UIKIT_)
-  rFolders[_T("System0")] = _T("/System/Library/Fonts/");
-  rFolders[_T("System1")] = _T("/System/Library/Fonts/Cache/");
+  rFolders["System0"] = "/System/Library/Fonts/";
+  rFolders["System1"] = "/System/Library/Fonts/Cache/";
 #elif (defined _WIN32_)
   nglChar p[MAX_PATH];
   HRESULT hr = SHGetFolderPath(NULL, CSIDL_FONTS, NULL, 0, p);
   if (hr == S_OK)
   {
-    rFolders[_T("System0")] = p;
+    rFolders["System0"] = p;
     
     //NGL_DEBUG( NGL_LOG("font", NGL_LOG_INFO, "Adding System0 font folder: '%s'\n", p); )
   }
   else
   {
-    rFolders[_T("System0")] = _T("/c:/windows/fonts/");
+    rFolders["System0"] = "/c:/windows/fonts/";
   }
 #elif (defined _ANDROID_)
   rFolders["System"] = "/system/fonts/";
@@ -648,7 +648,7 @@ void nuiFontManager::GetSystemFolders(std::map<nglString, nglPath>& rFolders)
   for (uint i = 0; i < count; i++)
   {
     nglString str;
-    str.CFormat(_T("System%d"), i);
+    str.CFormat("System%d", i);
     rFolders[str] = nglString(pPathes[i]);
   }
   XFreeFontPath(pPathes);
@@ -697,7 +697,7 @@ void nuiFontManager::ScanFolders(bool rescanAllFolders /* = false */)
   Info.Width = 320;
   Info.Height = 60;
   Info.Pos = nglWindowInfo::ePosCenter;
-  Info.Title = _T("nui test");
+  Info.Title = "nui test";
   Info.XPos = 0;
   Info.YPos = 0;
 
@@ -706,8 +706,8 @@ void nuiFontManager::ScanFolders(bool rescanAllFolders /* = false */)
   gpWin = new nuiMainWindow(ContextInfo, Info);
   nuiVBox* pBox = new nuiVBox();
   pBox->SetPosition(nuiCenter);
-  nuiLabel* pLabel = new nuiLabel(_T("Please wait. Scaning fonts..."));
-  gpFontPathLabel = new nuiLabel(_T("...searching..."));
+  nuiLabel* pLabel = new nuiLabel("Please wait. Scaning fonts...");
+  gpFontPathLabel = new nuiLabel("...searching...");
   //pLabel->SetTextColor(nuiColor(255, 255, 255));
   pBox->AddCell(pLabel, nuiCenter);
   pBox->AddCell(gpFontPathLabel, nuiCenter);
@@ -776,7 +776,7 @@ bool nuiFontManager::ScanSubFolder(const nglPath& rBasePath)
     
     if (gpWin)
     {
-      gpFontPathLabel->SetText(nglString().Add(_T("Found ")).Add((int32)mpFonts.size()));
+      gpFontPathLabel->SetText(nglString().Add("Found ").Add((int32)mpFonts.size()));
       gpWin->ForceRepaint();
     }
     

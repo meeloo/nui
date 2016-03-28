@@ -13,7 +13,7 @@
 nuiHTMLStyleValueBase::nuiHTMLStyleValueBase(bool use)
 : mUse(use)
 {
-  if (SetObjectClass(_T("nuiHTMLStyleValueBase")))
+  if (SetObjectClass("nuiHTMLStyleValueBase"))
   {
     
   }
@@ -53,7 +53,7 @@ nuiHTMLStyle::~nuiHTMLStyle()
 
 void nuiHTMLStyle::Init()
 {
-  if (SetObjectClass(_T("nuiHTMLStyle")))
+  if (SetObjectClass("nuiHTMLStyle"))
   {
     // Init Attributes:
   }

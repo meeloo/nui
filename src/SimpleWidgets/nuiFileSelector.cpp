@@ -11,7 +11,7 @@
 
 nuiFileSelectorBase::nuiFileSelectorBase()
 {
-  if (SetObjectClass(_T("nuiFileSelectorBase")))
+  if (SetObjectClass("nuiFileSelectorBase"))
     InitAttributes();
 }
 
@@ -23,7 +23,7 @@ nuiFileSelectorBase::~nuiFileSelectorBase()
 void nuiFileSelectorBase::InitAttributes()
 {
   AddAttribute(new nuiAttribute<nglString>
-               (nglString(_T("Filter")), nuiUnitName,
+               (nglString("Filter"), nuiUnitName,
                 nuiAttribute<nglString>::GetterDelegate(this, &nuiFileSelectorBase::GetLastFilter),
                 nuiAttribute<nglString>::SetterDelegate(this, &nuiFileSelectorBase::AddFilter)));
   
@@ -43,19 +43,19 @@ nuiTreeNode* nuiFileSelectorBase::GetNewNode(const nglPath& rPath)
     // no file is filtered
     if (mFilters.size() == 0)
       return NULL;
-    else if (IsFilterSet(_T("*")))
+    else if (IsFilterSet("*"))
     {
       if (pathName.IsBundle())
         pathName = pathName.GetRemovedExtension();
       
       pBox = new nuiHBox(2);
       pIcon = new nuiImage();
-      pIcon->SetObjectName(_T("nuiFileSelector::TreeFileIcon"));
-      pIcon->SetObjectClass(_T("nuiFileSelector::TreeFileIcon"));
+      pIcon->SetObjectName("nuiFileSelector::TreeFileIcon");
+      pIcon->SetObjectClass("nuiFileSelector::TreeFileIcon");
       
-      label = new nuiLabel(pathName.GetNodeName().IsEmpty()?_T("/"):pathName.GetNodeName());        
-      label->SetObjectName(_T("nuiFileSelector::TreeFileLabel"));      
-      label->SetObjectClass(_T("nuiFileSelector::TreeFileLabel"));      
+      label = new nuiLabel(pathName.GetNodeName().IsEmpty()?"/":pathName.GetNodeName());        
+      label->SetObjectName("nuiFileSelector::TreeFileLabel");      
+      label->SetObjectClass("nuiFileSelector::TreeFileLabel");      
     }    
     else 
     {
@@ -70,12 +70,12 @@ nuiTreeNode* nuiFileSelectorBase::GetNewNode(const nglPath& rPath)
         pBox = new nuiHBox(2);
         pIcon = new nuiImage();
         nglString objectName;
-        objectName.Format(_T("nuiFileSelector::TreeFilterIcon::%s"), rPath.GetExtension().ToLower().GetChars());
+        objectName.Format("nuiFileSelector::TreeFilterIcon::%s", rPath.GetExtension().ToLower().GetChars());
         pIcon->SetObjectName(objectName);
         pIcon->SetObjectClass(objectName);
-        label = new nuiLabel(pathName.GetNodeName().IsEmpty()?_T("/"):pathName.GetNodeName());        
-        label->SetObjectName(_T("nuiFileSelector::TreeFileLabel"));
-        label->SetObjectClass(_T("nuiFileSelector::TreeFileLabel"));
+        label = new nuiLabel(pathName.GetNodeName().IsEmpty()?"/":pathName.GetNodeName());        
+        label->SetObjectName("nuiFileSelector::TreeFileLabel");
+        label->SetObjectClass("nuiFileSelector::TreeFileLabel");
       }
     }
   }
@@ -86,15 +86,15 @@ nuiTreeNode* nuiFileSelectorBase::GetNewNode(const nglPath& rPath)
     
     nglString iconObjectName, labelObjectName;
     
-    if (rPath.GetParent().GetPathName().IsEmpty() || !rPath.GetPathName().Compare(_T("/")) || !rPath.GetParent().GetPathName().Compare(_T("/Volumes")))
+    if (rPath.GetParent().GetPathName().IsEmpty() || !rPath.GetPathName().Compare("/") || !rPath.GetParent().GetPathName().Compare("/Volumes"))
     {
-      iconObjectName = _T("nuiFileSelector::VolumeIcon");
-      labelObjectName = _T("nuiFileSelector::TreeFolderLabel");
+      iconObjectName = "nuiFileSelector::VolumeIcon";
+      labelObjectName = "nuiFileSelector::TreeFolderLabel";
     }
     else
     {
-      iconObjectName = _T("nuiFileSelector::TreeFolderIcon");
-      labelObjectName = _T("nuiFileSelector::TreeFolderLabel");
+      iconObjectName = "nuiFileSelector::TreeFolderIcon";
+      labelObjectName = "nuiFileSelector::TreeFolderLabel";
     }
     
     
@@ -102,7 +102,7 @@ nuiTreeNode* nuiFileSelectorBase::GetNewNode(const nglPath& rPath)
     pIcon = new nuiImage();
     pIcon->SetObjectName(iconObjectName);
     pIcon->SetObjectClass(iconObjectName);
-    label = new nuiLabel(rPath.GetNodeName().IsEmpty()?_T("/"):rPath.GetNodeName());        
+    label = new nuiLabel(rPath.GetNodeName().IsEmpty()?"/":rPath.GetNodeName());        
     label->SetObjectName(labelObjectName);
     label->SetObjectClass(labelObjectName);
   }
@@ -186,8 +186,8 @@ nuiFileSelectorNode::nuiFileSelectorNode(nuiFileSelectorBase* pSelector, const n
 : nuiTreeNode(pWidget, false, false, true, false)
 {
   mpSelector = pSelector;
-  SetProperty(_T("Path"), rPath.GetPathName());
-  //NGL_OUT(_T("New nuiFileSelectorNode: '%s'\n"), rPath.GetChars());
+  SetProperty("Path", rPath.GetPathName());
+  //NGL_OUT("New nuiFileSelectorNode: '%s'\n", rPath.GetChars());
 }
 
 nuiFileSelectorNode::~nuiFileSelectorNode()
@@ -206,7 +206,7 @@ void nuiFileSelectorNode::Open(bool Opened)
     nuiTreeNode::Open(Opened);
     Clear();
     
-    nglPath p(GetProperty(_T("Path")));
+    nglPath p(GetProperty("Path"));
     
     std::vector<nglPath> children;
     p.GetChildren(&children);
@@ -226,7 +226,7 @@ void nuiFileSelectorNode::Open(bool Opened)
       }
       else
       {
-        //NGL_OUT(_T("Skipping invisible file '%s'\n"), pathName.GetChars());
+        //NGL_OUT("Skipping invisible file '%s'\n", pathName.GetChars());
       }
 
       ++it;
@@ -240,7 +240,7 @@ void nuiFileSelectorNode::Open(bool Opened)
 
 bool nuiFileSelectorNode::IsEmpty() const
 {
-  nglPath p(GetProperty(_T("Path")));
+  nglPath p(GetProperty("Path"));
   return p.IsLeaf() || p.IsBundle();
 }
 
@@ -249,7 +249,7 @@ nuiWidgetPtr nuiFileSelectorNode::GetSubElement(uint32 index)
 {
   if (mSubElements.empty())
   {
-    nglPath p(GetProperty(_T("Path")));
+    nglPath p(GetProperty("Path"));
     nglPathInfo info;
     p.GetInfo(info);
     nglString str;
@@ -304,7 +304,7 @@ nuiFileSelector::nuiFileSelector(const nglPath& rPath, const std::list<nglString
 
 void nuiFileSelector::Init(const nglPath& rPath, const nglPath& rRootPath, const std::list<nglString>& rFilters, nuiEditLine* pEntry, bool showHiddenFiles, DisplayMode mode, bool ShowVolumes, bool Opened)
 {
-  if (SetObjectClass(_T("nuiFileSelector")))  
+  if (SetObjectClass("nuiFileSelector"))  
     InitAttributes();
   
 	mpEntry = pEntry;
@@ -327,7 +327,7 @@ nuiFileSelector::~nuiFileSelector()
 void nuiFileSelector::InitAttributes()
 {
   AddAttribute(new nuiAttribute<nuiColor>
-               (nglString(_T("HandleColor")), nuiUnitNone,
+               (nglString("HandleColor"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiFileSelector::GetHandleColor), 
                 nuiMakeDelegate(this, &nuiFileSelector::SetHandleColor)));    
 }
@@ -371,8 +371,8 @@ void nuiFileSelector::InitSelector (const nglPath& rPath, const nglPath& rRootPa
 
     
     mpFolderList = new nuiList(nuiVertical);
-    mpFolderList->SetObjectName(_T("nuiFileSelector::FolderView"));
-    mpFolderList->SetObjectClass(_T("nuiFileSelector::FolderView"));
+    mpFolderList->SetObjectName("nuiFileSelector::FolderView");
+    mpFolderList->SetObjectClass("nuiFileSelector::FolderView");
     mpInfoBox->SetCell(0, mpFolderList);    
     mpInfoBox->SetCellExpand(0, nuiExpandShrinkAndGrow);
 
@@ -390,21 +390,21 @@ void nuiFileSelector::InitSelector (const nglPath& rPath, const nglPath& rRootPa
       pBox->SetToken(new nuiToken<nglString>(volume.mPath.GetPathName()));
       
       nuiImage* pIcon = new nuiImage();
-      pIcon->SetObjectName(_T("nuiFileSelector::VolumeIcon"));
-      pIcon->SetObjectClass(_T("nuiFileSelector::VolumeIcon"));
+      pIcon->SetObjectName("nuiFileSelector::VolumeIcon");
+      pIcon->SetObjectClass("nuiFileSelector::VolumeIcon");
       pBox->AddCell(pIcon, nuiCenter);
       
       nuiLabel* pLabel = new nuiLabel(volume.mComment);
       pBox->AddCell(pLabel);
       pBox->SetCellExpand(pBox->GetNbCells()-1, nuiExpandShrinkAndGrow);
-      pLabel->SetObjectName(_T("nuiFileSelector::FolderLabel"));
-      pLabel->SetObjectClass(_T("nuiFileSelector::FolderLabel"));
+      pLabel->SetObjectName("nuiFileSelector::FolderLabel");
+      pLabel->SetObjectClass("nuiFileSelector::FolderLabel");
 
       mpFolderList->AddChild(pBox);
     }
 
     
-    nuiLabel* pSeparator = new nuiLabel(_T(" "));
+    nuiLabel* pSeparator = new nuiLabel(" ");
     pSeparator->SetBorder(0, 0.5);
     pSeparator->SetEnabled(false);
     mpFolderList->AddChild(pSeparator);
@@ -422,15 +422,15 @@ void nuiFileSelector::InitSelector (const nglPath& rPath, const nglPath& rRootPa
       pBox->SetToken(new nuiToken<nglString>(paths[i].GetPathName()));
       
       nuiImage* pIcon = new nuiImage();
-      pIcon->SetObjectName(_T("nuiFileSelector::FolderIcon"));
-      pIcon->SetObjectClass(_T("nuiFileSelector::FolderIcon"));
+      pIcon->SetObjectName("nuiFileSelector::FolderIcon");
+      pIcon->SetObjectClass("nuiFileSelector::FolderIcon");
       pBox->AddCell(pIcon, nuiCenter);
     
       nuiLabel* pLabel = new nuiLabel(paths[i].GetNodeName());
       pBox->AddCell(pLabel);
       pBox->SetCellExpand(pBox->GetNbCells()-1, nuiExpandShrinkAndGrow);
-      pLabel->SetObjectName(_T("nuiFileSelector::FolderLabel"));
-      pLabel->SetObjectClass(_T("nuiFileSelector::FolderLabel"));
+      pLabel->SetObjectName("nuiFileSelector::FolderLabel");
+      pLabel->SetObjectClass("nuiFileSelector::FolderLabel");
       mpFolderList->AddChild(pBox);
     }
     
@@ -439,15 +439,15 @@ void nuiFileSelector::InitSelector (const nglPath& rPath, const nglPath& rRootPa
   }
   
   
-  nuiTreeNode* pTree = nuiAutoRelease(new nuiTreeNode(new nuiLabel(_T("Loading..."))));
+  nuiTreeNode* pTree = nuiAutoRelease(new nuiTreeNode(new nuiLabel("Loading...")));
   switch (mode)
   {
     case eTree:
       {
         mpTreeView = new nuiTreeView(pTree, true);
         mpTreeView->SetMultiSelectable(false);
-        mpTreeView->SetObjectName(_T("nuiFileSelector::TreeView"));
-        mpTreeView->SetObjectClass(_T("nuiFileSelector::TreeView"));
+        mpTreeView->SetObjectName("nuiFileSelector::TreeView");
+        mpTreeView->SetObjectClass("nuiFileSelector::TreeView");
 
 
         nuiScrollView* pScrollView = new nuiScrollView();
@@ -459,8 +459,8 @@ void nuiFileSelector::InitSelector (const nglPath& rPath, const nglPath& rRootPa
       {
         nuiScrollView* pScrollView = new nuiScrollView(true, false);
         mpTreeView = new nuiColumnTreeView(pTree);
-        mpTreeView->SetObjectName(_T("nuiFileSelector::TreeView"));
-        mpTreeView->SetObjectClass(_T("nuiFileSelector::TreeView"));
+        mpTreeView->SetObjectName("nuiFileSelector::TreeView");
+        mpTreeView->SetObjectClass("nuiFileSelector::TreeView");
 
         pScrollView->AddChild(mpTreeView);
         mpMainBox->SetCell(1, pScrollView);
@@ -509,21 +509,21 @@ void nuiFileSelector::SetInfoView(nuiWidget* pWidget)
 void nuiFileSelector::FormatFileSize(nuiSize size, nglString& str)
 {
   if (size > 1000000000)
-    str.Format(_T("%.2f Go"), size / (1024*1024*1024));
+    str.Format("%.2f Go", size / (1024*1024*1024));
   else if (size > 1000000)
-    str.Format(_T("%.2f Mo"), size / (1024*1024));
+    str.Format("%.2f Mo", size / (1024*1024));
   else if (size > 1000)
-    str.Format(_T("%.2f Ko"), size / 1024);
+    str.Format("%.2f Ko", size / 1024);
   else 
-    str.Format(_T("%d b"), size);  
+    str.Format("%d b", size);  
 }
 
 
 nuiWidget* nuiFileSelector::GetFileInfo(const nglPath& rPath)
 {
   nuiWidget* pMainCont = new nuiWidget();
-  pMainCont->SetObjectName(_T("nuiFileSelector::InfoView"));
-  pMainCont->SetObjectClass(_T("nuiFileSelector::InfoView"));
+  pMainCont->SetObjectName("nuiFileSelector::InfoView");
+  pMainCont->SetObjectClass("nuiFileSelector::InfoView");
   
   nuiVBox* pBox = new nuiVBox(0);
   pBox->SetExpand(nuiExpandShrinkAndGrow);
@@ -534,7 +534,7 @@ nuiWidget* nuiFileSelector::GetFileInfo(const nglPath& rPath)
   pBox->AddCell(pIcon, nuiCenter);
   
   nglString objectName;
-  objectName.Format(_T("nuiFileSelector::InfoViewIcon::%s"), rPath.GetExtension().ToLower().GetChars());
+  objectName.Format("nuiFileSelector::InfoViewIcon::%s", rPath.GetExtension().ToLower().GetChars());
   pIcon->SetObjectName(objectName);
   pIcon->SetObjectClass(objectName);
   
@@ -555,7 +555,7 @@ nuiWidget* nuiFileSelector::GetFileInfo(const nglPath& rPath)
   nglString timestr;
   nglTime lastMod = info.LastMod;
   lastMod.GetLocalTime(timeInfo);
-  timestr.Format(_T("%d / %d / %d   %d:%d"), timeInfo.Year+1900, timeInfo.Month, timeInfo.Day, timeInfo.Hours, timeInfo.Minutes);
+  timestr.Format("%d / %d / %d   %d:%d", timeInfo.Year+1900, timeInfo.Month, timeInfo.Day, timeInfo.Hours, timeInfo.Minutes);
   pBox->AddCell(new nuiLabel(timestr), nuiCenter);
 
   
@@ -603,7 +603,7 @@ bool nuiFileSelector::SetPath(const nglPath& rPath)
       nuiFileSelectorNode* pBNode = dynamic_cast<nuiFileSelectorNode*>(children.at(j));
       if (pBNode)
       {
-        nglPath p(pBNode->GetProperty(_T("Path")));
+        nglPath p(pBNode->GetProperty("Path"));
         if (p.GetNodeName() == tokens.at(i))
         {
           pNode = pBNode;
@@ -695,7 +695,7 @@ nglPath nuiFileSelector::GetPath() const
   nuiTreeNode* pTree = mpTreeView->GetSelectedNode();
   if (!pTree)
     pTree = mpTreeView->GetTree();
-	nglPath pathName = pTree->GetProperty(_T("Path"));
+	nglPath pathName = pTree->GetProperty("Path");
 	nglString node = pathName.GetNodeName();
 	
 	nglString addin;
@@ -729,7 +729,7 @@ nglPath nuiFileSelector::GetFolderPath() const
 nglPath nuiFileSelector::GetRootPath() const
 {
   nuiTreeNode* pTree = mpTreeView->GetTree();
-  return pTree->GetProperty(_T("Path"));
+  return pTree->GetProperty("Path");
 }
 
 
@@ -747,7 +747,7 @@ void nuiFileSelector::SetDisplayMode(nuiFileSelector::DisplayMode mode)
   
   mDisplayMode = mode;
   nuiTreeNodePtr pTree = mpTreeView->GetTree();
-  mpTreeView->SetTree(nuiAutoRelease(new nuiTreeNode(_T("Changing view mode..."))));
+  mpTreeView->SetTree(nuiAutoRelease(new nuiTreeNode("Changing view mode...")));
   
   Clear();
   
@@ -757,8 +757,8 @@ void nuiFileSelector::SetDisplayMode(nuiFileSelector::DisplayMode mode)
       {
         mpTreeView = new nuiTreeView(pTree, true);
         mpTreeView->SetMultiSelectable(false);
-        mpTreeView->SetObjectName(_T("nuiFileSelector::TreeView"));
-        mpTreeView->SetObjectClass(_T("nuiFileSelector::TreeView"));
+        mpTreeView->SetObjectName("nuiFileSelector::TreeView");
+        mpTreeView->SetObjectClass("nuiFileSelector::TreeView");
 
         nuiScrollView* pScrollView = new nuiScrollView();
         pScrollView->AddChild(mpTreeView);
@@ -769,8 +769,8 @@ void nuiFileSelector::SetDisplayMode(nuiFileSelector::DisplayMode mode)
     case eColumn:
       {
         mpTreeView = new nuiColumnTreeView(pTree);
-        mpTreeView->SetObjectName(_T("nuiFileSelector::TreeView"));
-        mpTreeView->SetObjectClass(_T("nuiFileSelector::TreeView"));
+        mpTreeView->SetObjectName("nuiFileSelector::TreeView");
+        mpTreeView->SetObjectClass("nuiFileSelector::TreeView");
 
         nuiScrollView* pScrollView = new nuiScrollView(true, false);
         pScrollView->AddChild(mpTreeView);
@@ -796,7 +796,7 @@ void nuiFileSelector::OnSelected (const nuiEvent& rEvent)
 	nglPath curPath;
   nuiTreeNode* pTree = mpTreeView->GetSelectedNode();
 	if (pTree != NULL)
-		curPath = pTree->GetProperty(_T("Path"));
+		curPath = pTree->GetProperty("Path");
   
    
 	if (curPath.IsLeaf())
@@ -825,7 +825,7 @@ void nuiFileSelector::OnFolderListSelectionChanged(const nuiEvent& event)
   nglString SelectedPathName;
   nuiGetTokenValue<nglString>(pToken, SelectedPathName);
   nglPath SelectedPath(SelectedPathName);
-  //NGL_OUT(_T("new Path :__") + SelectedPath.GetPathName() + _T("__\n"));
+  //NGL_OUT("new Path :__" + SelectedPath.GetPathName() + "__\n");
   SetRootPath(SelectedPath);
 }
 

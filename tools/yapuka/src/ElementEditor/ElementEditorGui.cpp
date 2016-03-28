@@ -36,16 +36,16 @@ ElementEditorGui::ElementEditorGui()
   pBkg->AddChild(pButtonBox);
   
   // Main Buttons
-  nuiButton* pLoad = new nuiButton(_T("Load project"));
+  nuiButton* pLoad = new nuiButton("Load project");
   pButtonBox->AddCell(pLoad,nuiCenter);
   
-  nuiButton* pSave = new nuiButton(_T("Save project"));
+  nuiButton* pSave = new nuiButton("Save project");
   pButtonBox->AddCell(pSave,nuiCenter);
   
-  nuiButton* pFrameEditor = new nuiButton(_T("New Frame"));
+  nuiButton* pFrameEditor = new nuiButton("New Frame");
   pButtonBox->AddCell(pFrameEditor,nuiCenter);
   
-  nuiButton* pWidgetEditor = new nuiButton(_T("New Widget"));
+  nuiButton* pWidgetEditor = new nuiButton("New Widget");
   pButtonBox->AddCell(pWidgetEditor,nuiCenter);
   
   
@@ -63,9 +63,9 @@ ElementEditorGui::ElementEditorGui()
   
 	
 	
-  nuiTreeNode* pMainTree = new nuiTreeNode(_T("Elements"), true, false);
-	mpFrameTree = new nuiTreeNode(_T("Frames"), true, false);
-	mpWidgetTree = new nuiTreeNode(_T("Widgets"), true, false);
+  nuiTreeNode* pMainTree = new nuiTreeNode("Elements", true, false);
+	mpFrameTree = new nuiTreeNode("Frames", true, false);
+	mpWidgetTree = new nuiTreeNode("Widgets", true, false);
 	pMainTree->AddChild(mpFrameTree);
 	pMainTree->AddChild(mpWidgetTree);
 	
@@ -104,7 +104,7 @@ void ElementEditorGui::OnSave(const nuiEvent& rEvent)
   pEditPane->AddChild(pEntry);
   nuiPane* pPane = new nuiPane();
   pPane->SetCurve(8);
-  nuiFileSelector* pFS = new nuiFileSelector(path, _T("*"), pEntry, nuiFileSelector::eColumn);
+  nuiFileSelector* pFS = new nuiFileSelector(path, "*", pEntry, nuiFileSelector::eColumn);
   
   nuiVBox* pBox = new nuiVBox();
   pPane->AddChild(pFS);
@@ -121,7 +121,7 @@ void ElementEditorGui::OnSave(const nuiEvent& rEvent)
   pBox->SetCellExpand(1, nuiExpandFixed);
   
   nuiDialog* pDialog = new nuiDialog(this);
-  pDialog->InitDialog(_T("Save yapuka project"), NULL, nuiDialog::eDialogButtonOk | nuiDialog::eDialogButtonCancel);
+  pDialog->InitDialog("Save yapuka project", NULL, nuiDialog::eDialogButtonOk | nuiDialog::eDialogButtonCancel);
   pDialog->SetContents(pBox, nuiCenter);
   pDialog->SetDefaultPos();
   pDialog->SetToken(new nuiToken<nuiFileSelector*>(pFS));
@@ -136,7 +136,7 @@ void ElementEditorGui::OnSaved(const nuiEvent& rEvent)
   
   if (pDialog->GetResult() == nuiDialog::eDialogAccepted)
   {
-    nuiXML xml(_T("yapuka"));
+    nuiXML xml("yapuka");
     
     ElementDescList::iterator it = mElements.begin();
     ElementDescList::iterator end = mElements.end();
@@ -150,19 +150,19 @@ void ElementEditorGui::OnSaved(const nuiEvent& rEvent)
       {
         nuiXMLNode* pNode = pXML->Clone(&xml);
         printf("Saving %ls\n", pElement->GetName().GetChars());
-        pNode->SetAttribute(_T("Name"), pElement->GetName());
+        pNode->SetAttribute("Name", pElement->GetName());
       }
       ++it;
     }
     
     nglString Dump(xml.Dump());
     
-    NGL_OUT(_T("\n%ls\n"), Dump.GetChars());
+    NGL_OUT("\n%ls\n", Dump.GetChars());
     
     nglPath path(pFS->GetPath());
     if (path.GetExtension().IsEmpty())
     {
-      path = (path.GetPathName() + nglString(_T(".ypk")));
+      path = (path.GetPathName() + nglString(".ypk"));
     }
     
     nglFile file(path, eFileWrite);
@@ -182,7 +182,7 @@ void ElementEditorGui::OnLoad(const nuiEvent& rEvent)
   pEditPane->AddChild(pEntry);
   nuiPane* pPane = new nuiPane();
   pPane->SetCurve(8);
-  nuiFileSelector* pFS = new nuiFileSelector(path, _T("*"), pEntry, nuiFileSelector::eColumn);
+  nuiFileSelector* pFS = new nuiFileSelector(path, "*", pEntry, nuiFileSelector::eColumn);
   
   nuiVBox* pBox = new nuiVBox();
   pPane->AddChild(pFS);
@@ -199,7 +199,7 @@ void ElementEditorGui::OnLoad(const nuiEvent& rEvent)
   pBox->SetCellExpand(1, nuiExpandFixed);
   
   nuiDialog* pDialog = new nuiDialog(this);
-  pDialog->InitDialog(_T("Load yapuka project"), NULL, nuiDialog::eDialogButtonOk | nuiDialog::eDialogButtonCancel);
+  pDialog->InitDialog("Load yapuka project", NULL, nuiDialog::eDialogButtonOk | nuiDialog::eDialogButtonCancel);
   pDialog->SetContents(pBox, nuiCenter);
   pDialog->SetDefaultPos();
   pDialog->SetToken(new nuiToken<nuiFileSelector*>(pFS));
@@ -230,7 +230,7 @@ void ElementEditorGui::OnLoaded(const nuiEvent& rEvent)
       ElementDesc* pDesc = new ElementDesc();
       const nglString& rName = pNode->GetName();
       printf("Load Element: %ls\n", rName.GetChars());
-      if (rName == _T("nuiFrame"))
+      if (rName == "nuiFrame")
       {
         pDesc->SetType(eElementFrame);
       }
@@ -239,7 +239,7 @@ void ElementEditorGui::OnLoaded(const nuiEvent& rEvent)
         pDesc->SetType(eElementWidget);
       }
       
-      pDesc->SetName(pNode->GetAttribute(_T("Name")));
+      pDesc->SetName(pNode->GetAttribute("Name"));
       pDesc->SetXML(pNode->Clone());
       mElements.push_back(pDesc);
     }
@@ -256,7 +256,7 @@ void ElementEditorGui::OnNewFrame(const nuiEvent& rEvent)
 {
   ElementDesc* pDesc = new ElementDesc();
   pDesc->SetType(eElementFrame);
-  pDesc->SetName(_T("unnamed frame"));
+  pDesc->SetName("unnamed frame");
   mElements.push_back(pDesc);
   UpdateList();
   if (!mElements.empty())
@@ -267,7 +267,7 @@ void ElementEditorGui::OnNewWidget(const nuiEvent& rEvent)
 {
   ElementDesc* pDesc = new ElementDesc();
   pDesc->SetType(eElementWidget);
-  pDesc->SetName(_T("unnamed widget"));
+  pDesc->SetName("unnamed widget");
   mElements.push_back(pDesc);
   UpdateList();
   if (!mElements.empty())
@@ -281,9 +281,9 @@ void ElementEditorGui::UpdateList()
   
   if (mElements.empty())
   {
-    nuiTreeNode* pNode = new nuiTreeNode(_T("Empty"));
+    nuiTreeNode* pNode = new nuiTreeNode("Empty");
     mpFrameTree->AddChild(pNode);
-		pNode = new nuiTreeNode(_T("Empty"));
+		pNode = new nuiTreeNode("Empty");
     mpWidgetTree->AddChild(pNode);
   }
   else
@@ -315,10 +315,10 @@ void ElementEditorGui::UpdateList()
     }
     
     if (!nbFrames)
-      mpFrameTree->AddChild(new nuiTreeNode(_T("Empty")));
+      mpFrameTree->AddChild(new nuiTreeNode("Empty"));
     
     if (!nbWidgets)
-      mpWidgetTree->AddChild(new nuiTreeNode(_T("Empty")));
+      mpWidgetTree->AddChild(new nuiTreeNode("Empty"));
     
   }
   
@@ -330,9 +330,9 @@ void ElementEditorGui::UpdateList()
 
 void ElementEditorGui::ClearEditor()
 {
-  nuiLabel* pLabel = new nuiLabel(_T("No editor"), nuiFont::GetFont(36));
+  nuiLabel* pLabel = new nuiLabel("No editor", nuiFont::GetFont(36));
   pLabel->SetPosition(nuiCenter);
-  pLabel->SetTextColor(nuiColor(_T("lightgray")));
+  pLabel->SetTextColor(nuiColor("lightgray"));
   mpEditorContainer->AddChild(pLabel);
 }
 
