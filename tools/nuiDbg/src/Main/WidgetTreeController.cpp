@@ -10,6 +10,51 @@
 #include "Main/WidgetTreeController.h"
 #include "Main/nuiDbg.h"
 
+class LayerTreeNode : public nuiTreeNode
+{
+public:
+  LayerTreeNode(nuiDbgLayer* pLayer)
+  : nuiTreeNode(pLayer->GetObjectName(), false, false, true), mpLayer(pLayer)
+  {
+
+  }
+
+private:
+  nuiDbgLayer* mpLayer = nullptr;
+};
+
+class WindowTreeNode : public nuiTreeNode
+{
+public:
+  WindowTreeNode(nuiDbgWindow* pWindow)
+  : nuiTreeNode(pWindow->GetObjectName(), false, false, true, true), mpWindow(pWindow)
+  {
+
+  }
+
+  void Open(bool opened)
+  {
+    if (opened)
+    {
+      Clear();
+      auto layers(mpWindow->GetLayers());
+      for (auto layer : layers)
+      {
+        LayerTreeNode* pLayer = new LayerTreeNode(layer);
+        AddChild(pLayer);
+      }
+    }
+    else
+    {
+      Clear();
+      nuiTreeNode::Open(opened);
+    }
+  }
+
+private:
+  nuiDbgWindow* mpWindow = nullptr;
+};
+
 WidgetTreeController::WidgetTreeController()
 : mSink(this)
 {
@@ -37,7 +82,7 @@ void WidgetTreeController::Built()
     nuiTreeNode* pRoot = new nuiTreeNode("windows", true);
     for (auto window : windows)
     {
-      nuiTreeNode* pNode = new nuiTreeNode(window->GetObjectName(), true, false);
+      nuiTreeNode* pNode = new WindowTreeNode(window);
       pRoot->AddChild(pNode);
     }
 
