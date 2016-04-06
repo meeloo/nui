@@ -370,7 +370,7 @@ bool nuiSlider::AddChild(nuiWidgetPtr pChild)
   {
     if (mpBackground)
       mpBackground->Trash();
-    mpHandle = pChild;
+    mpBackground = pChild;
   }
 
 
