@@ -611,7 +611,6 @@
 
 /* Begin PBXFileReference section */
 		612094A51A39B64F006CACE7 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
-		61B37FE61A180AF0004EA14B /* Buttons copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Buttons copy2-Info.plist"; path = "/Users/vince/Work/nui_test/nui3/tutorials/Tutorials/Buttons copy2-Info.plist"; sourceTree = "<absolute>"; };
 		61B37FF01A180B3D004EA14B /* Buttons_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Buttons_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B3802D1A180D74004EA14B /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 		61B3802F1A180D7F004EA14B /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -630,7 +629,6 @@
 		E516F37C185CBB5700D97CA6 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
 		E516F37D185CBB5700D97CA6 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		E516F3A6185CBC1200D97CA6 /* Additive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Additive.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F3A7185CBC1200D97CA6 /* Buttons copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Buttons copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/Buttons copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F3A9185CBC8A00D97CA6 /* Additive.2008.sln */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Additive.2008.sln; sourceTree = "<group>"; };
 		E516F3AA185CBC8A00D97CA6 /* Additive.2008.vcproj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Additive.2008.vcproj; sourceTree = "<group>"; };
 		E516F3AB185CBC8A00D97CA6 /* dlist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = dlist.plist; sourceTree = "<group>"; };
@@ -646,17 +644,11 @@
 		E516F3B9185CBC8A00D97CA6 /* MainWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainWindow.cpp; sourceTree = "<group>"; };
 		E516F3BA185CBC8A00D97CA6 /* MainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainWindow.h; sourceTree = "<group>"; };
 		E516F3F4185CBEDF00D97CA6 /* AnimationLoop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnimationLoop.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F3F5185CBEDF00D97CA6 /* Additive copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Additive copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/Additive copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F421185CBEF600D97CA6 /* AudioDecoder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioDecoder.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F422185CBEF600D97CA6 /* AnimationLoop copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AnimationLoop copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/AnimationLoop copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F44E185CBF0200D97CA6 /* AudioEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F44F185CBF0200D97CA6 /* AudioDecoder copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AudioDecoder copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/AudioDecoder copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F47B185CBF0800D97CA6 /* AudioPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F47C185CBF0800D97CA6 /* AudioEngine copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AudioEngine copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/AudioEngine copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F4A8185CBF1200D97CA6 /* AudioRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F4A9185CBF1200D97CA6 /* AudioPlayer copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AudioPlayer copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/AudioPlayer copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F4D5185CBF1D00D97CA6 /* Checkerboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Checkerboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F4D6185CBF1D00D97CA6 /* AudioRecorder copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AudioRecorder copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/AudioRecorder copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F4D8185CBF3B00D97CA6 /* AnimationLoop-iPhone.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AnimationLoop-iPhone.plist"; sourceTree = "<group>"; };
 		E516F4D9185CBF3B00D97CA6 /* AnimationLoop.2008.sln */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AnimationLoop.2008.sln; sourceTree = "<group>"; };
 		E516F4DA185CBF3B00D97CA6 /* AnimationLoop.2008.vcproj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AnimationLoop.2008.vcproj; sourceTree = "<group>"; };
@@ -759,17 +751,11 @@
 		E516F599185CBF7900D97CA6 /* MainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainWindow.h; sourceTree = "<group>"; };
 		E516F5B8185CDB2F00D97CA6 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E516F5D2185D157300D97CA6 /* Checkerboard copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Checkerboard copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F5D3185D157300D97CA6 /* Checkerboard copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Checkerboard copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/Checkerboard copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F5E8185D158000D97CA6 /* ColorSelector copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ColorSelector copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F5E9185D158000D97CA6 /* ColorSelector copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ColorSelector copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/ColorSelector copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F5FE185D158900D97CA6 /* ComboBox copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ComboBox copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F5FF185D158900D97CA6 /* ComboBox copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ComboBox copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/ComboBox copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F614185D159100D97CA6 /* Commands copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Commands copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F615185D159100D97CA6 /* Commands copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Commands copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/Commands copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F62A185D159A00D97CA6 /* CoverFlow copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CoverFlow copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F62B185D159A00D97CA6 /* CoverFlow copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CoverFlow copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/CoverFlow copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F640185D15A500D97CA6 /* CSSFontSelection copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CSSFontSelection copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E516F641185D15A500D97CA6 /* CSSFontSelection copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CSSFontSelection copy-Info.plist"; path = "/Users/meeloo/work/nui3/tutorials/Tutorials/CSSFontSelection copy-Info.plist"; sourceTree = "<absolute>"; };
 		E516F643185D15CC00D97CA6 /* Checkerboard.2005.sln */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Checkerboard.2005.sln; sourceTree = "<group>"; };
 		E516F644185D15CC00D97CA6 /* Checkerboard.2005.vcproj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Checkerboard.2005.vcproj; sourceTree = "<group>"; };
 		E516F645185D15CC00D97CA6 /* Checkerboard.2008.sln */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Checkerboard.2008.sln; sourceTree = "<group>"; };
@@ -1894,20 +1880,6 @@
 				E55E77A8185BBC62005F01B1 /* Tutorials */,
 				E55E77A1185BBC62005F01B1 /* Frameworks */,
 				E55E77A0185BBC62005F01B1 /* Products */,
-				E516F3A7185CBC1200D97CA6 /* Buttons copy-Info.plist */,
-				E516F3F5185CBEDF00D97CA6 /* Additive copy-Info.plist */,
-				E516F422185CBEF600D97CA6 /* AnimationLoop copy-Info.plist */,
-				E516F44F185CBF0200D97CA6 /* AudioDecoder copy-Info.plist */,
-				E516F47C185CBF0800D97CA6 /* AudioEngine copy-Info.plist */,
-				E516F4A9185CBF1200D97CA6 /* AudioPlayer copy-Info.plist */,
-				E516F4D6185CBF1D00D97CA6 /* AudioRecorder copy-Info.plist */,
-				E516F5D3185D157300D97CA6 /* Checkerboard copy-Info.plist */,
-				E516F5E9185D158000D97CA6 /* ColorSelector copy-Info.plist */,
-				E516F5FF185D158900D97CA6 /* ComboBox copy-Info.plist */,
-				E516F615185D159100D97CA6 /* Commands copy-Info.plist */,
-				E516F62B185D159A00D97CA6 /* CoverFlow copy-Info.plist */,
-				E516F641185D15A500D97CA6 /* CSSFontSelection copy-Info.plist */,
-				61B37FE61A180AF0004EA14B /* Buttons copy2-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -3624,8 +3596,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -3634,7 +3606,6 @@
 					"$(inherited)",
 					NGL_STATIC_BUILD,
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -3643,11 +3614,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Applications/Xcode51-DP2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
 					../../include,
 					"../$(TARGET_NAME)/src/",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3673,7 +3642,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "NGL_STATIC_BUILD ";
@@ -3685,11 +3654,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Applications/Xcode51-DP2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
 					../../include,
 					"../$(TARGET_NAME)/src/",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

@@ -22,10 +22,10 @@
 
 const nglChar* gpWindowErrorTable[] =
 {
-  /*  0 */ _T("No error"),
-  /*  1 */ _T("System window creation failed"),
-  /*  2 */ _T("Full screen video mode unavailable"),
-  /*  3 */ _T("Properties out of range"),
+  /*  0 */ "No error",
+  /*  1 */ "System window creation failed",
+  /*  2 */ "Full screen video mode unavailable",
+  /*  3 */ "Properties out of range",
   NULL
 };
 
@@ -246,7 +246,7 @@ const nglChar* gpWindowErrorTable[] =
   CGPoint newp = [pTouch locationInView: (UIView*)self];
   CGPoint oldp = [pTouch previousLocationInView: (UIView*)self];    
 
-  NGL_OUT(_T("Touch Info [%p] [@%d]: [%s], [%d], [x:%f y:%f]->[x:%f y:%f]\n"),
+  NGL_OUT("Touch Info [%p] [@%d]: [%s], [%d], [x:%f y:%f]->[x:%f y:%f]\n",
             pTouch, [pTouch timestamp],
             touchPhase == UITouchPhaseBegan ?       "Clicked"   :
             touchPhase == UITouchPhaseMoved ?       "Moved"     :
@@ -266,7 +266,7 @@ const nglChar* gpWindowErrorTable[] =
   NSArray* pArray = [pSet allObjects];
   NGL_ASSERT(pArray);
   NSUInteger count = [pArray count];
-  NGL_OUT(_T("Dump touches info: %d\n"), count);
+  NGL_OUT("Dump touches info: %d\n", count);
 
   std::vector<UITouch*> touches;
   touches.resize((uint)count);
@@ -493,7 +493,7 @@ const nglChar* gpWindowErrorTable[] =
 
   if (!res)
   {
-    if (!mpNGLWindow->CallOnTextInput(_T("\n")))
+    if (!mpNGLWindow->CallOnTextInput("\n"))
     {
       [self hideKeyboard];
       mpNGLWindow->CallOnTextInputCancelled();
@@ -575,13 +575,13 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   mpUIView = _view;
   mpCALayer = _view.layer;
 
-  NGL_LOG(_T("window"), NGL_LOG_INFO, _T("trying to create GLES context"));
+  NGL_LOG("window", NGL_LOG_INFO, "trying to create GLES context");
   rContext.Dump(NGL_LOG_INFO);
   
   if ((rContext.TargetAPI != eTargetAPI_OpenGL) && (rContext.TargetAPI != eTargetAPI_OpenGL2))
   {
     // UIKit Implementation only supports OpenGLES renderer so far
-    NGL_LOG(_T("window"), NGL_LOG_INFO, _T("bad renderer"));
+    NGL_LOG("window", NGL_LOG_INFO, "bad renderer");
     NGL_ASSERT(0);
     return;
   }
@@ -708,7 +708,7 @@ void nglWindow::UpdateLayer()
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
   {
-    NGL_LOG(_T("window"), NGL_LOG_ERROR, _T("Failed to make complete framebuffer object\n"));
+    NGL_LOG("window", NGL_LOG_ERROR, "Failed to make complete framebuffer object\n");
     NGL_ASSERT(0);
   }
 
@@ -789,7 +789,7 @@ uint nglWindow::GetHeight () const
 
 bool nglWindow::SetSize (uint Width, uint Height)
 {
-  //NGL_OUT(_T("nglWindow::SetSize(%d, %d)\n"), Width, Height);
+  //NGL_OUT("nglWindow::SetSize(%d, %d)\n", Width, Height);
   if (mWidth == (GLint)Width &&
       mHeight == (GLint)Height)
     return false;
@@ -814,7 +814,7 @@ bool nglWindow::SetPosition (int XPos, int YPos)
 
 nglString nglWindow::GetTitle() const
 {
-  return _T("UIKit Window\n");
+  return "UIKit Window\n";
 }
 
 void nglWindow::SetTitle (const nglString& rTitle)
@@ -838,7 +838,7 @@ const nglWindow::OSInfo* nglWindow::GetOSInfo() const
 void nglWindow::BeginSession()
 {
 #ifdef _DEBUG_WINDOW_
-  NGL_LOG(_T("window"), NGL_LOG_INFO, _T("BeginSession\n"));
+  NGL_LOG("window", NGL_LOG_INFO, "BeginSession\n");
 #endif
   NGL_ASSERT(mpEAGLContext);
   [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext];
@@ -851,7 +851,7 @@ void nglWindow::EndSession()
 #ifndef __NOGLCONTEXT__
 
 #ifdef _DEBUG_WINDOW_
-  NGL_LOG(_T("window"), NGL_LOG_INFO, _T("EndSession\n"));
+  NGL_LOG("window", NGL_LOG_INFO, "EndSession\n");
 #endif
 	
   NGL_ASSERT(mpEAGLContext);
@@ -915,13 +915,13 @@ bool nglWindow::GetResolution(float& rHorizontal, float& rVertical) const
 void nglWindow::EnterModalState()
 {
   SetState(eShow);
-  NGL_OUT(_T("nglWindow::EnterModalState NOT IMPLENTED YET!"));
+  NGL_OUT("nglWindow::EnterModalState NOT IMPLENTED YET!");
 //  NGL_ASSERT(!"Not Implemented");
 }
 
 void nglWindow::ExitModalState()
 {
-  NGL_OUT(_T("nglWindow::ExitModalState NOT IMPLENTED YET!"));
+  NGL_OUT("nglWindow::ExitModalState NOT IMPLENTED YET!");
 //  NGL_ASSERT(!"Not Implemented");  
 }
 

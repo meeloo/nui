@@ -44,23 +44,23 @@ mHorizontalHotRectActive(true)
 
 void nuiScrollView::InitAttributes()
 {
-  AddAttribute(new nuiAttribute<bool>(_T("EnableHorizontalScroll"), nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::GetEnableHorizontalScroll), nuiMakeDelegate(this, &nuiScrollView::SetEnableHorizontalScroll)));
-  AddAttribute(new nuiAttribute<bool>(_T("EnableVerticalScroll"), nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::GetEnableVerticalScroll), nuiMakeDelegate(this, &nuiScrollView::SetEnableVerticalScroll)));
-  AddAttribute(new nuiAttribute<bool>(_T("EnableSmoothScrolling"), nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::IsSmoothScrollingEnabled), nuiMakeDelegate(this, &nuiScrollView::EnableSmoothScrolling)));
+  AddAttribute(new nuiAttribute<bool>("EnableHorizontalScroll", nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::GetEnableHorizontalScroll), nuiMakeDelegate(this, &nuiScrollView::SetEnableHorizontalScroll)));
+  AddAttribute(new nuiAttribute<bool>("EnableVerticalScroll", nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::GetEnableVerticalScroll), nuiMakeDelegate(this, &nuiScrollView::SetEnableVerticalScroll)));
+  AddAttribute(new nuiAttribute<bool>("EnableSmoothScrolling", nuiUnitYesNo, nuiMakeDelegate(this, &nuiScrollView::IsSmoothScrollingEnabled), nuiMakeDelegate(this, &nuiScrollView::EnableSmoothScrolling)));
   
-  AddAttribute(new nuiAttribute<float>(_T("HIncrement"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetHIncrement), nuiMakeDelegate(this, &nuiScrollView::SetHIncrement)));
-  AddAttribute(new nuiAttribute<float>(_T("VIncrement"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetVIncrement), nuiMakeDelegate(this, &nuiScrollView::SetVIncrement)));
+  AddAttribute(new nuiAttribute<float>("HIncrement", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetHIncrement), nuiMakeDelegate(this, &nuiScrollView::SetHIncrement)));
+  AddAttribute(new nuiAttribute<float>("VIncrement", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetVIncrement), nuiMakeDelegate(this, &nuiScrollView::SetVIncrement)));
   
-  AddAttribute(new nuiAttribute<float>(_T("HPos"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetXPos), nuiMakeDelegate(this, &nuiScrollView::SetXPos)));
-  AddAttribute(new nuiAttribute<float>(_T("VPos"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetYPos), nuiMakeDelegate(this, &nuiScrollView::SetYPos)));
+  AddAttribute(new nuiAttribute<float>("HPos", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetXPos), nuiMakeDelegate(this, &nuiScrollView::SetXPos)));
+  AddAttribute(new nuiAttribute<float>("VPos", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetYPos), nuiMakeDelegate(this, &nuiScrollView::SetYPos)));
   
-  AddAttribute(new nuiAttribute<float>(_T("HOffset"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetXOffset), nuiMakeDelegate(this, &nuiScrollView::SetXOffset)));
-  AddAttribute(new nuiAttribute<float>(_T("VOffset"), nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetYOffset), nuiMakeDelegate(this, &nuiScrollView::SetYOffset)));
+  AddAttribute(new nuiAttribute<float>("HOffset", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetXOffset), nuiMakeDelegate(this, &nuiScrollView::SetXOffset)));
+  AddAttribute(new nuiAttribute<float>("VOffset", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetYOffset), nuiMakeDelegate(this, &nuiScrollView::SetYOffset)));
 }
 
 void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVerticalScrollBar, bool Horizontal, bool Vertical)
 {
-  if (SetObjectClass(_T("nuiScrollView")))
+  if (SetObjectClass("nuiScrollView"))
     InitAttributes();
   
   SetAutoClip(true);
@@ -234,7 +234,7 @@ nuiRect nuiScrollView::CalcIdealSize()
 #ifdef _DEBUG_LAYOUT
       if (GetDebug())
       {
-        NGL_OUT(_T("\tnuiScrollView::CalcIdealSize: [%s %s] size %s\n"), pItem->GetObjectClass().GetChars(), pItem->GetObjectName().GetChars(), mIdealRect.GetValue().GetChars());
+        NGL_OUT("\tnuiScrollView::CalcIdealSize: [%s %s] size %s\n", pItem->GetObjectClass().GetChars(), pItem->GetObjectName().GetChars(), mIdealRect.GetValue().GetChars());
       }
 #endif
     }
@@ -257,7 +257,7 @@ nuiRect nuiScrollView::CalcIdealSize()
 #ifdef _DEBUG_LAYOUT
   if (GetDebug())
   {
-    NGL_OUT(_T("nuiScrollView::CalcIdealSize: %s\n"), mIdealRect.GetValue().GetChars());
+    NGL_OUT("nuiScrollView::CalcIdealSize: %s\n", mIdealRect.GetValue().GetChars());
   }
 #endif
   
@@ -269,7 +269,7 @@ bool nuiScrollView::SetRect(const nuiRect& rRect)
 #ifdef _DEBUG_LAYOUT
   if (GetDebug())
   {
-    NGL_OUT(_T("nuiScrollView::SetRect: %s\n"), rRect.GetValue().GetChars());
+    NGL_OUT("nuiScrollView::SetRect: %s\n", rRect.GetValue().GetChars());
   }
 #endif
   
@@ -450,7 +450,7 @@ bool nuiScrollView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy
   //  #ifdef _DEBUG_LAYOUT
   //  if (GetDebug())
   //  {
-  //    NGL_OUT(_T("\tnuiScrollView::SetChildrenRect: (%f, %f) (%f, %f) - (%f, %f)\n"), x, y, xx, yy, scrollv, scrollh);
+  //    NGL_OUT("\tnuiScrollView::SetChildrenRect: (%f, %f) (%f, %f) - (%f, %f)\n", x, y, xx, yy, scrollv, scrollh);
   //  }
   //  #endif
   
@@ -502,7 +502,7 @@ bool nuiScrollView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy
 #ifdef _DEBUG_LAYOUT
         if (GetDebug())
         {
-          NGL_OUT(_T("\tnuiScrollView::SetChildrenRect: SetLayout(%s)\n"), rect.GetValue().GetChars());
+          NGL_OUT("\tnuiScrollView::SetChildrenRect: SetLayout(%s)\n", rect.GetValue().GetChars());
         }
 #endif
         
@@ -543,7 +543,7 @@ bool nuiScrollView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy
 #ifdef _DEBUG_LAYOUT
         if (GetDebug())
         {
-          NGL_OUT(_T("\tnuiScrollView::SetChildrenRect: SetLayout(%s)\n"), rect.GetValue().GetChars());
+          NGL_OUT("\tnuiScrollView::SetChildrenRect: SetLayout(%s)\n", rect.GetValue().GetChars());
         }
 #endif
         
@@ -1448,8 +1448,8 @@ void nuiScrollView::ActivateMobileMode()
   mpHorizontal->SetBackgroundDeco(NULL);
   mpVertical->SetBackgroundDeco(NULL);
   
-  mpHorizontal->SetForegroundDecoName(_T("nuiDefaultDecorationMobileScrollbarHandle"));
-  mpVertical->SetForegroundDecoName(_T("nuiDefaultDecorationMobileScrollbarHandle"));
+  mpHorizontal->SetForegroundDecoName("nuiDefaultDecorationMobileScrollbarHandle");
+  mpVertical->SetForegroundDecoName("nuiDefaultDecorationMobileScrollbarHandle");
   SetBarSize(6);
 }
 

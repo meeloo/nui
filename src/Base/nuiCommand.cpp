@@ -202,7 +202,7 @@ nglString nuiCommandDesc::Dump() const
   
   for (uint32 i=0; i < (uint32)mArgsName.size(); i++)
   {
-    res.Append(_T(" (")).Append(mArgsType[i]).Append(_T(")")).Append(mArgsName[i]);
+    res.Append(" (").Append(mArgsType[i]).Append(")").Append(mArgsName[i]);
   }
   
   return res;

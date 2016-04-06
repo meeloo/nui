@@ -10,7 +10,7 @@
 nuiImage::nuiImage (nuiTexture* pTexture, bool AlreadyAcquired)
   : nuiWidget(), mColor(255, 255, 255, 255)
 {
-  if (SetObjectClass(_T("nuiImage")))
+  if (SetObjectClass("nuiImage"))
     InitAttributes();
 
   mpTexture = pTexture;
@@ -27,7 +27,7 @@ nuiImage::nuiImage (nuiTexture* pTexture, bool AlreadyAcquired)
 nuiImage::nuiImage (nglIStream* pInput, nglImageCodec* pCodec)
   : nuiWidget(), mColor(255, 255, 255, 255)
 {
-  if (SetObjectClass(_T("nuiImage")))
+  if (SetObjectClass("nuiImage"))
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(pInput, pCodec);
@@ -40,21 +40,21 @@ nuiImage::nuiImage (nglIStream* pInput, nglImageCodec* pCodec)
 nuiImage::nuiImage (const nglPath& rPath, nglImageCodec* pCodec)
   : nuiWidget(), mColor(255, 255, 255, 255)
 {
-  if (SetObjectClass(_T("nuiImage")))
+  if (SetObjectClass("nuiImage"))
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(rPath, pCodec);
   mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
-  SetProperty(_T("Source"),rPath.GetPathName());
+  SetProperty("Source",rPath.GetPathName());
   ResetTextureRect();
 }
 
 nuiImage::nuiImage (nglImageInfo& rInfo, bool Clone)
   : nuiWidget(), mColor(255, 255, 255, 255)
 {
-  if (SetObjectClass(_T("nuiImage")))
+  if (SetObjectClass("nuiImage"))
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(rInfo, Clone);
@@ -67,7 +67,7 @@ nuiImage::nuiImage (nglImageInfo& rInfo, bool Clone)
 nuiImage::nuiImage (const nglImage& rImage)
   : nuiWidget(), mColor(255, 255, 255, 255)
 {
-  if (SetObjectClass(_T("nuiImage")))
+  if (SetObjectClass("nuiImage"))
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(rImage);
@@ -80,7 +80,7 @@ nuiImage::nuiImage (const nglImage& rImage)
 nuiImage::nuiImage (nglImage* pImage, bool OwnImage)
   : nuiWidget(), mColor(255, 255, 255, 255)
 {
-  if (SetObjectClass(_T("nuiImage")))
+  if (SetObjectClass("nuiImage"))
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(pImage,OwnImage);
@@ -94,22 +94,22 @@ nuiImage::nuiImage (nglImage* pImage, bool OwnImage)
 void nuiImage::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglPath&>
-               (nglString(_T("Texture")), nuiUnitNone,
+               (nglString("Texture"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiImage::GetTexturePath), 
                 nuiMakeDelegate(this, &nuiImage::SetTexturePath)));
 
   AddAttribute(new nuiAttribute<const nuiRect&>
-               (nglString(_T("TextureRect")), nuiUnitNone,
+               (nglString("TextureRect"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiImage::GetTextureRect), 
                 nuiMakeDelegate(this, &nuiImage::SetTextureRect)));
 
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("Color")), nuiUnitNone,
+               (nglString("Color"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiImage::GetColor), 
                 nuiMakeDelegate(this, &nuiImage::SetColor)));
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("UseAlpha")), nuiUnitYesNo,
+               (nglString("UseAlpha"), nuiUnitYesNo,
                 nuiMakeDelegate(this, &nuiImage::GetUseAlpha),
                 nuiMakeDelegate(this, &nuiImage::SetUseAlpha)));
 }
@@ -129,7 +129,7 @@ void nuiImage::SetTexturePath(const nglPath& rTexturePath)
   pTexture->Release();
 //  mUseAlpha = true;
   //SetFixedAspectRatio(true);
-  SetProperty(_T("Source"), mTexturePath.GetPathName());
+  SetProperty("Source", mTexturePath.GetPathName());
 }
 
 void nuiImage::SetTexture(nuiTexture* pTex)
@@ -146,7 +146,7 @@ void nuiImage::SetTexture(nuiTexture* pTex)
 //  mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
-  SetProperty(_T("Source"), _T("Memory Buffer"));
+  SetProperty("Source", "Memory Buffer");
   ResetTextureRect();
   Invalidate();
 }

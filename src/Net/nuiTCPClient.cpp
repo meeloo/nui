@@ -46,33 +46,67 @@ nuiTCPClient::~nuiTCPClient()
   Close();
 }
 
-bool nuiTCPClient::Connect(const nuiNetworkHost& rHost)
+bool nuiTCPClient::Connect(const nuiNetworkHost& rHost, nuiSocketPool* pPool, nuiSocketPool::TriggerMode triggerMode)
 {
   if (!Init(AF_INET, SOCK_STREAM, 0))
     return false;
 
-  struct addrinfo* addr = nuiSocket::GetAddrInfo(rHost);
-  int res = connect(mSocket, addr->ai_addr, addr->ai_addrlen);
-  if (res)
-    DumpError(this, res, __FUNC__);
+  if (pPool)
+  {
+    // Async version:
+    nglThreadFunction* pThread = new nglThreadFunction([=](){
+      struct addrinfo* addr = nuiSocket::GetAddrInfo(rHost);
+      int res = connect(mSocket, addr->ai_addr, addr->ai_addrlen);
+      
+      UpdateIdle();
+      
+      freeaddrinfo(addr);
+      if (res)
+      {
+        DumpError(this, res, __FUNC__, "Connection error");
+        App->GetMainQueue().Post(nuiMakeTask<void>([&](){
+          ConnectError();
+        }));
+        return;
+      }
+      
+      mReadConnected = mWriteConnected = res == 0;
 
-  UpdateIdle();
+      App->GetMainQueue().Post(nuiMakeTask<void>([=](){
+        pPool->Add(this, triggerMode);
+        Connected();
+      }));
+    });
+    pThread->SetAutoDelete(true);
+    mReadConnected = mWriteConnected = false;
+    pThread->Start();
+  }
+  else
+  {
+    // Sync version:
+    struct addrinfo* addr = nuiSocket::GetAddrInfo(rHost);
+    int res = connect(mSocket, addr->ai_addr, addr->ai_addrlen);
+    if (res)
+      DumpError(this, res, __FUNC__);
 
-  freeaddrinfo(addr);
+    UpdateIdle();
 
-  mReadConnected = mWriteConnected = res == 0;
+    freeaddrinfo(addr);
+
+    mReadConnected = mWriteConnected = res == 0;
+  }
 
   return mReadConnected;
 }
 
-bool nuiTCPClient::Connect(const nglString& rHost, int16 port)
+bool nuiTCPClient::Connect(const nglString& rHost, int16 port, nuiSocketPool* pPool, nuiSocketPool::TriggerMode triggerMode)
 {
-  return Connect(nuiNetworkHost(rHost, port, nuiNetworkHost::eTCP));
+  return Connect(nuiNetworkHost(rHost, port, nuiNetworkHost::eTCP), pPool, triggerMode);
 }
 
-bool nuiTCPClient::Connect(uint32 ipaddress, int16 port)
+bool nuiTCPClient::Connect(uint32 ipaddress, int16 port, nuiSocketPool* pPool, nuiSocketPool::TriggerMode triggerMode)
 {
-  return Connect(nuiNetworkHost(ipaddress, port, nuiNetworkHost::eTCP));
+  return Connect(nuiNetworkHost(ipaddress, port, nuiNetworkHost::eTCP), pPool, triggerMode);
 }
 
 void nuiTCPClient::SetNoDelay(bool set)
@@ -246,7 +280,7 @@ int32 nuiTCPClient::GetAvailable() const
   return PendingBytes;
 }
 
-bool nuiTCPClient::CanWrite() const
+bool nuiTCPClient::GetCanWrite() const
 {
   return IsWriteConnected();
 }
@@ -307,6 +341,8 @@ void nuiTCPClient::OnCanRead()
   if (mReadDelegate)
     mReadDelegate(*this);
 
+  CanRead();
+
   std::vector<uint8> Data;
   ReceiveAvailable(Data);
 
@@ -318,6 +354,8 @@ void nuiTCPClient::OnCanWrite()
 {
   if (mWriteDelegate)
     mWriteDelegate(*this);
+
+  CanWrite();
 
   SendWriteBuffer();
   if (mAutoDelete && mOut.GetSize() == 0)
@@ -363,6 +401,7 @@ void nuiTCPClient::SendWriteBuffer()
 void nuiTCPClient::OnReadClosed()
 {
   NGL_LOG("socket", NGL_LOG_INFO, "%d read closed\n", GetSocket());
+  ReadClosed();
   nuiSocket::OnReadClosed();
   mReadConnected = false;
 }
@@ -370,6 +409,7 @@ void nuiTCPClient::OnReadClosed()
 void nuiTCPClient::OnWriteClosed()
 {
   NGL_LOG("socket", NGL_LOG_INFO, "%d write closed\n", GetSocket());
+  WriteClosed();
   nuiSocket::OnWriteClosed();
   mWriteConnected = false;
 }

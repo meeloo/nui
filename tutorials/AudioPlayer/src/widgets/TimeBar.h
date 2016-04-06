@@ -9,7 +9,7 @@
 
 #include "nui.h"
 
-class TimeBar : public nuiSimpleContainer
+class TimeBar : public nuiWidget
 {
 public:
   TimeBar(nuiAttrib<uint64>& rPositionAttrib, nuiAttrib<uint64>& rLengthAttrib, double SampleRate);

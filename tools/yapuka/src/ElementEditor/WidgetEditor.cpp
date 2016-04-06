@@ -18,7 +18,7 @@ WidgetInfo::WidgetInfo(nuiWidget* pWidget, bool isContainer)
 	
 	if (mIsContainer)
 	{
-		mpContainer = (nuiSimpleContainer*) dynamic_cast <nuiSimpleContainer*> (pWidget);
+		mpContainer = (nuiWidget*) dynamic_cast <nuiWidget*> (pWidget);
 		mpWidget = NULL;
 	}
 	else
@@ -38,7 +38,7 @@ nuiWidget* WidgetInfo::GetWidget()
 	return mpWidget;
 }
 
-nuiSimpleContainer* WidgetInfo::GetContainer()
+nuiWidget* WidgetInfo::GetContainer()
 {
 	return mpContainer;
 }
@@ -83,7 +83,7 @@ WidgetEditor::WidgetEditor(ElementDesc* pDesc, ElementInspector* pInspector)
 	pContainerScroll->AddChild(mpContainerList);
 	mEventSink.Connect(mpContainerList->Activated, &WidgetEditor::OnActivated, (void*)mpContainerList);
 	
-	ToolPane* pContainerPane = new ToolPane(_T("Container List"), pContainerScroll);
+	ToolPane* pContainerPane = new ToolPane("Container List", pContainerScroll);
 	mpInspector->AddToolpane(pContainerPane, 250/* max height */);
 
 
@@ -95,7 +95,7 @@ WidgetEditor::WidgetEditor(ElementDesc* pDesc, ElementInspector* pInspector)
 	pWidgetScroll->AddChild(mpWidgetList);
 	mEventSink.Connect(mpWidgetList->Activated, &WidgetEditor::OnActivated, (void*)mpWidgetList);
 
-	ToolPane* pWidgetPane = new ToolPane(_T("Widget List"), pWidgetScroll);
+	ToolPane* pWidgetPane = new ToolPane("Widget List", pWidgetScroll);
 	mpInspector->AddToolpane(pWidgetPane, 250/* max height */);
 
 
@@ -106,7 +106,7 @@ WidgetEditor::WidgetEditor(ElementDesc* pDesc, ElementInspector* pInspector)
 	{
     const nuiWidgetDesc& desc = *it;
 		nuiLabel* pLabel = new nuiLabel(desc.GetClassName());
-    if (!desc.GetClassGroup().Compare(_T("Container")))
+    if (!desc.GetClassGroup().Compare("Container"))
       mpContainerList->AddChild(pLabel);
     else
       mpWidgetList->AddChild(pLabel);
@@ -121,8 +121,8 @@ WidgetEditor::WidgetEditor(ElementDesc* pDesc, ElementInspector* pInspector)
   pSplitter->SetMasterChild(false);
 	AddChild(pSplitter);
 	
-	mpTreeView = new nuiSimpleContainer();
-	mpWidgetView = new nuiSimpleContainer();
+	mpTreeView = new nuiWidget();
+	mpWidgetView = new nuiWidget();
 
 	
 	
@@ -130,7 +130,7 @@ WidgetEditor::WidgetEditor(ElementDesc* pDesc, ElementInspector* pInspector)
 	pSplitter->AddChild(mpWidgetView);
 	
 	
-	mpTreeRoot = new nuiTreeNode(_T("unamed widget"));
+	mpTreeRoot = new nuiTreeNode("unamed widget");
 	WidgetInfo* info  = new WidgetInfo(mpWidgetView, true);
 	mpTreeRoot->SetToken(new nuiToken<WidgetInfo*>(info));
 	
@@ -173,9 +173,9 @@ void WidgetEditor::BuildTreeView(const nuiXMLNode* pXmlNode, nuiTreeNode* pParen
 //    if (!pWidget)
 //      continue;
 //      
-//    nuiTreeNode* pNode = new nuiTreeNode(pWidget->GetProperty(_T("Class")));
+//    nuiTreeNode* pNode = new nuiTreeNode(pWidget->GetProperty("Class"));
 //    
-//    nuiSimpleContainer* pContainer = (nuiSimpleContainer*) dynamic_cast <nuiSimpleContainer*>(pWidget);
+//    nuiWidget* pContainer = (nuiWidget*) dynamic_cast <nuiWidget*>(pWidget);
 //    if (pContainer)
 //    {
 //      // store the relation (treenode->container)
@@ -231,7 +231,7 @@ void WidgetEditor::OnSelectionChanged(const nuiEvent& rEvent)
 	NGL_ASSERT(res == true);
 	
 	// the associated widget may be a container or a simple widget
-	nuiSimpleContainer* pSelectedContainer = pSelectionInfo->GetContainer();
+	nuiWidget* pSelectedContainer = pSelectionInfo->GetContainer();
 	if (pSelectedContainer == NULL)
 		pTargetedWidget = pSelectionInfo->GetWidget();
 	else 
@@ -242,9 +242,9 @@ void WidgetEditor::OnSelectionChanged(const nuiEvent& rEvent)
     
 		
 	// create a toolpane with the name attribute of the selected widget as a title
-	nuiAttrib<const nglString&> ClassAttribute = pTargetedWidget->GetAttribute(_T("Class"));
+	nuiAttrib<const nglString&> ClassAttribute = pTargetedWidget->GetAttribute("Class");
 	NGL_ASSERT(ClassAttribute.IsValid());
-	nuiAttrib<const nglString&> NameAttribute = pTargetedWidget->GetAttribute(_T("Name"));
+	nuiAttrib<const nglString&> NameAttribute = pTargetedWidget->GetAttribute("Name");
 	NGL_ASSERT(NameAttribute.IsValid());
   
 
@@ -252,7 +252,7 @@ void WidgetEditor::OnSelectionChanged(const nuiEvent& rEvent)
 
 
 	// a button to delete the widget
-	nuiButton* pBtn = new nuiButton(_T("delete widget"));
+	nuiButton* pBtn = new nuiButton("delete widget");
 	mEventSink.Connect(pBtn->Activated, &WidgetEditor::OnDeleteActivated);
 
   std::list<nuiAttribBase> attributes;
@@ -336,7 +336,7 @@ void WidgetEditor::OnActivated(const nuiEvent& rEvent)
 	NGL_ASSERT(res == true);
 	
 	// the associated widget is not a container, it's a simple widget : stop the process
-	nuiSimpleContainer* pSelectedContainer = pSelectionInfo->GetContainer();
+	nuiWidget* pSelectedContainer = pSelectionInfo->GetContainer();
 	if (pSelectedContainer == NULL)
 	{
     if (DialogCantDo())
@@ -363,7 +363,7 @@ void WidgetEditor::OnActivated(const nuiEvent& rEvent)
 	
 	// is the new widget a Container or not?
 	bool isContainer = false;
-	nuiSimpleContainer* pContainer = (nuiSimpleContainer*) dynamic_cast <nuiSimpleContainer*> (pWidget);
+	nuiWidget* pContainer = (nuiWidget*) dynamic_cast <nuiWidget*> (pWidget);
 	if (pContainer)
 	{
 		isContainer = true;
@@ -409,9 +409,9 @@ bool WidgetEditor::DialogCantDo()
   pPane->SetCurve(16);
   pPane->SetUserSize(pWin->GetWidth()*.35f, pWin->GetHeight() * .1f);
 
-	pPane->AddChild(new nuiLabel(_T("The selected parent is not a container!\nYou can't add the selected widget!")));
+	pPane->AddChild(new nuiLabel("The selected parent is not a container!\nYou can't add the selected widget!"));
 	
-  mpDialog->InitDialog(_T("Alors on me dit que non..."), NULL, nuiDialog::eDialogButtonOk);
+  mpDialog->InitDialog("Alors on me dit que non...", NULL, nuiDialog::eDialogButtonOk);
   mpDialog->SetContents(pPane);
   mpDialog->SetDefaultPos();
 	
@@ -435,9 +435,9 @@ void WidgetEditor::FillWidgetDelegates()
 	if (!mWidgetDelegates.empty())
 		return;
 	
-	mWidgetDelegates[_T("nuiLabel")] = WidgetDelegateLabel;
-	mWidgetDelegates[_T("nuiTitledPane")] = WidgetDelegateTitledPane;
-	mWidgetDelegates[_T("nuiFolderPane")] = WidgetDelegateFolderPane;
+	mWidgetDelegates["nuiLabel"] = WidgetDelegateLabel;
+	mWidgetDelegates["nuiTitledPane"] = WidgetDelegateTitledPane;
+	mWidgetDelegates["nuiFolderPane"] = WidgetDelegateFolderPane;
 }
 
 
@@ -464,7 +464,7 @@ void WidgetEditor::CommitWidgetChanges(nuiTreeNode* pTreeNode, nuiXMLNode* pXmlP
 		NGL_ASSERT(res == true);
 		
 		// the associated widget may be a a container or a simple widget
-		nuiSimpleContainer* pSelectedContainer = pSelectionInfo->GetContainer();
+		nuiWidget* pSelectedContainer = pSelectionInfo->GetContainer();
 		if (pSelectedContainer == NULL)
 			pWidget = pSelectionInfo->GetWidget();
 		else 
@@ -494,11 +494,11 @@ void WidgetEditor::CommitChanges()
 {
   if (mpWidgetView->GetChildrenCount() > 0)
   {
-    nuiXMLNode* pNode = new nuiXMLNode(_T("widget"));
+    nuiXMLNode* pNode = new nuiXMLNode("widget");
       
     CommitWidgetChanges(mpTreeRoot, pNode);
     
-    pNode->SetAttribute(_T("Name"), mpDesc->GetName());
+    pNode->SetAttribute("Name", mpDesc->GetName());
     mpDesc->SetXML(pNode);
   }
   else 

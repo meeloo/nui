@@ -81,35 +81,35 @@ nglString nglCPUInfo::Dump()
 
   if (count == 0)
   {
-    text = _T("no host CPU information available");
+    text = "no host CPU information available";
     return text;
   }
 
   switch (GetFamily())
   {
-    case eUnknown: text += _T("unknown"); break;
-    case eIA32   : text += _T("IA32"); break;
-    case eIA64   : text += _T("IA64"); break;
-    case ePPC    : text += _T("PPC"); break;
-    case eAlpha  : text += _T("Alpha"); break;
-    case eMIPS   : text += _T("MIPS"); break;
+    case eUnknown: text += "unknown"; break;
+    case eIA32   : text += "IA32"; break;
+    case eIA64   : text += "IA64"; break;
+    case ePPC    : text += "PPC"; break;
+    case eAlpha  : text += "Alpha"; break;
+    case eMIPS   : text += "MIPS"; break;
   }
 
   if (count > 1)
   {
-    buffer.Format(_T(" x %d"), count);
-    text += _T(" x %d");
+    buffer.Format(" x %d", count);
+    text += " x %d";
   }
 
-  buffer.Format(_T("%s%s%s%s%s"),
-    HasMMX()     ? _T(" MMX") : _T(""),
-    HasSSE()     ? _T(" SSE") : _T(""),
-    HasSSE2()    ? _T(" SSE2") : _T(""),
-    Has3DNow()   ? _T(" 3DNow") : _T(""),
-    HasAltivec() ? _T(" Altivec") : _T(""));
+  buffer.Format("%s%s%s%s%s",
+    HasMMX()     ? " MMX" : _T(""),
+    HasSSE()     ? " SSE" : _T(""),
+    HasSSE2()    ? " SSE2" : _T(""),
+    Has3DNow()   ? " 3DNow" : _T(""),
+    HasAltivec() ? " Altivec" : _T(""));
   if (buffer.GetLength())
   {
-    text += _T(" with");
+    text += " with";
     text += buffer;
   }
 

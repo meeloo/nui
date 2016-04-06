@@ -14,8 +14,8 @@ void WidgetDelegateLabel(nuiWidget* pWidget)
 {
 	nuiLabel* pLabel = (nuiLabel*) pWidget;
 	
-	pLabel->SetObjectName(_T("unnamed label"));
-	pLabel->SetText(_T("empty label"));
+	pLabel->SetObjectName("unnamed label");
+	pLabel->SetText("empty label");
 }
 
 
@@ -23,14 +23,14 @@ void WidgetDelegateTitledPane(nuiWidget* pWidget)
 {
 	nuiTitledPane* pPane = (nuiTitledPane*) pWidget;
 	
-	pPane->SetObjectName(_T("unnamed titledpane"));
-	pPane->SetTitle(_T("unnamed titledpane"));
+	pPane->SetObjectName("unnamed titledpane");
+	pPane->SetTitle("unnamed titledpane");
 }
 
 void WidgetDelegateFolderPane(nuiWidget* pWidget)
 {
 	nuiFolderPane* pFolder = (nuiFolderPane*) pWidget;
 	
-	pFolder->SetObjectName(_T("unnamed folderpane"));
-	pFolder->SetTitle(_T("unnamed folderpane"));
+	pFolder->SetObjectName("unnamed folderpane");
+	pFolder->SetTitle("unnamed folderpane");
 }

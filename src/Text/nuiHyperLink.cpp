@@ -11,10 +11,10 @@ nuiHyperLink::nuiHyperLink()
 : nuiLabel(_T("")),
 mURL(_T(""))
 {
-  if (SetObjectClass(_T("nuiHyperLink")))
+  if (SetObjectClass("nuiHyperLink"))
     InitAttributes();
 
-  SetTextColor(nuiColor(_T("nuiHyperLink")));
+  SetTextColor(nuiColor("nuiHyperLink"));
 }
 
 
@@ -22,17 +22,17 @@ nuiHyperLink::nuiHyperLink(const nglString& rURL, const nglString& rLabel)
   : nuiLabel(rLabel.IsNull() ? rURL : rLabel),
     mURL(rURL)
 {
-  if (SetObjectClass(_T("nuiHyperLink")))
+  if (SetObjectClass("nuiHyperLink"))
     InitAttributes();
     
-  SetTextColor(nuiColor(_T("nuiHyperLink")));
+  SetTextColor(nuiColor("nuiHyperLink"));
 }
 
 
 void nuiHyperLink::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("URL")), nuiUnitName,
+               (nglString("URL"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHyperLink::GetURL), 
                 nuiMakeDelegate(this, &nuiHyperLink::SetURL)));  
 }

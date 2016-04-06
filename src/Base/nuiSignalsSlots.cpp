@@ -42,7 +42,6 @@ void nuiSlotsSink::DisconnectAll()
 void nuiSlotsSink::AddConnection(nuiSignal* pSignal, const nuiDelegateMemento &slot) 
 {
   mConnections.insert(std::make_pair(pSignal, slot));
-  uint32 count = mConnections.size();
 }
 
 void nuiSlotsSink::RemoveConnection(nuiSignal* pSignal, const nuiDelegateMemento &slot) 

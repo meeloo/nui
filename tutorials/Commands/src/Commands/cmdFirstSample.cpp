@@ -11,7 +11,7 @@
 #include "Application.h"
 #include "MainWindow_.h"
 
-cmdFirstSample::cmdFirstSample() : nuiCommand(_T("FirstCommandRef"), _T("first Sample command"), true/*can undo*/, true/* use command manager*/, true/*can repeat*/)
+cmdFirstSample::cmdFirstSample() : nuiCommand("FirstCommandRef", "first Sample command", true/*can undo*/, true/* use command manager*/, true/*can repeat*/)
 {
   mArg1 = mArg2 = 0;
 }
@@ -47,7 +47,7 @@ bool cmdFirstSample::ExecuteDo()
 bool cmdFirstSample::ExecuteUndo()
 {
   // here you can do everything you want to "undo" the action programmed in ::ExecuteDo()
-  GetMainWindow()->AddMessage(_T("cmdFirstSample ExecuteUndo"));
+  GetMainWindow()->AddMessage("cmdFirstSample ExecuteUndo");
   return true;
 }
     
@@ -113,10 +113,10 @@ nuiCommand* cmdFirstSample::Clone()
 // Constr
 //
 //
-cmdFirstSample::Desc::Desc() : nuiCommandDesc(_T("FirstCommandRef"))
+cmdFirstSample::Desc::Desc() : nuiCommandDesc("FirstCommandRef")
 {
-  AddArg(_T("number1"), _T("int"));
-  AddArg(_T("number2"), _T("int"));
+  AddArg("number1", "int");
+  AddArg("number2", "int");
 }
         
 
@@ -140,7 +140,7 @@ nuiCommand* cmdFirstSample::Desc::CreateCommand() const
 //
 nglString cmdFirstSample::Desc::Comment() const
 {
-  return _T("this a sample command. It simply adds two integer numbers.");
+  return "this a sample command. It simply adds two integer numbers.";
 }
         
         

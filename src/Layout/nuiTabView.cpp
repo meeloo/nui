@@ -17,7 +17,7 @@ nuiTabView::nuiTabView(nuiPosition tabPosition, bool decoratedBackground)
   mCurrentTabIndex(0), mTabPosition(tabPosition), mDecoratedBackground(decoratedBackground),
 mChangeOnDrag(false)
 {
-  SetObjectClass(_T("nuiTabView"));
+  SetObjectClass("nuiTabView");
   mChildrenRectUnion = true;
   mFoldable = false;
   mFolded = false;
@@ -312,8 +312,8 @@ void nuiTabView::InsertTab(nuiWidget* pTitle, nuiWidget* pContents, int32 pos)
   if (mDecoratedBackground)
   {
     pDecoContents = new nuiWidget();
-    pDecoContents->SetObjectName(_T("nuiTabView::Contents"));
-    pDecoContents->SetObjectClass(_T("nuiTabView::Contents"));
+    pDecoContents->SetObjectName("nuiTabView::Contents");
+    pDecoContents->SetObjectClass("nuiTabView::Contents");
     pDecoContents->AddChild(pContents);
     
     pContentsWidget = pDecoContents;
@@ -590,8 +590,8 @@ TabEvent::TabEvent(int32 index) : nuiEvent(), mTabIndex(index)
 //class Tab : public nuiWidget
 nuiTabView::Tab::Tab(nuiWidget* pWidget)
 {
-  SetObjectName(_T("nuiTabView::Tab"));
-  SetObjectClass(_T("nuiTabView::Tab"));
+  SetObjectName("nuiTabView::Tab");
+  SetObjectClass("nuiTabView::Tab");
   AddChild(pWidget);
 }
 

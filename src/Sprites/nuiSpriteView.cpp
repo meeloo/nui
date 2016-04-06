@@ -110,7 +110,7 @@ nuiSpriteAnimation::nuiSpriteAnimation(const nglPath& rPath)
   {
     nglPath p = *it;
     nglString pp = p.GetRemovedExtension();
-    if (pp.GetRight(3) != _T("@2x"))
+    if (pp.GetRight(3) != "@2x")
     {
       nuiSpriteFrame* pFrame = new nuiSpriteFrame();
       pFrame->SetTexture(p);
@@ -229,7 +229,7 @@ nuiSpriteDef::~nuiSpriteDef()
 void nuiSpriteDef::Init()
 {
   CheckValid();
-  if (SetObjectClass(_T("nuiSpriteDef")))
+  if (SetObjectClass("nuiSpriteDef"))
   {
     App->AddExit(&nuiSpriteDef::Uninit);
   }
@@ -354,7 +354,7 @@ nuiSprite::~nuiSprite()
 void nuiSprite::Init()
 {
   CheckValid();
-  if (SetObjectClass(_T("nuiSprite")))
+  if (SetObjectClass("nuiSprite"))
   {
     InitAttributes();
   }
@@ -370,17 +370,17 @@ void nuiSprite::Init()
 void nuiSprite::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Animation")), nuiUnitCustom,
+               (nglString("Animation"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiSprite::GetCurrentAnimationName),
                 nuiMakeDelegate(this, &nuiSprite::_SetAnimation)));
   
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("FrameTime")), nuiUnitCustom,
+               (nglString("FrameTime"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiSprite::GetSpeed),
                 nuiMakeDelegate(this, &nuiSprite::SetSpeed)));
   
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("FrameTime")), nuiUnitCustom,
+               (nglString("FrameTime"), nuiUnitCustom,
                 nuiMakeDelegate(this, &nuiSprite::GetFrameTime),
                 nuiMakeDelegate(this, &nuiSprite::SetFrameTime)));
 }
@@ -507,7 +507,7 @@ bool nuiSprite::IsInside(float x, float y) const
 nuiSpriteView::nuiSpriteView()
 {
   mLastTime = 0;
-  if (SetObjectClass(_T("nuiSpriteView")))
+  if (SetObjectClass("nuiSpriteView"))
   {
     // Init attributes
   }

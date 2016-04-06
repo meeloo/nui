@@ -112,6 +112,19 @@ private:
   ThreadDelegate mDelegate;
 };
 
+class nglThreadFunction : public nglThread
+{
+public:
+  nglThreadFunction(std::function<void()> rStartFunction, Priority priority = Normal, size_t StackSize = 0); // Constructor
+  nglThreadFunction(std::function<void()> rStartFunction, const nglString& rName, Priority priority = Normal, size_t StackSize = 0);
+  virtual ~nglThreadFunction(); // Destructor
+  
+  virtual void OnStart(); ///< Main thread method
+  
+private:
+  std::function<void()> mStartFunction;
+};
+
 
 // Functions
 nglThread* nglGetThreadFromGlobalList(nglThread::ID ThreadID);

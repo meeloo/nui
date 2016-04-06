@@ -22,11 +22,11 @@
 {\
   for (nuiGrabMap::const_iterator it = mpGrab.begin(); it != mpGrab.end(); ++it)\
   {\
-    NGL_OUT(_T("[%d] -> "), it->first);\
+    NGL_OUT("[%d] -> ", it->first);\
     if (!(it->second)) {\
-      NGL_OUT(_T("NULL\n"));\
+      NGL_OUT("NULL\n");\
     } else {\
-      NGL_OUT(_T("%s\n"),\
+      NGL_OUT("%s\n",\
       it->second->GetObjectClass().GetChars());\
     }\
   }\
@@ -99,11 +99,11 @@ protected:
 nuiToolTip::nuiToolTip()
  : nuiWidget()
 {
-  SetObjectClass(_T("nuiToolTip"));
-  SetObjectName(_T("ToolTipContainer"));
+  SetObjectClass("nuiToolTip");
+  SetObjectName("ToolTipContainer");
   mpLabel = new nuiLabel(nglString::Empty);
   mpLabel->SetWrapping(true);
-  mpLabel->SetObjectName(_T("ToolTipLabel"));
+  mpLabel->SetObjectName("ToolTipLabel");
   AddChild(mpLabel);
 }
 
@@ -189,7 +189,7 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
 {
   mNeedInvalidateOnSetRect = true;
   mClearBackground = true;
-  SetObjectClass(_T("nuiTopLevel"));
+  SetObjectClass("nuiTopLevel");
 
   mResPath = rResPath;
 
@@ -502,7 +502,7 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
 {
   nuiAutoRef;
   CheckValid();
-  NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::Grab 0x%x\n"), pWidget) );
+  NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::Grab 0x%x\n", pWidget) );
 
 ///< some widgets acquire the grab on creation, which is pretty unpleasant (this hack is quite bad)
   nglTouchId touchId = rInfo.TouchId;
@@ -515,8 +515,8 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
       && HasGrab(pWidget))
   {
 
-  NGL_TOUCHES_DEBUG( NGL_OUT(_T("TouchId[%d] "), mMouseInfo.TouchId) );
-  NGL_TOUCHES_DEBUG( NGL_OUT(_T("%s of type %s already grabbed from other touch(es)\n"), 
+  NGL_TOUCHES_DEBUG( NGL_OUT("TouchId[%d] ", mMouseInfo.TouchId) );
+  NGL_TOUCHES_DEBUG( NGL_OUT("%s of type %s already grabbed from other touch(es)\n", 
           pWidget->GetObjectName().GetChars(),
           pWidget->GetObjectClass().GetChars()) );
 
@@ -524,8 +524,8 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
   }
   if (pWidget)
   {
-    NGL_TOUCHES_DEBUG( NGL_OUT(_T("TouchId[%d] "), mMouseInfo.TouchId) );
-    NGL_TOUCHES_DEBUG( NGL_OUT(_T("Grab from %s of type %s\n"),
+    NGL_TOUCHES_DEBUG( NGL_OUT("TouchId[%d] ", mMouseInfo.TouchId) );
+    NGL_TOUCHES_DEBUG( NGL_OUT("Grab from %s of type %s\n",
             pWidget->GetObjectName().GetChars(), pWidget->GetObjectClass().GetChars()) );
   }
 
@@ -544,7 +544,7 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
     pGrab->MouseGrabbed(touchId);
 
 #ifndef DISABLE_TOOLTIP
-  if (pGrab && pGrab->GetProperty("ToolTipOnGrab") == _T("true"))
+  if (pGrab && pGrab->GetProperty("ToolTipOnGrab") == "true")
   {
     mpToolTipSource = pGrab;
     SetToolTipOn(false);
@@ -566,16 +566,16 @@ bool nuiTopLevel::Ungrab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
 {
   nuiAutoRef;
   CheckValid();
-  NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::Ungrab 0x%x\n"), pWidget) );
+  NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::Ungrab 0x%x\n", pWidget) );
   if (pWidget)
   {
-  //  NGL_TOUCHES_DEBUG( NGL_OUT(_T("TouchId[%d] "), mMouseInfo.TouchId) );
-    NGL_TOUCHES_DEBUG( NGL_OUT(_T("Ungrab from %s of type %s\n"), pWidget->GetObjectName().GetChars(), pWidget->GetObjectClass().GetChars()) );
+  //  NGL_TOUCHES_DEBUG( NGL_OUT("TouchId[%d] ", mMouseInfo.TouchId) );
+    NGL_TOUCHES_DEBUG( NGL_OUT("Ungrab from %s of type %s\n", pWidget->GetObjectName().GetChars(), pWidget->GetObjectClass().GetChars()) );
   }
 
 #ifndef DISABLE_TOOLTIP
   nuiWidgetPtr pGrab = GetGrab(rInfo.TouchId);
-  if (pGrab && pGrab->GetProperty("ToolTipOnGrab") == _T("true"))
+  if (pGrab && pGrab->GetProperty("ToolTipOnGrab") == "true")
   {
     mpToolTipSource = NULL;
     mDisplayToolTip = false;
@@ -592,7 +592,7 @@ bool nuiTopLevel::CancelGrab()
 {
   CheckValid();
   nuiAutoRef;
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CancelGrab()\n")) );
+NGL_TOUCHES_DEBUG( NGL_OUT("CancelGrab()\n") );
   for (nuiGrabMap::const_iterator it = mpGrab.begin(); it != mpGrab.end(); ++it)
   {
     nglTouchId touchId = it->first;
@@ -601,7 +601,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CancelGrab()\n")) );
     while (pGrab)
     {
 #ifndef DISABLE_TOOLTIP
-      if (pGrab->GetProperty("ToolTipOnGrab") == _T("true"))
+      if (pGrab->GetProperty("ToolTipOnGrab") == "true")
       {
         mpToolTipSource = NULL;
         mDisplayToolTip = false;
@@ -769,7 +769,7 @@ void nuiTopLevel::SetToolTipOn(bool AutoStop)
   if (mpToolTipSource)
   {
     /*
-    NGL_OUT(_T("ToolTipOn class %s / Text: %s\n"),
+    NGL_OUT("ToolTipOn class %s / Text: %s\n",
         mpToolTipSource->GetObjectClass().GetChars(),
         mpToolTipSource->GetToolTip().GetChars()
        );
@@ -794,7 +794,7 @@ void nuiTopLevel::ToolTipOn(const nuiEvent& rEvent)
   if (mpToolTipSource)
   {
     /*
-    NGL_OUT(_T("ToolTipOn class %s / Text: %s\n"),
+    NGL_OUT("ToolTipOn class %s / Text: %s\n",
         mpToolTipSource->GetObjectClass().GetChars(),
         mpToolTipSource->GetToolTip().GetChars()
        );
@@ -814,7 +814,7 @@ void nuiTopLevel::ToolTipOn(const nuiEvent& rEvent)
 void nuiTopLevel::ToolTipOff(const nuiEvent& rEvent)
 {
   CheckValid();
-  //NGL_OUT(_T("ToolTipOff\n"));
+  //NGL_OUT("ToolTipOff\n");
   mDisplayToolTip = false;
   mToolTipTimerOn.Stop();
   mToolTipTimerOff.Stop();
@@ -1153,16 +1153,16 @@ bool nuiTopLevel::CallMouseClick (nglMouseInfo& rInfo)
   mMouseInfo.Y = rInfo.Y;
   mMouseInfo.Buttons |= rInfo.Buttons;
 
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseClick X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
+NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::CallMouseClick X:%d Y:%d\n", rInfo.X, rInfo.Y) );
 
   mMouseInfo.TouchId = rInfo.TouchId;
 
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] BEGIN\n"), rInfo.TouchId) );
+NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseClick [%d] BEGIN\n", rInfo.TouchId) );
 
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
-    NGL_TOUCHES_DEBUG( NGL_OUT(_T("  destination %p %s %s\n"), pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
+    NGL_TOUCHES_DEBUG( NGL_OUT("  destination %p %s %s\n", pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
     WidgetBranchGuard guard(pGrab);
     std::vector<nuiWidgetPtr> containers;
     nuiWidgetPtr pParent = pGrab->GetParent();
@@ -1187,7 +1187,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] BEGIN\n"), rInfo.TouchId) );
     }
 
 PRINT_GRAB_IDS();
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END\n"), rInfo.TouchId) );
+NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseClick [%d] END\n", rInfo.TouchId) );
 
     UpdateWidgetsCSS();
     return res;
@@ -1202,7 +1202,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END\n"), rInfo.TouchId) );
     DispatchKeyboardFocus(widgets);
 
 PRINT_GRAB_IDS();
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseClick [%d] END2\n"), rInfo.TouchId) );
+NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseClick [%d] END2\n", rInfo.TouchId) );
 
   UpdateWidgetsCSS();
 	return res;
@@ -1276,7 +1276,7 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
-//  NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseUnclick X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
+//  NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::CallMouseUnclick X:%d Y:%d\n", rInfo.X, rInfo.Y) );
 
   // Update counterpart:
   std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
@@ -1305,11 +1305,11 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
   nglMouseInfo::Flags Buttons = rInfo.Buttons | (mLastClickedButton & nglMouseInfo::ButtonDoubleClick);
 
   mMouseInfo.TouchId = rInfo.TouchId;
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] BEGIN\n"), rInfo.TouchId) );
+NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseUnclick [%d] BEGIN\n", rInfo.TouchId) );
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
-    NGL_TOUCHES_DEBUG( NGL_OUT(_T("  destination %p %s %s\n"), pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
+    NGL_TOUCHES_DEBUG( NGL_OUT("  destination %p %s %s\n", pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
     WidgetBranchGuard guard(pGrab);
     NGL_ASSERT(!pGrab->IsTrashed(true));
     pGrab->Acquire();
@@ -1336,7 +1336,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] BEGIN\n"), rInfo.TouchId) )
       res = pGrab->DispatchMouseUnclick(rInfo);
     }
 PRINT_GRAB_IDS();
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
+NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseUnclick [%d] END\n", rInfo.TouchId) );
 
     {
       auto it = mpGrab.find(rInfo.TouchId);
@@ -1373,7 +1373,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
   UpdateMouseCursor(widgets);
   
 PRINT_GRAB_IDS();
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseUnclick [%d] END\n"), rInfo.TouchId) );
+NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseUnclick [%d] END\n", rInfo.TouchId) );
 
   if (it != mMouseClickedEvents.end())
     mMouseClickedEvents.erase(it);
@@ -1459,7 +1459,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
-NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
+NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::CallMouseMove X:%d Y:%d\n", rInfo.X, rInfo.Y) );
 
   // Update counterpart:
   std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
@@ -1479,7 +1479,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   mMouseInfo.Y = rInfo.Y;
 
   mMouseInfo.TouchId = rInfo.TouchId;
-  NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] BEGIN\n"), rInfo.TouchId) );
+  NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseMove [%d] BEGIN\n", rInfo.TouchId) );
 
   nuiWidgetPtr pWidget = NULL;
   nuiWidgetPtr pWidgetUnder = NULL;
@@ -1497,7 +1497,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
   nuiWidgetPtr pGrab = GetGrab();
   if (pGrab)
   {
-    NGL_TOUCHES_DEBUG( NGL_OUT(_T("  destination %p %s %s\n"), pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
+    NGL_TOUCHES_DEBUG( NGL_OUT("  destination %p %s %s\n", pGrab, pGrab->GetObjectClass().GetChars(), pGrab->GetObjectName().GetChars()) );
     WidgetBranchGuard guard(pGrab);
     std::vector<nuiWidgetPtr> containers;
     nuiWidgetPtr pParent = pGrab->GetParent();
@@ -1517,7 +1517,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
         pHandled = containers[i];
     }
     
-    //NGL_OUT(_T("grabbed mouse move on '%s' / '%s'\n"), mpGrab->GetObjectClass().GetChars(), mpGrab->GetObjectName().GetChars());
+    //NGL_OUT("grabbed mouse move on '%s' / '%s'\n", mpGrab->GetObjectClass().GetChars(), mpGrab->GetObjectName().GetChars());
     NGL_ASSERT(mpGrab[mMouseInfo.TouchId]);
     if (mpGrab[mMouseInfo.TouchId]->MouseEventsEnabled() && !hook)
     {
@@ -1542,7 +1542,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
     SetToolTipRect();
 #endif
 
-    NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END1\n"), rInfo.TouchId) );
+    NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseMove [%d] END1\n", rInfo.TouchId) );
     UpdateWidgetsCSS();
     return pHandled != NULL;
   }
@@ -1607,7 +1607,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseMove X:%d Y:%d\n"), rInfo.X
 #ifndef DISABLE_TOOLTIP
   SetToolTipRect();
 #endif
-  NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseMove [%d] END2\n"), rInfo.TouchId) );
+  NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseMove [%d] END2\n", rInfo.TouchId) );
   UpdateWidgetsCSS();
   return pHandled != NULL;
 }
@@ -1616,7 +1616,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
 {
   CheckValid();
   nuiAutoRef;
-  //NGL_TOUCHES_DEBUG( NGL_OUT(_T("nuiTopLevel::CallMouseWheel X:%d Y:%d\n"), rInfo.X, rInfo.Y) );
+  //NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::CallMouseWheel X:%d Y:%d\n", rInfo.X, rInfo.Y) );
 
   // Update counterpart:
   std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
@@ -1636,7 +1636,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
   mMouseInfo.Y = rInfo.Y;
 
   mMouseInfo.TouchId = rInfo.TouchId;
-  //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseWheel [%d] BEGIN\n"), rInfo.TouchId) );
+  //NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseWheel [%d] BEGIN\n", rInfo.TouchId) );
 
   nuiWidgetPtr pWidget = NULL;
   nuiWidgetPtr pWidgetUnder = NULL;
@@ -1673,7 +1673,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
         pHandled = containers[i];
     }
 
-    //NGL_OUT(_T("grabbed mouse wheel move on '%s' / '%s'\n"), mpGrab->GetObjectClass().GetChars(), mpGrab->GetObjectName().GetChars());
+    //NGL_OUT("grabbed mouse wheel move on '%s' / '%s'\n", mpGrab->GetObjectClass().GetChars(), mpGrab->GetObjectName().GetChars());
     NGL_ASSERT(mpGrab[mMouseInfo.TouchId]);
     if (mpGrab[mMouseInfo.TouchId]->MouseEventsEnabled() && !hook)
     {
@@ -1698,7 +1698,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
     SetToolTipRect();
 #endif
 
-    //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseWheel [%d] END\n"), rInfo.TouchId) );
+    //NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseWheel [%d] END\n", rInfo.TouchId) );
     UpdateWidgetsCSS();
     return pHandled != NULL;
   }
@@ -1761,7 +1761,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
 #ifndef DISABLE_TOOLTIP
   SetToolTipRect();
 #endif
-  //NGL_TOUCHES_DEBUG( NGL_OUT(_T("CallMouseWheel [%d] END\n"), rInfo.TouchId) );
+  //NGL_TOUCHES_DEBUG( NGL_OUT("CallMouseWheel [%d] END\n", rInfo.TouchId) );
   UpdateWidgetsCSS();
   return pHandled != NULL;
 }
@@ -1959,7 +1959,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
   mIsDrawing = true;
   
   CheckValid();
-  //nuiStopWatch watch(_T("nuiTopLevel::DrawTree"));
+  //nuiStopWatch watch("nuiTopLevel::DrawTree");
   UpdateWidgetsCSS();
   
 //  nuiMetaPainter* pFrame = dynamic_cast<nuiMetaPainter*>(pContext->GetPainter());
@@ -2017,7 +2017,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
   mIsDrawing = true;
 
   CheckValid();
-  //nuiStopWatch watch(_T("nuiTopLevel::DrawTree"));
+  //nuiStopWatch watch("nuiTopLevel::DrawTree");
   UpdateWidgetsCSS();
 
   uint32 clipWidth, clipHeight;
@@ -2029,7 +2029,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
 //  if (0)
   if (mPartialRedraw && !DISPLAY_PARTIAL_RECTS)
   {
-    //nuiStopWatch watch(_T("nuiTopLevel::DrawTree / PartialReDraw"));
+    //nuiStopWatch watch("nuiTopLevel::DrawTree / PartialReDraw");
     // Prepare the layout changes:
     pContext->ResetState();
 
@@ -2069,7 +2069,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext)
   }
   else
   {
-    //nuiStopWatch watch(_T("nuiTopLevel::DrawTree / FullDraw"));
+    //nuiStopWatch watch("nuiTopLevel::DrawTree / FullDraw");
     pContext->ResetState();
     pContext->ResetClipRect();
 
@@ -2259,7 +2259,7 @@ bool nuiTopLevel::InitHotKeys(nglIStream* pHotKeys)
   }
   else
   {
-    NGL_OUT(_T("Couldn't load hotkeys from file\n"));
+    NGL_OUT("Couldn't load hotkeys from file\n");
     delete pXML;
     
     return false;
@@ -2272,7 +2272,7 @@ bool nuiTopLevel::InitHotKeys(nuiXMLNode* pHotKeys)
   nglString nodeName = pHotKeys->GetName();
   if (nodeName.Compare(NUIHOTKEYS_XML_NODEID))
   {
-    NGL_OUT(_T("Not a hotkeys node\n : %s"), nodeName.GetChars());
+    NGL_OUT("Not a hotkeys node\n : %s", nodeName.GetChars());
     return false;
   }
   
@@ -2283,24 +2283,24 @@ bool nuiTopLevel::InitHotKeys(nuiXMLNode* pHotKeys)
   for (pHotKeysIt = pHotKeysList.begin(); pHotKeysIt != pHotKeysList.end(); ++pHotKeysIt)
   {    
     nuiXMLNode* pNode = *pHotKeysIt;
-    nglString name = pNode->GetAttribute(_T("Name"));
-    nglString description = pNode->GetAttribute(_T("Description"));
-    nuiKeyModifier modifiers = pNode->GetAttribute(_T("Modifiers")).GetUInt();
-    bool hasPriority = pNode->GetAttribute(_T("Priority")).Compare(_T("true")) ? false : true;
-    bool isOnKeyUp = pNode->GetAttribute(_T("OnKeyUp")).Compare(_T("true")) ? false : true;
+    nglString name = pNode->GetAttribute("Name");
+    nglString description = pNode->GetAttribute("Description");
+    nuiKeyModifier modifiers = pNode->GetAttribute("Modifiers").GetUInt();
+    bool hasPriority = pNode->GetAttribute("Priority").Compare("true") ? false : true;
+    bool isOnKeyUp = pNode->GetAttribute("OnKeyUp").Compare("true") ? false : true;
 
-    bool isHotKeyKey = pNode->GetAttribute(_T("IsHotKeyKey")).Compare(_T("true")) ? false : true;
+    bool isHotKeyKey = pNode->GetAttribute("IsHotKeyKey").Compare("true") ? false : true;
     
     nuiHotKey* pNewHotKey;
     
     if (isHotKeyKey)
     {
-      nglKeyCode trigger = pNode->GetAttribute(_T("Trigger_KeyCode")).GetUInt();
+      nglKeyCode trigger = pNode->GetAttribute("Trigger_KeyCode").GetUInt();
       pNewHotKey = new nuiHotKeyKey(trigger, modifiers, hasPriority, isOnKeyUp);
     }
     else
     {
-      nglString trig = pNode->GetAttribute(_T("Trigger_Char"));
+      nglString trig = pNode->GetAttribute("Trigger_Char");
       nglChar trigger = (nglChar)trig.GetCInt();
       pNewHotKey = new nuiHotKeyChar(trigger, modifiers, hasPriority, isOnKeyUp);
     }
@@ -2489,16 +2489,16 @@ void nuiTopLevel::PrintHotKeyMap(const nglString& rText)
 {  
   CheckValid();
   std::map<nglString, nuiHotKey*>::const_iterator it = mHotKeys.begin();
-  NGL_OUT(_T("\nShortcuts Map (%s):\n"), rText.GetStdString().c_str());
+  NGL_OUT("\nShortcuts Map (%s):\n", rText.GetStdString().c_str());
   while (it != mHotKeys.end())
   {
     nglString name = it->first;
     nuiHotKey* pHotKey = it->second;
-    NGL_OUT(_T("%s -> %s\n"), name.GetStdString().c_str(), pHotKey->ShortcutToString().GetStdString().c_str());
-    //NGL_OUT(_T("%s -> %s\n"), it->first.GetChars(), it->second->ShortcutToString().GetChars());
+    NGL_OUT("%s -> %s\n", name.GetStdString().c_str(), pHotKey->ShortcutToString().GetStdString().c_str());
+    //NGL_OUT("%s -> %s\n", it->first.GetChars(), it->second->ShortcutToString().GetChars());
     ++it;
   }
-  NGL_OUT(_T("\n"));
+  NGL_OUT("\n");
 }
 
 
@@ -2603,7 +2603,7 @@ bool nuiTopLevel::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%s'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%s'\n", rPath.GetChars());
     return false;
   }
   

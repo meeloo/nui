@@ -52,7 +52,7 @@ bool nglTimer::SetPeriod(nglTime Period)
 void nglTimerAction(CFRunLoopTimerRef       pCFTimer,
                     void*                   pUserData)
 {
-  //nuiStopWatch watch(_T("nglTimerAction"));
+  //nuiStopWatch watch("nglTimerAction");
   nglTimer* pTimer = (nglTimer*)(pUserData);
   if (!pTimer)
     return;

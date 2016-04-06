@@ -46,7 +46,7 @@ void nglPluginKernel::Quit(int Code)
 
 const nglChar *nglPluginKernel::OnError(uint& rCode) const
 {
-  return _T("Unknown Error");
+  return "Unknown Error";
 }
 
 // nglPlugin:

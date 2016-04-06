@@ -42,7 +42,7 @@ TimeLabel::~TimeLabel()
 void TimeLabel::OnTimerTick(const nuiEvent& rEvent)
 {
   nglString text(GetPosition());
-  text += (_T(" / "));
+  text += (" / ");
   text += GetLength();
   
   SetText(text);

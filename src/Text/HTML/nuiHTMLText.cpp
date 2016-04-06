@@ -46,7 +46,7 @@ void nuiHTMLText::Draw(nuiDrawContext* pContext)
     do 
     {
       str.Add(pIt->mText);
-      str.Add(_T(" "));
+      str.Add(" ");
       pIt = pIt->mpNextInRun;
     } while (pIt && !pIt->mFirstInRun);
       
@@ -55,7 +55,7 @@ void nuiHTMLText::Draw(nuiDrawContext* pContext)
     mpCompositeLayout->SetStrikeThrough(mStrikeThrough);
     mpCompositeLayout->Layout(str);
     
-    //NGL_OUT(_T("Draw HTMLText: %s\n"), str.GetChars());
+    //NGL_OUT("Draw HTMLText: %s\n", str.GetChars());
   }
   
   pContext->DrawText(0, mpCompositeLayout->GetAscender() , *mpCompositeLayout);

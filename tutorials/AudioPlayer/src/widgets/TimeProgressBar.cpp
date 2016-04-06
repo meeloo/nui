@@ -17,7 +17,7 @@ TimeProgressBar::TimeProgressBar(nuiAttrib<uint64>& rPositionAttrib, nuiAttrib<u
   mTimer(1.f / 25.f),
   mEventSink(this)
 {
-  SetObjectClass(_T("TimeProgressBar"));
+  SetObjectClass("TimeProgressBar");
   mEventSink.Connect(mTimer.Tick, &TimeProgressBar::OnTimerTick);
   mTimer.Start();
 }

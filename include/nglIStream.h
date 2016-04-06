@@ -82,9 +82,9 @@ void DumpLines(nglIStream& rInput)
   uint count = 0;
 
   while (rInput.ReadLine(line))
-    NGL_OUT (_T("%d: %s\n"), ++count, line.GetChars());
+    NGL_OUT ("%d: %s\n", ++count, line.GetChars());
 
-  NGL_OUT(_T("Total: %d line%s\n"), count, PLURAL(count));
+  NGL_OUT("Total: %d line%s\n", count, PLURAL(count));
 }
 \endcode
   */
@@ -105,7 +105,7 @@ nglSize ReadText (nglString& rText, nglTextFormat* pFormat);
   nglSize done = 0;
 
   while ((done =+ ReadLine(line)))
-    rText += line + _T("\n");
+    rText += line + "\n";
 
   return done;
 }

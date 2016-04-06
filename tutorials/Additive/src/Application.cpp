@@ -13,7 +13,7 @@
 
 #include "nglConsole.h"
 
-#define APPLICATION_TITLE _T("hello world!")
+#define APPLICATION_TITLE "hello world!"
 
 
 NGL_APP_CREATE(Application);
@@ -58,13 +58,13 @@ void Application::OnInit()
   ParseDefaultArgs();
 
   GetLog().UseConsole(true);
-//  GetLog().SetLevel(_T("font"), 100);
+//  GetLog().SetLevel("font", 100);
 
   // Manual
   if ( (GetArgCount() == 1) &&
-       ((!GetArg(0).Compare(_T("-h"))) || (!GetArg(0).Compare(_T("--help")))) )
+       ((!GetArg(0).Compare("-h")) || (!GetArg(0).Compare("--help"))) )
   {
-    NGL_OUT(_T("no params\n"));
+    NGL_OUT("no params\n");
     Quit (0);
     return;
   }
@@ -74,7 +74,7 @@ void Application::OnInit()
   while (i < GetArgCount())
   {
     nglString arg = GetArg(i);
-    if ((!arg.Compare(_T("--size")) || !arg.Compare(_T("-s"))) && ((i+1) < GetArgCount()))
+    if ((!arg.Compare("--size") || !arg.Compare("-s")) && ((i+1) < GetArgCount()))
     {
       int w, h;
 
@@ -85,17 +85,17 @@ void Application::OnInit()
       HasSize = true;
       i++;
     }
-    else if (!arg.Compare(_T("--showfps")) || !arg.Compare(_T("-fps"))) ShowFPS = true;
-    else if (!arg.Compare(_T("--fullscreen")) || !arg.Compare(_T("-f"))) IsFullScreen = true;
-    else if (!arg.Compare(_T("--debugobject")) || !arg.Compare(_T("-d"))) DebugObject = true;
-    else if (!arg.Compare(_T("--debuginfo")) || !arg.Compare(_T("-i"))) DebugInfo = true;
-    else if (!arg.Compare(_T("--renderer")) || !arg.Compare(_T("-r"))) 
+    else if (!arg.Compare("--showfps") || !arg.Compare("-fps")) ShowFPS = true;
+    else if (!arg.Compare("--fullscreen") || !arg.Compare("-f")) IsFullScreen = true;
+    else if (!arg.Compare("--debugobject") || !arg.Compare("-d")) DebugObject = true;
+    else if (!arg.Compare("--debuginfo") || !arg.Compare("-i")) DebugInfo = true;
+    else if (!arg.Compare("--renderer") || !arg.Compare("-r")) 
     {
       arg = GetArg(i+1);
-      if (!arg.Compare(_T("opengl"))) Renderer = eOpenGL;
-      else if (!arg.Compare(_T("direct3d"))) Renderer = eDirect3D;
-      else if (!arg.Compare(_T("opengl2"))) Renderer = eOpenGL2;
-      else if (!arg.Compare(_T("software"))) Renderer = eSoftware;
+      if (!arg.Compare("opengl")) Renderer = eOpenGL;
+      else if (!arg.Compare("direct3d")) Renderer = eDirect3D;
+      else if (!arg.Compare("opengl2")) Renderer = eOpenGL2;
+      else if (!arg.Compare("software")) Renderer = eSoftware;
       i++;
     }
     i++;
@@ -143,7 +143,7 @@ void Application::OnInit()
   if ((!mpMainWindow) || (mpMainWindow->GetError()))
   {
     if (mpMainWindow) 
-      NGL_OUT(_T("Error: cannot create window (%s)\n"), mpMainWindow->GetErrorStr());
+      NGL_OUT("Error: cannot create window (%s)\n", mpMainWindow->GetErrorStr());
     Quit (1);
     return;
   }

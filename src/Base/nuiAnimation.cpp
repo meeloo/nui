@@ -214,38 +214,38 @@ nuiAnimation::nuiAnimation()
   
   AcquireTimer();
   
-  if (SetObjectClass(_T("nuiAnimation")))
+  if (SetObjectClass("nuiAnimation"))
   {
     AddAttribute(new nuiAttribute<double>
-                 (nglString(_T("CurrentTime")), nuiUnitSeconds,
+                 (nglString("CurrentTime"), nuiUnitSeconds,
                   nuiMakeDelegate(this, &nuiAnimation::GetTimeFromStart),
                   nuiMakeDelegate(this, &nuiAnimation::SetTimeFromStart)));
     
     AddAttribute(new nuiAttribute<double>
-                 (nglString(_T("SetTimeFromNow")), nuiUnitSeconds,
+                 (nglString("SetTimeFromNow"), nuiUnitSeconds,
                   nuiMakeDelegate(this, &nuiAnimation::GetTimeFromNow),
                   nuiMakeDelegate(this, &nuiAnimation::SetTimeFromNow)));
 
     AddAttribute(new nuiAttribute<double>
-                 (nglString(_T("CurrentTimeFromEnd")), nuiUnitSeconds,
+                 (nglString("CurrentTimeFromEnd"), nuiUnitSeconds,
                   nuiMakeDelegate(this, &nuiAnimation::GetTimeFromEnd),
                   nuiMakeDelegate(this, &nuiAnimation::SetTimeFromEnd)));
     
     AddAttribute(new nuiAttribute<double>
-                 (nglString(_T("Position")), nuiUnitSize,
+                 (nglString("Position"), nuiUnitSize,
                   nuiMakeDelegate(this, &nuiAnimation::GetPosition)));
     
     AddAttribute(new nuiAttribute<bool>
-                 (nglString(_T("IsPlaying")), nuiUnitBoolean,
+                 (nglString("IsPlaying"), nuiUnitBoolean,
                   nuiMakeDelegate(this, &nuiAnimation::IsPlaying)));
         
     AddAttribute(new nuiAttribute<double>
-                 (nglString(_T("Duration")), nuiUnitSeconds,
+                 (nglString("Duration"), nuiUnitSeconds,
                   nuiMakeDelegate(this, &nuiAnimation::GetDuration),
                   nuiMakeDelegate(this, &nuiAnimation::SetDuration)));
 
     AddAttribute(new nuiAttribute<bool>
-                 (nglString(_T("DeleteOnStop")), nuiUnitBoolean,
+                 (nglString("DeleteOnStop"), nuiUnitBoolean,
                   nuiMakeDelegate(this, &nuiAnimation::GetDeleteOnStop),
                   nuiMakeDelegate(this, &nuiAnimation::SetDeleteOnStop)));
 
@@ -471,7 +471,7 @@ void nuiAnimation::Pause()
 void nuiAnimation::InternalStop()
 {
   mCount = 0;
-  //NGL_LOG(_T("nuiAnimation), NGL_LOG_DEBUG, _T("Stop at %f\n"), GetDuration());
+  //NGL_LOG("nuiAnimation), NGL_LOG_DEBUG, _T("Stop at %f\n", GetDuration());
   mAnimSink.Disconnect(GetTimer()->Tick, &nuiAnimation::OnTick);
   AnimStop();
   mCurrentPosition = 0;
@@ -483,7 +483,7 @@ void nuiAnimation::InternalStop()
 void nuiAnimation::InternalPause()
 {
   mCount = 0;
-  //NGL_LOG(_T("nuiAnimation), NGL_LOG_DEBUG, _T("Stop at %f\n"), GetDuration());
+  //NGL_LOG("nuiAnimation), NGL_LOG_DEBUG, _T("Stop at %f\n", GetDuration());
   mAnimSink.Disconnect(GetTimer()->Tick, &nuiAnimation::OnTick);
   AnimPause();
 }
@@ -811,7 +811,7 @@ double nuiAnimationSequence::GetDuration()
   for (; it != end; ++it)
     dur += (*it)->GetDuration();
 
-//  NGL_LOG(_T("nuiAnimationSequence), NGL_LOG_DEBUG, _T("::GetDuration() = %f\n"), dur);
+//  NGL_LOG("nuiAnimationSequence), NGL_LOG_DEBUG, _T("::GetDuration() = %f\n", dur);
   return dur;
 }
 
@@ -841,7 +841,7 @@ void nuiAnimationSequence::OnAnimStopped(const nuiEvent& rEvent)
 {
   if (IsPlaying())
   {
-    //NGL_LOG(_T("nuiAnimationSequence), NGL_LOG_DEBUG, _T("::OnAnimStopped\n"));
+    //NGL_LOG("nuiAnimationSequence), NGL_LOG_DEBUG, _T("::OnAnimStopped\n");
     nuiAnimation* pAnim = (nuiAnimation*)rEvent.mpUser;
     // Find the next anim in the sequence:
     std::list<nuiAnimation*>::iterator it = mpAnimations.begin();
@@ -863,12 +863,12 @@ void nuiAnimationSequence::OnAnimStopped(const nuiEvent& rEvent)
       // Launch the next anim in the sequence:
       pAnim = *it;
       pAnim->Play();
-      //NGL_LOG(_T("nuiAnimationSequence), NGL_LOG_DEBUG, _T("OnAnimStopped Launch next anim\n"));
+      //NGL_LOG("nuiAnimationSequence), NGL_LOG_DEBUG, _T("OnAnimStopped Launch next anim\n");
     }
     else
     {
       // stop the sequence if this was the last in the chain:
-      //NGL_LOG(_T("nuiAnimationSequence), NGL_LOG_DEBUG, _T("OnAnimStopped STOP\n"));
+      //NGL_LOG("nuiAnimationSequence), NGL_LOG_DEBUG, _T("OnAnimStopped STOP\n");
       mpAnimations.front()->Play();
     }
   }

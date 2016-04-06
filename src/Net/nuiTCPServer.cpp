@@ -88,6 +88,23 @@ nuiTCPClient* nuiTCPServer::Accept()
   return NULL;
 }
 
+void nuiTCPServer::OnCanRead()
+{
+  nuiTCPClient* pClient = Accept();
+  if (OnNewClient(pClient))
+  {
+    if (mpPool)
+    {
+      mpPool->Add(pClient, nuiSocketPool::eStateChange);
+    }
+  }
+}
+
+bool nuiTCPServer::OnNewClient(nuiTCPClient* pClient)
+{
+  return true;
+}
+
 nuiTCPClient* nuiTCPServer::OnCreateClient(nuiSocket::SocketType sock)
 {
   UpdateIdle();

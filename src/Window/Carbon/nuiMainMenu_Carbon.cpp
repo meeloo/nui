@@ -246,7 +246,7 @@ private:
 
 pascal OSStatus MainMenuEventHandler(EventHandlerCallRef eventHandlerCallRef, EventRef eventRef, void* userData)
 {
-  //  wprintf(_T("MainMenuEventHandler 0x%x\n"), userData);
+  //  wprintf("MainMenuEventHandler 0x%x\n", userData);
   
   nuiMainMenuPrivate* pPrivate = (nuiMainMenuPrivate*)userData;
   if (!pPrivate)
@@ -285,7 +285,7 @@ pascal OSStatus MainMenuEventHandler(EventHandlerCallRef eventHandlerCallRef, Ev
           if (pItem->GetType() == eItemCheck)
             pItem->SetChecked(!pItem->IsChecked());
           
-          //NGL_OUT(_T("Command Processed: 0x%x\n"), pItem);
+          //NGL_OUT("Command Processed: 0x%x\n", pItem);
           
           // and send the item activation signal
           pItem->Activated();

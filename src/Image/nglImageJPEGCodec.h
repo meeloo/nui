@@ -18,12 +18,12 @@ public:
   {
     mCanSave = true;
     mCanLoad = true;
-    mName = _T("JPEG");
-    mExtensions.push_back(nglString(_T(".jpeg")));
-    mExtensions.push_back(nglString(_T(".jpg")));
-    mExtensions.push_back(nglString(_T(".jpe")));
-    mExtensions.push_back(nglString(_T(".jif")));
-    mInfo = _T("JPEG image codec, using libjpeg from www.ijg.org");
+    mName = "JPEG";
+    mExtensions.push_back(nglString(".jpeg"));
+    mExtensions.push_back(nglString(".jpg"));
+    mExtensions.push_back(nglString(".jpe"));
+    mExtensions.push_back(nglString(".jif"));
+    mInfo = "JPEG image codec, using libjpeg from www.ijg.org";
   }
 
   virtual ~nglImageJPEGCodecInfo()

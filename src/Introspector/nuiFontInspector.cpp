@@ -13,7 +13,7 @@ int32 nuiFontInspector::UpdatingFonts = 0;
 nuiFontInspector::nuiFontInspector()
 : mSink(this)
 {
-  SetObjectClass(_T("nuiFontInspector"));
+  SetObjectClass("nuiFontInspector");
  
   // decoration
   nuiDecoration* pDeco = nuiDecoration::Get(INTROSPECTOR_DECO_CLIENT_BKG);
@@ -60,7 +60,7 @@ void nuiFontInspector::UpdateFonts()
   
   pGrid->AddRows(pGrid->GetNbRows(), Fonts.size() + 1);
   
-  const nglChar* Headers[] = { _T("ID"), _T("Family"), _T("Style"), _T("Size"), _T("Bold"), _T("Italic"), _T("Fixed"), _T("Scaleable"), _T("Glyphs"), _T("Panose"), _T("Preview"), NULL };
+  const nglChar* Headers[] = { "ID", "Family", "Style", "Size", "Bold", "Italic", "Fixed", "Scaleable", "Glyphs", "Panose", "Preview", NULL };
 
   nuiDecoration* pTitleDeco = nuiDecoration::Get(INTROSPECTOR_DECO_GRID_TITLE);
 
@@ -140,8 +140,8 @@ void nuiFontInspector::UpdateFonts()
     pGrid->SetCell(j++, i, pText, nuiFillHorizontal);
 
     // Preview
-    nuiLabel* pPreviewLabel = new nuiLabel(_T("ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n01234567890!@#$%^&*(){}[]\\|/?<>,.:"), nuiFont::GetFont(FontIDs[k]));
-    //nuiLabel* pPreviewLabel = new nuiLabel(_T("u - v - w - U - V - W"), nuiFont::GetFont(FontIDs[k]));
+    nuiLabel* pPreviewLabel = new nuiLabel("ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n01234567890!@#$%^&*(){}[]\\|/?<>,.:", nuiFont::GetFont(FontIDs[k]));
+    //nuiLabel* pPreviewLabel = new nuiLabel("u - v - w - U - V - W", nuiFont::GetFont(FontIDs[k]));
     pGrid->SetCell(j++, i, pPreviewLabel, nuiLeft);
     
     // nglFontBase

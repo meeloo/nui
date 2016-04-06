@@ -12,7 +12,7 @@ nuiRangeAttributeEditor::nuiRangeAttributeEditor(const nuiAttrib<const nuiRange&
     mEventSink(this),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiRangeAttributeEditor"));
+	SetObjectClass("nuiRangeAttributeEditor");
   
   mRange = mAttribute.Get();
 	
@@ -51,7 +51,7 @@ void nuiRangeAttributeEditor::Update()
   // font
   nuiFontRequest* pFontRequest = new nuiFontRequest();
   nuiFontRequest& rFontRequest(*pFontRequest);
-  rFontRequest.SetGenericName(_T("sans-serif"), 1.0f);
+  rFontRequest.SetGenericName("sans-serif", 1.0f);
   rFontRequest.SetBold(false, 1.0); 
   rFontRequest.MustHaveSize(10, 1.0);
   nuiFont* pFont = nuiFontManager::GetManager().GetFont(rFontRequest);
@@ -76,10 +76,10 @@ void nuiRangeAttributeEditor::Update()
   pBox->SetCellMinPixels(0, 10);
   pBox->SetCellMaxPixels(0, 10);
   nglString tmp;
-  tmp.Format(_T("%.0fs"), mRange.GetMinimum());
+  tmp.Format("%.0fs", mRange.GetMinimum());
   pRule->AddCell(new nuiLabel(tmp, pFont), nuiBottomLeft);
   pRule->SetCellExpand(0, nuiExpandShrinkAndGrow);
-  tmp.Format(_T("%.0fs"), mRange.GetMaximum());
+  tmp.Format("%.0fs", mRange.GetMaximum());
   pRule->AddCell(new nuiLabel(tmp, pFont), nuiBottomRight);
   pRule->SetCellExpand(0, nuiExpandShrinkAndGrow);
   

@@ -24,8 +24,8 @@ using namespace std;
 
 static const nglChar* gpImageErrorTable[] =
 {
-/*  0 */ _T("No error"),
-/*  1 */ _T("Out of memory"),
+/*  0 */ "No error",
+/*  1 */ "Out of memory",
          NULL
 };
 

@@ -10,9 +10,9 @@
 #include "nui.h"
 #include "nuiSampleReader.h"
 
-#define STREAM_SUFFIX _T("_stream")
-#define MEMORY_SUFFIX _T("_memory")
-#define SYNTH_SUFFIX _T("_synth")
+#define STREAM_SUFFIX "_stream"
+#define MEMORY_SUFFIX "_memory"
+#define SYNTH_SUFFIX "_synth"
 
 class nuiVoice;
 

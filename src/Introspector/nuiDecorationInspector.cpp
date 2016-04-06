@@ -11,7 +11,7 @@
 nuiDecorationInspector::nuiDecorationInspector()
 : mSink(this)
 {
-  SetObjectClass(_T("nuiDecorationInspector"));
+  SetObjectClass("nuiDecorationInspector");
   
   // decoration
   nuiDecoration* pDeco = nuiDecoration::Get(INTROSPECTOR_DECO_CLIENT_BKG);
@@ -65,7 +65,7 @@ void nuiDecorationInspector::UpdateDecos()
   {
     nglString name(it->first);
     nuiLabel* pLabel = new nuiLabel(name);
-    pLabel->SetProperty(_T("Deco"), name);
+    pLabel->SetProperty("Deco", name);
     pList->AddChild(pLabel);
     ++it;
   }
@@ -82,11 +82,11 @@ void nuiDecorationInspector::UpdateDecos()
   pSplitter->AddChild(pSplit2);
   nuiWidget* pCont = new nuiWidget();
   pSplit2->AddChild(pCont);
-  mpLabel = new nuiLabel(_T("Test Widget.\nApply decorations\nto me, from the list\non the left"), nuiFont::GetFont(16));
+  mpLabel = new nuiLabel("Test Widget.\nApply decorations\nto me, from the list\non the left", nuiFont::GetFont(16));
   mpLabel->SetPosition(nuiCenter);
   pCont->AddChild(mpLabel);
 
-  mpInfoLabel = new nuiLabel(_T("no info"), nuiFont::GetFont(8));
+  mpInfoLabel = new nuiLabel("no info", nuiFont::GetFont(8));
   mpInfoLabel->SetPosition(nuiTopLeft);
   mpInfoLabel->SetBorder(10, 10);
   pCont->AddChild(mpInfoLabel);
@@ -104,10 +104,10 @@ void nuiDecorationInspector::OnDecoSelection(const nuiEvent& rEvent)
   nuiList* pList = (nuiList*)rEvent.mpUser;
   nuiWidget* pW = pList->GetSelected();
   nuiDecoration* pDeco = NULL;
-  nglString info(_T("no info"));
+  nglString info("no info");
   if (pW)
   {
-    nglString name = pW->GetProperty(_T("Deco"));
+    nglString name = pW->GetProperty("Deco");
     pDeco = nuiDecoration::Get(name);
     if (!pDeco)
     {
@@ -167,7 +167,7 @@ void nuiDecorationInspector::OnDecoSelection(const nuiEvent& rEvent)
           for (uint32 i = 0; i < count; i++)
           {
             Base.ToString(i, str);
-            value.Add(i).Add(_T(":")).Add(str).Add("\t");
+            value.Add(i).Add(":").Add(str).Add("\t");
           }
           value.Trim(_T('\t'));
         }
@@ -182,7 +182,7 @@ void nuiDecorationInspector::OnDecoSelection(const nuiEvent& rEvent)
             for (uint32 j = 0; j < MIN(10, countj); j++)
             {
               Base.ToString(i, j, str);
-              value.Add(i).Add(",").Add(j).Add(_T(":")).Add(str).Add("\t");
+              value.Add(i).Add(",").Add(j).Add(":").Add(str).Add("\t");
             }
           }
           value.Trim(_T('\t'));
@@ -211,7 +211,7 @@ void nuiDecorationInspector::DumpDecl()
   {
     nglString decl = pDeco->GetCSSDeclaration();
     mpCSSLabel->SetText(decl);
-    NGL_OUT(_T("Decoration Declaration:\n%s\n"), decl.GetChars());
+    NGL_OUT("Decoration Declaration:\n%s\n", decl.GetChars());
   }
 }
 

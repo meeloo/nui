@@ -31,7 +31,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
   
   nuiCoverFlow* pFlow = new nuiCoverFlow();
   AddChild(pFlow);
-  nglPath p(_T("rsrc:/decorations"));
+  nglPath p("rsrc:/decorations");
   std::list<nglPath> children;
   p.GetChildren(&children);
   for (std::list<nglPath>::const_iterator it = children.begin(); children.end() != it; ++it)
@@ -45,24 +45,24 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
   { // Bounce
     nuiAttributeAnimation* pAnim = new nuiAttributeAnimation();
     pAnim->SetTargetObject(pFlow);
-    pAnim->SetTargetAttribute(_T("SelectionYOffset"));
+    pAnim->SetTargetAttribute("SelectionYOffset");
     pAnim->SetStartValue(0);
     pAnim->SetEndValue(0.2);
     pAnim->SetDuration(.5);
     pAnim->SetEasing(&nuiEasingSquareRev);
-    pFlow->AddAnimation(_T("Bounce"), pAnim);
+    pFlow->AddAnimation("Bounce", pAnim);
     pAnim->Play(-1, eAnimLoopPingPong);
   }
 
   { // Appear
     nuiAttributeAnimation* pAnim = new nuiAttributeAnimation();
     pAnim->SetTargetObject(pFlow);
-    pAnim->SetTargetAttribute(_T("SideDepth"));
+    pAnim->SetTargetAttribute("SideDepth");
     pAnim->SetStartValue(5);
     pAnim->SetEndValue(.7);
     pAnim->SetDuration(1.5);
     pAnim->SetEasing(&nuiEasingCubicRev);
-    pFlow->AddAnimation(_T("Appear"), pAnim);
+    pFlow->AddAnimation("Appear", pAnim);
     pAnim->Play();
   }
 }

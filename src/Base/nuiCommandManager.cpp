@@ -326,7 +326,7 @@ bool nuiCommandManager::Undo()
   //check
   if (0 == inst->mDoneStack.size())
   {
-      NGL_OUT(_T("command manager can't undo : empty commands stack!\n"));
+      NGL_OUT("command manager can't undo : empty commands stack!\n");
       return false;
   }
   
@@ -335,7 +335,7 @@ bool nuiCommandManager::Undo()
   
   if (!last->CanUndo())
   {
-      NGL_OUT(_T("command manager : %s can't undo!\n"), last->GetName().GetChars());
+      NGL_OUT("command manager : %s can't undo!\n", last->GetName().GetChars());
       return false;
   }
   
@@ -391,7 +391,7 @@ bool nuiCommandManager::Redo()
   //check
   if (0 == inst->mUndoneStack.size())
   {
-      NGL_OUT(_T("command manager can't redo : empty undone commands stack!\n"));
+      NGL_OUT("command manager can't redo : empty undone commands stack!\n");
       return false;
   }    
 
@@ -451,7 +451,7 @@ bool nuiCommandManager::Repeat()
   //check
   if (0 == inst->mDoneStack.size())
   {
-      NGL_OUT(_T("command manager can't repeat : empty commands stack!\n"));
+      NGL_OUT("command manager can't repeat : empty commands stack!\n");
       return false;
   }
   
@@ -460,7 +460,7 @@ bool nuiCommandManager::Repeat()
   
   if (!last->CanRepeat())
   {
-      NGL_OUT(_T("command manager : %s can't repeat!\n"), last->GetName().GetChars());
+      NGL_OUT("command manager : %s can't repeat!\n", last->GetName().GetChars());
       return false;
   }
   
@@ -545,7 +545,7 @@ uint length = str.GetLength();
     else if (length < CMDMNG_DUMPFORMAT_STRLEN)
     {
         str.DeleteRight(5);
-        str.Append(_T("[...]"));
+        str.Append("[...]");
     }
     
     str.Prepend(white);
@@ -574,14 +574,14 @@ nglString row;
     inst->DumpFormat(row, _T('-'));
     row.Append(row);
     
-    dStr.Format(_T("Done Commands stack [%d]"),(uint32)inst->mDoneStack.size());
-    uStr.Format(_T("Undone Commands stack [%d]"),(uint32)inst->mUndoneStack.size());
+    dStr.Format("Done Commands stack [%d]",(uint32)inst->mDoneStack.size());
+    uStr.Format("Undone Commands stack [%d]",(uint32)inst->mUndoneStack.size());
     
     inst->DumpFormat(dStr);
     inst->DumpFormat(uStr);
     
-    res.Format(_T("-%s-\n|%s|%s|\n"), row.GetChars(), dStr.GetChars(), uStr.GetChars());
-    res.Append(_T("-")).Append(row).Append(_T("-\n"));
+    res.Format("-%s-\n|%s|%s|\n", row.GetChars(), dStr.GetChars(), uStr.GetChars());
+    res.Append("-").Append(row).Append("-\n");
     
     
     std::list<nuiCommand*>::iterator dItr = inst->mDoneStack.end();
@@ -614,13 +614,13 @@ nglString row;
         inst->DumpFormat(dStr);
         inst->DumpFormat(uStr);
         
-        tmp.Format(_T("|%s|%s|\n"), dStr.GetChars(), uStr.GetChars());
+        tmp.Format("|%s|%s|\n", dStr.GetChars(), uStr.GetChars());
         res.Append(tmp);
 
     }
     while ( ((dLevel>=0) || (uLevel>=0))   && (i > 0));
     
-    res.Append(_T("-")).Append(row).Append(_T("-\n"));
+    res.Append("-").Append(row).Append("-\n");
 
     return res;
     

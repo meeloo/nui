@@ -30,7 +30,7 @@ JSBool js_NGL_LOUT(JSContext *mContext, JSObject *obj, uintN argc, jsval *argv, 
     return JS_FALSE;
   
   nglString s(cmd);
-  NGL_OUT(_T("%s\n"), s.GetChars());
+  NGL_OUT("%s\n", s.GetChars());
   
   *rval = JSVAL_VOID;  /* return undefined */
   return JS_TRUE;
@@ -38,7 +38,7 @@ JSBool js_NGL_LOUT(JSContext *mContext, JSObject *obj, uintN argc, jsval *argv, 
 
 
 nuiSpiderMonkey::nuiSpiderMonkey(uint32 MaxBytes)
-: nuiScriptEngine(_T("spidermonkey"), _T("javascript")), mMaxBytes(MaxBytes), mContext(NULL), mGlobal(NULL), mEventSink(this)
+: nuiScriptEngine("spidermonkey", "javascript"), mMaxBytes(MaxBytes), mContext(NULL), mGlobal(NULL), mEventSink(this)
 {
   if (!mRunTime)
   {
@@ -118,7 +118,7 @@ void smReportError(JSContext* cx, const char *message, JSErrorReport *report)
 
 void nuiSpiderMonkey::ReportError(const char *message, JSErrorReport *report)
 {
-  NGL_LOG(_T("spidermonkey"), NGL_LOG_ERROR, _T("%s:%u:%s\n"), report->filename ? report->filename : "<no filename>", (unsigned int)report->lineno, message);
+  NGL_LOG("spidermonkey", NGL_LOG_ERROR, "%s:%u:%s\n", report->filename ? report->filename : "<no filename>", (unsigned int)report->lineno, message);
 }
 
 nuiVariant nuiSpiderMonkey::GetVariantObjectFromJS(JSObject* pJSObject) const
@@ -235,14 +235,14 @@ void nuiSpiderMonkey::GetVariantFromJSVal(nuiVariant& var, jsval val) const
     case JSTYPE_XML:
     case JSTYPE_LIMIT:
       {
-        NGL_LOG(_T("JavaScript"), NGL_LOG_ERROR, _T("Unable to convert a complex type to a string"));
+        NGL_LOG("JavaScript", NGL_LOG_ERROR, "Unable to convert a complex type to a string");
         var = nuiVariant();
         return;
         
 //        jsval v;
 //        if (!JS_ConvertValue(mContext, v, JSTYPE_STRING, &val))
 //        {
-//          NGL_LOG(_T("JavaScript"), NGL_LOG_ERROR, _T("Unable to convert a complex type to a string"));
+//          NGL_LOG("JavaScript", NGL_LOG_ERROR, "Unable to convert a complex type to a string");
 //          var = nuiVariant();
 //          return;
 //        }
@@ -329,11 +329,11 @@ JSBool nuiSpiderMonkey::PropertyAdd(JSObject *obj, jsval id, jsval *vp)
   JSString* pStr = JS_ValueToString(mContext, id);
   nglString str(JS_GetStringBytes(pStr));
   
-  NGL_OUT(_T("Add Property %s\n"), str.GetChars());
+  NGL_OUT("Add Property %s\n", str.GetChars());
   JSType type = JS_TypeOfValue(mContext, *vp);
   
   if (JSVAL_IS_VOID(*vp))
-    NGL_OUT(_T("\tis void\n"));
+    NGL_OUT("\tis void\n");
   
   return JS_TRUE;
 }
@@ -352,11 +352,11 @@ JSBool nuiSpiderMonkey::PropertyDel(JSObject *obj, jsval id, jsval *vp)
   JSString* pStr = JS_ValueToString(mContext, id);
   nglString str(JS_GetStringBytes(pStr));
   
-  NGL_OUT(_T("Del Property %s\n"), str.GetChars());
+  NGL_OUT("Del Property %s\n", str.GetChars());
   JSType type = JS_TypeOfValue(mContext, *vp);
   
   if (JSVAL_IS_VOID(*vp))
-    NGL_OUT(_T("\tis void\n"));
+    NGL_OUT("\tis void\n");
   
   return JS_TRUE;
 }
@@ -390,7 +390,7 @@ JSBool nuiSpiderMonkey::PropertyGet(JSObject *obj, jsval id, jsval *vp)
   nuiVariant v;
   attrib.ToVariant(v);
   GetJSValFromVariant(vp, v);
-  //NGL_OUT(_T("Get Property %s\n"), str.GetChars());
+  //NGL_OUT("Get Property %s\n", str.GetChars());
   
   return JS_TRUE;
 }
@@ -436,7 +436,7 @@ JSBool nuiSpiderMonkey::PropertySet(JSObject *obj, jsval id, jsval *vp)
       }
     }
   }
-  //NGL_OUT(_T("Set Property %s\n"), str.GetChars());
+  //NGL_OUT("Set Property %s\n", str.GetChars());
   
   return JS_TRUE;
 }
@@ -500,12 +500,12 @@ JSObject* nuiSpiderMonkey::DefineJSClass(nuiClass* pClass)
     std::map<nuiClass*, JSObject*>::const_iterator it = mJSClassObjects.find(pClass);
     if (it != mJSClassObjects.end())
     {
-      NGL_OUT(_T("Skipping class '%s' (already defined)\n\n"), pClass->GetName().GetChars());
+      NGL_OUT("Skipping class '%s' (already defined)\n\n", pClass->GetName().GetChars());
       return it->second;
     }
   }
   
-  NGL_OUT(_T("\nDefining class '%s (%d)'\n"), pClass->GetName().GetChars(), pClass->GetClassType());
+  NGL_OUT("\nDefining class '%s (%d)'\n", pClass->GetName().GetChars(), pClass->GetClassType());
   
   JSClass cls =
   {
@@ -539,7 +539,7 @@ JSObject* nuiSpiderMonkey::DefineJSClass(nuiClass* pClass)
   nuiClass* pParent = pClass->GetParentClass();
   if (pParent)
   {
-    NGL_OUT(_T("\t inherits from '%s'\n"), pParent->GetName().GetChars());
+    NGL_OUT("\t inherits from '%s'\n", pParent->GetName().GetChars());
     std::map<nuiClass*, JSObject*>::const_iterator it = mJSClassObjects.find(pParent);
     if (it != mJSClassObjects.end())
     {
@@ -547,7 +547,7 @@ JSObject* nuiSpiderMonkey::DefineJSClass(nuiClass* pClass)
     }
     else
     {
-      NGL_OUT(_T("\t (recursive definition) of '%s'\n"), pParent->GetName().GetChars());
+      NGL_OUT("\t (recursive definition) of '%s'\n", pParent->GetName().GetChars());
       pJSProto = DefineJSClass(pParent);
     }
   }

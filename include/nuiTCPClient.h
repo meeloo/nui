@@ -38,9 +38,9 @@ public:
   nuiTCPClient();
   virtual ~nuiTCPClient();
 
-  bool Connect(const nuiNetworkHost& rHost);
-  bool Connect(const nglString& rHost, int16 port);
-  bool Connect(uint32 ipaddress, int16 port);
+  bool Connect(const nuiNetworkHost& rHost, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eStateChange);
+  bool Connect(const nglString& rHost, int16 port, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eStateChange);
+  bool Connect(uint32 ipaddress, int16 port, nuiSocketPool* pPool = nullptr, nuiSocketPool::TriggerMode triggerMode = nuiSocketPool::eStateChange);
 
   size_t Send(const std::vector<uint8>& rData);
   size_t Send(const uint8* pData, size_t len);
@@ -53,7 +53,7 @@ public:
   bool IsWriteConnected() const;
   bool IsReadConnected() const;
   int32 GetAvailable() const;
-  bool CanWrite() const;
+  bool GetCanWrite() const;
 
   void Close();
 
@@ -68,6 +68,13 @@ public:
   virtual void OnCanWrite();
   virtual void OnReadClosed();
   virtual void OnWriteClosed();
+
+  nuiSignal0<> CanRead;
+  nuiSignal0<> CanWrite;
+  nuiSignal0<> ReadClosed;
+  nuiSignal0<> WriteClosed;
+  nuiSignal0<> Connected;
+  nuiSignal0<> ConnectError;
 
   void SetAutoDelete(bool set); ///< Delete the client when the send buffer is empty after a call to SendWriteBuffer()
   void SendWriteBuffer();

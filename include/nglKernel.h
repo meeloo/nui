@@ -73,10 +73,10 @@ void nglDumpStackTrace();
 #define __TFILE__ __T(__FILE__)
 
 #define __NGL_ASSERT(test) \
-  if (!(test)) { NGL_OUT(_T("%s(%d): ") _T(#test) _T(" failed\n"), __TFILE__, __LINE__); __ASSERT_SYS(test) }
+  if (!(test)) { NGL_OUT("%s(%d): " _T(#test) " failed\n", __TFILE__, __LINE__); __ASSERT_SYS(test) }
 
 #define __NGL_ASSERTR(test, result) \
-  if (!(test)) { NGL_OUT(_T("%s(%d): ") _T(#test) _T(" failed\n"), __TFILE__, __LINE__); __ASSERT_SYS(test) return result; }
+  if (!(test)) { NGL_OUT("%s(%d): " _T(#test) " failed\n", __TFILE__, __LINE__); __ASSERT_SYS(test) return result; }
 
 /* ASSERT(R) facility
 */
@@ -570,11 +570,11 @@ protected:
  * NGL kernel log/debug macros
  */
 
-// NGL_OUT(_T("i=%d\n"), i)
+// NGL_OUT("i=%d\n", i)
 #define NGL_OUT  App->GetConsole().Output
 #define NGL_OUTV App->GetConsole().Outputv
 
-// NGL_LOG(_T("net"), NGL_LOG_INFO, "i=%d\n", i)
+// NGL_LOG("net", NGL_LOG_INFO, "i=%d\n", i)
 #define NGL_LOG  /*{NGL_OUT("%s %d", __FILE__, __LINE__);} */App->GetLog().Log
 #define NGL_LOGV App->GetLog().Logv
 

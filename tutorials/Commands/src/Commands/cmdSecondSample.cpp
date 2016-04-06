@@ -75,7 +75,7 @@ bool cmdSecondSample::SetArgs(const std::vector<nglString>& args)
 // Constr
 //
 //
-cmdSecondSample::Desc::Desc() : nuiCommandDesc(_T("SecondCommandRef"))
+cmdSecondSample::Desc::Desc() : nuiCommandDesc("SecondCommandRef")
 {
 }
         
@@ -100,7 +100,7 @@ nuiCommand* cmdSecondSample::Desc::CreateCommand() const
 //
 nglString cmdSecondSample::Desc::Comment() const
 {
-  return _T("this a sample command. It does nothing special:)");
+  return "this a sample command. It does nothing special:)";
 }
         
         

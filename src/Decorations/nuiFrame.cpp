@@ -12,7 +12,7 @@ nuiFrame::nuiFrame(const nglString& rName)
   mpTexture(NULL),
   mNeedUpdate(true)
 {
-  if (SetObjectClass(_T("nuiFrame")))
+  if (SetObjectClass("nuiFrame"))
     InitAttributes();
   mColor = nuiColor(255,255,255);
   mUseWidgetFrameColor = false;
@@ -28,7 +28,7 @@ nuiFrame::nuiFrame(const nglString& rName, nuiTexture* pTexture, const nuiRect& 
   mClientRect(rClientRect),
   mNeedUpdate(true)
 {
-  if (SetObjectClass(_T("nuiFrame")))
+  if (SetObjectClass("nuiFrame"))
     InitAttributes();
   mDebug = false;
   mInterpolated = true;
@@ -44,7 +44,7 @@ nuiFrame::nuiFrame(const nglString& rName, const nglPath& rTexturePath, const nu
   mClientRect(rClientRect),
   mNeedUpdate(true)
 {
-  if (SetObjectClass(_T("nuiFrame")))
+  if (SetObjectClass("nuiFrame"))
     InitAttributes();
 	
   SetTexturePath(rTexturePath.GetPathName());
@@ -58,36 +58,36 @@ nuiFrame::nuiFrame(const nglString& rName, const nglPath& rTexturePath, const nu
 void nuiFrame::InitAttributes()
 {
   nuiAttribute<const nuiRect&>* AttributeRect = new nuiAttribute<const nuiRect&>
-   (nglString(_T("ClientRect")), nuiUnitNone,
+   (nglString("ClientRect"), nuiUnitNone,
     nuiAttribute<const nuiRect&>::GetterDelegate(this, &nuiFrame::GetSourceClientRect),
     nuiAttribute<const nuiRect&>::SetterDelegate(this, &nuiFrame::SetSourceClientRect));
   
   nuiAttribute<const nuiColor&>* AttributeColor = new nuiAttribute<const nuiColor&>
-   (nglString(_T("Color")), nuiUnitNone,
+   (nglString("Color"), nuiUnitNone,
     nuiAttribute<const nuiColor&>::GetterDelegate(this, &nuiFrame::GetColor), 
     nuiAttribute<const nuiColor&>::SetterDelegate(this, &nuiFrame::SetColor));
 
   nuiAttribute<bool>* AttributeFrameColor = new nuiAttribute<bool>
-  (nglString(_T("UseWidgetFrameColor")), nuiUnitBoolean,
+  (nglString("UseWidgetFrameColor"), nuiUnitBoolean,
    nuiAttribute<bool>::GetterDelegate(this, &nuiFrame::IsWidgetFrameColorUsed),
    nuiAttribute<bool>::SetterDelegate(this, &nuiFrame::UseWidgetFrameColor));
   
   nuiAttribute<const nglPath&>* AttributeTexture = new nuiAttribute<const nglPath&>
-   (nglString(_T("Texture")), nuiUnitNone,
+   (nglString("Texture"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiFrame::GetTexturePath), 
     nuiMakeDelegate(this, &nuiFrame::SetTexturePath));
 
   nuiAttribute<bool>* AttributeInterpolation = new nuiAttribute<bool>
-   (nglString(_T("Interpolation")), nuiUnitBoolean,
+   (nglString("Interpolation"), nuiUnitBoolean,
     nuiAttribute<bool>::GetterDelegate(this, &nuiFrame::IsInterpolated),
     nuiAttribute<bool>::SetterDelegate(this, &nuiFrame::SetInterpolated));
   
 
-	AddAttribute(_T("ClientRect"), AttributeRect);
-	AddAttribute(_T("Color"), AttributeColor);
-  AddAttribute(_T("UseWidgetFrameColor"), AttributeFrameColor);
-	AddAttribute(_T("Texture"), AttributeTexture);
-	AddAttribute(_T("Interpolation"), AttributeInterpolation);
+	AddAttribute("ClientRect", AttributeRect);
+	AddAttribute("Color", AttributeColor);
+  AddAttribute("UseWidgetFrameColor", AttributeFrameColor);
+	AddAttribute("Texture", AttributeTexture);
+	AddAttribute("Interpolation", AttributeInterpolation);
 }
 
 
@@ -115,7 +115,7 @@ void nuiFrame::SetTexturePath(const nglPath& rPath)
 
   if (!mpTexture || !mpTexture->IsValid())
   {
-    NGL_OUT(_T("nuiFrame::SetTexturePath warning : could not load graphic resource '%s'\n"), rPath.GetChars());
+    NGL_OUT("nuiFrame::SetTexturePath warning : could not load graphic resource '%s'\n", rPath.GetChars());
     return;
   }
 
@@ -307,7 +307,7 @@ void nuiFrame::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, const nuiRect&
   {
     if (mUseWidgetFrameColor)
     {
-      nuiAttrib<const nuiColor&> colorAttr(pWidget->GetAttribute(_T("FrameColor")));
+      nuiAttrib<const nuiColor&> colorAttr(pWidget->GetAttribute("FrameColor"));
       if (colorAttr.IsValid())
       {
         color = colorAttr.Get();

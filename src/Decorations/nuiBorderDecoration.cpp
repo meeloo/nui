@@ -10,7 +10,7 @@
 nuiBorderDecoration::nuiBorderDecoration(const nglString& rName)
 : nuiDecoration(rName)
 {
-  if (SetObjectClass(_T("nuiBorderDecoration")))
+  if (SetObjectClass("nuiBorderDecoration"))
     InitAttributes();
 
   mStrokeSize = 0;
@@ -35,49 +35,49 @@ nuiBorderDecoration::~nuiBorderDecoration()
 void nuiBorderDecoration::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nuiRect&>
-   (nglString(_T("ClientRect")), nuiUnitNone,
+   (nglString("ClientRect"), nuiUnitNone,
     nuiAttribute<const nuiRect&>::GetterDelegate(this, &nuiBorderDecoration::GetSourceClientRect),
     nuiAttribute<const nuiRect&>::SetterDelegate(this, &nuiBorderDecoration::SetSourceClientRect)));
 
   AddAttribute(new nuiAttribute<uint32>
-  (nglString(_T("StrokeSize")), nuiUnitPixels,
+  (nglString("StrokeSize"), nuiUnitPixels,
    nuiMakeDelegate(this, &nuiBorderDecoration::GetStrokeSize),
    nuiMakeDelegate(this, &nuiBorderDecoration::SetStrokeSize)));
   
   AddAttribute(new nuiAttribute<const nuiColor&>
-  (nglString(_T("StrokeColor")), nuiUnitColor,
+  (nglString("StrokeColor"), nuiUnitColor,
    nuiMakeDelegate(this, &nuiBorderDecoration::GetStrokeColor), 
    nuiMakeDelegate(this, &nuiBorderDecoration::SetStrokeColor)));
 
   
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("StrokeLeftColor")), nuiUnitColor,
+               (nglString("StrokeLeftColor"), nuiUnitColor,
                 nuiMakeDelegate(this, &nuiBorderDecoration::GetStrokeLeftColor), 
                 nuiMakeDelegate(this, &nuiBorderDecoration::SetStrokeLeftColor)));
 
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("StrokeRightColor")), nuiUnitColor,
+               (nglString("StrokeRightColor"), nuiUnitColor,
                 nuiMakeDelegate(this, &nuiBorderDecoration::GetStrokeRightColor), 
                 nuiMakeDelegate(this, &nuiBorderDecoration::SetStrokeRightColor)));
 
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("StrokeTopColor")), nuiUnitColor,
+               (nglString("StrokeTopColor"), nuiUnitColor,
                 nuiMakeDelegate(this, &nuiBorderDecoration::GetStrokeTopColor), 
                 nuiMakeDelegate(this, &nuiBorderDecoration::SetStrokeTopColor)));
 
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("StrokeBottomColor")), nuiUnitColor,
+               (nglString("StrokeBottomColor"), nuiUnitColor,
                 nuiMakeDelegate(this, &nuiBorderDecoration::GetStrokeBottomColor), 
                 nuiMakeDelegate(this, &nuiBorderDecoration::SetStrokeBottomColor)));
   
   
   AddAttribute(new nuiAttribute<nglString>
-  (nglString(_T("Border")), nuiUnitNone,
+  (nglString("Border"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiBorderDecoration::GetBorderType), 
    nuiMakeDelegate(this, &nuiBorderDecoration::SetBorderType)));
 
   AddAttribute(new nuiAttribute<nglString>
-  (nglString(_T("BorderMode")), nuiUnitNone,
+  (nglString("BorderMode"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiBorderDecoration::GetBorderMode), 
    nuiMakeDelegate(this, &nuiBorderDecoration::SetBorderMode)));
 }
@@ -336,43 +336,43 @@ nglString nuiBorderDecoration::GetBorderType()
   switch(mBorderType)
   {
   case eBorderAll:
-    return _T("All");
+    return "All";
   case eBorderLeft:
-    return _T("Left");
+    return "Left";
   case eBorderRight:
-    return _T("Right");
+    return "Right";
   case eBorderTop:
-    return _T("Top");
+    return "Top";
   case eBorderBottom:
-    return _T("Bottom");
+    return "Bottom";
   case eBorderHorizontal:
-    return _T("Horizontal");
+    return "Horizontal";
   case eBorderVertical:
-    return _T("Vertical");
+    return "Vertical";
   case eBorderNone:
-    return _T("None");
+    return "None";
   default: 
-    return _T("error");
+    return "error";
   }
 }
 
 void nuiBorderDecoration::SetBorderType(nglString type)
 {
-  if (!type.Compare(_T("All"), false))
+  if (!type.Compare("All", false))
     mBorderType = eBorderAll;
-  else if (!type.Compare(_T("Left"), false))
+  else if (!type.Compare("Left", false))
     mBorderType = eBorderLeft;
-  else if (!type.Compare(_T("Right"), false))
+  else if (!type.Compare("Right", false))
     mBorderType = eBorderRight;
-  else if (!type.Compare(_T("Top"), false))
+  else if (!type.Compare("Top", false))
     mBorderType = eBorderTop;
-  else if (!type.Compare(_T("Bottom"), false))
+  else if (!type.Compare("Bottom", false))
     mBorderType = eBorderBottom;
-  else if (!type.Compare(_T("Horizontal"), false))
+  else if (!type.Compare("Horizontal", false))
     mBorderType = eBorderHorizontal;
-  else if (!type.Compare(_T("Vertical"), false))
+  else if (!type.Compare("Vertical", false))
     mBorderType = eBorderVertical;
-  else if (!type.Compare(_T("None"), false))
+  else if (!type.Compare("None", false))
     mBorderType = eBorderNone;
   else
     mBorderType = eBorderNone;
@@ -385,25 +385,25 @@ nglString nuiBorderDecoration::GetBorderMode() const
   switch (mBorderMode)
   {
   case eBorderNormal:
-    return _T("Normal");
+    return "Normal";
   case eBorder3DIn:
-    return _T("3D");
+    return "3D";
   case eBorder3DOut:
-    return _T("3DOut");
+    return "3DOut";
   default:
-    return _T("error");
+    return "error";
   }
 }
 
 void nuiBorderDecoration::SetBorderMode(nglString mode)
 {
-  if (!mode.Compare(_T("Normal"), false))
+  if (!mode.Compare("Normal", false))
     mBorderMode = eBorderNormal;
-  else if (!mode.Compare(_T("3D"), false))
+  else if (!mode.Compare("3D", false))
     mBorderMode = eBorder3DIn;
-  else if (!mode.Compare(_T("3DIn"), false))
+  else if (!mode.Compare("3DIn", false))
     mBorderMode = eBorder3DIn;
-  else if (!mode.Compare(_T("3DOut"), false))
+  else if (!mode.Compare("3DOut", false))
     mBorderMode = eBorder3DOut;
   else
     mBorderMode = eBorderNormal;

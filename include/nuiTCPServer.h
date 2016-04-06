@@ -25,8 +25,10 @@ public:
   
   nuiTCPClient* Accept();
   
-private:
   virtual nuiTCPClient* OnCreateClient(nuiSocket::SocketType sock);
+  virtual bool OnNewClient(nuiTCPClient* pClient); // Return yes if the new client should be added to the server's stocket pool (if it has one).
+protected:
+  virtual void OnCanRead();
 
   nglString GetDesc() const;
 

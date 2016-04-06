@@ -10,7 +10,7 @@
 nuiScrollBox::nuiScrollBox(nuiWidget* pBackward, nuiWidget* pForward, nuiOrientation Orientation, nuiWidget* pScrolledWidget)
 : mSink(this)
 {  
-  SetObjectClass(_T("nuiScrollBox"));
+  SetObjectClass("nuiScrollBox");
 
   mOrientation = Orientation;
   mpBackwardButton = new nuiButton();
@@ -58,7 +58,7 @@ nuiScrollBox::nuiScrollBox(nuiWidget* pBackward, nuiWidget* pForward, nuiOrienta
 nuiScrollBox::nuiScrollBox(const nglPath& rBackwardIconPath, const nglPath& rForwardIconPath, nuiOrientation Orientation, nuiWidget* pScrolledWidget)
 : mSink(this)
 {
-  SetObjectClass(_T("nuiScrollBox"));
+  SetObjectClass("nuiScrollBox");
   
   mOrientation = Orientation;
   mpBackwardButton = new nuiButton(rBackwardIconPath);

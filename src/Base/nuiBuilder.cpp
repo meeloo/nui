@@ -28,79 +28,79 @@ nuiBuilder::~nuiBuilder()
 
 void nuiBuilder::Init()
 {
-  NUI_ADD_WIDGET_CREATOR(nuiWidget, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiSplitter,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiPopupMenu,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiList,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiScrollBar,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiFixed,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiMainWindow,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiScrollView,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiZoomView,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiTabBar,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiTreeView,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiColumnTreeView,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiSlider,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiPane,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiGrid,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiHBox,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiVBox,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiFolderPane,"Container");
-  NUI_ADD_WIDGET_CREATOR(nuiLabel,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiText,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiEditText,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiEditLine,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiButton,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiKnob,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiToggleButton,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiRadioButton,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiImage,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiTab,"Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiProgressBar,"Widget");
+  NUI_ADD_WIDGET_CREATOR(nuiWidget);
+  NUI_ADD_WIDGET_CREATOR(nuiSplitter);
+  NUI_ADD_WIDGET_CREATOR(nuiPopupMenu);
+  NUI_ADD_WIDGET_CREATOR(nuiList);
+  NUI_ADD_WIDGET_CREATOR(nuiScrollBar);
+  NUI_ADD_WIDGET_CREATOR(nuiFixed);
+  NUI_ADD_WIDGET_CREATOR(nuiMainWindow);
+  NUI_ADD_WIDGET_CREATOR(nuiScrollView);
+  NUI_ADD_WIDGET_CREATOR(nuiZoomView);
+  NUI_ADD_WIDGET_CREATOR(nuiTabBar);
+  NUI_ADD_WIDGET_CREATOR(nuiTreeView);
+  NUI_ADD_WIDGET_CREATOR(nuiColumnTreeView);
+  NUI_ADD_WIDGET_CREATOR(nuiSlider);
+  NUI_ADD_WIDGET_CREATOR(nuiPane);
+  NUI_ADD_WIDGET_CREATOR(nuiGrid);
+  NUI_ADD_WIDGET_CREATOR(nuiHBox);
+  NUI_ADD_WIDGET_CREATOR(nuiVBox);
+  NUI_ADD_WIDGET_CREATOR(nuiFolderPane);
+  NUI_ADD_WIDGET_CREATOR(nuiLabel);
+  NUI_ADD_WIDGET_CREATOR(nuiText);
+  NUI_ADD_WIDGET_CREATOR(nuiEditText);
+  NUI_ADD_WIDGET_CREATOR(nuiEditLine);
+  NUI_ADD_WIDGET_CREATOR(nuiButton);
+  NUI_ADD_WIDGET_CREATOR(nuiKnob);
+  NUI_ADD_WIDGET_CREATOR(nuiToggleButton);
+  NUI_ADD_WIDGET_CREATOR(nuiRadioButton);
+  NUI_ADD_WIDGET_CREATOR(nuiImage);
+  NUI_ADD_WIDGET_CREATOR(nuiTab);
+  NUI_ADD_WIDGET_CREATOR(nuiProgressBar);
   
   //NUI_ADD_WIDGET_CREATOR(nuiMessageBox,"Dialog");
   //NUI_ADD_WIDGET_CREATOR(nuiDialogSelectDirectory,"Dialog");
   //NUI_ADD_WIDGET_CREATOR(nuiDialogSelectFile,"Dialog");
   
   //NUI_ADD_WIDGET_CREATOR(nuiDialog, "Dialog");
-  NUI_ADD_WIDGET_CREATOR(nuiFlowView, "Container");
-  //NUI_ADD_WIDGET_CREATOR(nuiImageSequence, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiModalContainer, "Container");
-  //NUI_ADD_WIDGET_CREATOR(nuiOffscreenView, "Container");
-  //NUI_ADD_WIDGET_CREATOR(nuiPopupView, "Container");
-  //NUI_ADD_WIDGET_CREATOR(nuiScrollBox, "Container");
-  //NUI_ADD_WIDGET_CREATOR(nuiShadeContainer, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiTabView, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiTitledPane, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiColorSelector, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiComboBox, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiCoverFlow, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiFileList, "Widget");
-  //NUI_ADD_WIDGET_CREATOR(nuiFileSelector, "Widget");
-  //NUI_ADD_WIDGET_CREATOR(nuiFileTree, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiFontBrowser, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiFrameView, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiHotKeyEditor, "Widget");
-  //NUI_ADD_WIDGET_CREATOR(nuiImageDropZone, "Widget");
-  //NUI_ADD_WIDGET_CREATOR(nuiShapeView, "Widget");
-  //NUI_ADD_WIDGET_CREATOR(nuiZoomBar, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiRSSView, "Widget");
-  //NUI_ADD_WIDGET_CREATOR(nuiHugeImage, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiHyperLink, "Widget");
-  //NUI_ADD_WIDGET_CREATOR(nuiLabelAttribute, "Widget");
-  //NUI_ADD_WIDGET_CREATOR(nuiLabelRenamer, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiHTMLView, "Widget");
+  NUI_ADD_WIDGET_CREATOR(nuiFlowView);
+  //NUI_ADD_WIDGET_CREATOR(nuiImageSequence);
+  NUI_ADD_WIDGET_CREATOR(nuiModalContainer);
+  //NUI_ADD_WIDGET_CREATOR(nuiOffscreenView);
+  //NUI_ADD_WIDGET_CREATOR(nuiPopupView);
+  //NUI_ADD_WIDGET_CREATOR(nuiScrollBox);
+  //NUI_ADD_WIDGET_CREATOR(nuiShadeContainer);
+  NUI_ADD_WIDGET_CREATOR(nuiTabView);
+  NUI_ADD_WIDGET_CREATOR(nuiTitledPane);
+  NUI_ADD_WIDGET_CREATOR(nuiColorSelector);
+  NUI_ADD_WIDGET_CREATOR(nuiComboBox);
+  NUI_ADD_WIDGET_CREATOR(nuiCoverFlow);
+  NUI_ADD_WIDGET_CREATOR(nuiFileList);
+  //NUI_ADD_WIDGET_CREATOR(nuiFileSelector);
+  //NUI_ADD_WIDGET_CREATOR(nuiFileTree);
+  NUI_ADD_WIDGET_CREATOR(nuiFontBrowser);
+  NUI_ADD_WIDGET_CREATOR(nuiFrameView);
+  NUI_ADD_WIDGET_CREATOR(nuiHotKeyEditor);
+  //NUI_ADD_WIDGET_CREATOR(nuiImageDropZone);
+  //NUI_ADD_WIDGET_CREATOR(nuiShapeView);
+  //NUI_ADD_WIDGET_CREATOR(nuiZoomBar);
+  NUI_ADD_WIDGET_CREATOR(nuiRSSView);
+  //NUI_ADD_WIDGET_CREATOR(nuiHugeImage);
+  NUI_ADD_WIDGET_CREATOR(nuiHyperLink);
+  //NUI_ADD_WIDGET_CREATOR(nuiLabelAttribute);
+  //NUI_ADD_WIDGET_CREATOR(nuiLabelRenamer);
+  NUI_ADD_WIDGET_CREATOR(nuiHTMLView);
 
-  NUI_ADD_WIDGET_CREATOR(nuiNavigationBar, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiNavigationController, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiNavigationButton, "Widget");
-  NUI_ADD_WIDGET_CREATOR(nuiViewController, "Widget");
+  NUI_ADD_WIDGET_CREATOR(nuiNavigationBar);
+  NUI_ADD_WIDGET_CREATOR(nuiNavigationController);
+  NUI_ADD_WIDGET_CREATOR(nuiNavigationButton);
+  NUI_ADD_WIDGET_CREATOR(nuiViewController);
 
-  NUI_ADD_WIDGET_CREATOR(nuiLayout, "Container");
-  NUI_ADD_WIDGET_CREATOR(nuiDrawerView, "Widget");
+  NUI_ADD_WIDGET_CREATOR(nuiLayout);
+  NUI_ADD_WIDGET_CREATOR(nuiDrawerView);
 
 #ifndef _OPENGL_ES_
-  NUI_ADD_WIDGET_CREATOR(nuiUserArea,"Widget");
+  NUI_ADD_WIDGET_CREATOR(nuiUserArea);
 #endif
 }
 
@@ -121,12 +121,12 @@ void nuiBuilder::Uninit()
   }
 }
 
-void nuiBuilder::SetHandler(const nglString& ClassName, const nglString& ClassGroup, nuiCreateWidgetFn pHandler)
+void nuiBuilder::SetHandler(const nglString& ClassName, nuiCreateWidgetFn pHandler)
 {
-  //wprintf(_T("Adding Widget handler: %s\n"), ClassName.GetChars());
+  //wprintf("Adding Widget handler: %s\n", ClassName.GetChars());
   NGL_ASSERT(mBuilderMap.find(ClassName) == mBuilderMap.end());
   NGL_ASSERT(mCreatorMap.find(ClassName) == mCreatorMap.end());
-  nuiWidgetDesc desc(ClassName, ClassGroup, pHandler);
+  nuiWidgetDesc desc(ClassName, pHandler);
   mBuilderMap[ClassName] = desc;
 }
 
@@ -267,12 +267,12 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
   std::map<nglString, nglString> ParamDictionary(mDefaultDictionary);
   ParamDictionary.insert(rParamDictionary.begin(), rParamDictionary.end());
   
-//  NGL_LOG(_T("nuiWidgetCreator"), NGL_LOG_DEBUG, _T("\nBuild %s / %s\n"), mClassName.GetChars(), mObjectName.GetChars());
+//  NGL_LOG("nuiWidgetCreator", NGL_LOG_DEBUG, "\nBuild %s / %s\n", mClassName.GetChars(), mObjectName.GetChars());
 //  std::map<nglString, nglString>::iterator it = ParamDictionary.begin();
 //  std::map<nglString, nglString>::iterator end = ParamDictionary.end();
 //  while (it != end)
 //  {
-//    NGL_LOG(_T("nuiWidgetCreator"), NGL_LOG_DEBUG, _T("\t%s - %s\n"), it->first.GetChars(), it->second.GetChars());
+//    NGL_LOG("nuiWidgetCreator", NGL_LOG_DEBUG, "\t%s - %s\n", it->first.GetChars(), it->second.GetChars());
 //    ++it;
 //  }
   
@@ -282,7 +282,7 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
   nuiWidget* pWidget = pBuilder->CreateWidget(classname, ParamDictionary);
   if (!pWidget)
   {
-    NGL_LOG(_T("nuiWidgetCreator"), NGL_LOG_ERROR, _T("Error while creating a %s named %s (translated to %s - %s"), 
+    NGL_LOG("nuiWidgetCreator", NGL_LOG_ERROR, "Error while creating a %s named %s (translated to %s - %s", 
             mClassName.GetChars(), mObjectName.GetChars(),
             classname.GetChars(), objectname.GetChars());
     return NULL;
@@ -386,7 +386,7 @@ nuiWidget* nuiWidgetCreator::Create(const std::map<nglString, nglString>& rParam
   }
 
   if (pWidget)
-    pWidget->Built();
+    pWidget->CallBuilt();
   return pWidget;
 }
 

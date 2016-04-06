@@ -24,7 +24,7 @@ using namespace std;
 
 nuiSplitterHandle::nuiSplitterHandle(nuiSplitter* pParent)
 {
-  SetObjectClass(_T("nuiSplitterHandle"));
+  SetObjectClass("nuiSplitterHandle");
   
   mpParent = pParent;
   mClicked = false;  
@@ -186,7 +186,7 @@ nuiSplitter::nuiSplitter ( nuiOrientation orientation, nuiSplitterMode mode)
 : nuiWidget()
 //  mSplitterSink(this)
 {
-  if (SetObjectClass(_T("nuiSplitter")))
+  if (SetObjectClass("nuiSplitter"))
     InitAttributes();
 
   mHandlePos = 50; // 50%
@@ -846,7 +846,7 @@ void nuiSplitter::GotoHandlePos(nuiSize HandlePos, nuiSize handleStep, double ti
   
   nuiAttributeAnimation* pAnim = new nuiAttributeAnimation();
   pAnim->SetTargetObject(this);
-  pAnim->SetTargetAttribute(_T("HandlePos"));
+  pAnim->SetTargetAttribute("HandlePos");
   pAnim->SetDeleteOnStop(true); 
   pAnim->SetEasing(nuiEasingSinusStartFast);
   pAnim->SetStartValue(mStartHandlePos);

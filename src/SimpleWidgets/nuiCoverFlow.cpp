@@ -24,65 +24,65 @@ nuiCoverFlow::nuiCoverFlow()
   mTimer(1.0f / 30.0f),
   mFlowSink(this)
 {
-  if (SetObjectClass(_T("nuiCoverFlow")))
+  if (SetObjectClass("nuiCoverFlow"))
   {
     AddAttribute(new nuiAttribute<int32>
-                 (nglString(_T("SelectedImage")), nuiUnitNone,
+                 (nglString("SelectedImage"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetSelectedIndex), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SelectImageIndex)));
     
     AddAttribute(new nuiAttribute<int32>
-                 (nglString(_T("SelectedImageNow")), nuiUnitNone,
+                 (nglString("SelectedImageNow"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetSelectedIndex), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SelectImageIndexNow)));
     
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("ReflectionStart")), nuiUnitNone,
+                 (nglString("ReflectionStart"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetReflectionStart), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetReflectionStart)));
 
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("ReflectionEnd")), nuiUnitNone,
+                 (nglString("ReflectionEnd"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetReflectionEnd), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetReflectionEnd)));
 
     AddAttribute(new nuiAttribute<bool>
-                 (nglString(_T("DrawBackground")), nuiUnitNone,
+                 (nglString("DrawBackground"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetDrawBackground), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetDrawBackground)));
 
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("YOffset")), nuiUnitNone,
+                 (nglString("YOffset"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetYOffset), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetYOffset)));
     
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("SelectionYOffset")), nuiUnitNone,
+                 (nglString("SelectionYOffset"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetSelectionYOffset), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetSelectionYOffset)));
     
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("Angle")), nuiUnitNone,
+                 (nglString("Angle"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetAngle), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetAngle)));
     
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("SideShift")), nuiUnitNone,
+                 (nglString("SideShift"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetSideShift), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetSideShift)));
     
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("SideGap")), nuiUnitNone,
+                 (nglString("SideGap"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetSideGap), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetSideGap)));
     
     AddAttribute(new nuiAttribute<float>
-                 (nglString(_T("SideDepth")), nuiUnitNone,
+                 (nglString("SideDepth"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetSideDepth), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetSideDepth)));
     
     AddAttribute(new nuiAttribute<const nuiColor&>
-                 (nglString(_T("BackgroundColor")), nuiUnitNone,
+                 (nglString("BackgroundColor"), nuiUnitNone,
                   nuiMakeDelegate(this, &nuiCoverFlow::GetBackgroundColor), 
                   nuiMakeDelegate(this, &nuiCoverFlow::SetBackgroundColor)));
   }
@@ -160,7 +160,7 @@ bool nuiCoverFlow::Draw(nuiDrawContext* pContext)
   float fractional = mPos - image;
   float fract = 1.0 - fractional;
   
-  //NGL_OUT(_T("image: %d\npos: %f\nfractionnal: %f\nfract: %f\n\n"), image, mPos, fractional, fract);
+  //NGL_OUT("image: %d\npos: %f\nfractionnal: %f\nfract: %f\n\n", image, mPos, fractional, fract);
   
   pContext->EnableBlending(true);
   pContext->SetBlendFunc(nuiBlendTransp);
@@ -283,9 +283,9 @@ bool nuiCoverFlow::Draw(nuiDrawContext* pContext)
   pContext->PopProjectionMatrix();
 
 //  pContext->EnableTexturing(false);
-//  pContext->SetStrokeColor(nuiColor(_T("red")));
+//  pContext->SetStrokeColor(nuiColor("red"));
 //  pContext->DrawLine(mRect.GetWidth() / 2, 0, mRect.GetWidth() / 2, mRect.GetHeight());
-//  pContext->SetStrokeColor(nuiColor(_T("blue")));
+//  pContext->SetStrokeColor(nuiColor("blue"));
 //  pContext->DrawLine(mRect.GetWidth() * .25, 0, mRect.GetWidth() * .25, mRect.GetHeight());
 //  pContext->DrawLine(mRect.GetWidth() * .75, 0, mRect.GetWidth() * .75, mRect.GetHeight());
   

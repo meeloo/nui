@@ -16,7 +16,7 @@ nuiLabel::nuiLabel(const nglString& Text)
 {
   InitDefaultValues();
 
-  if (SetObjectClass(_T("nuiLabel")))
+  if (SetObjectClass("nuiLabel"))
     InitAttributes();
 
   InitProperties();
@@ -31,7 +31,7 @@ nuiLabel::nuiLabel(const nglString& Text, nuiFont* pFont, bool AlreadyAcquired)
 {
   InitDefaultValues();
 
-  if (SetObjectClass(_T("nuiLabel")))
+  if (SetObjectClass("nuiLabel"))
     InitAttributes();
 
   InitProperties();
@@ -46,7 +46,7 @@ nuiLabel::nuiLabel(const nglString& Text, const nglString& rObjectName)
 {
   InitDefaultValues();
   
-  if (SetObjectClass(_T("nuiLabel")))
+  if (SetObjectClass("nuiLabel"))
     InitAttributes();
   
   InitProperties();
@@ -101,75 +101,75 @@ nuiLabel::~nuiLabel()
 void nuiLabel::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglString&>
-  (nglString(_T("Text")), nuiUnitName,
+  (nglString("Text"), nuiUnitName,
    nuiMakeDelegate(this, &nuiLabel::GetText), 
    nuiMakeDelegate(this, &nuiLabel::SetText)));
 
   AddAttribute(new nuiAttribute<const nuiColor&>
-  (nglString(_T("TextColor")), nuiUnitNone,
+  (nglString("TextColor"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiLabel::GetTextColor), 
    nuiMakeDelegate(this, &nuiLabel::SetTextColor)));
   
 
   AddAttribute(new nuiAttribute<const nuiColor&>
-  (nglString(_T("BackgroundColor")), nuiUnitNone,
+  (nglString("BackgroundColor"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiLabel::GetBackgroundColor), 
    nuiMakeDelegate(this, &nuiLabel::SetBackgroundColor)));
   
 
   AddAttribute(new nuiAttribute<bool>
-    (nglString(_T("Background")), nuiUnitYesNo,
+    (nglString("Background"), nuiUnitYesNo,
     nuiMakeDelegate(this, &nuiLabel::GetBackground), 
     nuiMakeDelegate(this, &nuiLabel::SetBackground)));
 
   AddAttribute(new nuiAttribute<bool>
-    (nglString(_T("Wraping")), nuiUnitYesNo,
+    (nglString("Wraping"), nuiUnitYesNo,
     nuiMakeDelegate(this, &nuiLabel::IsWrapping), 
     nuiMakeDelegate(this, &nuiLabel::SetWrapping)));
 
   AddAttribute(new nuiAttribute<bool>
-  (nglString(_T("Underline")), nuiUnitYesNo,
+  (nglString("Underline"), nuiUnitYesNo,
    nuiMakeDelegate(this, &nuiLabel::GetUnderline), 
    nuiMakeDelegate(this, &nuiLabel::SetUnderline)));
   
   AddAttribute(new nuiAttribute<bool>
-  (nglString(_T("StrikeThrough")), nuiUnitYesNo,
+  (nglString("StrikeThrough"), nuiUnitYesNo,
    nuiMakeDelegate(this, &nuiLabel::GetStrikeThrough), 
    nuiMakeDelegate(this, &nuiLabel::SetStrikeThrough)));
   
   
   AddAttribute(new nuiAttribute<nuiPosition>
-  (nglString(_T("TextPosition")), nuiUnitPosition,
+  (nglString("TextPosition"), nuiUnitPosition,
    nuiMakeDelegate(this, &nuiLabel::GetTextPosition), 
    nuiMakeDelegate(this, &nuiLabel::SetTextPosition)));
   
 
   AddAttribute(new nuiAttribute<const nglString&>
-  (nglString(_T("Font")), nuiUnitName,
+  (nglString("Font"), nuiUnitName,
     nuiMakeDelegate(this, &nuiLabel::_GetFont), 
     nuiMakeDelegate(this, &nuiLabel::_SetFont)));
   
   AddAttribute(new nuiAttribute<nuiOrientation>
-  (nglString(_T("Orientation")), nuiUnitNone,
+  (nglString("Orientation"), nuiUnitNone,
    nuiMakeDelegate(this, &nuiLabel::GetOrientation),
    nuiMakeDelegate(this, &nuiLabel::SetOrientation)));
   
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("HMargin")), nuiUnitNone,
+               (nglString("HMargin"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiLabel::GetHMargin), 
                 nuiMakeDelegate(this, &nuiLabel::SetHMargin)));
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T("VMargin")), nuiUnitNone,
+               (nglString("VMargin"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiLabel::GetVMargin), 
                 nuiMakeDelegate(this, &nuiLabel::SetVMargin)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("UseEllipsis")), nuiUnitYesNo,
+               (nglString("UseEllipsis"), nuiUnitYesNo,
                 nuiMakeDelegate(this, &nuiLabel::GetUseEllipsis), 
                 nuiMakeDelegate(this, &nuiLabel::UseEllipsis)));
   
   AddAttribute(new nuiAttribute<nuiTextLayoutMode>
-               (nglString(_T("TextLayoutMode")), nuiUnitNone,
+               (nglString("TextLayoutMode"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiLabel::GetTextLayoutMode),
                 nuiMakeDelegate(this, &nuiLabel::SetTextLayoutMode)));
   
@@ -219,7 +219,7 @@ const nuiColor& nuiLabel::GetBackgroundColor() const
 bool nuiLabel::Draw(nuiDrawContext* pContext)
 {
   if (GetDebug())
-    NGL_OUT(_T("Draw 0x%x (%s)\n"), this, mText.GetChars());
+    NGL_OUT("Draw 0x%x (%s)\n", this, mText.GetChars());
   nuiColor Color = GetTextColor();
   nuiColor ColorBg = GetBackgroundColor();
 
@@ -281,7 +281,7 @@ bool nuiLabel::Draw(nuiDrawContext* pContext)
   }
   else
   {
-//    NGL_OUT(_T("FUCK 0x%x!"), this);
+//    NGL_OUT("FUCK 0x%x!", this);
   }
   return true;
 }
@@ -313,7 +313,7 @@ void nuiLabel::CalcLayout()
 
       if (mWrapping)
       {
-        //NGL_OUT(_T("Setting wrapping to %f\n"), mConstraint.mMaxWidth);
+        //NGL_OUT("Setting wrapping to %f\n", mConstraint.mMaxWidth);
         float wrap1 = mConstraint.mMaxWidth;
         float wrap2 = MAX(GetMaxIdealWidth(), GetUserWidth());
         float wrap = 0;
@@ -390,7 +390,7 @@ bool nuiLabel::SetRect(const nuiRect& rRect)
       {
         int len = text.GetLength();
         text.DeleteRight(MIN(NbLetterToRemove, len));
-        text.Append(_T("..."));
+        text.Append("...");
       }
       mpLayout->Release();
       mpLayout = new nuiTextLayout(mpFont);
@@ -455,7 +455,7 @@ void nuiLabel::SetText(const nglString& Text)
     SetToolTip(nglString::Empty);
   nglString t(mText);
   mText = Text;
-  mText.TrimRight(_T("\n\r\t"));
+  mText.TrimRight("\n\r\t");
   mText.Replace('\r','\n');
   if (t == mText) // Only redisplay if the text has really changed!
     return;
@@ -615,7 +615,7 @@ bool nuiLabel::SetLayoutConstraint(const nuiWidget::LayoutConstraint& rConstrain
 {
   if (nuiWidget::SetLayoutConstraint(rConstraint))
   {
-    //NGL_OUT(_T("nuiLabel::SetLayoutConstraint %f %f\n"), mConstraint.mMaxWidth, mConstraint.mMaxHeight);
+    //NGL_OUT("nuiLabel::SetLayoutConstraint %f %f\n", mConstraint.mMaxWidth, mConstraint.mMaxHeight);
     mTextChanged = true;
     return true;
   }

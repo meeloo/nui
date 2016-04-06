@@ -8,7 +8,7 @@
 #include "nui.h"
 #include "nglKernel.h"
 
-#define NGL_CONSOLE_PROMPT _T("> ")
+#define NGL_CONSOLE_PROMPT "> "
 
 
 nglConsole::nglConsole(bool IsVisible)

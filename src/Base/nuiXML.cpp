@@ -63,7 +63,7 @@ xmlLexer::~xmlLexer()
 nglSize xmlLexer::ReadLine (nglString& rLine, nglTextFormat* pFormat)
 {
   nglSize size = mpStream->ReadLine(rLine, pFormat);
-  //wprintf(_T("Read line from XML: %d chars '%s'\n"), size, rLine.GetChars());
+  //wprintf("Read line from XML: %d chars '%s'\n", size, rLine.GetChars());
   return size;
 }
 
@@ -375,7 +375,7 @@ void nuiXMLBuilder::Characters(const XML_Char* s, int len)
   {
     if (!mIsTextNode)
     {
-      mpCurrentNode = new nuiXMLNode(_T("##text"), mpCurrentNode);
+      mpCurrentNode = new nuiXMLNode("##text", mpCurrentNode);
       mIsTextNode = true;
       mIsRootNode = false;
     }
@@ -385,13 +385,13 @@ void nuiXMLBuilder::Characters(const XML_Char* s, int len)
 
 void nuiXMLBuilder::ProcessingInstruction(const XML_Char* target, const XML_Char* data)
 {
-  nuiXMLNode* pNode = new nuiXMLNode(_T("##comment"), mpCurrentNode);
-  pNode->SetValue(nglString(target, eUTF8) + _T(" ") + nglString(data, eUTF8));
+  nuiXMLNode* pNode = new nuiXMLNode("##comment", mpCurrentNode);
+  pNode->SetValue(nglString(target, eUTF8) + " " + nglString(data, eUTF8));
 }
 
 void nuiXMLBuilder::Comment(const XML_Char* data)
 {
-  nuiXMLNode* pNode = new nuiXMLNode(_T("##comment"), mpCurrentNode);
+  nuiXMLNode* pNode = new nuiXMLNode("##comment", mpCurrentNode);
   pNode->SetValue(nglString(data, eUTF8));
 }
 
@@ -470,15 +470,15 @@ const nglString& nuiXMLNode::GetValue() const
 void nuiXMLNode::SetValue(const nglString& rValue)
 {
   mValue = rValue;
-  if (mName.GetLeft(2) != _T("##"))
-    mName = _T("##") + mName;
+  if (mName.GetLeft(2) != "##")
+    mName = "##" + mName;
 }
 
 void nuiXMLNode::SetValue(const char* pValue)
 {
   mValue = nglString(pValue);
-  if (mName.GetLeft(2) != _T("##"))
-    mName = _T("##") + mName;
+  if (mName.GetLeft(2) != "##")
+    mName = "##" + mName;
 }
 
 // Node attributes management:
@@ -562,7 +562,7 @@ void nuiXMLNode::SetAttribute(const nglString& rName, int64 value)
 
 void nuiXMLNode::SetAttribute(const nglString& rName, bool value)
 {
-  nglString val = value?_T("true"):_T("false");
+  nglString val = value?"true":"false";
   SetAttribute(rName,val);
 }
 
@@ -704,7 +704,7 @@ void nuiXMLNode::SetAttribute(const char* pName, int64 value)
 void nuiXMLNode::SetAttribute(const char* pName, bool value)
 {
   nglString name(pName);
-  nglString val = value?_T("true"):_T("false");
+  nglString val = value?"true":"false";
   SetAttribute(name,val);
 }
 
@@ -881,17 +881,17 @@ int64 nuiXMLNode::Write(nglOStream& rStream, uint level) const
   nglString scratch1;
   nglString scratch2;
   nglString name;
-  tab.Fill(_T("  "),level);
+  tab.Fill("  ",level);
 
-  if (mName.GetLeft(2) != _T("##"))
+  if (mName.GetLeft(2) != "##")
   {
     XMLizeString(name, mName);
     //#FIXME
     //DUMPT(("<%s",name.GetChars()));
     res += rStream.WriteText(tab);
-    res += rStream.WriteText(nglString(_T("<")));
+    res += rStream.WriteText(nglString("<"));
     res += rStream.WriteText(name);
-    //res.Add(tab).Add(_T(" <")).Add(name);
+    //res.Add(tab).Add(" <").Add(name);
 
     //    uint i;
 
@@ -913,12 +913,12 @@ int64 nuiXMLNode::Write(nglOStream& rStream, uint level) const
 
 
       //#FIXME
-      //res.Append(' ').Add(scratch1).Add(_T("=\"")).Add(scratch2).Add(_T("\""));
-      res += rStream.WriteText(nglString(_T(" ")));
+      //res.Append(' ').Add(scratch1).Add("=\"").Add(scratch2).Add("\"");
+      res += rStream.WriteText(nglString(" "));
       res += rStream.WriteText(scratch1);
-      res += rStream.WriteText(nglString(_T("=\"")));
+      res += rStream.WriteText(nglString("=\""));
       res += rStream.WriteText(scratch2);
-      res += rStream.WriteText(nglString(_T("\"")));
+      res += rStream.WriteText(nglString("\""));
 
       ++attrib;
     }
@@ -927,8 +927,8 @@ int64 nuiXMLNode::Write(nglOStream& rStream, uint level) const
     {
       //#FIXME
       //DUMP((">\n"));
-      //res.Add(_T(">\n"));
-      res += rStream.WriteText(nglString(_T(">\n")));
+      //res.Add(">\n");
+      res += rStream.WriteText(nglString(">\n"));
 
       list<nuiXMLNode*>::const_iterator it;
       list<nuiXMLNode*>::const_iterator end = mpChildren.end();
@@ -940,11 +940,11 @@ int64 nuiXMLNode::Write(nglOStream& rStream, uint level) const
 
       //#FIXME
       //DUMPT(("</%s>\n",name.GetChars()));
-      //res.Add(tab).Add(_T("</")).Add(name).Add(_T(">\n"));
+      //res.Add(tab).Add("</").Add(name).Add(">\n");
       res += rStream.WriteText(tab);
-      res += rStream.WriteText(nglString(_T("</")));
+      res += rStream.WriteText(nglString("</"));
       res += rStream.WriteText(name);
-      res += rStream.WriteText(nglString(_T(">\n")));
+      res += rStream.WriteText(nglString(">\n"));
 
       //      printf("res [%d]:\n%s\n**************\n\n", res.GetLength(), res.GetChars());
     }
@@ -952,42 +952,42 @@ int64 nuiXMLNode::Write(nglOStream& rStream, uint level) const
     {
       //#FIXME
       //DUMP(("/>\n"));
-      //res.Add(_T("/>\n"));
-      res += rStream.WriteText(nglString(_T("/>\n")));
+      //res.Add("/>\n");
+      res += rStream.WriteText(nglString("/>\n"));
     }
   }
   else
   {
     nglString value;
     XMLizeString(value, mValue);
-    if (mName == _T("##text"))
+    if (mName == "##text")
     {
       //#FIXME
       //DUMPT(("%s\n",value.GetChars()));
-      //res.Add(tab).Add(value).Add(_T("\n"));
+      //res.Add(tab).Add(value).Add("\n");
       res += rStream.WriteText(tab);
       res += rStream.WriteText(value);
-      res += rStream.WriteText(nglString(_T("\n")));
+      res += rStream.WriteText(nglString("\n"));
     }
-    else if (mName == _T("##comment"))
+    else if (mName == "##comment")
     {
       //#FIXME
       //DUMPT(("<!-- %s -->\n",value.GetChars()));
-      //res.Add(tab).Add(_T("<!-- ")).Add(value).Add(_T(" -->\n"));
+      //res.Add(tab).Add("<!-- ").Add(value).Add(" -->\n");
       res += rStream.WriteText(tab);
-      res += rStream.WriteText(nglString(_T("<!-- ")));
+      res += rStream.WriteText(nglString("<!-- "));
       res += rStream.WriteText(value);
-      res += rStream.WriteText(nglString(_T(" -->\n")));
+      res += rStream.WriteText(nglString(" -->\n"));
     }
-    else if (mName == _T("##command"))
+    else if (mName == "##command")
     {
       //#FIXME
       //DUMPT(("<!%s>\n",value.GetChars()));
-      //res.Add(tab).Add(_T("<!")).Add(value).Add(_T(">\n"));
+      //res.Add(tab).Add("<!").Add(value).Add(">\n");
       res += rStream.WriteText(tab);
-      res += rStream.WriteText(nglString(_T("<!")));
+      res += rStream.WriteText(nglString("<!"));
       res += rStream.WriteText(value);
-      res += rStream.WriteText(nglString(_T(">\n")));
+      res += rStream.WriteText(nglString(">\n"));
     }
   }
 
@@ -1001,14 +1001,14 @@ nglString nuiXMLNode::Dump(uint level) const
   nglString scratch1;
   nglString scratch2;
   nglString name;
-  tab.Fill(_T("  "),level);
+  tab.Fill("  ",level);
 
-  if (mName.GetLeft(2) != _T("##"))
+  if (mName.GetLeft(2) != "##")
   {
     XMLizeString(name, mName);
     //#FIXME
     //DUMPT(("<%s",name.GetChars()));
-    res.Add(tab).Add(_T(" <")).Add(name);
+    res.Add(tab).Add(" <").Add(name);
 
     //    uint i;
 
@@ -1030,7 +1030,7 @@ nglString nuiXMLNode::Dump(uint level) const
 
 
       //#FIXME
-      res.Append(' ').Add(scratch1).Add(_T("=\"")).Add(scratch2).Add(_T("\""));
+      res.Append(' ').Add(scratch1).Add("=\"").Add(scratch2).Add("\"");
 
 
       ++attrib;
@@ -1040,7 +1040,7 @@ nglString nuiXMLNode::Dump(uint level) const
     {
       //#FIXME
       //DUMP((">\n"));
-      res.Add(_T(">\n"));
+      res.Add(">\n");
 
       list<nuiXMLNode*>::const_iterator it;
       list<nuiXMLNode*>::const_iterator end = mpChildren.end();
@@ -1052,7 +1052,7 @@ nglString nuiXMLNode::Dump(uint level) const
 
       //#FIXME
       //DUMPT(("</%s>\n",name.GetChars()));
-      res.Add(tab).Add(_T("</")).Add(name).Add(_T(">\n"));
+      res.Add(tab).Add("</").Add(name).Add(">\n");
 
       //      printf("res [%d]:\n%s\n**************\n\n", res.GetLength(), res.GetChars());
     }
@@ -1060,30 +1060,30 @@ nglString nuiXMLNode::Dump(uint level) const
     {
       //#FIXME
       //DUMP(("/>\n"));
-      res.Add(_T("/>\n"));
+      res.Add("/>\n");
     }
   }
   else
   {
     nglString value;
     XMLizeString(value, mValue);
-    if (mName == _T("##text"))
+    if (mName == "##text")
     {
       //#FIXME
       //DUMPT(("%s\n",value.GetChars()));
-      res.Add(tab).Add(value).Add(_T("\n"));
+      res.Add(tab).Add(value).Add("\n");
     }
-    else if (mName == _T("##comment"))
+    else if (mName == "##comment")
     {
       //#FIXME
       //DUMPT(("<!-- %s -->\n",value.GetChars()));
-      res.Add(tab).Add(_T("<!-- ")).Add(value).Add(_T(" -->\n"));
+      res.Add(tab).Add("<!-- ").Add(value).Add(" -->\n");
     }
-    else if (mName == _T("##command"))
+    else if (mName == "##command")
     {
       //#FIXME
       //DUMPT(("<!%s>\n",value.GetChars()));
-      res.Add(tab).Add(_T("<!")).Add(value).Add(_T(">\n"));
+      res.Add(tab).Add("<!").Add(value).Add(">\n");
     }
   }
 
@@ -1160,14 +1160,14 @@ bool GetToken(nglString& src, nglString& dest)
   else if (src[0]=='=')
   {
     // This is the equal sign
-    dest=_T("=");
+    dest="=";
     src.DeleteLeft(1);
     return true;
   }
   else if (src[0]=='>')
   {
     // This is the end of the tag
-    dest=_T(">");
+    dest=">";
     src.Delete();
     return true;
   }
@@ -1177,7 +1177,7 @@ bool GetToken(nglString& src, nglString& dest)
     if (src[1]!='>')
       return false; // Malformed tag end
 
-    dest=_T("/>");
+    dest="/>";
     src.Delete();
     return true;
   }
@@ -1202,28 +1202,28 @@ bool GetToken(nglString& src, nglString& dest)
 bool nuiXMLNode::ParseXMLCommand(xmlLexer* pLexer, nglString& str)
 {
   str.TrimLeft();
-  if (!str.Compare(_T("DOCTYPE"),0,7,true))
+  if (!str.Compare("DOCTYPE",0,7,true))
   {
     // This is the DTD
-    int start = str.Find(_T("["));
-    int stop = str.FindLast(_T("]"));
+    int start = str.Find("[");
+    int stop = str.FindLast("]");
 
     if (start != -1 && stop != -1 && start < stop)
     {
       nglString dtd = str.Extract(start,stop-start);
 
-      int pos = dtd.Find(_T("<!ENTITY"),0);
+      int pos = dtd.Find("<!ENTITY",0);
       while (pos!=-1)
       {
-        int end = dtd.Find(_T(">"),pos);
+        int end = dtd.Find(">",pos);
         if (end == -1)
           return false;
         nglString entity = dtd.Extract(pos+ 8,end - pos - 8); /// strlen("<!ENTITY") == 8
         entity.Trim();
-        int quote1 = entity.Find(_T("\""),0);
+        int quote1 = entity.Find("\"",0);
         if (quote1 == -1)
           return false;
-        int quote2 = entity.Find(_T("\""),quote1+1);
+        int quote2 = entity.Find("\"",quote1+1);
         if (quote2 == -1)
           return false;
 
@@ -1232,16 +1232,16 @@ bool nuiXMLNode::ParseXMLCommand(xmlLexer* pLexer, nglString& str)
         name.Trim();
 
         pos += quote2;
-        pos = dtd.Find(_T(">"),pos);
+        pos = dtd.Find(">",pos);
         if (pos == -1)
           return false;
 
         // Ok, now we're quite sure to have found a valid entity, lets add it to the lexer:
         name.Insert((nglChar)'&',0);
-        name += _T(";");
+        name += ";";
         pLexer->AddEntity(name,value);
 
-        pos = dtd.Find(_T("<!ENTITY"),pos);
+        pos = dtd.Find("<!ENTITY",pos);
       }
     }
   }
@@ -1260,7 +1260,7 @@ bool nuiXMLNode::ParseXMLNode(xmlLexer* pLexer, nglString& str)
       if (str[2]=='-' && str[3]=='-')
       {
         // This is a comment tag
-        SetName(nglString(_T("##comment")));
+        SetName(nglString("##comment"));
         str.DeleteLeft(4);
         str.DeleteRight(3);
         str.TrimLeft();
@@ -1276,7 +1276,7 @@ bool nuiXMLNode::ParseXMLNode(xmlLexer* pLexer, nglString& str)
         return ParseXMLCommand(pLexer,str);
       }
       /*
-       SetName(nglString(_T("##command")));
+       SetName(nglString("##command"));
        str.DeleteLeft(2);
        str.DeleteRight(1);
        SetValue(str);
@@ -1289,7 +1289,7 @@ bool nuiXMLNode::ParseXMLNode(xmlLexer* pLexer, nglString& str)
       if (str[2]=='-' && str[3]=='-')
       {
         // This is a comment tag
-        SetName(nglString(_T("##comment")));
+        SetName(nglString("##comment"));
         str.DeleteLeft(4);
         str.DeleteRight(3);
         str.TrimLeft();
@@ -1300,7 +1300,7 @@ bool nuiXMLNode::ParseXMLNode(xmlLexer* pLexer, nglString& str)
       }
       else
       {
-        SetName(nglString(_T("##command")));
+        SetName(nglString("##command"));
         str.DeleteLeft(2);
         str.DeleteRight(1);
 
@@ -1383,7 +1383,7 @@ bool nuiXMLNode::ParseXMLNode(xmlLexer* pLexer, nglString& str)
 
       // Then this is a sub node:
       nuiXMLNode* pNode;
-      pNode = new nuiXMLNode(nglString(_T("##building")),this);
+      pNode = new nuiXMLNode(nglString("##building"),this);
       if (!pNode)
         return false;
 
@@ -1396,7 +1396,7 @@ bool nuiXMLNode::ParseXMLNode(xmlLexer* pLexer, nglString& str)
   }
   else
   {
-    SetName(nglString(_T("##text")));
+    SetName(nglString("##text"));
     DeXMLizeString(str);
     SetValue(str);
 
@@ -1516,7 +1516,7 @@ bool nuiXML::Load(nglIStream& rStream)
 
   nglTime End;
 
-  //  NGL_OUT(_T("XML %s Parsing took %g seconds"), mName.GetChars(), End - Start);
+  //  NGL_OUT("XML %s Parsing took %g seconds", mName.GetChars(), End - Start);
   return true;
 }
 
@@ -1536,19 +1536,19 @@ bool nuiXML::Save(nglOStream& rStream) const
 nglString nuiXML::Dump(uint level) const
 {
   nglString res;
-  res += _T("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+  res += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
   if( !mDTDName.IsEmpty()  && !mDTDFile.IsEmpty())
   {
     nglString dtd;
-    dtd.CFormat(_T("<!DOCTYPE %s  SYSTEM '%s'>\n"), mDTDName.GetChars(), mDTDFile.GetChars());
+    dtd.CFormat("<!DOCTYPE %s  SYSTEM '%s'>\n", mDTDName.GetChars(), mDTDFile.GetChars());
     res += dtd;
   }
 
   if( !mStyleSheetType.IsEmpty() && !mStyleSheetFile.IsEmpty())
   {
     nglString styleSheet;
-    styleSheet.CFormat(_T("<?xml-stylesheet type=\"%s\" href=\"%s\" ?>\n"), mStyleSheetType.GetChars(), mStyleSheetFile.GetChars());
+    styleSheet.CFormat("<?xml-stylesheet type=\"%s\" href=\"%s\" ?>\n", mStyleSheetType.GetChars(), mStyleSheetFile.GetChars());
     res+= styleSheet;
   }
 
@@ -1560,19 +1560,19 @@ nglString nuiXML::Dump(uint level) const
 int64 nuiXML::Write(nglOStream& rStream, uint level) const
 {
   nglString res;
-  res += _T("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+  res += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
   if (!mDTDName.IsEmpty()  && !mDTDFile.IsEmpty())
   {
     nglString dtd;
-    dtd.CFormat(_T("<!DOCTYPE %s  SYSTEM '%s'>\n"), mDTDName.GetChars(), mDTDFile.GetChars());
+    dtd.CFormat("<!DOCTYPE %s  SYSTEM '%s'>\n", mDTDName.GetChars(), mDTDFile.GetChars());
     res += dtd;
   }
 
   if( !mStyleSheetType.IsEmpty() && !mStyleSheetFile.IsEmpty())
   {
     nglString styleSheet;
-    styleSheet.CFormat(_T("<?xml-stylesheet type=\"%s\" href=\"%s\" ?>\n"), mStyleSheetType.GetChars(), mStyleSheetFile.GetChars());
+    styleSheet.CFormat("<?xml-stylesheet type=\"%s\" href=\"%s\" ?>\n", mStyleSheetType.GetChars(), mStyleSheetFile.GetChars());
     res+= styleSheet;
   }
 

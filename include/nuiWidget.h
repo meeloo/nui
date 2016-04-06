@@ -48,6 +48,7 @@ class nuiWidget : public nuiObject
 {
 protected:
   friend class nuiTopLevel;
+  friend class nuiWidgetCreator;
   class TestWidgetFunctor
   {
   public:
@@ -719,6 +720,42 @@ public:
   nuiLayer* GetParentLayer() const;
   //@}
 
+  template <typename T>
+  bool BindChild(const nglString& rName, T*& rWidgetPointer)
+  {
+    nuiWidget* pChild = SearchForChild(rName);
+    if (!pChild)
+    {
+      NGL_OUT("Unable to bind child '%s': child not found\n", rName.GetChars());
+      return false;
+    }
+    T* pC = dynamic_cast<T*>(pChild);
+    rWidgetPointer = pC;
+    if (!pC)
+    {
+      NGL_OUT("Unable to bind child '%s': child found but wrong type (%s)\n", rName.GetChars(), pChild->GetObjectClass().GetChars());
+      return false;
+    }
+    return true;
+  }
+  
+  template <typename T>
+  T* BindChild(const nglString& rName)
+  {
+    nuiWidget* pChild = SearchForChild(rName);
+    if (!pChild)
+    {
+      NGL_OUT("Unable to bind child '%s': child not found\n", rName.GetChars());
+      return nullptr;
+    }
+    T* pC = dynamic_cast<T*>(pChild);
+    if (!pC)
+    {
+      NGL_OUT("Unable to bind child '%s': child found but wrong type (%s)\n", rName.GetChars(), pChild->GetObjectClass().GetChars());
+      return nullptr;
+    }
+    return pC;
+  }
 
   NUI_GETSETDO(bool, ReverseRender, Invalidate());
   NUI_GETSET(bool, AutoAcceptMouseCancel);
@@ -912,7 +949,7 @@ protected:
   void UpdateTopLevel();  
   void InternalSetLayerPolicy(nuiDrawPolicy policy);
 
-
+  void CallBuilt();
 };
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }

@@ -32,7 +32,7 @@ public:
     else
       mName = mAttribute.GetName();
     
-    SetObjectClass(_T("nuiComboAttributeEditor"));
+    SetObjectClass("nuiComboAttributeEditor");
     
     mpCombo = NULL;
     
@@ -50,7 +50,7 @@ public:
   mIndexed(true),
   mIndex(index)
   {
-    SetObjectClass(_T("nuiComboAttributeEditor"));
+    SetObjectClass("nuiComboAttributeEditor");
     
     mpCombo = NULL;
     
@@ -176,7 +176,7 @@ public:
     else
       mName = mAttribute.GetName();
     
-    SetObjectClass(_T("nuiComboAttributeEditor(const ref)"));
+    SetObjectClass("nuiComboAttributeEditor(const ref)");
     
     mpCombo = NULL;
     
@@ -194,7 +194,7 @@ public:
   mIndexed(true),
   mIndex(index)
   {
-    SetObjectClass(_T("nuiComboAttributeEditor(const ref)"));
+    SetObjectClass("nuiComboAttributeEditor(const ref)");
     
     mpCombo = NULL;
     

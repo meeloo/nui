@@ -34,6 +34,9 @@ public:
 class nuiMainWindow :  public nuiTopLevel
 {
 public:
+  static const std::vector<nuiMainWindow*>& GetWindows();
+
+  
   nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo, const nglContext* pShared = NULL, const nglPath& mResPath = nglPath(ePathCurrent));
   nuiMainWindow(uint Width = 320, uint Height = 240, bool Fullscreen=false, const nglPath& mResPath = nglPath(ePathCurrent));
 

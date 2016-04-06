@@ -11,7 +11,7 @@
 nuiTextureInspector::nuiTextureInspector()
 : mSink(this)
 {
-  SetObjectClass(_T("nuiTextureInspector"));
+  SetObjectClass("nuiTextureInspector");
   
   // decoration
   nuiDecoration* pDeco = nuiDecoration::Get(INTROSPECTOR_DECO_CLIENT_BKG);
@@ -65,7 +65,7 @@ void nuiTextureInspector::UpdateTextures()
   {
     nglString name(it->first);
     nuiLabel* pLabel = new nuiLabel(name);
-    pLabel->SetProperty(_T("Texture"), name);
+    pLabel->SetProperty("Texture", name);
     pList->AddChild(pLabel);
     ++it;
   }
@@ -78,7 +78,7 @@ void nuiTextureInspector::UpdateTextures()
   pScrollView2->AddChild(mpAttributeGrid);
 
   nuiWidget* pCont = new nuiWidget();
-  nuiColorDecoration* pColDec = new nuiColorDecoration(_T("TextureInspectorBg"), nuiColor(128, 128, 128), 0, nuiColor(0, 0, 0), eFillShape, nuiBlendTransp, nuiRect(0,0,0,0));
+  nuiColorDecoration* pColDec = new nuiColorDecoration("TextureInspectorBg", nuiColor(128, 128, 128), 0, nuiColor(0, 0, 0), eFillShape, nuiBlendTransp, nuiRect(0,0,0,0));
   pCont->SetDecoration(pColDec);
   pSplitter->AddChild(pCont);
   mpImage = new nuiImage();
@@ -94,10 +94,10 @@ void nuiTextureInspector::OnTextureSelection(const nuiEvent& rEvent)
   nuiList* pList = (nuiList*)rEvent.mpUser;
   nuiWidget* pW = pList->GetSelected();
   nuiTexture* pTexture = NULL;
-  nglString info(_T("no info"));
+  nglString info("no info");
   if (pW)
   {
-    nglString name = pW->GetProperty(_T("Texture"));
+    nglString name = pW->GetProperty("Texture");
     pTexture = nuiTexture::GetTexture(name);
     if (pTexture)
       mpImage->SetTexture(pTexture);
@@ -148,7 +148,7 @@ void nuiTextureInspector::OnTextureSelection(const nuiEvent& rEvent)
           for (uint32 i = 0; i < count; i++)
           {
             Base.ToString(i, str);
-            value.Add(i).Add(_T(":")).Add(str).Add("\t");
+            value.Add(i).Add(":").Add(str).Add("\t");
           }
           value.Trim(_T('\t'));
         }
@@ -163,7 +163,7 @@ void nuiTextureInspector::OnTextureSelection(const nuiEvent& rEvent)
             for (uint32 j = 0; j < MIN(10, countj); j++)
             {
               Base.ToString(i, j, str);
-              value.Add(i).Add(",").Add(j).Add(_T(":")).Add(str).Add("\t");
+              value.Add(i).Add(",").Add(j).Add(":").Add(str).Add("\t");
             }
           }
           value.Trim(_T('\t'));

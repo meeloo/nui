@@ -13,7 +13,6 @@
 #include <stdio.h>
 
 #include "nglConsole.h"
-#include "nuiWindow.h"
 #include "nuiText.h"
 
 #include "nuiNativeResourceVolume.h"
@@ -68,27 +67,27 @@ void nuiApp::OnInit()
 
   uint Width = 0, Height = 0;
   bool HasSize = false;
-  mFullVersion = false;
+  mFullVersion = true;
   bool IsFullScreen = false;
   bool DebugObject = false;
   bool DebugInfo = false;
   bool ShowFPS = false;
   bool PartialRedraw = true;
 //  nuiRenderer Renderer = eDirect3D;
-  nuiRenderer Renderer = eOpenGL;
+  nuiRenderer Renderer = eOpenGL2;
 //  nuiRenderer Renderer = eSoftware;
 
   // Accept NGL default options
   ParseDefaultArgs();
 
   GetLog().UseConsole(true);
-  GetLog().SetLevel(_T("font"), 100);
+  GetLog().SetLevel("font", 100);
 
   // Manual
   if ( (GetArgCount() == 1) &&
-       ((!GetArg(0).Compare(_T("-h"))) || (!GetArg(0).Compare(_T("--help")))) )
+       ((!GetArg(0).Compare("-h")) || (!GetArg(0).Compare("--help"))) )
   {
-    NGL_OUT(_T("no params\n"));
+    NGL_OUT("no params\n");
     Quit (0);
     return;
   }
@@ -98,7 +97,7 @@ void nuiApp::OnInit()
   while (i < GetArgCount())
   {
     nglString arg = GetArg(i);
-    if ((!arg.Compare(_T("--size")) || !arg.Compare(_T("-s"))) && ((i+1) < GetArgCount()))
+    if ((!arg.Compare("--size") || !arg.Compare("-s")) && ((i+1) < GetArgCount()))
     {
       int w, h;
 
@@ -109,18 +108,18 @@ void nuiApp::OnInit()
       HasSize = true;
       i++;
     }
-    else if (!arg.Compare(_T("--fullversion")) || !arg.Compare(_T("-full"))) mFullVersion = true;
-    else if (!arg.Compare(_T("--showfps")) || !arg.Compare(_T("-fps"))) ShowFPS = true;
-    else if (!arg.Compare(_T("--fullscreen")) || !arg.Compare(_T("-f"))) IsFullScreen = true;
-    else if (!arg.Compare(_T("--debugobject")) || !arg.Compare(_T("-d"))) DebugObject = true;
-    else if (!arg.Compare(_T("--debuginfo")) || !arg.Compare(_T("-i"))) DebugInfo = true;
-    else if (!arg.Compare(_T("--partialredraw")) || !arg.Compare(_T("-p"))) PartialRedraw = true;
-    else if (!arg.Compare(_T("--renderer")) || !arg.Compare(_T("-r"))) 
+    else if (!arg.Compare("--fullversion") || !arg.Compare("-full")) mFullVersion = true;
+    else if (!arg.Compare("--showfps") || !arg.Compare("-fps")) ShowFPS = true;
+    else if (!arg.Compare("--fullscreen") || !arg.Compare("-f")) IsFullScreen = true;
+    else if (!arg.Compare("--debugobject") || !arg.Compare("-d")) DebugObject = true;
+    else if (!arg.Compare("--debuginfo") || !arg.Compare("-i")) DebugInfo = true;
+    else if (!arg.Compare("--partialredraw") || !arg.Compare("-p")) PartialRedraw = true;
+    else if (!arg.Compare("--renderer") || !arg.Compare("-r")) 
     {
       arg = GetArg(i+1);
-      if (!arg.Compare(_T("opengl"))) Renderer = eOpenGL;
-      else if (!arg.Compare(_T("direct3d"))) Renderer = eDirect3D;
-      else if (!arg.Compare(_T("software"))) Renderer = eSoftware;
+      if (!arg.Compare("opengl")) Renderer = eOpenGL2;
+      else if (!arg.Compare("direct3d")) Renderer = eDirect3D;
+      else if (!arg.Compare("software")) Renderer = eSoftware;
       i++;
     }
     i++;
@@ -161,7 +160,7 @@ void nuiApp::OnInit()
   Info.Width = Width;
   Info.Height = Height;
   Info.Pos = nglWindowInfo::ePosCenter;
-  Info.Title = _T("Yapuka - A GUI element editor for NUI");
+  Info.Title = "Yapuka - A GUI element editor for NUI";
   Info.XPos = 0;
   Info.YPos = 0;
         
@@ -169,7 +168,7 @@ void nuiApp::OnInit()
   if ((!win) || (win->GetError()))
   {
     if (win) 
-      NGL_OUT(_T("Error: cannot create window (%s)\n"), win->GetErrorStr());
+      NGL_OUT("Error: cannot create window (%s)\n", win->GetErrorStr());
     Quit (1);
     return;
   }
@@ -179,7 +178,7 @@ void nuiApp::OnInit()
   win->SetState(nglWindow::eShow);
   win->EnablePartialRedraw(PartialRedraw);
 /*
-  nuiImage* pImage = new nuiImage(win, nglPath(_T("../data/nui.png")));
+  nuiImage* pImage = new nuiImage(win, nglPath("../data/nui.png"));
   if (pImage)
   {
     pImage->SetPosition(nuiFill);

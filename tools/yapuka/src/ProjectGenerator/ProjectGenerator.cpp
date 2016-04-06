@@ -8,7 +8,6 @@
 #include "ProjectGenerator/ProjectGenerator.h"
 #include "nuiVBox.h"
 #include "nuiHBox.h"
-#include "nuiSeparator.h"
 #include "Main/MainWindow.h"
 
 #include "nuiDialogSelectDirectory.h"
@@ -19,18 +18,18 @@
 
 
 ProjectGenerator::ProjectGenerator()
-: nuiSimpleContainer(), mEventSink(this)
+: nuiWidget(), mEventSink(this)
 {
-  SetObjectName(_T("ProjectGenerator"));
+  SetObjectName("ProjectGenerator");
   mpTimer = NULL;
   
-  GetPreferences().GetString(PREFERENCES_PROJECTGENERATOR, _T("nuiSourcePath"), mNuiSourcePath);
-  if (!GetPreferences().GetString(PREFERENCES_PROJECTGENERATOR, _T("nuiTargetPath"), mProjectTargetPath))
+  GetPreferences().GetString(PREFERENCES_PROJECTGENERATOR, "nuiSourcePath", mNuiSourcePath);
+  if (!GetPreferences().GetString(PREFERENCES_PROJECTGENERATOR, "nuiTargetPath", mProjectTargetPath))
   {
     nglPath userPath(ePathUser);
     mProjectTargetPath = userPath.GetPathName();    
   }
-  mProjectTargetPath.Append(_T("/newNuiProject"));
+  mProjectTargetPath.Append("/newNuiProject");
   
   
   
@@ -40,15 +39,15 @@ ProjectGenerator::ProjectGenerator()
   
   pVBox->AddCell(BuildBlocSourceDirectory());
 
-  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
+//  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   pVBox->AddCell(BuildBlocProjectDirectory());
 
-  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
+//  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   pVBox->AddCell(BuildBlocOptions());
 
-  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
+//  pVBox->AddCell(new nuiSeparator(nuiHorizontal));
   
   pVBox->AddCell(BuildBlocButtons());
   
@@ -79,7 +78,7 @@ nuiWidget* ProjectGenerator::BuildBlocSourceDirectory()
   
   // icon
   mpIconSourceDirectory = new nuiImage();
-  mpIconSourceDirectory->SetObjectName(_T("Icon::SourceDirectory::Disabled"));
+  mpIconSourceDirectory->SetObjectName("Icon::SourceDirectory::Disabled");
   mpIconSourceDirectory->SetPosition(nuiTopLeft);
   pMainBox->SetCell(0, mpIconSourceDirectory);
   
@@ -91,7 +90,7 @@ nuiWidget* ProjectGenerator::BuildBlocSourceDirectory()
   pBloc->SetExpand(nuiExpandShrinkAndGrow);
   pBloc->SetBorder(20,40,40,40);
   
-  pBloc->AddCell(new nuiLabel(_T("nui source directory:")));
+  pBloc->AddCell(new nuiLabel("nui source directory:"));
   pBloc->SetCellExpand(pBloc->GetNbCells()-1, nuiExpandShrinkAndGrow);
   
   // edit line
@@ -104,7 +103,7 @@ nuiWidget* ProjectGenerator::BuildBlocSourceDirectory()
   
   pBox->SetCell(0, mpNuiSource);
   pBox->SetCellExpand(0, nuiExpandShrinkAndGrow);
-  nuiButton* pBtn = new nuiButton(_T("browse"));
+  nuiButton* pBtn = new nuiButton("browse");
   pBox->SetCell(1, pBtn);
   mEventSink.Connect(pBtn->Activated, &ProjectGenerator::OnBrowseSource);
   
@@ -117,7 +116,7 @@ nuiWidget* ProjectGenerator::BuildBlocSourceDirectory()
   nuiHBox* pHBox = new nuiHBox(0);
   pBloc->AddCell(pHBox);
   
-  pHBox->AddCell(new nuiLabel(_T("nui3 project file: ")));
+  pHBox->AddCell(new nuiLabel("nui3 project file: "));
   mpNuiCheckProjectFile = new nuiLabel(_T(""));
   mNuiCheckProjectFile = false;
   pHBox->AddCell(mpNuiCheckProjectFile);
@@ -126,7 +125,7 @@ nuiWidget* ProjectGenerator::BuildBlocSourceDirectory()
   pHBox->AddCell(NULL);
   pHBox->SetCellPixels(pHBox->GetNbCells()-1, 10);
   
-  pHBox->AddCell(new nuiLabel(_T("nui3 tools: ")));
+  pHBox->AddCell(new nuiLabel("nui3 tools: "));
   mpNuiCheckTools = new nuiLabel(_T(""));
   mNuiCheckTools = false;
   pHBox->AddCell(mpNuiCheckTools);
@@ -135,7 +134,7 @@ nuiWidget* ProjectGenerator::BuildBlocSourceDirectory()
   pHBox->AddCell(NULL);
   pHBox->SetCellPixels(pHBox->GetNbCells()-1, 10);
   
-  pHBox->AddCell(new nuiLabel(_T("nui3 template app: ")));
+  pHBox->AddCell(new nuiLabel("nui3 template app: "));
   mpNuiCheckTemplate = new nuiLabel(_T(""));
   mNuiCheckTemplate = false;
   pHBox->AddCell(mpNuiCheckTemplate);
@@ -146,7 +145,7 @@ nuiWidget* ProjectGenerator::BuildBlocSourceDirectory()
   
   
   // read-only information : nui3 directory relative path from new project
-  pBloc->AddCell(new nuiLabel(_T("nui3 relative path to project:")));
+  pBloc->AddCell(new nuiLabel("nui3 relative path to project:"));
   mpNuiRelativeSource = new nuiLabel(mNuiRelativeSource.GetPathName());
   mpNuiRelativeSource->SetEnabled(false);
   pBloc->AddCell(mpNuiRelativeSource);
@@ -166,7 +165,7 @@ nuiWidget* ProjectGenerator::BuildBlocProjectDirectory()
   
   // icon
   mpIconProjectDirectory = new nuiImage();
-  mpIconProjectDirectory->SetObjectName(_T("Icon::ProjectDirectory"));
+  mpIconProjectDirectory->SetObjectName("Icon::ProjectDirectory");
   mpIconProjectDirectory->SetPosition(nuiTopLeft);
   pMainBox->SetCell(0, mpIconProjectDirectory);
   
@@ -176,7 +175,7 @@ nuiWidget* ProjectGenerator::BuildBlocProjectDirectory()
   pBloc->SetExpand(nuiExpandShrinkAndGrow);
   pBloc->SetBorder(20,40,40,40);
   
-  pBloc->AddCell(new nuiLabel(_T("new project target:")));
+  pBloc->AddCell(new nuiLabel("new project target:"));
   
   nuiHBox* pBox = new nuiHBox(2);
   pBloc->AddCell(pBox);
@@ -187,7 +186,7 @@ nuiWidget* ProjectGenerator::BuildBlocProjectDirectory()
   
   pBox->SetCell(0, mpProjectTarget);
   pBox->SetCellExpand(0, nuiExpandShrinkAndGrow);
-  nuiButton* pBtn = new nuiButton(_T("browse"));
+  nuiButton* pBtn = new nuiButton("browse");
   pBox->SetCell(1, pBtn);
   mEventSink.Connect(pBtn->Activated, &ProjectGenerator::OnBrowseTarget);  
   
@@ -198,8 +197,8 @@ nuiWidget* ProjectGenerator::BuildBlocProjectDirectory()
   
   // read-only bloc for project name, extracted from project target
   nglString projectFilename = mProjectTargetPath;
-  projectFilename += _T("/newNuiProject.xcodeproj");
-  pBloc->AddCell(new nuiLabel(_T("project file:")));
+  projectFilename += "/newNuiProject.xcodeproj";
+  pBloc->AddCell(new nuiLabel("project file:"));
   mpProjectFilename = new nuiLabel(projectFilename);
   pBloc->AddCell(mpProjectFilename);
   mpProjectFilename->SetEnabled(false);
@@ -223,14 +222,14 @@ nuiWidget* ProjectGenerator::BuildBlocOptions()
   pMainBox->AddCell(pBloc);
   // icon
   nuiImage* pIcon = new nuiImage();
-  pIcon->SetObjectName(_T("Icon::Xcode"));
-  pIcon->SetToken(new nuiToken<nglString>(_T("Icon::Xcode")));
+  pIcon->SetObjectName("Icon::Xcode");
+  pIcon->SetToken(new nuiToken<nglString>("Icon::Xcode"));
   pIcon->SetPosition(nuiTopLeft);
   pBloc->SetCell(0, pIcon);
   pBloc->SetCellPixels(0, 48);
   // check box
   mpCheckXcode = new nuiToggleButton();
-  mpCheckXcode->SetToken(new nuiToken<nuiImage*>(pIcon));
+  mpCheckXcode->SetToken(new nuiToken<nuiRef<nuiImage> >(pIcon));
   mEventSink.Connect(mpCheckXcode->ButtonPressed, &ProjectGenerator::OnIconUpdate, (void*)mpCheckXcode);
   mEventSink.Connect(mpCheckXcode->ButtonDePressed, &ProjectGenerator::OnIconUpdate, (void*)mpCheckXcode);
   mpCheckXcode->SetPressed(true);
@@ -246,14 +245,14 @@ nuiWidget* ProjectGenerator::BuildBlocOptions()
   pMainBox->AddCell(pBloc);
   // icon
   pIcon = new nuiImage();
-  pIcon->SetObjectName(_T("Icon::VisualStudio2008"));
-  pIcon->SetToken(new nuiToken<nglString>(_T("Icon::VisualStudio2008")));
+  pIcon->SetObjectName("Icon::VisualStudio2008");
+  pIcon->SetToken(new nuiToken<nglString>("Icon::VisualStudio2008"));
   pIcon->SetPosition(nuiTopLeft);
   pBloc->SetCell(0, pIcon);
   pBloc->SetCellPixels(0, 48);
   // check box
   mpCheckVisualStudio2008 = new nuiToggleButton();
-  mpCheckVisualStudio2008->SetToken(new nuiToken<nuiImage*>(pIcon));
+  mpCheckVisualStudio2008->SetToken(new nuiToken<nuiRef<nuiImage> >(pIcon));
   mEventSink.Connect(mpCheckVisualStudio2008->ButtonPressed, &ProjectGenerator::OnIconUpdate, (void*)mpCheckVisualStudio2008);
   mEventSink.Connect(mpCheckVisualStudio2008->ButtonDePressed, &ProjectGenerator::OnIconUpdate, (void*)mpCheckVisualStudio2008);
   mpCheckVisualStudio2008->SetPressed(true);
@@ -273,14 +272,14 @@ nuiWidget* ProjectGenerator::BuildBlocOptions()
 void ProjectGenerator::OnIconUpdate(const nuiEvent& rEvent)
 {
   nuiToggleButton* pBtn = (nuiToggleButton*)rEvent.mpUser;
-  nuiImage* pIcon;
+  nuiRef<nuiImage> pIcon;
   nglString objectName;
   
-  nuiGetTokenValue<nuiImage*>(pBtn->GetToken(), pIcon);
+  nuiGetTokenValue<nuiRef<nuiImage> >(pBtn->GetToken(), pIcon);
   nuiGetTokenValue<nglString>(pIcon->GetToken(), objectName);
   
   if (!pBtn->IsPressed())
-    objectName += nglString(_T("::Disabled"));
+    objectName += nglString("::Disabled");
 
   pIcon->SetObjectName(objectName);
   
@@ -298,12 +297,12 @@ nuiWidget* ProjectGenerator::BuildBlocButtons()
   pBox->SetExpand(nuiExpandShrinkAndGrow);
   pBox->SetBorder(20,40,100,40);
   
-  nuiButton* pGeneratorButton = new nuiButton(_T("generate project"));
+  nuiButton* pGeneratorButton = new nuiButton("generate project");
   pGeneratorButton->SetPosition(nuiRight);
   pBox->AddCell(pGeneratorButton);
   pBox->SetCellExpand(pBox->GetNbCells()-1, nuiExpandShrinkAndGrow);
   
-  nuiButton* pQuitButton = new nuiButton(_T("quit"));
+  nuiButton* pQuitButton = new nuiButton("quit");
   pQuitButton->SetPosition(nuiRight);
   pBox->AddCell(pQuitButton);
   
@@ -333,71 +332,71 @@ void ProjectGenerator::OnTimerTick(const nuiEvent& rEvent)
   nglPath path(text);
   
   nglPath proj = path;
-  proj += nglPath(_T("nui3.xcodeproj"));
+  proj += nglPath("nui3.xcodeproj");
   
   bool allOK = true;
   
   if (proj.Exists())
   {
     mNuiCheckProjectFile = true;
-    mpNuiCheckProjectFile->SetText(_T("found"));
-    mpNuiCheckProjectFile->SetColor(eNormalTextFg, nuiColor(_T("green")));
+    mpNuiCheckProjectFile->SetText("found");
+//    mpNuiCheckProjectFile->SetColor(eNormalTextFg, nuiColor("green"));
 
     allOK &= true;
   }
   else
   {
     mNuiCheckProjectFile = false;
-    mpNuiCheckProjectFile->SetText(_T("not found!"));
-    mpNuiCheckProjectFile->SetColor(eNormalTextFg, nuiColor(_T("red")));
+    mpNuiCheckProjectFile->SetText("not found!");
+//    mpNuiCheckProjectFile->SetColor(eNormalTextFg, nuiColor("red"));
 
     allOK &= false;
   }
   
   // check if nui3 tool has been found (make_rc.py is taken as a reference)
   nglPath tool = path;
-  tool += nglPath(_T("tools/make_rc.py"));
+  tool += nglPath("tools/make_rc.py");
   
   if (tool.Exists())
   {
     mNuiCheckTools = true;
-    mpNuiCheckTools->SetText(_T("found"));
-    mpNuiCheckTools->SetColor(eNormalTextFg, nuiColor(_T("green")));
+    mpNuiCheckTools->SetText("found");
+//    mpNuiCheckTools->SetColor(eNormalTextFg, nuiColor("green"));
 
     allOK &= true;
   }
   else
   {
     mNuiCheckTools = false;
-    mpNuiCheckTools->SetText(_T("not found!"));
-    mpNuiCheckTools->SetColor(eNormalTextFg, nuiColor(_T("red")));
+    mpNuiCheckTools->SetText("not found!");
+//    mpNuiCheckTools->SetColor(eNormalTextFg, nuiColor("red"));
   
     allOK &= false;
   }
   
   nglPath templatePath = path;
-  templatePath += nglPath(_T("tools/TemplateApp/TemplateApp.xcodeproj"));
+  templatePath += nglPath("tools/TemplateApp/TemplateApp.xcodeproj");
   if (templatePath.Exists())
   {
     mNuiCheckTemplate = true;
-    mpNuiCheckTemplate->SetText(_T("found"));
-    mpNuiCheckTemplate->SetColor(eNormalTextFg, nuiColor(_T("green")));
+    mpNuiCheckTemplate->SetText("found");
+//    mpNuiCheckTemplate->SetColor(eNormalTextFg, nuiColor("green"));
     allOK &= true;
   }
   else
   {
     mNuiCheckTemplate = false;
-    mpNuiCheckTemplate->SetText(_T("not found!"));
-    mpNuiCheckTemplate->SetColor(eNormalTextFg, nuiColor(_T("red")));
+    mpNuiCheckTemplate->SetText("not found!");
+//    mpNuiCheckTemplate->SetColor(eNormalTextFg, nuiColor("red"));
     allOK &= false;
   }
   
   
   
   if (allOK)
-    mpIconSourceDirectory->SetObjectName(_T("Icon::SourceDirectory"));
+    mpIconSourceDirectory->SetObjectName("Icon::SourceDirectory");
   else
-    mpIconSourceDirectory->SetObjectName(_T("Icon::SourceDirectory::Disabled"));
+    mpIconSourceDirectory->SetObjectName("Icon::SourceDirectory::Disabled");
 
   
   // compute nui relative path to project
@@ -406,7 +405,7 @@ void ProjectGenerator::OnTimerTick(const nuiEvent& rEvent)
   mpNuiRelativeSource->SetText(mNuiRelativeSource.GetPathName());
   
   mNuiTemplatePath = nglPath(mpNuiSource->GetText());
-  mNuiTemplatePath += nglPath(_T("tools/TemplateApp"));
+  mNuiTemplatePath += nglPath("tools/TemplateApp");
   
   rEvent.Cancel();
 }
@@ -417,11 +416,11 @@ void ProjectGenerator::OnTargetTextChanged(const nuiEvent& rEvent)
   nglString text = mpProjectTarget->GetText();
   text.Trim();
   
-  mpIconProjectDirectory->SetObjectName(_T("Icon::ProjectDirectory"));
+  mpIconProjectDirectory->SetObjectName("Icon::ProjectDirectory");
   
   nglPath path(text);
   
-  nglString newtext = text + _T("/") + path.GetNodeName() + _T(".xcodeproj");
+  nglString newtext = text + "/" + path.GetNodeName() + ".xcodeproj";
   mpProjectFilename->SetText(newtext);
   
   mpTimer->Stop();
@@ -449,7 +448,7 @@ void ProjectGenerator::OnGenerateButton(const nuiEvent& rEvent)
   
   if ((source == nglString::Null) || (target == nglString::Null))
   {
-    nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), _T("Project Creator"), _T("source and target information can't be empty!"), eMB_OK);
+    nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), "Project Creator", "source and target information can't be empty!", eMB_OK);
     pMessageBox->QueryUser();   
     rEvent.Cancel();
     return;
@@ -459,8 +458,8 @@ void ProjectGenerator::OnGenerateButton(const nuiEvent& rEvent)
   if (!sourcePath.Exists())
   {
     nglString msg;
-    msg.Format(_T("the nui source directory '%ls' does not exist!"), sourcePath.GetChars());
-    nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), nglString(_T("Project Creator")), msg, eMB_OK);
+    msg.Format("the nui source directory '%ls' does not exist!", sourcePath.GetChars());
+    nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), nglString("Project Creator"), msg, eMB_OK);
     pMessageBox->QueryUser();     
     rEvent.Cancel();
     return;
@@ -469,8 +468,8 @@ void ProjectGenerator::OnGenerateButton(const nuiEvent& rEvent)
   if (!mNuiCheckProjectFile || !mNuiCheckTools)
   {
     nglString msg;
-    msg.Format(_T("Parts of nui could not be found.\nCheck the nui source directory or checkout the complete nui sources from libnui.net!"));
-    nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), nglString(_T("Project Creator")), msg, eMB_OK);
+    msg.Format("Parts of nui could not be found.\nCheck the nui source directory or checkout the complete nui sources from libnui.net!");
+    nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), nglString("Project Creator"), msg, eMB_OK);
     pMessageBox->QueryUser();
     rEvent.Cancel();
     return;        
@@ -482,13 +481,13 @@ void ProjectGenerator::OnGenerateButton(const nuiEvent& rEvent)
   mProjectName = path.GetNodeName();
 
   nglPath targetPath(target);
-  nglString xcodeproj = mProjectName + _T(".xcodeproj");
+  nglString xcodeproj = mProjectName + ".xcodeproj";
   targetPath += nglPath(xcodeproj);
   if (targetPath.Exists())
   {
     nglString msg;
-    msg.Format(_T("the following project exists already!\n'%ls'"), targetPath.GetChars());
-    nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), nglString(_T("Project Creator")), msg, eMB_OK);
+    msg.Format("the following project exists already!\n'%ls'", targetPath.GetChars());
+    nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), nglString("Project Creator"), msg, eMB_OK);
     pMessageBox->QueryUser();     
     rEvent.Cancel();
     return;
@@ -513,7 +512,7 @@ void ProjectGenerator::OnBrowseSource(const nuiEvent& rEvent)
     mNuiSourcePath = path.GetPathName();
   }
 
-  nuiDialogSelectDirectory* pDialog = new nuiDialogSelectDirectory(GetMainWindow(), _T("SELECT THE NUI SOURCE DIRECTORY"), mNuiSourcePath, nglPath(_T("/")));
+  nuiDialogSelectDirectory* pDialog = new nuiDialogSelectDirectory(GetMainWindow(), "SELECT THE NUI SOURCE DIRECTORY", mNuiSourcePath, nglPath("/"));
   mEventSink.Connect(pDialog->DirectorySelected, &ProjectGenerator::OnSourceSelected, (void*)pDialog);
   
   rEvent.Cancel();
@@ -529,7 +528,7 @@ void ProjectGenerator::OnSourceSelected(const nuiEvent& rEvent)
   
   OnTimerTick(rEvent);
 
-  GetPreferences().SetString(PREFERENCES_PROJECTGENERATOR, _T("nuiSourcePath"), mNuiSourcePath);
+  GetPreferences().SetString(PREFERENCES_PROJECTGENERATOR, "nuiSourcePath", mNuiSourcePath);
 }
 
 
@@ -539,7 +538,7 @@ void ProjectGenerator::OnBrowseTarget(const nuiEvent& rEvent)
 {
   nglPath path = nglPath(mProjectTargetPath).GetParent();
   
-  nuiDialogSelectDirectory* pDialog = new nuiDialogSelectDirectory(GetMainWindow(), _T("ENTER THE NEW PROJECT TARGET"), path, nglPath(_T("/")));
+  nuiDialogSelectDirectory* pDialog = new nuiDialogSelectDirectory(GetMainWindow(), "ENTER THE NEW PROJECT TARGET", path, nglPath("/"));
   mEventSink.Connect(pDialog->DirectorySelected, &ProjectGenerator::OnTargetSelected, (void*)pDialog);
   rEvent.Cancel();
 }
@@ -560,14 +559,14 @@ void ProjectGenerator::OnTargetSelected(const nuiEvent& rEvent)
     return;
   }
   
-  GetPreferences().SetString(PREFERENCES_PROJECTGENERATOR, _T("nuiTargetPath"), path.GetParent().GetPathName());  
+  GetPreferences().SetString(PREFERENCES_PROJECTGENERATOR, "nuiTargetPath", path.GetParent().GetPathName());  
 }
 
 
 
 bool ProjectGenerator::Make()
 {
-  NGL_OUT(_T("nui project generator\n"));
+  NGL_OUT("nui project generator\n");
   
 
   // create target directory
@@ -575,24 +574,24 @@ bool ProjectGenerator::Make()
   if (!targetpath.Create())
   {
     nglString msg;
-    msg.Format(_T("creating target directory '%ls'"), targetpath.GetChars());
+    msg.Format("creating target directory '%ls'", targetpath.GetChars());
     return MsgError(msg);
   }
 
-  NGL_OUT(_T("nui project generator : target directory created '%ls'\n"), targetpath.GetChars());
+  NGL_OUT("nui project generator : target directory created '%ls'\n", targetpath.GetChars());
 
     
   //copy the src folder 
-  if (!CopyDirectory(targetpath + nglPath(_T("src")), mNuiTemplatePath + nglPath(_T("src"))))
+  if (!CopyDirectory(targetpath + nglPath("src"), mNuiTemplatePath + nglPath("src")))
     return false;
   
 
   //copy the resources folders
-  if (!CopyDirectory(targetpath + nglPath(_T("resources")), mNuiTemplatePath + nglPath(_T("resources"))))
+  if (!CopyDirectory(targetpath + nglPath("resources"), mNuiTemplatePath + nglPath("resources")))
     return false;
-  if (!CopyDirectory(targetpath + nglPath(_T("resources/css")), mNuiTemplatePath + nglPath(_T("resources/css"))))
+  if (!CopyDirectory(targetpath + nglPath("resources/css"), mNuiTemplatePath + nglPath("resources/css")))
     return false;
-  if (!CopyDirectory(targetpath + nglPath(_T("resources/decorations")), mNuiTemplatePath + nglPath(_T("resources/decorations"))))
+  if (!CopyDirectory(targetpath + nglPath("resources/decorations"), mNuiTemplatePath + nglPath("resources/decorations")))
     return false;
 
   
@@ -604,23 +603,23 @@ bool ProjectGenerator::Make()
   if (mpCheckXcode->IsPressed())
   {
     projpath = targetpath;
-    nglString projfolder = mProjectName + nglString(_T(".xcodeproj"));
+    nglString projfolder = mProjectName + nglString(".xcodeproj");
     projpath += nglPath(projfolder);
     if (!projpath.Create())
     {
       nglString msg;
-      msg.Format(_T("creating xcodeproj folder '%ls'"), projpath.GetChars());
+      msg.Format("creating xcodeproj folder '%ls'", projpath.GetChars());
       return MsgError(msg);
     }
       
-    NGL_OUT(_T("nui project generator : project folder created '%ls'\n"), projpath.GetChars());
+    NGL_OUT("nui project generator : project folder created '%ls'\n", projpath.GetChars());
 
   
     // generate xcode project file
     projectfile = targetpath;
     projectfile += nglPath(projfolder);
-    projectfile += nglPath(_T("project.pbxproj"));
-    if (!GenerateFile(mNuiTemplatePath + nglPath(_T("TemplateApp.xcodeproj/project.pbxproj")), projectfile))
+    projectfile += nglPath("project.pbxproj");
+    if (!GenerateFile(mNuiTemplatePath + nglPath("TemplateApp.xcodeproj/project.pbxproj"), projectfile))
       return false;
     
   }
@@ -629,20 +628,20 @@ bool ProjectGenerator::Make()
   // generate visual studio 2008 project file
   if (mpCheckVisualStudio2008->IsPressed())
   {
-    filename = mProjectName + nglString(_T(".2008.vcproj"));
+    filename = mProjectName + nglString(".2008.vcproj");
     projectfile = targetpath;
     projectfile += nglPath(filename);
-    if (!GenerateFile(mNuiTemplatePath + nglPath(_T("TemplateApp.2008.vcproj")), projectfile))
+    if (!GenerateFile(mNuiTemplatePath + nglPath("TemplateApp.2008.vcproj"), projectfile))
       return false;
   }
   
   // generate visual studio 2008 solution file
   if (mpCheckVisualStudio2008->IsPressed())
   {
-    filename = mProjectName + nglString(_T(".2008.sln"));
+    filename = mProjectName + nglString(".2008.sln");
     projectfile = targetpath;
     projectfile += nglPath(filename);
-    if (!GenerateFile(mNuiTemplatePath + nglPath(_T("TemplateApp.2008.sln")), projectfile))
+    if (!GenerateFile(mNuiTemplatePath + nglPath("TemplateApp.2008.sln"), projectfile))
       return false;
   }
   
@@ -651,36 +650,36 @@ bool ProjectGenerator::Make()
   // generate Info.plist
   if (mpCheckXcode->IsPressed())
   {
-    filename = mProjectName + nglString(_T(".plist"));
+    filename = mProjectName + nglString(".plist");
     projectfile = targetpath;
     projectfile += nglPath(filename);
-    if (!GenerateFile(mNuiTemplatePath + nglPath(_T("TemplateApp.plist")), projectfile))
+    if (!GenerateFile(mNuiTemplatePath + nglPath("TemplateApp.plist"), projectfile))
       return false;
   }
 
   // generate iPhone Info.plist
   if (mpCheckXcode->IsPressed())
   {
-    filename = mProjectName + nglString(_T("-iPhone.plist"));
+    filename = mProjectName + nglString("-iPhone.plist");
     projectfile = targetpath;
     projectfile += nglPath(filename);
-    if (!GenerateFile(mNuiTemplatePath + nglPath(_T("TemplateApp-iPhone.plist")), projectfile))
+    if (!GenerateFile(mNuiTemplatePath + nglPath("TemplateApp-iPhone.plist"), projectfile))
       return false;
   }
   
   
   
   // generate resource.rc
-  filename = _T("resource.rc");
+  filename = "resource.rc";
   projectfile = targetpath;
   projectfile += nglPath(filename);
-  if (!GenerateFile(mNuiTemplatePath + nglPath(_T("resource.rc")), projectfile))
+  if (!GenerateFile(mNuiTemplatePath + nglPath("resource.rc"), projectfile))
     return false;
    
 
   nglString msg;
-  msg.Format(_T("nui project '%ls' successfully generated!"), mProjectName.GetChars());
-  nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), nglString(_T("Project Creator")), msg, eMB_OK);
+  msg.Format("nui project '%ls' successfully generated!", mProjectName.GetChars());
+  nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), nglString("Project Creator"), msg, eMB_OK);
   pMessageBox->QueryUser();      
   
   return true;
@@ -695,15 +694,14 @@ bool ProjectGenerator::CopyDirectory(const nglPath& targetPath, const nglPath& s
   if (!targetPath.Create())
   {
     nglString msg;
-    msg.Format(_T("creating target folder '%ls'"), targetPath.GetChars());
+    msg.Format("creating target folder '%ls'", targetPath.GetChars());
     return MsgError(msg);
   }
   
   
-  std::list<nglPath> children;
+  std::vector<nglPath> children;
   srcpath.GetChildren(&children);
-  std::list<nglPath>::iterator it;
-  for (it = children.begin(); it != children.end(); ++it)
+  for (auto it = children.begin(); it != children.end(); ++it)
   {
     const nglPath& srcpath = *it;
     
@@ -719,7 +717,7 @@ bool ProjectGenerator::CopyDirectory(const nglPath& targetPath, const nglPath& s
     if (!piFile)
     {
       nglString msg;
-      msg.Format(_T("opening for reading input file '%ls'"), srcpath.GetChars());
+      msg.Format("opening for reading input file '%ls'", srcpath.GetChars());
       return MsgError(msg);
     }
     
@@ -727,7 +725,7 @@ bool ProjectGenerator::CopyDirectory(const nglPath& targetPath, const nglPath& s
     if (!poFile)
     {
       nglString msg;
-      msg.Format(_T("opening for writing output file '%ls'"), dstpath.GetChars());
+      msg.Format("opening for writing output file '%ls'", dstpath.GetChars());
       return MsgError(msg);
     }
     
@@ -735,7 +733,7 @@ bool ProjectGenerator::CopyDirectory(const nglPath& targetPath, const nglPath& s
     delete poFile;
     delete piFile;
     
-    NGL_OUT(_T("nui project generator : created file '%ls'\n"), dstpath.GetChars());
+    NGL_OUT("nui project generator : created file '%ls'\n", dstpath.GetChars());
   }
   
   return true;
@@ -750,7 +748,7 @@ bool ProjectGenerator::GenerateFile(const nglPath& src, const nglPath& dst)
   if (!pFile)
   {
     nglString msg;
-    msg.Format(_T("reading input file '%ls'"), src.GetChars());
+    msg.Format("reading input file '%ls'", src.GetChars());
     return MsgError(msg);
   }
 
@@ -760,15 +758,15 @@ bool ProjectGenerator::GenerateFile(const nglPath& src, const nglPath& dst)
   delete pFile;
   
   nglString contents(str);
-  contents.Replace(_T("TemplateApp"), mProjectName);
-  contents.Replace(_T("../../../nui3"), mNuiRelativeSource.GetPathName());
+  contents.Replace("TemplateApp", mProjectName);
+  contents.Replace("../../../nui3", mNuiRelativeSource.GetPathName());
 
   
   nglOStream* poFile = dst.OpenWrite(false);
   if (!poFile)
   {
     nglString msg;
-    msg.Format(_T("writing output file '%ls'"), dst.GetChars());
+    msg.Format("writing output file '%ls'", dst.GetChars());
     return MsgError(msg);
   }
 
@@ -779,7 +777,7 @@ bool ProjectGenerator::GenerateFile(const nglPath& src, const nglPath& dst)
   if (ptr)
     free(ptr);
 
-  NGL_OUT(_T("nui project generator : generated '%ls'\n"), dst.GetChars());
+  NGL_OUT("nui project generator : generated '%ls'\n", dst.GetChars());
   return true;
 }
 
@@ -787,9 +785,9 @@ bool ProjectGenerator::GenerateFile(const nglPath& src, const nglPath& dst)
 bool ProjectGenerator::MsgError(const nglString& error)
 {
   nglString msg;
-  msg.Format(_T("error %ls"), error.GetChars());
+  msg.Format("error %ls", error.GetChars());
   NGL_OUT(msg);
-  nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), _T("Project Creator"), msg, eMB_OK);
+  nuiMessageBox* pMessageBox = new nuiMessageBox(GetMainWindow(), "Project Creator", msg, eMB_OK);
   pMessageBox->QueryUser();  
   return false;
 }

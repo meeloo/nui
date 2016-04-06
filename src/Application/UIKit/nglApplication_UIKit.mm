@@ -27,14 +27,14 @@ void objCCallOnMemoryWarning();
 - (void) dealloc
 {
   //App->TimedPrint("nglUIApplicationDelegate dealloc");
-  //NGL_OUT(_T("[nglUIApplicationDelegate dealloc]\n"));
+  //NGL_OUT("[nglUIApplicationDelegate dealloc]\n");
   [super dealloc];
 }
 
 - (void) applicationDidFinishLaunching:       (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidFinishLaunching");
-  NGL_OUT(_T("[nglUIApplicationDelegate applicationDidFinishLaunching]\n"));
+  NGL_OUT("[nglUIApplicationDelegate applicationDidFinishLaunching]\n");
   assert(App);
 
   objCCallOnInit(pUIApplication);
@@ -61,7 +61,7 @@ void objCCallOnMemoryWarning();
 - (void) applicationDidBecomeActive:          (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidBecomeActive");
-  NGL_DEBUG( NGL_OUT(_T("[nglUIApplicationDelegate applicationDidBecomeActive]\n")); )
+  NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationDidBecomeActive]\n"); )
   assert(App);
 
   objCCallOnActivation();
@@ -84,7 +84,7 @@ void objCCallOnMemoryWarning();
 - (void) applicationDidEnterBackground:       (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidEnterBackground");
-  NGL_DEBUG( NGL_OUT(_T("[nglUIApplicationDelegate applicationDidEnterBackground]\n")); )
+  NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationDidEnterBackground]\n"); )
   assert(App);
 
 	NSEnumerator *e = [[pUIApplication windows] objectEnumerator];
@@ -114,13 +114,13 @@ void objCCallOnMemoryWarning();
 - (void) applicationSignificantTimeChange:    (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationSignificantTimeChange");
-//NGL_OUT(_T("[nglUIApplicationDelegate applicationSignificantTimeChange]\n"));
+//NGL_OUT("[nglUIApplicationDelegate applicationSignificantTimeChange]\n");
 }
 
 - (void) applicationWillTerminate:            (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationWillTerminate");
-//	NGL_DEBUG( NGL_OUT(_T("[nglUIApplicationDelegate applicationWillTerminate]\n")) );
+//	NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationWillTerminate]\n") );
 
 	objCCallOnWillExit();
 
@@ -191,7 +191,7 @@ void objCCallOnMemoryWarning();
 
 const nglChar* gpApplicationErrorTable[] =
 {
-/*  0 */ _T("No error"),
+/*  0 */ "No error",
   NULL
 };
 

@@ -21,7 +21,7 @@ nuiComboBox::nuiComboBox()
   mHandleOffset(DEFAULT_HANDLE_OFFSET),
   mComboBoxEvents(this)
 {
-  SetObjectClass(_T("nuiComboBox"));
+  SetObjectClass("nuiComboBox");
   SetWantKeyboardFocus(true);
 }
 
@@ -36,7 +36,7 @@ nuiComboBox::nuiComboBox(nuiTreeNode* pChoicesTree, bool ownTree)
   mHandleOffset(DEFAULT_HANDLE_OFFSET),
   mComboBoxEvents(this)
 {
-  SetObjectClass(_T("nuiComboBox"));
+  SetObjectClass("nuiComboBox");
 
   if (mpChoicesTree)
     mpChoicesTree->Acquire();

@@ -35,10 +35,10 @@ static nuiAttributeEditor* GetBlurIntAttributeEditor(void* pTarget, nuiAttribute
 MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo, bool ShowFPS, const nglContext* pShared )
   : nuiMainWindow(rContextInfo, rInfo, pShared, nglPath(ePathCurrent)), mEventSink(this)
 {
-  if (SetObjectClass(_T("MainWindow")))
+  if (SetObjectClass("MainWindow"))
   {
     nuiAttribute<float>* pMeanAttrib = new nuiAttribute<float>
-    (nglString(_T("BlurMean")), nuiUnitSize,
+    (nglString("BlurMean"), nuiUnitSize,
      nuiMakeDelegate(this, &MainWindow::GetMean),
      nuiMakeDelegate(this, &MainWindow::SetMean)
      );
@@ -46,7 +46,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
     AddAttribute(pMeanAttrib);
     
     nuiAttribute<float>* pAmountAttrib = new nuiAttribute<float>
-    (nglString(_T("BlurAmount")), nuiUnitSize,
+    (nglString("BlurAmount"), nuiUnitSize,
      nuiMakeDelegate(this, &MainWindow::GetAmount),
      nuiMakeDelegate(this, &MainWindow::SetAmount)
      );
@@ -54,7 +54,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
     AddAttribute(pAmountAttrib);
     
     nuiAttribute<float>* pVarianceAttrib = new nuiAttribute<float>
-    (nglString(_T("BlurVariance")), nuiUnitSize,
+    (nglString("BlurVariance"), nuiUnitSize,
      nuiMakeDelegate(this, &MainWindow::GetVariance),
      nuiMakeDelegate(this, &MainWindow::SetVariance)
      );
@@ -62,7 +62,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
     AddAttribute(pVarianceAttrib);
 
     nuiAttribute<float>* pDeviationAttrib = new nuiAttribute<float>
-    (nglString(_T("BlurDeviation")), nuiUnitSize,
+    (nglString("BlurDeviation"), nuiUnitSize,
      nuiMakeDelegate(this, &MainWindow::GetDeviation),
      nuiMakeDelegate(this, &MainWindow::SetDeviation)
      );
@@ -71,7 +71,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
 
     {
       nuiAttribute<float>* pAttrib = new nuiAttribute<float>
-      (nglString(_T("BlurCountX")), nuiUnitSize,
+      (nglString("BlurCountX"), nuiUnitSize,
        nuiMakeDelegate(this, &MainWindow::GetCountX),
        nuiMakeDelegate(this, &MainWindow::SetCountX)
        );
@@ -80,7 +80,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
     }
     {
       nuiAttribute<float>* pAttrib = new nuiAttribute<float>
-      (nglString(_T("BlurCountY")), nuiUnitSize,
+      (nglString("BlurCountY"), nuiUnitSize,
        nuiMakeDelegate(this, &MainWindow::GetCountY),
        nuiMakeDelegate(this, &MainWindow::SetCountY)
        );
@@ -89,7 +89,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
     }
     {
       nuiAttribute<float>* pAttrib = new nuiAttribute<float>
-      (nglString(_T("BlurScaleX")), nuiUnitSize,
+      (nglString("BlurScaleX"), nuiUnitSize,
        nuiMakeDelegate(this, &MainWindow::GetScaleX),
        nuiMakeDelegate(this, &MainWindow::SetScaleX)
        );
@@ -98,7 +98,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
     }
     {
       nuiAttribute<float>* pAttrib = new nuiAttribute<float>
-      (nglString(_T("BlurScaleY")), nuiUnitSize,
+      (nglString("BlurScaleY"), nuiUnitSize,
        nuiMakeDelegate(this, &MainWindow::GetScaleY),
        nuiMakeDelegate(this, &MainWindow::SetScaleY)
        );
@@ -132,18 +132,18 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
   SetDebugMode(true);
 #endif
   
-  LoadCSS(_T("rsrc:/css/main.css"));
+  LoadCSS("rsrc:/css/main.css");
   
   nuiVBox* pBox = new nuiVBox;
   AddChild(pBox);
-  pBox->AddCell(GetAttribute(_T("BlurMean")).GetEditor());
-  pBox->AddCell(GetAttribute(_T("BlurAmount")).GetEditor());
-  pBox->AddCell(GetAttribute(_T("BlurVariance")).GetEditor());
-  pBox->AddCell(GetAttribute(_T("BlurDeviation")).GetEditor());
-  pBox->AddCell(GetAttribute(_T("BlurCountX")).GetEditor());
-  pBox->AddCell(GetAttribute(_T("BlurScaleX")).GetEditor());
-  pBox->AddCell(GetAttribute(_T("BlurCountY")).GetEditor());
-  pBox->AddCell(GetAttribute(_T("BlurScaleY")).GetEditor());
+  pBox->AddCell(GetAttribute("BlurMean").GetEditor());
+  pBox->AddCell(GetAttribute("BlurAmount").GetEditor());
+  pBox->AddCell(GetAttribute("BlurVariance").GetEditor());
+  pBox->AddCell(GetAttribute("BlurDeviation").GetEditor());
+  pBox->AddCell(GetAttribute("BlurCountX").GetEditor());
+  pBox->AddCell(GetAttribute("BlurScaleX").GetEditor());
+  pBox->AddCell(GetAttribute("BlurCountY").GetEditor());
+  pBox->AddCell(GetAttribute("BlurScaleY").GetEditor());
 
   EnablePartialRedraw(false);
   EnableRenderCache(false);
@@ -176,9 +176,9 @@ void MainWindow::UpdateSurfaces()
   if (mpSurface3)
     mpSurface3->Release();
   
-  mpSurface1 = nuiSurface::CreateSurface(_T("TextSurface"), w, h, eImagePixelRGBA);
-  mpSurface2 = nuiSurface::CreateSurface(_T("HBlur"), w2, h2, eImagePixelRGBA);
-  mpSurface3 = nuiSurface::CreateSurface(_T("VBlur"), w2, h2, eImagePixelRGBA);
+  mpSurface1 = nuiSurface::CreateSurface("TextSurface", w, h, eImagePixelRGBA);
+  mpSurface2 = nuiSurface::CreateSurface("HBlur", w2, h2, eImagePixelRGBA);
+  mpSurface3 = nuiSurface::CreateSurface("VBlur", w2, h2, eImagePixelRGBA);
   
   mpTexture1 = mpSurface1->GetTexture();
   mpTexture2 = mpSurface2->GetTexture();
@@ -228,11 +228,11 @@ bool MainWindow::Draw(nuiDrawContext* pContext)
   
   pContext->SetFont(nuiFont::GetFont(250));
   pContext->SetTextColor(nuiColor(192, 0, 0, 64, true));
-  pContext->DrawText(50, 240, _T("Text1"));
+  pContext->DrawText(50, 240, "Text1");
   pContext->SetTextColor(nuiColor(0, 0, 250, 64, true));
-  pContext->DrawText(80, 280, _T("Text2"));
+  pContext->DrawText(80, 280, "Text2");
   pContext->SetTextColor(nuiColor(255, 255, 255, 255, true));
-  pContext->DrawText(mMouseX - 400, mMouseY + 50, _T("Text3"));
+  pContext->DrawText(mMouseX - 400, mMouseY + 50, "Text3");
   DrawChildren(pContext);
 
   
@@ -332,7 +332,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%ls'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
   
@@ -346,7 +346,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     return true;
   }
   
-  NGL_OUT(_T("%ls\n"), pCSS->GetErrorString().GetChars());
+  NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
   
   delete pCSS;
   return false;

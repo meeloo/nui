@@ -1,0 +1,124 @@
+
+
+// you can include your stylesheets this way:
+// #include "myStylesheet.css"
+
+// remember each stylesheet file must have at least a blank ending line, 
+// or the stylehsheet parsing may not work properly
+
+@Font fontFileSelector
+{
+  GenericName: sans-serif;
+  Size: 12;
+  Bold: false;
+  Italic: false;
+}
+
+
+@nuiGradientDecoration dMainContainer
+{
+  Color1: rgb(190,190,190);
+  Color2: rgb(140,140,140);
+  ShapeMode: Fill;
+  ClientRect: "{10 10 0 0}";
+}
+
+
+"MainContainer"!
+{
+  DecorationMode: Border;
+  Decoration: dMainContainer;
+}
+
+
+"VersionNumber"!
+{
+  TextColor: rgb(150,150,150);
+}
+
+
+@Font FontTabView_Title
+{
+  GenericName: sans-serif;
+  Size: 12;
+  Bold: true;
+  Italic: false;  
+}
+
+"TabView::Title"!
+{
+  Font: FontTabView_Title;
+  BorderTop: 6;
+  BorderBottom: 6;
+  BorderLeft: 3;
+  BorderRight: 3;
+}
+
+
+
+@nuiGradientDecoration dToolpane_Title
+{
+  Color1: rgb(91,110,141);
+  Color2: rgb(34,66,114);
+  ShapeMode: Fill;
+  ClientRect: "{5 5 0 0}";
+}
+
+
+@nuiGradientDecoration dToolpane_Contents
+{
+  Color1: rgb(236,231,231);
+  Color2: rgb(255,255,255);
+  StrokeColor: rgb(204,204,204);
+  ShapeMode: StrokeAndFill;
+  ClientRect: "{5 5 0 0}";
+}
+
+"Toolpane::Title"!
+{
+  DecorationMode: Border;
+  Decoration: dToolpane_Title;
+}
+
+"Toolpane::Contents"!
+{
+  DecorationMode: Border;
+  Decoration: dToolpane_Contents;
+}
+
+
+
+
+/////////////////////////////////////////////////
+//
+// ICONS
+//
+//
+
+
+// File Selector
+
+"nuiFileSelector::FolderLabel"!
+{
+  Font: fontFileSelector;
+}
+  
+"nuiFileSelector::TreeFolderLabel"!
+{
+  Font: fontFileSelector;
+}
+  
+"nuiFileSelector::TreeFileLabel"!
+{
+  Font: fontFileSelector;
+}
+  
+
+///////////////////////////////////////////////////
+// Views
+#include "ConfigView.css"
+#include "WidgetTreeView.css"
+
+
+// blank ending line following
+

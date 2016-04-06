@@ -12,7 +12,7 @@
 #define NUI_VERSION_MAJOR 3
 #define NUI_VERSION_MINOR 0
 #define NUI_VERSION_RELEASE 4147
-#define NUI_VERSION_BETA (nglString(_T("beta")))
+#define NUI_VERSION_BETA (nglString("beta"))
 
 #define NUI_VERSION_MAKE(major, minor, release) ((major << 24) | (minor << 16) | release)
 

@@ -14,7 +14,7 @@ class nuiTranslator
 public:
   static nuiTranslator& GetTranslator();
   
-  nuiTranslator(const nglPath& rLanguagesFilesFolder = _T("rsrc:/localization/"));
+  nuiTranslator(const nglPath& rLanguagesFilesFolder = "rsrc:/localization/");
   virtual ~nuiTranslator();
   
   bool LoadLanguages(const nglPath& rLanguagesFilesFolder); ///< Load the list of language definition files form the given folder path

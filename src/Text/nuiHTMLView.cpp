@@ -22,7 +22,7 @@
 /////////////////////////////// nuiHTMLView
 nuiHTMLView::nuiHTMLView(float IdealWidth)
 {
-  if (SetObjectClass(_T("nuiHTMLView")))
+  if (SetObjectClass("nuiHTMLView"))
     InitAttributes();
   
   mpHTML = NULL;
@@ -72,68 +72,68 @@ void nuiHTMLView::Cancel()
 void nuiHTMLView::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Text")), nuiUnitName,
+               (nglString("Text"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHTMLView::GetText), 
                 nuiMakeDelegate(this, &nuiHTMLView::_SetText)));
   
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("Width")), nuiUnitName,
+               (nglString("Width"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHTMLView::GetIdealWidth), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetIdealWidth)));
   
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("IdealWidth")), nuiUnitName,
+               (nglString("IdealWidth"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHTMLView::GetIdealWidth), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetIdealWidth)));
   
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("VSpace")), nuiUnitName,
+               (nglString("VSpace"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHTMLView::GetVSpace), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetVSpace)));
   
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("HSpace")), nuiUnitName,
+               (nglString("HSpace"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHTMLView::GetHSpace), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetHSpace)));  
   
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Font")), nuiUnitName,
+               (nglString("Font"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHTMLView::_GetFont), 
                 nuiMakeDelegate(this, &nuiHTMLView::_SetFont)));
   
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("TextColor")), nuiUnitNone,
+               (nglString("TextColor"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiHTMLView::GetTextColor), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetTextColor)));
   
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("LinkColor")), nuiUnitNone,
+               (nglString("LinkColor"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiHTMLView::GetLinkColor), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetLinkColor)));
   
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("URL")), nuiUnitNone,
+               (nglString("URL"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiHTMLView::GetURL), 
                 nuiMakeDelegate(this, &nuiHTMLView::_SetURL)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("AutoIdealWidth")), nuiUnitName,
+               (nglString("AutoIdealWidth"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHTMLView::GetAutoIdealWidth), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetAutoIdealWidth)));  
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("UseToolTips")), nuiUnitName,
+               (nglString("UseToolTips"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiHTMLView::GetUseToolTips), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetUseToolTips)));  
   
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("DebugBoxes")), nuiUnitBoolean,
+               (nglString("DebugBoxes"), nuiUnitBoolean,
                 nuiMakeDelegate(this, &nuiHTMLView::GetDebugBoxes), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetDebugBoxes)));  
   
 
   AddAttribute(new nuiAttribute<float>
-               (nglString(_T("Margins")), nuiUnitPixels,
+               (nglString("Margins"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiHTMLView::GetMargins), 
                 nuiMakeDelegate(this, &nuiHTMLView::SetMargins)));
   
@@ -420,8 +420,8 @@ void nuiHTMLView::StreamDone(nuiAsyncIStream* pStream)
 	 return;
  }
 	
-//  App->GetLog().SetLevel(_T("StopWatch"), 50);
-//  nuiStopWatch watch(_T("nuiHTMLView::StreamDone"));
+//  App->GetLog().SetLevel("StopWatch", 50);
+//  nuiStopWatch watch("nuiHTMLView::StreamDone");
   mpStream = NULL;
   nglString url(mTempURL);
   const nuiHTTPResponse* pResponse = pStream->GetHTTPResponse();
@@ -432,9 +432,9 @@ void nuiHTMLView::StreamDone(nuiAsyncIStream* pStream)
 
   if (pResponse)
   {
-    //NGL_OUT(_T("\n\nHTTP Headers:\n%s\n\n"), pResponse->GetHeadersRep().GetChars());
+    //NGL_OUT("\n\nHTTP Headers:\n%s\n\n", pResponse->GetHeadersRep().GetChars());
     const nuiHTTPHeaderMap& rHeaders(pResponse->GetHeaders());
-    nuiHTTPHeaderMap::const_iterator it = rHeaders.find(_T("location"));
+    nuiHTTPHeaderMap::const_iterator it = rHeaders.find("location");
     if (it != rHeaders.end())
     {
       nglString newurl = it->second;
@@ -447,25 +447,25 @@ void nuiHTMLView::StreamDone(nuiAsyncIStream* pStream)
       {
         url = newurl;
       }
-      //NGL_OUT(_T("\n\nNew location: %s\n\n"), url.GetChars());
+      //NGL_OUT("\n\nNew location: %s\n\n", url.GetChars());
       
       SetURL(url);
       return;
     }
     
-    it = rHeaders.find(_T("content-type"));
+    it = rHeaders.find("content-type");
     
     if (it != rHeaders.end())
     {  
       nglString contents(it->second);
       contents.ToUpper();
-      int32 pos = contents.Find(_T("CHARSET="));
+      int32 pos = contents.Find("CHARSET=");
       if (pos >= 0)
       {
         nglString enc(contents.Extract(pos + 8));
         enc.Trim();
         encoding = nuiGetTextEncodingFromString(enc);
-        //NGL_OUT(_T("\n\nHTTP Encoding: %s - %d\n\n"), enc.GetChars(), encoding);
+        //NGL_OUT("\n\nHTTP Encoding: %s - %d\n\n", enc.GetChars(), encoding);
         
       }
     }
@@ -475,7 +475,7 @@ void nuiHTMLView::StreamDone(nuiAsyncIStream* pStream)
   pHTML->SetSourceURL(url);
   bool res = pHTML->Load(*pStream, encoding);
 
-  //  watch.AddIntermediate(_T("HTML Loaded"));
+  //  watch.AddIntermediate("HTML Loaded");
 
   if (res)
   {
@@ -491,12 +491,12 @@ void nuiHTMLView::StreamDone(nuiAsyncIStream* pStream)
     mpRootBox->SetDisplayChangedDelegate(nuiMakeDelegate(this, &nuiHTMLView::Invalidate));
     ParseTree(mpHTML, mpRootBox);
 
-    //    watch.AddIntermediate(_T("HTML Tree Parsed"));
+    //    watch.AddIntermediate("HTML Tree Parsed");
     
     nuiHTMLContext context(*mpContext);
     mpHTML->UpdateStyle(context);
     mpRootBox->Layout(context);
-    //    watch.AddIntermediate(_T("HTML Layouted"));
+    //    watch.AddIntermediate("HTML Layouted");
     InvalidateLayout();
     SetHotRect(nuiRect());
   }
@@ -613,10 +613,10 @@ void nuiHTMLView::ParseHeadLink(nuiHTMLNode* pNode, nuiHTMLBox* pBox)
   if (!pRel)
     return;
   
-  if (pRel->GetValue().Compare(_T("stylesheet"), false) != 0)
+  if (pRel->GetValue().Compare("stylesheet", false) != 0)
     return;
   
-  if (pType && pType->GetValue().Compare(_T("text/css"), false) != 0)
+  if (pType && pType->GetValue().Compare("text/css", false) != 0)
     return;
 
   if (!pHRef)
@@ -818,7 +818,7 @@ void nuiHTMLView::ParseList(nuiHTMLNode* pNode, nuiHTMLBox* pBox)
             txt = "\xe2\x80\xa2 ";
             break;
           case nuiHTMLNode::eTag_OL:
-            txt.Add(items).Add(_T(". "));
+            txt.Add(items).Add(". ");
             break;
           case nuiHTMLNode::eTag_DL:
             break;
@@ -932,7 +932,7 @@ bool nuiHTMLView::MouseUnclicked(const nglMouseInfo& rInfo)
               nglString url(pAttrib->GetValue());
               nuiHTML::GetAbsoluteURL(mpHTML->GetSourceURL(), url);
 
-              if (pAttribTarget && (pAttribTarget->GetValue() == _T("_blank")))
+              if (pAttribTarget && (pAttribTarget->GetValue() == "_blank"))
               {
                 nuiURL nuiurl(url);
                 nuiurl.OpenBrowser();

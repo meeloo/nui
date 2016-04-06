@@ -16,7 +16,7 @@
 nuiIntrospector::nuiIntrospector(nuiWidget* pTarget)
   : nuiVBox(3), mEventSink(this), mpTarget(pTarget)
 {
-  SetObjectClass(_T("nuiIntrospector"));
+  SetObjectClass("nuiIntrospector");
   SetExpand(nuiExpandShrinkAndGrow);
 
   InitDecorations();
@@ -59,38 +59,38 @@ nuiWidget* nuiIntrospector::GetToolbar()
   nuiColor textColor = nuiColor(32,32,32);
 
   // add buttons to inspector's tools
-  nuiRadioButton* pWBtn = new nuiRadioButton(_T("Widget Tree"));
+  nuiRadioButton* pWBtn = new nuiRadioButton("Widget Tree");
   pWBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pWBtn->SetBorders(0);
 
   mEventSink.Connect(pWBtn->ButtonPressed, &nuiIntrospector::ShowWidgetInspector);
   pBox->AddCell(pWBtn);
 
-  nuiRadioButton* pTBtn = new nuiRadioButton(_T("Threads"));
+  nuiRadioButton* pTBtn = new nuiRadioButton("Threads");
   pTBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pTBtn->SetBorders(0);
   mEventSink.Connect(pTBtn->ButtonPressed, &nuiIntrospector::ShowThreadInspector);
   pBox->AddCell(pTBtn);
     
-  nuiRadioButton* pFontBtn = new nuiRadioButton(_T("Fonts"));
+  nuiRadioButton* pFontBtn = new nuiRadioButton("Fonts");
   pFontBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pFontBtn->SetBorders(0);
   mEventSink.Connect(pFontBtn->ButtonPressed, &nuiIntrospector::ShowFontInspector);
   pBox->AddCell(pFontBtn);
 
-  nuiRadioButton* pDecoBtn = new nuiRadioButton(_T("Decorations"));
+  nuiRadioButton* pDecoBtn = new nuiRadioButton("Decorations");
   pDecoBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pDecoBtn->SetBorders(0);
   mEventSink.Connect(pDecoBtn->ButtonPressed, &nuiIntrospector::ShowDecorationInspector);
   pBox->AddCell(pDecoBtn);
   
-  nuiRadioButton* pTextureBtn = new nuiRadioButton(_T("Textures"));
+  nuiRadioButton* pTextureBtn = new nuiRadioButton("Textures");
   pTextureBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pTextureBtn->SetBorders(0);
   mEventSink.Connect(pTextureBtn->ButtonPressed, &nuiIntrospector::ShowTextureInspector);
   pBox->AddCell(pTextureBtn);
   
-  nuiRadioButton* pObjectsBtn = new nuiRadioButton(_T("Objects"));
+  nuiRadioButton* pObjectsBtn = new nuiRadioButton("Objects");
   pObjectsBtn->SetDecoration(nuiDecoration::Get(INTROSPECTOR_DECO_BUTTON), eDecorationBorder);
   pObjectsBtn->SetBorders(0);
   mEventSink.Connect(pObjectsBtn->ButtonPressed, &nuiIntrospector::ShowObjectInspector);
@@ -179,7 +179,7 @@ void nuiIntrospector::InitDecorations()
   nuiGradientDecoration* pGradOff
     = new nuiGradientDecoration
             (
-              _T("INTROSPECTOR_DECO_GRAD_OFF"), 
+              "INTROSPECTOR_DECO_GRAD_OFF", 
               nuiRect(3, 3, 0, 0),
               nuiColor(246,246,246),
               nuiColor(220,220,220),
@@ -193,7 +193,7 @@ void nuiIntrospector::InitDecorations()
   nuiGradientDecoration* pGradOn
     = new nuiGradientDecoration
             (
-              _T("INTROSPECTOR_DECO_GRAD_ON"), 
+              "INTROSPECTOR_DECO_GRAD_ON", 
               nuiRect(3, 3, 0, 0),
               nuiColor(227,237,250),
               nuiColor(161,202,243),
@@ -247,16 +247,16 @@ void nuiIntrospector::InitDecorations()
   
   nuiFontRequest* pFontRequest = new nuiFontRequest();
   nuiFontRequest& rFontRequest(*pFontRequest);
-  rFontRequest.SetGenericName(_T("sans-serif"), 1.0f);
+  rFontRequest.SetGenericName("sans-serif", 1.0f);
   rFontRequest.SetBold(false, 1.0); 
   rFontRequest.SetItalic(false, 1.0);
   rFontRequest.MustHaveSize(10, 1.0);
-  nuiFontManager::GetManager().GetFont(rFontRequest, _T("INTROSPECTOR_FONT_NORMAL"));
-  rFontRequest.SetGenericName(_T("sans-serif"), 1.0f);
+  nuiFontManager::GetManager().GetFont(rFontRequest, "INTROSPECTOR_FONT_NORMAL");
+  rFontRequest.SetGenericName("sans-serif", 1.0f);
   rFontRequest.SetBold(true, 1.0); 
   rFontRequest.SetItalic(false, 1.0);
   rFontRequest.MustHaveSize(10, 1.0);
-  nuiFontManager::GetManager().GetFont(rFontRequest, _T("INTROSPECTOR_FONT_BOLD"));
+  nuiFontManager::GetManager().GetFont(rFontRequest, "INTROSPECTOR_FONT_BOLD");
   pFontRequest->Release();
 }
 

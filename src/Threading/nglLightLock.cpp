@@ -37,7 +37,7 @@ nglLightLock::~nglLightLock()
 // virtual from nglLock
 const nglString& nglLightLock::GetLabel() const
 {
-  static const nglString lbl(_T("light lock"));
+  static const nglString lbl("light lock");
   return lbl;
 }
 

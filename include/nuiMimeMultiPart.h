@@ -12,7 +12,7 @@ class nuiHTTPMessage;
 class nuiMimeMultiPart
 {
 public:
-  nuiMimeMultiPart(const nglString& rName = _T("Default"), const nglString& rType = _T("multipart/form-data"), const nglString& rBoundary = nglString::Null);
+  nuiMimeMultiPart(const nglString& rName = "Default", const nglString& rType = "multipart/form-data", const nglString& rBoundary = nglString::Null);
   virtual ~nuiMimeMultiPart();
   
   void AddVariable(const nglString& rName, const nglString& rValue);
@@ -43,12 +43,12 @@ protected:
   class File
   {
   public:
-    File(const std::vector<uint8>& rData, const nglString& rVarName, const nglString& rFileName, const nglString& rType = _T("multipart/mixed"), const nglString rContentTransfertEncoding = _T("binary"))
+    File(const std::vector<uint8>& rData, const nglString& rVarName, const nglString& rFileName, const nglString& rType = "multipart/mixed", const nglString rContentTransfertEncoding = "binary")
     : mVarName(rVarName), mType(rType), mFileName(rFileName), mContentTransfertEncoding(rContentTransfertEncoding), mContents(rData)
     {
     }
     
-    File(nglIStream* pStream, const nglString& rVarName, const nglString& rFileName, const nglString& rType = _T("multipart/mixed"), const nglString rContentTransfertEncoding = _T("binary"))
+    File(nglIStream* pStream, const nglString& rVarName, const nglString& rFileName, const nglString& rType = "multipart/mixed", const nglString rContentTransfertEncoding = "binary")
     : mVarName(rVarName), mType(rType), mFileName(rFileName), mContentTransfertEncoding(rContentTransfertEncoding)
     {
       size_t len = (size_t)pStream->Available();

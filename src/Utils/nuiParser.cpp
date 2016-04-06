@@ -20,10 +20,10 @@ nuiParser::nuiParser(nglIStream* pStream, const nglPath& rSourcePath)
   mColumn = 1;
   mLine = 1;
   
-  SetValidInValue(_T("!@#$%<>*?'+-&~|[]{}\().,"));
-  SetValidInSymbolStart(_T("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"));
-  SetValidInSymbol(_T("0123456789"));
-  SetValidInBlank(_T(" \t\r\n"));
+  SetValidInValue("!@#$%<>*?'+-&~|[]{}\().,");
+  SetValidInSymbolStart("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_");
+  SetValidInSymbol("0123456789");
+  SetValidInBlank(" \t\r\n");
 }
 
 int32 nuiParser::GetLine() const
@@ -131,7 +131,7 @@ bool nuiParser::NextChar()
     mLine++;
   }
   
-  //wprintf(_T("%lc"), mChar);
+  //wprintf("%lc", mChar);
   
   return true;
 }

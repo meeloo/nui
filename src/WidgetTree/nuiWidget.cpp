@@ -719,6 +719,12 @@ nuiWidget::~nuiWidget()
   nuiRenderThread::DestroyWidget(this);
 }
 
+void nuiWidget::CallBuilt()
+{
+  Built();
+}
+
+
 void nuiWidget::Built()
 {
   // ...

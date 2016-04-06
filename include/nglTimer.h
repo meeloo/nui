@@ -48,7 +48,7 @@ public:
 
   void OnTick (nglTime Lap)
   {
-    NGL_OUT(_T("Tick !\n"));
+    NGL_OUT("Tick !\n");
   }
 };
 \endcode

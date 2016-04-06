@@ -11,21 +11,21 @@
 
 #if (!defined _UIKIT_)
 nuiNativeResourceVolume::nuiNativeResourceVolume()
-: nglVolume(_T("rsrc"), nglPath(), _T("Native resources"), nglPathVolume::ReadOnly, nglPathVolume::eTypeUnknown)
+: nglVolume("rsrc", nglPath(), "Native resources", nglPathVolume::ReadOnly, nglPathVolume::eTypeUnknown)
 {
-  //App->GetLog().SetLevel(_T("StopWatch"), 100);
+  //App->GetLog().SetLevel("StopWatch", 100);
   
-  //nuiStopWatch watch(_T("nuiNativeResourceVolume creation"));
+  //nuiStopWatch watch("nuiNativeResourceVolume creation");
   std::vector<nglPath> resources;
   nuiNativeResource::GetResourcesList(resources);
-  //watch.AddIntermediate(_T("GetResourcesList"));
+  //watch.AddIntermediate("GetResourcesList");
                      
-  //NGL_OUT(_T("Found %d resources in this executable\n"), resources.size());
+  //NGL_OUT("Found %d resources in this executable\n", resources.size());
   for (size_t i = 0; i < resources.size(); i++)
   {
     nglPath tmp(resources[i]);
     nglPath ref;
-    while (tmp != ref && tmp != nglPath(_T("/")))
+    while (tmp != ref && tmp != nglPath("/"))
     {
       ref = tmp;
       tmp = tmp.GetParent();
@@ -33,7 +33,7 @@ nuiNativeResourceVolume::nuiNativeResourceVolume()
 			if (!nodename.IsEmpty())
       {
         mItems[tmp].insert(nodename);
-        //NGL_OUT(_T("mItems[%s] <- '%s'\n"), tmp.GetChars(), nodename.GetChars());
+        //NGL_OUT("mItems[%s] <- '%s'\n", tmp.GetChars(), nodename.GetChars());
       }
 		}
   }
@@ -51,7 +51,7 @@ bool nuiNativeResourceVolume::GetPathInfo(const nglPath& rPath, nglPathInfo& rIn
 	tmp.TrimLeft(L'/');
 	nglPath trimmed(tmp);
   
-  if (!path.GetPathName().Compare(_T("/")))
+  if (!path.GetPathName().Compare("/"))
   {
     // we act like this is a folder
     rInfo.Exists = true;      ///< Node existence. All other fields are invalid if set to false.
@@ -145,9 +145,9 @@ bool nuiNativeResourceVolume::GetChildren(const nglPath& rPath, std::vector<nglP
 {
   nglString p(rPath.GetVolumeLessPath());
   p.TrimLeft(_T('/'));
-  //wprintf(_T("trimed path '%s'\n"), p.GetChars());
+  //wprintf("trimed path '%s'\n", p.GetChars());
   nglPath path(p);
-  //wprintf(_T("GetChildren(\"%s\") [%s] [%s]\n"), rPath.GetChars(), path.GetChars(), p.GetChars());
+  //wprintf("GetChildren(\"%s\" [%s] [%s]\n"), rPath.GetChars(), path.GetChars(), p.GetChars());
   
   std::map<nglPath, std::set<nglString> >::const_iterator fit = mItems.find(path);
   
@@ -173,7 +173,7 @@ bool nuiNativeResourceVolume::GetChildren(const nglPath& rPath, std::vector<nglP
 }
 #else
 nuiNativeResourceVolume::nuiNativeResourceVolume()
-: nglNativeVolume(_T("rsrc"), nglPathVolume(nuiGetNativeResourcePath(), _T("Native resources"), nglPathVolume::ReadOnly, nglPathVolume::eTypeUnknown))
+: nglNativeVolume("rsrc", nglPathVolume(nuiGetNativeResourcePath(), "Native resources", nglPathVolume::ReadOnly, nglPathVolume::eTypeUnknown))
 {
 }
 

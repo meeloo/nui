@@ -7,8 +7,8 @@
 
 #include "nui.h"
 
-#define NUICSV_SEPARATION_TAG _T("<nuicsv/>")
-#define NUICSV_COMMENT_TAG _T("<nuicsv_comment/>")
+#define NUICSV_SEPARATION_TAG "<nuicsv/>"
+#define NUICSV_COMMENT_TAG "<nuicsv_comment/>"
 
 
 
@@ -32,13 +32,13 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
 {  
   if (!pStream)
   {
-    NGL_OUT(_T("nuiCSV::Load error : input stream is NULL!\n"));
+    NGL_OUT("nuiCSV::Load error : input stream is NULL!\n");
     return false;
   }
 
   if (!pStream->Available())
   {
-    NGL_OUT(_T("nuiCSV::Load error : nothing to read from the input stream!\n"));
+    NGL_OUT("nuiCSV::Load error : nothing to read from the input stream!\n");
     return false;
   }
   
@@ -52,7 +52,7 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
 
 
   nglString line;
-  nglString separationString(mSeparationChar);
+  nglString separationString; separationString.Append(mSeparationChar);
   std::vector<nglString> tokens;
   uint32 numlines = 0;
   uint32 numcols = 0;
@@ -61,7 +61,7 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
   // for each line from input stream
   while (pStream->ReadLine(line, NULL))
   {
-    //NGL_OUT(_T("%3d ReadLine: %s\n"), numlines, line.GetChars());
+    //NGL_OUT("%3d ReadLine: %s\n", numlines, line.GetChars());
     numlines++;
     
     // first, handle the comment lines, if the comment option has been enabled
@@ -92,7 +92,7 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
       pos3 = line.Find(_T('\"'), pos2+1);
       if (pos3 < 0)
       {
-        NGL_OUT(_T("nuiCSV syntax error : a '\"' char is missing on line %d!\n"), numlines);
+        NGL_OUT("nuiCSV syntax error : a '\"' char is missing on line %d!\n", numlines);
         return false;
       }
       // but don't be fooled by the double '""' (it's a part from the text)
@@ -102,7 +102,7 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
       }
       if (pos3 < 0)
       {
-        NGL_OUT(_T("nuiCSV syntax error : a '\"' char is missing on line %d!\n"), numlines);
+        NGL_OUT("nuiCSV syntax error : a '\"' char is missing on line %d!\n", numlines);
         return false;
       }
       
@@ -132,7 +132,7 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
     {
       if (nbcols < numcols)
       {
-        NGL_OUT(_T("nuiCSV syntax error : not enough columns from the csv document in line %d! Could not process it!\n"), numlines);
+        NGL_OUT("nuiCSV syntax error : not enough columns from the csv document in line %d! Could not process it!\n", numlines);
         return false;
       }
       else if (numcols == 0)
@@ -141,7 +141,7 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
       }
       else if (nbcols > numcols)
       {
-        NGL_OUT(_T("nuiCSV syntax error : the number of columns in line %d (%d columns) doesn't match (%d columns)! Could not process it!\n"), numlines, nbcols, numcols);
+        NGL_OUT("nuiCSV syntax error : the number of columns in line %d (%d columns) doesn't match (%d columns)! Could not process it!\n", numlines, nbcols, numcols);
         return false;
       }
     }
@@ -164,7 +164,7 @@ bool nuiCSV::Load(nglIStream* pStream, bool CheckNbColumns)
       }
       
       // finally, replace all double '""' by single '"'
-      tokens[i].Replace(_T("\"\""), _T("\""));
+      tokens[i].Replace("\"\"", "\"");
       
       // and replace nuicsv special tag by the separation char (once again, here, it's not a separation char, it's a part from the text)
       tokens[i].Replace(NUICSV_SEPARATION_TAG, separationString);
@@ -210,7 +210,7 @@ nglString nuiCSV::Dump()
   nglString csv;
   
   nglString separation;
-  separation.Format(_T(" %lc "), mSeparationChar);
+  separation.Format(" %lc ", mSeparationChar);
     
   for (uint linenum = 0; linenum < mDocument.size(); linenum++)
   {
@@ -234,7 +234,7 @@ nglString nuiCSV::Dump()
     {
       nglString word = line[colnum];
       
-      word.Replace(_T("\""), _T("\"\"")); // " => ""
+      word.Replace("\"", "\"\""); // " => ""
       
       if ((colnum == 0) && (word.GetChar(0) == mCommentTag))
       {
@@ -253,7 +253,7 @@ nglString nuiCSV::Dump()
         csv.Append(separation);
     }
     
-    csv.Append(_T("\n"));
+    csv.Append("\n");
   }
   
   return csv;

@@ -26,7 +26,7 @@ nuiEditText::nuiEditText(const nglString& rText)
   mStartDragging(false),
   mTextColorSet(false)
 {
-  if (SetObjectClass(_T("nuiEditText")))
+  if (SetObjectClass("nuiEditText"))
     InitAttributes();
   
   SetFont(nuiFont::GetFont(12));
@@ -52,21 +52,26 @@ nuiEditText::~nuiEditText()
 void nuiEditText::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("TextColor")), nuiUnitNone,
+               (nglString("TextColor"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiEditText::GetTextColor), 
                 nuiMakeDelegate(this, &nuiEditText::SetTextColor)));
   
   AddAttribute(new nuiAttribute<const nglString&>
-               (nglString(_T("Font")), nuiUnitName,
+               (nglString("Font"), nuiUnitName,
                 nuiMakeDelegate(this, &nuiEditText::_GetFont), 
                 nuiMakeDelegate(this, &nuiEditText::_SetFont)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("FollowModifications")), nuiUnitYesNo,
+               (nglString("FollowModifications"), nuiUnitYesNo,
                 nuiMakeDelegate(this, &nuiEditText::GetFollowModifications),
                 nuiMakeDelegate(this, &nuiEditText::SetFollowModifications)));
 
 
+  AddAttribute(new nuiAttribute<const nglString&>
+               (nglString("Text"), nuiUnitName,
+                nuiMakeDelegate(this, &nuiEditText::GetText),
+                nuiMakeDelegate(this, &nuiEditText::SetText)));
+  
 }
 
 
@@ -258,7 +263,7 @@ bool nuiEditText::TextInput(const nglString& rUnicodeString)
   nglString str(rUnicodeString);
   str.Replace(nglChar(13), '\n');
   nuiObject* pObject = new nuiObject();
-  pObject->SetProperty(_T("Text"), str);
+  pObject->SetProperty("Text", str);
   Do(eInsertText, pObject);
   
   return true;
@@ -411,7 +416,7 @@ bool nuiEditText::KeyDown(const nglKeyEvent& rEvent)
 //    if (Char == 13)
 //      Char = '\n';
 //    nuiObject* pObject = new nuiObject();
-//    pObject->SetProperty(_T("Text"), nglString(Char));
+//    pObject->SetProperty("Text", nglString(Char));
 //    Do(eInsertText, pObject);
 //    return true;
 //  }
@@ -530,7 +535,7 @@ bool nuiEditText::MouseMoved(const nglMouseInfo& rInfo)
     Ungrab();
     mDragging = true;
     nglDragAndDrop* pDnd = new nglDragAndDrop(eDropEffectCopy);
-    pDnd->AddType(new nglDataTextObject(_T("ngl/Text")));
+    pDnd->AddType(new nglDataTextObject("ngl/Text"));
     pDnd->AddSupportedDropEffect(eDropEffectMove);
     
     /*bool res = (unused)*/ Drag(pDnd);
@@ -617,7 +622,7 @@ bool nuiEditText::Do(CommandId command, nuiObject* pParams)
 {
   if (!pParams)
     pParams = new nuiObject();
-  pParams->SetProperty(_T("Operation"), _T("Do"));
+  pParams->SetProperty("Operation", "Do");
   CommandFunction pCommand = mCommands[command];
   if (!(this->*pCommand)(pParams))
     return false;
@@ -643,7 +648,7 @@ bool nuiEditText::Undo()
     return false;
   mCommandStackPos--;
   std::pair<CommandId, nuiObject*>& rPair = mCommandStack[mCommandStackPos];
-  rPair.second->SetProperty(_T("Operation"), _T("Undo"));
+  rPair.second->SetProperty("Operation", "Undo");
   CommandFunction pCommand = mCommands[rPair.first];
   return (this->*pCommand)(rPair.second);
 }
@@ -654,7 +659,7 @@ bool nuiEditText::Redo()
   if (!CanRedo())
     return false;
   std::pair<CommandId, nuiObject*>& rPair = mCommandStack[mCommandStackPos];
-  rPair.second->SetProperty(_T("Operation"), _T("Do"));
+  rPair.second->SetProperty("Operation", "Do");
   CommandFunction pCommand = mCommands[rPair.first];
   res = (this->*pCommand)(rPair.second);
   mCommandStackPos++;
@@ -757,13 +762,13 @@ void nuiEditText::SaveCursorPos(nuiObject* pParams) const
 {
   nglString str;
   str.SetCUInt(mCursorPos);
-  pParams->SetProperty(_T("CursorPos"), str);
+  pParams->SetProperty("CursorPos", str);
 }
 
 void nuiEditText::LoadCursorPos(nuiObject* pParams)
 {
-  NGL_ASSERT(pParams->HasProperty(_T("CursorPos")));
-  SetCursorPos(pParams->GetProperty(_T("CursorPos")).GetCUInt());
+  NGL_ASSERT(pParams->HasProperty("CursorPos"));
+  SetCursorPos(pParams->GetProperty("CursorPos").GetCUInt());
   Invalidate();
 }
 
@@ -771,13 +776,13 @@ void nuiEditText::SaveAnchorPos(nuiObject* pParams) const
 {
   nglString str;
   str.SetCUInt(mAnchorPos);
-  pParams->SetProperty(_T("AnchorPos"), str);
+  pParams->SetProperty("AnchorPos", str);
 }
 
 void nuiEditText::LoadAnchorPos(nuiObject* pParams)
 {
-  NGL_ASSERT(pParams->HasProperty(_T("AnchorPos")));
-  SetAnchorPos(pParams->GetProperty(_T("AnchorPos")).GetCUInt());
+  NGL_ASSERT(pParams->HasProperty("AnchorPos"));
+  SetAnchorPos(pParams->GetProperty("AnchorPos").GetCUInt());
   Invalidate();
 }
 
@@ -786,14 +791,14 @@ void nuiEditText::SavePos(nuiObject* pParams) const
   SaveCursorPos(pParams);
   SaveAnchorPos(pParams);
   if (mSelectionActive)
-    pParams->SetProperty(_T("SelectionActive"), _T("true"));
+    pParams->SetProperty("SelectionActive", "true");
 }
 
 void nuiEditText::LoadPos(nuiObject* pParams)
 {
   LoadCursorPos(pParams);
   LoadAnchorPos(pParams);
-  mSelectionActive = (pParams->HasProperty(_T("SelectionActive")) && pParams->GetProperty(_T("SelectionActive")) == _T("true"));
+  mSelectionActive = (pParams->HasProperty("SelectionActive") && pParams->GetProperty("SelectionActive") == "true");
   Invalidate();
 }
 
@@ -813,7 +818,7 @@ void nuiEditText::MoveCursorTo(uint Pos)
 
 bool nuiEditText::GoDocBegin(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     SavePos(pParams);
@@ -829,7 +834,7 @@ bool nuiEditText::GoDocBegin(nuiObject* pParams)
 
 bool nuiEditText::GoDocEnd(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     SavePos(pParams);
@@ -845,7 +850,7 @@ bool nuiEditText::GoDocEnd(nuiObject* pParams)
 
 bool nuiEditText::GoLineBegin(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     TextBlock* pBlock = GetBlock(mCursorPos);
@@ -865,7 +870,7 @@ bool nuiEditText::GoLineBegin(nuiObject* pParams)
 
 bool nuiEditText::GoLineEnd(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     TextBlock* pBlock = GetBlock(mCursorPos);
@@ -885,7 +890,7 @@ bool nuiEditText::GoLineEnd(nuiObject* pParams)
 
 bool nuiEditText::GoParagraphBegin(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     TextBlock* pBlock = GetBlock(mCursorPos);
@@ -905,7 +910,7 @@ bool nuiEditText::GoParagraphBegin(nuiObject* pParams)
 
 bool nuiEditText::GoParagraphEnd(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     TextBlock* pBlock = GetBlock(mCursorPos);
@@ -925,7 +930,7 @@ bool nuiEditText::GoParagraphEnd(nuiObject* pParams)
 
 bool nuiEditText::GoUp(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     TextBlock* pBlock = GetBlock(mCursorPos);
@@ -956,7 +961,7 @@ bool nuiEditText::GoUp(nuiObject* pParams)
 
 bool nuiEditText::GoDown(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     TextBlock* pBlock = GetBlock(mCursorPos);
@@ -989,7 +994,7 @@ bool nuiEditText::GoDown(nuiObject* pParams)
 
 bool nuiEditText::GoLeft(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     if (!mCursorPos)
       return false;
@@ -1008,7 +1013,7 @@ bool nuiEditText::GoLeft(nuiObject* pParams)
 
 bool nuiEditText::GoRight(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     if (mCursorPos == (uint)mText.GetLength())
       return false;
@@ -1027,7 +1032,7 @@ bool nuiEditText::GoRight(nuiObject* pParams)
 
 bool nuiEditText::GoPageUp(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     nuiSize x,y;
@@ -1046,7 +1051,7 @@ bool nuiEditText::GoPageUp(nuiObject* pParams)
 
 bool nuiEditText::GoPageDown(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     nuiSize x,y;
@@ -1065,7 +1070,7 @@ bool nuiEditText::GoPageDown(nuiObject* pParams)
 
 bool nuiEditText::GoNextWord(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     SavePos(pParams);
@@ -1104,7 +1109,7 @@ bool nuiEditText::GoNextWord(nuiObject* pParams)
 
 bool nuiEditText::GoPreviousWord(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     SavePos(pParams);
@@ -1143,7 +1148,7 @@ bool nuiEditText::GoPreviousWord(nuiObject* pParams)
 
 bool nuiEditText::StartSelection(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     mSelecting = true;
@@ -1158,7 +1163,7 @@ bool nuiEditText::StartSelection(nuiObject* pParams)
 
 bool nuiEditText::StopSelection(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     mSelecting = false;
@@ -1173,7 +1178,7 @@ bool nuiEditText::StopSelection(nuiObject* pParams)
 
 bool nuiEditText::StartCommand(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     mCommandDown = true;
@@ -1188,7 +1193,7 @@ bool nuiEditText::StartCommand(nuiObject* pParams)
 
 bool nuiEditText::StopCommand(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     mCommandDown = false;
@@ -1203,7 +1208,7 @@ bool nuiEditText::StopCommand(nuiObject* pParams)
 
 bool nuiEditText::StartShift(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     mShiftDown = true;
@@ -1218,7 +1223,7 @@ bool nuiEditText::StartShift(nuiObject* pParams)
 
 bool nuiEditText::StopShift(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     mShiftDown = false;
@@ -1233,7 +1238,7 @@ bool nuiEditText::StopShift(nuiObject* pParams)
 
 bool nuiEditText::StartAlt(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     mAltDown = true;
@@ -1248,7 +1253,7 @@ bool nuiEditText::StartAlt(nuiObject* pParams)
 
 bool nuiEditText::StopAlt(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     mAltDown = false;
@@ -1263,7 +1268,7 @@ bool nuiEditText::StopAlt(nuiObject* pParams)
 
 bool nuiEditText::DisableSelection(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation")) == _T("Do"))
+  if (pParams->GetProperty("Operation") == "Do")
   {
     // Do
     SavePos(pParams);
@@ -1280,7 +1285,7 @@ bool nuiEditText::DisableSelection(nuiObject* pParams)
 
 bool nuiEditText::SelectAll(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     SavePos(pParams);
@@ -1302,7 +1307,7 @@ bool nuiEditText::DeleteSelection(nuiObject* pParams)
   if (!IsEditable())
     return false;
 
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     uint pos = 0;
@@ -1319,7 +1324,7 @@ bool nuiEditText::DeleteSelection(nuiObject* pParams)
     }
 
     end = MIN(mText.GetLength(), end);
-    pParams->SetProperty(_T("Text"), mText.Extract(pos, end - pos));
+    pParams->SetProperty("Text", mText.Extract(pos, end - pos));
     mText.Delete(pos, end - pos);
 
     ClearBlocks();
@@ -1332,7 +1337,7 @@ bool nuiEditText::DeleteSelection(nuiObject* pParams)
   else
   {
     // Undo
-    mText.Insert(pParams->GetProperty(_T("Text")), mCursorPos);
+    mText.Insert(pParams->GetProperty("Text"), mCursorPos);
 
     ClearBlocks();
     CreateBlocks(mText, mpBlocks);
@@ -1344,7 +1349,7 @@ bool nuiEditText::DeleteSelection(nuiObject* pParams)
 
 bool nuiEditText::SelectParagraph(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     SavePos(pParams);
@@ -1367,7 +1372,7 @@ bool nuiEditText::SelectParagraph(nuiObject* pParams)
 
 bool nuiEditText::SelectLine(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     SavePos(pParams);
@@ -1390,7 +1395,7 @@ bool nuiEditText::SelectLine(nuiObject* pParams)
 
 bool nuiEditText::SelectWord(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     SavePos(pParams);
@@ -1430,7 +1435,7 @@ bool nuiEditText::SelectWord(nuiObject* pParams)
 
 bool nuiEditText::Copy(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     App->GetClipBoard().SetData(nglMimeTextSource(GetSelection()));
@@ -1443,7 +1448,7 @@ bool nuiEditText::Cut(nuiObject* pParams)
   if (!IsEditable())
     return false;
 
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     App->GetClipBoard().SetData(nglMimeTextSource(GetSelection()));
@@ -1457,7 +1462,7 @@ bool nuiEditText::Paste(nuiObject* pParams)
   if (!IsEditable())
     return false;
 
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     nglClipBoard& rClipBoard = App->GetClipBoard();
     if (rClipBoard.IsAvailable(nglMimeSource::TextMimeData))
@@ -1466,7 +1471,7 @@ bool nuiEditText::Paste(nuiObject* pParams)
       rClipBoard.GetData(src);
       // Do
       nuiObject* pObject = new nuiObject();
-      pObject->SetProperty(_T("Text"), src.GetText());
+      pObject->SetProperty("Text", src.GetText());
       Do(eInsertText, pObject);
     }
   }
@@ -1478,7 +1483,7 @@ bool nuiEditText::DeleteForward(nuiObject* pParams)
   if (!IsEditable())
     return false;
 
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     uint pos = 0;
@@ -1500,7 +1505,7 @@ bool nuiEditText::DeleteForward(nuiObject* pParams)
     if (mCompositionPos >= 0 && pos >= mCompositionPos + mCompositionLength)
       return false;
     
-    pParams->SetProperty(_T("Text"), mText.Extract(pos, end - pos));
+    pParams->SetProperty("Text", mText.Extract(pos, end - pos));
     mText.Delete(pos, end - pos);
 
     ClearBlocks();
@@ -1516,7 +1521,7 @@ bool nuiEditText::DeleteForward(nuiObject* pParams)
   else
   {
     // Undo
-    mText.Insert(pParams->GetProperty(_T("Text")), mCursorPos);
+    mText.Insert(pParams->GetProperty("Text"), mCursorPos);
 
     ClearBlocks();
     CreateBlocks(mText, mpBlocks);
@@ -1531,7 +1536,7 @@ bool nuiEditText::DeleteBackward(nuiObject* pParams)
   if (!IsEditable())
     return false;
 
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     uint pos = 0;
@@ -1555,7 +1560,7 @@ bool nuiEditText::DeleteBackward(nuiObject* pParams)
     if (mCompositionPos >= 0 && pos < mCompositionPos)
       return false;
 
-    pParams->SetProperty(_T("Text"), mText.Extract(pos, end - pos));
+    pParams->SetProperty("Text", mText.Extract(pos, end - pos));
     mText.Delete(pos, end - pos);
 
     ClearBlocks();
@@ -1571,7 +1576,7 @@ bool nuiEditText::DeleteBackward(nuiObject* pParams)
   else
   {
     // Undo
-    mText.Insert(pParams->GetProperty(_T("Text")), mCursorPos);
+    mText.Insert(pParams->GetProperty("Text"), mCursorPos);
 
     ClearBlocks();
     CreateBlocks(mText, mpBlocks);
@@ -1584,7 +1589,7 @@ bool nuiEditText::DeleteBackward(nuiObject* pParams)
 
 bool nuiEditText::Undo(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     Undo();
@@ -1601,7 +1606,7 @@ bool nuiEditText::Undo(nuiObject* pParams)
 
 bool nuiEditText::Redo(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
     Redo();
@@ -1619,7 +1624,7 @@ bool nuiEditText::Redo(nuiObject* pParams)
 
 bool nuiEditText::ShowCursor(nuiObject* pParams)
 {
-  if (pParams->GetProperty(_T("Operation"))  == _T("Do"))
+  if (pParams->GetProperty("Operation")  == "Do")
   {
     // Do
   }
@@ -1635,9 +1640,9 @@ bool nuiEditText::InsertText(nuiObject* pParams)
   if (!IsEditable())
     return false;
 
-  const nglString& rText(pParams->GetProperty(_T("Text")));
-  const nglString& rOp(pParams->GetProperty(_T("Operation")));
-  if (rOp  == _T("Do"))
+  const nglString& rText(pParams->GetProperty("Text"));
+  const nglString& rOp(pParams->GetProperty("Operation"));
+  if (rOp  == "Do")
   {
     // Do
     if (mSelectionActive)
@@ -1676,7 +1681,7 @@ bool nuiEditText::NewLine(nuiObject* pParams)
   if (mCompositionPos < 0)
   {
     nuiObject* pObj = new nuiObject();
-    pObj->SetProperty(_T("Text"), _T("\n"));
+    pObj->SetProperty("Text", "\n");
     return Do(eInsertText, pObj);
   }
   return false;
@@ -1699,7 +1704,7 @@ void nuiEditText::SetCursorPos(uint Pos)
   }
   Invalidate();
 
-  //NGL_OUT(_T("Cursor pos = %d\n"), Pos);
+  //NGL_OUT("Cursor pos = %d\n", Pos);
 }
 
 void nuiEditText::SetCursorPos(uint Line, uint Column)
@@ -1870,7 +1875,7 @@ void nuiEditText::AddText(const nglString& rText)
   Do(eDisableSelection, new nuiObject());
   Do(eGoDocEnd, new nuiObject());
   nuiObject* pObj = new nuiObject();
-  pObj->SetProperty(_T("Text"), rText);
+  pObj->SetProperty("Text", rText);
   Do(eInsertText, pObj);
   Do(eGoDocEnd, new nuiObject());
   SetEditable(editable);
@@ -2247,7 +2252,7 @@ void nuiEditText::TextBlock::InvalidateLayout()
 
 nglDropEffect nuiEditText::OnCanDrop(nglDragAndDrop* pDragObject,nuiSize X,nuiSize Y)
 {
-  if (pDragObject->IsTypeSupported(_T("ngl/Text")))
+  if (pDragObject->IsTypeSupported("ngl/Text"))
   {
     MoveDropCursorTo(X,Y);
 
@@ -2272,7 +2277,7 @@ void nuiEditText::OnDropped(nglDragAndDrop* pDragObject,nuiSize X,nuiSize Y, ngl
 {
   mDropCursorPos=-1;
   
-  nglDataTextObject* pText = (nglDataTextObject*)pDragObject->GetType(_T("ngl/Text"));
+  nglDataTextObject* pText = (nglDataTextObject*)pDragObject->GetType("ngl/Text");
   const nglString& text = pText->GetData();
   
   uint pos;
@@ -2300,7 +2305,7 @@ void nuiEditText::OnDropped(nglDragAndDrop* pDragObject,nuiSize X,nuiSize Y, ngl
   SetAnchorPos(pos);
 
   nuiObject* pObj = new nuiObject();
-  pObj->SetProperty(_T("Text"), text);
+  pObj->SetProperty("Text", text);
   Do(eInsertText, pObj);
 
   /*
@@ -2332,9 +2337,9 @@ void nuiEditText::OnDragRequestData(nglDragAndDrop* pDragObject, const nglString
 {
   nglString data = GetSelection();
   
-  nglDataTextObject* pText = (nglDataTextObject*)pDragObject->GetType(_T("ngl/Text"));
+  nglDataTextObject* pText = (nglDataTextObject*)pDragObject->GetType("ngl/Text");
   if (!pText)
-    pText = new nglDataTextObject(_T("ngl/Text"));
+    pText = new nglDataTextObject("ngl/Text");
   pText->SetData(data);
   pDragObject->AddType(pText);
 }

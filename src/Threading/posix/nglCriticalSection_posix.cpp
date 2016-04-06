@@ -110,7 +110,7 @@ nglCriticalSection::~nglCriticalSection()
 // virtual from nglLock
 const nglString& nglCriticalSection::GetLabel() const
 {
-  static const nglString lbl(_T("critical section"));
+  static const nglString lbl("critical section");
   return lbl;
 }
 

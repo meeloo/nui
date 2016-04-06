@@ -207,7 +207,7 @@ bool nglImageCGCodec::Feed(nglIStream* pIStream)
   CGColorSpaceRef pCGColors = CGColorSpaceCreateDeviceRGB();
   if (pCGColors == NULL)
   {
-    NGL_OUT(_T("nglImageCGCodec::Feed Error allocating color space\n"));
+    NGL_OUT("nglImageCGCodec::Feed Error allocating color space\n");
     return false;
   }
 

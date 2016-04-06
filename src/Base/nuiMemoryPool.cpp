@@ -32,7 +32,7 @@ void* nuiMemoryPool::Allocate(size_t size)
   // check if there is enough free space
   if ((mpCurrent + size) > (mpMemory + mSize))
   {
-    NGL_OUT(_T("nuiMemoryPool 0x%x error : could not allocate %d bytes! (%d bytes available)\n"), this, size, GetAvailable());
+    NGL_OUT("nuiMemoryPool 0x%x error : could not allocate %d bytes! (%d bytes available)\n", this, size, GetAvailable());
     NGL_ASSERT(0);
     return NULL;
   }

@@ -11,7 +11,7 @@
 nuiViewController::nuiViewController(bool DefaultNavigationBar)
 : nuiWidget()
 {
-  SetObjectClass(_T("nuiViewController"));
+  SetObjectClass("nuiViewController");
   mAnimated = false;
   mOverlayed = false;
   mLoaded = false;

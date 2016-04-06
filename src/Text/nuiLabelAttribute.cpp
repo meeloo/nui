@@ -10,7 +10,7 @@
 nuiLabelAttribute::nuiLabelAttribute(const nuiAttrib<const nglString&>& rAttribute)
 	: nuiLabel(rAttribute.Get())
 {
-	SetObjectClass(_T("nuiLabelAttribute"));
+	SetObjectClass("nuiLabelAttribute");
 
 	mSink.Connect(rAttribute.GetChangedSignal(), nuiMakeDelegate(this, &nuiLabelAttribute::OnAttributeChanged));
 }

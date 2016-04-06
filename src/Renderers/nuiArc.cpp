@@ -50,19 +50,19 @@ nuiArc::nuiArc(float cX, float cY, float rX, float rY, float Theta1, float Theta
 
 nuiArc::nuiArc(nuiXMLNode* pNode)
 {
-  mStartVertex.Elt[0] = nuiGetVal(pNode, _T("X0"), 0.0f);
-  mStartVertex.Elt[1] = nuiGetVal(pNode, _T("Y0"), 0.0f);
-  mStartVertex.Elt[2] = nuiGetVal(pNode, _T("Z0"), 0.0f);
+  mStartVertex.Elt[0] = nuiGetVal(pNode, "X0", 0.0f);
+  mStartVertex.Elt[1] = nuiGetVal(pNode, "Y0", 0.0f);
+  mStartVertex.Elt[2] = nuiGetVal(pNode, "Z0", 0.0f);
                                                   
-  mStopVertex.Elt[0] = nuiGetVal(pNode, _T("X1"), 0.0f);
-  mStopVertex.Elt[1] = nuiGetVal(pNode, _T("Y1"), 0.0f);
-  mStopVertex.Elt[2] = nuiGetVal(pNode, _T("Z1"), 0.0f);
+  mStopVertex.Elt[0] = nuiGetVal(pNode, "X1", 0.0f);
+  mStopVertex.Elt[1] = nuiGetVal(pNode, "Y1", 0.0f);
+  mStopVertex.Elt[2] = nuiGetVal(pNode, "Z1", 0.0f);
 
-  mXRadius = nuiGetVal(pNode, _T("XRadius"), 0.0f);
-  mYRadius = nuiGetVal(pNode, _T("YRadius"), 0.0f);
-  mAngle = nuiGetVal(pNode, _T("Angle"), 0.0f);
-  mLargeArc = nuiGetBool(pNode, _T("LargeArc"), false);
-  mSweep = nuiGetBool(pNode, _T("Sweep"), false);
+  mXRadius = nuiGetVal(pNode, "XRadius", 0.0f);
+  mYRadius = nuiGetVal(pNode, "YRadius", 0.0f);
+  mAngle = nuiGetVal(pNode, "Angle", 0.0f);
+  mLargeArc = nuiGetBool(pNode, "LargeArc", false);
+  mSweep = nuiGetBool(pNode, "Sweep", false);
 }
 
 nuiArc::~nuiArc()
@@ -73,23 +73,23 @@ nuiXMLNode* nuiArc::Serialize(nuiXMLNode* pParentNode) const
 {
   nuiXMLNode* pNode = NULL;
   if (pParentNode)
-    pNode = new nuiXMLNode(_T("nuiArc"),pParentNode);
+    pNode = new nuiXMLNode("nuiArc",pParentNode);
   else
-    pNode = new nuiXML(_T("nuiArc"));
+    pNode = new nuiXML("nuiArc");
 
-  pNode->SetAttribute(_T("X0"),mStartVertex.Elt[0]);
-  pNode->SetAttribute(_T("Y0"),mStartVertex.Elt[1]);
-  if (mStartVertex.Elt[2] != 0.0f) pNode->SetAttribute(_T("Z0"), mStartVertex.Elt[2]);
+  pNode->SetAttribute("X0",mStartVertex.Elt[0]);
+  pNode->SetAttribute("Y0",mStartVertex.Elt[1]);
+  if (mStartVertex.Elt[2] != 0.0f) pNode->SetAttribute("Z0", mStartVertex.Elt[2]);
 
-  pNode->SetAttribute(_T("X1"),mStopVertex.Elt[0]);
-  pNode->SetAttribute(_T("Y1"),mStopVertex.Elt[1]);
-  if (mStopVertex.Elt[2] != 0.0f) pNode->SetAttribute(_T("Z1"), mStopVertex.Elt[2]);
+  pNode->SetAttribute("X1",mStopVertex.Elt[0]);
+  pNode->SetAttribute("Y1",mStopVertex.Elt[1]);
+  if (mStopVertex.Elt[2] != 0.0f) pNode->SetAttribute("Z1", mStopVertex.Elt[2]);
 
-  if (mXRadius != 0.0f) pNode->SetAttribute(_T("XRadius"), mXRadius);
-  if (mYRadius != 0.0f) pNode->SetAttribute(_T("YRadius"), mYRadius);
-  if (mAngle != 0.0f) pNode->SetAttribute(_T("Angle"), mAngle);
-  if (mLargeArc) pNode->SetAttribute(_T("LargeArc"), mLargeArc);
-  if (mSweep) pNode->SetAttribute(_T("Sweep"), mSweep);
+  if (mXRadius != 0.0f) pNode->SetAttribute("XRadius", mXRadius);
+  if (mYRadius != 0.0f) pNode->SetAttribute("YRadius", mYRadius);
+  if (mAngle != 0.0f) pNode->SetAttribute("Angle", mAngle);
+  if (mLargeArc) pNode->SetAttribute("LargeArc", mLargeArc);
+  if (mSweep) pNode->SetAttribute("Sweep", mSweep);
 
   return pNode;
 }

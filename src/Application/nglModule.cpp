@@ -9,9 +9,9 @@
 
 const nglChar* gpModuleErrorTable[] =
 {
-/*  0 */ _T("No error"),
-/*  1 */ _T("Invalid path"),
-/*  2 */ _T("File not found or corrupted"),
+/*  0 */ "No error",
+/*  1 */ "Invalid path",
+/*  2 */ "File not found or corrupted",
          NULL
 };
 

@@ -43,7 +43,7 @@ class nuiHTTPRequest : public nuiHTTPMessage
 {
 public:
   typedef nuiFastDelegate2<nuiHTTPRequest*, nuiHTTPResponse*> Delegate;
-  nuiHTTPRequest(const nglString& rUrl, const nglString& rMethod = _T("GET"));
+  nuiHTTPRequest(const nglString& rUrl, const nglString& rMethod = "GET");
   virtual ~nuiHTTPRequest();
 
   nuiHTTPResponse* SendRequest();

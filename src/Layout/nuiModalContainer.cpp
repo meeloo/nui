@@ -13,7 +13,7 @@ nuiModalContainer::nuiModalContainer(nuiWidgetPtr pParent)
   mInModalState(false),
   mModalEventSink(this)
 {
-  SetObjectClass(_T("nuiModalContainer"));
+  SetObjectClass("nuiModalContainer");
   InitParent(pParent);
 }
 
@@ -82,8 +82,8 @@ bool nuiModalContainer::DispatchMouseClick(const nglMouseInfo& rInfo)
     nuiSize Y = rInfo.Y;
     GlobalToLocal(X,Y);
     nglMouseInfo info(rInfo);
-    info.X = X;
-    info.Y = Y;
+    info.X = ToNearest(X);
+    info.Y = ToNearest(Y);
     if (PreClicked(rInfo))
     {
       Grab();
@@ -291,26 +291,26 @@ void nuiMessageBox(nuiWidget* pParent, const nglString& rTitle, const nglString&
   nuiModalContainer* pModal = new nuiModalContainer(pParent);
   
   nuiPane* pPane = new nuiPane();
-  pPane->SetObjectName(_T("nuiMessageBox"));
+  pPane->SetObjectName("nuiMessageBox");
   pModal->AddChild(pPane);
   
   nuiVBox* pVBox = new nuiVBox();
   pPane->AddChild(pVBox);
 
   nuiLabel* pTitle = new nuiLabel(rTitle);
-  pTitle->SetObjectName(_T("nuiMessageBox_Title"));
+  pTitle->SetObjectName("nuiMessageBox_Title");
   pVBox->AddCell(pTitle);
   
   nuiLabel* pMessage = new nuiLabel(rMessage);
-  pMessage->SetObjectName(_T("nuiMessageBox_Message"));
+  pMessage->SetObjectName("nuiMessageBox_Message");
   pVBox->AddCell(pMessage);
   
   nuiButton* pButton = new nuiButton();
-  pButton->SetObjectName(_T("nuiMessageBox_Button"));
+  pButton->SetObjectName("nuiMessageBox_Button");
   pVBox->AddCell(pButton);
   
-  nuiLabel* pButtonLabel = new nuiLabel(_T("OK"));
-  pButtonLabel->SetObjectName(_T("nuiMessageBox_ButtonLabel"));
+  nuiLabel* pButtonLabel = new nuiLabel("OK");
+  pButtonLabel->SetObjectName("nuiMessageBox_ButtonLabel");
   pButton->AddChild(pButtonLabel);
   
   nuiEventSink<nuiWidget> sink(pModal);

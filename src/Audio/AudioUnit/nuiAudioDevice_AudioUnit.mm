@@ -88,8 +88,8 @@ nuiAudioDevice_AudioUnit::nuiAudioDevice_AudioUnit()
   EnumSampleRates();
   EnumBufferSizes();
   if (HasAudioInput())
-    mInputChannels.push_back(_T("Input"));
-  mOutputChannels.push_back(_T("Output"));
+    mInputChannels.push_back("Input");
+  mOutputChannels.push_back("Output");
 }
 
 nuiAudioDevice_AudioUnit::~nuiAudioDevice_AudioUnit()
@@ -141,7 +141,7 @@ OSStatus AudioUnitInputCallback(void* inRefCon,
 
 void nuiAudioDevice_AudioUnit::Process(uint uNumFrames, AudioBufferList* ioData)
 {
-  //NGL_OUT(_T("nuiAudioDevice_AudioUnit::Process uNumFrames %d   (%d) %d %d\n"),uNumFrames, ioData->mNumberBuffers, ioData->mBuffers[0].mNumberChannels, ioData->mBuffers[1].mNumberChannels );
+  //NGL_OUT("nuiAudioDevice_AudioUnit::Process uNumFrames %d   (%d) %d %d\n",uNumFrames, ioData->mNumberBuffers, ioData->mBuffers[0].mNumberChannels, ioData->mBuffers[1].mNumberChannels );
   
   mAudioProcessFn(mInputBuffers, mOutputBuffers, uNumFrames);
 
@@ -215,7 +215,7 @@ void nuiAudioDevice_AudioUnit::Process(uint uNumFrames, AudioBufferList* ioData)
 
 void nuiAudioDevice_AudioUnit::ProcessInput(AudioUnitRenderActionFlags* ioActionFlags, const AudioTimeStamp* inTimeStamp, UInt32 inBusNumber, uint inNumberFrames, AudioBufferList* ioData)
 {
-  //NGL_OUT(_T("nuiAudioDevice_AudioUnit::ProcessInput uNumFrames %d    %d\n"),uNumFrames, ioData->mBuffers[0].mNumberChannels);
+  //NGL_OUT("nuiAudioDevice_AudioUnit::ProcessInput uNumFrames %d    %d\n",uNumFrames, ioData->mBuffers[0].mNumberChannels);
   
   //mAudioProcessFn(mInputBuffers, mOutputBuffers, uNumFrames);
   ioData = mpIData;
@@ -643,7 +643,7 @@ nglString nuiAudioDevice_AudioUnit::GetChannelName(bool IsInput, int32 index) co
 //class nuiAudioDeviceAPI_AudioUnit : public nuiAudioDeviceAPI
 nuiAudioDeviceAPI_AudioUnit::nuiAudioDeviceAPI_AudioUnit()
 {
-  mName = _T("AudioUnit");
+  mName = "AudioUnit";
 	// Initialize our session
 	OSStatus err = AudioSessionInitialize(NULL, NULL, interruptionListener, NULL);
   
@@ -677,7 +677,7 @@ nuiAudioDevice* nuiAudioDeviceAPI_AudioUnit::GetDevice(const nglString& rDeviceN
 nglString nuiAudioDeviceAPI_AudioUnit::GetDeviceName(int32 index) const
 {
   if (index == 0)
-    return nglString(_T("Output"));
+    return nglString("Output");
   return nglString::Null;
 }
 

@@ -38,7 +38,7 @@ using namespace std;
 
 const nglChar* gpKernelErrorTable[] =
 {
-/*  0 */ _T("No error"),
+/*  0 */ "No error",
   NULL
 };
 
@@ -84,7 +84,7 @@ nglKernel::~nglKernel()
 void nglKernel::GetClipboard(nglString& rClipBoard)
 {
   // #FIXME
-  rClipBoard = _T("*clipboard code not implemented*");
+  rClipBoard = "*clipboard code not implemented*";
 }
 
 bool nglKernel::SetClipboard(const nglString& rString)

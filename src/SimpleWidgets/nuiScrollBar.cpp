@@ -18,21 +18,21 @@ nuiScrollBar::nuiScrollBar(nuiOrientation orientation, const nuiRange& rRange, n
     mTimer(.2),
     mScrollBarSink(this)
 {
-  if (SetObjectClass(_T("nuiScrollBar")))
+  if (SetObjectClass("nuiScrollBar"))
   {
-    AddAttribute(new nuiAttribute<nuiOrientation>(nglString(_T("Orientation")), nuiUnitOrientation,
+    AddAttribute(new nuiAttribute<nuiOrientation>(nglString("Orientation"), nuiUnitOrientation,
                                            nuiMakeDelegate(this, &nuiScrollBar::GetOrientation),
                                            nuiMakeDelegate(this, &nuiScrollBar::SetOrientation)));
 
-    AddAttribute(new nuiAttribute<nuiSize>(nglString(_T("ThumbMinSize")), nuiUnitNone,
+    AddAttribute(new nuiAttribute<nuiSize>(nglString("ThumbMinSize"), nuiUnitNone,
                                            nuiMakeDelegate(this, &nuiScrollBar::GetThumbMinSize),
                                            nuiMakeDelegate(this, &nuiScrollBar::SetThumbMinSize)));
     
-    AddAttribute(new nuiAttribute<const nglString&>(nglString(_T("ForegroundDecoration")), nuiUnitName,
+    AddAttribute(new nuiAttribute<const nglString&>(nglString("ForegroundDecoration"), nuiUnitName,
                                                     nuiMakeDelegate(this, &nuiScrollBar::GetForegroundDecoName),
                                                     nuiMakeDelegate(this, &nuiScrollBar::SetForegroundDecoName)));
     
-    AddAttribute(new nuiAttribute<const nglString&>(nglString(_T("BackgroundDecoration")), nuiUnitName,
+    AddAttribute(new nuiAttribute<const nglString&>(nglString("BackgroundDecoration"), nuiUnitName,
                                                     nuiMakeDelegate(this, &nuiScrollBar::GetBackgroundDecoName),
                                                     nuiMakeDelegate(this, &nuiScrollBar::SetBackgroundDecoName)));
   }
@@ -65,13 +65,13 @@ nuiScrollBar::nuiScrollBar(nuiOrientation orientation, const nuiRange& rRange, n
   
   if (mOrientation == nuiVertical)
   {
-    mpBackgroundDeco = nuiDecoration::Get(_T("nuiDefaultDecorationScrollBarVerticalBkg"));
-    mpForegroundDeco = nuiDecoration::Get(_T("nuiDefaultDecorationScrollBarVerticalHdl"));
+    mpBackgroundDeco = nuiDecoration::Get("nuiDefaultDecorationScrollBarVerticalBkg");
+    mpForegroundDeco = nuiDecoration::Get("nuiDefaultDecorationScrollBarVerticalHdl");
   }
   else
   {
-    mpBackgroundDeco = nuiDecoration::Get(_T("nuiDefaultDecorationScrollBarHorizontalBkg"));
-    mpForegroundDeco = nuiDecoration::Get(_T("nuiDefaultDecorationScrollBarHorizontalHdl"));
+    mpBackgroundDeco = nuiDecoration::Get("nuiDefaultDecorationScrollBarHorizontalBkg");
+    mpForegroundDeco = nuiDecoration::Get("nuiDefaultDecorationScrollBarHorizontalHdl");
   }
 
   NUI_ADD_EVENT(ValueChanged);
@@ -214,7 +214,7 @@ bool nuiScrollBar::MouseClicked  (const nglMouseInfo& rInfo)
   mClickX = rInfo.X;
   mClickY = rInfo.Y;
 
-  //NGL_OUT(_T("nuiScrollBar::MouseClicked\n"));
+  //NGL_OUT("nuiScrollBar::MouseClicked\n");
   if (rInfo.Buttons & nglMouseInfo::ButtonLeft)
   {
     mClicked = true;
@@ -312,7 +312,7 @@ bool nuiScrollBar::MouseUnclicked  (const nglMouseInfo& rInfo)
 
 bool nuiScrollBar::MouseMoved  (const nglMouseInfo& rInfo)
 {
-  //NGL_OUT(_T("nuiScrollBar::MouseMoved\n"));
+  //NGL_OUT("nuiScrollBar::MouseMoved\n");
   NGL_ASSERT(mpRange);
 
   if (mThumbClicked)

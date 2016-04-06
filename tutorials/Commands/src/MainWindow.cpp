@@ -26,7 +26,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
   SetDebugMode(true);
 #endif
   
-  LoadCSS(_T("rsrc:/css/main.css"));
+  LoadCSS("rsrc:/css/main.css");
 }
 
 MainWindow::~MainWindow()
@@ -42,12 +42,12 @@ void MainWindow::OnCreation()
   pGrid->SetColumnExpand(1, nuiExpandShrinkAndGrow);
   AddChild(pGrid);
   
-  nuiLabel* pLabel = new nuiLabel(_T("Console"));
+  nuiLabel* pLabel = new nuiLabel("Console");
   pLabel->SetPosition(nuiCenter);
   pLabel->SetBorder(10,10);
   pGrid->SetCell(0,0, pLabel);
   
-  pLabel = new nuiLabel(_T("CommandManager"));
+  pLabel = new nuiLabel("CommandManager");
   pLabel->SetPosition(nuiCenter);
   pLabel->SetBorder(10,10);
   pGrid->SetCell(1,0, pLabel);
@@ -64,7 +64,7 @@ void MainWindow::OnCreation()
   nuiScrollView* pScroll = new nuiScrollView(true, true);
   pPane->AddChild(pScroll);
   
-  mpConsole = new nuiLabel(_T("Welcome to the 'Commands' tutorial.\nYou can play with the menus.\n"));
+  mpConsole = new nuiLabel("Welcome to the 'Commands' tutorial.\nYou can play with the menus.\n");
   mpConsole->SetPosition(nuiTopLeft);
   pScroll->AddChild(mpConsole);
 
@@ -98,8 +98,8 @@ void MainWindow::AddMessage(const nglChar* pFormat, ...)
   buf.Formatv(pFormat, args);
   va_end (args);
 
-  mpConsole->SetText(mpConsole->GetText() + nglString(_T("\n\n")) + buf);
-  NGL_OUT(_T("%ls\n"), buf.GetChars());
+  mpConsole->SetText(mpConsole->GetText() + nglString("\n\n") + buf);
+  NGL_OUT("%ls\n", buf.GetChars());
 }
 
 void MainWindow::UpdateCommandManagerInfo()
@@ -122,7 +122,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%ls'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
   
@@ -136,7 +136,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     return true;
   }
   
-  NGL_OUT(_T("%ls\n"), pCSS->GetErrorString().GetChars());
+  NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
   
   delete pCSS;
   return false;

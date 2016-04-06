@@ -65,7 +65,7 @@ void ToolPaneAttributes::AddAttributes(const std::list<nuiAttribBase>& rAttribut
 		nuiAttribBase attbase = *it;
     
     //LBDEBUG
-    NGL_OUT(_T("ToolPaneAttributes::AddAttributes : attribute '%ls'\n"), attbase.GetName().GetChars());
+    NGL_OUT("ToolPaneAttributes::AddAttributes : attribute '%ls'\n", attbase.GetName().GetChars());
 		
     nuiAttributeEditor* ed = attbase.GetEditor();
     if (ed)
@@ -74,7 +74,7 @@ void ToolPaneAttributes::AddAttributes(const std::list<nuiAttribBase>& rAttribut
       mpVBox->AddCell(pEditorBox);
      
       nglString label = attbase.GetName();
-      label.Append(_T(":"));
+      label.Append(":");
       pEditorBox->AddCell(new nuiLabel(label));
       pEditorBox->AddCell(ed);
       

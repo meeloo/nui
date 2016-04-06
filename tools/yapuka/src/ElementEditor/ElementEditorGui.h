@@ -11,7 +11,7 @@
 
 #include "ElementDesc.h"
 
-class ElementEditorGui : public nuiSimpleContainer
+class ElementEditorGui : public nuiWidget
 {
 public:
   ElementEditorGui();
@@ -49,7 +49,7 @@ private:
   typedef std::list<ElementDesc*> ElementDescList;
   ElementDescList mElements;
   
-  nuiSimpleContainer* mpEditorContainer;
+  nuiWidget* mpEditorContainer;
   
   
   nuiEventSink<ElementEditorGui> mEventSink;

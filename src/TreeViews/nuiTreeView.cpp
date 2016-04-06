@@ -15,7 +15,7 @@
 nuiTreeNode::nuiTreeNode(nuiWidgetPtr pElement, bool Opened, bool Selected, bool DrawTreeHandle, bool alwaysDisplayTreeHandle)
   : nuiTree<nuiWidget>(pElement, true)
 {
-  SetObjectClass(_T("nuiTreeNode"));
+  SetObjectClass("nuiTreeNode");
   mOpened = Opened;
   mSelected = Selected;
   mDrawTreeHandle = DrawTreeHandle;
@@ -33,7 +33,7 @@ nuiTreeNode::nuiTreeNode(nuiWidgetPtr pElement, bool Opened, bool Selected, bool
 nuiTreeNode::nuiTreeNode(const nglString& rLabelName, bool Opened, bool Selected, bool DrawTreeHandle, bool alwaysDisplayTreeHandle)
   : nuiTree<nuiWidget>(NULL, true)
 {
-  SetObjectClass(_T("nuiTreeNode"));
+  SetObjectClass("nuiTreeNode");
 
   mpElement = new nuiLabel(rLabelName);
 
@@ -54,7 +54,7 @@ nuiTreeNode::nuiTreeNode(const nglString& rLabelName, bool Opened, bool Selected
 
 nuiTreeNode::~nuiTreeNode()
 {
-  //NGL_OUT(_T("nuiTreeNode::~nuiTreeNode() [0x%x]\n"), this);
+  //NGL_OUT("nuiTreeNode::~nuiTreeNode() [0x%x]\n", this);
 }
 
 void nuiTreeNode::SetElement(nuiWidget* pNewElement)
@@ -293,7 +293,7 @@ nuiTreeView::nuiTreeView(nuiTreeNodePtr pTree, bool displayRoot)
   }
 
 
-  AddEvent(_T("TreeViewClicked"), Clicked);
+  AddEvent("TreeViewClicked", Clicked);
   NUI_ADD_EVENT(Activated);
   NUI_ADD_EVENT(SelectionChanged);
 }
@@ -307,27 +307,27 @@ nuiTreeView::~nuiTreeView()
 void nuiTreeView::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nuiColor&>
-               (nglString(_T("HandleColor")), nuiUnitNone,
+               (nglString("HandleColor"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiTreeView::GetHandleColor), 
                 nuiMakeDelegate(this, &nuiTreeView::SetHandleColor)));    
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("DisplayRoot")), nuiUnitNone,
+               (nglString("DisplayRoot"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiTreeView::GetDisplayRoot),
                 nuiMakeDelegate(this, &nuiTreeView::SetDisplayRoot)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("MultiSelectable")), nuiUnitNone,
+               (nglString("MultiSelectable"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiTreeView::IsMultiSelectable),
                 nuiMakeDelegate(this, &nuiTreeView::SetMultiSelectable)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("DeSelectable")), nuiUnitNone,
+               (nglString("DeSelectable"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiTreeView::IsDeSelectable),
                 nuiMakeDelegate(this, &nuiTreeView::SetDeSelectable)));
 
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("MultiSelecting")), nuiUnitNone,
+               (nglString("MultiSelecting"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiTreeView::IsMultiSelecting)));
 }
 
@@ -569,11 +569,11 @@ void nuiTreeView::OnTreeChildAdded(const nuiEvent& rEvent)
 
   if (pNode)
   {
-    //NGL_OUT(_T("Adding TreeNode 0x%x\n"), pNode);
+    //NGL_OUT("Adding TreeNode 0x%x\n", pNode);
     nuiWidgetPtr pWidget = pNode->GetElement();
     if (pWidget)
     {
-      //NGL_OUT(_T("Adding TreeNode widget 0x%x\n"), pWidget);
+      //NGL_OUT("Adding TreeNode widget 0x%x\n", pWidget);
       AddChild(pWidget);
     }
     

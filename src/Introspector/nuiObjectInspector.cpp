@@ -11,7 +11,7 @@
 nuiObjectInspector::nuiObjectInspector()
 : mSink(this)
 {
-  SetObjectClass(_T("nuiObjectInspector"));
+  SetObjectClass("nuiObjectInspector");
   
   // decoration
   nuiDecoration* pDeco = nuiDecoration::Get(INTROSPECTOR_DECO_CLIENT_BKG);
@@ -59,8 +59,8 @@ void nuiObjectInspector::UpdateObjects()
     nglString index;
     index.SetCInt(i);
     nuiLabel* pLabel = new nuiLabel(name);
-    pLabel->SetProperty(_T("Object"), name);
-    pLabel->SetProperty(_T("Index"), index);
+    pLabel->SetProperty("Object", name);
+    pLabel->SetProperty("Index", index);
     pList->AddChild(pLabel);
   }
   
@@ -78,13 +78,13 @@ void nuiObjectInspector::OnObjectSelection(const nuiEvent& rEvent)
 {
   nuiList* pList = (nuiList*)rEvent.mpUser;
   nuiWidget* pW = pList->GetSelected();
-  nglString info(_T("no info"));
+  nglString info("no info");
   nglString name;
   int32 index = -1;
   if (pW)
   {
-    name = pW->GetProperty(_T("Object"));
-    index = pW->GetProperty(_T("Index")).GetCUInt();
+    name = pW->GetProperty("Object");
+    index = pW->GetProperty("Index").GetCUInt();
   }
   
   mSlot.DisconnectAll();

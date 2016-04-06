@@ -45,10 +45,10 @@ void nuiSocket::DumpError(const nuiSocket* pSocket, int err, const char* msg, ..
     m.Formatv(msg, args);
     va_end(args);
 
-    NGL_OUT(_T("[%s] Socket Error (%p %d): %s\n"), m.GetChars(), pSocket, pSocket?pSocket->GetSocket():0, error.GetChars());
+    NGL_OUT("[%s] Socket Error (%p %d): %s\n", m.GetChars(), pSocket, pSocket?pSocket->GetSocket():0, error.GetChars());
   }
   else
-    NGL_OUT(_T("Socket Error (%p, %d): %s\n"), pSocket, pSocket?pSocket->GetSocket():0, error.GetChars());
+    NGL_OUT("Socket Error (%p, %d): %s\n", pSocket, pSocket?pSocket->GetSocket():0, error.GetChars());
 }
 
 void nuiSocket::DumpError(const nuiSocket* pSocket, int err)
@@ -381,8 +381,8 @@ void nuiSocketPool::Add(nuiSocket* pSocket, TriggerMode Mode)
   ev.ident = pSocket->GetSocket();
   ev.filter = EVFILT_READ;
   ev.flags = EV_ADD | EV_ENABLE;
-//  if (Mode != eStateChange)
-//    ev.flags |= EV_CLEAR;
+  if (Mode == eStateChange)
+    ev.flags |= EV_CLEAR;
   ev.udata = pSocket;
   int res = kevent(mQueue, &ev, 1, NULL, 0, 0);
   nuiSocket::DumpError(NULL, res, "nuiSocketPool::Add 1");
@@ -681,6 +681,13 @@ int nuiSocketPool::DispatchEvents(int timeout_millisec)
 
 void nuiSocketPool::HandleIdleSockets()
 {
+  double now = nglTime();
+  double diff = now - mLastIdlePurge;
+  if (diff < 1)
+    return;
+
+  mLastIdlePurge = now;
+
   std::set<nuiSocket*> sockets;
   {
     nglCriticalSectionGuard g(mCS);

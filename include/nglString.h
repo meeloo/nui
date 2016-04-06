@@ -39,10 +39,10 @@ enum nglTextFormat
 /* Handy macros
 */
 #ifndef YESNO
-#define PLURAL(x)    (((x) > 1) ? _T("s") : _T(""))
-#define YESNO(x)     ((x) ? _T("yes") : _T("no"))
-#define TRUEFALSE(x) ((x) ? _T("true") : _T("false"))
-#define ONOFF(x)     ((x) ? _T("on") : _T("off"))
+#define PLURAL(x)    (((x) > 1) ? "s" : _T(""))
+#define YESNO(x)     ((x) ? "yes" : "no")
+#define TRUEFALSE(x) ((x) ? "true" : "false")
+#define ONOFF(x)     ((x) ? "on" : "off")
 
 #endif
 
@@ -159,17 +159,17 @@ public:
 	/** @name Life cycle */
 	//@{
 	nglString();                                 ///< Creates a null string (contains no data).
-	explicit nglString(nglUChar Ch);                 ///< Creates a string with a single char. If \p nglChar is zero, the string is empty
   nglString(const nglChar* pSource);
-	nglString(const nglString& rSource);            ///< Copy constructor
+  nglString(const nglString& rSource);            ///< Copy constructor
+  nglString(nglString&& rSource);            ///< Move constructor
 	nglString(const std::string& rSource, nglTextEncoding Encoding = eEncodingNative);       ///< Creates a string from a std::string
 
-	nglString(const nglChar* pSource, nglTextEncoding Encoding);
+	explicit nglString(const nglChar* pSource, nglTextEncoding Encoding);
 	/*!<
 	Creates a string, importing from the null-terminated \a pSource byte array,
 	using the given \a Encoding. See Import() for more info.
 	*/
-	nglString(const nglChar* pSource, int32 Length, nglTextEncoding Encoding = eEncodingNative);
+	explicit nglString(const nglChar* pSource, int32 Length, nglTextEncoding Encoding = eEncodingNative);
 	/*!<
 	Creates a string, importing no more than \p Length chars from the
 	\p pSource string, using the given \p Encoding. See Import() for more info.
@@ -440,7 +440,7 @@ public:
 	POSIX or ISOC99 format tags if you want to keep your program portable.
 
 	<b>Important</b> : the %%s tag refers to a Unicode string on \e all platforms
-	(ie. _T("hello") or mystring.GetChars()).
+	(ie. "hello" or mystring.GetChars()).
 	*/
 	nglString& Formatv(const nglString& rFormat, va_list Args);
 	nglString& Formatv(const nglChar* pFormat, va_list Args);
@@ -467,7 +467,8 @@ public:
 	nglString& Add(float s, int32 precision = 8, nglFloatFormatFlag flags = Simple);
 	nglString& Add(double s, int32 precision = 8, nglFloatFormatFlag flags = Simple);
 	nglString& Add(const nglString& rString, int32 count = 1);
-  nglString& Add(const nglChar* pString, int32 count = 1);
+  nglString& Add(const nglChar* pString, int32 count);
+  nglString& Add(const nglChar* pString);
 	nglString& Add(void* pVoidPointer);
 	nglString& AddNewLine();
 

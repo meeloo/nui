@@ -294,7 +294,7 @@ void nglPathVolume::UpdateVolumes(std::vector<nglPathVolume>& rVolumes)
     
     nglPathVolume v;
     v.mPath = nglPath([[url path] UTF8String]);
-    if (v.mPath == nglPath(_T("/"))) // Skip '/' ...
+    if (v.mPath == nglPath("/")) // Skip '/' ...
       continue;
     
     // Fill type
@@ -440,7 +440,7 @@ nglString nglPath::GetMimeType() const
 
       uint i;
       std::vector<nglString> tokens;
-      if (line.Tokenize(tokens, _T(" \t\n")) < 2)
+      if (line.Tokenize(tokens, " \t\n") < 2)
         continue;
 
       for (i = 1; i < tokens.size(); i++)
@@ -459,10 +459,10 @@ static const nglChar* _intrank(int x)
 {
   switch (x)
   {
-    case 1 : return _T("st");
-    case 2 : return _T("nd");
-    case 3 : return _T("rd");
-    default: return _T("th");
+    case 1 : return "st";
+    case 2 : return "nd";
+    case 3 : return "rd";
+    default: return "th";
   }
 }
 
@@ -473,7 +473,7 @@ bool nglPath_IsRO(nglString& rOptions)
 
   rOptions.Tokenize(tokens, _T(','));
   for (i = tokens.begin(); i != tokens.end(); i++)
-    if ((*i) == _T("ro")) return true;
+    if ((*i) == "ro") return true;
 
   return false;
 }
@@ -488,76 +488,76 @@ bool nglPath_SetVolume(nglPathVolume& rVolume,
   rVolume.mFlags = nglPathVolume::Offline;
   rVolume.mType  = nglPathVolume::eTypeUnknown;
 
-  if ((rMPoint == _T("none")) ||
-      (rMPoint == _T("/")) ||
-      (rMPoint == _T("/boot")) ||
-      (rMPoint == _T("/usr")) ||
-      (rMPoint == _T("/usr/local")) ||
-      (rMPoint == _T("/var")) ||
-      (rMPoint == _T("/tmp")) ||
-      (rMPoint == _T("/home")))
+  if ((rMPoint == "none") ||
+      (rMPoint == "/") ||
+      (rMPoint == "/boot") ||
+      (rMPoint == "/usr") ||
+      (rMPoint == "/usr/local") ||
+      (rMPoint == "/var") ||
+      (rMPoint == "/tmp") ||
+      (rMPoint == "/home"))
   {
     rVolume.mFlags |= nglPathVolume::System;
   }
 
-  if (!rDevice.Compare(_T("/dev/hd"), 0, 7))
+  if (!rDevice.Compare("/dev/hd", 0, 7))
   {
     int controler = (rDevice[7] - 'a') / 2 + 1;
     int channel = (rDevice[7] - 'a') % 2;
     int partition = rDevice[8] - '0';
-    rVolume.mComment.Format(_T("%s on %d%s partition (%s on %d%s IDE controler)"),
+    rVolume.mComment.Format("%s on %d%s partition (%s on %d%s IDE controler)",
       rFSType.GetChars(),
       partition, _intrank(partition),
-      channel ? _T("slave") : _T("master"),
+      channel ? "slave" : "master",
       controler, _intrank(controler));
   }
   else
-  if (!rDevice.Compare(_T("/dev/sd"), 0, 7))
+  if (!rDevice.Compare("/dev/sd", 0, 7))
   {
     int dev = rDevice[7] - 'a';
     int partition = rDevice[8] - '0';
-    rVolume.mComment.Format(_T("%s on %d%s partition (%d%s SCSI device)"),
+    rVolume.mComment.Format("%s on %d%s partition (%d%s SCSI device)",
       rFSType.GetChars(),
       partition, _intrank(partition),
       dev, _intrank(dev));
     rVolume.mType = nglPathVolume::eTypeHD;
   }
   else
-  if ((!rDevice.Compare(_T("/dev/sr"), 0, 7)) ||
-      (!rDevice.Compare(_T("/dev/sg"), 0, 7)))
+  if ((!rDevice.Compare("/dev/sr", 0, 7)) ||
+      (!rDevice.Compare("/dev/sg", 0, 7)))
   {
     int dev = rDevice[7] - '0' + 1;
-    rVolume.mComment.Format(_T("%s (%d%s SCSI device)"),
+    rVolume.mComment.Format("%s (%d%s SCSI device)",
       rFSType.GetChars(),
       dev, _intrank(dev));
       rVolume.mFlags |= nglPathVolume::Removable;
       rVolume.mType = nglPathVolume::eTypeCD;
   }
   else
-  if (!rDevice.Compare(_T("/dev/fd"), 0, 7))
+  if (!rDevice.Compare("/dev/fd", 0, 7))
   {
     int dev = rDevice[7] - '0' + 1;
-    rVolume.mComment.Format(_T("%d%s floppy"), dev, _intrank(dev));
+    rVolume.mComment.Format("%d%s floppy", dev, _intrank(dev));
     rVolume.mFlags |= nglPathVolume::Removable;
     rVolume.mType = nglPathVolume::eTypeFloppy;
   }
 
-  if (rFSType == _T("smbfs"))
+  if (rFSType == "smbfs")
   {
-    rVolume.mComment.Format(_T("%s (SMB)"), rDevice.GetChars());
+    rVolume.mComment.Format("%s (SMB)", rDevice.GetChars());
     rVolume.mType = nglPathVolume::eTypeNetwork;
   }
   else
-  if (rFSType == _T("nfs"))
+  if (rFSType == "nfs")
   {
-    rVolume.mComment.Format(_T("%s (NFS)"), rDevice.GetChars());
+    rVolume.mComment.Format("%s (NFS)", rDevice.GetChars());
     rVolume.mType = nglPathVolume::eTypeNetwork;
   }
   else
-  if ((rFSType == _T("proc")) ||
-      (rFSType == _T("devfs")) ||
-      (rFSType == _T("usbdevfs")) ||
-      (rFSType == _T("devpts")))
+  if ((rFSType == "proc") ||
+      (rFSType == "devfs") ||
+      (rFSType == "usbdevfs") ||
+      (rFSType == "devpts"))
   {
     rVolume.mComment =  rFSType;
     rVolume.mFlags |= nglPathVolume::System;
@@ -592,7 +592,7 @@ uint64 nglPath::GetVolumes(std::vector<nglPathVolume>& rVolumes, uint64 Flags)
     std::vector<nglString> tokens;
     nglPathVolume vol;
 
-    line.Tokenize(tokens, _T(" \t"));
+    line.Tokenize(tokens, " \t");
     if (tokens.size() < 4)
     	continue;
 
@@ -614,7 +614,7 @@ uint64 nglPath::GetVolumes(std::vector<nglPathVolume>& rVolumes, uint64 Flags)
     nglPathVolume newvol;
     nglPathVolume* vol;
 
-    line.Tokenize(tokens, _T(" \t"));
+    line.Tokenize(tokens, " \t");
 
     for (i = rVolumes.begin(); (i != rVolumes.end()) && ((*i).mPath != tokens[1]); i++);
 

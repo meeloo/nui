@@ -24,7 +24,7 @@ nuiColumnTreeView::nuiColumnTreeView(nuiTreeNodePtr pTree)
   mColumnTreeViewSink(this),
   mKey(nglString::Empty)
 {
-  SetObjectClass(_T("nuiColumnTreeView"));
+  SetObjectClass("nuiColumnTreeView");
   mMinColumnSize = NUI_COLUMNTREEVIEW_MINCOLSIZE;
   SetWantKeyboardFocus(true);
 
@@ -792,17 +792,17 @@ void nuiColumnTreeView::CreateScrollBars()
 {
   uint32 Depth = GetDepth();
   
-  //NGL_OUT(_T("CreateScrollBars for %d columns (%d)\n"), Depth, mpScrollBars.size());
+  //NGL_OUT("CreateScrollBars for %d columns (%d)\n", Depth, mpScrollBars.size());
   
   if (mpScrollBars.size() == Depth)
   {
-    //NGL_OUT(_T("Done (no change)\n"));
+    //NGL_OUT("Done (no change)\n");
     return;
   }
 
   if (mpScrollBars.size() < Depth)
   {
-    //NGL_OUT(_T("Need %d more\n"), Depth - mpScrollBars.size());
+    //NGL_OUT("Need %d more\n", Depth - mpScrollBars.size());
     // Allocate new scrollbars
     while (mpScrollBars.size() < Depth)
     {
@@ -861,7 +861,7 @@ void nuiColumnTreeView::CreateScrollBars()
 
   if (mpScrollBars.size() > Depth)
   {
-    //NGL_OUT(_T("Need %d less\n"), mpScrollBars.size() - Depth);
+    //NGL_OUT("Need %d less\n", mpScrollBars.size() - Depth);
     // Delete redundant Scrollbars:
     for (uint i = Depth; i < mpScrollBars.size(); i++)
     {

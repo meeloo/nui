@@ -288,9 +288,9 @@ template <>
 bool nuiAttribute<bool>::ToString(bool value, nglString& rString) const
 {
   if (value)
-    rString = _T("true");
+    rString = "true";
   else
-    rString = _T("false");
+    rString = "false";
 
   return true;
 }
@@ -298,7 +298,7 @@ bool nuiAttribute<bool>::ToString(bool value, nglString& rString) const
 template <>
 bool nuiAttribute<bool>::FromString(bool& rValue, const nglString& rString) const
 {
-  if (rString.Compare(_T("true"), false) == 0)
+  if (rString.Compare("true", false) == 0)
     rValue = true;
   else
     rValue = false;
@@ -318,9 +318,9 @@ template <>
 void nuiAttribute<bool>::FormatDefault(bool value, nglString& rString) const
 {
 	if (value)
-		rString = _T("true");
+		rString = "true";
 	else
-		rString = _T("false");
+		rString = "false";
 }
 
 
@@ -917,24 +917,24 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiPosition>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiPosition> > values;
-  values.push_back(std::make_pair(_T("Left"), nuiLeft));
-  values.push_back(std::make_pair(_T("Right"), nuiRight));
-  values.push_back(std::make_pair(_T("Top"), nuiTop));
-  values.push_back(std::make_pair(_T("Bottom"), nuiBottom));
-  values.push_back(std::make_pair(_T("Center"), nuiCenter));
-  values.push_back(std::make_pair(_T("Fill"), nuiFill));
-  values.push_back(std::make_pair(_T("Fill Horizontal"), nuiFillHorizontal));
-  values.push_back(std::make_pair(_T("Fill Vertical"), nuiFillVertical));
-  values.push_back(std::make_pair(_T("Fill Left"), nuiFillLeft));
-  values.push_back(std::make_pair(_T("Fill Right"), nuiFillRight));
-  values.push_back(std::make_pair(_T("Fill Top"), nuiFillTop));
-  values.push_back(std::make_pair(_T("Fill Bottom"), nuiFillBottom));
-  values.push_back(std::make_pair(_T("Top Left"), nuiTopLeft));
-  values.push_back(std::make_pair(_T("Top Right"), nuiTopRight));
-  values.push_back(std::make_pair(_T("Bottom Left"), nuiBottomLeft));
-  values.push_back(std::make_pair(_T("Bottom Right"), nuiBottomRight));
-  values.push_back(std::make_pair(_T("Tile"), nuiTile));
-  values.push_back(std::make_pair(_T("No Position"), nuiNoPosition));
+  values.push_back(std::make_pair("Left", nuiLeft));
+  values.push_back(std::make_pair("Right", nuiRight));
+  values.push_back(std::make_pair("Top", nuiTop));
+  values.push_back(std::make_pair("Bottom", nuiBottom));
+  values.push_back(std::make_pair("Center", nuiCenter));
+  values.push_back(std::make_pair("Fill", nuiFill));
+  values.push_back(std::make_pair("Fill Horizontal", nuiFillHorizontal));
+  values.push_back(std::make_pair("Fill Vertical", nuiFillVertical));
+  values.push_back(std::make_pair("Fill Left", nuiFillLeft));
+  values.push_back(std::make_pair("Fill Right", nuiFillRight));
+  values.push_back(std::make_pair("Fill Top", nuiFillTop));
+  values.push_back(std::make_pair("Fill Bottom", nuiFillBottom));
+  values.push_back(std::make_pair("Top Left", nuiTopLeft));
+  values.push_back(std::make_pair("Top Right", nuiTopRight));
+  values.push_back(std::make_pair("Bottom Left", nuiBottomLeft));
+  values.push_back(std::make_pair("Bottom Right", nuiBottomRight));
+  values.push_back(std::make_pair("Tile", nuiTile));
+  values.push_back(std::make_pair("No Position", nuiNoPosition));
   return new nuiComboAttributeEditor<nuiPosition>(nuiAttrib<nuiPosition>(pTarget, this), values);
 }
 
@@ -971,8 +971,8 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiOrientation>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiOrientation> > values;
-  values.push_back(std::make_pair(_T("Horizontal"), nuiHorizontal));
-  values.push_back(std::make_pair(_T("Vertical"), nuiVertical));
+  values.push_back(std::make_pair("Horizontal", nuiHorizontal));
+  values.push_back(std::make_pair("Vertical", nuiVertical));
   return new nuiComboAttributeEditor<nuiOrientation>(nuiAttrib<nuiOrientation>(pTarget, this), values);
 }
 
@@ -1010,8 +1010,8 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiDirection>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiDirection> > values;
-  values.push_back(std::make_pair(_T("Forward"), nuiForward));
-  values.push_back(std::make_pair(_T("Backward"), nuiBackward));
+  values.push_back(std::make_pair("Forward", nuiForward));
+  values.push_back(std::make_pair("Backward", nuiBackward));
   return new nuiComboAttributeEditor<nuiDirection>(nuiAttrib<nuiDirection>(pTarget, this), values);
 }
 
@@ -1281,7 +1281,7 @@ nuiAttributeEditor* nuiAttribute<nuiPoint>::GetDefaultEditor(void* pTarget)
 template <>
 void nuiAttribute<nuiPoint>::FormatDefault(nuiPoint value, nglString & string) const
 {
-  string.CFormat(_T("X: %.0fpx\nY: %.0fpx"), value[0], value[1]);
+  string.CFormat("X: %.0fpx\nY: %.0fpx", value[0], value[1]);
 }
 
 
@@ -1318,7 +1318,7 @@ nuiAttributeEditor* nuiAttribute<nuiRect>::GetDefaultEditor(void* pTarget)
 template <>
 void nuiAttribute<nuiRect>::FormatDefault(nuiRect value, nglString & string) const
 {
-  string.CFormat(_T("(%.0f,%.0f) : (%.0f x %0.f)"), value.Left(), value.Top(), value.GetWidth(), value.GetHeight());
+  string.CFormat("(%.0f,%.0f) : (%.0f x %0.f)", value.Left(), value.Top(), value.GetWidth(), value.GetHeight());
 }
 
 
@@ -1361,7 +1361,7 @@ nuiAttributeEditor* nuiAttribute<const nuiRect&>::GetDefaultEditor(void* pTarget
 template <>
 void nuiAttribute<const nuiRect&>::FormatDefault(const nuiRect& rValue, nglString & string) const
 {
-  string.CFormat(_T("(%.0f,%.0f) : (%.0f x %0.f)"), rValue.Left(), rValue.Top(), rValue.GetWidth(), rValue.GetHeight());
+  string.CFormat("(%.0f,%.0f) : (%.0f x %0.f)", rValue.Left(), rValue.Top(), rValue.GetWidth(), rValue.GetHeight());
 }
 
 
@@ -1404,7 +1404,7 @@ nuiAttributeEditor* nuiAttribute<nuiBorder>::GetDefaultEditor(void* pTarget)
 template <>
 void nuiAttribute<nuiBorder>::FormatDefault(nuiBorder value, nglString & string) const
 {
-  string.CFormat(_T("(%.0f,%.0f,%.0f,%0.f)"), value.Left(), value.Top(), value.Right(), value.Bottom());
+  string.CFormat("(%.0f,%.0f,%.0f,%0.f)", value.Left(), value.Top(), value.Right(), value.Bottom());
 }
 
 
@@ -1447,7 +1447,7 @@ nuiAttributeEditor* nuiAttribute<const nuiBorder&>::GetDefaultEditor(void* pTarg
 template <>
 void nuiAttribute<const nuiBorder&>::FormatDefault(const nuiBorder& rValue, nglString & string) const
 {
-  string.CFormat(_T("(%.0f,%.0f,%.0f,%0.f)"), rValue.Left(), rValue.Top(), rValue.Right(), rValue.Bottom());
+  string.CFormat("(%.0f,%.0f,%.0f,%0.f)", rValue.Left(), rValue.Top(), rValue.Right(), rValue.Bottom());
 }
 
 #endif
@@ -1571,17 +1571,17 @@ bool nuiAttribute<nuiDecorationMode>::ToString(nuiDecorationMode Value, nglStrin
 template <>
 bool nuiAttribute<nuiDecorationMode>::FromString(nuiDecorationMode& rValue, const nglString& rString) const
 {
-  if (!rString.Compare(_T("Overdraw"), false))
+  if (!rString.Compare("Overdraw", false))
   {
     rValue = eDecorationOverdraw;
     return true;
   }
-  else if (!rString.Compare(_T("Border"), false))
+  else if (!rString.Compare("Border", false))
   {
     rValue = eDecorationBorder;
     return true;
   }
-  else if (!rString.Compare(_T("ClientOnly"), false))
+  else if (!rString.Compare("ClientOnly", false))
   {
     rValue = eDecorationClientOnly;
     return true;
@@ -1595,9 +1595,9 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiDecorationMode>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiDecorationMode> > values;
-  values.push_back(std::make_pair(_T("Overdraw"), eDecorationOverdraw));
-  values.push_back(std::make_pair(_T("Border"), eDecorationBorder));
-  values.push_back(std::make_pair(_T("Client Only"), eDecorationClientOnly));
+  values.push_back(std::make_pair("Overdraw", eDecorationOverdraw));
+  values.push_back(std::make_pair("Border", eDecorationBorder));
+  values.push_back(std::make_pair("Client Only", eDecorationClientOnly));
   return new nuiComboAttributeEditor<nuiDecorationMode>(nuiAttrib<nuiDecorationMode>(pTarget, this), values);
 }
 
@@ -1659,17 +1659,17 @@ bool nuiAttribute<nuiShapeMode>::ToString(nuiShapeMode Value, nglString& rString
 template <>
 bool nuiAttribute<nuiShapeMode>::FromString(nuiShapeMode& rValue, const nglString& rString) const
 {
-  if (!rString.Compare(_T("Stroke"), false))
+  if (!rString.Compare("Stroke", false))
   {
     rValue = eStrokeShape;
     return true;
   }
-  else if (!rString.Compare(_T("Fill"), false))
+  else if (!rString.Compare("Fill", false))
   {
     rValue = eFillShape;
     return true;
   }
-  else if (!rString.Compare(_T("StrokeAndFill"), false))
+  else if (!rString.Compare("StrokeAndFill", false))
   {
     rValue = eStrokeAndFillShape;
     return true;
@@ -1683,9 +1683,9 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiShapeMode>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiShapeMode> > values;
-  values.push_back(std::make_pair(_T("Stroke"), eStrokeShape));
-  values.push_back(std::make_pair(_T("Fill"), eFillShape));
-  values.push_back(std::make_pair(_T("Stroke and Fill"), eStrokeAndFillShape));
+  values.push_back(std::make_pair("Stroke", eStrokeShape));
+  values.push_back(std::make_pair("Fill", eFillShape));
+  values.push_back(std::make_pair("Stroke and Fill", eStrokeAndFillShape));
   return new nuiComboAttributeEditor<nuiShapeMode>(nuiAttrib<nuiShapeMode>(pTarget, this), values);
 }
 
@@ -1748,9 +1748,9 @@ template <>
 bool nuiAttribute<nuiDecorationLayer>::ToString(nuiDecorationLayer Value, nglString& rString) const
 {
   if (Value == eLayerBack)
-    rString = _T("Back");
+    rString = "Back";
   else
-    rString = _T("Front");
+    rString = "Front";
 
   return true;
 }
@@ -1758,9 +1758,9 @@ bool nuiAttribute<nuiDecorationLayer>::ToString(nuiDecorationLayer Value, nglStr
 template <>
 bool nuiAttribute<nuiDecorationLayer>::FromString(nuiDecorationLayer& rValue, const nglString& rString) const
 {
-  if (!rString.Compare(_T("Back"), false))
+  if (!rString.Compare("Back", false))
     rValue = eLayerBack;
-  else if (!rString.Compare(_T("Front"), false))
+  else if (!rString.Compare("Front", false))
     rValue = eLayerFront;
   else
     return false;
@@ -1771,8 +1771,8 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiDecorationLayer>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiDecorationLayer> > values;
-  values.push_back(std::make_pair(_T("Back"), eLayerBack));
-  values.push_back(std::make_pair(_T("Front"), eLayerFront));
+  values.push_back(std::make_pair("Back", eLayerBack));
+  values.push_back(std::make_pair("Front", eLayerFront));
   return new nuiComboAttributeEditor<nuiDecorationLayer>(nuiAttrib<nuiDecorationLayer>(pTarget, this), values);
 }
 
@@ -1780,9 +1780,9 @@ template <>
 void nuiAttribute<nuiDecorationLayer>::FormatDefault(nuiDecorationLayer value, nglString & string) const
 {
   if (value == eLayerBack)
-    string = _T("Back");
+    string = "Back";
   else
-    string = _T("Front");
+    string = "Front";
 }
 
 
@@ -1800,79 +1800,79 @@ bool nuiAttribute<nuiMouseCursor>::ToString(nuiMouseCursor Value, nglString& rSt
   switch(Value)
   {
     case eCursorDoNotSet:
-      rString = _T("DoNotSet");
+      rString = "DoNotSet";
       break;
     case eCursorNone:
-      rString = _T("None");
+      rString = "None";
       break;
     case eCursorArrow:
-      rString = _T("Arrow");
+      rString = "Arrow";
       break;
     case eCursorCross:
-      rString = _T("Cross");
+      rString = "Cross";
       break;
     case eCursorIBeam:
-      rString = _T("IBeam");
+      rString = "IBeam";
       break;
     case eCursorHand:
-      rString = _T("Hand");
+      rString = "Hand";
       break;
     case eCursorClosedHand:
-      rString = _T("ClosedHand");
+      rString = "ClosedHand";
       break;
     case eCursorPointingHand:
-      rString = _T("PointingHand");
+      rString = "PointingHand";
       break;
     case eCursorHelp:
-      rString = _T("Help");
+      rString = "Help";
       break;
     case eCursorWait:
-      rString = _T("Wait");
+      rString = "Wait";
       break;
     case eCursorCaret:
-      rString = _T("Caret");
+      rString = "Caret";
       break;
     case eCursorDnD:
-      rString = _T("DnD");
+      rString = "DnD";
       break;
     case eCursorForbid:
-      rString = _T("Forbid");
+      rString = "Forbid";
       break;
     case eCursorMove:
-      rString = _T("Move");
+      rString = "Move";
       break;
     case eCursorResize:
-      rString = _T("Resize");
+      rString = "Resize";
       break;
     case eCursorResizeNS:
-      rString = _T("ResizeNS");
+      rString = "ResizeNS";
       break;
     case eCursorResizeWE:
-      rString = _T("ResizeWE");
+      rString = "ResizeWE";
       break;
     case eCursorResizeN:
-      rString = _T("ResizeN");
+      rString = "ResizeN";
       break;
     case eCursorResizeS:
-      rString = _T("ResizeS");
+      rString = "ResizeS";
       break;
     case eCursorResizeW:
-      rString = _T("ResizeW");
+      rString = "ResizeW";
       break;
     case eCursorResizeE:
-      rString = _T("DoNotSet");
+      rString = "DoNotSet";
       break;
     case eCursorResizeNW:
-      rString = _T("ResizeNW");
+      rString = "ResizeNW";
       break;
     case eCursorResizeNE:
-      rString = _T("ResizeNE");
+      rString = "ResizeNE";
       break;
     case eCursorResizeSW:
-      rString = _T("ResizeSW");
+      rString = "ResizeSW";
       break;
     case eCursorResizeSE:
-      rString = _T("ResizeSE");
+      rString = "ResizeSE";
       break;
   };
 
@@ -1884,55 +1884,55 @@ bool nuiAttribute<nuiMouseCursor>::FromString(nuiMouseCursor& rValue, const nglS
 {
   rValue = eCursorArrow;
 
-  if (!rString.Compare(_T("DoNotSet"), false))
+  if (!rString.Compare("DoNotSet", false))
     rValue = eCursorDoNotSet;
-  else if (!rString.Compare(_T("None"), false))
+  else if (!rString.Compare("None", false))
     rValue = eCursorNone;
-  else if (!rString.Compare(_T("Arrow"), false))
+  else if (!rString.Compare("Arrow", false))
     rValue = eCursorArrow;
-  else if (!rString.Compare(_T("Cross"), false))
+  else if (!rString.Compare("Cross", false))
     rValue = eCursorCross;
-  else if (!rString.Compare(_T("IBeam"), false))
+  else if (!rString.Compare("IBeam", false))
     rValue = eCursorIBeam;
-  else if (!rString.Compare(_T("Hand"), false))
+  else if (!rString.Compare("Hand", false))
     rValue = eCursorHand;
-  else if (!rString.Compare(_T("ClosedHand"), false))
+  else if (!rString.Compare("ClosedHand", false))
     rValue = eCursorClosedHand;
-  else if (!rString.Compare(_T("PointingHand"), false))
+  else if (!rString.Compare("PointingHand", false))
     rValue = eCursorPointingHand;
-  else if (!rString.Compare(_T("Help"), false))
+  else if (!rString.Compare("Help", false))
     rValue = eCursorHelp;
-  else if (!rString.Compare(_T("Wait"), false))
+  else if (!rString.Compare("Wait", false))
     rValue = eCursorWait;
-  else if (!rString.Compare(_T("Caret"), false))
+  else if (!rString.Compare("Caret", false))
     rValue = eCursorCaret;
-  else if (!rString.Compare(_T("DnD"), false))
+  else if (!rString.Compare("DnD", false))
     rValue = eCursorDnD;
-  else if (!rString.Compare(_T("Forbid"), false))
+  else if (!rString.Compare("Forbid", false))
     rValue = eCursorForbid;
-  else if (!rString.Compare(_T("Move"), false))
+  else if (!rString.Compare("Move", false))
     rValue = eCursorMove;
-  else if (!rString.Compare(_T("Resize"), false))
+  else if (!rString.Compare("Resize", false))
     rValue = eCursorResize;
-  else if (!rString.Compare(_T("ResizeNS"), false))
+  else if (!rString.Compare("ResizeNS", false))
     rValue = eCursorResizeNS;
-  else if (!rString.Compare(_T("ResizeWE"), false))
+  else if (!rString.Compare("ResizeWE", false))
     rValue = eCursorResizeWE;
-  else if (!rString.Compare(_T("ResizeN"), false))
+  else if (!rString.Compare("ResizeN", false))
     rValue = eCursorResizeN;
-  else if (!rString.Compare(_T("ResizeS"), false))
+  else if (!rString.Compare("ResizeS", false))
     rValue = eCursorResizeS;
-  else if (!rString.Compare(_T("ResizeW"), false))
+  else if (!rString.Compare("ResizeW", false))
     rValue = eCursorResizeW;
-  else if (!rString.Compare(_T("ResizeE"), false))
+  else if (!rString.Compare("ResizeE", false))
     rValue = eCursorResizeE;
-  else if (!rString.Compare(_T("ResizeNW"), false))
+  else if (!rString.Compare("ResizeNW", false))
     rValue = eCursorResizeNW;
-  else if (!rString.Compare(_T("ResizeNE"), false))
+  else if (!rString.Compare("ResizeNE", false))
     rValue = eCursorResizeNE;
-  else if (!rString.Compare(_T("ResizeSW"), false))
+  else if (!rString.Compare("ResizeSW", false))
     rValue = eCursorResizeSW;
-  else if (!rString.Compare(_T("ResizeSE"), false))
+  else if (!rString.Compare("ResizeSE", false))
     rValue = eCursorResizeSE;
   else
     return false;
@@ -1944,31 +1944,31 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiMouseCursor>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiMouseCursor> > values;
-  values.push_back(std::make_pair(_T("Do not set"), eCursorDoNotSet));
-  values.push_back(std::make_pair(_T("None"), eCursorNone));
-  values.push_back(std::make_pair(_T("Arrow"), eCursorArrow));
-  values.push_back(std::make_pair(_T("Cross"), eCursorCross));
-  values.push_back(std::make_pair(_T("IBeam"), eCursorIBeam));
-  values.push_back(std::make_pair(_T("Hand"), eCursorHand));
-  values.push_back(std::make_pair(_T("ClosedHand"), eCursorClosedHand));
-  values.push_back(std::make_pair(_T("PointingHand"), eCursorPointingHand));
-  values.push_back(std::make_pair(_T("Help"), eCursorHelp));
-  values.push_back(std::make_pair(_T("Wait"), eCursorWait));
-  values.push_back(std::make_pair(_T("Caret"), eCursorCaret));
-  values.push_back(std::make_pair(_T("DnD"), eCursorDnD));
-  values.push_back(std::make_pair(_T("Forbid"), eCursorForbid));
-  values.push_back(std::make_pair(_T("Move"), eCursorMove));
-  values.push_back(std::make_pair(_T("Resize"), eCursorResize));
-  values.push_back(std::make_pair(_T("ResizeNS"), eCursorResizeNS));
-  values.push_back(std::make_pair(_T("ResizeWE"), eCursorResizeWE));
-  values.push_back(std::make_pair(_T("ResizeN"), eCursorResizeN));
-  values.push_back(std::make_pair(_T("ResizeS"), eCursorResizeS));
-  values.push_back(std::make_pair(_T("ResizeW"), eCursorResizeW));
-  values.push_back(std::make_pair(_T("ResizeE"), eCursorResizeE));
-  values.push_back(std::make_pair(_T("ResizeNW"), eCursorResizeNW));
-  values.push_back(std::make_pair(_T("ResizeNE"), eCursorResizeNE));
-  values.push_back(std::make_pair(_T("ResizeSW"), eCursorResizeSW));
-  values.push_back(std::make_pair(_T("ResizeSE"), eCursorResizeSE));
+  values.push_back(std::make_pair("Do not set", eCursorDoNotSet));
+  values.push_back(std::make_pair("None", eCursorNone));
+  values.push_back(std::make_pair("Arrow", eCursorArrow));
+  values.push_back(std::make_pair("Cross", eCursorCross));
+  values.push_back(std::make_pair("IBeam", eCursorIBeam));
+  values.push_back(std::make_pair("Hand", eCursorHand));
+  values.push_back(std::make_pair("ClosedHand", eCursorClosedHand));
+  values.push_back(std::make_pair("PointingHand", eCursorPointingHand));
+  values.push_back(std::make_pair("Help", eCursorHelp));
+  values.push_back(std::make_pair("Wait", eCursorWait));
+  values.push_back(std::make_pair("Caret", eCursorCaret));
+  values.push_back(std::make_pair("DnD", eCursorDnD));
+  values.push_back(std::make_pair("Forbid", eCursorForbid));
+  values.push_back(std::make_pair("Move", eCursorMove));
+  values.push_back(std::make_pair("Resize", eCursorResize));
+  values.push_back(std::make_pair("ResizeNS", eCursorResizeNS));
+  values.push_back(std::make_pair("ResizeWE", eCursorResizeWE));
+  values.push_back(std::make_pair("ResizeN", eCursorResizeN));
+  values.push_back(std::make_pair("ResizeS", eCursorResizeS));
+  values.push_back(std::make_pair("ResizeW", eCursorResizeW));
+  values.push_back(std::make_pair("ResizeE", eCursorResizeE));
+  values.push_back(std::make_pair("ResizeNW", eCursorResizeNW));
+  values.push_back(std::make_pair("ResizeNE", eCursorResizeNE));
+  values.push_back(std::make_pair("ResizeSW", eCursorResizeSW));
+  values.push_back(std::make_pair("ResizeSE", eCursorResizeSE));
   return new nuiComboAttributeEditor<nuiMouseCursor>(nuiAttrib<nuiMouseCursor>(pTarget, this), values);
 }
 
@@ -2464,47 +2464,47 @@ bool nuiAttribute<nuiBlendFunc>::ToString(nuiBlendFunc Value, nglString& rString
   switch (Value)
   {
     case nuiBlendSource:
-      rString = _T("Source"); break;
+      rString = "Source"; break;
     case nuiBlendTransp:
-      rString = _T("Transp"); break;
+      rString = "Transp"; break;
     case nuiBlendClear:
-      rString = _T("Clear"); break;
+      rString = "Clear"; break;
     case nuiBlendDest:
-      rString = _T("Dest"); break;
+      rString = "Dest"; break;
     case nuiBlendOver:
-      rString = _T("Over"); break;
+      rString = "Over"; break;
     case nuiBlendOverRev:
-      rString = _T("OverRev"); break;
+      rString = "OverRev"; break;
     case nuiBlendIn:
-      rString = _T("In"); break;
+      rString = "In"; break;
     case nuiBlendInRev:
-      rString = _T("InRev"); break;
+      rString = "InRev"; break;
     case nuiBlendOut:
-      rString = _T("Out"); break;
+      rString = "Out"; break;
     case nuiBlendOutRev:
-      rString = _T("OutRev"); break;
+      rString = "OutRev"; break;
     case nuiBlendTop:
-      rString = _T("Top"); break;
+      rString = "Top"; break;
     case nuiBlendTopRev:
-      rString = _T("TopRev"); break;
+      rString = "TopRev"; break;
     case nuiBlendXOR:
-      rString = _T("XOR"); break;
+      rString = "XOR"; break;
     case nuiBlendAdd:
-      rString = _T("Add"); break;
+      rString = "Add"; break;
     case nuiBlendSaturate:
-      rString = _T("Saturate"); break;
+      rString = "Saturate"; break;
 
     case nuiBlendTranspClear:
-      rString = _T("Clear"); break;
+      rString = "Clear"; break;
     case nuiBlendTranspAdd:
-      rString = _T("TranspAdd"); break;
+      rString = "TranspAdd"; break;
     case nuiBlendTranspOver:
-      rString = _T("TranspOver"); break;
+      rString = "TranspOver"; break;
     case nuiBlendTranspInRev:
-      rString = _T("TranspInRev"); break;
+      rString = "TranspInRev"; break;
 
     default:
-      rString = _T("UnknownBlendFunc");
+      rString = "UnknownBlendFunc";
       return false;
   }
 
@@ -2515,97 +2515,97 @@ bool nuiAttribute<nuiBlendFunc>::ToString(nuiBlendFunc Value, nglString& rString
 template <>
 bool nuiAttribute<nuiBlendFunc>::FromString(nuiBlendFunc& rValue, const nglString& rString) const
 {
-  if (!rString.Compare(_T("Source"), false))
+  if (!rString.Compare("Source", false))
   {
     rValue = nuiBlendSource;
     return true;
   }
-  else if (!rString.Compare(_T("Transp"), false))
+  else if (!rString.Compare("Transp", false))
   {
     rValue = nuiBlendTransp;
     return true;
   }
-  else if (!rString.Compare(_T("Clear"), false))
+  else if (!rString.Compare("Clear", false))
   {
     rValue = nuiBlendClear;
     return true;
   }
-  else if (!rString.Compare(_T("Dest"), false))
+  else if (!rString.Compare("Dest", false))
   {
     rValue = nuiBlendDest;
     return true;
   }
-  else if (!rString.Compare(_T("Over"), false))
+  else if (!rString.Compare("Over", false))
   {
     rValue = nuiBlendOver;
     return true;
   }
-  else if (!rString.Compare(_T("OverRev"), false))
+  else if (!rString.Compare("OverRev", false))
   {
     rValue = nuiBlendOverRev;
     return true;
   }
-  else if (!rString.Compare(_T("In"), false))
+  else if (!rString.Compare("In", false))
   {
     rValue = nuiBlendIn;
     return true;
   }
-  else if (!rString.Compare(_T("InRev"), false))
+  else if (!rString.Compare("InRev", false))
   {
     rValue = nuiBlendInRev;
     return true;
   }
-  else if (!rString.Compare(_T("Out"), false))
+  else if (!rString.Compare("Out", false))
   {
     rValue = nuiBlendOut;
     return true;
   }
-  else if (!rString.Compare(_T("OutRev"), false))
+  else if (!rString.Compare("OutRev", false))
   {
     rValue = nuiBlendOutRev;
     return true;
   }
-  else if (!rString.Compare(_T("Top"), false))
+  else if (!rString.Compare("Top", false))
   {
     rValue = nuiBlendTop;
     return true;
   }
-  else if (!rString.Compare(_T("TopRev"), false))
+  else if (!rString.Compare("TopRev", false))
   {
     rValue = nuiBlendTopRev;
     return true;
   }
-  else if (!rString.Compare(_T("XOR"), false))
+  else if (!rString.Compare("XOR", false))
   {
     rValue = nuiBlendXOR;
     return true;
   }
-  else if (!rString.Compare(_T("Add"), false))
+  else if (!rString.Compare("Add", false))
   {
     rValue = nuiBlendAdd;
     return true;
   }
-  else if (!rString.Compare(_T("Saturate"), false))
+  else if (!rString.Compare("Saturate", false))
   {
     rValue = nuiBlendSaturate;
     return true;
   }
-  else if (!rString.Compare(_T("Clear"), false))
+  else if (!rString.Compare("Clear", false))
   {
     rValue = nuiBlendClear;
     return true;
   }
-  else if (!rString.Compare(_T("TranspAdd"), false))
+  else if (!rString.Compare("TranspAdd", false))
   {
     rValue = nuiBlendTranspAdd;
     return true;
   }
-  else if (!rString.Compare(_T("TranspOver"), false))
+  else if (!rString.Compare("TranspOver", false))
   {
     rValue = nuiBlendTranspOver;
     return true;
   }
-  else if (!rString.Compare(_T("TranspInRev"), false))
+  else if (!rString.Compare("TranspInRev", false))
   {
     rValue = nuiBlendTranspInRev;
     return true;
@@ -2619,25 +2619,25 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiBlendFunc>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiBlendFunc> > values;
-  values.push_back(std::make_pair(_T("Source"), nuiBlendSource));
-  values.push_back(std::make_pair(_T("Transp"), nuiBlendTransp));
-  values.push_back(std::make_pair(_T("Clear"), nuiBlendClear));
-  values.push_back(std::make_pair(_T("Dest"), nuiBlendDest));
-  values.push_back(std::make_pair(_T("Over"), nuiBlendOver));
-  values.push_back(std::make_pair(_T("OverRev"), nuiBlendOverRev));
-  values.push_back(std::make_pair(_T("In"), nuiBlendIn));
-  values.push_back(std::make_pair(_T("InRev"), nuiBlendInRev));
-  values.push_back(std::make_pair(_T("Out"), nuiBlendOut));
-  values.push_back(std::make_pair(_T("OutRev"), nuiBlendOutRev));
-  values.push_back(std::make_pair(_T("Top"), nuiBlendTop));
-  values.push_back(std::make_pair(_T("TopRev"), nuiBlendTopRev));
-  values.push_back(std::make_pair(_T("XOR"), nuiBlendXOR));
-  values.push_back(std::make_pair(_T("Add"), nuiBlendAdd));
-  values.push_back(std::make_pair(_T("Saturate"), nuiBlendSaturate));
-  values.push_back(std::make_pair(_T("Clear"), nuiBlendClear));
-  values.push_back(std::make_pair(_T("TranspAdd"), nuiBlendTranspAdd));
-  values.push_back(std::make_pair(_T("TranspOver"), nuiBlendTranspOver));
-  values.push_back(std::make_pair(_T("TranspInRev"), nuiBlendTranspInRev));
+  values.push_back(std::make_pair("Source", nuiBlendSource));
+  values.push_back(std::make_pair("Transp", nuiBlendTransp));
+  values.push_back(std::make_pair("Clear", nuiBlendClear));
+  values.push_back(std::make_pair("Dest", nuiBlendDest));
+  values.push_back(std::make_pair("Over", nuiBlendOver));
+  values.push_back(std::make_pair("OverRev", nuiBlendOverRev));
+  values.push_back(std::make_pair("In", nuiBlendIn));
+  values.push_back(std::make_pair("InRev", nuiBlendInRev));
+  values.push_back(std::make_pair("Out", nuiBlendOut));
+  values.push_back(std::make_pair("OutRev", nuiBlendOutRev));
+  values.push_back(std::make_pair("Top", nuiBlendTop));
+  values.push_back(std::make_pair("TopRev", nuiBlendTopRev));
+  values.push_back(std::make_pair("XOR", nuiBlendXOR));
+  values.push_back(std::make_pair("Add", nuiBlendAdd));
+  values.push_back(std::make_pair("Saturate", nuiBlendSaturate));
+  values.push_back(std::make_pair("Clear", nuiBlendClear));
+  values.push_back(std::make_pair("TranspAdd", nuiBlendTranspAdd));
+  values.push_back(std::make_pair("TranspOver", nuiBlendTranspOver));
+  values.push_back(std::make_pair("TranspInRev", nuiBlendTranspInRev));
   return new nuiComboAttributeEditor<nuiBlendFunc>(nuiAttrib<nuiBlendFunc>(pTarget, this), values);
 }
 
@@ -2661,16 +2661,16 @@ bool nuiAttribute<nuiExpandMode>::ToString(nuiExpandMode Value, nglString& rStri
   switch (Value)
   {
     case nuiExpandFixed:
-      rString = _T("Fixed"); break;
+      rString = "Fixed"; break;
     case nuiExpandGrow:
-      rString = _T("Grow"); break;
+      rString = "Grow"; break;
     case nuiExpandShrink:
-      rString = _T("Shrink"); break;
+      rString = "Shrink"; break;
     case nuiExpandShrinkAndGrow:
-      rString = _T("ShrinkAndGrow"); break;
+      rString = "ShrinkAndGrow"; break;
 
     default:
-      rString = _T("UnknownExpandMode");
+      rString = "UnknownExpandMode";
       return false;
   }
 
@@ -2681,22 +2681,22 @@ bool nuiAttribute<nuiExpandMode>::ToString(nuiExpandMode Value, nglString& rStri
 template <>
 bool nuiAttribute<nuiExpandMode>::FromString(nuiExpandMode& rValue, const nglString& rString) const
 {
-  if (!rString.Compare(_T("Fixed"), false))
+  if (!rString.Compare("Fixed", false))
   {
     rValue = nuiExpandFixed;
     return true;
   }
-  else if (!rString.Compare(_T("Grow"), false))
+  else if (!rString.Compare("Grow", false))
   {
     rValue = nuiExpandGrow;
     return true;
   }
-  else if (!rString.Compare(_T("Shrink"), false))
+  else if (!rString.Compare("Shrink", false))
   {
     rValue = nuiExpandShrink;
     return true;
   }
-  else if (!rString.Compare(_T("ShrinkAndGrow"), false))
+  else if (!rString.Compare("ShrinkAndGrow", false))
   {
     rValue = nuiExpandShrinkAndGrow;
     return true;
@@ -2711,10 +2711,10 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiExpandMode>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiExpandMode> > values;
-  values.push_back(std::make_pair(_T("Fixed"), nuiExpandFixed));
-  values.push_back(std::make_pair(_T("Grow"), nuiExpandGrow));
-  values.push_back(std::make_pair(_T("Shrink"), nuiExpandShrink));
-  values.push_back(std::make_pair(_T("Shrink and Grow"), nuiExpandShrinkAndGrow));
+  values.push_back(std::make_pair("Fixed", nuiExpandFixed));
+  values.push_back(std::make_pair("Grow", nuiExpandGrow));
+  values.push_back(std::make_pair("Shrink", nuiExpandShrink));
+  values.push_back(std::make_pair("Shrink and Grow", nuiExpandShrinkAndGrow));
   if (GetDimension() == 0)
     return new nuiComboAttributeEditor<nuiExpandMode>(nuiAttrib<nuiExpandMode>(pTarget, this), values);
   else
@@ -2741,16 +2741,16 @@ bool nuiAttribute<nuiTextLayoutMode>::ToString(nuiTextLayoutMode Value, nglStrin
   switch (Value)
   {
     case nuiTextLayoutLeft:
-      rString = _T("Left"); break;
+      rString = "Left"; break;
     case nuiTextLayoutRight:
-      rString = _T("Right"); break;
+      rString = "Right"; break;
     case nuiTextLayoutCenter:
-      rString = _T("Center"); break;
+      rString = "Center"; break;
     case nuiTextLayoutJustify:
-      rString = _T("Justify"); break;
+      rString = "Justify"; break;
 
     default:
-      rString = _T("UnknownTextLayoutMode");
+      rString = "UnknownTextLayoutMode";
       return false;
   }
 
@@ -2761,22 +2761,22 @@ bool nuiAttribute<nuiTextLayoutMode>::ToString(nuiTextLayoutMode Value, nglStrin
 template <>
 bool nuiAttribute<nuiTextLayoutMode>::FromString(nuiTextLayoutMode& rValue, const nglString& rString) const
 {
-  if (!rString.Compare(_T("Left"), false))
+  if (!rString.Compare("Left", false))
   {
     rValue = nuiTextLayoutLeft;
     return true;
   }
-  else if (!rString.Compare(_T("Right"), false))
+  else if (!rString.Compare("Right", false))
   {
     rValue = nuiTextLayoutRight;
     return true;
   }
-  else if (!rString.Compare(_T("Center"), false))
+  else if (!rString.Compare("Center", false))
   {
     rValue = nuiTextLayoutCenter;
     return true;
   }
-  else if (!rString.Compare(_T("Justify"), false))
+  else if (!rString.Compare("Justify", false))
   {
     rValue = nuiTextLayoutJustify;
     return true;
@@ -2791,10 +2791,10 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiTextLayoutMode>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiTextLayoutMode> > values;
-  values.push_back(std::make_pair(_T("Left"), nuiTextLayoutLeft));
-  values.push_back(std::make_pair(_T("Right"), nuiTextLayoutRight));
-  values.push_back(std::make_pair(_T("Center"), nuiTextLayoutCenter));
-  values.push_back(std::make_pair(_T("Justify"), nuiTextLayoutJustify));
+  values.push_back(std::make_pair("Left", nuiTextLayoutLeft));
+  values.push_back(std::make_pair("Right", nuiTextLayoutRight));
+  values.push_back(std::make_pair("Center", nuiTextLayoutCenter));
+  values.push_back(std::make_pair("Justify", nuiTextLayoutJustify));
   if (GetDimension() == 0)
     return new nuiComboAttributeEditor<nuiTextLayoutMode>(nuiAttrib<nuiTextLayoutMode>(pTarget, this), values);
   else
@@ -2822,16 +2822,16 @@ bool nuiAttribute<nuiDrawPolicy>::ToString(nuiDrawPolicy Value, nglString& rStri
   switch (Value)
   {
     case nuiDrawPolicyDrawNone:
-      rString = _T("DrawNone"); break;
+      rString = "DrawNone"; break;
     case nuiDrawPolicyDrawSelf:
-      rString = _T("DrawSelf"); break;
+      rString = "DrawSelf"; break;
     case nuiDrawPolicyDrawChildren:
-      rString = _T("DrawChildren"); break;
+      rString = "DrawChildren"; break;
     case nuiDrawPolicyDrawTree:
-      rString = _T("DrawTree"); break;
+      rString = "DrawTree"; break;
       
     default:
-      rString = _T("DrawSelf");
+      rString = "DrawSelf";
       return false;
   }
   
@@ -2841,22 +2841,22 @@ bool nuiAttribute<nuiDrawPolicy>::ToString(nuiDrawPolicy Value, nglString& rStri
 template <>
 bool nuiAttribute<nuiDrawPolicy>::FromString(nuiDrawPolicy& rValue, const nglString& rString) const
 {
-  if (!rString.Compare(_T("DrawNone"), false))
+  if (!rString.Compare("DrawNone", false))
   {
     rValue = nuiDrawPolicyDrawNone;
     return true;
   }
-  else if (!rString.Compare(_T("DrawSelf"), false))
+  else if (!rString.Compare("DrawSelf", false))
   {
     rValue = nuiDrawPolicyDrawSelf;
     return true;
   }
-  else if (!rString.Compare(_T("DrawChildren"), false))
+  else if (!rString.Compare("DrawChildren", false))
   {
     rValue = nuiDrawPolicyDrawChildren;
     return true;
   }
-  else if (!rString.Compare(_T("DrawTree"), false))
+  else if (!rString.Compare("DrawTree", false))
   {
     rValue = nuiDrawPolicyDrawTree;
     return true;
@@ -2871,10 +2871,10 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiDrawPolicy>::GetDefaultEditor(void* pTarget)
 {
   std::vector<std::pair<nglString, nuiDrawPolicy> > values;
-  values.push_back(std::make_pair(_T("DrawNone"), nuiDrawPolicyDrawNone));
-  values.push_back(std::make_pair(_T("DrawSelf"), nuiDrawPolicyDrawSelf));
-  values.push_back(std::make_pair(_T("DrawChildren"), nuiDrawPolicyDrawSelf));
-  values.push_back(std::make_pair(_T("DrawTree"), nuiDrawPolicyDrawTree));
+  values.push_back(std::make_pair("DrawNone", nuiDrawPolicyDrawNone));
+  values.push_back(std::make_pair("DrawSelf", nuiDrawPolicyDrawSelf));
+  values.push_back(std::make_pair("DrawChildren", nuiDrawPolicyDrawSelf));
+  values.push_back(std::make_pair("DrawTree", nuiDrawPolicyDrawTree));
   if (GetDimension() == 0)
     return new nuiComboAttributeEditor<nuiDrawPolicy>(nuiAttrib<nuiDrawPolicy>(pTarget, this), values);
   else

@@ -11,13 +11,13 @@
 nuiTab::nuiTab()
 : nuiButton(), mIdentifier(-1)
 {
-  SetObjectClass(_T("nuiTab"));
+  SetObjectClass("nuiTab");
 }
 
 nuiTab::nuiTab(const nglString & text)
 : nuiButton(text), mIdentifier(-1)
 {
-  SetObjectClass(_T("nuiTab"));
+  SetObjectClass("nuiTab");
 }
 
 nuiTab::~nuiTab()
@@ -36,7 +36,7 @@ nuiTabBar::nuiTabBar()
 : nuiWidget(),
   mTabsSink(this)
 {
-  SetObjectClass(_T("nuiTabBar"));
+  SetObjectClass("nuiTabBar");
 }
 
 nuiTabBar::~nuiTabBar()

@@ -15,7 +15,7 @@
 #include "Widgets/TimeBar.h"
 #include "Widgets/VolumeController.h"
 
-#define NOTIF_FILEBROWSE_DONE _T("FILEBROWSE_DONE")
+#define NOTIF_FILEBROWSE_DONE "FILEBROWSE_DONE"
 
 /*
  * MainWindow
@@ -28,7 +28,7 @@ MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& 
   SetDebugMode(true);
 #endif
   
-  LoadCSS(_T("rsrc:/css/main.css"));
+  LoadCSS("rsrc:/css/main.css");
   
   RegisterObserver(NOTIF_FILEBROWSE_DONE, this);
 }
@@ -47,14 +47,14 @@ void MainWindow::OnCreation()
   AudioEngine* pAudioEngine = GetAudioEngine();
   
   // Time Bar
-  nuiAttrib<uint64> posAttrib = pAudioEngine->GetAttribute(_T("position"));
-  nuiAttrib<uint64> lengthAttrib = pAudioEngine->GetAttribute(_T("length"));
+  nuiAttrib<uint64> posAttrib = pAudioEngine->GetAttribute("position");
+  nuiAttrib<uint64> lengthAttrib = pAudioEngine->GetAttribute("length");
   mpTimeBar = new TimeBar(posAttrib, lengthAttrib, pAudioEngine->GetSampleRate());
   pLayoutBox->AddCell(mpTimeBar);
   
   // volume controller
-  nuiAttrib<float> gainAttrib = pAudioEngine->GetAttribute(_T("gain"));
-  nuiAttrib<bool> muteAttrib = pAudioEngine->GetAttribute(_T("mute"));
+  nuiAttrib<float> gainAttrib = pAudioEngine->GetAttribute("gain");
+  nuiAttrib<bool> muteAttrib = pAudioEngine->GetAttribute("mute");
   VolumeController* pVolumeController = new VolumeController(gainAttrib, muteAttrib);
   pLayoutBox->AddCell(pVolumeController);
   
@@ -70,9 +70,9 @@ void MainWindow::OnCreation()
   // label with border in the button (put the label string in the button's constructor if you don't need borders)
   nglString text;
   if (GetAudioEngine()->IsPlaying())
-    text = _T("pause");
+    text = "pause";
   else
-    text = _T("play");
+    text = "play";
   mpPlayButtonLabel = new nuiLabel(text);
   mpPlayButtonLabel->SetPosition(nuiCenter);
   mpPlayButtonLabel->SetBorder(8,8);
@@ -80,12 +80,12 @@ void MainWindow::OnCreation()
   mpPlayButton->SetEnabled(false);
   
   // load button
-  nuiButton* pLoadBtn = new nuiButton(_T("Load"));
+  nuiButton* pLoadBtn = new nuiButton("Load");
   pLayoutBox->AddCell(pLoadBtn);
   pLayoutBox->SetCellExpand(pLayoutBox->GetNbCells()-1, nuiExpandShrinkAndGrow);
   mEventSink.Connect(pLoadBtn->Clicked, &MainWindow::OnBrowse);
   
-  mBrowsedFile = _T("rsrc:/test.mp3");
+  mBrowsedFile = "rsrc:/test.mp3";
   PostNotification(new nuiNotification(NOTIF_FILEBROWSE_DONE));
   
 }
@@ -98,12 +98,12 @@ void MainWindow::OnButtonClick(const nuiEvent& rEvent)
   if (playing)
   {  
     GetAudioEngine()->Pause();
-    mpPlayButtonLabel->SetText(_T("play"));
+    mpPlayButtonLabel->SetText("play");
   }
   else
   {
     GetAudioEngine()->Play();
-    mpPlayButtonLabel->SetText(_T("pause"));
+    mpPlayButtonLabel->SetText("pause");
   }
   
   
@@ -127,7 +127,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
   nglIStream* pF = rPath.OpenRead();
   if (!pF)
   {
-    NGL_OUT(_T("Unable to open CSS source file '%ls'\n"), rPath.GetChars());
+    NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
   
@@ -141,7 +141,7 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     return true;
   }
   
-  NGL_OUT(_T("%ls\n"), pCSS->GetErrorString().GetChars());
+  NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
   
   delete pCSS;
   return false;
@@ -150,8 +150,8 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
 void MainWindow::OnBrowse(const nuiEvent& rEvent)
 {
   nglPath browsedPath             = nglPath(ePathUser);
-  nglPath rootPath                = nglPath(_T("/"));
-  nglString filter                = _T("*");
+  nglPath rootPath                = nglPath("/");
+  nglString filter                = "*";
   bool showHiddenFiles            = false;
   nglString defaultEditLineValue  = nglString::Null;
   
@@ -162,7 +162,7 @@ void MainWindow::OnBrowse(const nuiEvent& rEvent)
   // Of course, instead of using the nuiDialogSelectFile object, you are able to implement your own file selector,
   // using the nuiDialog class and nuiFileSelector class. Take a look to nuiDialogSelectFile to see how it's done.
   //
-  mpDialog = new nuiDialogSelectFile(this, _T("SELECT A FILE TO LOAD"), browsedPath, rootPath, defaultEditLineValue, filter, showHiddenFiles);
+  mpDialog = new nuiDialogSelectFile(this, "SELECT A FILE TO LOAD", browsedPath, rootPath, defaultEditLineValue, filter, showHiddenFiles);
   mEventSink.Connect(mpDialog->FileSelected, &MainWindow::OnDialogDone);    
   
   // we wish this dialog box to be modal

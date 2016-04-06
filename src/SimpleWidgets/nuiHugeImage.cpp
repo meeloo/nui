@@ -11,7 +11,7 @@
 
 nuiHugeImage::nuiHugeImage(const nglPath& rImagePath)
 {
-  if (SetObjectClass(_T("nuiHugeImage")))
+  if (SetObjectClass("nuiHugeImage"))
   {
     InitAttributes();
   }
@@ -26,34 +26,34 @@ nuiHugeImage::nuiHugeImage(const nglPath& rImagePath)
 
   mpZoom = new nuiAttributeAnimation();
   mpZoom->SetTargetObject(this);
-  mpZoom->SetTargetAttribute(_T("Zoom"));
+  mpZoom->SetTargetAttribute("Zoom");
   mpZoom->SetCaptureStartOnPlay(true);
   mpZoom->SetEndValue(mMaxZoom);
   mpZoom->SetEasing(nuiEasingSinus);
   mpZoom->SetDuration(1.0f);
-  AddAnimation(_T("Zoom"), mpZoom);
+  AddAnimation("Zoom", mpZoom);
   
   mpPanX = new nuiAttributeAnimation();
   mpPanX->SetTargetObject(this);
-  mpPanX->SetTargetAttribute(_T("CenterX"));
+  mpPanX->SetTargetAttribute("CenterX");
   mpPanX->SetCaptureStartOnPlay(true);
   mpPanX->SetEndValue(0);
   mpPanX->SetEasing(nuiEasingSinus);
   mpPanX->SetDuration(1.0f);
-  AddAnimation(_T("PanX"), mpPanX);
+  AddAnimation("PanX", mpPanX);
 
   mpPanY = new nuiAttributeAnimation();
   mpPanY->SetTargetObject(this);
-  mpPanY->SetTargetAttribute(_T("CenterY"));
+  mpPanY->SetTargetAttribute("CenterY");
   mpPanY->SetCaptureStartOnPlay(true);
   mpPanY->SetEndValue(0);
   mpPanY->SetEasing(nuiEasingSinus);
   mpPanY->SetDuration(1.0f);
-  AddAnimation(_T("PanY"), mpPanY);
+  AddAnimation("PanY", mpPanY);
   
   InitImage();
   Load(rImagePath);
-  //StartAnimation(_T("Zoom"));
+  //StartAnimation("Zoom");
 }
 
 nuiHugeImage::~nuiHugeImage()
@@ -63,23 +63,23 @@ nuiHugeImage::~nuiHugeImage()
 
 void nuiHugeImage::InitAttributes()
 {
-  AddAttribute(new nuiAttribute<float>(nglString(_T("Zoom")), nuiUnitCustom,
+  AddAttribute(new nuiAttribute<float>(nglString("Zoom"), nuiUnitCustom,
                                        nuiMakeDelegate(this, &nuiHugeImage::GetZoom),
                                        nuiMakeDelegate(this, &nuiHugeImage::SetZoom)));
   
-  AddAttribute(new nuiAttribute<float>(nglString(_T("MinZoom")), nuiUnitCustom,
+  AddAttribute(new nuiAttribute<float>(nglString("MinZoom"), nuiUnitCustom,
                                        nuiMakeDelegate(this, &nuiHugeImage::GetMinZoom),
                                        nuiMakeDelegate(this, &nuiHugeImage::SetMaxZoom)));
   
-  AddAttribute(new nuiAttribute<float>(nglString(_T("MaxZoom")), nuiUnitCustom,
+  AddAttribute(new nuiAttribute<float>(nglString("MaxZoom"), nuiUnitCustom,
                                        nuiMakeDelegate(this, &nuiHugeImage::GetMaxZoom),
                                        nuiMakeDelegate(this, &nuiHugeImage::SetMaxZoom)));
   
-  AddAttribute(new nuiAttribute<float>(nglString(_T("CenterX")), nuiUnitCustom,
+  AddAttribute(new nuiAttribute<float>(nglString("CenterX"), nuiUnitCustom,
                                        nuiMakeDelegate(this, &nuiHugeImage::GetCenterX),
                                        nuiMakeDelegate(this, &nuiHugeImage::SetCenterX)));
 
-  AddAttribute(new nuiAttribute<float>(nglString(_T("CenterY")), nuiUnitCustom,
+  AddAttribute(new nuiAttribute<float>(nglString("CenterY"), nuiUnitCustom,
                                        nuiMakeDelegate(this, &nuiHugeImage::GetCenterY),
                                        nuiMakeDelegate(this, &nuiHugeImage::SetCenterY)));
 }
@@ -113,7 +113,7 @@ bool nuiHugeImage::Load(const nglPath& rImagePath)
       int32 sx = MIN(TEXTURE_SIZE, w - x);
       int32 sy = MIN(TEXTURE_SIZE, h - y);
       nglImage* pCrop = pImage->Crop(x, y, sx, sy);
-      //NGL_OUT(_T("Crop[%d][%d] 0x%x\n"), i, j, pCrop);
+      //NGL_OUT("Crop[%d][%d] 0x%x\n", i, j, pCrop);
       mTextures[i][j] = nuiTexture::GetTexture(pCrop, true);
 //       mTextures[i][j]->EnableAutoMipMap(true);
 //       mTextures[i][j]->SetMagFilter(GL_LINEAR);
@@ -159,7 +159,7 @@ bool nuiHugeImage::Draw(nuiDrawContext* pContext)
         int32 h = pTexture->GetHeight();
         nuiRect src(w, h);
         nuiRect dest(x, y, w, h);
-        //NGL_OUT(_T("%d x %d - %s\n"), i, j, dest.GetValue().GetChars());
+        //NGL_OUT("%d x %d - %s\n", i, j, dest.GetValue().GetChars());
         pContext->SetTexture(pTexture);
         pContext->DrawImage(dest, src);
       }
@@ -190,22 +190,22 @@ bool nuiHugeImage::MouseClicked(const nglMouseInfo& rInfo)
       y += (rInfo.Y - (mRect.GetHeight() / 2)) / mZoom;
     }
     
-    StopAnimation(_T("Zoom"));
+    StopAnimation("Zoom");
     mpZoom->SetEndValue(zoom);
-    StartAnimation(_T("Zoom"));
+    StartAnimation("Zoom");
     
     if (mX != x)
     {
-      StopAnimation(_T("PanX"));
+      StopAnimation("PanX");
       mpPanX->SetEndValue(x);
-      StartAnimation(_T("PanX"));
+      StartAnimation("PanX");
     }
 
     if (mY != y)
     {
-      StopAnimation(_T("PanY"));
+      StopAnimation("PanY");
       mpPanY->SetEndValue(y);
-      StartAnimation(_T("PanY"));
+      StartAnimation("PanY");
     }    
     Invalidate();
   }
@@ -278,8 +278,8 @@ void nuiHugeImage::ClearImage()
 void nuiHugeImage::ZoomTo(float zoom)
 {
   mpZoom->SetEndValue(zoom);
-  StopAnimation(_T("Zoom"));
-  StartAnimation(_T("Zoom"));
+  StopAnimation("Zoom");
+  StartAnimation("Zoom");
   Invalidate();
 }
 

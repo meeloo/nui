@@ -36,15 +36,15 @@ public:
     mCanSave = false; ///< FIXME
     mCanLoad = true;
 
-    mName = _T("CG");
+    mName = "CG";
 
-    mExtensions.push_back(nglString(_T(".png")));
-    mExtensions.push_back(nglString(_T(".jpeg")));
-    mExtensions.push_back(nglString(_T(".jpg")));
-    mExtensions.push_back(nglString(_T(".jpe")));
-    mExtensions.push_back(nglString(_T(".jif")));
+    mExtensions.push_back(nglString(".png"));
+    mExtensions.push_back(nglString(".jpeg"));
+    mExtensions.push_back(nglString(".jpg"));
+    mExtensions.push_back(nglString(".jpe"));
+    mExtensions.push_back(nglString(".jif"));
     
-    mInfo = _T("CG image codec, using Core Graphics Framework from Apple");
+    mInfo = "CG image codec, using Core Graphics Framework from Apple";
   }
 
   virtual ~nglImageCGCodecInfo()

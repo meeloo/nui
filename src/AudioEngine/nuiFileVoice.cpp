@@ -63,14 +63,14 @@ bool nuiFileVoice::Init()
   
   if (!path.Exists())
   {
-    NGL_OUT(_T("Can't load this audio file: %s (file does not exist)\n"), path.GetNodeName().GetChars());
+    NGL_OUT("Can't load this audio file: %s (file does not exist)\n", path.GetNodeName().GetChars());
     return false;
   }
   
   nglIStream* pStream = path.OpenRead();
   if (!pStream)
   {
-    NGL_OUT(_T("Can't load this audio file: %s (stream can't be open)\n"), path.GetNodeName().GetChars());
+    NGL_OUT("Can't load this audio file: %s (stream can't be open)\n", path.GetNodeName().GetChars());
     return false;
   }
   
@@ -88,7 +88,7 @@ bool nuiFileVoice::Init()
       pReader = new nuiAudioDecoder(*pStream);
       if (!pReader->GetInfo(info))
       {
-        NGL_OUT(_T("Can't load this audio file: %s (reader can't be created)\n"), path.GetNodeName().GetChars());
+        NGL_OUT("Can't load this audio file: %s (reader can't be created)\n", path.GetNodeName().GetChars());
         delete pReader;
         delete pStream;
         return false;
@@ -99,7 +99,7 @@ bool nuiFileVoice::Init()
   mpStream = pStream;
   mpReader = pReader;
   mInfo = info;
-  NGL_OUT(_T("audio file loaded: %s\n"), path.GetNodeName().GetChars());
+  NGL_OUT("audio file loaded: %s\n", path.GetNodeName().GetChars());
   return true;
 }
 

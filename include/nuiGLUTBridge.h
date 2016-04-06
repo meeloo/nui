@@ -127,7 +127,7 @@ protected:
     pContext->GetPainter()->SetState(nuiRenderState(), true);
     
     //static int counter = 0;
-    //NGL_OUT(_T("%d OnPaint %d - %d\n"), counter++, DrawFullFrame, RestorePartial);
+    //NGL_OUT("%d OnPaint %d - %d\n", counter++, DrawFullFrame, RestorePartial);
     
     pContext->LoadIdentity();
     
@@ -158,7 +158,7 @@ protected:
     nuiDrawContext* pCtx = GetDrawContext();
     pCtx->SetSize(Width,Height);
     
-    //NGL_OUT(_T("(OnResize)nglWindow::Invalidate()\n"));;
+    //NGL_OUT("(OnResize)nglWindow::Invalidate()\n");;
     InvalidateLayout();
     EmptyTrash();
   }
@@ -170,7 +170,7 @@ protected:
   
   void OnDestruction()
   {
-    //NGL_OUT(_T("OnDestruction\n"));
+    //NGL_OUT("OnDestruction\n");
     EmptyTrash();
   }
   

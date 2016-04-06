@@ -13,7 +13,7 @@
 nuiStateDecoration::nuiStateDecoration(const nglString& rName)
   : nuiDecoration(rName), mClientRect(0,0,0,0), mUseSourceClientRect(false)
 {
-  if (SetObjectClass(_T("nuiStateDecoration")))
+  if (SetObjectClass("nuiStateDecoration"))
     InitAttributes();
 }
 
@@ -21,7 +21,7 @@ nuiStateDecoration::nuiStateDecoration(const nglString& rName)
 nuiStateDecoration::nuiStateDecoration(const nglString& rName, const nglString& rUp, const nglString& rDown, const nglString& rHoverOn, const nglString& rDisabled, const nglString& rDisabledSelected)
   : nuiDecoration(rName), mClientRect(0,0,0,0), mUseSourceClientRect(false)
 {
-  if (SetObjectClass(_T("nuiStateDecoration")))
+  if (SetObjectClass("nuiStateDecoration"))
     InitAttributes();
 
   if (!rUp.IsNull())
@@ -44,7 +44,7 @@ nuiStateDecoration::nuiStateDecoration(const nglString& rName, const nglString& 
 nuiStateDecoration::nuiStateDecoration(const nglString& rName, const nglString& rUp, const nglString& rDown, const nglString& rUpHoverOn,  const nglString& rDownHoverOn, const nglString& rDisabled, const nglString& rDisabledSelected)
   : nuiDecoration(rName), mClientRect(0,0,0,0), mUseSourceClientRect(false)
 {
-  if (SetObjectClass(_T("nuiStateDecoration")))
+  if (SetObjectClass("nuiStateDecoration"))
     InitAttributes();
 
   SetState(nuiStateEnabled  | nuiStateReleased | nuiStateHoverOff, GetDecoration(rUp));
@@ -77,52 +77,52 @@ nuiStateDecoration::~nuiStateDecoration()
 void nuiStateDecoration::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nuiRect&>
-   (nglString(_T("ClientRect")), nuiUnitNone,
+   (nglString("ClientRect"), nuiUnitNone,
     nuiAttribute<const nuiRect&>::GetterDelegate(this, &nuiStateDecoration::GetSourceClientRect),
     nuiAttribute<const nuiRect&>::SetterDelegate(this, &nuiStateDecoration::SetSourceClientRect)));
 
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("OnUp")), nuiUnitNone,
+   (nglString("OnUp"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiStateDecoration::GetDecoUp), 
     nuiMakeDelegate(this, &nuiStateDecoration::SetDecoUp)));
 
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("OnDown")), nuiUnitNone,
+   (nglString("OnDown"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiStateDecoration::GetDecoDown), 
     nuiMakeDelegate(this, &nuiStateDecoration::SetDecoDown)));
 
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("OnUpHover")), nuiUnitNone,
+   (nglString("OnUpHover"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiStateDecoration::GetDecoUpHover), 
     nuiMakeDelegate(this, &nuiStateDecoration::SetDecoUpHover)));
 
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("OnDownHover")), nuiUnitNone,
+   (nglString("OnDownHover"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiStateDecoration::GetDecoDownHover), 
     nuiMakeDelegate(this, &nuiStateDecoration::SetDecoDownHover)));
     
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("OnSelected")), nuiUnitNone,
+   (nglString("OnSelected"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiStateDecoration::GetDecoSelected), 
     nuiMakeDelegate(this, &nuiStateDecoration::SetDecoSelected)));
 
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("OnDisabled")), nuiUnitNone,
+   (nglString("OnDisabled"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiStateDecoration::GetDecoDisabled), 
     nuiMakeDelegate(this, &nuiStateDecoration::SetDecoDisabled)));
 
   AddAttribute(new nuiAttribute<const nglString&>
-     (nglString(_T("OnDisabledSelected")), nuiUnitNone,
+     (nglString("OnDisabledSelected"), nuiUnitNone,
       nuiMakeDelegate(this, &nuiStateDecoration::GetDecoDisabledSelected), 
       nuiMakeDelegate(this, &nuiStateDecoration::SetDecoDisabledSelected)));
 
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("OnUpDisabled")), nuiUnitNone,
+   (nglString("OnUpDisabled"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiStateDecoration::GetDecoUpDisabled), 
     nuiMakeDelegate(this, &nuiStateDecoration::SetDecoUpDisabled)));
 
   AddAttribute(new nuiAttribute<const nglString&>
-   (nglString(_T("OnDownDisabled")), nuiUnitNone,
+   (nglString("OnDownDisabled"), nuiUnitNone,
     nuiMakeDelegate(this, &nuiStateDecoration::GetDecoDownDisabled), 
     nuiMakeDelegate(this, &nuiStateDecoration::SetDecoDownDisabled)));
 
@@ -140,7 +140,7 @@ nuiDecoration* nuiStateDecoration::GetDecoration(const nglString& rName) const
   nuiTexture* pTexture = nuiTexture::GetTexture(nglPath(rName));
   if (!pTexture || !pTexture->IsValid())
   {
-    NGL_OUT(_T("nuiStateDecoration::GetDecoration warning : could not load graphic resource '%s'\n"), rName.GetChars());
+    NGL_OUT("nuiStateDecoration::GetDecoration warning : could not load graphic resource '%s'\n", rName.GetChars());
     return NULL;
   }
   

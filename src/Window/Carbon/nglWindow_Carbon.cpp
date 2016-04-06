@@ -31,10 +31,10 @@
 
 const nglChar* gpWindowErrorTable[] =
 {
-/*  0 */ _T("No error"),
-/*  1 */ _T("System window creation failed"),
-/*  2 */ _T("Full screen video mode unavailable"),
-/*  3 */ _T("Properties out of range"),
+/*  0 */ "No error",
+/*  1 */ "System window creation failed",
+/*  2 */ "Full screen video mode unavailable",
+/*  3 */ "Properties out of range",
 NULL
 };
 
@@ -93,52 +93,52 @@ void PrintErr(OSErr err)
   switch (err)
   {
     case procNotFound:
-      NGL_OUT(_T("Proc Not Found Error\n")); 
+      NGL_OUT("Proc Not Found Error\n"); 
       break;    
     case badDragRefErr:
-      NGL_OUT(_T("Unknown drag reference\n"));
+      NGL_OUT("Unknown drag reference\n");
       break;
     case badDragItemErr:
-      NGL_OUT(_T("Unknown drag item reference\n"));
+      NGL_OUT("Unknown drag item reference\n");
       break;
     case badDragFlavorErr:
-      NGL_OUT(_T("Unknown flavor type\n"));
+      NGL_OUT("Unknown flavor type\n");
       break;
     case duplicateFlavorErr:
-      NGL_OUT(_T("Flavor type already exists\n"));
+      NGL_OUT("Flavor type already exists\n");
       break;
     case cantGetFlavorErr:
-      NGL_OUT(_T("Error while trying to get flavor data\n"));
+      NGL_OUT("Error while trying to get flavor data\n");
       break;
     case duplicateHandlerErr:
-      NGL_OUT(_T("Handler already exists\n"));
+      NGL_OUT("Handler already exists\n");
       break;
     case handlerNotFoundErr:
-      NGL_OUT(_T("Handler not found\n"));
+      NGL_OUT("Handler not found\n");
       break;
     case dragNotAcceptedErr:
-      NGL_OUT(_T("Drag was not accepted by receiver\n"));
+      NGL_OUT("Drag was not accepted by receiver\n");
       break;
     case unsupportedForPlatformErr:
-      NGL_OUT(_T("Call is for PowerPC only\n"));
+      NGL_OUT("Call is for PowerPC only\n");
       break;
     case noSuitableDisplaysErr:
-      NGL_OUT(_T("No displays support translucency\n"));
+      NGL_OUT("No displays support translucency\n");
       break;
     case badImageRgnErr:
-      NGL_OUT(_T("Bad translucent image region\n"));
+      NGL_OUT("Bad translucent image region\n");
       break;
     case badImageErr:
-      NGL_OUT(_T("Bad translucent image PixMap\n"));
+      NGL_OUT("Bad translucent image PixMap\n");
       break;
     case nonDragOriginatorErr:
-      NGL_OUT(_T("Illegal attempt to access originator only data\n"));
+      NGL_OUT("Illegal attempt to access originator only data\n");
       break;
     default:
       if (!err)
-        NGL_OUT(_T("No error returned\n"));
+        NGL_OUT("No error returned\n");
       else
-        NGL_OUT(_T("Unknown error returned\n"));
+        NGL_OUT("Unknown error returned\n");
       break;
   }
 }
@@ -215,7 +215,7 @@ nglCarbonDragAndDrop::~nglCarbonDragAndDrop()
 
 bool nglCarbonDragAndDrop::Drag(nglDragAndDrop* pDragObject)
 {
-  //NGL_OUT(_T("\n\nnglCarbonDragAndDrop::Drag\n\n"));
+  //NGL_OUT("\n\nnglCarbonDragAndDrop::Drag\n\n");
   OSErr err = noErr;
   mpDragObject = pDragObject; 
   
@@ -293,7 +293,7 @@ bool nglCarbonDragAndDrop::Drag(nglDragAndDrop* pDragObject)
   delete mpDragObject;
   mpDragObject = NULL;
 
-  //NGL_OUT(_T("\n\nnglCarbonDragAndDrop::Drag DONE\n\n"));
+  //NGL_OUT("\n\nnglCarbonDragAndDrop::Drag DONE\n\n");
   return res;
   
 }
@@ -407,13 +407,13 @@ OSErr nglDragTrackingHandler (DragTrackingMessage message, WindowRef theWindow, 
   switch (message)
   {
     case kDragTrackingEnterHandler:
-      //NGL_OUT(_T("nglDragTrackingHandler(kDragTrackingEnterHandler, 0x%x, 0x%x, 0x%x)\n"), theWindow, handlerRefCon, theDrag);
+      //NGL_OUT("nglDragTrackingHandler(kDragTrackingEnterHandler, 0x%x, 0x%x, 0x%x)\n", theWindow, handlerRefCon, theDrag);
       //Dont really care ..
       break;
       
     case kDragTrackingEnterWindow:
       {
-        //NGL_OUT(_T("nglDragTrackingHandler(kDragTrackingEnterWindow, 0x%x, 0x%x, 0x%x)\n"), theWindow, handlerRefCon, theDrag);
+        //NGL_OUT("nglDragTrackingHandler(kDragTrackingEnterWindow, 0x%x, 0x%x, 0x%x)\n", theWindow, handlerRefCon, theDrag);
         NGL_ASSERT(!pDnd->HasDropObject());
         
         nglDragAndDrop* pDrag = new nglDragAndDrop(eDropEffectCopy);
@@ -463,7 +463,7 @@ OSErr nglDragTrackingHandler (DragTrackingMessage message, WindowRef theWindow, 
       
     case kDragTrackingInWindow:
       { 
-        //NGL_OUT(_T("nglDragTrackingHandler(kDragTrackingInWindow, 0x%x, 0x%x, 0x%x)\n"), theWindow, handlerRefCon, theDrag);
+        //NGL_OUT("nglDragTrackingHandler(kDragTrackingInWindow, 0x%x, 0x%x, 0x%x)\n", theWindow, handlerRefCon, theDrag);
         Point mouse;
         err = GetDragMouse (theDrag, &mouse, NULL);
         Rect rect;
@@ -503,7 +503,7 @@ OSErr nglDragTrackingHandler (DragTrackingMessage message, WindowRef theWindow, 
       
     case kDragTrackingLeaveWindow:
       {
-        //NGL_OUT(_T("nglDragTrackingHandler(kDragTrackingLeaveWindow, 0x%x, 0x%x, 0x%x)\n"), theWindow, handlerRefCon, theDrag);
+        //NGL_OUT("nglDragTrackingHandler(kDragTrackingLeaveWindow, 0x%x, 0x%x, 0x%x)\n", theWindow, handlerRefCon, theDrag);
         pDnd->mpWin->OnDragLeave();
         NGL_ASSERT(pDnd->HasDropObject());
         delete pDnd->GetDropObject();
@@ -515,7 +515,7 @@ OSErr nglDragTrackingHandler (DragTrackingMessage message, WindowRef theWindow, 
     case kDragTrackingLeaveHandler:
       {
         //Dont really care ..
-        //NGL_OUT(_T("nglDragTrackingHandler(kDragTrackingLeaveHandler, 0x%x, 0x%x, 0x%x)\n"), theWindow, handlerRefCon, theDrag);
+        //NGL_OUT("nglDragTrackingHandler(kDragTrackingLeaveHandler, 0x%x, 0x%x, 0x%x)\n", theWindow, handlerRefCon, theDrag);
       }
       break;
       
@@ -713,7 +713,7 @@ static OSStatus GetText(EventRef inEvent, nglString& outString)
     if (noErr == err) 
       outString.Import((const char*)&buf[0], buf.size() * sizeof(UniChar), eUCS2);
     
-    //NGL_OUT(_T("  Unicode text: %s\n"), outString.GetChars());
+    //NGL_OUT("  Unicode text: %s\n", outString.GetChars());
   }
   return err;
 }
@@ -1071,9 +1071,9 @@ void nglWindow::InitDragAndDrop()
     /*
      * Drag and Drop stuff
      */
-    App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Text"), 'TEXT', nglDataTextObject::Create);
-    App->GetDataTypesRegistry().RegisterDataType(_T("ngl/Files"), kDragFlavorTypeHFS, nglDataFilesObject::Create);
-		App->GetDataTypesRegistry().RegisterDataType(_T("ngl/PromiseFiles"), kDragFlavorTypePromiseHFS, nglDataFilesObject::Create);
+    App->GetDataTypesRegistry().RegisterDataType("ngl/Text", 'TEXT', nglDataTextObject::Create);
+    App->GetDataTypesRegistry().RegisterDataType("ngl/Files", kDragFlavorTypeHFS, nglDataFilesObject::Create);
+		App->GetDataTypesRegistry().RegisterDataType("ngl/PromiseFiles", kDragFlavorTypePromiseHFS, nglDataFilesObject::Create);
     mpCarbonDragAndDrop = new nglCarbonDragAndDrop(this, mWindow);
     
     CallOnCreation();
@@ -1241,7 +1241,7 @@ OSStatus nglWindow::WindowEventHandler (EventHandlerCallRef eventHandlerCallRef,
         }
           break;
         default:
-          NGL_DEBUG( NGL_LOG(_T("window"), NGL_LOG_INFO, _T("WindowEventHandler: unhandled event %d\n"), eventKind); )
+          NGL_DEBUG( NGL_LOG("window", NGL_LOG_INFO, "WindowEventHandler: unhandled event %d\n", eventKind); )
           break;
       }
     }

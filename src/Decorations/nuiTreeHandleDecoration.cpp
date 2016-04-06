@@ -13,7 +13,7 @@
 nuiTreeHandleDecoration::nuiTreeHandleDecoration(const nglString& rName, nuiColor handleColor, uint32 handleSize, const nuiBorder& rHandleBorder)
   : nuiDecoration(rName), mBorder(rHandleBorder)
 {
-  if (SetObjectClass(_T("nuiTreeHandleDecoration")))
+  if (SetObjectClass("nuiTreeHandleDecoration"))
     InitAttributes();
   
   mHandleColor = handleColor;
@@ -35,17 +35,17 @@ nuiTreeHandleDecoration::~nuiTreeHandleDecoration()
 void nuiTreeHandleDecoration::InitAttributes()
 {
   AddAttribute(new nuiAttribute<const nuiBorder&>
-   (nglString(_T("HandleBorder")), nuiUnitNone,
+   (nglString("HandleBorder"), nuiUnitNone,
     nuiAttribute<const nuiBorder&>::GetterDelegate(this, &nuiTreeHandleDecoration::GetHandleBorder),
     nuiAttribute<const nuiBorder&>::SetterDelegate(this, &nuiTreeHandleDecoration::SetHandleBorder)));
 
   AddAttribute(new nuiAttribute<uint32>
-  (nglString(_T("HandleSize")), nuiUnitPixels,
+  (nglString("HandleSize"), nuiUnitPixels,
    nuiMakeDelegate(this, &nuiTreeHandleDecoration::GetHandleSize),
    nuiMakeDelegate(this, &nuiTreeHandleDecoration::SetHandleSize)));
   
   AddAttribute(new nuiAttribute<const nuiColor&>
-  (nglString(_T("HandleColor")), nuiUnitColor,
+  (nglString("HandleColor"), nuiUnitColor,
    nuiMakeDelegate(this, &nuiTreeHandleDecoration::GetHandleColor), 
    nuiMakeDelegate(this, &nuiTreeHandleDecoration::SetHandleColor)));
 }

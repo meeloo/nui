@@ -14,7 +14,7 @@ nuiPercentAttributeEditor::nuiPercentAttributeEditor(const nuiAttrib<float>& rAt
   mEventSink(this),
   mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiPercentAttributeEditor"));
+	SetObjectClass("nuiPercentAttributeEditor");
     
 	nuiVBox* vbox = new nuiVBox(0);
 	vbox->SetExpand(nuiExpandShrinkAndGrow);
@@ -36,9 +36,9 @@ nuiPercentAttributeEditor::nuiPercentAttributeEditor(const nuiAttrib<float>& rAt
 	{
 		nglString label;
 		if ((i==range.GetMinimum()) || (i==range.GetMaximum()))
-			label.CFormat(_T("%.0f%%"), i*100.0f);
+			label.CFormat("%.0f%%", i*100.0f);
 		else
-      label = _T("|");
+      label = "|";
 		
 		signs->SetCell(j, new nuiLabel(label, nuiFont::GetFont(8)));
 		signs->SetCellExpand(j, nuiExpandShrinkAndGrow);

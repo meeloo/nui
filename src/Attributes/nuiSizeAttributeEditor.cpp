@@ -12,7 +12,7 @@ nuiSizeAttributeEditor::nuiSizeAttributeEditor(const nuiAttrib<double>& rAttribu
 	: nuiAttributeEditor(),
     mAttribute(rAttribute)
 {
-	SetObjectClass(_T("nuiSizeAttributeEditor"));
+	SetObjectClass("nuiSizeAttributeEditor");
 	
 	nglString contents;
 	mAttribute.Format(contents);

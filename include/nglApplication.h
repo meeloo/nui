@@ -37,7 +37,7 @@ class MyApp : public nglApplication
 public:
   void OnInit()
   {
-    NGL_OUT (_T("Hello world !\n"));
+    NGL_OUT ("Hello world !\n");
     Quit();
   }
 };

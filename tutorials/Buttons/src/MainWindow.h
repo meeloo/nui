@@ -9,6 +9,8 @@
 
 #include "nuiMainWindow.h"
 
+#define DUMMY_DEBUGGER 0
+
 
 class MainWindow : public nuiMainWindow
 {
@@ -40,5 +42,11 @@ private:
   
   nuiLabel* mpLabel;
   nuiEventSink<MainWindow> mEventSink;
+
+#if DUMMY_DEBUGGER
+  nuiTCPClient* mpClient = nullptr;
+  nuiMessageClient* mpMessageClient = nullptr;
+  nuiSocketPool mSocketPool;
+#endif
 };
 

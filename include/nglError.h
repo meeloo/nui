@@ -205,7 +205,7 @@ protected:
      search. Example :
 
 \code
-const nglChar** ChildErrorTable = {_T("no error"), _T("Bad luck"), NULL};
+const nglChar** ChildErrorTable = {"no error", "Bad luck", NULL};
 
 const nglChar* Child::OnError (uint& rError) const
 {

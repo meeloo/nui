@@ -84,17 +84,27 @@ class nuiTask0 : public nuiTask
 {
 public:
   typedef nuiFastDelegate0<Ret> Delegate;
+  typedef std::function<Ret()> Function;
   nuiTask0(const Delegate& rDelegate)
   : mDelegate(rDelegate)
   {    
   }
   
+  nuiTask0(const Function& rFunction)
+  : mFunction(rFunction)
+  {
+  }
+  
   
 protected:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate();
+    if (mDelegate)
+      mDelegate();
+    else
+      mFunction();
   }
 };
 
@@ -111,17 +121,27 @@ class nuiTask1 : public nuiTask
 {
 public:
   typedef nuiFastDelegate1<P0, Ret> Delegate;
+  typedef std::function<Ret(P0)> Function;
   nuiTask1(const Delegate& rDelegate, typename RefConst<P0>::Type rP0)
   : mP0(rP0), mDelegate(rDelegate)
   {    
   }
   
+  nuiTask1(const Function& rFunction, typename RefConst<P0>::Type rP0)
+  : mP0(rP0), mFunction(rFunction)
+  {
+  }
+  
   DEFPARAM(0, typename DeRefConst<P0>::Type);
 private:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate(mP0);
+    if (mDelegate)
+      mDelegate(mP0);
+    else
+      mFunction(mP0);
   }
 };
 
@@ -131,9 +151,15 @@ class nuiTask2 : public nuiTask
 {
 public:
   typedef nuiFastDelegate2<P0, P1, Ret> Delegate;
+  typedef std::function<Ret(P0, P1)> Function;
   nuiTask2(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1)
   {    
+  }
+  
+  nuiTask2(const Function& rFunction, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1)
+  : mFunction(rFunction), mP0(rP0), mP1(rP1)
+  {
   }
   
   DEFPARAM(0, typename DeRefConst<P0>::Type);
@@ -141,9 +167,13 @@ public:
 
 private:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate(mP0, mP1);
+    if (mDelegate)
+      mDelegate(mP0, mP1);
+    else
+      mFunction(mP0, mP1);
   }
 };
 
@@ -153,9 +183,15 @@ class nuiTask3 : public nuiTask
 {
 public:
   typedef nuiFastDelegate3<P0, P1, P2, Ret> Delegate;
+  typedef std::function<Ret(P0, P1, P2)> Function;
   nuiTask3(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2)
   {    
+  }
+  
+  nuiTask3(const Function& rFunction, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2)
+  : mFunction(rFunction), mP0(rP0), mP1(rP1), mP2(rP2)
+  {
   }
   
   DEFPARAM(0, typename DeRefConst<P0>::Type);
@@ -164,9 +200,13 @@ public:
 
 private:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate(mP0, mP1, mP2);
+    if (mDelegate)
+      mDelegate(mP0, mP1, mP2);
+    else
+      mFunction(mP0, mP1, mP2);
   }
 };
 
@@ -176,9 +216,15 @@ class nuiTask4 : public nuiTask
 {
 public:
   typedef nuiFastDelegate4<P0, P1, P2, P3, Ret> Delegate;
+  typedef std::function<Ret(P0, P1, P2, P3)> Function;
   nuiTask4(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3)
-  {    
+  {
+  }
+  
+  nuiTask4(const Function& rFunction, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3)
+  : mFunction(rFunction), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3)
+  {
   }
   
   DEFPARAM(0, typename DeRefConst<P0>::Type);
@@ -188,9 +234,13 @@ public:
 
 private:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate(mP0, mP1, mP2, mP3);
+    if (mDelegate)
+      mDelegate(mP0, mP1, mP2, mP3);
+    else
+      mFunction(mP0, mP1, mP2, mP3);
   }
 };
 
@@ -201,9 +251,15 @@ class nuiTask5 : public nuiTask
 {
 public:
   typedef nuiFastDelegate5<P0, P1, P2, P3, P4, Ret> Delegate;
+  typedef std::function<Ret(P0, P1, P2, P3, P4)> Function;
   nuiTask5(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4)
   {    
+  }
+  
+  nuiTask5(const Function& rFunction, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4)
+  : mFunction(rFunction), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4)
+  {
   }
   
   DEFPARAM(0, typename DeRefConst<P0>::Type);
@@ -214,9 +270,13 @@ public:
 
 private:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate(mP0, mP1, mP2, mP3, mP4);
+    if (mDelegate)
+      mDelegate(mP0, mP1, mP2, mP3, mP4);
+    else
+      mFunction(mP0, mP1, mP2, mP3, mP4);
   }
 };
 
@@ -228,9 +288,15 @@ class nuiTask6 : public nuiTask
 {
 public:
   typedef nuiFastDelegate6<P0, P1, P2, P3, P4, P5, Ret> Delegate;
+  typedef std::function<Ret(P0, P1, P2, P3, P4, P5)> Function;
   nuiTask6(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5)
-  {    
+  {
+  }
+  
+  nuiTask6(const Function& rFunction, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5)
+  : mFunction(rFunction), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5)
+  {
   }
   
   DEFPARAM(0, typename DeRefConst<P0>::Type);
@@ -242,9 +308,13 @@ public:
 
 private:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate(mP0, mP1, mP2, mP3, mP4, mP5);
+    if (mDelegate)
+      mDelegate(mP0, mP1, mP2, mP3, mP4, mP5);
+    else
+      mFunction(mP0, mP1, mP2, mP3, mP4, mP5);
   }
 };
 
@@ -256,9 +326,15 @@ class nuiTask7 : public nuiTask
 {
 public:
   typedef nuiFastDelegate7<P0, P1, P2, P3, P4, P5, P6, Ret> Delegate;
+  typedef std::function<Ret(P0, P1, P2, P3, P4, P5, P6)> Function;
   nuiTask7(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5, typename RefConst<P6>::Type rP6)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5), mP6(rP6)
   {    
+  }
+  
+  nuiTask7(const Function& rFunction, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5, typename RefConst<P6>::Type rP6)
+  : mFunction(rFunction), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5), mP6(rP6)
+  {
   }
   
   DEFPARAM(0, typename DeRefConst<P0>::Type);
@@ -271,9 +347,13 @@ public:
 
 private:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate(mP0, mP1, mP2, mP3, mP4, mP5, mP6);
+    if (mDelegate)
+      mDelegate(mP0, mP1, mP2, mP3, mP4, mP5, mP6);
+    else
+      mFunction(mP0, mP1, mP2, mP3, mP4, mP5, mP6);
   }
 };
 
@@ -285,9 +365,15 @@ class nuiTask8 : public nuiTask
 {
 public:
   typedef nuiFastDelegate8<P0, P1, P2, P3, P4, P5, P6, P7, Ret> Delegate;
+  typedef std::function<Ret(P0, P1, P2, P3, P4, P5, P6, P7)> Function;
   nuiTask8(const Delegate& rDelegate, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5, typename RefConst<P6>::Type rP6, typename RefConst<P7>::Type rP7)
   : mDelegate(rDelegate), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5), mP6(rP6), mP7(rP7)
   {    
+  }
+  
+  nuiTask8(const Function& rFunction, typename RefConst<P0>::Type rP0, typename RefConst<P1>::Type rP1, typename RefConst<P2>::Type rP2, typename RefConst<P3>::Type rP3, typename RefConst<P4>::Type rP4, typename RefConst<P5>::Type rP5, typename RefConst<P6>::Type rP6, typename RefConst<P7>::Type rP7)
+  : mFunction(rFunction), mP0(rP0), mP1(rP1), mP2(rP2), mP3(rP3), mP4(rP4), mP5(rP5), mP6(rP6), mP7(rP7)
+  {
   }
   
   DEFPARAM(0, typename DeRefConst<P0>::Type);
@@ -301,9 +387,13 @@ public:
 
 private:
   Delegate mDelegate;
+  Function mFunction;
   virtual void Execute() const
   {
-    mDelegate(mP0, mP1, mP2, mP3, mP4, mP5, mP6, mP7);
+    if (mDelegate)
+      mDelegate(mP0, mP1, mP2, mP3, mP4, mP5, mP6, mP7);
+    else
+      mFunction(mP0, mP1, mP2, mP3, mP4, mP5, mP6, mP7);
   }
 };
 
@@ -332,6 +422,12 @@ nuiTask0<RetType>* nuiMakeTask(Y* x, RetType (X::*func)() const)
 	return new nuiTask0<RetType>(nuiMakeDelegate(x, func));
 }
 
+template <typename RetType>
+nuiTask0<RetType>* nuiMakeTask(const typename nuiTask0<RetType>::Function& func)
+{
+  return new nuiTask0<RetType>(func);
+}
+
 
 // 1 Param
 template <class Param0, class RetType>
@@ -350,6 +446,12 @@ template <class X, class Y, class Param0, class RetType>
 nuiTask1<Param0, RetType>* nuiMakeTask(Y* x, RetType (X::*func)(Param0 p0) const, typename RefConst<Param0>::Type  P0)
 { 
 	return new nuiTask1<Param0, RetType>(nuiMakeDelegate(x, func), P0);
+}
+
+template <class Param0, class RetType>
+nuiTask1<Param0, RetType>* nuiMakeTask(const typename nuiTask1<Param0, RetType>::Function& func, typename RefConst<Param0>::Type  P0)
+{
+  return new nuiTask1<Param0, RetType>(func, P0);
 }
 
 
@@ -376,6 +478,12 @@ nuiTask2<Param0, Param1, RetType>* nuiMakeTask(Y*x, RetType (X::*func)(Param0 p0
 	return new nuiTask2<Param0, Param1, RetType>(nuiMakeDelegate(x, func), P0, P1);
 }
 
+template <class Param0, class Param1, class RetType>
+nuiTask2<Param0, Param1, RetType>* nuiMakeTask(const typename nuiTask2<Param0, Param1, RetType>::Function& func, typename RefConst<Param0>::Type  P0, typename RefConst<Param1>::Type  P1)
+{
+  return new nuiTask2<Param0, Param1, RetType>(func, P0);
+}
+
 
 // 3 Params
 template <class Param0, class Param1, class Param2, class RetType>
@@ -399,6 +507,15 @@ nuiTask3<Param0, Param1, Param2, RetType>* nuiMakeTask(Y*x, RetType (X::*func)(P
 	return new nuiTask3<Param0, Param1, Param2, RetType>(nuiMakeDelegate(x, func), P0, P1, P2);
 }
 
+template <class Param0, class Param1, class Param2, class RetType>
+nuiTask3<Param0, Param1, Param2, RetType>* nuiMakeTask(const typename nuiTask3<Param0, Param1, Param2, RetType>::Function& func,
+                                                       Param0 P0, Param1 P1, Param2 P2)
+{
+  return new nuiTask3<Param0, Param1, Param2, RetType>(func, P0, P1, P2);
+}
+
+
+
 // 4 Params
 template <class Param0, class Param1, class Param2, class Param3, class RetType>
 nuiTask4<Param0, Param1, Param2, Param3, RetType>* nuiMakeTask(RetType (*func)(Param0 p0, Param1 p1, Param2 p2, Param3 p3),
@@ -421,6 +538,14 @@ nuiTask4<Param0, Param1, Param2, Param3, RetType>* nuiMakeTask(Y*x, RetType (X::
 	return new nuiTask4<Param0, Param1, Param2, Param3, RetType>(nuiMakeDelegate(x, func), P0, P1, P2, P3);
 }
 
+template <class Param0, class Param1, class Param2, class Param3, class RetType>
+nuiTask4<Param0, Param1, Param2, Param3, RetType>* nuiMakeTask(const typename nuiTask4<Param0, Param1, Param2, Param3, RetType>::Function& func,
+                                                               Param0 P0, Param1 P1, Param2 P2, Param3 P3)
+{
+  return new nuiTask4<Param0, Param1, Param2, Param3, RetType>(func, P0, P1, P2, P3);
+}
+
+
 // 5 Params
 template <class Param0, class Param1, class Param2, class Param3, class Param4, class RetType>
 nuiTask5<Param0, Param1, Param2, Param3, Param4, RetType>* nuiMakeTask(RetType (*func)(Param0 p0, Param1 p1, Param2 p2, Param3 p3, Param4 p4),
@@ -441,6 +566,13 @@ nuiTask5<Param0, Param1, Param2, Param3, Param4, RetType>* nuiMakeTask(Y*x, RetT
                                        Param0 P0, Param1 P1, Param2 P2, Param3 P3, Param4 P4)
 { 
 	return new nuiTask5<Param0, Param1, Param2, Param3, Param4, RetType>(nuiMakeDelegate(x, func), P0, P1, P2, P3, P4);
+}
+
+template <class X, class Y, class Param0, class Param1, class Param2, class Param3, class Param4, class RetType>
+nuiTask5<Param0, Param1, Param2, Param3, Param4, RetType>* nuiMakeTask(const typename nuiTask5<Param0, Param1, Param2, Param3, Param4, RetType>::Function& func,
+                                                                       Param0 P0, Param1 P1, Param2 P2, Param3 P3, Param4 P4)
+{
+  return new nuiTask5<Param0, Param1, Param2, Param3, Param4, RetType>(func, P0, P1, P2, P3, P4);
 }
 
 // 6 Params
@@ -465,6 +597,13 @@ nuiTask6<Param0, Param1, Param2, Param3, Param4, Param5, RetType>* nuiMakeTask(Y
 	return new nuiTask6<Param0, Param1, Param2, Param3, Param4, Param5, RetType>(nuiMakeDelegate(x, func), P0, P1, P2, P3, P4, P5);
 }
 
+template <class Param0, class Param1, class Param2, class Param3, class Param4, class Param5, class RetType>
+nuiTask6<Param0, Param1, Param2, Param3, Param4, Param5, RetType>* nuiMakeTask(const typename nuiTask6<Param0, Param1, Param2, Param3, Param4, Param5, RetType>::Function& func,
+                                                                               Param0 P0, Param1 P1, Param2 P2, Param3 P3, Param4 P4, Param5 P5)
+{
+  return new nuiTask6<Param0, Param1, Param2, Param3, Param4, Param5, RetType>(func, P0, P1, P2, P3, P4, P5);
+}
+
 // 7 Params
 template <class Param0, class Param1, class Param2, class Param3, class Param4, class Param5, class Param6, class RetType>
 nuiTask7<Param0, Param1, Param2, Param3, Param4, Param5, Param6, RetType>* nuiMakeTask(RetType (*func)(Param0 p0, Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6),
@@ -485,6 +624,13 @@ nuiTask7<Param0, Param1, Param2, Param3, Param4, Param5, Param6, RetType>* nuiMa
                                        Param0 P0, Param1 P1, Param2 P2, Param3 P3, Param4 P4, Param5 P5, Param6 P6)
 { 
 	return new nuiTask7<Param0, Param1, Param2, Param3, Param4, Param5, Param6, RetType>(nuiMakeDelegate(x, func), P0, P1, P2, P3, P4, P5, P6);
+}
+
+template <class Param0, class Param1, class Param2, class Param3, class Param4, class Param5, class Param6, class RetType>
+nuiTask7<Param0, Param1, Param2, Param3, Param4, Param5, Param6, RetType>* nuiMakeTask(const typename nuiTask7<Param0, Param1, Param2, Param3, Param4, Param5, Param6, RetType>::Function& func,
+                                                                                       Param0 P0, Param1 P1, Param2 P2, Param3 P3, Param4 P4, Param5 P5, Param6 P6)
+{
+  return new nuiTask7<Param0, Param1, Param2, Param3, Param4, Param5, Param6, RetType>(func, P0, P1, P2, P3, P4, P5, P6);
 }
 
 
@@ -508,6 +654,13 @@ nuiTask8<Param0, Param1, Param2, Param3, Param4, Param5, Param6, Param7, RetType
                                        Param0 P0, Param1 P1, Param2 P2, Param3 P3, Param4 P4, Param5 P5, Param6 P6, Param7 P7)
 { 
 	return new nuiTask8<Param0, Param1, Param2, Param3, Param4, Param5, Param6, Param7, RetType>(nuiMakeDelegate(x, func), P0, P1, P2, P3, P4, P5, P6, P7);
+}
+
+template <class Param0, class Param1, class Param2, class Param3, class Param4, class Param5, class Param6, class Param7, class RetType>
+nuiTask8<Param0, Param1, Param2, Param3, Param4, Param5, Param6, Param7, RetType>* nuiMakeTask(const typename nuiTask8<Param0, Param1, Param2, Param3, Param4, Param5, Param6, Param7, RetType>::Function& func,
+                                                                                               Param0 P0, Param1 P1, Param2 P2, Param3 P3, Param4 P4, Param5 P5, Param6 P6, Param7 P7)
+{
+  return new nuiTask8<Param0, Param1, Param2, Param3, Param4, Param5, Param6, Param7, RetType>(func, P0, P1, P2, P3, P4, P5, P6, P7);
 }
 
 

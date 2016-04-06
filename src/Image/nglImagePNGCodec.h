@@ -18,9 +18,9 @@ public:
   {
     mCanSave = true;
     mCanLoad = true;
-    mName = _T("PNG");
-    mExtensions.push_back(nglString(_T(".png")));
-    mInfo = _T("PNG image codec, using libpng");
+    mName = "PNG";
+    mExtensions.push_back(nglString(".png"));
+    mInfo = "PNG image codec, using libpng";
   };
 
   virtual ~nglImagePNGCodecInfo()

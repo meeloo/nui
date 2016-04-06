@@ -9,7 +9,7 @@
 #include "nui.h"
 
 
-#define NOTIF_PENDING_OPERATION _T("nuiNavigationController_PendingOp")
+#define NOTIF_PENDING_OPERATION "nuiNavigationController_PendingOp"
 #define NAVBAR_ANIM_ALPHA_DURATION 0.25f
 
 
@@ -29,7 +29,7 @@ nuiNavigationController::nuiNavigationController()
 : nuiWidget(),
   mEventSink(this)
 {
-  if (SetObjectClass(_T("nuiNavigationController")))
+  if (SetObjectClass("nuiNavigationController"))
     InitAttributes();
   
   if (mEasings.size() == 0)
@@ -104,11 +104,11 @@ void nuiNavigationController::InitAttributes()
 {
   mAnimPosition = 0.f;
   AddAttribute(new nuiAttribute<nuiSize>
-               (nglString(_T(".AnimPosition")), nuiUnitNone,
+               (nglString(".AnimPosition"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiNavigationController::GetAnimPositon), 
                 nuiMakeDelegate(this, &nuiNavigationController::SetAnimPosition)));
   AddAttribute(new nuiAttribute<bool>
-               (nglString(_T("ShowNavbar")), nuiUnitNone,
+               (nglString("ShowNavbar"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiNavigationController::GetShowNavbar),
                 nuiMakeDelegate(this, &nuiNavigationController::SetShowNavbar)));
 }
@@ -251,7 +251,7 @@ bool nuiNavigationController::Draw(nuiDrawContext* pContext)
   for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
     nuiWidgetPtr pItem = pIt->GetWidget();
-    if (pItem && (pItem->GetObjectClass() == _T("nuiNavigationBar")))
+    if (pItem && (pItem->GetObjectClass() == "nuiNavigationBar"))
     {
       pNavigationBar = pItem;
       continue;
@@ -628,7 +628,7 @@ void nuiNavigationController::_PopViewControllerAnimated(bool animated, Transiti
 {
   if (mViewControllers.size() < 1)
   {
-    NGL_OUT(_T("nuiNavigationController::popViewControllerAnimated : nothing to pop"));
+    NGL_OUT("nuiNavigationController::popViewControllerAnimated : nothing to pop");
     return;
   }
 
@@ -833,7 +833,7 @@ void nuiNavigationController::_PopToViewController(nuiViewController* pViewContr
 {
  if (mViewControllers.size() < 2)
   {
-    NGL_OUT(_T("nuiNavigationController::PopToViewController : nothing to pop to..."));
+    NGL_OUT("nuiNavigationController::PopToViewController : nothing to pop to...");
     return;
   }
 
@@ -878,7 +878,7 @@ void nuiNavigationController::_PopToViewController(nuiViewController* pViewContr
   
   if (!done)
   {
-    NGL_OUT(_T("nuiNavigationController::PopToViewController error : could not find any ViewController %p\n"));
+    NGL_OUT("nuiNavigationController::PopToViewController error : could not find any ViewController %p\n");
     return;  
   }
   
@@ -906,7 +906,7 @@ void nuiNavigationController::_PopToRootViewControllerAnimated(bool animated, Tr
 {
  if (mViewControllers.size() < 1)
   {
-    NGL_OUT(_T("nuiNavigationController::PopToRootViewControllerAnimated : nothing to pop"));
+    NGL_OUT("nuiNavigationController::PopToRootViewControllerAnimated : nothing to pop");
     return;
   }
 
@@ -951,7 +951,7 @@ void nuiNavigationController::_PopToRootViewControllerAnimated(bool animated, Tr
   
   if (!done)
   {
-    NGL_OUT(_T("nuiNavigationController::PopToRootViewControllerAnimated error : could not complete operation\n"));
+    NGL_OUT("nuiNavigationController::PopToRootViewControllerAnimated error : could not complete operation\n");
     return;  
   }
   

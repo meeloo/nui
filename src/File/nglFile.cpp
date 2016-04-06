@@ -34,15 +34,15 @@ using namespace std;
 #if 0
 static const nglChar* gpFileErrorTable[] =
 {
-	/*  0 */ _T("No error"),
-	/*  1 */ _T("nglPath is a folder"),
-	/*  2 */ _T("Access permission denied"),
-	/*  3 */ _T("nglPath name too long"),
-	/*  4 */ _T("Invalid or non-existent path"),
-	/*  5 */ _T("Write access denied (read-only file system)"),
-	/*  6 */ _T("Not enough space on device to create a new file"),
-	/*  7 */ _T("Process open file maximum reached"),
-	/*  8 */ _T("System open file maximum reached"),
+	/*  0 */ "No error",
+	/*  1 */ "nglPath is a folder",
+	/*  2 */ "Access permission denied",
+	/*  3 */ "nglPath name too long",
+	/*  4 */ "Invalid or non-existent path",
+	/*  5 */ "Write access denied (read-only file system)",
+	/*  6 */ "Not enough space on device to create a new file",
+	/*  7 */ "Process open file maximum reached",
+	/*  8 */ "System open file maximum reached",
 	NULL
 };
 #endif
@@ -52,23 +52,23 @@ const nglChar* File_mode(nglFileMode mode)
 {
 	switch (mode)
 	{
-	case eFileRead  : return _T("R"); break;
-	case eFileWrite : return _T("R/W (trunc.)"); break;
-	case eFileModify: return _T("R/W (modify)"); break;
-	case eFileAppend: return _T("R/W (append)"); break;
+	case eFileRead  : return "R"; break;
+	case eFileWrite : return "R/W (trunc.)"; break;
+	case eFileModify: return "R/W (modify)"; break;
+	case eFileAppend: return "R/W (append)"; break;
 	}
-	return _T("?");
+	return "?";
 }
 
 const nglChar* File_endian(nglEndian endian)
 {
 	switch (endian)
 	{
-	case eEndianLittle: return _T("LE/Intel"); break;
-	case eEndianBig   : return _T("BE/Motorola"); break;
-	case eEndianPDP   : return _T("PDP"); break;
+	case eEndianLittle: return "LE/Intel"; break;
+	case eEndianBig   : return "BE/Motorola"; break;
+	case eEndianPDP   : return "PDP"; break;
 	}
-	return _T("?");
+	return "?";
 }
 #endif
 

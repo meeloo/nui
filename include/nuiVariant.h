@@ -437,7 +437,7 @@ public:
       NGL_ASSERT(mData.mpArray);
       std::vector<nuiVariant>& rArray(*mData.mpArray);
       v.reserve(rArray.size());
-      for (int32 i = 0; i < rArray.size(); i++)
+      for (size_t i = 0; i < rArray.size(); i++)
         v.push_back(rArray[i]);
     }
     else
