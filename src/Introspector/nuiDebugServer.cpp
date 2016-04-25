@@ -43,7 +43,7 @@ public:
                 auto renderthread = pWindow->GetRenderThread();
                 auto layers = renderthread->GetStats();
 
-                Post(nuiMessage("StartLayerList", window, (int32)windows.size()));
+                Post(nuiMessage("StartLayerList", window, (int32)layers.size()));
 
                 for (auto layerstat : layers)
                 {

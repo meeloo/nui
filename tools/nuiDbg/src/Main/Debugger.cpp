@@ -40,7 +40,7 @@ nuiDebugger::nuiDebugger()
 
   // Layers:
   AddMethod("NewLayer", nui_make_function(
-                                           [=](uint64 window, uint64 pointer, nglString name, double time, uint32 count)
+                                           [=](uint64 window, uint64 pointer, nglString name, double time, int64 count)
                                            {
                                              NGL_OUT("Remote: New Layer: 0x%x / %s (%f / %d) (window = %p)\n", pointer, name.GetChars(), time, count, window);
                                              auto windowit = mWindows.find(window);

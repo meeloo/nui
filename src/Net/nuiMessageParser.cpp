@@ -8,6 +8,9 @@
 
 #include "nui.h"
 
+#define NUI_DEBUG_MESSAGE_PARSER 0
+#define NUI_DUMP_MESSAGES 1
+
 extern uint8 nui_internal_datasizes[];
 
 void FixEndianness(nuiMessageDataType type, std::vector<uint8>& rData)
@@ -72,6 +75,9 @@ void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<bool
     {
       case Waiting:
       {
+#if NUI_DEBUG_MESSAGE_PARSER
+        NGL_OUT("Wait\n");
+#endif
         mRemainingDataChunks = rData[offset];
         offset++;
 
@@ -82,6 +88,9 @@ void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<bool
       case ReadType:
       {
         mType = (nuiMessageDataType)rData[offset];
+#if NUI_DEBUG_MESSAGE_PARSER
+        NGL_OUT("Read Type %d\n", mType);
+#endif
         offset++;
 
         mCurrentChunkSize = nui_internal_datasizes[mType];
@@ -113,6 +122,9 @@ void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<bool
         if (mCurrentChunkSize == 0)
         {
           mCurrentChunkSize = le32_to_cpu(*(uint32*)&mChunck[0]); // We have the size of the data
+#if NUI_DEBUG_MESSAGE_PARSER
+          NGL_OUT("Read Size %d\n", mCurrentChunkSize);
+#endif
           mChunck.clear();
           mState = ReadData;
         }
@@ -126,9 +138,15 @@ void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<bool
         memcpy(&mChunck[pos], &rData[offset], toread);
         offset += toread;
         mCurrentChunkSize -= toread;
+#if NUI_DEBUG_MESSAGE_PARSER
+        NGL_OUT("Read Data %d\n", toread);
+#endif
 
         if (mCurrentChunkSize == 0)
         {
+#if NUI_DEBUG_MESSAGE_PARSER
+          NGL_OUT("  Done Reading Data\n");
+#endif
           FixEndianness(mType, mChunck);
           mState = ReadType;
           switch (mType) {
@@ -154,6 +172,9 @@ void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<bool
           mRemainingDataChunks--;
           if (!mRemainingDataChunks)
           {
+#if NUI_DEBUG_MESSAGE_PARSER || NUI_DUMP_MESSAGES
+            NGL_OUT("Done Reading Message: %s\n", mpCurrentMessage->GetDescription().GetChars());
+#endif
             if (!onNewMessage(mpCurrentMessage))
               return;
             mpCurrentMessage = new nuiMessage();
