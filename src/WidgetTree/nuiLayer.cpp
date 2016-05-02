@@ -105,16 +105,9 @@ nuiLayer::~nuiLayer()
     nglCriticalSectionGuard gcs(mLayersCS);
     nglString name = GetObjectName();
     auto it = mLayers.find(name);
-    if (it != mLayers.end())
-    {
-      mLayers.erase(it);
-      App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent));
-    }
-    else
-    {
-//      NGL_OUT("ERROR: failed erasing layer from list %p '%s'\n", this, name.GetChars());
-    }
-//    LayersChanged();
+    NGL_ASSERT(it != mLayers.end());
+    mLayers.erase(it);
+    App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent));
   }
 }
 
@@ -123,13 +116,10 @@ void nuiLayer::SetObjectName(const nglString &rName)
   nglCriticalSectionGuard gcs(mLayersCS);
   nglString name = GetObjectName();
   auto it = mLayers.find(name);
-  if (it != mLayers.end())
-  {
-    mLayers[rName] = this;
-    mLayers.erase(it);
-    App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent));
-    //    LayersChanged();
-  }
+  NGL_ASSERT(it != mLayers.end());
+  mLayers[rName] = this;
+  mLayers.erase(it);
+  App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent));
 
   nuiNode::SetObjectName(rName);
 }
@@ -137,12 +127,6 @@ void nuiLayer::SetObjectName(const nglString &rName)
 void nuiLayer::SetContents(nuiWidget* pWidget)
 {
   // Layers don't own their widgets, it's just a link and the widget should tell the layer when it's dead
-  //  if (pWidget)
-  //    pWidget->Acquire();
-  //
-  //  if (mpWidgetContents)
-  //    mpWidgetContents->Release();
-
   if (mpTextureContents)
     mpTextureContents->Release();
   

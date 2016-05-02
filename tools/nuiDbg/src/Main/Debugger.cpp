@@ -21,6 +21,7 @@ nuiDebugger::nuiDebugger()
             {
               NGL_OUT("Remote: New Window: 0x%x / %s\n", pointer, name.GetChars());
               AddWindow(new nuiDbgWindow(pointer, name));
+              UpdateLayerList(pointer);
             }));
   
   AddMethod("StartWindowList", nui_make_function(
@@ -96,8 +97,8 @@ void nuiDebugger::Connect(const nglString& rAddress, int16 port)
     StateChanged(GetState());
 
     pClient->CanRead.Connect([&]{
-      HandleMessages([&](nuiMessage&, nuiProtocolFunctionBase*){
-        NGL_OUT("Error\n");
+      HandleMessages([&](nuiMessage& message, nuiProtocolFunctionBase* pFunction){
+        NGL_OUT("Debugger Error. '%s' and '%s' not compatibles\n", message.GetDescription().GetChars(), pFunction->GetDescription().GetChars());
         return false;
       });
     });
