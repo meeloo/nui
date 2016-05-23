@@ -1686,11 +1686,6 @@ bool nuiFontBase::LoadFinish(float Size)
     // We expect that the first charmap is actually the right one for the locale's encoding
     FT_Set_Charmap (face, face->charmaps[0]);
   }
-#ifndef USE_WCHAR
-  else
-    // We have a Unicode charmap, we'll do locale -> UCS-2 conversion
-    mpConv = nglString::GetStringConv(nglEncodingPair(eEncodingInternal, eUCS2));
-#endif
   mCharMap = FT_Get_Charmap_Index(face->charmap);
   
   NGL_DEBUG( NGL_LOG("font", NGL_LOG_DEBUG, "  selected charmap   : %s (#%d)", GetCharMapName(), GetCharMap()); )

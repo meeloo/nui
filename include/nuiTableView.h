@@ -20,7 +20,7 @@ class nuiCellSource
 public:
   typedef nuiSimpleEventSource<0> CellSourceEvent;
   
-  nuiCellSource() : mNeedsRefresh(false) {}
+  nuiCellSource() {}
   virtual ~nuiCellSource() {}
 
   virtual nuiWidget* CreateCell() = 0;
@@ -36,7 +36,7 @@ public:
 protected:
   nuiTableView* mpTableView = nullptr;
 private:
-  bool mNeedsRefresh;
+  bool mNeedsRefresh = false;
 };
 
 

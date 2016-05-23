@@ -132,7 +132,6 @@ enum nglTextEncoding
 };
 
 typedef std::pair<nglTextEncoding, nglTextEncoding> nglEncodingPair;
-typedef std::map<nglEncodingPair, nglStringConv*> nglStringConvMap;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -805,7 +804,6 @@ private:
 	std::string	mString;
   bool mIsNull;
   
-  static nglStringConvMap gStringConvCache;
   static void ReleaseStringConvs();
   friend class nglKernel;
   static std::set<char> gURLDontEncodeChars;

@@ -13,6 +13,9 @@
 using namespace std;
 
 int64 nuiObject::ObjectCount = 0;
+std::vector<int32> nuiObject::mInheritanceMap;
+nglCriticalSection gInheritanceMapLock;
+
 
 nuiObject::nuiObject()
 {
@@ -69,8 +72,12 @@ void nuiObject::Init(const nglString& rObjectName)
 #endif
       
       int32 c = GetClassNameIndex(obj);
-      bool first = mInheritanceMap[c] < -1;
-      mInheritanceMap[c] = GetObjectClassNameIndex();
+      bool first = false;
+      {
+        nglCriticalSectionGuard g(gInheritanceMapLock);
+        first = mInheritanceMap[c] < -1;
+        mInheritanceMap[c] = GetObjectClassNameIndex();
+      }
       
       //	const nglString propname = "Class";
       //  mProperties[propname] = obj;
@@ -166,7 +173,10 @@ nuiObject::~nuiObject()
       ++it;
     }
 
-    c = mInheritanceMap[c];
+    {
+      nglCriticalSectionGuard g(gInheritanceMapLock);
+      c = mInheritanceMap[c];
+    }
   }
 
   // Kill instance attributes:
@@ -229,8 +239,6 @@ void nuiObject::SetObjectName(const nglString& rName)
 
 }
 
-std::vector<int32> nuiObject::mInheritanceMap;
-
 bool nuiObject::SetObjectClass(const nglString& rClass)
 {
   CheckValid();
@@ -239,9 +247,12 @@ bool nuiObject::SetObjectClass(const nglString& rClass)
 #endif
 
   int32 c = GetClassNameIndex(rClass);
-  bool first = mInheritanceMap[c] < -1;
-  mInheritanceMap[c] = GetObjectClassNameIndex();
-
+  bool first = false;
+  {
+    nglCriticalSectionGuard g(gInheritanceMapLock);
+    first = mInheritanceMap[c] < -1;
+    mInheritanceMap[c] = GetObjectClassNameIndex();
+  }
 //	const nglString propname = "Class";
 //  mProperties[propname] = rClass;
 
@@ -268,7 +279,10 @@ void nuiObject::GetObjectInheritance(std::vector<nglString>& rClasses) const
   do
   {
     rClasses.push_back(GetClassNameFromIndex(c));
-    c = mInheritanceMap[c];
+    {
+      nglCriticalSectionGuard g(gInheritanceMapLock);
+      c = mInheritanceMap[c];
+    }
   }
   while (c >= 0);
 }
@@ -284,12 +298,17 @@ bool nuiObject::IsOfClass(const nglString& rClass) const
 bool nuiObject::IsOfClass(int32 ClassIndex) const
 {
   CheckValid();
-  NGL_ASSERT(ClassIndex < mInheritanceMap.size());
+  NGL_DEBUG(
+  {
+    nglCriticalSectionGuard g(gInheritanceMapLock);
+    NGL_ASSERT(ClassIndex < mInheritanceMap.size());
+  });
 
   int32 c = mClassNameIndex;
 
   while (c && c > ClassIndex)
   {
+    nglCriticalSectionGuard g(gInheritanceMapLock);
     c = mInheritanceMap[c];
   }
 
@@ -415,7 +434,10 @@ void nuiObject::GetAttributes(std::map<nglString, nuiAttribBase>& rAttributeMap)
       ++it;
     }
 
-    c = mInheritanceMap[c];
+    {
+      nglCriticalSectionGuard g(gInheritanceMapLock);
+      c = mInheritanceMap[c];
+    }
   }
 }
 
@@ -437,7 +459,10 @@ void nuiObject::GetAttributesOfClass(uint32 ClassIndex, std::map<nglString, nuiA
       ++it;
     }
 
-    c = mInheritanceMap[c];
+    {
+      nglCriticalSectionGuard g(gInheritanceMapLock);
+      c = mInheritanceMap[c];
+    }
   }
 }
 
@@ -465,7 +490,10 @@ void nuiObject::GetSortedAttributes(std::list<nuiAttribBase>& rListToFill) const
       ++it;
     }
 
-    c = mInheritanceMap[c];
+    {
+      nglCriticalSectionGuard g(gInheritanceMapLock);
+      c = mInheritanceMap[c];
+    }
   }
 
   // Add instance attributes
@@ -523,7 +551,10 @@ nuiAttribBase nuiObject::GetAttribute(const nglString& rName) const
     if (it != end)
       return nuiAttribBase(const_cast<nuiObject*>(this), it->second);
 
-    c = mInheritanceMap[c];
+    {
+      nglCriticalSectionGuard g(gInheritanceMapLock);
+      c = mInheritanceMap[c];
+    }
   }
 
   return nuiAttribBase();
@@ -604,7 +635,10 @@ int32 nuiObject::GetClassNameIndex(const nglString& rName)
     mObjectClassNamesMap[rName] = index;
     mObjectClassNames.push_back(rName);
     mClassAttributes.resize(index + 1);
-    mInheritanceMap.push_back(-2); // -1 = not parent, -2 = not initialized
+    {
+      nglCriticalSectionGuard g(gInheritanceMapLock);
+      mInheritanceMap.push_back(-2); // -1 = not parent, -2 = not initialized
+    }
     NGL_DEBUG( NGL_LOG("nuiObject", NGL_LOG_INFO, "New class: %s [%d]\n", rName.GetChars(), index); )
 
     return index;

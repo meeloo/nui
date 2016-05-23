@@ -11465,6 +11465,26 @@
 				BuildIndependentTargetsInParallel = NO;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = libNUI;
+				TargetAttributes = {
+					73F0841812E9BA0700656E84 = {
+						ProvisioningStyle = Manual;
+					};
+					73F097E812E9D09E00656E84 = {
+						ProvisioningStyle = Manual;
+					};
+					E5429F110C3F0A5900225219 = {
+						ProvisioningStyle = Manual;
+					};
+					E5D63EBB1209AB9C009C26A9 = {
+						ProvisioningStyle = Manual;
+					};
+					E5DD2E8D12E09CA700F1EF4E = {
+						ProvisioningStyle = Manual;
+					};
+					E5FB9A20147D5CEE001A1829 = {
+						ProvisioningStyle = Manual;
+					};
+				};
 			};
 			buildConfigurationList = E58167300C3CEBF100902DFE /* Build configuration list for PBXProject "nui3" */;
 			compatibilityVersion = "Xcode 3.2";

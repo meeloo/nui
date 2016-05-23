@@ -224,10 +224,12 @@ SHADER_STRING (
                }
                );
 
+// Stats
 static uint32 mins = 30000;
 static uint32 maxs = 0;
 static uint32 totalinframe = 0;
 static uint32 total = 0;
+static nglCriticalSection gStats;
 
 
 static int64 MakePOT(int64 v)
@@ -1084,11 +1086,14 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
 #ifdef DEBUG
   nuiGLDebugGuard g("nuiGLPainter::DrawArray");
 #endif
-  
+
   static uint32 ops = 0;
   static uint32 skipped_ops = 0;
-  
-  ops++;
+  {
+    nglCriticalSectionGuard g(gStats);
+    ops++;
+  }
+
   const nuiMatrix& rM(mMatrixStack.top());
   float bounds[6];
   pArray->GetBounds(bounds);
@@ -1129,13 +1134,15 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
         )
     {
       pArray->Release();
-      skipped_ops++;
-      
+      {
+        nglCriticalSectionGuard g(gStats);
+        skipped_ops++;
+
       //      #ifdef _DEBUG
       //      if (!(skipped_ops % 100))
       //        printf("optim (%d / %d) - %2.2f%%\n", skipped_ops, ops, (float)skipped_ops * 100.0f / (float)ops);
       //      #endif
-      
+      }
       return;
     }
   }
@@ -1213,12 +1220,15 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   mFinalState.mpShaderState->SetModelViewMatrix(mMatrixStack.top(), false);
   
   uint32 s = pArray->GetSize();
-  
+
+  {
+  nglCriticalSectionGuard g(gStats);
   total += s;
   totalinframe += s;
   mins = MIN(mins, s);
   maxs = MAX(maxs, s);
-  
+  }
+
   if (!s)
   {
     pArray->Release();
@@ -1433,8 +1443,11 @@ void nuiGLPainter::BeginSession()
   FinalizeSurfaces();
   FinalizeTextures();
   FinalizeRenderArrays();
-  
-  totalinframe = 0;
+
+  {
+    nglCriticalSectionGuard g(gStats);
+    totalinframe = 0;
+  }
 }
 
 void nuiGLPainter::EndSession()
@@ -2732,7 +2745,10 @@ void nuiGLPainter::SetVertexBuffersPointers(const nuiRenderArray& rArray, Render
 {
   static int64 created = 0;
   static int64 bound = 0;
-  total++;
+  {
+    nglCriticalSectionGuard g(gStats);
+    total++;
+  }
   nuiShaderProgram* pPgm = mFinalState.mpShader;
   
   // Look for VAO:

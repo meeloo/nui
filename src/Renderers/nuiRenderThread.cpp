@@ -174,14 +174,14 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   auto it = mWidgetDrawPainters.find(mpRoot);
   if (it == mWidgetDrawPainters.end())
   {
-    RenderingDone(false);
+    App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, false));
     return;
   }
   
   nuiRef<nuiMetaPainter> pRootPainter = it->second;
   if (pRootPainter == nullptr)
   {
-    RenderingDone(false);
+    App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, false));
     return;
   }
   
@@ -255,7 +255,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   mpContext->GetLock().Unlock();
   
-  RenderingDone(true);
+  App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, true));
 
 //  DumpStats();
 }

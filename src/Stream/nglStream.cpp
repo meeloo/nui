@@ -21,6 +21,7 @@ nglStream::nglStream()
 
 nglStream::~nglStream()
 {
+  delete mpConv;
 }
 
 

@@ -689,7 +689,7 @@ return strdup(psz);
 
 char* nglString::Export (const nglTextEncoding Encoding) const
 {
-  nglStringConv* pConv = nglString::GetStringConv(nglEncodingPair(eEncodingInternal, Encoding)); // From=internal -> To=user 'Encoding'
+  std::unique_ptr<nglStringConv> pConv(nglString::GetStringConv(nglEncodingPair(eEncodingInternal, Encoding))); // From=internal -> To=user 'Encoding'
 
   if (pConv->GetState() != eStringConv_OK)
     return NULL;
@@ -765,7 +765,7 @@ int32 nglString::Export (int32& rOffset, char* pBuffer, int32& rToWrite, const n
   if (rOffset < 0 || !pBuffer || rToWrite < 0)
     return -1;
 
-  nglStringConv* pConv = nglString::GetStringConv(nglEncodingPair(eEncodingInternal, Encoding)); // From=internal -> To=user 'Encoding'
+  std::unique_ptr<nglStringConv> pConv(nglString::GetStringConv(nglEncodingPair(eEncodingInternal, Encoding))); // From=internal -> To=user 'Encoding'
 
   return Export(rOffset, pBuffer, rToWrite, *pConv);
 }
@@ -945,7 +945,7 @@ int32 nglString::Import (int32& rOffset, const char* pBuffer, int32& rToRead, co
     return -1;
 
   mIsNull = false;
-  nglStringConv* pConv = nglString::GetStringConv(nglEncodingPair(Encoding, eEncodingInternal)); // From=user 'Encoding' -> To=internal
+  std::unique_ptr<nglStringConv> pConv(nglString::GetStringConv(nglEncodingPair(Encoding, eEncodingInternal))); // From=user 'Encoding' -> To=internal
 
   return Import(rOffset, pBuffer, rToRead, *pConv);
 }
@@ -2565,107 +2565,104 @@ bool nglString::IsFloat() const
 
 nglChar nglStringConv::mUnknown = L'?';
 
-nglStringConvMap nglString::gStringConvCache;
-
 nglStringConv* nglString::GetStringConv(const nglEncodingPair& rEncodings)
 {
-  if (gStringConvCache.empty())
-  {
-    nglEncodingPair p = nglEncodingPair(eUTF8, eUCS2);
-    nglStringConv* pConv = new nglUTFStringConv(eUTF8, eUCS2);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUTF8, eUCS4);
-    pConv = new nglUTFStringConv(eUTF8, eUCS4);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUCS2, eUTF8);
-    pConv = new nglUTFStringConv(eUCS2, eUTF8);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUCS2, eUCS4);
-    pConv = new nglUTFStringConv(eUCS2, eUCS4);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUCS4, eUTF8);
-    pConv = new nglUTFStringConv(eUCS4, eUTF8);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUCS4, eUCS2);
-    pConv = new nglUTFStringConv(eUCS4, eUCS2);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-
-    p = nglEncodingPair(eEncodingNative, eUTF8);
-    pConv = new nglUTFStringConv(eEncodingNative, eUTF8);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eEncodingNative, eUCS2);
-    pConv = new nglUTFStringConv(eEncodingNative, eUCS2);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eEncodingNative, eUCS4);
-    pConv = new nglUTFStringConv(eEncodingNative, eUCS4);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUTF8, eEncodingNative);
-    pConv = new nglUTFStringConv(eUTF8, eEncodingNative);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUCS2, eEncodingNative);
-    pConv = new nglUTFStringConv(eUCS2, eEncodingNative);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUCS4, eEncodingNative);
-    pConv = new nglUTFStringConv(eUCS4, eEncodingNative);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-
-    p = nglEncodingPair(eUTF8, eEncodingInternal);
-    pConv = new nglUTFStringConv(eUTF8, eEncodingInternal);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUCS2, eEncodingInternal);
-    pConv = new nglUTFStringConv(eUCS2, eEncodingInternal);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eUCS4, eEncodingInternal);
-    pConv = new nglUTFStringConv(eUCS4, eEncodingInternal);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eEncodingInternal, eUTF8);
-    pConv = new nglUTFStringConv(eEncodingInternal, eUTF8);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eEncodingInternal, eUCS2);
-    pConv = new nglUTFStringConv(eEncodingInternal, eUCS2);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eEncodingInternal, eUCS4);
-    pConv = new nglUTFStringConv(eEncodingInternal, eUCS4);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-
-    p = nglEncodingPair(eEncodingNative, eEncodingInternal);
-    pConv = new nglUTFStringConv(eEncodingNative, eEncodingInternal);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-    p = nglEncodingPair(eEncodingInternal, eEncodingNative);
-    pConv = new nglUTFStringConv(eEncodingInternal, eEncodingNative);
-    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
-  }
-
-  nglStringConvMap::iterator it = gStringConvCache.find(rEncodings);
-  if (it != gStringConvCache.end())
-    return it->second;
+//  if (gStringConvCache.empty())
+//  {
+//    nglEncodingPair p = nglEncodingPair(eUTF8, eUCS2);
+//    nglStringConv* pConv = new nglUTFStringConv(eUTF8, eUCS2);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUTF8, eUCS4);
+//    pConv = new nglUTFStringConv(eUTF8, eUCS4);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUCS2, eUTF8);
+//    pConv = new nglUTFStringConv(eUCS2, eUTF8);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUCS2, eUCS4);
+//    pConv = new nglUTFStringConv(eUCS2, eUCS4);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUCS4, eUTF8);
+//    pConv = new nglUTFStringConv(eUCS4, eUTF8);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUCS4, eUCS2);
+//    pConv = new nglUTFStringConv(eUCS4, eUCS2);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//
+//    p = nglEncodingPair(eEncodingNative, eUTF8);
+//    pConv = new nglUTFStringConv(eEncodingNative, eUTF8);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eEncodingNative, eUCS2);
+//    pConv = new nglUTFStringConv(eEncodingNative, eUCS2);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eEncodingNative, eUCS4);
+//    pConv = new nglUTFStringConv(eEncodingNative, eUCS4);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUTF8, eEncodingNative);
+//    pConv = new nglUTFStringConv(eUTF8, eEncodingNative);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUCS2, eEncodingNative);
+//    pConv = new nglUTFStringConv(eUCS2, eEncodingNative);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUCS4, eEncodingNative);
+//    pConv = new nglUTFStringConv(eUCS4, eEncodingNative);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//
+//    p = nglEncodingPair(eUTF8, eEncodingInternal);
+//    pConv = new nglUTFStringConv(eUTF8, eEncodingInternal);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUCS2, eEncodingInternal);
+//    pConv = new nglUTFStringConv(eUCS2, eEncodingInternal);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eUCS4, eEncodingInternal);
+//    pConv = new nglUTFStringConv(eUCS4, eEncodingInternal);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eEncodingInternal, eUTF8);
+//    pConv = new nglUTFStringConv(eEncodingInternal, eUTF8);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eEncodingInternal, eUCS2);
+//    pConv = new nglUTFStringConv(eEncodingInternal, eUCS2);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eEncodingInternal, eUCS4);
+//    pConv = new nglUTFStringConv(eEncodingInternal, eUCS4);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//
+//    p = nglEncodingPair(eEncodingNative, eEncodingInternal);
+//    pConv = new nglUTFStringConv(eEncodingNative, eEncodingInternal);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//    p = nglEncodingPair(eEncodingInternal, eEncodingNative);
+//    pConv = new nglUTFStringConv(eEncodingInternal, eEncodingNative);
+//    gStringConvCache.insert(std::pair<const nglEncodingPair, nglStringConv*>(p, pConv));
+//  }
+//
+//  nglStringConvMap::iterator it = gStringConvCache.find(rEncodings);
+//  if (it != gStringConvCache.end())
+//    return it->second;
 
   nglStringConv* pConverter = new nglStringConv(rEncodings.first, rEncodings.second);
   NGL_ASSERT(pConverter);
 
   if (pConverter->GetState() == eStringConv_OK)
   {
-    gStringConvCache.insert(std::pair<nglEncodingPair, nglStringConv*>(rEncodings, pConverter));
+//    gStringConvCache.insert(std::pair<nglEncodingPair, nglStringConv*>(rEncodings, pConverter));
     return pConverter;
   }
 
   delete pConverter;
-
   return NULL;
 }
 
 void nglString::ReleaseStringConvs()
 {
-  nglStringConvMap::iterator it = gStringConvCache.begin();
-  nglStringConvMap::iterator end = gStringConvCache.end();
-
-  while (it != end)
-  {
-    delete it->second;
-
-    ++it;
-  }
-  gStringConvCache.clear();
+//  nglStringConvMap::iterator it = gStringConvCache.begin();
+//  nglStringConvMap::iterator end = gStringConvCache.end();
+//
+//  while (it != end)
+//  {
+//    delete it->second;
+//
+//    ++it;
+//  }
+//  gStringConvCache.clear();
 }
 
 uint32 nglString::GetLevenshteinDistance(const nglString& rSource, bool CaseSensitive)

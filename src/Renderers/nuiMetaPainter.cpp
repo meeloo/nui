@@ -8,6 +8,7 @@
 #include "nui.h"
 
 int64 nuiMetaPainter::Count = 0;
+static nglCriticalSection gCountCS;
 
 // nuiMetaPainter:
 nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
@@ -23,7 +24,10 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
   mDrawChildrenImmediat = false;
   mLastSize = -1;
 
-  Count++;
+  {
+    nglCriticalSectionGuard g(gCountCS);
+    Count++;
+  }
 //  printf("[NEW] MetaPainter Count: %lld %p\n", Count, this);
 //  SetTrace(true);
 #ifdef _DEBUG_
@@ -34,7 +38,10 @@ nuiMetaPainter::nuiMetaPainter(nglContext* pContext)
 
 nuiMetaPainter::~nuiMetaPainter()
 {
-  Count--;
+  {
+    nglCriticalSectionGuard g(gCountCS);
+    Count--;
+  }
 //  printf("[DEL] MetaPainter Count: %lld %p\n", Count, this);
 
   Reset(NULL);

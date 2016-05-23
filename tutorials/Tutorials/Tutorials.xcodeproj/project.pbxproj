@@ -2333,6 +2333,49 @@
 					61B37FEF1A180B3D004EA14B = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = GZ9B3EJNP6;
+						ProvisioningStyle = Automatic;
+					};
+					E516F383185CBC1200D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F3C7185CBEDF00D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F3F6185CBEF600D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F423185CBF0200D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F450185CBF0800D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F47D185CBF1200D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F4AA185CBF1D00D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F5BE185D157300D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F5D4185D158000D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F5EA185D158900D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F600185D159100D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F616185D159A00D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E516F62C185D15A500D97CA6 = {
+						ProvisioningStyle = Manual;
+					};
+					E55E779E185BBC62005F01B1 = {
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
