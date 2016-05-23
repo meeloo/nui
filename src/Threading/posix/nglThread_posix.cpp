@@ -21,6 +21,7 @@ class nglThreadPrivate
 public:
   static void Start(nglThread * pThread)
   {
+    nglCriticalSectionGuard g(*pThread->mpInitCS);
     bool autodelete = pThread->GetAutoDelete();
     pThread->OnStart();
     pThread->mState = nglThread::Closed;
@@ -30,6 +31,7 @@ public:
 
   static void exit(nglThread * pThread)
   {
+    nglCriticalSectionGuard g(*pThread->mpInitCS);
     pThread->mpData->thread = NULL;
   }
 
@@ -73,6 +75,7 @@ static void *start_thread(void *arg)
 nglThread::nglThread(Priority priority, size_t StackSize)
 {
   mpData = new nglThreadPrivate();
+  mpInitCS = new nglCriticalSection();
 
   mpData->thread = 0;
   mState = Stopped;
@@ -85,6 +88,7 @@ nglThread::nglThread(const nglString& rName, Priority priority, size_t StackSize
 {
   mName = rName;
   mpData = new nglThreadPrivate();
+  mpInitCS = new nglCriticalSection();
 
   mpData->thread = 0;
   mState = Stopped;
@@ -97,6 +101,7 @@ nglThread::nglThread(const nglString& rName, Priority priority, size_t StackSize
 nglThread::~nglThread()
 {
   delete mpData;
+  delete mpInitCS;
 }
 
 bool nglThread::Start()
@@ -168,11 +173,13 @@ bool nglThread::IsCurrent() const
 
 nglThread::State nglThread::GetState() const
 {
+  nglCriticalSectionGuard g(*mpInitCS);
   return mState;
 }
 
 nglThread::Priority nglThread::GetPriority() const
 {
+  nglCriticalSectionGuard g(*mpInitCS);
   return mPriority;
 }
 

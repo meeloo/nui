@@ -1857,6 +1857,7 @@ void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
 void nuiGLPainter::DestroyTexture(nuiTexture* pTexture)
 {
+  nglCriticalSectionGuard g(mRenderingCS);
   mDestroyedTextures.push_back(pTexture);
 }
 
@@ -1899,6 +1900,7 @@ nuiGLPainter::FramebufferInfo::FramebufferInfo()
 
 void nuiGLPainter::DestroySurface(nuiSurface* pSurface)
 {
+  nglCriticalSectionGuard g(mRenderingCS);
   mDestroyedSurfaces.push_back(pSurface);
 }
 
@@ -2903,11 +2905,13 @@ void nuiGLPainter::ResetVertexPointers(const nuiRenderArray& rArray)
 
 void nuiGLPainter::DestroyRenderArray(nuiRenderArray* pArray)
 {
+  nglCriticalSectionGuard g(mRenderingCS);
   mDestroyedRenderArrays.push_back(pArray);
 }
 
 void nuiGLPainter::FinalizeRenderArrays()
 {
+  nglCriticalSectionGuard g(mRenderingCS);
   for (auto array : mDestroyedRenderArrays)
     _DestroyRenderArray(array);
   mDestroyedRenderArrays.clear();

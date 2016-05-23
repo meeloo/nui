@@ -154,7 +154,8 @@ protected:
   static nglCriticalSection mFrameArraysCS;
   static nglCriticalSection mRenderArraysCS;
 
-  
+  nglCriticalSection mRenderingCS;
+
   int64 dummy = 0;
   int32 mScissorX;
   int32 mScissorY;

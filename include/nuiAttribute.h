@@ -73,6 +73,30 @@ void Set##Y(X val) \
   Z;\
 }
 
+// Atomic version
+#define NUI_GET_ATOMIC(X, Y) \
+X Get##Y() const { return ngl_atomic_read(m##Y); }
+
+#define NUI_SET_ATOMIC(X, Y) \
+void Set##Y(X val) { ngl_atomic_set(m##Y, val); }
+
+#define NUI_GETSET_ATOMIC(X, Y) \
+NUI_GET_ATOMIC(X, Y); \
+NUI_SET_ATOMIC(X, Y);
+
+#define NUI_GETSETDO_ATOMIC(X, Y, Z) \
+NUI_GET_ATOMIC(X, Y); \
+void Set##Y(X val) \
+{\
+if (ngl_atomic_read(m##Y) == val)\
+{\
+return;\
+}\
+ngl_atomic_set(m##Y, val);\
+Z;\
+}
+
+// Objects
 #define NUI_OBJGETSET(X, Y) \
 const X& Get##Y() const { return m##Y; } \
 void Set##Y(const X& val) { m##Y = val; }
