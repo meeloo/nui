@@ -1,7 +1,7 @@
 #include "nui.h"
 
 nuiSurfaceMap nuiSurface::mpSurfaces;
-nglCriticalSection nuiSurface::mSurfacesCS;
+nglCriticalSection nuiSurface::mSurfacesCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
 void nuiSurface::DumpSurfaces()
 {

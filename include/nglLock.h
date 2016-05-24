@@ -31,7 +31,7 @@ public:
 protected:
 
   nglLock(bool registerToThreadChecker);
-  nglLock(const nglString& rName, bool registerToThreadChecker);
+  nglLock(const char* pName, bool registerToThreadChecker);
 
 
   virtual void _Lock(nglThread::ID threadID) = 0;

@@ -17,9 +17,9 @@ nglLock::nglLock(bool registerToThreadChecker)
 }
 
 
-nglLock::nglLock(const nglString& rName, bool registerToThreadChecker)
+nglLock::nglLock(const char* pName, bool registerToThreadChecker)
 {
-  mName = rName;
+  mName = pName;
   mRegisterToThreadChecker = registerToThreadChecker;
 
   if (mRegisterToThreadChecker)

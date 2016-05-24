@@ -22,8 +22,8 @@ nglLightLock::nglLightLock(bool registerToThreadChecker)
 }
 
 
-nglLightLock::nglLightLock(const nglString& rName, bool registerToThreadChecker)
-  : nglLock(rName, registerToThreadChecker)
+nglLightLock::nglLightLock(const char* pName, bool registerToThreadChecker)
+  : nglLock(pName, registerToThreadChecker)
 {
 	ngl_atomic_set(mAtomic, 0);
 }

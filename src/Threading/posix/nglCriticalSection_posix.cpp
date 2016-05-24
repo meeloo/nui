@@ -95,8 +95,8 @@ nglCriticalSection::nglCriticalSection(bool registerToThreadChecker)
 	mpPrivate = new nglCriticalSectionPrivate();
 }
 
-nglCriticalSection::nglCriticalSection(const nglString& rName, bool registerToThreadChecker)
-  : nglLock(rName, registerToThreadChecker)
+nglCriticalSection::nglCriticalSection(const char* pName, bool registerToThreadChecker)
+  : nglLock(pName, registerToThreadChecker)
 {
 	mpPrivate = new nglCriticalSectionPrivate();
 }

@@ -28,7 +28,7 @@ public:
   
   // Constructor(s) / Destructor
   nglCriticalSection(bool registerToThreadChecker = true);
-  nglCriticalSection(const nglString& rName, bool registerToThreadChecker = true);
+  nglCriticalSection(const char* pName, bool registerToThreadChecker = true);
   virtual ~nglCriticalSection();
 
   virtual const nglString& GetLabel() const;

@@ -151,7 +151,7 @@ private :
   
   nuiTokenBase* mpToken = nullptr;
   //std::map<nglString,nuiAttributeBase*> mAttributes;
-  static uint32 mUniqueAttributeOrder; // to handle properties's order
+  static nglAtomic mUniqueAttributeOrder; // to handle properties's order
   
   static std::vector<nglString> mObjectClassNames;
   static std::vector<std::map<nglString, nuiAttributeBase*> > mClassAttributes;

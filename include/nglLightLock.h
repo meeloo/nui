@@ -24,7 +24,7 @@ public:
   
   // Constructor(s) / Destructor
   nglLightLock(bool registerToThreadChecker=true);
-  nglLightLock(const nglString& rName, bool registerToThreadChecker=true);
+  nglLightLock(const char* pName, bool registerToThreadChecker=true);
   virtual ~nglLightLock();
 
   virtual const nglString& GetLabel() const;

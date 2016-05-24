@@ -407,29 +407,31 @@ void nuiThreadInspector::Update(const nuiEvent& rEvent)
 void nuiThreadInspector::SetNodeFromLock(nuiTreeNode* pLockNode, const nglThreadState& rState)
 {
   nuiHBox* pBox = (nuiHBox*)pLockNode->GetElement();
-  
-  nglString tmp;
-  tmp.Format("- %s -", rState.GetStateToString().GetChars());
-  nuiLabel* pLabel = (nuiLabel*)pBox->GetCell(COL_STATE);
-  pLabel->SetText(tmp);
-  
-  tmp.Format("%.3fs", rState.GetTimeLength(mCurrentTime));
-  pLabel = (nuiLabel*)pBox->GetCell(COL_TIME);
-  pLabel->SetText(tmp);
-
-  pLabel = (nuiLabel*)pBox->GetCell(COL_WARNING);
-  pLabel->SetText(rState.GetWarningToString().GetChars());
-
-  if (rState.GetWarning() != nglThreadState::eWarningNone)
+  if (pBox)
   {
-    nuiDecoration* pDeco = nuiDecoration::Get("THREADINSPECTOR_DECO_WARNING");
-    if (!pDeco)
-      pDeco = new nuiColorDecoration("THREADINSPECTOR_DECO_WARNING", nuiRect(2, 2, 0, 0), nuiColor(240,0,0));
-    pLabel->SetDecoration(pDeco, eDecorationBorder);
+    nglString tmp;
+    tmp.Format("- %s -", rState.GetStateToString().GetChars());
+    nuiLabel* pLabel = (nuiLabel*)pBox->GetCell(COL_STATE);
+    pLabel->SetText(tmp);
+    
+    tmp.Format("%.3fs", rState.GetTimeLength(mCurrentTime));
+    pLabel = (nuiLabel*)pBox->GetCell(COL_TIME);
+    pLabel->SetText(tmp);
+
+    pLabel = (nuiLabel*)pBox->GetCell(COL_WARNING);
+    pLabel->SetText(rState.GetWarningToString().GetChars());
+
+    if (rState.GetWarning() != nglThreadState::eWarningNone)
+    {
+      nuiDecoration* pDeco = nuiDecoration::Get("THREADINSPECTOR_DECO_WARNING");
+      if (!pDeco)
+        pDeco = new nuiColorDecoration("THREADINSPECTOR_DECO_WARNING", nuiRect(2, 2, 0, 0), nuiColor(240,0,0));
+      pLabel->SetDecoration(pDeco, eDecorationBorder);
+    }
+    else
+      pLabel->SetDecoration(NULL);
+    
   }
-  else
-    pLabel->SetDecoration(NULL);
-  
 }
 
 

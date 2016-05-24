@@ -434,23 +434,23 @@ void nuiUniformDesc::Set(const nuiUniformDesc& rDesc, bool apply)
     Apply();
 }
 
-static int total = 0;
-static int skipped = 0;
-static int applied = 0;
+static nglAtomic total = 0;
+static nglAtomic skipped = 0;
+static nglAtomic applied = 0;
 
 void nuiUniformDesc::Apply() const
 {
-  total++;
+  ngl_atomic_inc(total);
 
 //  if (!(total % 10000))
 //    NGL_OUT("Uniform stats: %d on %d applied (%d skipped) %f cache hit\n", applied, total, skipped, (float)skipped/(float)total);
 
   if (!mChanged)
   {
-    skipped++;
+    ngl_atomic_inc(skipped);
     return;
   }
-  applied++;
+  ngl_atomic_inc(applied);
 
   mChanged = false;
 

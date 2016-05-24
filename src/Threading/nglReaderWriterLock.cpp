@@ -14,6 +14,19 @@ nglReaderWriterLock::nglReaderWriterLock()
   mWriter = 0;
 }
 
+nglThread::ID nglReaderWriterLock::GetWriter() const
+{
+  nglCriticalSectionGuard g(mCSWriter);
+  return mWriter;
+}
+
+void nglReaderWriterLock::SetWriter(nglThread::ID value)
+{
+  nglCriticalSectionGuard g(mCSWriter);
+  mWriter = value;
+}
+
+
 void nglReaderWriterLock::LockRead()
 { 
   bool ok = false;
@@ -22,15 +35,15 @@ void nglReaderWriterLock::LockRead()
     {
       nglCriticalSectionGuard guard(mCS);
 
-      if (!mWriter)
+      if (!GetWriter())
       {
-        mReaders++;
+        ngl_atomic_inc(mReaders);
         ok = true;
       }
     }
 
     // If the writer changes after the test but before the wait we are fucked
-    while (mWriter)
+    while (GetWriter())
       mWaitForRead.Wait(1);
 
   } while (!ok);
@@ -42,9 +55,9 @@ bool nglReaderWriterLock::TryLockRead()
   {
     nglCriticalSectionGuard guard(mCS);
     
-    if (!mWriter)
+    if (!GetWriter())
     {
-      mReaders++;
+      ngl_atomic_inc(mReaders);
       ok = true;
     }
   }
@@ -57,7 +70,7 @@ void nglReaderWriterLock::UnlockRead()
   nglCriticalSectionGuard guard(mCS);
 
   ngl_atomic_dec(mReaders);
-  if (!mReaders)
+  if (!ngl_atomic_read(mReaders))
     mWaitForWrite.WakeOne();
 }
 
@@ -68,16 +81,20 @@ void nglReaderWriterLock::LockWrite()
     {
       nglCriticalSectionGuard guard(mCS);
 
-      if (!mWriter && !mReaders)
+      if (!GetWriter() && !ngl_atomic_read(mReaders))
       {
-        mWriter = nglThread::GetCurThreadID();
+        SetWriter(nglThread::GetCurThreadID());
       }
     }
 
-    while (mWriter && mWriter != nglThread::GetCurThreadID())
+    nglThread::ID threadid = GetWriter();
+    while (threadid && threadid != nglThread::GetCurThreadID())
+    {
       mWaitForWrite.Wait(1);
+      threadid = GetWriter();
+    }
 
-  } while (mWriter != nglThread::GetCurThreadID());
+  } while (GetWriter() != nglThread::GetCurThreadID());
 }
 
 bool nglReaderWriterLock::TryLockWrite()
@@ -85,13 +102,14 @@ bool nglReaderWriterLock::TryLockWrite()
   {
     nglCriticalSectionGuard guard(mCS);
     
-    if (!mWriter && !mReaders)
+    if (!GetWriter() && !ngl_atomic_read(mReaders))
     {
-      mWriter = nglThread::GetCurThreadID();
+      SetWriter(nglThread::GetCurThreadID());
     }
   }
   
-  return mWriter == nglThread::GetCurThreadID();
+  SetWriter(nglThread::GetCurThreadID());
+  return mWriter;
 }
 
 
@@ -99,8 +117,8 @@ void nglReaderWriterLock::UnlockWrite()
 {
   nglCriticalSectionGuard guard(mCS);
 
-  mWriter = NULL;
-  if (!mReaders)
+  SetWriter(NULL);
+  if (!ngl_atomic_read(mReaders))
     mWaitForWrite.WakeOne();
   else
     mWaitForRead.WakeAll();

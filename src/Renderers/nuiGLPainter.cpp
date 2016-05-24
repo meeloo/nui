@@ -229,7 +229,7 @@ static uint32 mins = 30000;
 static uint32 maxs = 0;
 static uint32 totalinframe = 0;
 static uint32 total = 0;
-static nglCriticalSection gStats;
+static nglCriticalSection gStats(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
 
 static int64 MakePOT(int64 v)
@@ -351,7 +351,7 @@ bool nuiGLPainter::CheckFramebufferStatus()
 uint32 nuiGLPainter::mActiveContexts = 0;
 
 nuiGLPainter::nuiGLPainter(nglContext* pContext)
-: nuiPainter(pContext)
+: nuiPainter(pContext), mRenderingCS("mRenderingCS")
 {
   gpPainters.insert(this);
 
@@ -2937,10 +2937,10 @@ std::map<nuiTexture*, nuiGLPainter::TextureInfo> nuiGLPainter::mTextures;
 std::map<nuiSurface*, nuiGLPainter::FramebufferInfo> nuiGLPainter::mFramebuffers;
 std::vector<nuiRenderArray*> nuiGLPainter::mFrameArrays;
 std::map<nuiRenderArray*, nuiGLPainter::RenderArrayInfo*> nuiGLPainter::mRenderArrays;
-nglCriticalSection nuiGLPainter::mTexturesCS;
-nglCriticalSection nuiGLPainter::mFramebuffersCS;
-nglCriticalSection nuiGLPainter::mFrameArraysCS;
-nglCriticalSection nuiGLPainter::mRenderArraysCS;
+nglCriticalSection nuiGLPainter::mTexturesCS("mTexturesCS");
+nglCriticalSection nuiGLPainter::mFramebuffersCS("mFramebuffersCS");
+nglCriticalSection nuiGLPainter::mFrameArraysCS("mFrameArraysCS");
+nglCriticalSection nuiGLPainter::mRenderArraysCS("mRenderArraysCS");
 
 
 #endif //   #ifndef __NUI_NO_GL__

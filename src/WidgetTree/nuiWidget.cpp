@@ -608,7 +608,8 @@ void nuiWidget::Init()
   NUI_ADD_EVENT(PreMouseMoved);
   NUI_ADD_EVENT(PreMouseWheelMoved);
   
-  SetLayerPolicy(nuiDrawPolicyDrawSelf);
+//  SetLayerPolicy(nuiDrawPolicyDrawSelf);
+  SetLayerPolicy(nuiDrawPolicyDrawNone);
 }
 
 bool nuiWidget::SetObjectClass(const nglString& rName)

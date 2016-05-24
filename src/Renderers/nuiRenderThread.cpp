@@ -16,7 +16,7 @@
 #define NUI_ENABLE_THREADED_RENDERING 1
 
 std::set<nuiRenderThread*> nuiRenderThread::mThreads;
-nglCriticalSection nuiRenderThread::ThreadsCS;
+nglCriticalSection nuiRenderThread::ThreadsCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
 : mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)

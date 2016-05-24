@@ -38,25 +38,24 @@ public:
     }
     NGL_ASSERTR(val > 0, val);
 
-    val = ngl_atomic_dec(mRefCount);
     OnReleased();
-
-    if (mTrace)
+    bool trace = mTrace;
+    if (trace)
     {
-      NGL_OUT("Release object %p (%d - %d)\n", this, val, mRefCount);
+      NGL_OUT("Release object %p (%d)\n", this, mRefCount);
     }
 
-    if (val == 0)
+    if (mRefCount == 1)
     {
-      if (mTrace)
+      if (trace)
       {
         NGL_OUT("Delete object %p %d\n", this, mRefCount);
       }
-      
-      
-      const_cast<nuiRefCount*>(this)->OnFinalize();
 
-      if (mTrace)
+      const_cast<nuiRefCount*>(this)->OnFinalize();
+      val = ngl_atomic_dec(mRefCount);
+
+      if (trace)
       {
         DumpInfos();
         NGL_OUT("delete ref counted object: %p %s / %d / %d\n", this, typeid(this).name(), typeid(this).hash_code(), mRefCount);
@@ -65,7 +64,7 @@ public:
       delete this;
       return 0;
     }
-    return val;
+    return val - 1;
   }
 
   void SetTrace(bool set)

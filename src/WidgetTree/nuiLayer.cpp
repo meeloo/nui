@@ -9,7 +9,7 @@
 #include "nui.h"
 
 std::map<nglString, nuiLayer*> nuiLayer::mLayers;
-nglCriticalSection nuiLayer::mLayersCS;
+nglCriticalSection nuiLayer::mLayersCS("mLayersCS");
 nuiSimpleEventSource<0> nuiLayer::LayersChanged;
 
 

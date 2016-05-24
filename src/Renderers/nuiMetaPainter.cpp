@@ -8,7 +8,7 @@
 #include "nui.h"
 
 int64 nuiMetaPainter::Count = 0;
-static nglCriticalSection gCountCS;
+static nglCriticalSection gCountCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
 // nuiMetaPainter:
 nuiMetaPainter::nuiMetaPainter(nglContext* pContext)

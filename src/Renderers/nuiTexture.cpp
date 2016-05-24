@@ -11,6 +11,7 @@
 
 using namespace std;
 
+static nglCriticalSection gTextureReloadCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 nuiTextureMap nuiTexture::mpTextures;
 
 #if 1
@@ -47,6 +48,8 @@ nuiTexture* nuiTexture::GetTexture (nglIStream* pInput, nglImageCodec* pCodec)
 
 nuiTexture* nuiTexture::GetTexture (const nglPath& rPath, nglImageCodec* pCodec)
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
+  
   nuiTexture* pTexture = NULL;
   nuiTextureMap::iterator it = mpTextures.find(rPath.GetPathName());
   if (it == mpTextures.end())
@@ -67,6 +70,7 @@ nuiTexture* nuiTexture::GetTexture (nglImageInfo& rInfo, bool Clone)
     pTexture = new nuiTexture(rInfo,Clone);
   else
   {
+    nglCriticalSectionGuard g(gTextureReloadCS);
     nglString name;
     name.Format("Info 0x%x",&rInfo);
     nuiTextureMap::iterator it = mpTextures.find(name);
@@ -84,6 +88,7 @@ nuiTexture* nuiTexture::GetTexture (nglImageInfo& rInfo, bool Clone)
 
 nuiTexture* nuiTexture::GetTexture (const nglImage& rImage)
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   nuiTexture* pTexture = NULL;
   nglString name;
   name.Format("Image 0x%x",&rImage);
@@ -101,6 +106,7 @@ nuiTexture* nuiTexture::GetTexture (const nglImage& rImage)
 
 nuiTexture* nuiTexture::GetTexture (nglImage* pImage, bool OwnImage)
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   nuiTexture* pTexture = NULL;
   nglString name;
   name.Format("Image 0x%x",pImage);
@@ -121,6 +127,7 @@ nuiTexture* nuiTexture::GetTexture(nuiSurface* pSurface)
   nuiTexture* pTexture = pSurface->GetTexture();
   if (!pTexture)
   {
+    nglCriticalSectionGuard g(gTextureReloadCS);
     nglString name = nuiGetSurfaceHash(pSurface);
     nuiTextureMap::iterator it = mpTextures.find(name);
     if (it == mpTextures.end())
@@ -138,6 +145,7 @@ nuiTexture* nuiTexture::GetTexture(nuiSurface* pSurface)
 
 nuiTexture* nuiTexture::GetTexture(const nglString& rName)
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   nuiTexture* pTexture = NULL;
   nuiTextureMap::iterator it = mpTextures.find(rName);
   if (it == mpTextures.end())
@@ -157,6 +165,7 @@ nuiTexture* nuiTexture::GetTexture(const nglChar* pName)
 
 nuiTexture* nuiTexture::BindTexture(GLuint TextureID, GLenum Target)
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   nuiTexture* pTexture = NULL;
   nglString name;
   name.Format("TextureID %d %d", TextureID, Target);
@@ -173,6 +182,7 @@ nuiTexture* nuiTexture::BindTexture(GLuint TextureID, GLenum Target)
 
 nuiTexture* nuiTexture::CreateTextureProxy(const nglString& rName, const nglString& rSourceTextureID, const nuiRect& rProxyRect, bool RotateRight)
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   nuiTexture* pTexture = NULL;
   nglString name = rName;
   nuiTextureMap::iterator it = mpTextures.find(name);
@@ -380,6 +390,7 @@ nuiTexture* nuiTexture::GetAATexture()
 {
   nuiTexture* pTexture = NULL;
 #ifndef __NUI_NO_AA__
+  nglCriticalSectionGuard g(gTextureReloadCS);
   nuiTextureMap::iterator it = mpTextures.find("nuiTextureAA");
   if (it == mpTextures.end())
   {
@@ -415,6 +426,7 @@ nuiTexture* nuiTexture::GetAATexture()
 
 void nuiTexture::ClearAll()
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   nuiTextureMap::iterator it = mpTextures.begin();
   nuiTextureMap::iterator end = mpTextures.end();
   
@@ -467,6 +479,7 @@ void nuiTexture::InitTextures()
 
 void nuiTexture::ForceReloadAll(bool Rebind)
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   nuiTextureMap::iterator it = mpTextures.begin();
   nuiTextureMap::iterator end = mpTextures.end();
 
@@ -497,7 +510,10 @@ nuiTexture::nuiTexture(nglIStream* pInput, nglImageCodec* pCodec)
   nglString name;
   name.Format("Stream #%d",count);
   SetProperty("Source",name);
-  mpTextures[name] = this;
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures[name] = this;
+  }
 
   Init();
 }
@@ -548,7 +564,10 @@ nuiTexture::nuiTexture (const nglPath& rPath, nglImageCodec* pCodec)
   mRetainBuffer = mRetainBuffers;
 
   SetProperty("Source",rPath.GetPathName());
-  mpTextures[rPath.GetPathName()] = this;
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures[rPath.GetPathName()] = this;
+  }
 
   Init();
   SetScale(scale);
@@ -573,7 +592,10 @@ nuiTexture::nuiTexture (nglImageInfo& rInfo, bool Clone)
   else 
     name.Format("Info 0x%x",&rInfo);
   SetProperty("Source",name);
-  mpTextures[name] = this;
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures[name] = this;
+  }
 
   Init();
 }
@@ -593,7 +615,10 @@ nuiTexture::nuiTexture (const nglImage& rImage)
   nglString name;
   name.Format("Image 0x%x",mpImage);
   SetProperty("Source",name);
-  mpTextures[name] = this;
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures[name] = this;
+  }
 
   Init();
 }
@@ -613,7 +638,10 @@ nuiTexture::nuiTexture (nglImage* pImage, bool OwnImage)
   nglString name;
   name.Format("Image 0x%x",mpImage);
   SetProperty("Source",name);
-  mpTextures[name] = this;
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures[name] = this;
+  }
 
   Init();
 }
@@ -634,7 +662,10 @@ nuiTexture::nuiTexture(nuiSurface* pSurface)
 
   nglString name = nuiGetSurfaceHash(pSurface);
   SetProperty("Source", name);
-  mpTextures[name] = this;
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures[name] = this;
+  }
 
   Init();
 }
@@ -655,8 +686,11 @@ nuiTexture::nuiTexture(GLuint TextureID, GLenum Target)
   nglString name;
   name.Format("TextureID %d %d", mTextureID, mTarget);
   SetProperty("Source", name);
-  mpTextures[name] = this;
- 
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures[name] = this;
+  }
+
   Init();
 }
 
@@ -678,7 +712,11 @@ nuiTexture::nuiTexture(const nglString& rName, const nglString& rSourceTextureID
   
   nglString name = rName;
   SetProperty("Source", name);
-  mpTextures[name] = this;
+
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures[name] = this;
+  }
   
   Init();
 }
@@ -760,7 +798,7 @@ void nuiTexture::Init()
   mRealWidthPOT = mRealWidth;
   mRealHeightPOT = mRealHeight;
 
-  NGL_DEBUG(NGL_LOG("nuiTexture", NGL_LOG_INFO, "nuiTexture::Init() (0x%x - [%f %f] source='%s') COUNT: %d\n", this, mRealWidth, mRealHeight, GetProperty("Source").GetChars(), mpTextures.size());)
+  NGL_DEBUG(nglCriticalSectionGuard g(gTextureReloadCS); NGL_LOG("nuiTexture", NGL_LOG_INFO, "nuiTexture::Init() (0x%x - [%f %f] source='%s') COUNT: %d\n", this, mRealWidth, mRealHeight, GetProperty("Source").GetChars(), mpTextures.size());)
 
   if (mRealWidth > 0 && mRealHeight > 0)
   // Find the nearest bounding power of two size:
@@ -828,18 +866,22 @@ nuiTexture::~nuiTexture()
     //mpSurface->Release();
   }
   nglString source(GetProperty("Source"));
-  mpTextures.erase(source);
-  
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures.erase(source);
+  }
+
   if (mpProxyTexture)
     mpProxyTexture->Release();
   
   TexturesChanged();
 
-  NGL_DEBUG(NGL_LOG("nuiTexture", NGL_LOG_INFO, "nuiTexture::~nuiTexture(0x%x - [%f %f] source='%s') COUNT : %d\n", this, mRealWidth, mRealHeight, GetProperty("Source").GetChars(), mpTextures.size());)
+  NGL_DEBUG(nglCriticalSectionGuard g(gTextureReloadCS);NGL_LOG("nuiTexture", NGL_LOG_INFO, "nuiTexture::~nuiTexture(0x%x - [%f %f] source='%s') COUNT : %d\n", this, mRealWidth, mRealHeight, GetProperty("Source").GetChars(), mpTextures.size());)
 }
 
 void nuiTexture::ForceReload(bool Rebind)
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   if (!Rebind)
   {
     mForceReload = true;
@@ -852,6 +894,7 @@ void nuiTexture::ForceReload(bool Rebind)
 
 void nuiTexture::ResetForceReload()
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   mForceReload = false;
 }
 
@@ -1050,9 +1093,12 @@ void nuiTexture::SetRetainBuffer(bool Retain)
 
 bool nuiTexture::SetSource(const nglString& rName)
 {
-  mpTextures.erase(GetProperty("Source"));
-  SetProperty("Source", rName);
-  mpTextures[rName] = this;
+  {
+    nglCriticalSectionGuard g(gTextureReloadCS);
+    mpTextures.erase(GetProperty("Source"));
+    SetProperty("Source", rName);
+    mpTextures[rName] = this;
+  }
   TexturesChanged();
   return true;
 }

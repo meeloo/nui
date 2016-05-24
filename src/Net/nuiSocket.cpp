@@ -307,7 +307,7 @@ void nuiSocket::VisitSockets(const nuiFastDelegate1<nuiSocket*>& rDelegate)
 
 
 int64 nuiSocket::gmSocketCount = 0;
-nglCriticalSection nuiSocket::gmCS;
+nglCriticalSection nuiSocket::gmCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 std::set<nuiSocket*> nuiSocket::gmAllSockets;
 
 

@@ -14,7 +14,7 @@ using namespace std;
 
 int64 nuiObject::ObjectCount = 0;
 std::vector<int32> nuiObject::mInheritanceMap;
-nglCriticalSection gInheritanceMapLock;
+nglCriticalSection gInheritanceMapLock(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
 
 nuiObject::nuiObject()
@@ -400,7 +400,7 @@ nuiTokenBase* nuiObject::GetToken() const
 
 //** nuiAttributes system *******************************************
 
-uint32 nuiObject::mUniqueAttributeOrder = 0;
+nglAtomic nuiObject::mUniqueAttributeOrder = 0;
 
 
 void nuiObject::GetAttributes(std::map<nglString, nuiAttribBase>& rAttributeMap) const
@@ -571,7 +571,7 @@ void nuiObject::AddAttribute(const nglString& rName, nuiAttributeBase* pAttribut
     return;
   }
 
-  mUniqueAttributeOrder++;
+  ngl_atomic_inc(mUniqueAttributeOrder);
   pAttribute->SetOrder(mUniqueAttributeOrder);
 
   NGL_ASSERT(mClassNameIndex < mClassAttributes.size());
@@ -589,7 +589,7 @@ void nuiObject::AddAttribute(nuiAttributeBase* pAttribute)
   }
 
 
-  mUniqueAttributeOrder++;
+  ngl_atomic_inc(mUniqueAttributeOrder);
   pAttribute->SetOrder(mUniqueAttributeOrder);
 
   mClassAttributes[mClassNameIndex][pAttribute->GetName()] = pAttribute;
@@ -598,7 +598,7 @@ void nuiObject::AddAttribute(nuiAttributeBase* pAttribute)
 void nuiObject::AddInstanceAttribute(const nglString& rName, nuiAttributeBase* pAttribute)
 {
   CheckValid();
-  mUniqueAttributeOrder++;
+  ngl_atomic_inc(mUniqueAttributeOrder);
   pAttribute->SetOrder(mUniqueAttributeOrder);
   pAttribute->SetAsInstanceAttribute(true);
 
@@ -608,7 +608,7 @@ void nuiObject::AddInstanceAttribute(const nglString& rName, nuiAttributeBase* p
 void nuiObject::AddInstanceAttribute(nuiAttributeBase* pAttribute)
 {
   CheckValid();
-  mUniqueAttributeOrder++;
+  ngl_atomic_inc(mUniqueAttributeOrder);
   pAttribute->SetOrder(mUniqueAttributeOrder);
   pAttribute->SetAsInstanceAttribute(true);
 
@@ -730,7 +730,7 @@ bool nuiObject::ClearGlobalProperty(const char* pName)
 }
 
 std::map<nuiObject*, nuiObject::Trace*> nuiObject::mObjects;
-nglCriticalSection nuiObject::gObjectTraceCS;
+nglCriticalSection nuiObject::gObjectTraceCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
 #ifdef _NUI_DEBUG_OBJECTS_
 bool nuiObject::IsObject(void* pointer)

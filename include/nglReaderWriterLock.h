@@ -38,6 +38,10 @@ private:
   nglThread::ID mWriter;
 
   nglCriticalSection mCS;
+  mutable nglCriticalSection mCSWriter;
+
+  nglThread::ID GetWriter() const;
+  void SetWriter(nglThread::ID value);
 
   nglCondition mWaitForRead;
   nglCondition mWaitForWrite;
