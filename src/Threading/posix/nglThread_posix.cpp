@@ -21,12 +21,14 @@ class nglThreadPrivate
 public:
   static void Start(nglThread * pThread)
   {
-    nglCriticalSectionGuard g(*pThread->mpInitCS);
     bool autodelete = pThread->GetAutoDelete();
     pThread->OnStart();
-    pThread->mState = nglThread::Closed;
-    if (autodelete)
-      delete pThread;
+    {
+      nglCriticalSectionGuard g(*pThread->mpInitCS);
+      pThread->mState = nglThread::Closed;
+      if (autodelete)
+        delete pThread;
+    }
   }
 
   static void exit(nglThread * pThread)
