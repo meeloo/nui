@@ -38,7 +38,7 @@ public:
 	*/
 	KIWI_ERROR_RETURN_TYPE addConstraint( const Constraint& constraint )
 	{
-		m_impl.addConstraint( constraint );
+		KIWI_ERROR_RETURN m_impl.addConstraint( constraint );
 	}
 
 	/* Remove a constraint from the solver.
@@ -51,7 +51,7 @@ public:
 	*/
 	KIWI_ERROR_RETURN_TYPE removeConstraint( const Constraint& constraint )
 	{
-		m_impl.removeConstraint( constraint );
+		KIWI_ERROR_RETURN m_impl.removeConstraint( constraint );
 	}
 
 	/* Test whether a constraint has been added to the solver.

@@ -47,13 +47,13 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 
 nuiApp::nuiApp()
 {
-  if (win)
-    win->Release();
-  win = NULL;
 }
 
 nuiApp::~nuiApp()
 {
+  if (win)
+    win->Release();
+  win = NULL;
 }
 
 void nuiApp::OnExit (int Code)

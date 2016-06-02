@@ -29,7 +29,7 @@ public:
   
     
 protected:
-   MainWindow *win;
+   MainWindow *win = nullptr;
 
 
 private:
