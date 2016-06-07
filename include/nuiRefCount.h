@@ -64,7 +64,10 @@ public:
       delete this;
       return 0;
     }
-    return val - 1;
+    else
+    {
+      return ngl_atomic_dec(mRefCount);
+    }
   }
 
   void SetTrace(bool set)
