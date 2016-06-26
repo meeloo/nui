@@ -1417,6 +1417,78 @@
 		C38971851C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
 		C38971861C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
 		C38971871C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
+		C3E9C15D1D1F8BC100DEBED4 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */; };
+		C3E9C15E1D1F8BC100DEBED4 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */; };
+		C3E9C15F1D1F8BC100DEBED4 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */; };
+		C3E9C1601D1F8BC100DEBED4 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */; };
+		C3E9C1611D1F8BC100DEBED4 /* constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14C1D1F8BC100DEBED4 /* constraint.h */; };
+		C3E9C1621D1F8BC100DEBED4 /* constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14C1D1F8BC100DEBED4 /* constraint.h */; };
+		C3E9C1631D1F8BC100DEBED4 /* constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14C1D1F8BC100DEBED4 /* constraint.h */; };
+		C3E9C1641D1F8BC100DEBED4 /* constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14C1D1F8BC100DEBED4 /* constraint.h */; };
+		C3E9C1651D1F8BC100DEBED4 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14D1D1F8BC100DEBED4 /* debug.h */; };
+		C3E9C1661D1F8BC100DEBED4 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14D1D1F8BC100DEBED4 /* debug.h */; };
+		C3E9C1671D1F8BC100DEBED4 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14D1D1F8BC100DEBED4 /* debug.h */; };
+		C3E9C1681D1F8BC100DEBED4 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14D1D1F8BC100DEBED4 /* debug.h */; };
+		C3E9C1691D1F8BC100DEBED4 /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14E1D1F8BC100DEBED4 /* errors.h */; };
+		C3E9C16A1D1F8BC100DEBED4 /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14E1D1F8BC100DEBED4 /* errors.h */; };
+		C3E9C16B1D1F8BC100DEBED4 /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14E1D1F8BC100DEBED4 /* errors.h */; };
+		C3E9C16C1D1F8BC100DEBED4 /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14E1D1F8BC100DEBED4 /* errors.h */; };
+		C3E9C16D1D1F8BC100DEBED4 /* expression.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14F1D1F8BC100DEBED4 /* expression.h */; };
+		C3E9C16E1D1F8BC100DEBED4 /* expression.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14F1D1F8BC100DEBED4 /* expression.h */; };
+		C3E9C16F1D1F8BC100DEBED4 /* expression.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14F1D1F8BC100DEBED4 /* expression.h */; };
+		C3E9C1701D1F8BC100DEBED4 /* expression.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14F1D1F8BC100DEBED4 /* expression.h */; };
+		C3E9C1711D1F8BC100DEBED4 /* kiwi.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1501D1F8BC100DEBED4 /* kiwi.h */; };
+		C3E9C1721D1F8BC100DEBED4 /* kiwi.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1501D1F8BC100DEBED4 /* kiwi.h */; };
+		C3E9C1731D1F8BC100DEBED4 /* kiwi.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1501D1F8BC100DEBED4 /* kiwi.h */; };
+		C3E9C1741D1F8BC100DEBED4 /* kiwi.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1501D1F8BC100DEBED4 /* kiwi.h */; };
+		C3E9C1751D1F8BC100DEBED4 /* maptype.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1511D1F8BC100DEBED4 /* maptype.h */; };
+		C3E9C1761D1F8BC100DEBED4 /* maptype.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1511D1F8BC100DEBED4 /* maptype.h */; };
+		C3E9C1771D1F8BC100DEBED4 /* maptype.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1511D1F8BC100DEBED4 /* maptype.h */; };
+		C3E9C1781D1F8BC100DEBED4 /* maptype.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1511D1F8BC100DEBED4 /* maptype.h */; };
+		C3E9C1791D1F8BC100DEBED4 /* row.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1521D1F8BC100DEBED4 /* row.h */; };
+		C3E9C17A1D1F8BC100DEBED4 /* row.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1521D1F8BC100DEBED4 /* row.h */; };
+		C3E9C17B1D1F8BC100DEBED4 /* row.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1521D1F8BC100DEBED4 /* row.h */; };
+		C3E9C17C1D1F8BC100DEBED4 /* row.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1521D1F8BC100DEBED4 /* row.h */; };
+		C3E9C17D1D1F8BC100DEBED4 /* shareddata.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1531D1F8BC100DEBED4 /* shareddata.h */; };
+		C3E9C17E1D1F8BC100DEBED4 /* shareddata.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1531D1F8BC100DEBED4 /* shareddata.h */; };
+		C3E9C17F1D1F8BC100DEBED4 /* shareddata.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1531D1F8BC100DEBED4 /* shareddata.h */; };
+		C3E9C1801D1F8BC100DEBED4 /* shareddata.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1531D1F8BC100DEBED4 /* shareddata.h */; };
+		C3E9C1811D1F8BC100DEBED4 /* solver.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1541D1F8BC100DEBED4 /* solver.h */; };
+		C3E9C1821D1F8BC100DEBED4 /* solver.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1541D1F8BC100DEBED4 /* solver.h */; };
+		C3E9C1831D1F8BC100DEBED4 /* solver.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1541D1F8BC100DEBED4 /* solver.h */; };
+		C3E9C1841D1F8BC100DEBED4 /* solver.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1541D1F8BC100DEBED4 /* solver.h */; };
+		C3E9C1851D1F8BC100DEBED4 /* solverimpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1551D1F8BC100DEBED4 /* solverimpl.h */; };
+		C3E9C1861D1F8BC100DEBED4 /* solverimpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1551D1F8BC100DEBED4 /* solverimpl.h */; };
+		C3E9C1871D1F8BC100DEBED4 /* solverimpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1551D1F8BC100DEBED4 /* solverimpl.h */; };
+		C3E9C1881D1F8BC100DEBED4 /* solverimpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1551D1F8BC100DEBED4 /* solverimpl.h */; };
+		C3E9C1891D1F8BC100DEBED4 /* strength.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1561D1F8BC100DEBED4 /* strength.h */; };
+		C3E9C18A1D1F8BC100DEBED4 /* strength.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1561D1F8BC100DEBED4 /* strength.h */; };
+		C3E9C18B1D1F8BC100DEBED4 /* strength.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1561D1F8BC100DEBED4 /* strength.h */; };
+		C3E9C18C1D1F8BC100DEBED4 /* strength.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1561D1F8BC100DEBED4 /* strength.h */; };
+		C3E9C18D1D1F8BC100DEBED4 /* symbol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1571D1F8BC100DEBED4 /* symbol.h */; };
+		C3E9C18E1D1F8BC100DEBED4 /* symbol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1571D1F8BC100DEBED4 /* symbol.h */; };
+		C3E9C18F1D1F8BC100DEBED4 /* symbol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1571D1F8BC100DEBED4 /* symbol.h */; };
+		C3E9C1901D1F8BC100DEBED4 /* symbol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1571D1F8BC100DEBED4 /* symbol.h */; };
+		C3E9C1911D1F8BC100DEBED4 /* symbolics.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1581D1F8BC100DEBED4 /* symbolics.h */; };
+		C3E9C1921D1F8BC100DEBED4 /* symbolics.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1581D1F8BC100DEBED4 /* symbolics.h */; };
+		C3E9C1931D1F8BC100DEBED4 /* symbolics.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1581D1F8BC100DEBED4 /* symbolics.h */; };
+		C3E9C1941D1F8BC100DEBED4 /* symbolics.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1581D1F8BC100DEBED4 /* symbolics.h */; };
+		C3E9C1951D1F8BC100DEBED4 /* term.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1591D1F8BC100DEBED4 /* term.h */; };
+		C3E9C1961D1F8BC100DEBED4 /* term.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1591D1F8BC100DEBED4 /* term.h */; };
+		C3E9C1971D1F8BC100DEBED4 /* term.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1591D1F8BC100DEBED4 /* term.h */; };
+		C3E9C1981D1F8BC100DEBED4 /* term.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C1591D1F8BC100DEBED4 /* term.h */; };
+		C3E9C1991D1F8BC100DEBED4 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15A1D1F8BC100DEBED4 /* util.h */; };
+		C3E9C19A1D1F8BC100DEBED4 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15A1D1F8BC100DEBED4 /* util.h */; };
+		C3E9C19B1D1F8BC100DEBED4 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15A1D1F8BC100DEBED4 /* util.h */; };
+		C3E9C19C1D1F8BC100DEBED4 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15A1D1F8BC100DEBED4 /* util.h */; };
+		C3E9C19D1D1F8BC100DEBED4 /* variable.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15B1D1F8BC100DEBED4 /* variable.h */; };
+		C3E9C19E1D1F8BC100DEBED4 /* variable.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15B1D1F8BC100DEBED4 /* variable.h */; };
+		C3E9C19F1D1F8BC100DEBED4 /* variable.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15B1D1F8BC100DEBED4 /* variable.h */; };
+		C3E9C1A01D1F8BC100DEBED4 /* variable.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15B1D1F8BC100DEBED4 /* variable.h */; };
+		C3E9C1A11D1F8BC100DEBED4 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15C1D1F8BC100DEBED4 /* version.h */; };
+		C3E9C1A21D1F8BC100DEBED4 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15C1D1F8BC100DEBED4 /* version.h */; };
+		C3E9C1A31D1F8BC100DEBED4 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15C1D1F8BC100DEBED4 /* version.h */; };
+		C3E9C1A41D1F8BC100DEBED4 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C15C1D1F8BC100DEBED4 /* version.h */; };
 		E50066D4115070A700CDD83E /* nuiVariant.h in Headers */ = {isa = PBXBuildFile; fileRef = E50066D2115070A700CDD83E /* nuiVariant.h */; };
 		E501C11913FD4561009FB677 /* hb-fallback-shape-private.hh in Headers */ = {isa = PBXBuildFile; fileRef = E501C11213FD4561009FB677 /* hb-fallback-shape-private.hh */; };
 		E501C11B13FD4561009FB677 /* hb-fallback-shape-private.hh in Headers */ = {isa = PBXBuildFile; fileRef = E501C11213FD4561009FB677 /* hb-fallback-shape-private.hh */; };
@@ -2184,42 +2256,6 @@
 		E548CEFE16E4EABF00F98E45 /* nuiUniformDesc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E548CEF616E4EABF00F98E45 /* nuiUniformDesc.cpp */; };
 		E54D8FBE16C1D7FD00102723 /* nuiAudioDevice_AudioUnit.mm in Sources */ = {isa = PBXBuildFile; fileRef = E54D8FBB16C1D7FD00102723 /* nuiAudioDevice_AudioUnit.mm */; };
 		E54D8FC216C1D81300102723 /* nuiAudioDevice_AudioUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = E54D8FBF16C1D81300102723 /* nuiAudioDevice_AudioUnit.h */; };
-		E55185851C375629004FD160 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185731C375629004FD160 /* AssocVector.h */; };
-		E55185861C375629004FD160 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185731C375629004FD160 /* AssocVector.h */; };
-		E55185871C375629004FD160 /* constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185741C375629004FD160 /* constraint.h */; };
-		E55185881C375629004FD160 /* constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185741C375629004FD160 /* constraint.h */; };
-		E55185891C375629004FD160 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185751C375629004FD160 /* debug.h */; };
-		E551858A1C375629004FD160 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185751C375629004FD160 /* debug.h */; };
-		E551858B1C375629004FD160 /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185761C375629004FD160 /* errors.h */; };
-		E551858C1C375629004FD160 /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185761C375629004FD160 /* errors.h */; };
-		E551858D1C375629004FD160 /* expression.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185771C375629004FD160 /* expression.h */; };
-		E551858E1C375629004FD160 /* expression.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185771C375629004FD160 /* expression.h */; };
-		E551858F1C375629004FD160 /* kiwi.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185781C375629004FD160 /* kiwi.h */; };
-		E55185901C375629004FD160 /* kiwi.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185781C375629004FD160 /* kiwi.h */; };
-		E55185911C375629004FD160 /* maptype.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185791C375629004FD160 /* maptype.h */; };
-		E55185921C375629004FD160 /* maptype.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185791C375629004FD160 /* maptype.h */; };
-		E55185931C375629004FD160 /* row.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857A1C375629004FD160 /* row.h */; };
-		E55185941C375629004FD160 /* row.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857A1C375629004FD160 /* row.h */; };
-		E55185951C375629004FD160 /* shareddata.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857B1C375629004FD160 /* shareddata.h */; };
-		E55185961C375629004FD160 /* shareddata.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857B1C375629004FD160 /* shareddata.h */; };
-		E55185971C375629004FD160 /* solver.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857C1C375629004FD160 /* solver.h */; };
-		E55185981C375629004FD160 /* solver.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857C1C375629004FD160 /* solver.h */; };
-		E55185991C375629004FD160 /* solverimpl.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857D1C375629004FD160 /* solverimpl.h */; };
-		E551859A1C375629004FD160 /* solverimpl.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857D1C375629004FD160 /* solverimpl.h */; };
-		E551859B1C375629004FD160 /* strength.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857E1C375629004FD160 /* strength.h */; };
-		E551859C1C375629004FD160 /* strength.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857E1C375629004FD160 /* strength.h */; };
-		E551859D1C375629004FD160 /* symbol.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857F1C375629004FD160 /* symbol.h */; };
-		E551859E1C375629004FD160 /* symbol.h in Headers */ = {isa = PBXBuildFile; fileRef = E551857F1C375629004FD160 /* symbol.h */; };
-		E551859F1C375629004FD160 /* symbolics.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185801C375629004FD160 /* symbolics.h */; };
-		E55185A01C375629004FD160 /* symbolics.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185801C375629004FD160 /* symbolics.h */; };
-		E55185A11C375629004FD160 /* term.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185811C375629004FD160 /* term.h */; };
-		E55185A21C375629004FD160 /* term.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185811C375629004FD160 /* term.h */; };
-		E55185A31C375629004FD160 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185821C375629004FD160 /* util.h */; };
-		E55185A41C375629004FD160 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185821C375629004FD160 /* util.h */; };
-		E55185A51C375629004FD160 /* variable.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185831C375629004FD160 /* variable.h */; };
-		E55185A61C375629004FD160 /* variable.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185831C375629004FD160 /* variable.h */; };
-		E55185A71C375629004FD160 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185841C375629004FD160 /* version.h */; };
-		E55185A81C375629004FD160 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = E55185841C375629004FD160 /* version.h */; };
 		E55236EC0CD3382B00BF0B87 /* nuiBox.h in Headers */ = {isa = PBXBuildFile; fileRef = E55236EB0CD3382B00BF0B87 /* nuiBox.h */; };
 		E553C12712A55987009DDD22 /* ngl_config.uikit.h in Headers */ = {isa = PBXBuildFile; fileRef = E553C12112A55987009DDD22 /* ngl_config.uikit.h */; };
 		E553C12812A55987009DDD22 /* ngl_config.mac.h in Headers */ = {isa = PBXBuildFile; fileRef = E553C12212A55987009DDD22 /* ngl_config.mac.h */; };
@@ -4283,6 +4319,24 @@
 		C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiProtocol.h; path = include/nuiProtocol.h; sourceTree = SOURCE_ROOT; };
 		C389717C1C602474003F2232 /* nuiDebugServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDebugServer.cpp; path = Introspector/nuiDebugServer.cpp; sourceTree = "<group>"; };
 		C38971841C6024B6003F2232 /* nuiDebugServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDebugServer.h; path = include/nuiDebugServer.h; sourceTree = SOURCE_ROOT; };
+		C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssocVector.h; sourceTree = "<group>"; };
+		C3E9C14C1D1F8BC100DEBED4 /* constraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constraint.h; sourceTree = "<group>"; };
+		C3E9C14D1D1F8BC100DEBED4 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		C3E9C14E1D1F8BC100DEBED4 /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errors.h; sourceTree = "<group>"; };
+		C3E9C14F1D1F8BC100DEBED4 /* expression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expression.h; sourceTree = "<group>"; };
+		C3E9C1501D1F8BC100DEBED4 /* kiwi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kiwi.h; sourceTree = "<group>"; };
+		C3E9C1511D1F8BC100DEBED4 /* maptype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maptype.h; sourceTree = "<group>"; };
+		C3E9C1521D1F8BC100DEBED4 /* row.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = row.h; sourceTree = "<group>"; };
+		C3E9C1531D1F8BC100DEBED4 /* shareddata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shareddata.h; sourceTree = "<group>"; };
+		C3E9C1541D1F8BC100DEBED4 /* solver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = solver.h; sourceTree = "<group>"; };
+		C3E9C1551D1F8BC100DEBED4 /* solverimpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = solverimpl.h; sourceTree = "<group>"; };
+		C3E9C1561D1F8BC100DEBED4 /* strength.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = strength.h; sourceTree = "<group>"; };
+		C3E9C1571D1F8BC100DEBED4 /* symbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = symbol.h; sourceTree = "<group>"; };
+		C3E9C1581D1F8BC100DEBED4 /* symbolics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = symbolics.h; sourceTree = "<group>"; };
+		C3E9C1591D1F8BC100DEBED4 /* term.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = term.h; sourceTree = "<group>"; };
+		C3E9C15A1D1F8BC100DEBED4 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		C3E9C15B1D1F8BC100DEBED4 /* variable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = variable.h; sourceTree = "<group>"; };
+		C3E9C15C1D1F8BC100DEBED4 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		E50066D2115070A700CDD83E /* nuiVariant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiVariant.h; path = include/nuiVariant.h; sourceTree = SOURCE_ROOT; };
 		E501C11213FD4561009FB677 /* hb-fallback-shape-private.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = "hb-fallback-shape-private.hh"; path = "harfbuzz/hb-fallback-shape-private.hh"; sourceTree = "<group>"; };
 		E501C11313FD4561009FB677 /* hb-fallback-shape.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "hb-fallback-shape.cc"; path = "harfbuzz/hb-fallback-shape.cc"; sourceTree = "<group>"; };
@@ -5014,24 +5068,6 @@
 		E548CEF616E4EABF00F98E45 /* nuiUniformDesc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nuiUniformDesc.cpp; sourceTree = "<group>"; };
 		E54D8FBB16C1D7FD00102723 /* nuiAudioDevice_AudioUnit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = nuiAudioDevice_AudioUnit.mm; path = Audio/AudioUnit/nuiAudioDevice_AudioUnit.mm; sourceTree = "<group>"; };
 		E54D8FBF16C1D81300102723 /* nuiAudioDevice_AudioUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiAudioDevice_AudioUnit.h; path = include/nuiAudioDevice_AudioUnit.h; sourceTree = SOURCE_ROOT; };
-		E55185731C375629004FD160 /* AssocVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AssocVector.h; path = kiwi/kiwi/AssocVector.h; sourceTree = "<group>"; };
-		E55185741C375629004FD160 /* constraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = constraint.h; path = kiwi/kiwi/constraint.h; sourceTree = "<group>"; };
-		E55185751C375629004FD160 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = debug.h; path = kiwi/kiwi/debug.h; sourceTree = "<group>"; };
-		E55185761C375629004FD160 /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = errors.h; path = kiwi/kiwi/errors.h; sourceTree = "<group>"; };
-		E55185771C375629004FD160 /* expression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = expression.h; path = kiwi/kiwi/expression.h; sourceTree = "<group>"; };
-		E55185781C375629004FD160 /* kiwi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kiwi.h; path = kiwi/kiwi/kiwi.h; sourceTree = "<group>"; };
-		E55185791C375629004FD160 /* maptype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = maptype.h; path = kiwi/kiwi/maptype.h; sourceTree = "<group>"; };
-		E551857A1C375629004FD160 /* row.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = row.h; path = kiwi/kiwi/row.h; sourceTree = "<group>"; };
-		E551857B1C375629004FD160 /* shareddata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shareddata.h; path = kiwi/kiwi/shareddata.h; sourceTree = "<group>"; };
-		E551857C1C375629004FD160 /* solver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = solver.h; path = kiwi/kiwi/solver.h; sourceTree = "<group>"; };
-		E551857D1C375629004FD160 /* solverimpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = solverimpl.h; path = kiwi/kiwi/solverimpl.h; sourceTree = "<group>"; };
-		E551857E1C375629004FD160 /* strength.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = strength.h; path = kiwi/kiwi/strength.h; sourceTree = "<group>"; };
-		E551857F1C375629004FD160 /* symbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = symbol.h; path = kiwi/kiwi/symbol.h; sourceTree = "<group>"; };
-		E55185801C375629004FD160 /* symbolics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = symbolics.h; path = kiwi/kiwi/symbolics.h; sourceTree = "<group>"; };
-		E55185811C375629004FD160 /* term.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = term.h; path = kiwi/kiwi/term.h; sourceTree = "<group>"; };
-		E55185821C375629004FD160 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = kiwi/kiwi/util.h; sourceTree = "<group>"; };
-		E55185831C375629004FD160 /* variable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = variable.h; path = kiwi/kiwi/variable.h; sourceTree = "<group>"; };
-		E55185841C375629004FD160 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = kiwi/kiwi/version.h; sourceTree = "<group>"; };
 		E55236EB0CD3382B00BF0B87 /* nuiBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiBox.h; path = include/nuiBox.h; sourceTree = SOURCE_ROOT; };
 		E553C12112A55987009DDD22 /* ngl_config.uikit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ngl_config.uikit.h; sourceTree = SOURCE_ROOT; };
 		E553C12212A55987009DDD22 /* ngl_config.mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ngl_config.mac.h; sourceTree = SOURCE_ROOT; };
@@ -6275,6 +6311,32 @@
 			name = Dialogs;
 			sourceTree = "<group>";
 		};
+		C3E9C14A1D1F8BC100DEBED4 /* kiwi */ = {
+			isa = PBXGroup;
+			children = (
+				C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */,
+				C3E9C14C1D1F8BC100DEBED4 /* constraint.h */,
+				C3E9C14D1D1F8BC100DEBED4 /* debug.h */,
+				C3E9C14E1D1F8BC100DEBED4 /* errors.h */,
+				C3E9C14F1D1F8BC100DEBED4 /* expression.h */,
+				C3E9C1501D1F8BC100DEBED4 /* kiwi.h */,
+				C3E9C1511D1F8BC100DEBED4 /* maptype.h */,
+				C3E9C1521D1F8BC100DEBED4 /* row.h */,
+				C3E9C1531D1F8BC100DEBED4 /* shareddata.h */,
+				C3E9C1541D1F8BC100DEBED4 /* solver.h */,
+				C3E9C1551D1F8BC100DEBED4 /* solverimpl.h */,
+				C3E9C1561D1F8BC100DEBED4 /* strength.h */,
+				C3E9C1571D1F8BC100DEBED4 /* symbol.h */,
+				C3E9C1581D1F8BC100DEBED4 /* symbolics.h */,
+				C3E9C1591D1F8BC100DEBED4 /* term.h */,
+				C3E9C15A1D1F8BC100DEBED4 /* util.h */,
+				C3E9C15B1D1F8BC100DEBED4 /* variable.h */,
+				C3E9C15C1D1F8BC100DEBED4 /* version.h */,
+			);
+			name = kiwi;
+			path = include/kiwi;
+			sourceTree = SOURCE_ROOT;
+		};
 		E505C8720C958BE6001D802C /* Threading */ = {
 			isa = PBXGroup;
 			children = (
@@ -7123,31 +7185,6 @@
 			name = clipper;
 			sourceTree = "<group>";
 		};
-		E55185721C375617004FD160 /* kiwi */ = {
-			isa = PBXGroup;
-			children = (
-				E55185731C375629004FD160 /* AssocVector.h */,
-				E55185741C375629004FD160 /* constraint.h */,
-				E55185751C375629004FD160 /* debug.h */,
-				E55185761C375629004FD160 /* errors.h */,
-				E55185771C375629004FD160 /* expression.h */,
-				E55185781C375629004FD160 /* kiwi.h */,
-				E55185791C375629004FD160 /* maptype.h */,
-				E551857A1C375629004FD160 /* row.h */,
-				E551857B1C375629004FD160 /* shareddata.h */,
-				E551857C1C375629004FD160 /* solver.h */,
-				E551857D1C375629004FD160 /* solverimpl.h */,
-				E551857E1C375629004FD160 /* strength.h */,
-				E551857F1C375629004FD160 /* symbol.h */,
-				E55185801C375629004FD160 /* symbolics.h */,
-				E55185811C375629004FD160 /* term.h */,
-				E55185821C375629004FD160 /* util.h */,
-				E55185831C375629004FD160 /* variable.h */,
-				E55185841C375629004FD160 /* version.h */,
-			);
-			name = kiwi;
-			sourceTree = "<group>";
-		};
 		E55DEDF90D350FE3002DA5BD /* SoftwareRasterizer */ = {
 			isa = PBXGroup;
 			children = (
@@ -7210,8 +7247,8 @@
 		E58167440C3CECA700902DFE /* deps */ = {
 			isa = PBXGroup;
 			children = (
+				C3E9C14A1D1F8BC100DEBED4 /* kiwi */,
 				E5077A771C6D47FE0090688B /* capnproto */,
-				E55185721C375617004FD160 /* kiwi */,
 				E5BAC3CB1AF596D200B2BE76 /* Frameworks */,
 				E52FD3A0184D499D0015935E /* clipper */,
 				E573205B14BF2142008D488E /* premake4.lua */,
@@ -9091,8 +9128,10 @@
 				73F0844C12E9BA0700656E84 /* nglMath.h in Headers */,
 				73F0844D12E9BA0700656E84 /* nglIOStream.h in Headers */,
 				73F0844E12E9BA0700656E84 /* nuiHotKey.h in Headers */,
+				C3E9C16F1D1F8BC100DEBED4 /* expression.h in Headers */,
 				73F0845012E9BA0700656E84 /* nuiRectPath.h in Headers */,
 				73F0845112E9BA0700656E84 /* nglOStream.h in Headers */,
+				C3E9C1771D1F8BC100DEBED4 /* maptype.h in Headers */,
 				73F0845212E9BA0700656E84 /* nuiPathGenerator.h in Headers */,
 				73F0845312E9BA0700656E84 /* nglImageCodec.h in Headers */,
 				73F0845512E9BA0700656E84 /* nuiTabView.h in Headers */,
@@ -9107,6 +9146,7 @@
 				73F0845E12E9BA0700656E84 /* nuiPainter.h in Headers */,
 				73F0846012E9BA0700656E84 /* nuiOutliner.h in Headers */,
 				73F0846112E9BA0700656E84 /* nglIFile.h in Headers */,
+				C3E9C1A31D1F8BC100DEBED4 /* version.h in Headers */,
 				73F0846212E9BA0700656E84 /* nuiD3DPainter.h in Headers */,
 				73F0846312E9BA0700656E84 /* nglDataObjects.h in Headers */,
 				73F0846412E9BA0700656E84 /* nuiShapeView.h in Headers */,
@@ -9134,6 +9174,7 @@
 				73F0847D12E9BA0700656E84 /* nuiEvent.h in Headers */,
 				73F0847E12E9BA0700656E84 /* ngl_all.h in Headers */,
 				73F0847F12E9BA0700656E84 /* nglInputDevice.h in Headers */,
+				C3E9C19B1D1F8BC100DEBED4 /* util.h in Headers */,
 				73F0848012E9BA0700656E84 /* nuiPoint.h in Headers */,
 				73F0848112E9BA0700656E84 /* nglFile.h in Headers */,
 				73F0848212E9BA0700656E84 /* nui_all.h in Headers */,
@@ -9167,6 +9208,7 @@
 				73F084A112E9BA0700656E84 /* nuiSplitter.h in Headers */,
 				613DF38F1A34E52D00BD7656 /* nuiTableView.h in Headers */,
 				73F084A212E9BA0700656E84 /* nglVideoMode.h in Headers */,
+				C3E9C18B1D1F8BC100DEBED4 /* strength.h in Headers */,
 				73F084A312E9BA0700656E84 /* nuiMainWindow.h in Headers */,
 				73F084A412E9BA0700656E84 /* nuiTexture.h in Headers */,
 				73F084A512E9BA0700656E84 /* nuiTextureHelpers.h in Headers */,
@@ -9177,6 +9219,7 @@
 				73F084AC12E9BA0700656E84 /* nglMatrix.h in Headers */,
 				73F084AD12E9BA0700656E84 /* ngl.h in Headers */,
 				73F084AE12E9BA0700656E84 /* nuiButton.h in Headers */,
+				C3E9C1971D1F8BC100DEBED4 /* term.h in Headers */,
 				73F084AF12E9BA0700656E84 /* nglMachOPrefix.h in Headers */,
 				73F084B012E9BA0700656E84 /* nglImageTGACodec.h in Headers */,
 				73F084B112E9BA0700656E84 /* nglImagePPMCodec.h in Headers */,
@@ -9213,11 +9256,13 @@
 				73F084D612E9BA0700656E84 /* nglSyncEvent.h in Headers */,
 				73F084D712E9BA0700656E84 /* nuiFrameView.h in Headers */,
 				73F084D812E9BA0700656E84 /* nuiFolderPane.h in Headers */,
+				C3E9C16B1D1F8BC100DEBED4 /* errors.h in Headers */,
 				73F084D912E9BA0700656E84 /* nuiZoomBar.h in Headers */,
 				73F084DB12E9BA0700656E84 /* nuiBox.h in Headers */,
 				73F084DD12E9BA0700656E84 /* nuiColorSelector.h in Headers */,
 				73F084DE12E9BA0700656E84 /* nuiImageDropZone.h in Headers */,
 				73F084DF12E9BA0700656E84 /* nuiAudioDevice.h in Headers */,
+				C3E9C1931D1F8BC100DEBED4 /* symbolics.h in Headers */,
 				73F084E012E9BA0700656E84 /* nuiPopupView.h in Headers */,
 				73F084E112E9BA0700656E84 /* nuiNativeResource.h in Headers */,
 				73F084E212E9BA0700656E84 /* nuiAttribute.h in Headers */,
@@ -9229,8 +9274,11 @@
 				73F084E812E9BA0700656E84 /* nuiColorAttributeEditor.h in Headers */,
 				73F084E912E9BA0700656E84 /* nuiPathAttributeEditor.h in Headers */,
 				73F084EA12E9BA0700656E84 /* nuiRectAttributeEditor.h in Headers */,
+				C3E9C1631D1F8BC100DEBED4 /* constraint.h in Headers */,
 				73F084EB12E9BA0700656E84 /* nuiStringAttributeEditor.h in Headers */,
 				73F084EC12E9BA0700656E84 /* nuiLabelAttribute.h in Headers */,
+				C3E9C17F1D1F8BC100DEBED4 /* shareddata.h in Headers */,
+				C3E9C1731D1F8BC100DEBED4 /* kiwi.h in Headers */,
 				73F084ED12E9BA0700656E84 /* nuiBooleanAttributeEditor.h in Headers */,
 				73F084EE12E9BA0700656E84 /* nuiNativeResourceVolume.h in Headers */,
 				73F084EF12E9BA0700656E84 /* nuiDecoration.h in Headers */,
@@ -9289,6 +9337,7 @@
 				73F0852912E9BA0700656E84 /* nuiLocale.h in Headers */,
 				73F0852A12E9BA0700656E84 /* nuiSample.h in Headers */,
 				73F0852B12E9BA0700656E84 /* nuiSampleInfo.h in Headers */,
+				C3E9C1871D1F8BC100DEBED4 /* solverimpl.h in Headers */,
 				73F0852C12E9BA0700656E84 /* nuiSampleReader.h in Headers */,
 				73F0852D12E9BA0700656E84 /* nuiSampleWriter.h in Headers */,
 				73F0852E12E9BA0700656E84 /* nuiWaveReader.h in Headers */,
@@ -9296,6 +9345,7 @@
 				73F0853012E9BA0700656E84 /* nuiSampleDefines.h in Headers */,
 				73F0853112E9BA0700656E84 /* nuiUnicode.h in Headers */,
 				73F0853212E9BA0700656E84 /* nuiVersion.h in Headers */,
+				C3E9C18F1D1F8BC100DEBED4 /* symbol.h in Headers */,
 				73F0853312E9BA0700656E84 /* nuiAudioDecoder.h in Headers */,
 				73F0853412E9BA0700656E84 /* nuiChunksDefinitions.h in Headers */,
 				73F0853512E9BA0700656E84 /* ngl_carbon.h in Headers */,
@@ -9304,6 +9354,7 @@
 				73F0853812E9BA0700656E84 /* nuiCommandContainer.h in Headers */,
 				73F0853912E9BA0700656E84 /* nuiCommandManager.h in Headers */,
 				73F0853A12E9BA0700656E84 /* nuiFileTree.h in Headers */,
+				C3E9C15F1D1F8BC100DEBED4 /* AssocVector.h in Headers */,
 				73F0853B12E9BA0700656E84 /* nuiChunkSampleReader.h in Headers */,
 				73F0853C12E9BA0700656E84 /* nuiAiffReader.h in Headers */,
 				73F0853D12E9BA0700656E84 /* nuiAiffWriter.h in Headers */,
@@ -9326,6 +9377,7 @@
 				73F0855012E9BA0700656E84 /* nuiHTMLHeader.h in Headers */,
 				73F0855112E9BA0700656E84 /* nuiHTMLStyle.h in Headers */,
 				73F0855212E9BA0700656E84 /* nuiWebCSS.h in Headers */,
+				C3E9C19F1D1F8BC100DEBED4 /* variable.h in Headers */,
 				73F0855312E9BA0700656E84 /* nuiHugeImage.h in Headers */,
 				73F0855412E9BA0700656E84 /* nuiToggleButton.h in Headers */,
 				73F0855512E9BA0700656E84 /* nuiClampedValueAttributeEditor.h in Headers */,
@@ -9371,6 +9423,7 @@
 				73F0857E12E9BA0700656E84 /* features.h in Headers */,
 				73F0857F12E9BA0700656E84 /* forwards.h in Headers */,
 				73F0858012E9BA0700656E84 /* json.h in Headers */,
+				C3E9C17B1D1F8BC100DEBED4 /* row.h in Headers */,
 				73F0858112E9BA0700656E84 /* reader.h in Headers */,
 				73F0858212E9BA0700656E84 /* value.h in Headers */,
 				73F0858312E9BA0700656E84 /* writer.h in Headers */,
@@ -9382,6 +9435,7 @@
 				73F0858A12E9BA0700656E84 /* nuiAudioDb.h in Headers */,
 				73F0858B12E9BA0700656E84 /* nuiAudioEngine.h in Headers */,
 				73F0858C12E9BA0700656E84 /* nuiSound.h in Headers */,
+				C3E9C1671D1F8BC100DEBED4 /* debug.h in Headers */,
 				73F0858D12E9BA0700656E84 /* nuiSoundManager.h in Headers */,
 				73F0858E12E9BA0700656E84 /* nuiVoice.h in Headers */,
 				73F0858F12E9BA0700656E84 /* nuiMemorySound.h in Headers */,
@@ -9390,6 +9444,7 @@
 				73F0859212E9BA0700656E84 /* nuiFileVoice.h in Headers */,
 				73F0859312E9BA0700656E84 /* nuiSynthSound.h in Headers */,
 				73F0859412E9BA0700656E84 /* nuiSynthVoice.h in Headers */,
+				C3E9C1831D1F8BC100DEBED4 /* solver.h in Headers */,
 				E5345F3D12F3317500F435D9 /* TextureAtlas.h in Headers */,
 				E51C806D136ADE1F004C3FFB /* nuiTextLayout.h in Headers */,
 				E51C807D136ADE98004C3FFB /* hb_nui.h in Headers */,
@@ -9431,14 +9486,12 @@
 				73F097F012E9D09E00656E84 /* svpscmap.h in Headers */,
 				73F097F112E9D09E00656E84 /* ftvalid.h in Headers */,
 				73F097F212E9D09E00656E84 /* ft2unix.h in Headers */,
-				E55185901C375629004FD160 /* kiwi.h in Headers */,
 				73F097F312E9D09E00656E84 /* svgxval.h in Headers */,
 				73F097F412E9D09E00656E84 /* ftlcdfil.h in Headers */,
 				73F097F512E9D09E00656E84 /* svpsinfo.h in Headers */,
 				E5077C301C6D54690090688B /* async-prelude.h in Headers */,
 				73F097F612E9D09E00656E84 /* ttnameid.h in Headers */,
 				73F097F712E9D09E00656E84 /* ftoutln.h in Headers */,
-				E551858C1C375629004FD160 /* errors.h in Headers */,
 				E5077C441C6D54690090688B /* miniposix.h in Headers */,
 				E5077C581C6D54690090688B /* tuple.h in Headers */,
 				73F097F812E9D09E00656E84 /* svsfnt.h in Headers */,
@@ -9460,7 +9513,6 @@
 				73F0980712E9D09E00656E84 /* ftsizes.h in Headers */,
 				73F0980812E9D09E00656E84 /* ftbitmap.h in Headers */,
 				73F0980912E9D09E00656E84 /* svkern.h in Headers */,
-				E55185A21C375629004FD160 /* term.h in Headers */,
 				E5077C3C1C6D54690090688B /* function.h in Headers */,
 				73F0980A12E9D09E00656E84 /* sfnt.h in Headers */,
 				73F0980B12E9D09E00656E84 /* ftimage.h in Headers */,
@@ -9513,7 +9565,6 @@
 				73F0982D12E9D09E00656E84 /* ftsystem.h in Headers */,
 				73F0982E12E9D09E00656E84 /* svtteng.h in Headers */,
 				73F0982F12E9D09E00656E84 /* ftoption.h in Headers */,
-				E55185921C375629004FD160 /* maptype.h in Headers */,
 				E5077CBA1C6D54690090688B /* common.h in Headers */,
 				E5077B9F1C6D53720090688B /* membrane.h in Headers */,
 				73F0983012E9D09E00656E84 /* ttunpat.h in Headers */,
@@ -9541,7 +9592,6 @@
 				73F0984612E9D09E00656E84 /* ftwinfnt.h in Headers */,
 				73F0984712E9D09E00656E84 /* ftserv.h in Headers */,
 				73F0984812E9D09E00656E84 /* jmemsys.h in Headers */,
-				E551858A1C375629004FD160 /* debug.h in Headers */,
 				73F0984912E9D09E00656E84 /* ftdebug.h in Headers */,
 				73F0984A12E9D09E00656E84 /* jinclude.h in Headers */,
 				73F0984D12E9D09E00656E84 /* gxvalid.h in Headers */,
@@ -9557,9 +9607,7 @@
 				73F0985712E9D09E00656E84 /* aferrors.h in Headers */,
 				73F0985812E9D09E00656E84 /* afglobal.h in Headers */,
 				73F0985912E9D09E00656E84 /* afhints.h in Headers */,
-				E55185961C375629004FD160 /* shareddata.h in Headers */,
 				73F0985A12E9D09E00656E84 /* aflatin.h in Headers */,
-				E55185A61C375629004FD160 /* variable.h in Headers */,
 				73F0985B12E9D09E00656E84 /* afloader.h in Headers */,
 				73F0985C12E9D09E00656E84 /* afmodule.h in Headers */,
 				E5077B9B1C6D53720090688B /* layout.h in Headers */,
@@ -9572,7 +9620,6 @@
 				73F0986012E9D09E00656E84 /* bdferror.h in Headers */,
 				73F0986112E9D09E00656E84 /* ftccache.h in Headers */,
 				73F0986212E9D09E00656E84 /* ftccback.h in Headers */,
-				E55185A41C375629004FD160 /* util.h in Headers */,
 				73F0986312E9D09E00656E84 /* ftcerror.h in Headers */,
 				73F0986412E9D09E00656E84 /* ftcglyph.h in Headers */,
 				73F0986512E9D09E00656E84 /* ftcimage.h in Headers */,
@@ -9601,7 +9648,6 @@
 				73F0987612E9D09E00656E84 /* otvmod.h in Headers */,
 				73F0987712E9D09E00656E84 /* pcf.h in Headers */,
 				73F0987812E9D09E00656E84 /* pcfdrivr.h in Headers */,
-				E55185981C375629004FD160 /* solver.h in Headers */,
 				E5077C3A1C6D54690090688B /* exception.h in Headers */,
 				73F0987912E9D09E00656E84 /* pcferror.h in Headers */,
 				73F0987A12E9D09E00656E84 /* pcfread.h in Headers */,
@@ -9617,7 +9663,6 @@
 				73F0988412E9D09E00656E84 /* afmparse.h in Headers */,
 				73F0988512E9D09E00656E84 /* psauxerr.h in Headers */,
 				E5077BB11C6D53720090688B /* rpc.capnp.h in Headers */,
-				E55185A01C375629004FD160 /* symbolics.h in Headers */,
 				73F0988612E9D09E00656E84 /* psauxmod.h in Headers */,
 				73F0988712E9D09E00656E84 /* psconv.h in Headers */,
 				E5077C481C6D54690090688B /* one-of.h in Headers */,
@@ -9641,7 +9686,6 @@
 				73F0989912E9D09E00656E84 /* sfobjs.h in Headers */,
 				73F0989A12E9D09E00656E84 /* ttbdf.h in Headers */,
 				73F0989B12E9D09E00656E84 /* ttcmap.h in Headers */,
-				E551859A1C375629004FD160 /* solverimpl.h in Headers */,
 				73F0989C12E9D09E00656E84 /* ttkern.h in Headers */,
 				73F0989D12E9D09E00656E84 /* ttload.h in Headers */,
 				E5077CBE1C6D54690090688B /* iostream.h in Headers */,
@@ -9665,7 +9709,6 @@
 				73F098AE12E9D09E00656E84 /* t1gload.h in Headers */,
 				73F098AF12E9D09E00656E84 /* t1load.h in Headers */,
 				73F098B012E9D09E00656E84 /* t1objs.h in Headers */,
-				E55185881C375629004FD160 /* constraint.h in Headers */,
 				73F098B112E9D09E00656E84 /* t1parse.h in Headers */,
 				E5077C341C6D54690090688B /* async.h in Headers */,
 				73F098B212E9D09E00656E84 /* t1tokens.h in Headers */,
@@ -9718,7 +9761,6 @@
 				73F098D812E9D09E00656E84 /* attrs.h in Headers */,
 				73F098D912E9D09E00656E84 /* lexer.h in Headers */,
 				73F098DA12E9D09E00656E84 /* tidy-int.h in Headers */,
-				E55185861C375629004FD160 /* AssocVector.h in Headers */,
 				73F098DB12E9D09E00656E84 /* attrdict.h in Headers */,
 				E5077BC31C6D53720090688B /* serialize-text.h in Headers */,
 				E5077B8B1C6D53720090688B /* blob.h in Headers */,
@@ -9726,13 +9768,11 @@
 				73F098DD12E9D09E00656E84 /* access.h in Headers */,
 				73F098DE12E9D09E00656E84 /* entities.h in Headers */,
 				73F098DF12E9D09E00656E84 /* pprint.h in Headers */,
-				E551859C1C375629004FD160 /* strength.h in Headers */,
 				73F098E012E9D09E00656E84 /* charsets.h in Headers */,
 				E5077BB31C6D53720090688B /* rpc.h in Headers */,
 				73F098E112E9D09E00656E84 /* parser.h in Headers */,
 				73F098E212E9D09E00656E84 /* fileio.h in Headers */,
 				73F098E312E9D09E00656E84 /* clean.h in Headers */,
-				E55185A81C375629004FD160 /* version.h in Headers */,
 				73F098E512E9D09E00656E84 /* svcid.h in Headers */,
 				73F098E612E9D09E00656E84 /* svttglyf.h in Headers */,
 				73F098E712E9D09E00656E84 /* ftadvanc.h in Headers */,
@@ -9755,7 +9795,6 @@
 				73F0994D12E9D09E00656E84 /* properties.h in Headers */,
 				73F0994E12E9D09E00656E84 /* select.h in Headers */,
 				73F0994F12E9D09E00656E84 /* stylesheet.h in Headers */,
-				E551859E1C375629004FD160 /* symbol.h in Headers */,
 				73F0995012E9D09E00656E84 /* types.h in Headers */,
 				E5077C401C6D54690090688B /* main.h in Headers */,
 				73F0995112E9D09E00656E84 /* libwapcaplet.h in Headers */,
@@ -9801,7 +9840,6 @@
 				73F0997412E9D09E00656E84 /* hash.h in Headers */,
 				73F0997512E9D09E00656E84 /* properties.h in Headers */,
 				73F0997612E9D09E00656E84 /* propget.h in Headers */,
-				E55185941C375629004FD160 /* row.h in Headers */,
 				73F0997712E9D09E00656E84 /* propset.h in Headers */,
 				73F0997812E9D09E00656E84 /* select.h in Headers */,
 				E5077C541C6D54690090688B /* threadlocal.h in Headers */,
@@ -9854,7 +9892,6 @@
 				E511F7C71367149100DE93B0 /* hb-ot-tag.h in Headers */,
 				E511F7C81367149100DE93B0 /* hb-ot.h in Headers */,
 				E511F7C91367149100DE93B0 /* hb-private.hh in Headers */,
-				E551858E1C375629004FD160 /* expression.h in Headers */,
 				E511F7CB1367149100DE93B0 /* hb-shape.h in Headers */,
 				E511F7CC1367149100DE93B0 /* hb-unicode-private.hh in Headers */,
 				E511F7CE1367149100DE93B0 /* hb-unicode.h in Headers */,
@@ -9894,6 +9931,7 @@
 				E5429FB10C3F0A5900225219 /* nglWindow.h in Headers */,
 				E5429FB30C3F0A5900225219 /* nuiRadioButton.h in Headers */,
 				E5429FB40C3F0A5900225219 /* nuiShadeContainer.h in Headers */,
+				C3E9C1691D1F8BC100DEBED4 /* errors.h in Headers */,
 				E5429FB60C3F0A5900225219 /* nuiLabelRenamer.h in Headers */,
 				E5429FB70C3F0A5900225219 /* nglString.h in Headers */,
 				E5429FB80C3F0A5900225219 /* nuiMouseEvent.h in Headers */,
@@ -9921,6 +9959,7 @@
 				E5429FD50C3F0A5900225219 /* nglMath.h in Headers */,
 				E5429FD70C3F0A5900225219 /* nglIOStream.h in Headers */,
 				E5429FD80C3F0A5900225219 /* nuiHotKey.h in Headers */,
+				C3E9C1791D1F8BC100DEBED4 /* row.h in Headers */,
 				E5429FDA0C3F0A5900225219 /* nuiRectPath.h in Headers */,
 				E5429FDB0C3F0A5900225219 /* nglOStream.h in Headers */,
 				E5429FDC0C3F0A5900225219 /* nuiPathGenerator.h in Headers */,
@@ -9936,6 +9975,7 @@
 				E5429FE80C3F0A5900225219 /* nuiTopLevel.h in Headers */,
 				E5429FE90C3F0A5900225219 /* nuiPainter.h in Headers */,
 				E5429FEC0C3F0A5900225219 /* nuiOutliner.h in Headers */,
+				C3E9C1811D1F8BC100DEBED4 /* solver.h in Headers */,
 				E5429FED0C3F0A5900225219 /* nglIFile.h in Headers */,
 				E5429FEE0C3F0A5900225219 /* nuiD3DPainter.h in Headers */,
 				E5429FEF0C3F0A5900225219 /* nglDataObjects.h in Headers */,
@@ -9963,6 +10003,7 @@
 				E542A0090C3F0A5900225219 /* ngl_glext.h in Headers */,
 				E542A00A0C3F0A5900225219 /* nglOMemory.h in Headers */,
 				E542A00B0C3F0A5900225219 /* nuiFontBase.h in Headers */,
+				C3E9C15D1D1F8BC100DEBED4 /* AssocVector.h in Headers */,
 				E542A00C0C3F0A5900225219 /* nuiEvent.h in Headers */,
 				E542A00D0C3F0A5900225219 /* ngl_all.h in Headers */,
 				E542A00E0C3F0A5900225219 /* nglInputDevice.h in Headers */,
@@ -9981,6 +10022,7 @@
 				E542A0200C3F0A5900225219 /* nuiBuilder.h in Headers */,
 				E542A0210C3F0A5900225219 /* nuiGLPainter.h in Headers */,
 				E542A0220C3F0A5900225219 /* nuiWidgetAnimation.h in Headers */,
+				C3E9C1711D1F8BC100DEBED4 /* kiwi.h in Headers */,
 				E542A0230C3F0A5900225219 /* nglEvent.h in Headers */,
 				E542A0250C3F0A5900225219 /* nuiXML.h in Headers */,
 				E542A0260C3F0A5900225219 /* nuiSlider.h in Headers */,
@@ -10013,6 +10055,7 @@
 				E542A04C0C3F0A5900225219 /* nglImageTGACodec.h in Headers */,
 				E542A04D0C3F0A5900225219 /* nglImagePPMCodec.h in Headers */,
 				E542A04E0C3F0A5900225219 /* ioapi.h in Headers */,
+				C3E9C1611D1F8BC100DEBED4 /* constraint.h in Headers */,
 				E52003C21C78D5C00031A12B /* nuiMessageData.h in Headers */,
 				E542A04F0C3F0A5900225219 /* nglImagePNGCodec.h in Headers */,
 				E542A0500C3F0A5900225219 /* main.h in Headers */,
@@ -10029,6 +10072,7 @@
 				E57BC75A0C63EA070026DE07 /* nuiFastDelegate.h in Headers */,
 				E57BC75D0C63EA1A0026DE07 /* nuiSignalsSlots.h in Headers */,
 				E5A2A6E80C7F2877008E2827 /* nuiTreeView.h in Headers */,
+				C3E9C1651D1F8BC100DEBED4 /* debug.h in Headers */,
 				E5EB3A9C0C82270400CF21E2 /* nuiBindingManager.h in Headers */,
 				E517B0DE0C85704900190FF9 /* nuiHBox.h in Headers */,
 				E517B0DF0C85704900190FF9 /* nuiVBox.h in Headers */,
@@ -10053,6 +10097,7 @@
 				E5D66E520CF433BA004783D4 /* nuiNativeResource.h in Headers */,
 				BC35D31F0CF5C57B002CE274 /* nuiAttribute.h in Headers */,
 				BC35D3200CF5C57B002CE274 /* nuiAttributeEditor.h in Headers */,
+				C3E9C18D1D1F8BC100DEBED4 /* symbol.h in Headers */,
 				BCCC98100CF5D21800677C8C /* nuiPercentAttributeEditor.h in Headers */,
 				BCF4F8270CF5E224009FEF20 /* nuiPointAttributeEditor.h in Headers */,
 				E5C2ED750CF6480A0098B8BB /* nglVolume.h in Headers */,
@@ -10061,6 +10106,7 @@
 				BCA519FC0CFAE0F900832BD1 /* nuiColorAttributeEditor.h in Headers */,
 				BCA519FD0CFAE0F900832BD1 /* nuiPathAttributeEditor.h in Headers */,
 				BCA519FE0CFAE0F900832BD1 /* nuiRectAttributeEditor.h in Headers */,
+				C3E9C1991D1F8BC100DEBED4 /* util.h in Headers */,
 				BCF24E4B0CFEF51500650944 /* nuiStringAttributeEditor.h in Headers */,
 				BC58C4B00D0078EB00C19A59 /* nuiLabelAttribute.h in Headers */,
 				BCA456B60D043D9A009236E9 /* nuiBooleanAttributeEditor.h in Headers */,
@@ -10099,7 +10145,9 @@
 				BC4389DA0DC82C4800AF5002 /* nglLightLock.h in Headers */,
 				BC438B060DC873E500AF5002 /* nglLock.h in Headers */,
 				BC3EB53C0DDE4DF200DEA0CC /* nuiBorderDecoration.h in Headers */,
+				C3E9C1951D1F8BC100DEBED4 /* term.h in Headers */,
 				BC915AFD0DE187F80044CD59 /* nuiImageDecoration.h in Headers */,
+				C3E9C1A11D1F8BC100DEBED4 /* version.h in Headers */,
 				56892C210DE489B7005806AD /* nuiMemoryPool.h in Headers */,
 				BC6477C20DEB208B000C5508 /* nuiDecorationDefines.h in Headers */,
 				BC3532790DF4279A003930C3 /* nuiMouseCursor.h in Headers */,
@@ -10139,6 +10187,7 @@
 				BC6CCB2C0F121D750020EE35 /* nuiCommandContainer.h in Headers */,
 				BC6CCB2D0F121D750020EE35 /* nuiCommandManager.h in Headers */,
 				BC586EC30F15022400703177 /* nuiFileTree.h in Headers */,
+				C3E9C1891D1F8BC100DEBED4 /* strength.h in Headers */,
 				40182A6E0F24C74A00F11401 /* nuiChunkSampleReader.h in Headers */,
 				40182AD50F24F09500F11401 /* nuiAiffReader.h in Headers */,
 				40EAFD7B0F2780550072C6DE /* nuiAiffWriter.h in Headers */,
@@ -10151,6 +10200,7 @@
 				E556973A0FB2D71600324321 /* nuiParser.h in Headers */,
 				E5D2D18D0FDE949C00143480 /* nuiRSS.h in Headers */,
 				E5B74AE00FE021C900476F43 /* nuiRSSView.h in Headers */,
+				C3E9C1751D1F8BC100DEBED4 /* maptype.h in Headers */,
 				E56D24040FE2F3AD00C16F53 /* nuiFlowView.h in Headers */,
 				E51E54AE0FF1237F00FDF3BE /* nglImageGIFCodec.h in Headers */,
 				E591C01D0FF17984005E5E3D /* nuiHTMLContext.h in Headers */,
@@ -10171,6 +10221,7 @@
 				E55A47CA1053234C002AB5CA /* nuiComboAttributeEditor.h in Headers */,
 				4024359010568E550089BA0B /* nuiStopWatch.h in Headers */,
 				E58411CA1077451500E0CB45 /* nuiBindings.h in Headers */,
+				C3E9C1851D1F8BC100DEBED4 /* solverimpl.h in Headers */,
 				E5D9FEE91082B350008D0F11 /* nuiGLUTBridge.h in Headers */,
 				408D9BA61097436800AEE78A /* nuiVideoDecoder.h in Headers */,
 				E540AB6310DFAC8F00791FBA /* nuiAsyncIStream.h in Headers */,
@@ -10184,10 +10235,12 @@
 				E52CBD211174C07E0031DFA8 /* nuiScriptEngine.h in Headers */,
 				E52CC07511751B620031DFA8 /* nuiSpiderMonkey.h in Headers */,
 				E5AFA4D8117548CD0021C1E1 /* nuiMimeMultiPart.h in Headers */,
+				C3E9C17D1D1F8BC100DEBED4 /* shareddata.h in Headers */,
 				E50367CA11A0AD9E001F4389 /* nuiNetworkHost.h in Headers */,
 				E50367CB11A0AD9E001F4389 /* nuiSocket.h in Headers */,
 				E50367CC11A0AD9E001F4389 /* nuiTCPClient.h in Headers */,
 				E50367CD11A0AD9E001F4389 /* nuiTCPServer.h in Headers */,
+				C3E9C16D1D1F8BC100DEBED4 /* expression.h in Headers */,
 				E50367DF11A0ADF5001F4389 /* nglStringConv.h in Headers */,
 				E50367E011A0ADF5001F4389 /* nuiRegExp.h in Headers */,
 				E57DDB6111ADE86A00C0E4DE /* nuiHTMLTable.h in Headers */,
@@ -10210,6 +10263,7 @@
 				40033EC112B14E08000695D2 /* nuiJson.h in Headers */,
 				E553C12712A55987009DDD22 /* ngl_config.uikit.h in Headers */,
 				E553C12812A55987009DDD22 /* ngl_config.mac.h in Headers */,
+				C3E9C19D1D1F8BC100DEBED4 /* variable.h in Headers */,
 				E553C12912A55987009DDD22 /* ngl_config.cocoa.h in Headers */,
 				E553C15412A55B1E009DDD22 /* nglImageCGCodec.h in Headers */,
 				BC87DF0612A9599B00D836BF /* nuiNavigationButton.h in Headers */,
@@ -10246,6 +10300,7 @@
 				E52FA68014F686CF00992064 /* nuiStringTemplate.h in Headers */,
 				E5AD0A51169F20EC00836BAA /* nuiShader.h in Headers */,
 				E548CEF016E4EA9500F98E45 /* nuiUniformDesc.h in Headers */,
+				C3E9C1911D1F8BC100DEBED4 /* symbolics.h in Headers */,
 				E50F41F716E7746D00519AF0 /* nuiVertexAttribDesc.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10295,18 +10350,21 @@
 				E5D63F4A1209AB9C009C26A9 /* nuiCommand.h in Headers */,
 				E5D63F4B1209AB9C009C26A9 /* nglPath.h in Headers */,
 				E5D63F4C1209AB9C009C26A9 /* nglOFile.h in Headers */,
+				C3E9C17A1D1F8BC100DEBED4 /* row.h in Headers */,
 				E5D63F4D1209AB9C009C26A9 /* nuiUserArea.h in Headers */,
 				E5D63F4E1209AB9C009C26A9 /* nglMath.h in Headers */,
 				E5D63F501209AB9C009C26A9 /* nglIOStream.h in Headers */,
 				E5D63F511209AB9C009C26A9 /* nuiHotKey.h in Headers */,
 				E5D63F531209AB9C009C26A9 /* nuiRectPath.h in Headers */,
 				E5D63F541209AB9C009C26A9 /* nglOStream.h in Headers */,
+				C3E9C1621D1F8BC100DEBED4 /* constraint.h in Headers */,
 				E5D63F551209AB9C009C26A9 /* nuiPathGenerator.h in Headers */,
 				E5D63F561209AB9C009C26A9 /* nglImageCodec.h in Headers */,
 				E5D63F581209AB9C009C26A9 /* nuiTabView.h in Headers */,
 				E5D63F591209AB9C009C26A9 /* nuiLabel.h in Headers */,
 				E5D63F5A1209AB9C009C26A9 /* nglVector.h in Headers */,
 				E5D63F5B1209AB9C009C26A9 /* nuiDialog.h in Headers */,
+				C3E9C1921D1F8BC100DEBED4 /* symbolics.h in Headers */,
 				E5D63F5C1209AB9C009C26A9 /* nglTime.h in Headers */,
 				E5D63F5D1209AB9C009C26A9 /* nglKernel.h in Headers */,
 				E5D63F5E1209AB9C009C26A9 /* nglDragAndDropObjects.h in Headers */,
@@ -10369,6 +10427,7 @@
 				E5D63F9F1209AB9C009C26A9 /* nglConsole.h in Headers */,
 				E5D63FA11209AB9C009C26A9 /* nuiEditText.h in Headers */,
 				E5D63FA21209AB9C009C26A9 /* nuiSpline.h in Headers */,
+				C3E9C19E1D1F8BC100DEBED4 /* variable.h in Headers */,
 				E5D63FA31209AB9C009C26A9 /* nuiFileList.h in Headers */,
 				E5D63FA41209AB9C009C26A9 /* nuiSplitter.h in Headers */,
 				E5D63FA51209AB9C009C26A9 /* nglVideoMode.h in Headers */,
@@ -10381,7 +10440,9 @@
 				E5D63FAD1209AB9C009C26A9 /* nuiPathOptimizer.h in Headers */,
 				E5D63FAE1209AB9C009C26A9 /* nuiObject.h in Headers */,
 				E5D63FAF1209AB9C009C26A9 /* nglMatrix.h in Headers */,
+				C3E9C1961D1F8BC100DEBED4 /* term.h in Headers */,
 				E5D63FB01209AB9C009C26A9 /* ngl.h in Headers */,
+				C3E9C1A21D1F8BC100DEBED4 /* version.h in Headers */,
 				E5D63FB11209AB9C009C26A9 /* nuiButton.h in Headers */,
 				E5D63FB21209AB9C009C26A9 /* nglMachOPrefix.h in Headers */,
 				E5D63FB41209AB9C009C26A9 /* nglImageJPEGCodec.h in Headers */,
@@ -10400,6 +10461,7 @@
 				E5D63FC11209AB9C009C26A9 /* nuiFontInstance.h in Headers */,
 				E5D63FC21209AB9C009C26A9 /* nglInputDeviceInstance.h in Headers */,
 				E5D63FC31209AB9C009C26A9 /* ConvertUTF.h in Headers */,
+				C3E9C18E1D1F8BC100DEBED4 /* symbol.h in Headers */,
 				E5D640331209AB9C009C26A9 /* nuiFastDelegate.h in Headers */,
 				E5D640341209AB9C009C26A9 /* nuiSignalsSlots.h in Headers */,
 				E5D640361209AB9C009C26A9 /* nuiTreeView.h in Headers */,
@@ -10439,6 +10501,7 @@
 				E5D640601209AB9C009C26A9 /* nuiLabelAttribute.h in Headers */,
 				E5D640611209AB9C009C26A9 /* nuiBooleanAttributeEditor.h in Headers */,
 				E5D640621209AB9C009C26A9 /* nuiNativeResourceVolume.h in Headers */,
+				C3E9C19A1D1F8BC100DEBED4 /* util.h in Headers */,
 				E5D640631209AB9C009C26A9 /* nuiDecoration.h in Headers */,
 				E5D640641209AB9C009C26A9 /* nuiFrame.h in Headers */,
 				E5D640651209AB9C009C26A9 /* nuiGradientDecoration.h in Headers */,
@@ -10451,10 +10514,12 @@
 				E5D6406C1209AB9C009C26A9 /* nuiAudioConvert.h in Headers */,
 				E5D6406D1209AB9C009C26A9 /* nuiAudioFifo.h in Headers */,
 				E5D6406E1209AB9C009C26A9 /* nuiAudioResampler.h in Headers */,
+				C3E9C1661D1F8BC100DEBED4 /* debug.h in Headers */,
 				E5D6406F1209AB9C009C26A9 /* nuiCSS.h in Headers */,
 				E5D640701209AB9C009C26A9 /* nuiStateDecoration.h in Headers */,
 				E5D640711209AB9C009C26A9 /* nuiCSV.h in Headers */,
 				E5D640721209AB9C009C26A9 /* nglUTFStringConv.h in Headers */,
+				C3E9C16A1D1F8BC100DEBED4 /* errors.h in Headers */,
 				E5D640821209AB9C009C26A9 /* nuiFontManager.h in Headers */,
 				E5D640831209AB9C009C26A9 /* nuiSerializeContext.h in Headers */,
 				E5D640841209AB9C009C26A9 /* nuiHTTP.h in Headers */,
@@ -10463,6 +10528,7 @@
 				E5D640A11209AB9C009C26A9 /* nuiSizeAttributeEditor.h in Headers */,
 				E51DA3731847375000ADA1B0 /* nuiTaskThread.h in Headers */,
 				E5D640A21209AB9C009C26A9 /* nuiFontBrowser.h in Headers */,
+				C3E9C1821D1F8BC100DEBED4 /* solver.h in Headers */,
 				E52003C71C78D5C00031A12B /* nuiMessageParser.h in Headers */,
 				E5D640A31209AB9C009C26A9 /* nglThreadChecker.h in Headers */,
 				E5D640A41209AB9C009C26A9 /* nuiIntrospector.h in Headers */,
@@ -10486,6 +10552,7 @@
 				E5D640B61209AB9C009C26A9 /* nuiDialogSelectDirectory.h in Headers */,
 				E58615D718AD9085005B0D12 /* nuiDrawerView.h in Headers */,
 				E5D640B71209AB9C009C26A9 /* nuiDialogSelectFile.h in Headers */,
+				C3E9C1861D1F8BC100DEBED4 /* solverimpl.h in Headers */,
 				E5D640B81209AB9C009C26A9 /* nuiMessageBox.h in Headers */,
 				E5D640B91209AB9C009C26A9 /* nuiURL.h in Headers */,
 				E5D640BA1209AB9C009C26A9 /* nuiDefaultDecoration.h in Headers */,
@@ -10513,6 +10580,7 @@
 				E5D640D21209AB9C009C26A9 /* nuiChunksDefinitions.h in Headers */,
 				E5D640D31209AB9C009C26A9 /* ngl_carbon.h in Headers */,
 				E5D640D41209AB9C009C26A9 /* nuiSingleton.h in Headers */,
+				C3E9C18A1D1F8BC100DEBED4 /* strength.h in Headers */,
 				C3885B901C791F0300E2C8B7 /* nuiProtocol.h in Headers */,
 				E5D640D51209AB9C009C26A9 /* nuiHTMLView.h in Headers */,
 				E52003BB1C78D5C00031A12B /* nuiMessage.h in Headers */,
@@ -10557,6 +10625,7 @@
 				E5D641051209AB9C009C26A9 /* nglReaderWriterLock.h in Headers */,
 				E5D641061209AB9C009C26A9 /* nglCondition.h in Headers */,
 				E5D641071209AB9C009C26A9 /* nuiObjectInspector.h in Headers */,
+				C3E9C17E1D1F8BC100DEBED4 /* shareddata.h in Headers */,
 				E5D641081209AB9C009C26A9 /* nuiTypeTraits.h in Headers */,
 				E52003BF1C78D5C00031A12B /* nuiMessageClient.h in Headers */,
 				E5D641091209AB9C009C26A9 /* nuiVariant.h in Headers */,
@@ -10581,6 +10650,7 @@
 				E528FCCA126B48950030CB86 /* nuiSpriteView.h in Headers */,
 				BC92ACC31282F91C006A27B0 /* nuiNavigationBar.h in Headers */,
 				BC92ACC41282F91C006A27B0 /* nuiNavigationController.h in Headers */,
+				C3E9C16E1D1F8BC100DEBED4 /* expression.h in Headers */,
 				BC92ACCB1282F923006A27B0 /* nuiViewController.h in Headers */,
 				40033EB612B14DF0000695D2 /* autolink.h in Headers */,
 				40033EB712B14DF0000695D2 /* config.h in Headers */,
@@ -10599,6 +10669,7 @@
 				406F78BE12DC9F2900DBAC43 /* nuiAudioEngine.h in Headers */,
 				406F78D012DC9F3C00DBAC43 /* nuiSound.h in Headers */,
 				406F78D112DC9F3C00DBAC43 /* nuiSoundManager.h in Headers */,
+				C3E9C1761D1F8BC100DEBED4 /* maptype.h in Headers */,
 				406F78D212DC9F3C00DBAC43 /* nuiVoice.h in Headers */,
 				400C2F6512DE0995007472C4 /* nuiMemorySound.h in Headers */,
 				400C2F6712DE0995007472C4 /* nuiMemoryVoice.h in Headers */,
@@ -10628,7 +10699,9 @@
 				61ED91A31A702716001AF911 /* nglStdStream.h in Headers */,
 				E5AD0A56169F20EC00836BAA /* nuiShader.h in Headers */,
 				E548CEF516E4EA9500F98E45 /* nuiUniformDesc.h in Headers */,
+				C3E9C1721D1F8BC100DEBED4 /* kiwi.h in Headers */,
 				E50F41FC16E7746D00519AF0 /* nuiVertexAttribDesc.h in Headers */,
+				C3E9C15E1D1F8BC100DEBED4 /* AssocVector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10657,7 +10730,6 @@
 				E5DD2E9D12E09CA700F1EF4E /* svsfnt.h in Headers */,
 				E5DD2E9E12E09CA700F1EF4E /* ftmodule.h in Headers */,
 				E5DD2E9F12E09CA700F1EF4E /* jconfig.h in Headers */,
-				E551859B1C375629004FD160 /* strength.h in Headers */,
 				E5DD2EA012E09CA700F1EF4E /* ftsnames.h in Headers */,
 				E5DD2EA112E09CA700F1EF4E /* ft2build.h in Headers */,
 				E5DD2EA212E09CA700F1EF4E /* jmorecfg.h in Headers */,
@@ -10685,13 +10757,11 @@
 				E5077BC21C6D53720090688B /* serialize-text.h in Headers */,
 				E5DD2EB512E09CA700F1EF4E /* svpfr.h in Headers */,
 				E5DD2EB612E09CA700F1EF4E /* fttrigon.h in Headers */,
-				E55185871C375629004FD160 /* constraint.h in Headers */,
 				E5DD2EB712E09CA700F1EF4E /* ftoption.h in Headers */,
 				E5DD2EB812E09CA700F1EF4E /* tttypes.h in Headers */,
 				E5DD2EB912E09CA700F1EF4E /* ftpfr.h in Headers */,
 				E5DD2EBA12E09CA700F1EF4E /* ftcalc.h in Headers */,
 				E5077B901C6D53720090688B /* common.h in Headers */,
-				E55185991C375629004FD160 /* solverimpl.h in Headers */,
 				E5DD2EBB12E09CA700F1EF4E /* jdhuff.h in Headers */,
 				E5DD2EBC12E09CA700F1EF4E /* svwinfnt.h in Headers */,
 				E5DD2EBD12E09CA700F1EF4E /* fttypes.h in Headers */,
@@ -10769,8 +10839,6 @@
 				E5077BB01C6D53720090688B /* rpc.capnp.h in Headers */,
 				E5DD2FA912E09CA700F1EF4E /* afmodule.h in Headers */,
 				E5DD2FAA12E09CA700F1EF4E /* aftypes.h in Headers */,
-				E55185951C375629004FD160 /* shareddata.h in Headers */,
-				E55185A51C375629004FD160 /* variable.h in Headers */,
 				E5DD2FAB12E09CA700F1EF4E /* afwarp.h in Headers */,
 				E5DD2FAC12E09CA700F1EF4E /* bdfdrivr.h in Headers */,
 				E5077B8C1C6D53720090688B /* c++.capnp.h in Headers */,
@@ -10850,9 +10918,7 @@
 				E5DD2FED12E09CA700F1EF4E /* ttsbit.h in Headers */,
 				E5DD2FEE12E09CA700F1EF4E /* ftgrays.h in Headers */,
 				E5DD2FEF12E09CA700F1EF4E /* ftsmerrs.h in Headers */,
-				E55185851C375629004FD160 /* AssocVector.h in Headers */,
 				E5DD2FF012E09CA700F1EF4E /* ftsmooth.h in Headers */,
-				E551858D1C375629004FD160 /* expression.h in Headers */,
 				E5DD2FF112E09CA700F1EF4E /* ttdriver.h in Headers */,
 				E5DD2FF212E09CA700F1EF4E /* tterrors.h in Headers */,
 				E5DD2FF312E09CA700F1EF4E /* ttgload.h in Headers */,
@@ -10915,7 +10981,6 @@
 				E5DD306912E09CA700F1EF4E /* iconvtc.h in Headers */,
 				E5DD306A12E09CA700F1EF4E /* access.h in Headers */,
 				E5DD306B12E09CA700F1EF4E /* entities.h in Headers */,
-				E55185A71C375629004FD160 /* version.h in Headers */,
 				E5DD306C12E09CA700F1EF4E /* pprint.h in Headers */,
 				E5DD306D12E09CA700F1EF4E /* charsets.h in Headers */,
 				E5077C5B1C6D54690090688B /* vector.h in Headers */,
@@ -10959,7 +11024,6 @@
 				E5DD30F112E09CA700F1EF4E /* jsdtoa.h in Headers */,
 				E5DD30F212E09CA700F1EF4E /* jsdtracef.h in Headers */,
 				E5DD30F312E09CA700F1EF4E /* jsemit.h in Headers */,
-				E55185891C375629004FD160 /* debug.h in Headers */,
 				E5DD30F412E09CA700F1EF4E /* jsexn.h in Headers */,
 				E5077BB21C6D53720090688B /* rpc.h in Headers */,
 				E5DD30F512E09CA700F1EF4E /* jsfun.h in Headers */,
@@ -10979,7 +11043,6 @@
 				E5DD310112E09CA700F1EF4E /* jsnum.h in Headers */,
 				E5077C551C6D54690090688B /* time.h in Headers */,
 				E5DD310212E09CA700F1EF4E /* jsobj.h in Headers */,
-				E55185911C375629004FD160 /* maptype.h in Headers */,
 				E5DD310312E09CA700F1EF4E /* jsobjinlines.h in Headers */,
 				E5DD310412E09CA700F1EF4E /* json.h in Headers */,
 				E5DD310512E09CA700F1EF4E /* jsopcode.h in Headers */,
@@ -10993,8 +11056,6 @@
 				E5DD310C12E09CA700F1EF4E /* jsscan.h in Headers */,
 				E5DD310D12E09CA700F1EF4E /* jsscope.h in Headers */,
 				E52FD3A5184D49B10015935E /* clipper.hpp in Headers */,
-				E551858B1C375629004FD160 /* errors.h in Headers */,
-				E551859D1C375629004FD160 /* symbol.h in Headers */,
 				E5077C4B1C6D54690090688B /* string-tree.h in Headers */,
 				E5DD310E12E09CA700F1EF4E /* jsscopeinlines.h in Headers */,
 				E5DD310F12E09CA700F1EF4E /* jsscript.h in Headers */,
@@ -11048,7 +11109,6 @@
 				E5DD313E12E09CA800F1EF4E /* computed.h in Headers */,
 				E5DD313F12E09CA800F1EF4E /* errors.h in Headers */,
 				E5DD314012E09CA800F1EF4E /* fpmath.h in Headers */,
-				E551858F1C375629004FD160 /* kiwi.h in Headers */,
 				E5077C531C6D54690090688B /* threadlocal.h in Headers */,
 				E5077BA21C6D53720090688B /* orphan.h in Headers */,
 				E5DD314112E09CA800F1EF4E /* functypes.h in Headers */,
@@ -11060,12 +11120,9 @@
 				E5DD314712E09CA800F1EF4E /* types.h in Headers */,
 				E5DD314812E09CA800F1EF4E /* libwapcaplet.h in Headers */,
 				E5DD314912E09CA800F1EF4E /* codec.h in Headers */,
-				E55185931C375629004FD160 /* row.h in Headers */,
 				E5DD314A12E09CA800F1EF4E /* mibenum.h in Headers */,
-				E55185A11C375629004FD160 /* term.h in Headers */,
 				E5DD314B12E09CA800F1EF4E /* utf16.h in Headers */,
 				E5DD314C12E09CA800F1EF4E /* utf8.h in Headers */,
-				E551859F1C375629004FD160 /* symbolics.h in Headers */,
 				E5DD314D12E09CA800F1EF4E /* errors.h in Headers */,
 				E5077C471C6D54690090688B /* one-of.h in Headers */,
 				E5DD314E12E09CA800F1EF4E /* functypes.h in Headers */,
@@ -11078,11 +11135,9 @@
 				E5DD315512E09CA800F1EF4E /* _stylesheet.h in Headers */,
 				E5DD315712E09CA800F1EF4E /* bytecode.h in Headers */,
 				E5DD315812E09CA800F1EF4E /* opcodes.h in Headers */,
-				E55185971C375629004FD160 /* solver.h in Headers */,
 				E5DD315912E09CA800F1EF4E /* detect.h in Headers */,
 				E5077C371C6D54690090688B /* debug.h in Headers */,
 				E5DD315A12E09CA800F1EF4E /* lex.h in Headers */,
-				E55185A31C375629004FD160 /* util.h in Headers */,
 				E5DD315B12E09CA800F1EF4E /* aliases.h in Headers */,
 				E5DD315C12E09CA800F1EF4E /* charset.h in Headers */,
 				E5DD315D12E09CA800F1EF4E /* 8859_tables.h in Headers */,
@@ -11166,6 +11221,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3E9C19C1D1F8BC100DEBED4 /* util.h in Headers */,
 				E5FB9A25147D5CEE001A1829 /* nglZipFS.h in Headers */,
 				E5FB9A27147D5CEE001A1829 /* ngl3DSLoader.h in Headers */,
 				E5FB9A29147D5CEE001A1829 /* nglIMemory.h in Headers */,
@@ -11198,6 +11254,8 @@
 				E5FB9A69147D5CEE001A1829 /* nuiApplication.h in Headers */,
 				E5FB9A6B147D5CEE001A1829 /* nuiTreeEvent.h in Headers */,
 				E5FB9A72147D5CEE001A1829 /* nglStream.h in Headers */,
+				C3E9C1741D1F8BC100DEBED4 /* kiwi.h in Headers */,
+				C3E9C1681D1F8BC100DEBED4 /* debug.h in Headers */,
 				E52003BD1C78D5C00031A12B /* nuiMessage.h in Headers */,
 				E5FB9A75147D5CEE001A1829 /* nglKeyboard.h in Headers */,
 				E5FB9A76147D5CEE001A1829 /* nglTimer.h in Headers */,
@@ -11236,11 +11294,15 @@
 				E5FB9AB9147D5CEE001A1829 /* zip.h in Headers */,
 				E5FB9ABB147D5CEE001A1829 /* nglInputDeviceInstance.h in Headers */,
 				E5FB9ABC147D5CEE001A1829 /* ConvertUTF.h in Headers */,
+				C3E9C1A01D1F8BC100DEBED4 /* variable.h in Headers */,
 				E5FB9ABD147D5CEE001A1829 /* nuiFastDelegate.h in Headers */,
+				C3E9C1781D1F8BC100DEBED4 /* maptype.h in Headers */,
 				E5FB9ABE147D5CEE001A1829 /* nuiSignalsSlots.h in Headers */,
+				C3E9C17C1D1F8BC100DEBED4 /* row.h in Headers */,
 				E5FB9AC0147D5CEE001A1829 /* nuiBindingManager.h in Headers */,
 				E52003C11C78D5C00031A12B /* nuiMessageClient.h in Headers */,
 				E5FB9AC9147D5CEE001A1829 /* nuiToken.h in Headers */,
+				C3E9C1601D1F8BC100DEBED4 /* AssocVector.h in Headers */,
 				E5FB9ACA147D5CEE001A1829 /* nglAtomic.h in Headers */,
 				E5FB9ACB147D5CEE001A1829 /* nglLockFreeFifo.h in Headers */,
 				E5FB9ACC147D5CEE001A1829 /* nglRingBuffer.h in Headers */,
@@ -11268,11 +11330,13 @@
 				E5FB9B06147D5CEE001A1829 /* nglLightLock.h in Headers */,
 				E5FB9B07147D5CEE001A1829 /* nglLock.h in Headers */,
 				E5FB9B0A147D5CEE001A1829 /* nuiMemoryPool.h in Headers */,
+				C3E9C1641D1F8BC100DEBED4 /* constraint.h in Headers */,
 				E5FB9B0E147D5CEE001A1829 /* nuiMainMenu.h in Headers */,
 				E5FB9B13147D5CEE001A1829 /* nuiURL.h in Headers */,
 				E5FB9B1F147D5CEE001A1829 /* nuiTranslator.h in Headers */,
 				E5FB9B20147D5CEE001A1829 /* nuiLocale.h in Headers */,
 				E5FB9B21147D5CEE001A1829 /* nuiSample.h in Headers */,
+				C3E9C1841D1F8BC100DEBED4 /* solver.h in Headers */,
 				E5FB9B22147D5CEE001A1829 /* nuiSampleInfo.h in Headers */,
 				E5FB9B23147D5CEE001A1829 /* nuiSampleReader.h in Headers */,
 				E5FB9B24147D5CEE001A1829 /* nuiSampleWriter.h in Headers */,
@@ -11281,6 +11345,8 @@
 				E5FB9B27147D5CEE001A1829 /* nuiSampleDefines.h in Headers */,
 				E5FB9B29147D5CEE001A1829 /* nuiUnicode.h in Headers */,
 				E5FB9B2A147D5CEE001A1829 /* nuiVersion.h in Headers */,
+				C3E9C1801D1F8BC100DEBED4 /* shareddata.h in Headers */,
+				C3E9C18C1D1F8BC100DEBED4 /* strength.h in Headers */,
 				C3885B921C791F0300E2C8B7 /* nuiProtocol.h in Headers */,
 				E5FB9B2B147D5CEE001A1829 /* nuiAudioDecoder.h in Headers */,
 				E5FB9B2C147D5CEE001A1829 /* nuiChunksDefinitions.h in Headers */,
@@ -11310,23 +11376,28 @@
 				E5FB9B5D147D5CEE001A1829 /* nuiTCPClient.h in Headers */,
 				E5FB9B5E147D5CEE001A1829 /* nuiTCPServer.h in Headers */,
 				E5FB9B5F147D5CEE001A1829 /* nglStringConv.h in Headers */,
+				C3E9C16C1D1F8BC100DEBED4 /* errors.h in Headers */,
 				E5FB9B60147D5CEE001A1829 /* nuiRegExp.h in Headers */,
 				E5FB9B63147D5CEE001A1829 /* nuiTask.h in Headers */,
 				E5FB9B64147D5CEE001A1829 /* nuiNonCopyable.h in Headers */,
 				E5FB9B6A147D5CEE001A1829 /* autolink.h in Headers */,
 				E5FB9B6B147D5CEE001A1829 /* config.h in Headers */,
+				C3E9C1A41D1F8BC100DEBED4 /* version.h in Headers */,
 				E5FB9B6C147D5CEE001A1829 /* features.h in Headers */,
 				E5FB9B6D147D5CEE001A1829 /* forwards.h in Headers */,
 				E5FB9B6E147D5CEE001A1829 /* json.h in Headers */,
+				C3E9C1701D1F8BC100DEBED4 /* expression.h in Headers */,
 				E5FB9B6F147D5CEE001A1829 /* reader.h in Headers */,
 				E5FB9B70147D5CEE001A1829 /* value.h in Headers */,
 				E5FB9B71147D5CEE001A1829 /* writer.h in Headers */,
 				E5FB9B72147D5CEE001A1829 /* nuiJson.h in Headers */,
+				C3E9C1981D1F8BC100DEBED4 /* term.h in Headers */,
 				E5FB9B73147D5CEE001A1829 /* ngl_config.uikit.h in Headers */,
 				E5FB9B74147D5CEE001A1829 /* ngl_config.mac.h in Headers */,
 				E5FB9B75147D5CEE001A1829 /* ngl_config.cocoa.h in Headers */,
 				61ED91A71A702716001AF911 /* nglStdStream.h in Headers */,
 				E5FB9B76147D5CEE001A1829 /* nglImageCGCodec.h in Headers */,
+				C3E9C1901D1F8BC100DEBED4 /* symbol.h in Headers */,
 				E5FB9B79147D5CEE001A1829 /* nuiAudioDb.h in Headers */,
 				E5FB9B7A147D5CEE001A1829 /* nuiAudioEngine.h in Headers */,
 				E5FB9B7B147D5CEE001A1829 /* nuiSound.h in Headers */,
@@ -11336,6 +11407,8 @@
 				E5FB9B7F147D5CEE001A1829 /* nuiMemoryVoice.h in Headers */,
 				E5FB9B80147D5CEE001A1829 /* nuiFileSound.h in Headers */,
 				E5FB9B81147D5CEE001A1829 /* nuiFileVoice.h in Headers */,
+				C3E9C1941D1F8BC100DEBED4 /* symbolics.h in Headers */,
+				C3E9C1881D1F8BC100DEBED4 /* solverimpl.h in Headers */,
 				E5FB9B82147D5CEE001A1829 /* nuiSynthSound.h in Headers */,
 				E5FB9B83147D5CEE001A1829 /* nuiSynthVoice.h in Headers */,
 				E5FB9B84147D5CEE001A1829 /* TextureAtlas.h in Headers */,
