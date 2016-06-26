@@ -120,6 +120,7 @@ protected:
     std::vector<GLuint> mIndexBuffers;
     std::vector<GLuint> mStreamBuffers;
 
+    static nglCriticalSection mHeapCS;
     static std::list<RenderArrayInfo*> mHeap;
   };
 

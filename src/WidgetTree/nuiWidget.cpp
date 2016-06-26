@@ -165,22 +165,125 @@ bool nuiWidget::AttrIsVisible()
 	return IsVisible();
 }
 
+class nuiLayoutVariableContext : kiwi::Variable::Context
+{
+public:
+  nuiLayoutVariableContext(const nglString& rName, nuiWidget* pWidget, nuiWidget::LayoutAttribute attribute)
+  :mName(rName), mpWidget(pWidget), mAttribute(attribute)
+  { }
+
+  NUI_GET(nglString, Name);
+  nuiWidget* GetWidget() const { return mpWidget; }
+  NUI_GET(nuiWidget::LayoutAttribute, Attribute);
+
+  double GetValue() const
+  {
+    if (mAttribute == nuiWidget::LayoutAttribute_Attribute)
+    {
+      nuiAttribBase attrib(mpWidget->GetAttribute(mName));
+      if (attrib.IsValid())
+      {
+        nuiVariant variant(attrib);
+        return (double)variant;
+      }
+      return std::numeric_limits<double>::signaling_NaN();
+    }
+
+    return mpWidget->GetLayoutAttributeValue(mAttribute);
+  }
+private:
+  nglString mName;
+  nuiWidget *mpWidget;
+  nuiWidget::LayoutAttribute mAttribute;
+};
+
+double nuiWidget::GetLayoutAttributeValue(nuiWidget::LayoutAttribute attribute) const
+{
+  // Compute attribute value:
+  switch (attribute)
+  {
+    case nuiWidget::LayoutAttribute_Left:
+      return GetRect().Left();
+
+    case nuiWidget::LayoutAttribute_Right:
+      return GetRect().Right();
+
+    case nuiWidget::LayoutAttribute_Top:
+      return GetRect().Top();
+
+    case nuiWidget::LayoutAttribute_Bottom:
+      return GetRect().Bottom();
+
+    case nuiWidget::LayoutAttribute_Leading:        // TODO: Implement RtL
+      return GetRect().Left();
+
+    case nuiWidget::LayoutAttribute_Trailing:       // TODO: Implement RtL
+      return GetRect().Right();
+
+
+    case nuiWidget::LayoutAttribute_LeadingBorder:
+      return GetBorderedRect().Left();
+
+    case nuiWidget::LayoutAttribute_TrailingBorder:
+      return  GetBorderedRect().Right();
+
+    case nuiWidget::LayoutAttribute_Width:
+      return GetRect().GetWidth();
+
+    case nuiWidget::LayoutAttribute_Height:
+      return GetRect().GetHeight();
+
+
+    case nuiWidget::LayoutAttribute_CenterX:
+      return (GetRect().Left() + GetRect().GetWidth()) * 0.5;
+
+    case nuiWidget::LayoutAttribute_CenterY:
+      return (GetRect().Top() + GetRect().GetHeight()) * 0.5;
+
+
+    case nuiWidget::LayoutAttribute_LeftBorder:
+      return GetBorderedRect().Left();
+
+    case nuiWidget::LayoutAttribute_RightBorder:
+      return GetBorderedRect().Left();
+
+    case nuiWidget::LayoutAttribute_TopBorder:
+      return GetBorderedRect().Top();
+
+    case nuiWidget::LayoutAttribute_BottomBorder:
+      return GetBorderedRect().Bottom();
+
+
+    case nuiWidget::LayoutAttribute_Attribute:
+    default:
+      NGL_ASSERT(0);
+      return std::numeric_limits<double>::signaling_NaN();
+  }
+
+  NGL_ASSERT(0);
+  return std::numeric_limits<double>::signaling_NaN();
+}
+
 
 void nuiWidget::InitAttributes()
 {
   kiwi::Solver solver;
   kiwi::Variable x("X");
   kiwi::Variable y("Y");
+  kiwi::Variable z("Z");
 
-  solver.addEditVariable(x, 100);
-  solver.suggestValue(x, 20);
+  kiwi::ErrorType e1 = solver.addEditVariable(x, 100);
+  kiwi::ErrorType e2 = solver.suggestValue(x, 20);
+  kiwi::ErrorType e3 = solver.addEditVariable(z, 10);
+  kiwi::ErrorType e4 = solver.suggestValue(z, 50);
 //  solver.addConstraint(x == 20);
-  solver.addConstraint(x + 2 <= y + 10);
+  kiwi::ErrorType e5 = solver.addConstraint((x * 0.5 + 2) - (z * 3) <= y + 10);
+  kiwi::ErrorType e6 = solver.addConstraint(z >= y);
   solver.updateVariables();
   solver.dump();
 
-  NGL_OUT("x = %f / y = %f\n", x.value(), y.value());
-  
+  NGL_OUT("x = %f / y = %f / z = %f\n", x.value(), y.value(), z.value());
+
   AddAttribute(new nuiAttribute<bool>
     (nglString("Enabled"), nuiUnitBoolean,
      nuiMakeDelegate(this, &nuiWidget::AttrIsEnabled),
@@ -716,6 +819,8 @@ nuiWidget::~nuiWidget()
 
   if (mpBackingLayer)
     mpBackingLayer->Release();
+
+  delete mpSolver;
 
   nuiRenderThread::DestroyWidget(this);
 }
@@ -6299,3 +6404,13 @@ void nuiWidget::BroadcastForceNoDrawToLayer()
   }
 }
 
+
+kiwi::Solver& nuiWidget::GetSolver()
+{
+  if (!mpSolver)
+  {
+    mpSolver = new kiwi::Solver;
+  }
+
+  return *mpSolver;
+}

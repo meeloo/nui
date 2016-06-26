@@ -44,6 +44,11 @@ typedef std::vector<nuiRef<nuiWidget> > nuiWidgetList;
 typedef nuiTreeEventSource<nuiChildAdded, nuiWidget> nuiWidgetAddedEventSource;
 typedef nuiTreeEventSource<nuiChildDeleted, nuiWidget> nuiWidgetDeletedEventSource;
 
+
+namespace kiwi {
+  class Solver;
+}
+
 class nuiWidget : public nuiObject
 {
 protected:
@@ -62,6 +67,36 @@ protected:
 
 
 public:
+
+  enum LayoutAttribute
+  {
+    LayoutAttribute_Left,
+    LayoutAttribute_Right,
+    LayoutAttribute_Top,
+    LayoutAttribute_Bottom,
+
+    LayoutAttribute_Leading,
+    LayoutAttribute_Trailing,
+
+    LayoutAttribute_LeadingBorder,
+    LayoutAttribute_TrailingBorder,
+
+    //  LayoutAttribute_Baseline,
+    //  LayoutAttribute_FirstBaseline,
+
+    LayoutAttribute_Width,
+    LayoutAttribute_Height,
+
+    LayoutAttribute_CenterX,
+    LayoutAttribute_CenterY,
+
+    LayoutAttribute_LeftBorder,
+    LayoutAttribute_RightBorder,
+    LayoutAttribute_TopBorder,
+    LayoutAttribute_BottomBorder,
+    
+    LayoutAttribute_Attribute
+  };
 
   class Iterator
   {
@@ -288,6 +323,9 @@ public:
   virtual nuiRect GetBorderedRect() const; ///< Return the current area used by this Object including its border
   nuiRect GetBorderedRect(const nuiRect& rRect) const;
   nuiRect GetBorderLessRect(const nuiRect& rRect) const;
+
+  double GetLayoutAttributeValue(LayoutAttribute attribute) const;
+
 
   void SetUserWidth(nuiSize s);
   nuiSize GetUserWidth();
@@ -762,6 +800,8 @@ public:
   NUI_GETSET(bool, AutoAcceptMouseSteal);
   NUI_GETSETDO(bool, ForceNoDrawToLayer, BroadcastForceNoDrawToLayer());
 
+  kiwi::Solver& GetSolver();
+
 protected:
   virtual ~nuiWidget();
 
@@ -950,6 +990,8 @@ protected:
   void InternalSetLayerPolicy(nuiDrawPolicy policy);
 
   void CallBuilt();
+
+  kiwi::Solver* mpSolver = nullptr;
 };
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }
