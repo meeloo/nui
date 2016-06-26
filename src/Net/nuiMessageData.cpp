@@ -206,6 +206,8 @@ nuiMessageData& nuiMessageData::operator= (nuiMessageData&& rData)
   {
     mValue = rData.mValue;
   }
+
+  return *this;
 }
 
 nuiMessageData::~nuiMessageData()

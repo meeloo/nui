@@ -1438,8 +1438,6 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
   
   
   NGL_ASSERT(clippingstacksize == pContext->GetClipStackSize());
-
-  return true;
 }
 
 bool nuiWidget::IsKeyDown (nglKeyCode Key) const
@@ -5897,6 +5895,8 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
 
 
   DebugRefreshInfo();
+
+  return true;
 }
 
 bool nuiWidget::SetRect(const nuiRect& rRect)

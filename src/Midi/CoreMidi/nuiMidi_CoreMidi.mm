@@ -165,6 +165,7 @@ bool nuiMidiInPort_CoreMidi::Close()
     MIDIPortDispose(mpPort);
   mpPort = NULL;
 
+  return true;
 }
 
 //class nuiMidiOutPort_CoreMidi
@@ -241,7 +242,8 @@ bool nuiMidiOutPort_CoreMidi::Close()
   if (mpPort)
     MIDIPortDispose(mpPort);
   mpPort = NULL;
-  
+
+  return true;
 }
 
 bool nuiMidiOutPort_CoreMidi::Send(const uint8* pData, int32 size)

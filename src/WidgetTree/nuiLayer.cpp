@@ -455,8 +455,6 @@ void nuiLayer::GetLayers(std::map<nglString, nuiRef<nuiLayer>>& layers)
   {
     layers[it.first] = it.second;
   }
-  
-  return layers;
 }
 
 nuiTexture* nuiLayer::GetTexture() const

@@ -938,5 +938,5 @@ nuiEasingPreset nuiGetEasingPresetForMethod(nuiEasingMethod method)
     { nuiEasingElasticOut<500>, nuiEasingPresetElasticOut }
   };
 
-
+  return methods[method];
 }

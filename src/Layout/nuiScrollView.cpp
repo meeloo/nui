@@ -993,6 +993,7 @@ bool nuiScrollView::MouseCanceled(const nglMouseInfo& rInfo)
   mLeftClick = 0;
   //  mLeftClick--;
   //  NGL_OUT("nuiScrollView::MouseCanceled LeftClick: %d\n", mLeftClick);
+  return true;
 }
 
 bool nuiScrollView::CallPreMouseClicked(const nglMouseInfo& rInfo)

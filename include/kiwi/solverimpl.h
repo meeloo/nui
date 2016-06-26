@@ -271,7 +271,7 @@ public:
 		{
 			if( row_it->second->add( -delta ) < 0.0 )
 				m_infeasible_rows.push_back( row_it->first );
-			return;
+			KIWI_RETURN_OK;
 		}
 
 		// Check next if the negative error variable is basic.
@@ -280,7 +280,7 @@ public:
 		{
 			if( row_it->second->add( delta ) < 0.0 )
 				m_infeasible_rows.push_back( row_it->first );
-			return;
+			KIWI_RETURN_OK;
 		}
 
 		// Otherwise update each row where the error variables exist.
@@ -575,7 +575,7 @@ private:
 		{
 			Symbol entering( getEnteringSymbol( objective ) );
 			if( entering.type() == Symbol::Invalid )
-				return;
+				KIWI_RETURN_OK;
 			RowMap::iterator it = getLeavingRow( entering );
 			if( it == m_rows.end() )
 				KIWI_THROW( InternalSolverError, "The objective is unbounded." )

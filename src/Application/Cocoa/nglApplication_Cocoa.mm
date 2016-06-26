@@ -425,7 +425,7 @@ static NSString* GetApplicationName(void)
   //		objCCallOnInit(pNSApplication);
   //	}
   
-	
+  return YES;
 }
 
 - (void) applicationDidBecomeActive:          (NSNotification*) pNotification
@@ -530,11 +530,13 @@ static NSString* GetApplicationName(void)
 - (BOOL)application:(id)sender openFileWithoutUI:(NSString *)filename
 {
   NSLog(@"[NSApplication openFileWithoutUI: %@", filename);
+  return YES;
 }
 
 - (BOOL)application:(NSApplication *)theApplication openTempFile:(NSString *)filename
 {
   NSLog(@"[NSApplication openTempFile: %@", filename);
+  return YES;
 }
 
 @end
