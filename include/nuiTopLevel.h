@@ -171,7 +171,7 @@ public:
   void RegisterObserver(const nglString& rNotificationName, nuiNotificationObserver* pObserver); ///< Register an observer for the given notification type. If the type is nglString::Empty, all the notifications will be sent to the observer.
   void UnregisterObserver(nuiNotificationObserver* pObserver, const nglString& rNotificationName = nglString::Null); ///< Unregister pObserver so that it doesn't receive the given notification. By default it is removed from all notification types (nglString::Null).
   
-  virtual const std::map<nglTouchId, nglMouseInfo>& GetMouseStates() const;
+  virtual const std::unordered_map<nglTouchId, nglMouseInfo>& GetMouseStates() const;
   virtual nuiSize GetStatusBarSize() const;
 
   virtual float GetScale() const;
@@ -204,14 +204,14 @@ protected:
 
   nuiRef<nuiWidget> mpDraggedWidget;
 
-  typedef std::map<nglTouchId, nuiWidgetPtr> nuiGrabMap;
+  typedef std::unordered_map<nglTouchId, nuiWidgetPtr> nuiGrabMap;
   nuiGrabMap mpGrab;
   void DumpGrabMap(int line) const;
-  std::map<nglTouchId, bool> mpGrabAcquired;
+  std::unordered_map<nglTouchId, bool> mpGrabAcquired;
   bool HasGrab(nuiWidgetPtr pWidget); ///< Returns true if this \p pWidget has been grabbed by any touch
   nuiWidgetPtr GetGrab(nglTouchId touchId) const;  ///< Returns the Widget that has been grabbed by this \p touchId, NULL otherwise
-  std::map<nglTouchId, nglMouseInfo> mMouseClickedEvents;
-  std::map<nglTouchId, nglMouseInfo> mMouseStates;
+  std::unordered_map<nglTouchId, nglMouseInfo> mMouseClickedEvents;
+  std::unordered_map<nglTouchId, nglMouseInfo> mMouseStates;
 
   nglPath mResPath;
 
@@ -251,14 +251,14 @@ protected:
   std::map<nglString, nuiHotKey*> mHotKeys;
   
   std::set<nuiWidgetPtr> mHoveredWidgets;
-  std::map<nuiWidgetPtr, uint32> mCSSWidgets;
+  std::unordered_map<nuiWidgetPtr, uint32> mCSSWidgets;
   
   nuiCSS* mpCSS = nullptr;
   
-  std::map<nuiWidgetPtr, nuiWidgetPtr> mTabForward;
-  std::map<nuiWidgetPtr, nuiWidgetPtr> mTabBackward;
-  std::map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabForwardRev;
-  std::map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabBackwardRev;
+  std::unordered_map<nuiWidgetPtr, nuiWidgetPtr> mTabForward;
+  std::unordered_map<nuiWidgetPtr, nuiWidgetPtr> mTabBackward;
+  std::unordered_map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabForwardRev;
+  std::unordered_map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabBackwardRev;
   
   std::set< nuiRef<nuiWidget> > mDirtyWidgets;
 };

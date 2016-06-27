@@ -24,6 +24,11 @@
 #include "nuiEvent.h"
 #include "nuiTreeEvent.h"
 
+#include <unordered_map>
+
+#define KIWI_NO_EXCEPTIONS
+#include "kiwi/kiwi.h"
+
 class nuiDrawContext;
 class nuiWidget;
 class nuiMetaPainter;
@@ -456,7 +461,7 @@ public:
   virtual bool MouseGrabbed(nglTouchId Id);
   virtual bool MouseUngrabbed(nglTouchId Id);
   virtual bool RequestStolenMouse(const nglMouseInfo& rInfo); ///< Return false if you want to refuse to the mouse grab be stolen by another widget
-  virtual const std::map<nglTouchId, nglMouseInfo>& GetMouseStates() const;
+  virtual const std::unordered_map<nglTouchId, nglMouseInfo>& GetMouseStates() const;
   //@}
 
   /** @name Other Incomming events */
@@ -852,7 +857,7 @@ protected:
   bool TriggerHotKeys(const nglKeyEvent& rEvent, bool KeyDown,  bool Priority, nuiKeyModifier Mask); ///< Helper function. Triggers appropriate hotkeys
   nuiKeyModifier mHotKeyMask = 0;
 
-  std::map<nuiWidgetElement, nuiColor> mWidgetElementColors;
+  std::unordered_map<nuiWidgetElement, nuiColor> mWidgetElementColors;
 
   LayoutConstraint mConstraint;
 
@@ -992,6 +997,12 @@ protected:
   void CallBuilt();
 
   kiwi::Solver* mpSolver = nullptr;
+  std::unordered_map<nuiWidget*, Loki::AssocVector<nuiWidget::LayoutAttribute, kiwi::Variable> > mLayoutVariables;
+  std::unordered_map<nuiWidget*, std::map<nglString, kiwi::Variable> > mLayoutNamedVariables;
+
+  kiwi::Variable GetLayoutVariable(nuiWidgetPtr child, nuiWidget::LayoutAttribute attribute);
+  kiwi::Variable GetLayoutVariable(nuiWidgetPtr child, const nglString& rName);
+  void DeleteLayoutVariablesForWidget(nuiWidgetPtr child);
 };
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }

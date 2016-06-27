@@ -1135,7 +1135,7 @@ bool nuiTopLevel::CallKeyUp (const nglKeyEvent& rEvent)
   return false;
 }
 
-const std::map<nglTouchId, nglMouseInfo>& nuiTopLevel::GetMouseStates() const
+const std::unordered_map<nglTouchId, nglMouseInfo>& nuiTopLevel::GetMouseStates() const
 {
   return mMouseStates;
 }
@@ -1279,7 +1279,7 @@ bool nuiTopLevel::CallMouseUnclick(nglMouseInfo& rInfo)
 //  NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::CallMouseUnclick X:%d Y:%d\n", rInfo.X, rInfo.Y) );
 
   // Update counterpart:
-  std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
+  std::unordered_map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
   if (it != mMouseClickedEvents.end())
   {
     rInfo.Counterpart = &it->second;
@@ -1462,7 +1462,7 @@ bool nuiTopLevel::CallMouseMove (nglMouseInfo& rInfo)
 NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::CallMouseMove X:%d Y:%d\n", rInfo.X, rInfo.Y) );
 
   // Update counterpart:
-  std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
+  std::unordered_map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
   if (it != mMouseClickedEvents.end())
     rInfo.Counterpart = &it->second;
   // Update state:
@@ -1619,7 +1619,7 @@ bool nuiTopLevel::CallMouseWheel (nglMouseInfo& rInfo)
   //NGL_TOUCHES_DEBUG( NGL_OUT("nuiTopLevel::CallMouseWheel X:%d Y:%d\n", rInfo.X, rInfo.Y) );
 
   // Update counterpart:
-  std::map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
+  std::unordered_map<nglTouchId, nglMouseInfo>::iterator it = mMouseClickedEvents.find(rInfo.TouchId);
   if (it != mMouseClickedEvents.end())
     rInfo.Counterpart = &it->second;
   // Update state:
@@ -2513,7 +2513,7 @@ void nuiTopLevel::SetWatchedWidget(nuiWidget* pWatchedWidget)
 void nuiTopLevel::PrepareWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 MatchersTag)
 {
   CheckValid();
-  std::map<nuiWidgetPtr, uint32>::iterator it = mCSSWidgets.find(pWidget);
+  std::unordered_map<nuiWidgetPtr, uint32>::iterator it = mCSSWidgets.find(pWidget);
   if (it != mCSSWidgets.end())
     mCSSWidgets[pWidget] |= MatchersTag;
   else
@@ -2562,8 +2562,8 @@ void nuiTopLevel::ApplyWidgetCSS(nuiWidget* pWidget, bool Recursive, uint32 Matc
 void nuiTopLevel::UpdateWidgetsCSS()
 {
   CheckValid();
-  std::map<nuiWidgetPtr, uint32>::iterator it = mCSSWidgets.begin();
-  std::map<nuiWidgetPtr, uint32>::iterator end = mCSSWidgets.end();
+  std::unordered_map<nuiWidgetPtr, uint32>::iterator it = mCSSWidgets.begin();
+  std::unordered_map<nuiWidgetPtr, uint32>::iterator end = mCSSWidgets.end();
   
   while (it != end)
   {
@@ -2638,7 +2638,7 @@ void nuiTopLevel::SetTabForward(nuiWidget* pSource, nuiWidget* pDestination, boo
 {
   CheckValid();
   // First check f there is already an entry in the table for this source
-  std::map<nuiWidgetPtr, nuiWidgetPtr>::iterator it = mTabForward.find(pSource);
+  std::unordered_map<nuiWidgetPtr, nuiWidgetPtr>::iterator it = mTabForward.find(pSource);
   
   // if this is the case then remove the back pointer
   if (it != mTabForward.end())
@@ -2676,7 +2676,7 @@ void nuiTopLevel::SetTabBackward(nuiWidget* pSource, nuiWidget* pDestination, bo
 {
   CheckValid();
   // First check f there is already an entry in the table for this source
-  std::map<nuiWidgetPtr, nuiWidgetPtr>::iterator it = mTabBackward.find(pSource);
+  std::unordered_map<nuiWidgetPtr, nuiWidgetPtr>::iterator it = mTabBackward.find(pSource);
   
   // if this is the case then remove the back pointer
   if (it != mTabBackward.end())
@@ -2713,7 +2713,7 @@ void nuiTopLevel::SetTabBackward(nuiWidget* pSource, nuiWidget* pDestination, bo
 nuiWidget* nuiTopLevel::GetTabForward(nuiWidget* pSource) const
 {
   CheckValid();
-  std::map<nuiWidgetPtr, nuiWidgetPtr>::const_iterator it = mTabForward.find(pSource);
+  std::unordered_map<nuiWidgetPtr, nuiWidgetPtr>::const_iterator it = mTabForward.find(pSource);
   if (it != mTabForward.end())
     return it->second;
   return NULL;
@@ -2722,7 +2722,7 @@ nuiWidget* nuiTopLevel::GetTabForward(nuiWidget* pSource) const
 nuiWidget* nuiTopLevel::GetTabBackward(nuiWidget* pSource) const
 {
   CheckValid();
-  std::map<nuiWidgetPtr, nuiWidgetPtr>::const_iterator it = mTabBackward.find(pSource);
+  std::unordered_map<nuiWidgetPtr, nuiWidgetPtr>::const_iterator it = mTabBackward.find(pSource);
   if (it != mTabBackward.end())
     return it->second;
   return NULL;
@@ -2731,7 +2731,7 @@ nuiWidget* nuiTopLevel::GetTabBackward(nuiWidget* pSource) const
 void nuiTopLevel::GetTabForwardSources(nuiWidget* pDestination, std::set<nuiWidgetPtr>& rSources) const
 {
   CheckValid();
-  std::map<nuiWidgetPtr, std::set<nuiWidgetPtr> >::const_iterator it = mTabForwardRev.find(pDestination);
+  std::unordered_map<nuiWidgetPtr, std::set<nuiWidgetPtr> >::const_iterator it = mTabForwardRev.find(pDestination);
   if (it != mTabForwardRev.end())
   {
     rSources = it->second;
@@ -2743,7 +2743,7 @@ void nuiTopLevel::GetTabForwardSources(nuiWidget* pDestination, std::set<nuiWidg
 void nuiTopLevel::GetTabBackwardSources(nuiWidget* pDestination, std::set<nuiWidgetPtr>& rSources) const
 {
   CheckValid();
-  std::map<nuiWidgetPtr, std::set<nuiWidgetPtr> >::const_iterator it = mTabBackwardRev.find(pDestination);
+  std::unordered_map<nuiWidgetPtr, std::set<nuiWidgetPtr> >::const_iterator it = mTabBackwardRev.find(pDestination);
   if (it != mTabBackwardRev.end())
   {
     rSources = it->second;
@@ -2791,7 +2791,7 @@ void nuiTopLevel::UnregisterObserver(nuiNotificationObserver* pObserver, const n
 }
 
 
-//typedef std::map<nglTouchId, nuiWidgetPtr> nuiGrabMap;
+//typedef std::unordered_map<nglTouchId, nuiWidgetPtr> nuiGrabMap;
 
 void nuiTopLevel::DumpGrabMap(int line) const
 {

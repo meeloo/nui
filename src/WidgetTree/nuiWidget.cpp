@@ -8,8 +8,6 @@
 
 
 #include "nui.h"
-#define KIWI_NO_EXCEPTIONS
-#include "kiwi/kiwi.h"
 
 // Local layer disabling switch for testing:
 //#undef NUI_USE_LAYERS
@@ -165,105 +163,6 @@ bool nuiWidget::AttrIsVisible()
 	return IsVisible();
 }
 
-class nuiLayoutVariableContext : kiwi::Variable::Context
-{
-public:
-  nuiLayoutVariableContext(const nglString& rName, nuiWidget* pWidget, nuiWidget::LayoutAttribute attribute)
-  :mName(rName), mpWidget(pWidget), mAttribute(attribute)
-  { }
-
-  NUI_GET(nglString, Name);
-  nuiWidget* GetWidget() const { return mpWidget; }
-  NUI_GET(nuiWidget::LayoutAttribute, Attribute);
-
-  double GetValue() const
-  {
-    if (mAttribute == nuiWidget::LayoutAttribute_Attribute)
-    {
-      nuiAttribBase attrib(mpWidget->GetAttribute(mName));
-      if (attrib.IsValid())
-      {
-        nuiVariant variant(attrib);
-        return (double)variant;
-      }
-      return std::numeric_limits<double>::signaling_NaN();
-    }
-
-    return mpWidget->GetLayoutAttributeValue(mAttribute);
-  }
-private:
-  nglString mName;
-  nuiWidget *mpWidget;
-  nuiWidget::LayoutAttribute mAttribute;
-};
-
-double nuiWidget::GetLayoutAttributeValue(nuiWidget::LayoutAttribute attribute) const
-{
-  // Compute attribute value:
-  switch (attribute)
-  {
-    case nuiWidget::LayoutAttribute_Left:
-      return GetRect().Left();
-
-    case nuiWidget::LayoutAttribute_Right:
-      return GetRect().Right();
-
-    case nuiWidget::LayoutAttribute_Top:
-      return GetRect().Top();
-
-    case nuiWidget::LayoutAttribute_Bottom:
-      return GetRect().Bottom();
-
-    case nuiWidget::LayoutAttribute_Leading:        // TODO: Implement RtL
-      return GetRect().Left();
-
-    case nuiWidget::LayoutAttribute_Trailing:       // TODO: Implement RtL
-      return GetRect().Right();
-
-
-    case nuiWidget::LayoutAttribute_LeadingBorder:
-      return GetBorderedRect().Left();
-
-    case nuiWidget::LayoutAttribute_TrailingBorder:
-      return  GetBorderedRect().Right();
-
-    case nuiWidget::LayoutAttribute_Width:
-      return GetRect().GetWidth();
-
-    case nuiWidget::LayoutAttribute_Height:
-      return GetRect().GetHeight();
-
-
-    case nuiWidget::LayoutAttribute_CenterX:
-      return (GetRect().Left() + GetRect().GetWidth()) * 0.5;
-
-    case nuiWidget::LayoutAttribute_CenterY:
-      return (GetRect().Top() + GetRect().GetHeight()) * 0.5;
-
-
-    case nuiWidget::LayoutAttribute_LeftBorder:
-      return GetBorderedRect().Left();
-
-    case nuiWidget::LayoutAttribute_RightBorder:
-      return GetBorderedRect().Left();
-
-    case nuiWidget::LayoutAttribute_TopBorder:
-      return GetBorderedRect().Top();
-
-    case nuiWidget::LayoutAttribute_BottomBorder:
-      return GetBorderedRect().Bottom();
-
-
-    case nuiWidget::LayoutAttribute_Attribute:
-    default:
-      NGL_ASSERT(0);
-      return std::numeric_limits<double>::signaling_NaN();
-  }
-
-  NGL_ASSERT(0);
-  return std::numeric_limits<double>::signaling_NaN();
-}
-
 
 void nuiWidget::InitAttributes()
 {
@@ -281,6 +180,8 @@ void nuiWidget::InitAttributes()
   kiwi::ErrorType e6 = solver.addConstraint(z >= y);
   solver.updateVariables();
   solver.dump();
+
+  NGL_OUT("SizeOf kiwi::Variable = %d\n", sizeof(x));
 
   NGL_OUT("x = %f / y = %f / z = %f\n", x.value(), y.value(), z.value());
 
@@ -1702,7 +1603,7 @@ bool nuiWidget::MouseUngrabbed(nglTouchId id)
   return false;
 }
 
-const std::map<nglTouchId, nglMouseInfo>& nuiWidget::GetMouseStates() const
+const std::unordered_map<nglTouchId, nglMouseInfo>& nuiWidget::GetMouseStates() const
 {
   nuiTopLevel* pTopLevel = GetTopLevel();
   NGL_ASSERT(pTopLevel);
@@ -6414,3 +6315,182 @@ kiwi::Solver& nuiWidget::GetSolver()
 
   return *mpSolver;
 }
+
+class nuiLayoutVariableContext : public kiwi::Variable::Context
+{
+public:
+  nuiLayoutVariableContext(nuiWidget* pWidget, nuiWidget::LayoutAttribute attribute)
+  : mpWidget(pWidget), mAttribute(attribute)
+  { }
+
+  nuiLayoutVariableContext(nuiWidget* pWidget, const nglString& rName)
+  :mName(rName), mpWidget(pWidget), mAttribute(nuiWidget::LayoutAttribute_Attribute)
+  { }
+
+
+  NUI_GET(nglString, Name);
+  nuiWidget* GetWidget() const { return mpWidget; }
+  NUI_GET(nuiWidget::LayoutAttribute, Attribute);
+
+  double GetValue() const
+  {
+    if (mAttribute == nuiWidget::LayoutAttribute_Attribute)
+    {
+      nuiAttribBase attrib(mpWidget->GetAttribute(mName));
+      if (attrib.IsValid())
+      {
+        nuiVariant variant(attrib);
+        return (double)variant;
+      }
+      return std::numeric_limits<double>::signaling_NaN();
+    }
+
+    return mpWidget->GetLayoutAttributeValue(mAttribute);
+  }
+private:
+  nglString mName;
+  nuiWidget *mpWidget;
+  nuiWidget::LayoutAttribute mAttribute;
+};
+
+double nuiWidget::GetLayoutAttributeValue(nuiWidget::LayoutAttribute attribute) const
+{
+  // Compute attribute value:
+  switch (attribute)
+  {
+    case nuiWidget::LayoutAttribute_Left:
+      return GetRect().Left();
+
+    case nuiWidget::LayoutAttribute_Right:
+      return GetRect().Right();
+
+    case nuiWidget::LayoutAttribute_Top:
+      return GetRect().Top();
+
+    case nuiWidget::LayoutAttribute_Bottom:
+      return GetRect().Bottom();
+
+    case nuiWidget::LayoutAttribute_Leading:        // TODO: Implement RtL
+      return GetRect().Left();
+
+    case nuiWidget::LayoutAttribute_Trailing:       // TODO: Implement RtL
+      return GetRect().Right();
+
+
+    case nuiWidget::LayoutAttribute_LeadingBorder:
+      return GetBorderedRect().Left();
+
+    case nuiWidget::LayoutAttribute_TrailingBorder:
+      return  GetBorderedRect().Right();
+
+    case nuiWidget::LayoutAttribute_Width:
+      return GetRect().GetWidth();
+
+    case nuiWidget::LayoutAttribute_Height:
+      return GetRect().GetHeight();
+
+
+    case nuiWidget::LayoutAttribute_CenterX:
+      return (GetRect().Left() + GetRect().GetWidth()) * 0.5;
+
+    case nuiWidget::LayoutAttribute_CenterY:
+      return (GetRect().Top() + GetRect().GetHeight()) * 0.5;
+
+
+    case nuiWidget::LayoutAttribute_LeftBorder:
+      return GetBorderedRect().Left();
+
+    case nuiWidget::LayoutAttribute_RightBorder:
+      return GetBorderedRect().Left();
+
+    case nuiWidget::LayoutAttribute_TopBorder:
+      return GetBorderedRect().Top();
+
+    case nuiWidget::LayoutAttribute_BottomBorder:
+      return GetBorderedRect().Bottom();
+
+
+    case nuiWidget::LayoutAttribute_Attribute:
+    default:
+      NGL_ASSERT(0);
+      return std::numeric_limits<double>::signaling_NaN();
+  }
+  
+  NGL_ASSERT(0);
+  return std::numeric_limits<double>::signaling_NaN();
+}
+
+static const char* nuiGetLayoutAttributeName(nuiWidget::LayoutAttribute attribute)
+{
+  NGL_ASSERT(attribute >= nuiWidget::LayoutAttribute_Left && attribute < nuiWidget::LayoutAttribute_Attribute);
+  static const char* names[] = {
+    "Left",
+    "Right",
+    "Top",
+    "Bottom",
+    "Leading",
+    "Trailing"
+    "LeadingBorder",
+    "TrailingBorder",
+    "Width",
+    "Height",
+    "CenterX",
+    "CenterY",
+    "LeftBorder",
+    "RightBorder",
+    "TopBorder",
+    "BottomBorder"
+  };
+
+  return names[attribute];
+}
+
+kiwi::Variable nuiWidget::GetLayoutVariable(nuiWidgetPtr child, nuiWidget::LayoutAttribute attribute)
+{
+  auto it = mLayoutVariables.find(child);
+  if (mLayoutVariables.end() != it)
+  {
+    auto ChildAttribs = it->second;
+    auto it2 = ChildAttribs.find(attribute);
+    if (ChildAttribs.end() != it2)
+    {
+      return it2->second;
+    }
+  }
+
+  auto var = kiwi::Variable(nuiGetLayoutAttributeName(attribute), new nuiLayoutVariableContext(child, attribute));
+  mLayoutVariables[child].insert(std::make_pair(attribute, var));
+
+  return var;
+}
+
+kiwi::Variable nuiWidget::GetLayoutVariable(nuiWidgetPtr child, const nglString& rName)
+{
+  auto it = mLayoutNamedVariables.find(child);
+  if (mLayoutNamedVariables.end() != it)
+  {
+    auto ChildAttribs = it->second;
+    auto it2 = ChildAttribs.find(rName);
+    if (ChildAttribs.end() != it2)
+    {
+      return it2->second;
+    }
+  }
+
+  auto var = kiwi::Variable(rName.GetStdString(), new nuiLayoutVariableContext(child, rName));
+  mLayoutNamedVariables[child].insert(std::make_pair(rName, var));
+
+  return var;
+}
+
+
+
+void nuiWidget::DeleteLayoutVariablesForWidget(nuiWidgetPtr child)
+{
+  auto it = mLayoutVariables.find(child);
+  if (it == mLayoutVariables.end())
+    return;
+
+  mLayoutVariables.erase(it);
+}
+
