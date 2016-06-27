@@ -29,6 +29,7 @@ nuiButton::nuiButton()
   mAutoRepeat = false;
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
+  mDelayedActivation = 0;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
 
@@ -57,6 +58,7 @@ nuiButton::nuiButton(const nglString& rText)
   mAutoRepeat = false;
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
+  mDelayedActivation = 0;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
   nuiLabel* pLabel = new nuiLabel(rText);
@@ -89,6 +91,7 @@ nuiButton::nuiButton(const nglImage& rImage)
   mAutoRepeat = false;
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
+  mDelayedActivation = 0;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
   SetRedrawOnHover(false);
@@ -122,6 +125,7 @@ nuiButton::nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired)
   mAutoRepeat = false;
   mRepeatDelay = 0.5;
   mRepeatMinDelay = 0.01;
+  mDelayedActivation = 0;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
   SetRedrawOnHover(false);
@@ -182,6 +186,12 @@ void nuiButton::InitAttributes()
                (nglString("ActivationOffset"), nuiUnitPixels,
                 nuiMakeDelegate(this, &nuiButton::GetActivationOffset),
                 nuiMakeDelegate(this, &nuiButton::SetActivationOffset)));
+
+  AddAttribute(new nuiAttribute<float>
+               (nglString("DelayedActivation"), nuiUnitSeconds,
+                nuiMakeDelegate(this, &nuiButton::GetDelayedActivation),
+                nuiMakeDelegate(this, &nuiButton::SetDelayedActivation)));
+
 }
 
 bool nuiButton::Draw(nuiDrawContext* pContext)
@@ -316,6 +326,17 @@ bool nuiButton::MouseClicked(const nglMouseInfo& rInfo)
         mEventSink.Connect(mpAutoRepeatTimer->Tick, &nuiButton::OnAutoRepeat);
       }
     }
+    else if (mDelayedActivation > 0)
+    {
+      mLastTime = nglTime();
+      mUntilRepeat = mDelayedActivation;
+      
+      if (!mpAutoRepeatTimer)
+      {
+        mpAutoRepeatTimer = nuiAnimation::AcquireTimer();
+        mEventSink.Connect(mpAutoRepeatTimer->Tick, &nuiButton::OnDelayedActivation);
+      }
+    }
     return true;
   }
   return false;
@@ -373,7 +394,10 @@ bool nuiButton::MouseUngrabbed(nglTouchId Id)
   }
   if (mpAutoRepeatTimer)
   {
-    mEventSink.Disconnect(mpAutoRepeatTimer->Tick, &nuiButton::OnAutoRepeat);
+    if (mDelayedActivation > 0)
+      mEventSink.Disconnect(mpAutoRepeatTimer->Tick, &nuiButton::OnDelayedActivation);
+    else
+      mEventSink.Disconnect(mpAutoRepeatTimer->Tick, &nuiButton::OnAutoRepeat);
     mpAutoRepeatTimer = NULL;
     nuiAnimation::ReleaseTimer();
   }
@@ -459,11 +483,25 @@ float nuiButton::GetAutoRepeatMinDelay() const
   return mRepeatMinDelay;
 }
 
+void nuiButton::OnDelayedActivation(const nuiEvent& rEvent)
+{
+  NGL_ASSERT(mDelayedActivation > 0);
+  if (mUntilRepeat >= 0 && IsPressed())
+  {
+    nglTime now;
+    mUntilRepeat -= (now.GetValue() - mLastTime.GetValue());
+    mLastTime = now;
+    if (mUntilRepeat < 0)
+    {
+      DelayedActivation();
+    }
+  }
+}
+
 void nuiButton::OnAutoRepeat(const nuiEvent& rEvent)
 {
   if (!mAutoRepeat)
     return;
-
   if (IsPressed())
   {
     nglTime now;

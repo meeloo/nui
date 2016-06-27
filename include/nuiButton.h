@@ -61,7 +61,12 @@ public:
   float GetAutoRepeatDelay() const;
   void SetAutoRepeatMinDelay(float Delay);
   float GetAutoRepeatMinDelay() const;
+
   
+  float GetDelayedActivation() const noexcept { return mDelayedActivation; }
+  void SetDelayedActivation(float Delay) noexcept { mDelayedActivation = Delay; }
+  nuiSimpleEventSource<nuiWidgetActivated> DelayedActivation;
+
   void SetActivationOffset(nuiSize Offset);
   nuiSize GetActivationOffset() const;
 
@@ -73,6 +78,7 @@ protected:
   bool mPressed;
   bool mAutoRepeat;
   nglTime mLastTime;
+  float mDelayedActivation;
   float mRepeatDelay;
   float mRepeatMinDelay;
   float mCurrentRepeatDelay;
@@ -81,6 +87,7 @@ protected:
   nuiSize mActivationOffset;
   nuiEventSink<nuiButton> mEventSink;
   void OnAutoRepeat(const nuiEvent& rEvent);
+  void OnDelayedActivation(const nuiEvent& rEvent);
   nuiTask* mpTask;
   
   static float mDefaultBorders;

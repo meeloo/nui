@@ -98,7 +98,9 @@ void nuiBorderDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, con
   
   if ((mBorderType == eBorderAll) && mUseStrokeGlobalColor)
   {
-    pContext->SetStrokeColor(mStrokeColor);
+    nuiColor c(mStrokeColor);
+    c.Multiply(pWidget->GetMixedAlpha());
+    pContext->SetStrokeColor(c);
     pContext->DrawRect(rDestRect, eStrokeShape);
     return;
   }
