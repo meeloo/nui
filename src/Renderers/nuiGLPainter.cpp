@@ -2379,9 +2379,12 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
   ResetOpenGLState();
 }
 
+nglCriticalSection nuiGLPainter::RenderArrayInfo::mHeapCS;
 std::list<nuiGLPainter::RenderArrayInfo*> nuiGLPainter::RenderArrayInfo::mHeap;
+
 nuiGLPainter::RenderArrayInfo* nuiGLPainter::RenderArrayInfo::Create(nuiRenderArray* pRenderArray)
 {
+  nglCriticalSectionGuard g(mHeapCS);
   if (!mHeap.empty())
   {
     RenderArrayInfo* pInfo = mHeap.front();
@@ -2421,6 +2424,7 @@ void nuiGLPainter::RenderArrayInfo::Rebind(nuiRenderArray* pRenderArray)
   mpRenderArray = pRenderArray;
 
   int32 count = pRenderArray->GetSize();
+  NGL_ASSERT(mVertexBuffer == -1);
   glGenBuffers(1, &mVertexBuffer);
   nuiCheckForGLErrors();
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -2508,7 +2512,10 @@ void nuiGLPainter::RenderArrayInfo::Destroy()
   }
 
   mStreamBuffers.clear();
-  mHeap.push_back(this);
+  {
+    nglCriticalSectionGuard g(mHeapCS);
+    mHeap.push_back(this);
+  }
 }
 
 void nuiGLPainter::RenderArrayInfo::BindVertices() const

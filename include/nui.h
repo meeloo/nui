@@ -15,6 +15,9 @@ This file includes all nui needed headers to ease the creation of precompiled he
 #ifndef __nui_h__
 #define __nui_h__
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wno-global-constructors"
+
 #ifndef NGL_STATIC_BUILD
 #define NGL_STATIC_BUILD // Fake the static build! Always!
 #endif
@@ -46,5 +49,7 @@ This file includes all nui needed headers to ease the creation of precompiled he
 
 #define NUI_FONTDB_PATH "nuiFonts.db5"
 #include "nui_all.h"
+
+#pragma clang diagnostic pop
 
 #endif // __nui_h__
