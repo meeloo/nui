@@ -56,6 +56,7 @@ void objCCallOnMemoryWarning();
 		
 		objCCallOnInit(pUIApplication);
 	}
+  return YES;
 }
 
 - (void) applicationDidBecomeActive:          (UIApplication*) pUIApplication
@@ -187,6 +188,7 @@ void objCCallOnMemoryWarning();
     std::list<nglPath> paths { p };
     ((nglApplication *) App)->OpenDocuments(paths);
   }
+  return YES;
 }
 
 @end///< nglUIApplicationDelegate
