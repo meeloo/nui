@@ -12,8 +12,9 @@
 
 - (void) dealloc;
 - (void) applicationDidFinishLaunching:       (UIApplication*) pUIApp;
-- (BOOL) application:(UIApplication *)pUIApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+- (BOOL) application:                         (UIApplication*) pUIApp didFinishLaunchingWithOptions: (NSDictionary *) launchOptions;
 - (void) applicationDidBecomeActive:          (UIApplication*) pUIApp;
+- (void) applicationWillResignActive:         (UIApplication*) pUIApp;
 - (void) applicationDidEnterBackground:       (UIApplication*) pUIApp;
 - (void) applicationDidReceiveMemoryWarning:  (UIApplication*) pUIApp;
 - (void) applicationSignificantTimeChange:    (UIApplication*) pUIApp;

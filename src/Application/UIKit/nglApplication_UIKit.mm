@@ -82,27 +82,32 @@ void objCCallOnMemoryWarning();
 	}	
 }
 
-- (void) applicationDidEnterBackground:       (UIApplication*) pUIApplication
+- (void) applicationWillResignActive:         (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidEnterBackground");
-  NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationDidEnterBackground]\n"); )
+  NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationWillResignActive]\n"); )
   assert(App);
 
-	NSEnumerator *e = [[pUIApplication windows] objectEnumerator];
-	
-	id win;
-	while ((win = [e nextObject]))
+  NSEnumerator *e = [[pUIApplication windows] objectEnumerator];
+
+  id win;
+  while ((win = [e nextObject]))
   {
     if ([win respondsToSelector: @selector(getNGLWindow)])
-		{
-			nglWindow* pWindow = [win getNGLWindow];
-			
-			NGL_ASSERT(pWindow);
-			pWindow->CallOnDesactivation();
-		}
-	}
-	
+    {
+      nglWindow* pWindow = [win getNGLWindow];
+
+      NGL_ASSERT(pWindow);
+      pWindow->CallOnDesactivation();
+    }
+  }
+
   objCCallOnDeactivation();
+}
+
+- (void) applicationDidEnterBackground:       (UIApplication*) pUIApplication
+{
+  // App was notified with applicationWillResignActive:
 }
 
 - (void) applicationDidReceiveMemoryWarning:  (UIApplication*) pUIApplication
