@@ -22,8 +22,13 @@
 
 - (void) applicationDidFinishLaunching:       (NSApplication*) pUIApp;
 - (BOOL) application:(NSApplication *)pNSApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
-- (void) applicationDidBecomeActive:          (NSApplication*) pUIApp;
-- (void) applicationDidEnterBackground:         (NSApplication*) pUIApp;
+
+- (void)applicationWillBecomeActive:          (NSNotification *)notification;
+- (void)applicationDidBecomeActive:           (NSNotification *)notification;
+
+- (void)applicationWillResignActive:          (NSNotification *)notification;
+- (void)applicationDidResignActive:           (NSNotification *)notification;
+
 - (void) applicationDidReceiveMemoryWarning:  (NSApplication*) pUIApp;
 - (void) applicationSignificantTimeChange:    (NSApplication*) pUIApp;
 - (void) applicationWillTerminate:            (NSApplication*) pUIApp;

@@ -154,7 +154,15 @@ void nglWindow::OnDestruction()
 {
 }
 
+void nglWindow::OnPreActivation()
+{
+}
+
 void nglWindow::OnActivation()
+{
+}
+
+void nglWindow::OnPreDesactivation()
 {
 }
 
@@ -293,10 +301,22 @@ void nglWindow::CallOnDestruction()
   OnDestruction();
 }
 
+void nglWindow::CallOnPreActivation()
+{
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "PreActivation\n"); )
+  OnPreActivation();
+}
+
 void nglWindow::CallOnActivation()
 {
   NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Activation\n"); )
   OnActivation();
+}
+
+void nglWindow::CallOnPreDesactivation()
+{
+  NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "PreDesactivation\n"); )
+  OnPreDesactivation();
 }
 
 void nglWindow::CallOnDesactivation()

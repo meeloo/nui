@@ -164,7 +164,9 @@ protected:
   virtual void OnResize (uint Width, uint Height);
   virtual void OnCreation();
   virtual void OnDestruction();
+  virtual void OnPreActivation();
   virtual void OnActivation();
+  virtual void OnPreDesactivation();
   virtual void OnDesactivation();
   virtual void OnClose();
   virtual void OnState(nglWindow::StateInfo State);
@@ -233,7 +235,9 @@ private:
     virtual void OnResize (uint Width, uint Height);
     virtual void OnCreation();
     virtual void OnDestruction();
+    virtual void OnPreActivation();
     virtual void OnActivation();
+    virtual void OnPreDesactivation();
     virtual void OnDesactivation();
     virtual void OnClose();
     virtual void OnState(StateInfo State);

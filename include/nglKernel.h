@@ -310,16 +310,27 @@ public:
    */
   //@}
 
-  virtual void OnActivation();
+  virtual void OnPreActivation();
   /*!<
    Called right before the application will be reactivated by the iPhone OS multitasking.
    */
   //@}
 
+  virtual void OnActivation();
+  /*!<
+   Called when the application is actually reactivated by the iPhone OS multitasking.
+   */
+  //@}
+
+  virtual void OnPreDeactivation();
+  /*!<
+   Called right before the application will be deactivated by the iPhone OS multitasking.
+   */
+  //@}
 
   virtual void OnDeactivation();
   /*!<
-   Called right before the application will be deactivated by the iPhone OS multitasking.
+   Called when the application is actually deactivated by the iPhone OS multitasking.
    */
   //@}
 
@@ -372,7 +383,9 @@ protected:
   void CallOnExit(int Code);
   void CallOnWillExit();
   void CallOnMemoryWarning();
+  void CallOnPreActivation();
   void CallOnActivation();
+  void CallOnPreDeactivation();
   void CallOnDeactivation();
 
   bool mActive;
@@ -515,7 +528,9 @@ protected:
   friend void objCCallOnExit(int Code);
   friend void objCCallOnWillExit();
   friend void objCCallOnInitWithURL(void* pUIApplication, const nglString &url);
+  friend void objCCallOnPreActivation();
   friend void objCCallOnActivation();
+  friend void objCCallOnPreDeactivation();
   friend void objCCallOnDeactivation();
   friend void objCCallOnMemoryWarning();
 
@@ -535,6 +550,10 @@ protected:
   friend void objCCallOnInit(void* pNSApplication);
   friend void objCCallOnExit(int Code);
   friend void objCCallOnWillExit();
+  friend void objCCallOnPreActivation();
+  friend void objCCallOnActivation();
+  friend void objCCallOnPreDeactivation();
+  friend void objCCallOnDeactivation();
 
   void* mpNSApplication;
 

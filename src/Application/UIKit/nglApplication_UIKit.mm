@@ -15,7 +15,9 @@ void objCCallOnInit(void* pUIApplication);
 void objCCallOnInitWithURL(void* pUIApplication, const nglString &url);
 void objCCallOnExit(int code);
 void objCCallOnWillExit();
+void objCCallOnPreActivation();
 void objCCallOnActivation();
+void objCCallOnPreDeactivation();
 void objCCallOnDeactivation();
 void objCCallOnMemoryWarning();
 
@@ -59,9 +61,32 @@ void objCCallOnMemoryWarning();
   return YES;
 }
 
-- (void) applicationDidBecomeActive:          (UIApplication*) pUIApplication
+// The app is about to enter the foreground.
+- (void) applicationWillEnterForeground: (UIApplication*) pUIApplication
 {
-  //App->TimedPrint("nglUIApplicationDelegate applicationDidBecomeActive");
+  NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationWillEnterForeground]\n"); )
+  assert(App);
+
+  objCCallOnPreActivation();
+
+  NSEnumerator *e = [[pUIApplication windows] objectEnumerator];
+
+  id win;
+  while ((win = [e nextObject]) )
+  {
+    if ([win respondsToSelector: @selector(getNGLWindow)] )
+    {
+      nglWindow* pWindow = [win getNGLWindow];
+
+      NGL_ASSERT(pWindow);
+      pWindow->CallOnPreActivation();
+    }
+  }	
+}
+
+// The app has become active
+- (void) applicationDidBecomeActive: (UIApplication*) pUIApplication
+{
   NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationDidBecomeActive]\n"); )
   assert(App);
 
@@ -82,10 +107,34 @@ void objCCallOnMemoryWarning();
 	}	
 }
 
-- (void) applicationWillResignActive:         (UIApplication*) pUIApplication
+// The app is about to become inactive
+- (void) applicationWillResignActive: (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidEnterBackground");
   NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationWillResignActive]\n"); )
+  assert(App);
+
+  NSEnumerator *e = [[pUIApplication windows] objectEnumerator];
+
+  id win;
+  while ((win = [e nextObject]))
+  {
+    if ([win respondsToSelector: @selector(getNGLWindow)])
+    {
+      nglWindow* pWindow = [win getNGLWindow];
+
+      NGL_ASSERT(pWindow);
+      pWindow->CallOnPreDesactivation();
+    }
+  }
+
+  objCCallOnPreDeactivation();
+}
+
+// The app is now in the background
+- (void) applicationDidEnterBackground: (UIApplication*) pUIApplication
+{
+  NGL_DEBUG( NGL_OUT("[nglUIApplicationDelegate applicationDidEnterBackground]\n"); )
   assert(App);
 
   NSEnumerator *e = [[pUIApplication windows] objectEnumerator];
@@ -103,11 +152,6 @@ void objCCallOnMemoryWarning();
   }
 
   objCCallOnDeactivation();
-}
-
-- (void) applicationDidEnterBackground:       (UIApplication*) pUIApplication
-{
-  // App was notified with applicationWillResignActive:
 }
 
 - (void) applicationDidReceiveMemoryWarning:  (UIApplication*) pUIApplication

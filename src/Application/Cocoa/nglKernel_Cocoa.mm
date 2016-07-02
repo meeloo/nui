@@ -119,7 +119,32 @@ if (pWindow) {
 
 NGL_OUT("objCCallOnExit App->CallOnExit\n");
 */
- }
+}
+
+void objCCallOnPreActivation()
+{
+  assert(App);
+  App->CallOnPreActivation();
+}
+
+void objCCallOnActivation()
+{
+  assert(App);
+  App->CallOnActivation();
+}
+
+void objCCallOnPreDeactivation()
+{
+  assert(App);
+  App->CallOnPreDeactivation();
+}
+
+void objCCallOnDeactivation()
+{
+  assert(App);
+  App->CallOnDeactivation();
+}
+
 
 
 

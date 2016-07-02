@@ -379,10 +379,22 @@ void nglKernel::OnWillExit()
 
 }
 
+void nglKernel::CallOnPreActivation()
+{
+  mActive = true;
+  OnPreActivation();
+}
+
 void nglKernel::CallOnActivation()
 {
   mActive = true;
   OnActivation();
+}
+
+void nglKernel::CallOnPreDeactivation()
+{
+  mActive = false;
+  OnPreDeactivation();
 }
 
 void nglKernel::CallOnDeactivation()
@@ -391,7 +403,15 @@ void nglKernel::CallOnDeactivation()
   OnDeactivation();
 }
 
+void nglKernel::OnPreActivation()
+{
+}
+
 void nglKernel::OnActivation()
+{
+}
+
+void nglKernel::OnPreDeactivation()
 {
 }
 

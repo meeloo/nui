@@ -14,6 +14,10 @@ void objCCallOnInit(void* pNSApplication);
 void objCCallOnInitWithURL(void* pNSApplication, const nglString &url);
 void objCCallOnExit(int code);
 void objCCallOnWillExit();
+void objCCallOnPreActivation();
+void objCCallOnActivation();
+void objCCallOnPreDeactivation();
+void objCCallOnDeactivation();
 
 
 static NSString* GetApplicationName(void)
@@ -428,10 +432,43 @@ static NSString* GetApplicationName(void)
   return YES;
 }
 
-- (void) applicationDidBecomeActive:          (NSNotification*) pNotification
+- (void) applicationWillBecomeActive: (NSNotification *) pNotification
+{
+  NGL_DEBUG( NGL_OUT("[nglNSApplicationDelegate applicationWillBecomeActive]\n"); )
+  NGL_ASSERT(App);
+
+  objCCallOnPreActivation();
+
+  NSApplication* pNSApplication = [pNotification object];
+  if (pNSApplication != nil)
+  {
+    NSArray* array = [pNSApplication windows];
+    if (array != nil)
+    {
+      NSEnumerator *e = [array objectEnumerator];
+
+      id win;
+      while (e != nil && (win = [e nextObject]) )
+      {
+        if ([win respondsToSelector: @selector(getNGLWindow)] )
+        {
+          nglWindow* pWindow = [win getNGLWindow];
+
+          NGL_ASSERT(pWindow);
+          pWindow->CallOnPreActivation();
+        }
+      }
+    }
+  }
+}
+
+- (void) applicationDidBecomeActive: (NSNotification*) pNotification
 {
   NGL_DEBUG( NGL_OUT("[nglNSApplicationDelegate applicationDidBecomeActive]\n"); )
   NGL_ASSERT(App);
+
+  objCCallOnActivation();
+
   NSApplication* pNSApplication = [pNotification object];
   if (pNSApplication != nil)
   {
@@ -455,9 +492,40 @@ static NSString* GetApplicationName(void)
   }
 }
 
-- (void) applicationDidEnterBackground:         (NSNotification*) pNotification
+- (void) applicationWillResignActive: (NSNotification*) pNotification
 {
-  NGL_DEBUG( NGL_OUT("[nglNSApplicationDelegate applicationDidEnterBackground]\n"); )
+  NGL_DEBUG( NGL_OUT("[nglNSApplicationDelegate applicationWillResignActive]\n"); )
+  NGL_ASSERT(App);
+
+  NSApplication* pNSApplication = [pNotification object];
+  if (pNSApplication != nil)
+  {
+    NSArray* array = [pNSApplication windows];
+    if (array != nil)
+    {
+      NSEnumerator *e = [array objectEnumerator];
+
+      id win;
+      while (e != nil && (win = [e nextObject]) )
+      {
+        if ([win respondsToSelector: @selector(getNGLWindow)] )
+        {
+          nglWindow* pWindow = [win getNGLWindow];
+
+          NGL_ASSERT(pWindow);
+          pWindow->CallOnPreDesactivation();
+        }
+      }
+    }
+  }
+
+  objCCallOnPreDeactivation();
+}
+
+
+- (void) applicationDidResignActive: (NSNotification*) pNotification
+{
+  NGL_DEBUG( NGL_OUT("[nglNSApplicationDelegate applicationDidResignActive]\n"); )
   NGL_ASSERT(App);
 	
   NSApplication* pNSApplication = [pNotification object];
@@ -481,6 +549,8 @@ static NSString* GetApplicationName(void)
       }
     }
   }
+
+  objCCallOnDeactivation();
 }
 
 - (void) applicationSignificantTimeChange:    (NSNotification*) pNotification

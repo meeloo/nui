@@ -509,6 +509,10 @@ void nuiMainWindow::OnDestruction()
   //NGL_OUT("OnDestruction\n");
 }
 
+void nuiMainWindow::OnPreActivation()
+{
+}
+
 void nuiMainWindow::OnActivation()
 {
   mLastEventTime = nglTime();
@@ -516,6 +520,10 @@ void nuiMainWindow::OnActivation()
   //OUT("OnActivation\n");
   CancelGrab();
   mMouseInfo.Buttons = 0;
+}
+
+void nuiMainWindow::OnPreDesactivation()
+{
 }
 
 void nuiMainWindow::OnDesactivation()
@@ -1204,16 +1212,26 @@ void nuiMainWindow::NGLWindow::OnDestruction()
     mpMainWindow->OnDestruction();
 }
 
+void nuiMainWindow::NGLWindow::OnPreActivation()
+{
+  mpMainWindow->OnPreActivation();
+}
+
 void nuiMainWindow::NGLWindow::OnActivation()
 {
   mpMainWindow->SetPaintEnabled(true);
   mpMainWindow->OnActivation();
 }
 
+void nuiMainWindow::NGLWindow::OnPreDesactivation()
+{
+  mpMainWindow->OnPreDesactivation();
+  mpMainWindow->SetPaintEnabled(false);
+}
+
 void nuiMainWindow::NGLWindow::OnDesactivation()
 {
   mpMainWindow->OnDesactivation();
-  mpMainWindow->SetPaintEnabled(false);
 }
 
 void nuiMainWindow::NGLWindow::OnClose()

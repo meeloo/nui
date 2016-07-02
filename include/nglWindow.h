@@ -584,11 +584,19 @@ window = new nglWindow (context, info, NULL);
     This method is called when the window object is destroyed.
     You should put your destroy code here, and \e not in the destructor.
   */
+  virtual void OnPreActivation();
+  /*!<
+   This method is called when the window is about to get the focus.
+   */
   virtual void OnActivation();
   /*!<
     This method is called when the window gets the focus, meaning it
     can receive keyboard and mouse events.
   */
+  virtual void OnPreDesactivation();
+  /*!<
+   This method is called when the window is about to lose focus.
+   */
   virtual void OnDesactivation();
   /*!<
     This method is called when the window looses the focus, meaning it
@@ -804,7 +812,9 @@ public:
 #endif
   void CallOnCreation();
   void CallOnDestruction();
+  void CallOnPreActivation();
   void CallOnActivation();
+  void CallOnPreDesactivation();
   void CallOnDesactivation();
   void CallOnClose();
   void CallOnPaint();
