@@ -1219,14 +1219,22 @@ void nuiMainWindow::NGLWindow::OnPreActivation()
 
 void nuiMainWindow::NGLWindow::OnActivation()
 {
+// iOS: when going back in foreground, re-enable painter
+#ifdef _UIKIT_
   mpMainWindow->SetPaintEnabled(true);
+#endif
+
   mpMainWindow->OnActivation();
 }
 
 void nuiMainWindow::NGLWindow::OnPreDesactivation()
 {
-  mpMainWindow->OnPreDesactivation();
+// iOS forbid any graphic processing when app is in background, disable painter
+#ifdef _UIKIT_
   mpMainWindow->SetPaintEnabled(false);
+#endif
+
+  mpMainWindow->OnPreDesactivation();
 }
 
 void nuiMainWindow::NGLWindow::OnDesactivation()
