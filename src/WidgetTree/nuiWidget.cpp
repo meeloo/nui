@@ -4286,6 +4286,12 @@ bool nuiWidget::AddChild(nuiWidgetPtr pChild)
 
   pChild->SetParent(this);
   ChildAdded(this, pChild);
+
+  if (mpSolver)
+  {
+    pChild->AddLayoutRules(*mpSolver);
+  }
+
   Invalidate();
   InvalidateLayout();
 
@@ -6546,8 +6552,25 @@ void nuiWidget::PrepareAutoLayout(kiwi::Solver& solver)
 
 void nuiWidget::AddLayoutRules(kiwi::Solver& solver)
 {
-  const double kmax = std::numeric_limits<double>::max();
+  const double kmax = kiwi::strength::required - 1;
   LayoutAttributes& attribs(GetLayoutAttributes());
+
+  // Add infinitely strong links for unbreakable relations:
+  solver.addConstraint(kiwi::Constraint(attribs.Leading == attribs.Left));
+  solver.addConstraint(kiwi::Constraint(attribs.Trailing == attribs.Right));
+  solver.addConstraint(kiwi::Constraint(attribs.LeadingBorder == attribs.LeftBorder));
+  solver.addConstraint(kiwi::Constraint(attribs.TrailingBorder == attribs.RightBorder));
+
+  solver.addConstraint(kiwi::Constraint(attribs.CenterX  == (attribs.Left    + attribs.Right)  * 0.5));
+  solver.addConstraint(kiwi::Constraint(attribs.CenterY  == (attribs.Top     + attribs.Bottom) * 0.5));
+
+  solver.addConstraint(kiwi::Constraint(attribs.Width    == attribs.Right    - attribs.Left));
+  solver.addConstraint(kiwi::Constraint(attribs.Height   == attribs.Bottom   - attribs.Top));
+
+  solver.addConstraint(kiwi::Constraint(attribs.LeftBorder    == attribs.Left   - attribs.BorderLeft));
+  solver.addConstraint(kiwi::Constraint(attribs.RightBorder   == attribs.Right  + attribs.BorderRight));
+  solver.addConstraint(kiwi::Constraint(attribs.TopBorder     == attribs.Top    - attribs.BorderTop));
+  solver.addConstraint(kiwi::Constraint(attribs.BottomBorder  == attribs.Bottom + attribs.BorderBottom));
 
   solver.addEditVariable(attribs.ContentsWidth, kmax);
   solver.addEditVariable(attribs.ContentsHeight, kmax);
@@ -6555,24 +6578,6 @@ void nuiWidget::AddLayoutRules(kiwi::Solver& solver)
   solver.addEditVariable(attribs.BorderRight, kmax);
   solver.addEditVariable(attribs.BorderTop, kmax);
   solver.addEditVariable(attribs.BorderBottom, kmax);
-
-  // Add infinitely strong links for unbreakable relations:
-  mpSolver->addConstraint(kiwi::Constraint(attribs.Leading == attribs.Left,  kmax));
-  mpSolver->addConstraint(kiwi::Constraint(attribs.Leading == attribs.Right,  kmax));
-  mpSolver->addConstraint(kiwi::Constraint(attribs.LeadingBorder == attribs.LeftBorder,  kmax));
-  mpSolver->addConstraint(kiwi::Constraint(attribs.LeadingBorder == attribs.RightBorder,  kmax));
-
-  mpSolver->addConstraint(kiwi::Constraint(attribs.CenterX  == (attribs.Left    + attribs.Right)  * 0.5, kmax));
-  mpSolver->addConstraint(kiwi::Constraint(attribs.CenterY  == (attribs.Top     + attribs.Bottom) * 0.5, kmax));
-
-  mpSolver->addConstraint(kiwi::Constraint(attribs.Width    == attribs.Right    - attribs.Left, kmax));
-  mpSolver->addConstraint(kiwi::Constraint(attribs.Height   == attribs.Bottom   - attribs.Top,  kmax));
-
-  mpSolver->addConstraint(kiwi::Constraint(attribs.LeftBorder    == attribs.Left   - attribs.BorderLeft,   kmax));
-  mpSolver->addConstraint(kiwi::Constraint(attribs.RightBorder   == attribs.Right  + attribs.BorderRight,  kmax));
-  mpSolver->addConstraint(kiwi::Constraint(attribs.TopBorder     == attribs.Top    - attribs.BorderTop,    kmax));
-  mpSolver->addConstraint(kiwi::Constraint(attribs.BottomBorder  == attribs.Bottom + attribs.BorderBottom, kmax));
-
 }
 
 void nuiWidget::EnableAutoLayout(bool set)
@@ -6582,18 +6587,38 @@ void nuiWidget::EnableAutoLayout(bool set)
 
   if (set)
   {
-    const double kmax = std::numeric_limits<double>::max();
-    const double kmin = std::numeric_limits<double>::min();
+    const double kmax = kiwi::strength::required - 1;
+    const double kmin = 0;
     nuiWidget::LayoutAttributes attribs(GetLayoutAttributes());
     GetSolver();
 
     // Add some rules for the container (we don't need all the same ones that the children need
-    mpSolver->addEditVariable(attribs.Left, kmax);
-    mpSolver->addEditVariable(attribs.Right, kmax);
-    mpSolver->addEditVariable(attribs.Top, kmax);
-    mpSolver->addEditVariable(attribs.Bottom, kmax);
-    mpSolver->addEditVariable(attribs.Width, kmax);
-    mpSolver->addEditVariable(attribs.Height, kmax);
+    // Add infinitely strong links for unbreakable relations:
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Leading == attribs.Left));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Trailing == attribs.Right));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.LeadingBorder == attribs.LeftBorder));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.TrailingBorder == attribs.RightBorder));
+
+    mpSolver->addConstraint(kiwi::Constraint(attribs.CenterX  == attribs.Width  * 0.5));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.CenterY  == attribs.Height * 0.5));
+
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Left == 0));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Top == 0));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Right    == attribs.ContentsWidth));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Bottom   == attribs.ContentsHeight));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Width    == attribs.ContentsWidth));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Height   == attribs.ContentsHeight));
+
+    mpSolver->addConstraint(kiwi::Constraint(attribs.LeftBorder    == attribs.Left   - attribs.BorderLeft));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.RightBorder   == attribs.Right  + attribs.BorderRight));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.TopBorder     == attribs.Top    - attribs.BorderTop));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.BottomBorder  == attribs.Bottom + attribs.BorderBottom));
+
+    // Fix those once and for all:
+//    mpSolver->addEditVariable(attribs.Right, kmax);
+//    mpSolver->addEditVariable(attribs.Bottom, kmax);
+//    mpSolver->addEditVariable(attribs.Width, kmax);
+//    mpSolver->addEditVariable(attribs.Height, kmax);
 
     mpSolver->addEditVariable(attribs.ContentsWidth, kmax);
     mpSolver->addEditVariable(attribs.ContentsHeight, kmax);
@@ -6601,33 +6626,23 @@ void nuiWidget::EnableAutoLayout(bool set)
     mpSolver->addEditVariable(attribs.BorderRight, kmax);
     mpSolver->addEditVariable(attribs.BorderTop, kmax);
     mpSolver->addEditVariable(attribs.BorderBottom, kmax);
-
-    // Add infinitely strong links for unbreakable relations:
-    mpSolver->addConstraint(kiwi::Constraint(attribs.Leading == attribs.Left,  kmax));
-    mpSolver->addConstraint(kiwi::Constraint(attribs.Leading == attribs.Right,  kmax));
-    mpSolver->addConstraint(kiwi::Constraint(attribs.LeadingBorder == attribs.LeftBorder,  kmax));
-    mpSolver->addConstraint(kiwi::Constraint(attribs.LeadingBorder == attribs.RightBorder,  kmax));
-
-    mpSolver->addConstraint(kiwi::Constraint(attribs.CenterX  == (attribs.Left    + attribs.Right)  * 0.5, kmax));
-    mpSolver->addConstraint(kiwi::Constraint(attribs.CenterY  == (attribs.Top     + attribs.Bottom) * 0.5, kmax));
-
-    mpSolver->addConstraint(kiwi::Constraint(attribs.Width    == attribs.Right    - attribs.Left, kmax));
-    mpSolver->addConstraint(kiwi::Constraint(attribs.Height   == attribs.Bottom   - attribs.Top,  kmax));
-
-    mpSolver->addConstraint(kiwi::Constraint(attribs.LeftBorder    == attribs.Left   - attribs.BorderLeft,   kmax));
-    mpSolver->addConstraint(kiwi::Constraint(attribs.RightBorder   == attribs.Right  + attribs.BorderRight,  kmax));
-    mpSolver->addConstraint(kiwi::Constraint(attribs.TopBorder     == attribs.Top    - attribs.BorderTop,    kmax));
-    mpSolver->addConstraint(kiwi::Constraint(attribs.BottomBorder  == attribs.Bottom + attribs.BorderBottom, kmax));
-
-    // Fix those once and for all:
+    
     mpSolver->suggestValue(attribs.BorderLeft, 0);
     mpSolver->suggestValue(attribs.BorderRight, 0);
     mpSolver->suggestValue(attribs.BorderTop, 0);
     mpSolver->suggestValue(attribs.BorderBottom, 0);
-    mpSolver->suggestValue(attribs.Left, 0);
-    mpSolver->suggestValue(attribs.Top, 0);
 
-    mpSolver->dump();
+    // Prepare the solver for every child widget:
+    {
+      IteratorPtr pIt;
+      for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        pItem->AddLayoutRules(*mpSolver);
+
+      }
+      delete pIt;
+    }
   }
   else
   {
@@ -6650,5 +6665,12 @@ void nuiWidget::ComputeAutoLayout()
   mpSolver->updateVariables();
 
   mpSolver->dump();
+//  NGL_OUT("\nw = %f  h = %f [%f %f] (%f %f %f %f)\n",
+//          attribs.Width.value(), attribs.Height.value(),
+//          attribs.ContentsWidth.value(), attribs.ContentsHeight.value(),
+//          attribs.Left.value(), attribs.Top.value(),
+//          attribs.Right.value(), attribs.Bottom.value()
+//          );
+
 }
 
