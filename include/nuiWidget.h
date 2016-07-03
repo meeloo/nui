@@ -852,6 +852,7 @@ public:
   NUI_GETSETDO(bool, ForceNoDrawToLayer, BroadcastForceNoDrawToLayer());
 
   kiwi::Solver& GetSolver();
+  void EnableAutoLayout(bool set);
   nuiWidget::LayoutAttributes& GetLayoutAttributes();
 
 protected:
@@ -1046,9 +1047,7 @@ protected:
   kiwi::Solver* mpSolver = nullptr;
   nuiWidget::LayoutAttributes* mpLayoutAttributes = nullptr;
 
-  void EnableAutoLayout();
   void PrepareAutoLayout(kiwi::Solver& solver);
-  void ApplyAutoLayout();
   void AddLayoutRules(kiwi::Solver& solver);
   void ComputeAutoLayout();
 };
