@@ -6626,6 +6626,8 @@ void nuiWidget::EnableAutoLayout(bool set)
     mpSolver->suggestValue(attribs.BorderBottom, 0);
     mpSolver->suggestValue(attribs.Left, 0);
     mpSolver->suggestValue(attribs.Top, 0);
+
+    mpSolver->dump();
   }
   else
   {
