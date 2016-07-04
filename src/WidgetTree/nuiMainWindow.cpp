@@ -262,8 +262,10 @@ nuiSize nuiMainWindow::GetStatusBarSize() const
 
 void nuiMainWindow::Paint()
 {
+#ifdef _UIKIT_
   if (!App->IsActive()) // Only repaint if the application is active!
     return;
+#endif
   
   if (!IsPaintEnabled())
     return;
@@ -354,8 +356,10 @@ static float Gx = 0;
 
 void nuiMainWindow::Paint()
 {
+#ifdef _UIKIT_
   if (!App->IsActive()) // Only repaint if the application is active!
     return;
+#endif
 
   if (!IsPaintEnabled())
     return;
@@ -724,8 +728,10 @@ bool nuiMainWindow::DBG_GetMouseOverInfo()
 
 void nuiMainWindow::InvalidateTimer(const nuiEvent& rEvent)
 {
+#ifdef _UIKIT_
   if (!App->IsActive()) // Only repaint if the application is active!
     return;
+#endif
   
   NGL_OUT("New Frame %d %p------------------------------------\n", mTotalFrames, this);
   
