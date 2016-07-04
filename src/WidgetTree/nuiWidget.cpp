@@ -166,25 +166,6 @@ bool nuiWidget::AttrIsVisible()
 
 void nuiWidget::InitAttributes()
 {
-  kiwi::Solver solver;
-  kiwi::Variable x("X");
-  kiwi::Variable y("Y");
-  kiwi::Variable z("Z");
-
-  kiwi::ErrorType e1 = solver.addEditVariable(x, 100);
-  kiwi::ErrorType e2 = solver.suggestValue(x, 20);
-  kiwi::ErrorType e3 = solver.addEditVariable(z, 10);
-  kiwi::ErrorType e4 = solver.suggestValue(z, 50);
-//  solver.addConstraint(x == 20);
-  kiwi::ErrorType e5 = solver.addConstraint((x * 0.5 + 2) - (z * 3) <= y + 10);
-  kiwi::ErrorType e6 = solver.addConstraint(z >= y);
-  solver.updateVariables();
-  solver.dump();
-
-  NGL_OUT("SizeOf kiwi::Variable = %d\n", sizeof(x));
-
-  NGL_OUT("x = %f / y = %f / z = %f\n", x.value(), y.value(), z.value());
-
   AddAttribute(new nuiAttribute<bool>
     (nglString("Enabled"), nuiUnitBoolean,
      nuiMakeDelegate(this, &nuiWidget::AttrIsEnabled),
@@ -4286,6 +4267,12 @@ bool nuiWidget::AddChild(nuiWidgetPtr pChild)
 
   pChild->SetParent(this);
   ChildAdded(this, pChild);
+
+  if (mpSolver)
+  {
+    pChild->AddLayoutRules(*mpSolver);
+  }
+
   Invalidate();
   InvalidateLayout();
 
@@ -5804,16 +5791,50 @@ bool nuiWidget::SetRect(const nuiRect& rRect)
 {
   SetSelfRect(rRect);
   nuiRect rect(rRect.Size());
-  IteratorPtr pIt;
-  for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+  if (mpSolver)
   {
-    nuiWidgetPtr pItem = pIt->GetWidget();
-    if (mCanRespectConstraint)
-      pItem->SetLayoutConstraint(mConstraint);
-    pItem->GetIdealRect();
-    pItem->SetLayout(rect);
+    // first prepare auto layout:
+    {
+      IteratorPtr pIt;
+      for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        if (mCanRespectConstraint)
+          pItem->SetLayoutConstraint(mConstraint);
+        pItem->PrepareAutoLayout(*mpSolver);
+      }
+      delete pIt;
+    }
+
+    // Actually run the solver:
+    ComputeAutoLayout();
+
+    // then Apply the auto layout results:
+    {
+      IteratorPtr pIt;
+      for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        nuiWidget::LayoutAttributes attribs(pItem->GetLayoutAttributes());
+        nuiRect rect((float)attribs.Left.value(), (float)attribs.Top.value(), (float)attribs.Right.value(), (float)attribs.Bottom.value(), false);
+        pItem->SetLayout(rect);
+      }
+      delete pIt;
+    }
+
   }
-  delete pIt;
+  else
+  {
+    IteratorPtr pIt;
+    for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+    {
+      nuiWidgetPtr pItem = pIt->GetWidget();
+      if (mCanRespectConstraint)
+        pItem->SetLayoutConstraint(mConstraint);
+      pItem->GetIdealRect();
+      pItem->SetLayout(rect);
+    }
+  }
 
   DebugRefreshInfo();
   return true;
@@ -6445,52 +6466,196 @@ static const char* nuiGetLayoutAttributeName(nuiWidget::LayoutAttribute attribut
   return names[attribute];
 }
 
-kiwi::Variable nuiWidget::GetLayoutVariable(nuiWidgetPtr child, nuiWidget::LayoutAttribute attribute)
+
+
+nuiWidget::LayoutAttributes::LayoutAttributes(nuiWidget* pWidget)
+: mpWidget(pWidget)
 {
-  auto it = mLayoutVariables.find(child);
-  if (mLayoutVariables.end() != it)
-  {
-    auto ChildAttribs = it->second;
-    auto it2 = ChildAttribs.find(attribute);
-    if (ChildAttribs.end() != it2)
-    {
-      return it2->second;
-    }
-  }
-
-  auto var = kiwi::Variable(nuiGetLayoutAttributeName(attribute), new nuiLayoutVariableContext(child, attribute));
-  mLayoutVariables[child].insert(std::make_pair(attribute, var));
-
-  return var;
+  CreateVariables();
+  
 }
 
-kiwi::Variable nuiWidget::GetLayoutVariable(nuiWidgetPtr child, const nglString& rName)
+void nuiWidget::LayoutAttributes::CreateVariables()
 {
-  auto it = mLayoutNamedVariables.find(child);
-  if (mLayoutNamedVariables.end() != it)
+  nglString basename(mpWidget->GetObjectName());
+  for (int i = 0; i < nuiWidget::LayoutAttribute_Attribute; i++)
   {
-    auto ChildAttribs = it->second;
-    auto it2 = ChildAttribs.find(rName);
-    if (ChildAttribs.end() != it2)
-    {
-      return it2->second;
-    }
+    nglString name(basename);
+    name.Add(".").Add(nuiGetLayoutAttributeName((nuiWidget::LayoutAttribute)i));
+    attributes[i] = kiwi::Variable(name.GetStdString(), new nuiLayoutVariableContext(mpWidget, (nuiWidget::LayoutAttribute)i));
   }
-
-  auto var = kiwi::Variable(rName.GetStdString(), new nuiLayoutVariableContext(child, rName));
-  mLayoutNamedVariables[child].insert(std::make_pair(rName, var));
-
-  return var;
+  BorderLeft.setName((basename + ".BorderLeft").GetStdString());
+  BorderRight.setName((basename + ".BorderRight").GetStdString());
+  BorderTop.setName((basename + ".BorderTop").GetStdString());
+  BorderBottom.setName((basename + ".BorderBottom").GetStdString());
 }
 
-
-
-void nuiWidget::DeleteLayoutVariablesForWidget(nuiWidgetPtr child)
+void nuiWidget::LayoutAttributes::UpdateVariablesNames()
 {
-  auto it = mLayoutVariables.find(child);
-  if (it == mLayoutVariables.end())
+  nglString basename(mpWidget->GetObjectName());
+  for (int i = 0; i < nuiWidget::LayoutAttribute_Attribute; i++)
+  {
+    nglString name(basename);
+    name.Add(".").Add(nuiGetLayoutAttributeName((nuiWidget::LayoutAttribute)i));
+    attributes[i].setName(name.GetStdString());
+  }
+  BorderLeft.setName((basename + ".BorderLeft").GetStdString());
+  BorderRight.setName((basename + ".BorderRight").GetStdString());
+  BorderTop.setName((basename + ".BorderTop").GetStdString());
+  BorderBottom.setName((basename + ".BorderBottom").GetStdString());
+}
+
+nuiWidget::LayoutAttributes& nuiWidget::GetLayoutAttributes()
+{
+  if (!mpLayoutAttributes)
+  {
+    mpLayoutAttributes = new LayoutAttributes(this);
+  }
+
+  return *mpLayoutAttributes;
+}
+
+void nuiWidget::PrepareAutoLayout(kiwi::Solver& solver)
+{
+  if (!mpLayoutAttributes)
     return;
 
-  mLayoutVariables.erase(it);
+  LayoutAttributes& attribs(GetLayoutAttributes());
+
+  nuiRect ideal(GetIdealRect());
+  solver.suggestValue(attribs.ContentsWidth, ideal.GetWidth());
+  solver.suggestValue(attribs.ContentsHeight, ideal.GetHeight());
+  solver.suggestValue(attribs.LeftBorder, GetBorderLeft());
+  solver.suggestValue(attribs.RightBorder, GetBorderRight());
+  solver.suggestValue(attribs.TopBorder, GetBorderTop());
+  solver.suggestValue(attribs.BottomBorder, GetBorderBottom());
+}
+
+void nuiWidget::AddLayoutRules(kiwi::Solver& solver)
+{
+  const double kmax = kiwi::strength::required - 1;
+  LayoutAttributes& attribs(GetLayoutAttributes());
+
+  // Add infinitely strong links for unbreakable relations:
+  solver.addConstraint(kiwi::Constraint(attribs.Leading == attribs.Left));
+  solver.addConstraint(kiwi::Constraint(attribs.Trailing == attribs.Right));
+  solver.addConstraint(kiwi::Constraint(attribs.LeadingBorder == attribs.LeftBorder));
+  solver.addConstraint(kiwi::Constraint(attribs.TrailingBorder == attribs.RightBorder));
+
+  solver.addConstraint(kiwi::Constraint(attribs.CenterX  == (attribs.Left    + attribs.Right)  * 0.5));
+  solver.addConstraint(kiwi::Constraint(attribs.CenterY  == (attribs.Top     + attribs.Bottom) * 0.5));
+
+  solver.addConstraint(kiwi::Constraint(attribs.Width    == attribs.Right    - attribs.Left));
+  solver.addConstraint(kiwi::Constraint(attribs.Height   == attribs.Bottom   - attribs.Top));
+
+  solver.addConstraint(kiwi::Constraint(attribs.LeftBorder    == attribs.Left   - attribs.BorderLeft));
+  solver.addConstraint(kiwi::Constraint(attribs.RightBorder   == attribs.Right  + attribs.BorderRight));
+  solver.addConstraint(kiwi::Constraint(attribs.TopBorder     == attribs.Top    - attribs.BorderTop));
+  solver.addConstraint(kiwi::Constraint(attribs.BottomBorder  == attribs.Bottom + attribs.BorderBottom));
+
+  // Try to make default constraints respect the contents size:
+  solver.addConstraint(kiwi::Constraint(attribs.Width == attribs.ContentsWidth, kiwi::strength::weak));
+  solver.addConstraint(kiwi::Constraint(attribs.Height == attribs.ContentsHeight, kiwi::strength::weak));
+
+  solver.addEditVariable(attribs.ContentsWidth, kmax);
+  solver.addEditVariable(attribs.ContentsHeight, kmax);
+  solver.addEditVariable(attribs.BorderLeft, kmax);
+  solver.addEditVariable(attribs.BorderRight, kmax);
+  solver.addEditVariable(attribs.BorderTop, kmax);
+  solver.addEditVariable(attribs.BorderBottom, kmax);
+}
+
+void nuiWidget::EnableAutoLayout(bool set)
+{
+  if (set == (mpSolver != nullptr))
+    return;
+
+  if (set)
+  {
+    const double kmax = kiwi::strength::required - 1;
+    const double kmin = 0;
+    nuiWidget::LayoutAttributes attribs(GetLayoutAttributes());
+    GetSolver();
+
+    // Add some rules for the container (we don't need all the same ones that the children need
+    // Add infinitely strong links for unbreakable relations:
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Leading == attribs.Left));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Trailing == attribs.Right));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.LeadingBorder == attribs.LeftBorder));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.TrailingBorder == attribs.RightBorder));
+
+    mpSolver->addConstraint(kiwi::Constraint(attribs.CenterX  == attribs.Width  * 0.5));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.CenterY  == attribs.Height * 0.5));
+
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Left == 0));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Top == 0));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Right    == attribs.ContentsWidth));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Bottom   == attribs.ContentsHeight));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Width    == attribs.ContentsWidth));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.Height   == attribs.ContentsHeight));
+
+    mpSolver->addConstraint(kiwi::Constraint(attribs.LeftBorder    == attribs.Left   - attribs.BorderLeft));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.RightBorder   == attribs.Right  + attribs.BorderRight));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.TopBorder     == attribs.Top    - attribs.BorderTop));
+    mpSolver->addConstraint(kiwi::Constraint(attribs.BottomBorder  == attribs.Bottom + attribs.BorderBottom));
+
+    // Fix those once and for all:
+//    mpSolver->addEditVariable(attribs.Right, kmax);
+//    mpSolver->addEditVariable(attribs.Bottom, kmax);
+//    mpSolver->addEditVariable(attribs.Width, kmax);
+//    mpSolver->addEditVariable(attribs.Height, kmax);
+
+    mpSolver->addEditVariable(attribs.ContentsWidth, kmax);
+    mpSolver->addEditVariable(attribs.ContentsHeight, kmax);
+    mpSolver->addEditVariable(attribs.BorderLeft, kmax);
+    mpSolver->addEditVariable(attribs.BorderRight, kmax);
+    mpSolver->addEditVariable(attribs.BorderTop, kmax);
+    mpSolver->addEditVariable(attribs.BorderBottom, kmax);
+    
+    mpSolver->suggestValue(attribs.BorderLeft, 0);
+    mpSolver->suggestValue(attribs.BorderRight, 0);
+    mpSolver->suggestValue(attribs.BorderTop, 0);
+    mpSolver->suggestValue(attribs.BorderBottom, 0);
+
+    // Prepare the solver for every child widget:
+    {
+      IteratorPtr pIt;
+      for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
+      {
+        nuiWidgetPtr pItem = pIt->GetWidget();
+        pItem->AddLayoutRules(*mpSolver);
+
+      }
+      delete pIt;
+    }
+  }
+  else
+  {
+    delete mpSolver;
+    mpSolver = nullptr;
+  }
+
+  InvalidateLayout();
+}
+
+void nuiWidget::ComputeAutoLayout()
+{
+  NGL_ASSERT(mpSolver != nullptr);
+  nuiWidget::LayoutAttributes attribs(GetLayoutAttributes());
+
+  nuiRect rect(mRect);
+  mpSolver->suggestValue(attribs.ContentsWidth, rect.GetWidth());
+  mpSolver->suggestValue(attribs.ContentsHeight, rect.GetHeight());
+
+  mpSolver->updateVariables();
+
+//  mpSolver->dump();
+//  NGL_OUT("\nw = %f  h = %f [%f %f] (%f %f %f %f)\n",
+//          attribs.Width.value(), attribs.Height.value(),
+//          attribs.ContentsWidth.value(), attribs.ContentsHeight.value(),
+//          attribs.Left.value(), attribs.Top.value(),
+//          attribs.Right.value(), attribs.Bottom.value()
+//          );
+
 }
 

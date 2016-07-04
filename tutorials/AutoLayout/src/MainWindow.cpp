@@ -55,6 +55,23 @@ void MainWindow::OnClose()
 void MainWindow::OnCreation()
 {
   nuiWidget* main = nuiBuilder::Build("main");
+
+  nuiWidget* label1 = main->SearchForChild("label1", true);
+  nuiWidget* label2 = main->SearchForChild("label2", true);
+
+  main->EnableAutoLayout(true);
+  auto& mainAttribs(main->GetLayoutAttributes());
+  auto& label1Attribs(label1->GetLayoutAttributes());
+  auto& label2Attribs(label2->GetLayoutAttributes());
+
+  auto& solver(main->GetSolver());
+
+  solver.addConstraint(label1Attribs.CenterX == mainAttribs.CenterX);
+  solver.addConstraint(label1Attribs.CenterY == mainAttribs.CenterY);
+
+  solver.addConstraint(label2Attribs.CenterX == label1Attribs.Right);
+  solver.addConstraint(label2Attribs.Top >= label1Attribs.Bottom);
+
   AddChild(main);
 }
 

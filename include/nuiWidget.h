@@ -103,6 +103,52 @@ public:
     LayoutAttribute_Attribute
   };
 
+  class LayoutAttributes
+  {
+  public:
+    LayoutAttributes(nuiWidget* pWidget);
+    
+    kiwi::Variable attributes[nuiWidget::LayoutAttribute_Attribute];
+
+    // Direct access:
+    kiwi::Variable& Left = attributes[nuiWidget::LayoutAttribute_Left];
+    kiwi::Variable& Right = attributes[nuiWidget::LayoutAttribute_Right];
+    kiwi::Variable& Top = attributes[nuiWidget::LayoutAttribute_Top];
+    kiwi::Variable& Bottom = attributes[nuiWidget::LayoutAttribute_Bottom];
+
+    kiwi::Variable& Leading = attributes[nuiWidget::LayoutAttribute_Leading];
+    kiwi::Variable& Trailing = attributes[nuiWidget::LayoutAttribute_Trailing];
+
+    kiwi::Variable& LeadingBorder = attributes[nuiWidget::LayoutAttribute_LeadingBorder];
+    kiwi::Variable& TrailingBorder = attributes[nuiWidget::LayoutAttribute_TrailingBorder];
+
+    kiwi::Variable& Width = attributes[nuiWidget::LayoutAttribute_Width];
+    kiwi::Variable& Height = attributes[nuiWidget::LayoutAttribute_Height];
+
+    kiwi::Variable& CenterX = attributes[nuiWidget::LayoutAttribute_CenterX];
+    kiwi::Variable& CenterY = attributes[nuiWidget::LayoutAttribute_CenterY];
+
+    kiwi::Variable& LeftBorder = attributes[nuiWidget::LayoutAttribute_LeftBorder];
+    kiwi::Variable& RightBorder = attributes[nuiWidget::LayoutAttribute_RightBorder];
+    kiwi::Variable& TopBorder = attributes[nuiWidget::LayoutAttribute_TopBorder];
+    kiwi::Variable& BottomBorder = attributes[nuiWidget::LayoutAttribute_BottomBorder];
+
+    kiwi::Variable ContentsWidth;
+    kiwi::Variable ContentsHeight;
+  private:
+    void CreateVariables();
+    void UpdateVariablesNames();
+
+    nuiWidget* mpWidget = nullptr;
+
+    kiwi::Variable BorderLeft;
+    kiwi::Variable BorderRight;
+    kiwi::Variable BorderTop;
+    kiwi::Variable BorderBottom;
+
+    friend class nuiWidget;
+  };
+
   class Iterator
   {
   public:
@@ -806,6 +852,8 @@ public:
   NUI_GETSETDO(bool, ForceNoDrawToLayer, BroadcastForceNoDrawToLayer());
 
   kiwi::Solver& GetSolver();
+  void EnableAutoLayout(bool set);
+  nuiWidget::LayoutAttributes& GetLayoutAttributes();
 
 protected:
   virtual ~nuiWidget();
@@ -997,12 +1045,11 @@ protected:
   void CallBuilt();
 
   kiwi::Solver* mpSolver = nullptr;
-  std::unordered_map<nuiWidget*, Loki::AssocVector<nuiWidget::LayoutAttribute, kiwi::Variable> > mLayoutVariables;
-  std::unordered_map<nuiWidget*, std::map<nglString, kiwi::Variable> > mLayoutNamedVariables;
+  nuiWidget::LayoutAttributes* mpLayoutAttributes = nullptr;
 
-  kiwi::Variable GetLayoutVariable(nuiWidgetPtr child, nuiWidget::LayoutAttribute attribute);
-  kiwi::Variable GetLayoutVariable(nuiWidgetPtr child, const nglString& rName);
-  void DeleteLayoutVariablesForWidget(nuiWidgetPtr child);
+  void PrepareAutoLayout(kiwi::Solver& solver);
+  void AddLayoutRules(kiwi::Solver& solver);
+  void ComputeAutoLayout();
 };
 
 #define NUI_ADD_EVENT(NAME) { AddEvent(_T(#NAME), NAME); }
