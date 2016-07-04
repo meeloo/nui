@@ -166,25 +166,6 @@ bool nuiWidget::AttrIsVisible()
 
 void nuiWidget::InitAttributes()
 {
-  kiwi::Solver solver;
-  kiwi::Variable x("X");
-  kiwi::Variable y("Y");
-  kiwi::Variable z("Z");
-
-  kiwi::ErrorType e1 = solver.addEditVariable(x, 100);
-  kiwi::ErrorType e2 = solver.suggestValue(x, 20);
-  kiwi::ErrorType e3 = solver.addEditVariable(z, 10);
-  kiwi::ErrorType e4 = solver.suggestValue(z, 50);
-//  solver.addConstraint(x == 20);
-  kiwi::ErrorType e5 = solver.addConstraint((x * 0.5 + 2) - (z * 3) <= y + 10);
-  kiwi::ErrorType e6 = solver.addConstraint(z >= y);
-  solver.updateVariables();
-  solver.dump();
-
-  NGL_OUT("SizeOf kiwi::Variable = %d\n", sizeof(x));
-
-  NGL_OUT("x = %f / y = %f / z = %f\n", x.value(), y.value(), z.value());
-
   AddAttribute(new nuiAttribute<bool>
     (nglString("Enabled"), nuiUnitBoolean,
      nuiMakeDelegate(this, &nuiWidget::AttrIsEnabled),
@@ -6572,6 +6553,10 @@ void nuiWidget::AddLayoutRules(kiwi::Solver& solver)
   solver.addConstraint(kiwi::Constraint(attribs.TopBorder     == attribs.Top    - attribs.BorderTop));
   solver.addConstraint(kiwi::Constraint(attribs.BottomBorder  == attribs.Bottom + attribs.BorderBottom));
 
+  // Try to make default constraints respect the contents size:
+  solver.addConstraint(kiwi::Constraint(attribs.Width == attribs.ContentsWidth, kiwi::strength::weak));
+  solver.addConstraint(kiwi::Constraint(attribs.Height == attribs.ContentsHeight, kiwi::strength::weak));
+
   solver.addEditVariable(attribs.ContentsWidth, kmax);
   solver.addEditVariable(attribs.ContentsHeight, kmax);
   solver.addEditVariable(attribs.BorderLeft, kmax);
@@ -6664,7 +6649,7 @@ void nuiWidget::ComputeAutoLayout()
 
   mpSolver->updateVariables();
 
-  mpSolver->dump();
+//  mpSolver->dump();
 //  NGL_OUT("\nw = %f  h = %f [%f %f] (%f %f %f %f)\n",
 //          attribs.Width.value(), attribs.Height.value(),
 //          attribs.ContentsWidth.value(), attribs.ContentsHeight.value(),

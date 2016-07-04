@@ -21,8 +21,13 @@
 // blank ending line following
 
 +nuiWidget main {
-  +nuiLabel label
+  +nuiLabel label1
   {
     Text: "Bleh is a label";
+  }
+  +nuiLabel label2
+  {
+    Text: "label2";
+    TextColor: red;
   }
 }
