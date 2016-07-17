@@ -5,65 +5,101 @@
  licence: see nui3/LICENCE.TXT
 */
 
-class nuiParser
+class nuiLexer
 {
 public:
-  nuiParser(nglIStream* pStream, const nglPath& rSourcePath);
+  enum TokenType
+  {
+    EndOfFile,
+    Symbol,
+    String,
+    Number,
+    Operator,
+    AssignementOperator,
+    OpenParent,
+    CloseParent,
+    OpenBracket,
+    CloseBracket,
+    OpenSBracket,
+    CloseSBracket,
+    Comments,
+    Blank,
+    Comma,
+    SemiColon,
+    Hash,
+    NewLine
+  };
+  
+  class Token
+  {
+  public:
+    Token(const nglString& str = nglString(), nuiLexer::TokenType type = EndOfFile)
+    : mString(str), mType(type)
+    {
+    }
 
-  bool IsDone() const; ///< Returns true if all the source data has been consumed
-  bool PeekChar(); ///< Read the next char but don't advance the read index.
-  bool NextChar(); ///< Read the next char and advance the read index.
-  nglChar GetChar() const; ///< Get the current char.
-  bool PeekString(uint32 len, nglString& rResult);
+    const char* GetTypeName() const;
+    const char* c_str() const;
 
-  bool SkipBlank(); ///< Advance the read pointer until the current char is not a blank.  Returns false if there is a problem.
-  bool SkipToNextLine(); ///< Advance the read pointer until the start of the next line.  Returns false if there is a problem.
-  bool GetQuoted(nglString& rResult); ///< Read a Quoted string. Returns false if there is a problem.
-  bool GetSymbol(nglString& rResult); ///< Read a symbol. Returns false if there is a problem.
-  bool GetValue(nglString& rResult, bool AllowBlank = false); ///< Read a value. Returns false if there is a problem.
-  bool GetFloat(float& rResult); ///< Read a float. Returns false if there is a problem.
-  bool GetFloat(double& rResult); ///< Read a float. Returns false if there is a problem.
-  bool GetInteger(uint8&  rResult, uint8 Base = 10); ///< Read an integer. Returns false if there is a problem.
-  bool GetInteger(uint16& rResult, uint8 Base = 10); ///< Read an integer. Returns false if there is a problem.
-  bool GetInteger(uint32& rResult, uint8 Base = 10); ///< Read an integer. Returns false if there is a problem.
-  bool GetInteger(uint64& rResult, uint8 Base = 10); ///< Read an integer. Returns false if there is a problem.
-  bool GetInteger(int8&   rResult, uint8 Base = 10); ///< Read an integer. Returns false if there is a problem.
-  bool GetInteger(int16&  rResult, uint8 Base = 10); ///< Read an integer. Returns false if there is a problem.
-  bool GetInteger(int32&  rResult, uint8 Base = 10); ///< Read an integer. Returns false if there is a problem.
-  bool GetInteger(int64&  rResult, uint8 Base = 10); ///< Read an integer. Returns false if there is a problem.
+    nglString mString;
+    nuiLexer::TokenType mType;
+  };
   
-  bool Expect(const nglString& rString, bool CaseSensitive = true);
-  bool Expect(nglChar ch, bool CaseSensitive = true);
-  
-  void SetError(const nglString& rError); ///< Change the error message.
-  int32 GetLine() const; ///< Return the current line number
-  int32 GetColumn() const; ///< Return the current column.
-  const nglString& GetErrorStr() const; ///< Return the error string stored in the parser.
-  
+
+  nuiLexer(const nglString& str);
+  nuiLexer(nglIStream* pStream, const nglPath& rSourcePath);
+
+  const nuiLexer::Token& NextToken();
+  const nuiLexer::Token& GetToken() const;
+
+  bool SkipBlank();
+  bool NextChar();
+  char LookAhead() const;
+
+  const nuiLexer::Token& CaptureToken(nuiLexer::TokenType type);
+  const nuiLexer::Token& ParseSymbol();
+  const nuiLexer::Token& ParseNumber();
+  const nuiLexer::Token& ParseString();
+  const nuiLexer::Token& ParseMultiLineComment();
+  const nuiLexer::Token& ParseLineComment();
+
+  bool IsDone() const; // True if we are past the last token in the input string
+  bool IsStarved() const; // True if we can no longer add to the current token because we are past the end of the input string
+  int GetLine() const;
+  int GetColumn() const;
+
+  // Config:
   void SetValidInSymbolStart(const nglString& rValidChars); ///< Set the characters that are valid as the first character of a symbol (usualy all latin letters + underscore).
   void SetValidInSymbol(const nglString& rValidChars); ///< Set the characters that are valid in a symbol (usualy all latin characters + underscore + latin numbers).
-  void SetValidInValue(const nglString& rValidChars); ///< Set the characters that are valid in a value.
   void SetValidInBlank(const nglString& rValidChars); ///< Set the characters that are considered blanks.
 
   bool IsValidInSymbolStart(nglChar c) const; ///< Returns true if the given char is valid as a symbol start
   bool IsValidInSymbol(nglChar c) const; ///< Returns true if the given char is valid in a symbol
-  bool IsValidInValue(nglChar c) const; // Returns true is the given char is valid in a value
   bool IsBlank(nglChar c) const; ///< Returns true if the given char is a blank.
   bool IsNumberDigit(nglChar c, uint32 Base = 10) const; ///< Returns true if the given char is a valid number digit for the given base.
   bool GetNumberDigit(uint8& res, nglChar c, uint32 Base) const; ///< Returns true if the given char is a valid number digit for the given base. In this case res contains the converted digit as a number.
 
-protected:
-  nglIStream* mpStream;
+
+private:
+  nglIStream* mpStream = nullptr;
   nglPath mSourcePath;
-  nglChar mChar;
-  int32 mColumn;
-  int32 mLine;
-  bool mEnableCppComments;
-  bool mError;
-  nglString mErrorString;
+
+  nglString mInput;
+  size_t mStart = 0;
+  size_t mEnd = 0;
+  nuiLexer::Token mToken;
+  char mLastChar;
+  char mChar;
+
+  int mLine = 0;
+  int mColumn = 0;
+
+  std::set<char> mOperators;
+
   std::set<nglChar> mValidInSymbolStart;
   std::set<nglChar> mValidInSymbol;
-  std::set<nglChar> mValidInValue;
   std::set<nglChar> mLineCommentStarters;
   std::set<nglChar> mBlanks;
+
 };
+

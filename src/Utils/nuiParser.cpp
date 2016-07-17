@@ -8,68 +8,399 @@
 #include "nui.h"
 
 
-//class nuiParser
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 
-nuiParser::nuiParser(nglIStream* pStream, const nglPath& rSourcePath)
+/////////// nuiLexerizer
+nuiLexer::nuiLexer(const nglString& str)
+: mInput(str)
+{
+  char operators[] =
+  {
+    '.',
+    '<',
+    '>',
+    '?',
+    ':',
+    '/',
+    '|',
+    '&',
+    '^',
+    '*',
+    '/',
+    '+',
+    '-',
+    '=',
+    '%',
+    '!',
+    '~',
+    0
+  };
+
+  for (int i = 0; operators[i]; i++)
+    mOperators.insert(operators[i]);
+
+  SetValidInSymbolStart("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_");
+  SetValidInSymbol("0123456789");
+  SetValidInBlank(" \t\r\n");
+
+  // Start streaming chars:
+  NextChar();
+}
+
+nuiLexer::nuiLexer(nglIStream* pStream, const nglPath& rSourcePath)
 {
   mpStream = pStream;
   mSourcePath = rSourcePath;
   if (mSourcePath.IsLeaf())
     mSourcePath = mSourcePath.GetParent();
-  mChar = _T(' ');
-  mColumn = 1;
-  mLine = 1;
-  
-  SetValidInValue("!@#$%<>*?'+-&~|[]{}\().,");
-  SetValidInSymbolStart("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_");
-  SetValidInSymbol("0123456789");
-  SetValidInBlank(" \t\r\n");
 }
 
-int32 nuiParser::GetLine() const
+const char* nuiLexer::Token::GetTypeName() const
 {
-  return mLine;
-}
-
-int32 nuiParser::GetColumn() const
-{
-  return mColumn;
-}
-
-const nglString& nuiParser::GetErrorStr() const
-{
-  return mErrorString;
-}
-
-bool nuiParser::PeekChar()
-{
-  nglFileOffset ofs = mpStream->GetPos();
-  bool res = NextChar();
-  mpStream->SetPos(ofs);
-  return res;
-}
-
-bool nuiParser::PeekString(uint32 len, nglString& rResult)
-{
-  nglFileOffset ofs = mpStream->GetPos();
-  rResult.Wipe();
-  while (len && NextChar())
+  switch (mType)
   {
-    rResult.Add(GetChar());
-    len--;
+    case EndOfFile:
+      return "EOF";
+    case Symbol:
+      return "Symbol";
+    case String:
+      return "String";
+    case Number:
+      return "Number";
+    case Operator:
+      return "Operator";
+    case AssignementOperator:
+      return "AssignementOperator";
+
+    case OpenParent:
+      return "OpenParent";
+    case CloseParent:
+      return "CloseParent";
+
+    case OpenBracket:
+      return "OpenBracket";
+    case CloseBracket:
+      return "CloseBracket";
+
+    case OpenSBracket:
+      return "OpenSBracket";
+    case CloseSBracket:
+      return "CloseSBracket";
+
+    case Comments:
+      return "Comments";
+
+    case Comma:
+      return "Comma";
+
+    case SemiColon:
+      return "SemiColon";
+
+
+    case Blank:
+      return "Blank";
+    case NewLine:
+      return "NewLine";
+
+    case Hash:
+      return "Hash";
   }
-  mpStream->SetPos(ofs);
-  return !len;
+
+  return "???";
+}
+
+const char* nuiLexer::Token::c_str() const
+{
+  return mString.GetChars();
+}
+
+const nuiLexer::Token& nuiLexer::NextToken()
+{
+  mToken.mString.Nullify();
+  mToken.mType = EndOfFile;
+
+  if (IsDone())
+    return CaptureToken(EndOfFile);
+
+  if (mChar == 10)
+  {
+    NextChar();
+    return CaptureToken(NewLine);
+  }
+
+  if (mChar <= ' ')
+  {
+    SkipBlank();
+    if (mStart + 1 < mEnd)
+      return CaptureToken(Blank);
+  }
+
+  if (mChar == '.')
+  {
+    if (isnumber(LookAhead()))
+      return ParseNumber();
+
+    NextChar();
+    return CaptureToken(Operator);
+  }
+  else if (mChar == '(')
+  {
+    NextChar();
+    return CaptureToken(OpenParent);
+  }
+  else if (mChar == ')')
+  {
+    NextChar();
+    return CaptureToken(CloseParent);
+  }
+  else if (mChar == '{')
+  {
+    NextChar();
+    return CaptureToken(OpenBracket);
+  }
+  else if (mChar == '}')
+  {
+    NextChar();
+    return CaptureToken(CloseBracket);
+  }
+  else if (mChar == '[')
+  {
+    NextChar();
+    return CaptureToken(OpenSBracket);
+  }
+  else if (mChar == ']')
+  {
+    NextChar();
+    return CaptureToken(CloseSBracket);
+  }
+  else if (mChar == ',')
+  {
+    NextChar();
+    return CaptureToken(Comma);
+  }
+  else if (mChar == ';')
+  {
+    NextChar();
+    return CaptureToken(SemiColon);
+  }
+  else if (mChar == '#')
+  {
+    NextChar();
+    return CaptureToken(Hash);
+  }
+  else if (IsValidInSymbolStart(mChar))
+  {
+    // Parse a Symbol
+    return ParseSymbol();
+  }
+  else if (IsNumberDigit(mChar))
+  {
+    return ParseNumber();
+  }
+  else if (mChar == '\"')
+  {
+    //  Parse string
+    ParseString();
+  }
+  else if (mChar == '/')
+  {
+    //  Parse comment?
+    if (LookAhead() == '/')
+    {
+      // Parse line comment
+      return ParseLineComment();
+    }
+    else if (LookAhead() == '*')
+    {
+      // Parse multi line comment
+      return ParseMultiLineComment();
+    }
+    else if (LookAhead() == '=')
+    {
+      NextChar();
+      NextChar();
+      return CaptureToken(AssignementOperator);
+    }
+
+    NextChar();
+    return CaptureToken(Operator);
+  }
+  else if (mChar == '=')
+  {
+    if (LookAhead() == '=')
+    {
+      NextChar();
+      return CaptureToken(Operator);
+    }
+
+    NextChar();
+    return CaptureToken(AssignementOperator);
+  }
+  else if (mChar == '*' || mChar == '+' || mChar == '-' || mChar == '&' || mChar == '|' || mChar == '^' || mChar == '%')
+  {
+    if (LookAhead() == '=')
+    {
+      NextChar();
+      NextChar();
+      return CaptureToken(AssignementOperator);
+    }
+
+    NextChar();
+    return CaptureToken(Operator);
+  }
+  else if (mOperators.find(mChar) != mOperators.end())
+  {
+    NextChar();
+    return CaptureToken(Operator);
+  }
+
+  return mToken;
+}
+
+const nuiLexer::Token& nuiLexer::ParseString()
+{
+  // Skip the "
+  NextChar();
+
+  while (mChar != '"' && !IsStarved())
+  {
+    if (!NextChar())
+      return CaptureToken(String);
+  }
+
+  // Skip the "
+  NextChar();
+
+  return CaptureToken(String);
 }
 
 
-bool nuiParser::IsDone() const
+const nuiLexer::Token& nuiLexer::ParseMultiLineComment()
 {
-  return mpStream->GetState() != eStreamReady;
+  // Skip the *
+  NextChar();
+  NextChar();
+
+  while (mChar != '*' && LookAhead() != '/' && !IsStarved())
+  {
+    if (!NextChar())
+      return CaptureToken(Comments);
+  }
+
+  // Skip the /
+  NextChar();
+  NextChar();
+
+  return CaptureToken(Comments);
 }
 
-bool nuiParser::NextChar()
+const nuiLexer::Token& nuiLexer::ParseLineComment()
 {
+  while (mChar != 10 && NextChar() && !IsStarved())
+  {
+    // Bleh!
+  }
+  return CaptureToken(Comments);
+}
+
+
+char nuiLexer::LookAhead() const
+{
+  if (IsDone())
+    return 0;
+  return mInput[mEnd];
+}
+
+
+const nuiLexer::Token& nuiLexer::ParseSymbol()
+{
+  if (!NextChar())
+    return CaptureToken(Symbol);
+
+  while (IsValidInSymbol(mChar) && !IsStarved())
+  {
+    if (!NextChar())
+      return CaptureToken(Symbol);
+  }
+
+  return CaptureToken(Symbol);
+}
+
+const nuiLexer::Token& nuiLexer::ParseNumber()
+{
+  // Crude parsing: I don't check the validity so there can be 2 decimal dots or exponent sign...
+  if (!NextChar())
+    return CaptureToken(Number);
+
+  while ((IsNumberDigit(mChar) || mChar == '.' || mChar == 'e' || mChar == 'E') && !IsStarved())
+  {
+    if (!NextChar())
+      return CaptureToken(Number);
+  }
+
+  return CaptureToken(Number);
+}
+
+
+const nuiLexer::Token& nuiLexer::CaptureToken(nuiLexer::TokenType type)
+{
+  mToken.mString = (mEnd - mStart - 1) > 0 ? mInput.Extract(mStart, mEnd - mStart - 1) : "";
+  mStart = mEnd - 1;
+  mToken.mType = type;
+
+  return mToken;
+}
+
+const nuiLexer::Token& nuiLexer::GetToken() const
+{
+  return mToken;
+}
+
+bool nuiLexer::SkipBlank()
+{
+  while (IsBlank(mChar) && NextChar() && !IsStarved())
+  {
+    // Woké
+  }
+
+  return !IsDone();
+}
+
+bool nuiLexer::IsDone() const
+{
+  return mpStream ? (mpStream->GetState() != eStreamReady) : (mStart >= mInput.GetLength());
+}
+
+bool nuiLexer::IsStarved() const
+{
+  return mpStream ? (mpStream->GetState() != eStreamReady) : (mEnd >= mInput.GetLength());
+}
+
+
+bool nuiLexer::NextChar()
+{
+  if (!mpStream)
+  {
+    if (IsDone())
+      return false;
+
+    bool lastCharOrOverflow = mEnd >= mInput.GetLength();
+
+    mLastChar = mChar;
+    mChar = lastCharOrOverflow ? '\0' : mInput[mEnd];
+    mEnd++;
+    mColumn++;
+
+    if (mChar == '\n')
+    {
+      mLine++;
+      mColumn = 0;
+    }
+    return !IsDone();
+  }
+
+  // We are handling a stream:
   nglChar previous = mChar;
   // Parse an utf-8 char sequence:
   uint8 c = 0;
@@ -115,7 +446,7 @@ bool nuiParser::NextChar()
       mChar = c & ~0xC0;
       count = 1;
     }
-    
+
     for (uint32 i = 0; i < count; i++)
     {
       if (1 != mpStream->ReadUInt8(&c, 1))
@@ -124,359 +455,67 @@ bool nuiParser::NextChar()
       mChar |= c & 0x3F;
     }
   }
-  
+
   if ((mChar == 0xa && previous != 0xd) || (mChar == 0xd && previous != 0xa) )
   {
     mColumn = 1;
     mLine++;
   }
-  
+
   //wprintf("%lc", mChar);
-  
-  return true;
-}
 
-nglChar nuiParser::GetChar() const
-{
-  return mChar;
-}
-
-bool nuiParser::IsBlank(nglChar c) const
-{
-  return mBlanks.find(c) != mBlanks.end();
-}
-
-bool nuiParser::SkipBlank()
-{
-  bool res = true;
-  while ((IsBlank(mChar) || mChar == '/') && res) 
-  {
-    if (mChar == '/') // Is this a comment?
-    {
-      res = PeekChar();
-      
-      if (!res)
-        return false;
-      
-      if (mChar == '/')
-      {
-        res = NextChar();
-        // Skip to the end of the line:
-        res = NextChar();
-        while (res && mChar != 0xa && mChar != 0xd)
-        {
-          res = NextChar();
-        }
-      }
-    }
-    
-    res = NextChar();
-  }
-  return res;
-}
-
-bool nuiParser::SkipToNextLine()
-{
-  bool res = NextChar();
-  if (!res)
-    return false;
-  // Skip to the end of the line:
-  while (res && mChar != 0xa && mChar != 0xd)
-    res = NextChar();
-  return res;
-}
-
-
-bool nuiParser::GetQuoted(nglString& rResult)
-{
-  if (!SkipBlank())
-    return false;
-  
-  if (mChar != _T('\"'))
-    return false;
-  
-  while (GetChar() && mChar != _T('\"'))
-  {
-    if (mChar == _T('\\'))
-    {
-      if (!GetChar())
-        return false;
-      
-      if (mChar != _T('\"'))
-        return false;
-      
-    }
-    
-    rResult.Add(mChar);
-  }
-  
-  NextChar();
-  return true;
-}
-
-bool nuiParser::GetSymbol(nglString& rResult)
-{
-  rResult.Nullify();
-  if (!SkipBlank())
-    return false;
-  
-  if (!IsValidInSymbolStart(mChar))
-    return false;
-  rResult.Add(mChar);
-  
-  if (!NextChar())
-    return false;
-  
-  while (IsValidInSymbol(mChar))
-  {
-    rResult.Add(mChar);
-    if (!NextChar())
-      return false;
-  }
-  
-  return !rResult.IsEmpty();
-}
-
-bool nuiParser::GetValue(nglString& rResult, bool AllowBlank)
-{
-  rResult.Nullify();
-  if (!SkipBlank())
-    return false;
-  
-  while ((AllowBlank && IsBlank(mChar)) || IsValidInValue(mChar))
-  {
-    rResult.Add(mChar);
-    NextChar();
-  }
-  
-  return true;
-}
-
-void nuiParser::SetError(const nglString& rError)
-{
-  mErrorString = rError;
-  mError = true;
-}
-
-bool nuiParser::GetFloat(float& rResult)
-{
-  double r;
-  bool res = GetFloat(r);
-  rResult = r;
-  return res;
-}
-
-bool nuiParser::GetFloat(double& rResult)
-{
-  bool neg = false;
-  double value = 0;
-  //  bool dotfound = false;
-  
-  if (mChar == '-')
-  {
-    neg = true;
-    if (!NextChar())
-      return false;
-  }
-  
-  uint8 c = 0;
-  if (!GetNumberDigit(c, mChar, 10))
-    return false;
-  while (mChar && c <= 9)
-  {
-    value = value * 10 + c;
-    if (!NextChar())
-      return false;
-    if (!GetNumberDigit(c, mChar, 10))
-      return false;
-  }
-  
-  // Read decimal dot:
-  if (mChar == '.')
-  {
-    if (!NextChar())
-      return false;
-    double count = 1, v = 0;
-    if (!GetNumberDigit(c, mChar, 10))
-      return false;
-    while (mChar && c <= 9) // Read decimal part:
-    {
-      v = v * 10 + c;
-      count *= 10;
-      if (!NextChar())
-        return false;
-      if (!GetNumberDigit(c, mChar, 10))
-        return false;
-    }
-    
-    if (count)
-    {
-      value += v / count;
-    }
-  }
-  
-  if (mChar == 'e' || mChar == 'E')
-  {
-    if (!NextChar())
-      return false;
-    int32 exponent;
-    if (!GetInteger(exponent, 10))
-      return false;
-    value *= pow(10.0, exponent);
-  }
-  
-  return neg ? -value : value;
-  
-}
-
-
-bool nuiParser::GetInteger(uint8&  rResult, uint8 Base)
-{
-  uint64 r;
-  bool res = GetInteger(r, Base);
-  rResult = r;
-  return res && (r < (1 << 8));
-}
-
-bool nuiParser::GetInteger(uint16& rResult, uint8 Base)
-{
-  uint64 r;
-  bool res = GetInteger(r, Base);
-  rResult = r;
-  return res && (r < (1 << 16));
-}
-
-bool nuiParser::GetInteger(uint32& rResult, uint8 Base)
-{
-  uint64 r;
-  bool res = GetInteger(r, Base);
-  rResult = r;
-  bool res2 = r == rResult;
-  return res && res2;
-}
-
-bool nuiParser::GetInteger(uint64& rResult, uint8 Base)
-{
-  uint64 old = 0;
-  rResult = 0;
-  uint8 digit = 0;
-  
-  while (GetNumberDigit(digit, mChar, Base))
-  {
-    rResult *= Base;
-    old = rResult;
-    rResult += digit;
-    
-    if ((rResult - digit) != old)
-      return false;
-    
-    if (!NextChar())
-      return false;
-  }
-  return true;
-}
-
-bool nuiParser::GetInteger(int8&  rResult, uint8 Base)
-{
-  uint64 r;
-  bool res = GetInteger(r, Base);
-  rResult = r;
-  return res && (r < (1 << 8));
-}
-
-bool nuiParser::GetInteger(int16& rResult, uint8 Base)
-{
-  uint64 r;
-  bool res = GetInteger(r, Base);
-  rResult = r;
-  return res && (r < (1 << 16));
-}
-
-bool nuiParser::GetInteger(int32& rResult, uint8 Base)
-{
-  uint64 r;
-  bool res = GetInteger(r, Base);
-  rResult = r;
-  return res && (r < (1LL << 32));
-}
-
-bool nuiParser::GetInteger(int64& rResult, uint8 Base)
-{
-  int64 old = 0;
-  rResult = 0;
-  uint8 digit = 0;
-  bool neg = false;
-  if (mChar == '-')
-  {
-    neg = true;
-    NextChar();
-  }
-  
-  while (GetNumberDigit(digit, mChar, Base))
-  {
-    rResult *= Base;
-    rResult += digit;
-    
-    if ((rResult - digit) != (old * Base))
-      return false;
-  }
-  
-  if (neg)
-    rResult = -rResult;
   return true;
 }
 
 
-void nuiParser::SetValidInSymbolStart(const nglString& rValidChars)
+int nuiLexer::GetLine() const
+{
+  return mLine;
+}
+
+int nuiLexer::GetColumn() const
+{
+  return mColumn;
+}
+
+
+void nuiLexer::SetValidInSymbolStart(const nglString& rValidChars)
 {
   for (uint32 i = 0; i < rValidChars.GetLength(); i++)
     mValidInSymbolStart.insert(rValidChars[i]);
 }
 
-void nuiParser::SetValidInSymbol(const nglString& rValidChars)
+void nuiLexer::SetValidInSymbol(const nglString& rValidChars)
 {
   for (uint32 i = 0; i < rValidChars.GetLength(); i++)
     mValidInSymbol.insert(rValidChars[i]);
 }
 
-void nuiParser::SetValidInValue(const nglString& rValidChars)
-{
-  for (uint32 i = 0; i < rValidChars.GetLength(); i++)
-    mValidInValue.insert(rValidChars[i]);
-}
-
-bool nuiParser::IsValidInValue(nglChar c) const
-{
-  if (mValidInValue.find(c) != mValidInValue.end())
-    return true;
-  return IsValidInSymbol(c);
-}
-
-void nuiParser::SetValidInBlank(const nglString& rValidChars)
+void nuiLexer::SetValidInBlank(const nglString& rValidChars)
 {
   for (uint32 i = 0; i < rValidChars.GetLength(); i++)
     mBlanks.insert(rValidChars[i]);
 }
 
-bool nuiParser::IsValidInSymbolStart(nglChar c) const
+bool nuiLexer::IsValidInSymbolStart(nglChar c) const
 {
   return (mValidInSymbolStart.find(c) != mValidInSymbolStart.end());
 }
 
-bool nuiParser::IsValidInSymbol(nglChar c) const
+bool nuiLexer::IsValidInSymbol(nglChar c) const
 {
   if (mValidInSymbol.find(c) != mValidInSymbol.end())
     return true;
   return IsValidInSymbolStart(c);
 }
 
-bool nuiParser::IsNumberDigit(nglChar c, uint32 Base) const
+bool nuiLexer::IsNumberDigit(nglChar c, uint32 Base) const
 {
   uint8 d = 0;
   return GetNumberDigit(d, c, Base);
 }
 
-bool nuiParser::GetNumberDigit(uint8& res, nglChar c, uint32 Base) const
+bool nuiLexer::GetNumberDigit(uint8& res, nglChar c, uint32 Base) const
 {
   if (c >= '0' && c <= '9')
     c -= '0';
@@ -494,31 +533,3 @@ bool nuiParser::GetNumberDigit(uint8& res, nglChar c, uint32 Base) const
   return res < Base;
 }
 
-bool nuiParser::Expect(const nglString& rString, bool CaseSensitive)
-{
-  nglString tmp;
-  if (!PeekString(rString.GetLength(), tmp))
-    return false;
-  return tmp.Compare(rString, CaseSensitive);
-}
-
-bool nuiParser::Expect(nglChar ch, bool CaseSensitive)
-{
-  if (CaseSensitive)
-  {
-    if (GetChar() == ch)
-    {
-      NextChar();
-      return true;
-    }
-  }
-  else
-  {
-    if (tolower(GetChar()) == tolower(ch))
-    {
-      NextChar();
-      return true;
-    }
-  }
-  return false;
-}
