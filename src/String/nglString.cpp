@@ -543,15 +543,15 @@ nglString::~nglString()
 {
 }
 
-int32 nglString::GetLength() const
+size_t nglString::GetLength() const
 {
   return (int32)mString.size();
 }
 
-int32 nglString::GetULength() const
+size_t nglString::GetULength() const
 {
-  int32 len = 0;
-  int32 l = 1;
+  size_t len = 0;
+  size_t l = 1;
   while (l > 0)
   {
     l = GetNextUChar(len);
@@ -569,7 +569,7 @@ bool nglString::IsNull() const
   return mIsNull;
 }
 
-nglChar nglString::GetChar(uint32 Index) const
+nglChar nglString::GetChar(size_t Index) const
 {
   if (IsEmpty())
     return 0;
@@ -580,21 +580,20 @@ nglChar nglString::GetLastChar() const
 {
   if (IsEmpty())
     return 0;
-  return mString[(uint32)GetLength()-1];
+  return mString[GetLength()-1];
 }
 
-nglUChar nglString::GetUChar(uint32 Index) const
+nglUChar nglString::GetUChar(size_t Index) const
 {
-  int32 i = Index;
-  return GetNextUChar(i);
+  return GetNextUChar(Index);
 }
 
-nglUChar nglString::GetNextUChar(int32& Index) const
+nglUChar nglString::GetNextUChar(size_t& Index) const
 {
   if (IsEmpty())
     return 0;
 
-  int32 len = GetLength();
+  size_t len = GetLength();
   nglUChar UChar = 0;
   nglChar previous = 0;
   // Parse an utf-8 char sequence:
@@ -3021,32 +3020,14 @@ bool operator>=(const nglUChar Left, const nglString& rRight)     { nglString tm
 bool operator>=(const nglChar* pLeft, const nglString& rRight)   { _OP_(rRight, pLeft) }
 #undef _OP_
 
-nglChar nglString::operator[](uint32 Index) const
+nglChar  nglString::operator[](size_t Index) const
 {
-//#ifdef _DEBUG_
-//	if ((Index < 0) || ((int32)Index >= GetLength())) return Zero;
-//	return mString[Index];
-//#else
-//	// Relaxed checking, still buffer overflow safe
-//	return (Index >= 0 && (int32)Index < (int32)mString.size()) ? mString[Index] : Zero;
-//#endif // _DEBUG_
-	return mString[Index];
+  return mString[Index];
 }
 
-// Array access
-nglChar& nglString::operator[](uint32 Index)
+nglChar& nglString::operator[](size_t Index)
 {
-	return mString[Index];
-}
-
-nglChar  nglString::operator[](int32 Index) const
-{
-	return mString[Index];
-}
-
-nglChar& nglString::operator[](int32 Index)
-{
-	return mString[Index];
+  return mString[Index];
 }
 
 bool nglCompareStrings(const nglString& rLeft, const nglString& rRight)

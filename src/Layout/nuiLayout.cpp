@@ -125,14 +125,14 @@ void nuiLayoutConstraint::SetFree()
 
 bool nuiLayoutConstraint::Set(const nglString& rDescription)
 {
-  int index = 0;
+  size_t index = 0;
   nglUChar c = rDescription.GetNextUChar(index);
 
   if (c == '[')
   {
     // Fix start + ?
-    int pos = index;
-    int end = index;
+    size_t pos = index;
+    size_t end = index;
     c = rDescription.GetNextUChar(index);
     while (c != ',' && c != '}')
     {
@@ -146,8 +146,8 @@ bool nuiLayoutConstraint::Set(const nglString& rDescription)
     if (c == ',')
     {
       // Fix stop or fix size
-      int pos = index;
-      int end = index;
+      size_t pos = index;
+      size_t end = index;
       c = rDescription.GetNextUChar(index);
       while (c != ']' && c != '}')
       {
@@ -183,8 +183,8 @@ bool nuiLayoutConstraint::Set(const nglString& rDescription)
   else if (c == '{')
   {
     // Fix end + ?
-    int pos = index;
-    int end = index;
+    size_t pos = index;
+    size_t end = index;
     c = rDescription.GetNextUChar(index);
     while (c != ',' && c != '}' && c != ']')
     {
@@ -198,8 +198,8 @@ bool nuiLayoutConstraint::Set(const nglString& rDescription)
     if (c == ',')
     {
       // Fix stop or fix size
-      int pos = index;
-      int end = index;
+      size_t pos = index;
+      size_t end = index;
       c = rDescription.GetNextUChar(index);
 
       while (c != ']' && c != '}' && c != ',')
@@ -232,8 +232,8 @@ bool nuiLayoutConstraint::Set(const nglString& rDescription)
         anchor2.Trim();
 
         // Fix stop or fix size
-        int pos = index;
-        int end = index;
+        size_t pos = index;
+        size_t end = index;
         c = rDescription.GetNextUChar(index);
 
         while (c != '}')

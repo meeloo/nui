@@ -48,18 +48,18 @@ nuiTextLayout::~nuiTextLayout()
 bool nuiTextLayout::Layout(const nglString& rString)
 {
   // Transform the string in a vector of nglUChar, also keep the offsets from the original chars to the nglUChar and vice versa
-  int32 len = rString.GetLength();
-  int32 i = 0;
+  size_t len = rString.GetLength();
+  size_t i = 0;
   
   //printf("layout ");
   while (i < len)
   {
-    int32 oldi = i;
+    size_t oldi = i;
     nglUChar ch = rString.GetNextUChar(i);
     //printf("'%c' (%d) ", (char)ch, ch);
     mUnicode.push_back(ch);
     mOffsetInString.push_back(i);
-    for (int j = 0; j < i - oldi; j++)
+    for (size_t j = 0; j < i - oldi; j++)
       mOffsetInUnicode.push_back(mUnicode.size() - 1);
   }
   
@@ -72,9 +72,9 @@ bool nuiTextLayout::Layout(const nglString& rString)
   // 4. Split ranges into fonts
   // 5. Split ranges into lines / words if needed
   
-  int32 start = 0;
-  int32 position = 0;
-  int32 count = mUnicode.size();
+  size_t start = 0;
+  size_t position = 0;
+  size_t count = mUnicode.size();
   while (position < count)
   {
     // Scan through the text and look for end of line markers
@@ -100,7 +100,7 @@ bool nuiTextLayout::Layout(const nglString& rString)
   mDescender = 0;
 
   //printf("Map scripts to fonts:\n");
-  int32 c = 0;
+  size_t c = 0;
   // Find the needed fonts for each script:
 
   std::map< std::pair<nuiFontBase*, nuiUnicodeScript> , nuiFontBase*> FontSet;
@@ -191,7 +191,7 @@ bool nuiTextLayout::Layout(const nglString& rString)
           {
             // compute the bounding box:
             float runw = 0;
-            for (int32 g = 0; g < rGlyphs.size(); g++)
+            for (size_t g = 0; g < rGlyphs.size(); g++)
             {
               const nuiTextGlyph& rGlyph(rGlyphs.at(g));
               runw += rGlyph.AdvanceX;
@@ -226,10 +226,10 @@ bool nuiTextLayout::Layout(const nglString& rString)
   PenY = 0;
 
   // Now place the glyphs correctly
-  for (uint32 p = 0; p < mpParagraphs.size(); p++)
+  for (size_t p = 0; p < mpParagraphs.size(); p++)
   {
     Paragraph* pParagraph = mpParagraphs[p];
-    for (uint32 l = 0; l < pParagraph->size(); l++)
+    for (size_t l = 0; l < pParagraph->size(); l++)
     {
       nuiTextLine* pLine = (*pParagraph)[l];
 
@@ -265,16 +265,16 @@ bool nuiTextLayout::Layout(const nglString& rString)
   return true;
 }
 
-bool Split(nglUChar previousch, nglUChar ch, int32 index)
+bool Split(nglUChar previousch, nglUChar ch, size_t index)
 {
   if (previousch && ((previousch < 32) != (ch < 32)))
     return true;
   return false;
 }
 
-void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const nuiTextStyle& style, int32& pos, int32 len)
+void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const nuiTextStyle& style, size_t& pos, size_t len)
 {
-  int32 oldpos = pos;
+  size_t oldpos = pos;
   if (len != 0)
   {
     // Split the paragraph into ranges:
@@ -282,20 +282,20 @@ void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const
     nuiSplitText(mUnicode, ranges, nuiST_ScriptChange, pos, len, &Split);
 
     {
-      int32 origin = pos;
+      size_t origin = pos;
       for (const nuiTextRange& range: ranges)
       {
-        int32 rlen = range.mLength;
-        int32 localpos = pos;
+        size_t rlen = range.mLength;
+        size_t localpos = pos;
         //printf("\trange %d (%d - %d) (%s - %s)\n", i, localpos, rlen, nuiGetUnicodeScriptName(range.mScript).GetChars(), nuiGetUnicodeRangeName(range.mRange).GetChars());
 
         // Walk the range for this charset and create runs as well as populate the font/charset structures:
         std::set<nglUChar>& charset(mCharsets[pFont][range.mScript]);
         {
-          int32 runstart = localpos;
+          size_t runstart = localpos;
           bool lastisspace = false;
-          int32 tabs = 0;
-          int32 spaces = 0;
+          size_t tabs = 0;
+          size_t spaces = 0;
 
           while (localpos < pos + rlen)
           {
@@ -364,7 +364,7 @@ void nuiTextLayout::SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const
   NGL_ASSERT(pos == oldpos + len);
 }
 
-bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
+bool nuiTextLayout::LayoutParagraph(size_t start, size_t length)
 {
   //printf("new paragraph: %d + %d\n", start, length);
 
@@ -384,20 +384,20 @@ bool nuiTextLayout::LayoutParagraph(int32 start, int32 length)
 
   // Split the paragraph into font chunks:
   nuiFontBase* pFont = mStyle.GetFont();
-  int32 pos = start;
+  size_t pos = start;
   nuiTextStyle style(mStyle);
   for (auto it = mStyleChanges.begin(); it != mStyleChanges.end(); ++it)
   {
     const nuiTextStyle& newstyle(it->second);
     nuiFontBase* pNewFont = newstyle.GetFont();
-    int32 len = mOffsetInUnicode[it->first] - pos;
+    size_t len = mOffsetInUnicode[it->first] - pos;
     SplitFontRange(pLine, pFont, style, pos, len);
     style = newstyle;
     if (pNewFont != nullptr)
       pFont = pNewFont;
   }
 
-  int32 len = start + length - pos;
+  size_t len = start + length - pos;
   if (len > 0)
   {
     SplitFontRange(pLine, pFont, style, pos, len);
@@ -505,7 +505,7 @@ int32 nuiTextLayout::GetGlyphCount() const
   return count;
 }
 
-const nuiTextGlyph* nuiTextLayout::GetGlyph(int32 Offset) const
+const nuiTextGlyph* nuiTextLayout::GetGlyph(size_t Offset) const
 {
   for (int32 p = 0; p < GetParagraphCount(); p++)
   {
@@ -793,12 +793,12 @@ nuiTextLayoutMode nuiTextLayout::GetTextLayoutMode() const
   return mStyle.GetMode();
 }
 
-void nuiTextLayout::AddStyleChange(int32 StringPosition, const nuiTextStyle& rNewStyle)
+void nuiTextLayout::AddStyleChange(size_t StringPosition, const nuiTextStyle& rNewStyle)
 {
   mStyleChanges[StringPosition] = rNewStyle;
 }
 
-void nuiTextLayout::DelStyleChanges(int32 StringPosition)
+void nuiTextLayout::DelStyleChanges(size_t StringPosition)
 {
   auto it = mStyleChanges.find(StringPosition);
   if (it == mStyleChanges.end())
@@ -807,7 +807,7 @@ void nuiTextLayout::DelStyleChanges(int32 StringPosition)
   mStyleChanges.erase(it);
 }
 
-const std::map<int32, nuiTextStyle>& nuiTextLayout::GetStyleChanges() const
+const std::map<size_t, nuiTextStyle>& nuiTextLayout::GetStyleChanges() const
 {
   return mStyleChanges;
 }

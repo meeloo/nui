@@ -355,10 +355,10 @@ nuiTextRange::~nuiTextRange()
 {
 }
 
-bool nuiSplitText(const nuiUCharIterator& Iterator, nuiTextRangeList& rRanges, nuiSplitTextFlag flags, int32 start, int32 length, const nuiTextSplitterDelegate& rSplitDelegate)
+bool nuiSplitText(const nuiUCharIterator& Iterator, nuiTextRangeList& rRanges, nuiSplitTextFlag flags, size_t start, size_t length, const nuiTextSplitterDelegate& rSplitDelegate)
 {
-  int32 size = Iterator.GetLength();
-  if (length < 0)
+  size_t size = Iterator.GetLength();
+  if (length == (size_t)-1)
     length = size;
   if (length + start > size)
     length = size - start;
@@ -374,12 +374,12 @@ bool nuiSplitText(const nuiUCharIterator& Iterator, nuiTextRangeList& rRanges, n
   const bool mergecommonscript = flags & nuiST_MergeCommonScript;
   const bool printable = flags & nuiST_Printable;
   
-  int32 lastpos = start;
-  int32 curpos = start;
+  size_t lastpos = start;
+  size_t curpos = start;
   nglUChar oldch = 0;
   nglUChar ch = Iterator.GetNextUChar(curpos);
-  int32 direction = nuiGetUnicodeDirection(ch);
-  int32 newdirection = direction;
+  size_t direction = nuiGetUnicodeDirection(ch);
+  size_t newdirection = direction;
   bool print = ucisprint(ch);
   bool newprint = print;
   
@@ -399,7 +399,7 @@ bool nuiSplitText(const nuiUCharIterator& Iterator, nuiTextRangeList& rRanges, n
   while (curpos < start + length)
   {
     bool brk = false;
-    int32 pos = curpos;
+    size_t pos = curpos;
     ch = Iterator.GetNextUChar(curpos);
 
     if (wordboundary)
@@ -518,13 +518,13 @@ bool nuiSplitText(const nuiUCharIterator& Iterator, nuiTextRangeList& rRanges, n
   return true;
 }
 
-bool nuiSplitText(const nglString& rSourceString, nuiTextRangeList& rRanges, nuiSplitTextFlag flags, int32 start, int32 length, const nuiTextSplitterDelegate& rDelegate)
+bool nuiSplitText(const nglString& rSourceString, nuiTextRangeList& rRanges, nuiSplitTextFlag flags, size_t start, size_t length, const nuiTextSplitterDelegate& rDelegate)
 {
   nuiUCharIterator_String it(rSourceString);
   return nuiSplitText(it, rRanges, flags, start, length, rDelegate);
 }
 
-bool nuiSplitText(const std::vector<nglUChar>& rSourceString, nuiTextRangeList& rRanges, nuiSplitTextFlag flags, int32 start, int32 length, const nuiTextSplitterDelegate& rDelegate)
+bool nuiSplitText(const std::vector<nglUChar>& rSourceString, nuiTextRangeList& rRanges, nuiSplitTextFlag flags, size_t start, size_t length, const nuiTextSplitterDelegate& rDelegate)
 {
   nuiUCharIterator_Vector it(rSourceString);
   return nuiSplitText(it, rRanges, flags, start, length, rDelegate);
@@ -811,10 +811,10 @@ nuiUnicodeScript nuiGetUnicodeScript(nglUChar ch)
 
 nuiUnicodeScript nuiGetUnicodeScript(nglUChar ch, nglUChar& rLow, nglUChar& rHigh)
 {
-  const int32 count = sizeof(nuiScriptRanges) / sizeof(nuiScriptRange);
+  const size_t count = sizeof(nuiScriptRanges) / sizeof(nuiScriptRange);
   
   // Slow iterative search for now...
-  for (int32 i = 0; i < count; i++)
+  for (size_t i = 0; i < count; i++)
   {
     if (ch >= nuiScriptRanges[i].mLow && ch <= nuiScriptRanges[i].mHigh)
     {
@@ -1015,7 +1015,7 @@ nglTextEncoding nuiGetTextEncodingFromString(const nglString& WebString)
     encodings.push_back(std::make_pair("UCS_4", eUCS4));       ///< UCS-4 (Unicode)
   }
   
-  for (uint32 i = 0; i < encodings.size(); i++)
+  for (size_t i = 0; i < encodings.size(); i++)
   {
     nglTextEncoding res = encodings[i].second;
     nglString input(encodings[i].first);
@@ -1417,7 +1417,7 @@ nglUChar nuiGetMirrorringChar(nglUChar ch)
 {
   if (gMirrors.empty())
   {
-    int32 i = 0;
+    size_t i = 0;
     while (gMirrorsArray[i])
     {
       gMirrors[gMirrorsArray[i]] = gMirrorsArray[i+1];

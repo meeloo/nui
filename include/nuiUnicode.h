@@ -245,8 +245,8 @@ class nuiUCharIterator
 {
 public:
   virtual ~nuiUCharIterator() {}
-  virtual nglUChar GetNextUChar(int32& position) const = 0;
-  virtual int32 GetLength() const = 0;
+  virtual nglUChar GetNextUChar(size_t& position) const = 0;
+  virtual size_t GetLength() const = 0;
 };
 
 class nuiUCharIterator_String : public nuiUCharIterator
@@ -256,11 +256,11 @@ public:
   : mString(rString)
   {
   }
-  virtual nglUChar GetNextUChar(int32& position) const
+  virtual nglUChar GetNextUChar(size_t& position) const
   {
     return mString.GetNextUChar(position);
   }
-  virtual int32 GetLength() const
+  virtual size_t GetLength() const
   {
     return mString.GetLength();
   }
@@ -276,13 +276,13 @@ public:
   : mString(rString)
   {
   }
-  virtual nglUChar GetNextUChar(int32& position) const
+  virtual nglUChar GetNextUChar(size_t& position) const
   {
     return mString[position++];
   }
-  virtual int32 GetLength() const
+  virtual size_t GetLength() const
   {
-    return (int32)mString.size();
+    return mString.size();
   }
   
 private:
@@ -295,8 +295,8 @@ public:
   nuiTextRange();
   ~nuiTextRange();
 
-  uint32 mLength; // Count of unicode code points
-  int32 mDirection; // Even: Left to right, Odd: right to left
+  size_t mLength; // Count of unicode code points
+  size_t mDirection; // Even: Left to right, Odd: right to left
   nuiUnicodeScript mScript; // What script is this range of text
   nuiUnicodeRange mRange; // What unicode range is this range of text
   bool mBlank; // Does this range contains strictly blank (space, tab, return, etc.) code points.
@@ -316,11 +316,11 @@ const nuiSplitTextFlag nuiST_ScriptChange    = nuiST_StrictScriptChange | nuiST_
 const nuiSplitTextFlag nuiST_Natural         = nuiST_ScriptChange | nuiST_WordBoundary | nuiST_DirectionChange | nuiST_MergeCommonScript;
 const nuiSplitTextFlag nuiST_All             = nuiST_Natural | nuiST_RangeChange;
 
-typedef nuiFastDelegate3<nglUChar, nglUChar, int32, bool> nuiTextSplitterDelegate;
+typedef nuiFastDelegate3<nglUChar, nglUChar, size_t, bool> nuiTextSplitterDelegate;
 
-bool nuiSplitText(const nglString& rSourceString, nuiTextRangeList& rRanges, nuiSplitTextFlag flags = nuiST_Natural, int32 start = 0, int32 length = -1, const nuiTextSplitterDelegate& rDelegate = NULL);
-bool nuiSplitText(const std::vector<nglUChar>& rSourceString, nuiTextRangeList& rRanges, nuiSplitTextFlag flags = nuiST_Natural, int32 start = 0, int32 length = -1, const nuiTextSplitterDelegate& rDelegate = NULL);
-bool nuiSplitText(const nuiUCharIterator& Iterator, nuiTextRangeList& rRanges, nuiSplitTextFlag flags = nuiST_Natural, int32 start = 0, int32 length = -1, const nuiTextSplitterDelegate& rDelegate = NULL);
+bool nuiSplitText(const nglString& rSourceString, nuiTextRangeList& rRanges, nuiSplitTextFlag flags = nuiST_Natural, size_t start = 0, size_t length = -1, const nuiTextSplitterDelegate& rDelegate = NULL);
+bool nuiSplitText(const std::vector<nglUChar>& rSourceString, nuiTextRangeList& rRanges, nuiSplitTextFlag flags = nuiST_Natural, size_t start = 0, size_t length = -1, const nuiTextSplitterDelegate& rDelegate = NULL);
+bool nuiSplitText(const nuiUCharIterator& Iterator, nuiTextRangeList& rRanges, nuiSplitTextFlag flags = nuiST_Natural, size_t start = 0, size_t length = -1, const nuiTextSplitterDelegate& rDelegate = NULL);
 
 nglTextEncoding nuiGetTextEncodingFromString(const nglString& WebString);
 

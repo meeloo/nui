@@ -72,8 +72,8 @@ public:
 
     if (container.IsValid())
     {
-      int32 count = container.GetIndexRange(0);
-      for (int32 i = 0; i < count; i++)
+      size_t count = container.GetIndexRange(0);
+      for (size_t i = 0; i < count; i++)
       {
         nglString val;
         container.ToString(i, val);
@@ -109,14 +109,14 @@ void nuiStringTemplateContainer::AddNode(nuiStringTemplateNode* pNode)
 
 void nuiStringTemplateContainer::Clear()
 {
-  for (int32 i = 0; i < mpNodes.size(); i++)
+  for (size_t i = 0; i < mpNodes.size(); i++)
     delete mpNodes[i];
   mpNodes.clear();
 }
 
 bool nuiStringTemplateContainer::Generate(nuiObject* pDataSource, const OutputDelegate& rOutputDelegate)
 {
-  for (int32 i = 0; i < mpNodes.size(); i++)
+  for (size_t i = 0; i < mpNodes.size(); i++)
     if (!mpNodes[i]->Generate(pDataSource, rOutputDelegate))
       return false;
   
@@ -216,9 +216,9 @@ public:
   
 
   const nglString& mString;
-  int32 mPos;
-  int32 mNextPos;
-  const int32 mLen;
+  size_t mPos;
+  size_t mNextPos;
+  const size_t mLen;
   nglUChar mChar;
   nglUChar mTag;
   
@@ -233,12 +233,12 @@ bool nuiStringTemplate::Parse(const nglString& rSource)
 
 bool nuiStringTemplate::ParseTextUntilCommand(ParseContext& rContext)
 {
-  int32 start = rContext.mPos;
+  size_t start = rContext.mPos;
   nglUChar cc = 0;
   
   while (rContext.IsValid())
   {
-    int32 current = rContext.mPos;
+    size_t current = rContext.mPos;
     nglUChar c = rContext.mChar;
     
     if (cc == '{' && (c == '{' || c == '%'))
@@ -271,12 +271,12 @@ bool nuiStringTemplate::ParseTextUntilCommand(ParseContext& rContext)
 
 bool nuiStringTemplate::Parse(ParseContext& rContext)
 {
-  int32 start = rContext.mPos;
+  size_t start = rContext.mPos;
   nglUChar cc = 0;
 
   while (rContext.IsValid())
   {
-    int32 current = rContext.mPos;
+    size_t current = rContext.mPos;
     nglUChar c = rContext.mChar;
     
     ParseTextUntilCommand(rContext);
