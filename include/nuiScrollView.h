@@ -50,7 +50,8 @@ public:
   void SetVIncrement(nuiSize vIncrement);
   nuiSize GetVIncrement() const;
   
-  void SetBarSize(float Set)    { mBarSize = Set; InvalidateLayout(); }
+  void SetBarSize(float Set)  { mBarSize = Set; InvalidateLayout(); }
+  float GetBarSize() const    { return mBarSize; }
   
   void EnableSmoothScrolling(bool set);
   bool IsSmoothScrollingEnabled() const;

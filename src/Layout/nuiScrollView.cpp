@@ -56,6 +56,9 @@ void nuiScrollView::InitAttributes()
   
   AddAttribute(new nuiAttribute<float>("HOffset", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetXOffset), nuiMakeDelegate(this, &nuiScrollView::SetXOffset)));
   AddAttribute(new nuiAttribute<float>("VOffset", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetYOffset), nuiMakeDelegate(this, &nuiScrollView::SetYOffset)));
+  
+  AddAttribute(new nuiAttribute<float>("BarSize", nuiUnitPixels, nuiMakeDelegate(this, &nuiScrollView::GetBarSize), nuiMakeDelegate(this, &nuiScrollView::SetBarSize)));
+
 }
 
 void nuiScrollView::Init(nuiScrollBar* pHorizontalScrollBar, nuiScrollBar* pVerticalScrollBar, bool Horizontal, bool Vertical)

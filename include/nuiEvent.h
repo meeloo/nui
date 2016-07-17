@@ -155,10 +155,10 @@ public:
     nuiEventTargetBase::Connect(rSource, nuiMakeDelegate((T*)mpTarget, pTargetFunc).GetMemento(), pUser);
   }
 
-  void Connect(nuiEventSource& rSource, const std::function<void(const nuiEvent&)>& func)
+  void Connect(nuiEventSource& rSource, const std::function<void(const nuiEvent&)>& func, void* pUser=NULL)
   {
     assert(nuiEventTargetBase::mpTarget != NULL);
-    nuiEventTargetBase::Connect(rSource, func);
+    nuiEventTargetBase::Connect(rSource, func, pUser);
   }
 
   void Disconnect(void (*pTargetFunc)(const nuiEvent&))
