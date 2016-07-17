@@ -100,7 +100,7 @@ float nuiTextLine::GetDescender() const
   return v;
 }
 
-int32 nuiTextLine::GetGlyphCount() const
+size_t nuiTextLine::GetGlyphCount() const
 {
   int32 count = 0;
   for (uint32 i = 0; i < mpRuns.size(); i++)
@@ -111,11 +111,11 @@ int32 nuiTextLine::GetGlyphCount() const
   return count;
 }
 
-const nuiTextGlyph* nuiTextLine::GetGlyph(int32 Offset) const
+const nuiTextGlyph* nuiTextLine::GetGlyph(size_t Offset) const
 {
   for (uint32 i = 0; i < mpRuns.size(); i++)
   {
-    int32 s = mpRuns[i]->GetGlyphCount();
+    size_t s = mpRuns[i]->GetGlyphCount();
     if (Offset < s)
       return mpRuns[i]->GetGlyph(Offset);
     Offset -= s;

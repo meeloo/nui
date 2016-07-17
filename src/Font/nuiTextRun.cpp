@@ -8,7 +8,7 @@
 #include "nui.h"
 
 /////////////
-nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, nuiUnicodeScript script, int32 Position, int32 Length, const nuiTextStyle& rStyle)
+nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, nuiUnicodeScript script, size_t Position, size_t Length, const nuiTextStyle& rStyle)
 : mLayout(rLayout),
   mPosition(Position),
   mLength(Length),
@@ -25,7 +25,7 @@ nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, nuiUnicodeScript script, in
 {
 }
 
-nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, int32 Position, int32 Length, float AdvanceX, float AdvanceY, const nuiTextStyle& rStyle)
+nuiTextRun::nuiTextRun(const nuiTextLayout& rLayout, size_t Position, size_t Length, float AdvanceX, float AdvanceY, const nuiTextStyle& rStyle)
 : mLayout(rLayout),
   mPosition(Position),
   mLength(Length),
@@ -71,12 +71,12 @@ nuiFontBase* nuiTextRun::GetFont() const
 }
 
 
-int32 nuiTextRun::GetPosition() const
+size_t nuiTextRun::GetPosition() const
 {
   return mPosition;
 }
 
-int32 nuiTextRun::GetLength() const
+size_t nuiTextRun::GetLength() const
 {
   return mLength;
 }
@@ -154,12 +154,12 @@ nuiRect nuiTextRun::GetRect() const
   return nuiRect();
 }
 
-int32 nuiTextRun::GetGlyphCount() const
+size_t nuiTextRun::GetGlyphCount() const
 {
   return mGlyphs.size();
 }
 
-const nuiTextGlyph* nuiTextRun::GetGlyph(int32 Offset) const
+const nuiTextGlyph* nuiTextRun::GetGlyph(size_t Offset) const
 {
   return &(mGlyphs.at(Offset));
 }
@@ -169,7 +169,7 @@ const nuiTextGlyph* nuiTextRun::GetGlyphAt (float X, float Y) const
   X -= mX;
   Y -= mY;
   
-  for (int32 i = 0; i < mGlyphs.size(); i++)
+  for (size_t i = 0; i < mGlyphs.size(); i++)
   {
     const nuiTextGlyph* pGlyph = &mGlyphs[i];
     if (pGlyph->mDestRect.IsInside(X, Y))

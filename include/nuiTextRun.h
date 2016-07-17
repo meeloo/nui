@@ -41,7 +41,7 @@ public:
 class nuiTextGlyph : public nuiGlyphInfo
 {
 public:
-  int32 mCluster; ///< Position of the source char in the original unicode code point vector
+  size_t mCluster; ///< Position of the source char in the original unicode code point vector
   float mX, mY; ///< Position on screen
   nuiTexture* mpTexture; ///< Texture that contains this glyph
   nuiRect mDestRect; ///< Destination rectangle of the laid ou glyph
@@ -55,14 +55,14 @@ public:
 class nuiTextRun : public nuiRefCount
 {
 public:
-  nuiTextRun(const nuiTextLayout& rLayout, nuiUnicodeScript Script, int32 Position, int32 Length, const nuiTextStyle& rStyle);
-  nuiTextRun(const nuiTextLayout& rLayout, int32 Position, int32 Length, float AdvanceX, float AdvanceY, const nuiTextStyle& rStyle); ///< Create a blank (dummy) layout
+  nuiTextRun(const nuiTextLayout& rLayout, nuiUnicodeScript Script, size_t Position, size_t Length, const nuiTextStyle& rStyle);
+  nuiTextRun(const nuiTextLayout& rLayout, size_t Position, size_t Length, float AdvanceX, float AdvanceY, const nuiTextStyle& rStyle); ///< Create a blank (dummy) layout
   void SetFont(nuiFontBase* pFont);
   
   nuiUnicodeScript GetScript() const;
-  int32 GetPosition() const;
+  size_t GetPosition() const;
   const nglUChar* GetUnicodeChars() const;
-  int32 GetLength() const;
+  size_t GetLength() const;
   
   float GetAdvanceX() const;
   float GetAdvanceY() const;
@@ -71,10 +71,10 @@ public:
   float GetDescender() const;
   
   std::vector<nuiTextGlyph>& GetGlyphs();
-  const nuiTextGlyph* GetGlyph   (int32 Offset) const;
+  const nuiTextGlyph* GetGlyph   (size_t Offset) const;
   const nuiTextGlyph* GetGlyphAt (float X, float Y) const;
 
-  int32 GetGlyphCount() const;
+  size_t GetGlyphCount() const;
   nuiFontBase* GetFont() const;
   
   void SetUnderline(bool set);
@@ -98,8 +98,8 @@ private:
   friend class nuiFontBase;
   nuiTextStyle mStyle;
   const nuiTextLayout& mLayout;
-  int32 mPosition;
-  int32 mLength;
+  size_t mPosition;
+  size_t mLength;
   nuiUnicodeScript mScript;
   
   bool mUnderline : 1;

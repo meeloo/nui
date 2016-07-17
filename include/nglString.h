@@ -184,20 +184,18 @@ public:
 
 	/** @name nglString size */
 	//@{
-	int32  GetLength() const; ///< Returns size in chars. If zero, the string is either \e null or \e empty
-	int32  GetULength() const; ///< Returns size in unicode code points. Remember that GetULength() <= GetLength(). If zero, the string is either \e null or \e empty
+	size_t  GetLength() const; ///< Returns size in chars. If zero, the string is either \e null or \e empty
+	size_t  GetULength() const; ///< Returns size in unicode code points. Remember that GetULength() <= GetLength(). If zero, the string is either \e null or \e empty
   bool IsEmpty() const; ///< Returns whether the string contains characters or not. Null strings are considered empty.
   bool IsNull() const; ///< Returns whether the string is equal to nglString::Null.
 	//@}
 
 	/** @name Fetch string content */
 	//@{
-	nglChar GetChar(uint32 Index)	const;  ///< Returns the char at position \p Index. If \p Index is out of range, returns zero. See operator[]()
-	nglChar GetChar(int32 Index)		const { return GetChar((uint32)Index); }  ///< Returns the char at position \p Index. If \p Index is out of range, returns zero. See operator[]()
+	nglChar GetChar(size_t Index)	const;  ///< Returns the char at position \p Index. If \p Index is out of range, returns zero. See operator[]()
 	nglChar GetLastChar() const;        ///< Returns last char of string. Returns zero if the string is \e null or \e empty
-	nglUChar GetUChar(uint32 Index)	const;  ///< Returns the char at position \p Index. If \p Index is out of range, returns zero. See operator[]()
-	nglUChar GetUChar(int32 Index)		const { return GetChar((uint32)Index); }  ///< Returns the char at position \p Index. If \p Index is out of range, returns zero. See operator[]()
-  nglUChar GetNextUChar(int32& Index) const;
+	nglUChar GetUChar(size_t Index)	const;  ///< Returns the char at position \p Index. If \p Index is out of range, returns zero. See operator[]()
+  nglUChar GetNextUChar(size_t& Index) const;
 	const nglChar* GetChars() const;           ///< Returns the string content as a char array. Returns null if the string is \e null
 	std::string GetStdString(const nglTextEncoding Encoding=eUTF8) const;    ///< Returns the string content as an std::string. Return an empty string if the string is \e null.
 
@@ -785,10 +783,8 @@ public:
 	friend bool operator>=(const nglChar* pLeft, const nglString& rRight);
 
 	// Array access
-	nglChar  operator[](uint32 Index) const;
-	nglChar& operator[](uint32 Index);
-	nglChar  operator[](int32 Index) const;
-	nglChar& operator[](int32 Index);
+  nglChar  operator[](size_t Index) const;
+  nglChar& operator[](size_t Index);
 
 	// Type cast
 	//operator const nglChar*() const;

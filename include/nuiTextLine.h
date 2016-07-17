@@ -30,9 +30,9 @@ public:
   
   nuiRect GetRect() const;
   
-  int32 GetGlyphCount() const;
+  size_t GetGlyphCount() const;
   
-  const nuiTextGlyph* GetGlyph   (int32 Offset) const;
+  const nuiTextGlyph* GetGlyph   (size_t Offset) const;
   const nuiTextGlyph* GetGlyphAt (float X, float Y) const;
 
   float PreLayout(float wrap);

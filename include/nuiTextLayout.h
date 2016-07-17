@@ -48,7 +48,7 @@ public:
   //@}
   
   int32 GetGlyphCount() const;
-  const nuiTextGlyph* GetGlyph   (int32 Offset) const;
+  const nuiTextGlyph* GetGlyph   (size_t Offset) const;
   const nuiTextGlyph* GetGlyphAt (float X, float Y) const;
   /*!< Identify a glyph at given coordinates
    \param X abscissa in layout coordinate space
@@ -78,9 +78,9 @@ public:
   void SetWrapX(nuiSize WrapX);
   nuiSize GetWrapX() const;
 
-  void AddStyleChange(int32 StringPosition, const nuiTextStyle& rNewStyle);
-  void DelStyleChanges(int32 StringPosition);
-  const std::map<int32, nuiTextStyle>& GetStyleChanges() const;
+  void AddStyleChange(size_t StringPosition, const nuiTextStyle& rNewStyle);
+  void DelStyleChanges(size_t StringPosition);
+  const std::map<size_t, nuiTextStyle>& GetStyleChanges() const;
   void ClearStyleChanges();
 
 protected:
@@ -88,10 +88,10 @@ protected:
 
 private:
   bool PrintGlyphs(nuiDrawContext *pContext, float X, float Y, const std::map<nuiTexture*, std::vector<nuiTextGlyph*> >& rGlyphs, bool AlignGlyphPixels) const;
-  void SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const nuiTextStyle& style, int32& pos, int32 len);
+  void SplitFontRange(nuiTextLine* pLine, nuiFontBase* pFont, const nuiTextStyle& style, size_t& pos, size_t len);
 
   nuiTextStyle mStyle;
-  std::map<int32, nuiTextStyle> mStyleChanges;
+  std::map<size_t, nuiTextStyle> mStyleChanges;
   std::map<nuiFontBase*, std::map<nuiUnicodeScript, std::set<nglUChar> > > mCharsets;
   
   nuiOrientation mOrientation;
@@ -102,14 +102,14 @@ private:
   float mXMin, mXMax;
   float mYMin, mYMax;
   
-  bool LayoutParagraph(int32 start, int32 length);
+  bool LayoutParagraph(size_t start, size_t length);
   
   typedef std::vector<nuiTextLine*> Paragraph;
   std::vector<Paragraph*> mpParagraphs;
   
   std::vector<nglUChar> mUnicode;
-  std::vector<int32> mOffsetInString;
-  std::vector<int32> mOffsetInUnicode;
+  std::vector<size_t> mOffsetInString;
+  std::vector<size_t> mOffsetInUnicode;
 
   float mSpaceWidth = 0;
   float mTabWidth = 0;
