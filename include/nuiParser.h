@@ -84,7 +84,7 @@ public:
   nuiLexer(const nglString& str);
   nuiLexer(nglIStream* pStream, const nglPath& rSourcePath);
 
-  const nuiLexer::Token& NextNonBlankToken();
+  const nuiLexer::Token& NextNonBlankToken(bool SkipNewLinesToo);
   const nuiLexer::Token& NextToken();
   const nuiLexer::Token& GetToken() const;
 

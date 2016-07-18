@@ -138,7 +138,7 @@ void Application::OnInit()
   nuiLexer lexer(path.OpenRead(), path);
   nuiLexer::Token token;
   do {
-    token = lexer.NextNonBlankToken();
+    token = lexer.NextNonBlankToken(true);
     printf("Token %s ( %s )\n", token.GetTypeName(), token.mString.GetChars());
   } while (token.mType != nuiLexer::EndOfFile);
 

@@ -151,11 +151,11 @@ const char* nuiLexer::Token::c_str() const
   return mString.GetChars();
 }
 
-const nuiLexer::Token& nuiLexer::NextNonBlankToken()
+const nuiLexer::Token& nuiLexer::NextNonBlankToken(bool SkipNewLinesToo)
 {
   do {
     NextToken();
-  } while (mToken.mType == Blank && !IsStarved());
+  } while (((mToken.mType == Blank) || (SkipNewLinesToo?mToken.mType == NewLine:true)) && !IsStarved());
   return mToken;
 }
 
