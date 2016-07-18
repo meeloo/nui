@@ -149,5 +149,7 @@ private:
   std::set<nglUChar> mLineCommentStarters;
   std::set<nglUChar> mBlanks;
 
+  bool StreamNextChar(nglUChar& ch);
+
 };
 

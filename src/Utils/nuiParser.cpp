@@ -292,6 +292,17 @@ nglUChar nuiLexer::LookAhead() const
 {
   if (IsDone())
     return 0;
+  if (mpStream)
+  {
+    nglUChar ch = 0;
+    nglFileOffset offset = mpStream->GetPos();
+    nuiLexer *lexer = const_cast<nuiLexer*>(this);
+    bool res = lexer->StreamNextChar(ch);
+    if (!res)
+      return 0;
+    mpStream->SetPos(offset);
+    return ch;
+  }
   return mInput[mEnd];
 }
 
@@ -404,59 +415,9 @@ bool nuiLexer::NextChar()
   // We are handling a stream:
   mLastChar = mChar;
   nglUChar previous = mChar;
-  // Parse an utf-8 char sequence:
-  uint8 c = 0;
-  if (1 != mpStream->ReadUInt8(&c, 1))
-  {
-    mChar = 0;
-    return false;
-  }
-  if (!(c & 0x80))
-  {
-    mChar = c;
-  }
-  else
-  {
-    //  0xC0 // 2 bytes
-    //  0xE0 // 3
-    //  0xF0 // 4
-    //  0xF8 // 5
-    //  0xFC // 6
-    uint32 count = 0;
-    if ((c & 0xFC) == 0xFC)
-    {
-      mChar = c & ~0xFC;
-      count = 5;
-    }
-    else if ((c & 0xF8) == 0xF8)
-    {
-      mChar = c & ~0xF8;
-      count = 4;
-    }
-    else if ((c & 0xF0) == 0xF0)
-    {
-      mChar = c & ~0xF0;
-      count = 3;
-    }
-    else if ((c & 0xE0) == 0xE0)
-    {
-      mChar = c & ~0xE0;
-      count = 2;
-    }
-    else if ((c & 0xC0) == 0xC0)
-    {
-      mChar = c & ~0xC0;
-      count = 1;
-    }
 
-    for (uint32 i = 0; i < count; i++)
-    {
-      if (1 != mpStream->ReadUInt8(&c, 1))
-        return false;
-      mChar <<= 6;
-      mChar |= c & 0x3F;
-    }
-  }
+  if (!StreamNextChar(mChar))
+    return false;
 
   mInput += mChar;
 
@@ -480,6 +441,65 @@ bool nuiLexer::NextChar()
   return true;
 }
 
+bool nuiLexer::StreamNextChar(nglUChar& ch)
+{
+  NGL_ASSERT(mpStream);
+  // Parse an utf-8 char sequence:
+  uint8 c = 0;
+  if (1 != mpStream->ReadUInt8(&c, 1))
+  {
+    ch = 0;
+    return false;
+  }
+  if (!(c & 0x80))
+  {
+    ch = c;
+  }
+  else
+  {
+    //  0xC0 // 2 bytes
+    //  0xE0 // 3
+    //  0xF0 // 4
+    //  0xF8 // 5
+    //  0xFC // 6
+    uint32 count = 0;
+    if ((c & 0xFC) == 0xFC)
+    {
+      ch = c & ~0xFC;
+      count = 5;
+    }
+    else if ((c & 0xF8) == 0xF8)
+    {
+      ch = c & ~0xF8;
+      count = 4;
+    }
+    else if ((c & 0xF0) == 0xF0)
+    {
+      ch = c & ~0xF0;
+      count = 3;
+    }
+    else if ((c & 0xE0) == 0xE0)
+    {
+      ch = c & ~0xE0;
+      count = 2;
+    }
+    else if ((c & 0xC0) == 0xC0)
+    {
+      ch = c & ~0xC0;
+      count = 1;
+    }
+
+    for (uint32 i = 0; i < count; i++)
+    {
+      if (1 != mpStream->ReadUInt8(&c, 1))
+        return false;
+      ch <<= 6;
+      ch |= c & 0x3F;
+    }
+  }
+
+  return true;
+}
 
 int nuiLexer::GetLine() const
 {
