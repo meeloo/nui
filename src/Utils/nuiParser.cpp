@@ -328,16 +328,17 @@ const nuiLexer::Token& nuiLexer::ParseNumber()
 
 const nuiLexer::Token& nuiLexer::CaptureToken(nuiLexer::TokenType type)
 {
-//  if (mpStream)
-//  {
-//    mToken.mString = (mEnd - mStart - 1) > 0 ? mInput.Extract(mStart, mEnd - mStart - 1) : "";
-//    mInput.DeleteLeft((mEnd - mStart - 1));
-//    mStart = mEnd = 0;
-//    mToken.mType = type;
-//
-//    return mToken;
-//  }
-//  else
+  if (mpStream)
+  {
+    mToken.mString = (mEnd - mStart - 1) > 0 ? mInput.Extract(mStart, mEnd - mStart - 1) : "";
+    mInput.DeleteLeft((mEnd - mStart - 1));
+    mStart = 0;
+    mEnd = 1;
+    mToken.mType = type;
+
+    return mToken;
+  }
+  else
   {
     mToken.mString = (mEnd - mStart - 1) > 0 ? mInput.Extract(mStart, mEnd - mStart - 1) : "";
     mStart = mEnd - 1;
