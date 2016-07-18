@@ -15,30 +15,50 @@
 nuiLexer::nuiLexer(const nglString& str)
 : mInput(str)
 {
-  char operators[] =
-  {
-    '.',
-    '<',
-    '>',
-    '?',
-    ':',
-    '/',
-    '|',
-    '&',
-    '^',
-    '*',
-    '/',
-    '+',
-    '-',
-    '=',
-    '%',
-    '!',
-    '~',
-    0
-  };
+  AddTokenPattern(".", Dot);
+  AddTokenPattern(",", Comma);
+  AddTokenPattern(";", SemiColon);
+  AddTokenPattern(":", Colon);
+  AddTokenPattern("<", LessThan);
+  AddTokenPattern("<=", LessThanOrEqual);
+  AddTokenPattern(">", MoreThan);
+  AddTokenPattern(">=", MoreThanOrEqual);
+  AddTokenPattern("!", ExclamationMark);
+  AddTokenPattern("?", QuestionMark);
+  AddTokenPattern("|", Pipe);
+  AddTokenPattern("&", Ampersand);
+  AddTokenPattern("^", Circumflex);
+  AddTokenPattern("%", Percent);
+  AddTokenPattern("@", Arobase);
+  AddTokenPattern("~", Tilde);
+  AddTokenPattern("#", Hash);
+  AddTokenPattern("`", BackQuote);
+  AddTokenPattern("\\", BackSlash);
 
-  for (int i = 0; operators[i]; i++)
-    mOperators.insert(operators[i]);
+  AddTokenPattern("*", Multiply);
+  AddTokenPattern("/", Divide);
+  AddTokenPattern("+", Plus);
+  AddTokenPattern("-", Minus);
+
+  AddTokenPattern("*=", MultiplyEqual);
+  AddTokenPattern("/=", DivideEqual);
+  AddTokenPattern("+=", PlusEqual);
+  AddTokenPattern("-=", MinusEqual);
+
+  AddTokenPattern("[", OpenSBracket);
+  AddTokenPattern("]", CloseSBracket);
+
+  AddTokenPattern("(", OpenParent);
+  AddTokenPattern(")", CloseParent);
+
+  AddTokenPattern("{", OpenBracket);
+  AddTokenPattern("}", CloseBracket);
+
+  AddTokenPattern("=", Equal);
+  AddTokenPattern("==", IsEqual);
+
+//  AddTokenPattern("'", SimpleQuote);
+//  AddTokenPattern("\"", DoubleQuote);
 
   SetValidInSymbolStart("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_");
   SetValidInSymbol("0123456789");
@@ -58,61 +78,78 @@ nuiLexer::nuiLexer(nglIStream* pStream, const nglPath& rSourcePath)
 
 const char* nuiLexer::Token::GetTypeName() const
 {
-  switch (mType)
+
+#define TOK(X) #X
+  static const char* names[] =
   {
-    case EndOfFile:
-      return "EOF";
-    case Symbol:
-      return "Symbol";
-    case String:
-      return "String";
-    case Number:
-      return "Number";
-    case Operator:
-      return "Operator";
-    case AssignementOperator:
-      return "AssignementOperator";
+    TOK(EndOfFile),
+    TOK(Symbol),
 
-    case OpenParent:
-      return "OpenParent";
-    case CloseParent:
-      return "CloseParent";
+    TOK(QuotedString),
+    TOK(SimpleQuotedString),
 
-    case OpenBracket:
-      return "OpenBracket";
-    case CloseBracket:
-      return "CloseBracket";
+    TOK(Number),
 
-    case OpenSBracket:
-      return "OpenSBracket";
-    case CloseSBracket:
-      return "CloseSBracket";
+    TOK(Dot),
+    TOK(Comma),
+    TOK(SemiColon),
+    TOK(Colon),
+    TOK(LessThan),
+    TOK(LessThanOrEqual),
+    TOK(MoreThan),
+    TOK(MoreThanOrEqual),
+    TOK(ExclamationMark),
+    TOK(QuestionMark),
+    TOK(Slash),
+    TOK(Pipe),
+    TOK(Ampersand),
+    TOK(Circumflex),
+    TOK(Percent),
+    TOK(Arobase),
+    TOK(Tilde),
+    TOK(BackQuote),
+    TOK(BackSlash),
 
-    case Comments:
-      return "Comments";
+    TOK(Multiply),
+    TOK(Divide),
+    TOK(Plus),
+    TOK(Minus),
 
-    case Comma:
-      return "Comma";
+    TOK(MultiplyEqual),
+    TOK(DivideEqual),
+    TOK(PlusEqual),
+    TOK(MinusEqual),
 
-    case SemiColon:
-      return "SemiColon";
+    TOK(Equal),
+    TOK(IsEqual),
 
+    TOK(OpenParent),
+    TOK(CloseParent),
+    TOK(OpenBracket),
+    TOK(CloseBracket),
+    TOK(OpenSBracket),
+    TOK(CloseSBracket),
+    TOK(Comments),
+    TOK(Blank),
+    TOK(Hash),
+    TOK(NewLine)
+  };
+#undef TOK
 
-    case Blank:
-      return "Blank";
-    case NewLine:
-      return "NewLine";
-
-    case Hash:
-      return "Hash";
-  }
-
-  return "???";
+  return names[mType];
 }
 
 const char* nuiLexer::Token::c_str() const
 {
   return mString.GetChars();
+}
+
+const nuiLexer::Token& nuiLexer::NextNonBlankToken()
+{
+  do {
+    NextToken();
+  } while (mToken.mType == Blank && !IsStarved());
+  return mToken;
 }
 
 const nuiLexer::Token& nuiLexer::NextToken()
@@ -136,74 +173,15 @@ const nuiLexer::Token& nuiLexer::NextToken()
       return CaptureToken(Blank);
   }
 
+  // Specia case for floats beginning with a decimal dot:
   if (mChar == '.')
   {
     if (isnumber(LookAhead()))
       return ParseNumber();
+  }
 
-    NextChar();
-    return CaptureToken(Operator);
-  }
-  else if (mChar == '(')
-  {
-    NextChar();
-    return CaptureToken(OpenParent);
-  }
-  else if (mChar == ')')
-  {
-    NextChar();
-    return CaptureToken(CloseParent);
-  }
-  else if (mChar == '{')
-  {
-    NextChar();
-    return CaptureToken(OpenBracket);
-  }
-  else if (mChar == '}')
-  {
-    NextChar();
-    return CaptureToken(CloseBracket);
-  }
-  else if (mChar == '[')
-  {
-    NextChar();
-    return CaptureToken(OpenSBracket);
-  }
-  else if (mChar == ']')
-  {
-    NextChar();
-    return CaptureToken(CloseSBracket);
-  }
-  else if (mChar == ',')
-  {
-    NextChar();
-    return CaptureToken(Comma);
-  }
-  else if (mChar == ';')
-  {
-    NextChar();
-    return CaptureToken(SemiColon);
-  }
-  else if (mChar == '#')
-  {
-    NextChar();
-    return CaptureToken(Hash);
-  }
-  else if (IsValidInSymbolStart(mChar))
-  {
-    // Parse a Symbol
-    return ParseSymbol();
-  }
-  else if (IsNumberDigit(mChar))
-  {
-    return ParseNumber();
-  }
-  else if (mChar == '\"')
-  {
-    //  Parse string
-    ParseString();
-  }
-  else if (mChar == '/')
+  // Special case for comments:
+  if (mChar == '/')
   {
     //  Parse comment?
     if (LookAhead() == '/')
@@ -216,43 +194,38 @@ const nuiLexer::Token& nuiLexer::NextToken()
       // Parse multi line comment
       return ParseMultiLineComment();
     }
-    else if (LookAhead() == '=')
-    {
-      NextChar();
-      NextChar();
-      return CaptureToken(AssignementOperator);
-    }
-
-    NextChar();
-    return CaptureToken(Operator);
   }
-  else if (mChar == '=')
-  {
-    if (LookAhead() == '=')
-    {
-      NextChar();
-      return CaptureToken(Operator);
-    }
 
-    NextChar();
-    return CaptureToken(AssignementOperator);
-  }
-  else if (mChar == '*' || mChar == '+' || mChar == '-' || mChar == '&' || mChar == '|' || mChar == '^' || mChar == '%')
-  {
-    if (LookAhead() == '=')
-    {
-      NextChar();
-      NextChar();
-      return CaptureToken(AssignementOperator);
-    }
 
-    NextChar();
-    return CaptureToken(Operator);
-  }
-  else if (mOperators.find(mChar) != mOperators.end())
+  if (IsValidInSymbolStart(mChar))
   {
-    NextChar();
-    return CaptureToken(Operator);
+    // Parse a Symbol
+    return ParseSymbol();
+  }
+  else if (mChar == '\"' || mChar == '\'')
+  {
+    return ParseString();
+  }
+  else if (IsNumberDigit(mChar))
+  {
+    return ParseNumber();
+  }
+  else
+  {
+    TokenPattern* pattern = &mPatterns;
+    auto it = pattern->mChildren.find(mChar);
+    if (it != pattern->mChildren.end())
+    {
+
+      while (it != pattern->mChildren.end())
+      {
+        NextChar();
+        pattern = &it->second;
+        it = pattern->mChildren.find(mChar);
+      }
+
+      return CaptureToken(pattern->mType);
+    }
   }
 
   return mToken;
@@ -261,18 +234,21 @@ const nuiLexer::Token& nuiLexer::NextToken()
 const nuiLexer::Token& nuiLexer::ParseString()
 {
   // Skip the "
+  nglUChar QuoteType = mChar;
+  TokenType type = mChar == '\"' ? QuotedString : SimpleQuotedString;
+
   NextChar();
 
-  while (mChar != '"' && !IsStarved())
+  while (mChar != QuoteType && !IsStarved())
   {
     if (!NextChar())
-      return CaptureToken(String);
+      return CaptureToken(type);
   }
 
   // Skip the "
   NextChar();
 
-  return CaptureToken(String);
+  return CaptureToken(type);
 }
 
 
@@ -305,7 +281,7 @@ const nuiLexer::Token& nuiLexer::ParseLineComment()
 }
 
 
-char nuiLexer::LookAhead() const
+nglUChar nuiLexer::LookAhead() const
 {
   if (IsDone())
     return 0;
@@ -367,6 +343,11 @@ bool nuiLexer::SkipBlank()
   return !IsDone();
 }
 
+bool nuiLexer::IsBlank(nglUChar c) const
+{
+  return mBlanks.find(c) != mBlanks.end();
+}
+
 bool nuiLexer::IsDone() const
 {
   return mpStream ? (mpStream->GetState() != eStreamReady) : (mStart >= mInput.GetLength());
@@ -401,7 +382,7 @@ bool nuiLexer::NextChar()
   }
 
   // We are handling a stream:
-  nglChar previous = mChar;
+  nglUChar previous = mChar;
   // Parse an utf-8 char sequence:
   uint8 c = 0;
   if (1 != mpStream->ReadUInt8(&c, 1))
@@ -497,25 +478,25 @@ void nuiLexer::SetValidInBlank(const nglString& rValidChars)
     mBlanks.insert(rValidChars[i]);
 }
 
-bool nuiLexer::IsValidInSymbolStart(nglChar c) const
+bool nuiLexer::IsValidInSymbolStart(nglUChar c) const
 {
   return (mValidInSymbolStart.find(c) != mValidInSymbolStart.end());
 }
 
-bool nuiLexer::IsValidInSymbol(nglChar c) const
+bool nuiLexer::IsValidInSymbol(nglUChar c) const
 {
   if (mValidInSymbol.find(c) != mValidInSymbol.end())
     return true;
   return IsValidInSymbolStart(c);
 }
 
-bool nuiLexer::IsNumberDigit(nglChar c, uint32 Base) const
+bool nuiLexer::IsNumberDigit(nglUChar c, uint32 Base) const
 {
   uint8 d = 0;
   return GetNumberDigit(d, c, Base);
 }
 
-bool nuiLexer::GetNumberDigit(uint8& res, nglChar c, uint32 Base) const
+bool nuiLexer::GetNumberDigit(uint8& res, nglUChar c, uint32 Base) const
 {
   if (c >= '0' && c <= '9')
     c -= '0';
@@ -529,7 +510,22 @@ bool nuiLexer::GetNumberDigit(uint8& res, nglChar c, uint32 Base) const
     c -= 'A';
     c += 10;
   }
-  res = c;
+  res = (uint8)c;
   return res < Base;
 }
+
+void nuiLexer::AddTokenPattern(const nglString& rString, nuiLexer::TokenType type)
+{
+  TokenPattern* pattern = &mPatterns;
+  size_t i = 0;
+  nglUChar ch = 0;
+
+  while ((ch = rString.GetNextUChar(i)))
+  {
+    pattern = &(pattern->mChildren[ch]);
+  }
+
+  pattern->mType = type;
+}
+
 

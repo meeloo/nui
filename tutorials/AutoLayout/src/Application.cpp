@@ -131,6 +131,15 @@ void Application::OnInit()
   nuiDebugServer* pServer = new nuiDebugServer();
   pServer->Start(31337);
 
+  // Test parser:
+  nglString str("Bleh(prout, 12.4 - 5 * 2);\n   Test += \"ho ho ho\"\n");
+  nuiLexer lexer(str);
+  nuiLexer::Token token;
+  do {
+    token = lexer.NextNonBlankToken();
+    printf("Token %s ( %s )\n", token.GetTypeName(), token.mString.GetChars());
+  } while (token.mType != nuiLexer::EndOfFile);
+
 
   /* Create the nglWindow (and thus a GL context, don't even try to
    *   instantiate the gui (or nglFont) before the nuiWin !)
