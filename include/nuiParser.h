@@ -117,6 +117,7 @@ public:
 
 
 private:
+  void Init();
   nglIStream* mpStream = nullptr;
   nglPath mSourcePath;
 

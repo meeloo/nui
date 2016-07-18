@@ -15,6 +15,21 @@
 nuiLexer::nuiLexer(const nglString& str)
 : mInput(str)
 {
+  Init();
+}
+
+nuiLexer::nuiLexer(nglIStream* pStream, const nglPath& rSourcePath)
+{
+  mpStream = pStream;
+  mSourcePath = rSourcePath;
+  if (mSourcePath.IsLeaf())
+    mSourcePath = mSourcePath.GetParent();
+
+  Init();
+}
+
+void nuiLexer::Init()
+{
   AddTokenPattern(".", Dot);
   AddTokenPattern(",", Comma);
   AddTokenPattern(";", SemiColon);
@@ -57,8 +72,8 @@ nuiLexer::nuiLexer(const nglString& str)
   AddTokenPattern("=", Equal);
   AddTokenPattern("==", IsEqual);
 
-//  AddTokenPattern("'", SimpleQuote);
-//  AddTokenPattern("\"", DoubleQuote);
+  //  AddTokenPattern("'", SimpleQuote);
+  //  AddTokenPattern("\"", DoubleQuote);
 
   SetValidInSymbolStart("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_");
   SetValidInSymbol("0123456789");
@@ -66,14 +81,6 @@ nuiLexer::nuiLexer(const nglString& str)
 
   // Start streaming chars:
   NextChar();
-}
-
-nuiLexer::nuiLexer(nglIStream* pStream, const nglPath& rSourcePath)
-{
-  mpStream = pStream;
-  mSourcePath = rSourcePath;
-  if (mSourcePath.IsLeaf())
-    mSourcePath = mSourcePath.GetParent();
 }
 
 const char* nuiLexer::Token::GetTypeName() const
@@ -321,11 +328,23 @@ const nuiLexer::Token& nuiLexer::ParseNumber()
 
 const nuiLexer::Token& nuiLexer::CaptureToken(nuiLexer::TokenType type)
 {
-  mToken.mString = (mEnd - mStart - 1) > 0 ? mInput.Extract(mStart, mEnd - mStart - 1) : "";
-  mStart = mEnd - 1;
-  mToken.mType = type;
+//  if (mpStream)
+//  {
+//    mToken.mString = (mEnd - mStart - 1) > 0 ? mInput.Extract(mStart, mEnd - mStart - 1) : "";
+//    mInput.DeleteLeft((mEnd - mStart - 1));
+//    mStart = mEnd = 0;
+//    mToken.mType = type;
+//
+//    return mToken;
+//  }
+//  else
+  {
+    mToken.mString = (mEnd - mStart - 1) > 0 ? mInput.Extract(mStart, mEnd - mStart - 1) : "";
+    mStart = mEnd - 1;
+    mToken.mType = type;
 
-  return mToken;
+    return mToken;
+  }
 }
 
 const nuiLexer::Token& nuiLexer::GetToken() const
@@ -382,6 +401,7 @@ bool nuiLexer::NextChar()
   }
 
   // We are handling a stream:
+  mLastChar = mChar;
   nglUChar previous = mChar;
   // Parse an utf-8 char sequence:
   uint8 c = 0;
@@ -435,6 +455,17 @@ bool nuiLexer::NextChar()
       mChar <<= 6;
       mChar |= c & 0x3F;
     }
+  }
+
+  mInput += mChar;
+
+  mEnd++;
+  mColumn++;
+
+  if (mChar == '\n')
+  {
+    mLine++;
+    mColumn = 0;
   }
 
   if ((mChar == 0xa && previous != 0xd) || (mChar == 0xd && previous != 0xa) )

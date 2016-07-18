@@ -132,8 +132,10 @@ void Application::OnInit()
   pServer->Start(31337);
 
   // Test parser:
-  nglString str("Bleh(prout, 12.4 - 5 * 2);\n   Test += \"ho ho ho\"\n");
-  nuiLexer lexer(str);
+//  nglString str("Bleh(prout, 12.4 - 5 * 2);\n   Test += \"ho ho ho\"\n");
+//  nuiLexer lexer(str);
+  nglPath path("rsrc:/css/main.css");
+  nuiLexer lexer(path.OpenRead(), path);
   nuiLexer::Token token;
   do {
     token = lexer.NextNonBlankToken();
