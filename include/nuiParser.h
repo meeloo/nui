@@ -5,6 +5,8 @@
  licence: see nui3/LICENCE.TXT
 */
 
+#include <unordered_map>
+
 class nuiLexer
 {
 public:
@@ -12,10 +14,45 @@ public:
   {
     EndOfFile,
     Symbol,
-    String,
+
+    QuotedString,
+    SimpleQuotedString,
+
     Number,
-    Operator,
-    AssignementOperator,
+
+    Dot,
+    Comma,
+    SemiColon,
+    Colon,
+    LessThan,
+    LessThanOrEqual,
+    MoreThan,
+    MoreThanOrEqual,
+    ExclamationMark,
+    QuestionMark,
+    Slash,
+    Pipe,
+    Ampersand,
+    Circumflex,
+    Percent,
+    Arobase,
+    Tilde,
+    BackQuote,
+    BackSlash,
+
+    Multiply,
+    Divide,
+    Plus,
+    Minus,
+
+    MultiplyEqual,
+    DivideEqual,
+    PlusEqual,
+    MinusEqual,
+
+    Equal,
+    IsEqual,
+
     OpenParent,
     CloseParent,
     OpenBracket,
@@ -24,8 +61,6 @@ public:
     CloseSBracket,
     Comments,
     Blank,
-    Comma,
-    SemiColon,
     Hash,
     NewLine
   };
@@ -49,12 +84,13 @@ public:
   nuiLexer(const nglString& str);
   nuiLexer(nglIStream* pStream, const nglPath& rSourcePath);
 
+  const nuiLexer::Token& NextNonBlankToken(bool SkipNewLinesToo);
   const nuiLexer::Token& NextToken();
   const nuiLexer::Token& GetToken() const;
 
   bool SkipBlank();
   bool NextChar();
-  char LookAhead() const;
+  nglUChar LookAhead() const;
 
   const nuiLexer::Token& CaptureToken(nuiLexer::TokenType type);
   const nuiLexer::Token& ParseSymbol();
@@ -73,14 +109,15 @@ public:
   void SetValidInSymbol(const nglString& rValidChars); ///< Set the characters that are valid in a symbol (usualy all latin characters + underscore + latin numbers).
   void SetValidInBlank(const nglString& rValidChars); ///< Set the characters that are considered blanks.
 
-  bool IsValidInSymbolStart(nglChar c) const; ///< Returns true if the given char is valid as a symbol start
-  bool IsValidInSymbol(nglChar c) const; ///< Returns true if the given char is valid in a symbol
-  bool IsBlank(nglChar c) const; ///< Returns true if the given char is a blank.
-  bool IsNumberDigit(nglChar c, uint32 Base = 10) const; ///< Returns true if the given char is a valid number digit for the given base.
-  bool GetNumberDigit(uint8& res, nglChar c, uint32 Base) const; ///< Returns true if the given char is a valid number digit for the given base. In this case res contains the converted digit as a number.
+  bool IsValidInSymbolStart(nglUChar c) const; ///< Returns true if the given char is valid as a symbol start
+  bool IsValidInSymbol(nglUChar c) const; ///< Returns true if the given char is valid in a symbol
+  bool IsBlank(nglUChar c) const; ///< Returns true if the given char is a blank.
+  bool IsNumberDigit(nglUChar c, uint32 Base = 10) const; ///< Returns true if the given char is a valid number digit for the given base.
+  bool GetNumberDigit(uint8& res, nglUChar c, uint32 Base) const; ///< Returns true if the given char is a valid number digit for the given base. In this case res contains the converted digit as a number.
 
 
 private:
+  void Init();
   nglIStream* mpStream = nullptr;
   nglPath mSourcePath;
 
@@ -88,18 +125,31 @@ private:
   size_t mStart = 0;
   size_t mEnd = 0;
   nuiLexer::Token mToken;
-  char mLastChar;
-  char mChar;
+  nglUChar mLastChar;
+  nglUChar mChar;
 
   int mLine = 0;
   int mColumn = 0;
 
-  std::set<char> mOperators;
+  class TokenPattern
+  {
+  public:
+    TokenPattern(TokenType type = EndOfFile) : mType(type) {}
 
-  std::set<nglChar> mValidInSymbolStart;
-  std::set<nglChar> mValidInSymbol;
-  std::set<nglChar> mLineCommentStarters;
-  std::set<nglChar> mBlanks;
+    TokenType mType = EndOfFile;
+    std::unordered_map<nglUChar, TokenPattern> mChildren;
+
+  };
+  TokenPattern mPatterns;
+
+  void AddTokenPattern(const nglString& rString, nuiLexer::TokenType type);
+
+  std::set<nglUChar> mValidInSymbolStart;
+  std::set<nglUChar> mValidInSymbol;
+  std::set<nglUChar> mLineCommentStarters;
+  std::set<nglUChar> mBlanks;
+
+  bool StreamNextChar(nglUChar& ch);
 
 };
 
