@@ -160,7 +160,7 @@ inline uint64 ngl_atomic_dec(nglAtomic64 &value)
 
 #include <libkern/OSAtomic.h> 
 
-typedef volatile int32_t nglAtomic32;
+typedef volatile uint32 nglAtomic32;
 
 // read atomic variable
 inline uint32 ngl_atomic_read(const nglAtomic32 &value)
