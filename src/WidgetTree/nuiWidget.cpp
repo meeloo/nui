@@ -69,7 +69,7 @@ static nuiWidgetCounter gWidgetCounter;
 #endif
 
 nuiWidget::nuiWidget()
-: nuiObject(), mGenericWidgetSink(this)
+: nuiLayoutable(), mGenericWidgetSink(this)
 {
   InitDefaultValues();
   
@@ -88,9 +88,8 @@ nuiWidget::nuiWidget()
 }
 
 
-
 nuiWidget::nuiWidget(const nglString& rObjectName)
-: nuiObject(rObjectName), mGenericWidgetSink(this)
+: nuiLayoutable(rObjectName), mGenericWidgetSink(this)
 {
   InitDefaultValues();
   
@@ -6353,21 +6352,6 @@ public:
   nuiWidget* GetWidget() const { return mpWidget; }
   NUI_GET(nuiWidget::LayoutAttribute, Attribute);
 
-  double GetValue() const
-  {
-    if (mAttribute == nuiWidget::LayoutAttribute_Attribute)
-    {
-      nuiAttribBase attrib(mpWidget->GetAttribute(mName));
-      if (attrib.IsValid())
-      {
-        nuiVariant variant(attrib);
-        return (double)variant;
-      }
-      return std::numeric_limits<double>::signaling_NaN();
-    }
-
-    return mpWidget->GetLayoutAttributeValue(mAttribute);
-  }
 private:
   nglString mName;
   nuiWidget *mpWidget;
@@ -6657,5 +6641,37 @@ void nuiWidget::ComputeAutoLayout()
 //          attribs.Right.value(), attribs.Bottom.value()
 //          );
 
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+nuiLayoutable::nuiLayoutable(const nglString& rObjectName)
+: nuiObject(rObjectName)
+{
+
+}
+
+nuiLayoutable::~nuiLayoutable()
+{
+
+}
+
+void nuiLayoutable::InitAttributes()
+{
+  // Wep
+}
+
+const nuiRect& nuiLayoutable::GetIdealRect()
+{
+  return mIdealRect;
+}
+
+const nuiRect& nuiLayoutable::GetRect() const
+{
+  return mRect;
+}
+
+void nuiLayoutable::CallBuilt()
+{
+  Built();
 }
 

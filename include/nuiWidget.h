@@ -54,7 +54,40 @@ namespace kiwi {
   class Solver;
 }
 
-class nuiWidget : public nuiObject
+class nuiLayoutable : public nuiObject
+{
+protected:
+  friend class nuiTopLevel;
+  friend class nuiWidgetCreator;
+
+public:
+
+  /** @name Life */
+  //@{
+  nuiLayoutable(const nglString& rObjectName = nglString::Null); ///< constructor with an objectName by default
+  void InitAttributes();
+  //@}
+
+  /** @name Object size management */
+  //@{
+  virtual nuiRect CalcIdealSize() = 0;
+  virtual void SetLayout(const nuiRect& rRect) = 0; ///< This method asks the object to recalculate its layout with the given nuiRect. It will NOT force a SetRect. SetRect will be called if the widget asked for a re-layout (InvalidateLayout()) or if the given rectangle is different than the current rectangle of the widget. Returns the value returned by the SetRect method or false.
+
+  virtual const nuiRect& GetIdealRect(); ///< Return the ideal area used by this Object.
+  virtual const nuiRect& GetRect() const; ///< Return the current area used by this Object.
+
+  virtual void Built() = 0; ///< This method is called right after a widget has been created by the CSS engine and all the CSS inits have been applied.
+
+protected:
+  virtual ~nuiLayoutable();
+
+  nuiRect mRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
+  nuiRect mIdealRect; ///< The ideal bounding box of the nuiObject (in coordinates of its parent) position should be at the origin.
+  void CallBuilt();
+};
+
+
+class nuiWidget : public nuiLayoutable
 {
 protected:
   friend class nuiTopLevel;
@@ -878,10 +911,8 @@ protected:
   nuiTopLevel* mpTopLevel = nullptr;
 
   float mAlpha = 1.0f; ///< Indicates the transparency level of the object. Optional.
-  nuiRect mRect; ///< The bounding box of the nuiWidget (in coordinates of its parent).
   nuiRect mLayoutRect; ///< The rect given by the parent (may be different than mRect)
   nuiRect mVisibleRect; ///< The active bounding box of the nuiObject (in local coordinates).
-  nuiRect mIdealRect; ///< The ideal bounding box of the nuiObject (in coordinates of its parent) position should be at the origin.
   nuiRect mUserRect; ///< The bounding box of the nuiObject if set by the user (in coordinates of its parent).
   nuiRect mHotRect; ///< The currently important interactive part of the widget. Containers try to keep this rect in view when possible. For exemple set it as the cursor rectangle in a text edit widget. Is you text edit is contained in a scroll view, the scroll view will try to follow the cursor.
 
