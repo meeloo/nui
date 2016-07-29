@@ -174,14 +174,10 @@ void objCCallOnMemoryWarning();
 
 	objCCallOnWillExit();
 
-	NSEnumerator *e = [[pUIApplication windows] objectEnumerator];
-	
-	id win;
-	while ((win = [e nextObject]))
+  for (UIWindow* cur_win in pUIApplication.windows)
   {
-		[win close];
-	}	
- 
+    cur_win = nil;
+  }
 
 ///< advise the kernel we're quiting
   objCCallOnExit(0);
