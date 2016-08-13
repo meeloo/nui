@@ -59,6 +59,7 @@ public:
   
 protected:
   void InitAttributes();
+  void OnDelayedActivation(const nuiEvent& rEvent);
 
   static nuiSize mDefaultCheckSize;
 
@@ -67,7 +68,7 @@ protected:
   nuiSize mCheckSize;
   bool mHasContents;
   bool mWasPressed;
-
+  nuiEventSink<nuiToggleButton> mToggleEventSink;
 };
 
 #endif // __nuiToggleButton_h__

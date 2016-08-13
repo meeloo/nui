@@ -10,7 +10,7 @@
 nuiSize nuiToggleButton::mDefaultCheckSize = 14;
 
 nuiToggleButton::nuiToggleButton()
-: nuiButton()
+: nuiButton(), mToggleEventSink(this)
 {
   if (SetObjectClass("nuiToggleButton"))
   {
@@ -23,7 +23,7 @@ nuiToggleButton::nuiToggleButton()
 }
 
 nuiToggleButton::nuiToggleButton(const nglString& rText)
-: nuiButton(rText)
+: nuiButton(rText), mToggleEventSink(this)
 {
   if (SetObjectClass("nuiToggleButton"))
   {
@@ -36,7 +36,7 @@ nuiToggleButton::nuiToggleButton(const nglString& rText)
 }
 
 nuiToggleButton::nuiToggleButton(nuiStateDecoration* pDecoration)
-: nuiButton(pDecoration)
+: nuiButton(pDecoration), mToggleEventSink(this)
 {
   if (SetObjectClass("nuiToggleButton"))
   {
@@ -49,7 +49,7 @@ nuiToggleButton::nuiToggleButton(nuiStateDecoration* pDecoration)
 }
 
 nuiToggleButton::nuiToggleButton(const nglImage& rImage)
-: nuiButton(rImage)
+: nuiButton(rImage), mToggleEventSink(this)
 {
   if (SetObjectClass("nuiToggleButton"))
   {
@@ -169,6 +169,19 @@ bool nuiToggleButton::MouseClicked  (const nglMouseInfo& rInfo)
     mWasPressed = IsPressed();
     SetPressed(!mWasPressed);
     Invalidate();
+    
+    if (mDelayedActivation > 0)
+    {
+      mLastTime = nglTime();
+      mUntilRepeat = mDelayedActivation;
+      
+      if (!mpAutoRepeatTimer)
+      {
+        mpAutoRepeatTimer = nuiAnimation::AcquireTimer();
+        mToggleEventSink.Connect(mpAutoRepeatTimer->Tick, &nuiToggleButton::OnDelayedActivation);
+      }
+    }
+    
     return true;
   }
   return false;
@@ -227,7 +240,29 @@ bool nuiToggleButton::MouseUngrabbed(nglTouchId Id)
     mClicked = false;
     SetPressed(mWasPressed);
   }
+  if (mpAutoRepeatTimer)
+  {
+    if (mDelayedActivation > 0)
+      mToggleEventSink.Disconnect(mpAutoRepeatTimer->Tick, &nuiToggleButton::OnDelayedActivation);
+    mpAutoRepeatTimer = NULL;
+    nuiAnimation::ReleaseTimer();
+  }
   return false;
+}
+
+void nuiToggleButton::OnDelayedActivation(const nuiEvent& rEvent)
+{
+  NGL_ASSERT(mDelayedActivation > 0);
+  if (mUntilRepeat >= 0)
+  {
+    nglTime now;
+    mUntilRepeat -= (now.GetValue() - mLastTime.GetValue());
+    mLastTime = now;
+    if (mUntilRepeat < 0)
+    {
+      DelayedActivation();
+    }
+  }
 }
 
 void nuiToggleButton::SetDisplayAsCheckBox(bool set) 

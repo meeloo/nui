@@ -72,7 +72,9 @@ public:
 
   bool KeyDown(const nglKeyEvent& rEvent);
   bool KeyUp(const nglKeyEvent& rEvent);
+  
 protected:
+  void OnDelayedActivation(const nuiEvent& rEvent);
   virtual ~nuiButton();
   bool mClicked;
   bool mPressed;
@@ -87,7 +89,6 @@ protected:
   nuiSize mActivationOffset;
   nuiEventSink<nuiButton> mEventSink;
   void OnAutoRepeat(const nuiEvent& rEvent);
-  void OnDelayedActivation(const nuiEvent& rEvent);
   nuiTask* mpTask;
   
   static float mDefaultBorders;
