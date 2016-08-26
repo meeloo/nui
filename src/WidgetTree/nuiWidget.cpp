@@ -4303,8 +4303,8 @@ bool nuiWidget::DelChild(nuiWidgetPtr pChild)
       }
 
       pChild->SetParent(NULL);
-      mpChildren.erase(it);
       ChildDeleted(this, pChild);
+      mpChildren.erase(it);
       InvalidateLayout();
       DebugRefreshInfo();
       return true;
