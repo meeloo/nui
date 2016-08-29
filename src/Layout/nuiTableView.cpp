@@ -351,7 +351,7 @@ bool nuiTableView::MouseUnclicked(const nglMouseInfo& rInfo)
 
 bool nuiTableView::MouseMoved(const nglMouseInfo& rInfo)
 {
-  if (!mMoved && IsSelectionEnabled())
+  if (!mMoved /*&& IsSelectionEnabled()*/)
   {
     if (!mLeftClick)
       return false;
