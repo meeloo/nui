@@ -1221,6 +1221,7 @@ void nuiMainWindow::NGLWindow::OnDestruction()
 void nuiMainWindow::NGLWindow::OnPreActivation()
 {
   mpMainWindow->OnPreActivation();
+  mpMainWindow->GetRenderThread()->UnlockRendering();
 }
 
 void nuiMainWindow::NGLWindow::OnActivation()
@@ -1238,6 +1239,7 @@ void nuiMainWindow::NGLWindow::OnPreDesactivation()
 // iOS forbid any graphic processing when app is in background, disable painter
 #ifdef _UIKIT_
   mpMainWindow->SetPaintEnabled(false);
+  mpMainWindow->GetRenderThread()->LockRendering();
 #endif
 
   mpMainWindow->OnPreDesactivation();

@@ -184,7 +184,9 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, false));
     return;
   }
-  
+ 
+  LockRendering();
+
   mpContext->GetLock().Lock();
   
   mpPainter->ResetStats();
@@ -254,8 +256,9 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   mpContext->EndSession();
   
   mpContext->GetLock().Unlock();
-  
+
   App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, true));
+  UnlockRendering();
 
 //  DumpStats();
 }

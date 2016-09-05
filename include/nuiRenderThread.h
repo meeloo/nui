@@ -28,6 +28,9 @@ public:
   virtual ~nuiRenderThread();
 
   // Public API:
+  void LockRendering()    { mRenderingLock.Lock(); }
+  void UnlockRendering()  { mRenderingLock.Unlock(); }
+
   void StartRendering(uint32 x, uint32 y);
   void SetRect(const nuiRect& rRect);
   //  void AddClipRect(const nuiRect& rRect);
@@ -54,9 +57,12 @@ public:
   static void DestroyLayer(nuiLayer* pLayer);
 
   std::map<nuiLayer*, nuiRenderingStat> GetStats() const;
+
 private:
   void Post(nuiTask* pTask);
-    
+  
+  nglCriticalSection mRenderingLock;
+
   nuiTaskQueue mQueue;
   nuiTaskQueue mNextFrameQueue;
 
