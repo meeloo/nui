@@ -184,8 +184,12 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, false));
     return;
   }
- 
-  LockRendering();
+
+  // Try locking
+  if (!TryLockRendering())
+  {
+    return;
+  }
 
   mpContext->GetLock().Lock();
   
@@ -258,6 +262,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   mpContext->GetLock().Unlock();
 
   App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, true));
+
   UnlockRendering();
 
 //  DumpStats();

@@ -28,8 +28,9 @@ public:
   virtual ~nuiRenderThread();
 
   // Public API:
-  void LockRendering()    { mRenderingLock.Lock(); }
-  void UnlockRendering()  { mRenderingLock.Unlock(); }
+  inline void LockRendering()    { mRenderingLock.Lock(); }
+  inline void UnlockRendering()  { mRenderingLock.Unlock(); }
+  inline bool TryLockRendering() { return mRenderingLock.TryLock(); }
 
   void StartRendering(uint32 x, uint32 y);
   void SetRect(const nuiRect& rRect);

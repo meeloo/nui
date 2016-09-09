@@ -915,6 +915,8 @@ private:
 #endif //_CARBON_
 
 #ifdef _UIKIT_
+public:
+  inline bool IsInited() const { return mInited; }
 private:
   bool mInited;
   void InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo,
