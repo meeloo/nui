@@ -23,6 +23,9 @@
 - (void) applicationDidReceiveMemoryWarning:  (UIApplication*) pUIApp;
 - (void) applicationSignificantTimeChange:    (UIApplication*) pUIApp;
 - (void) applicationWillTerminate:            (UIApplication*) pUIApp;
+- (BOOL) application:                         (UIApplication*) pUIApp
+             openURL:                         (NSURL*) url
+             options:                         (NSDictionary<UIApplicationOpenURLOptionsKey, id>*) options;
 
 // Handling Remote Notifications
 

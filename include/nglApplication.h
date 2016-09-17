@@ -103,8 +103,14 @@ public:
   
   virtual void OpenDocuments(std::list<nglPath>& paths);
   /*!<
-   Called when an "open documents" apple event is received (on Macintosh).
+   Called when an "open documents" OS event is received.
    */
+  
+  virtual void OpenURL(const nglString& rURL);
+  /*!<
+   Called when an "open url" OS event is received.
+   */
+
 
   /** @name Command line */
   //@{

@@ -227,11 +227,18 @@ void objCCallOnMemoryWarning();
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
 {
-  if (url && [url isFileURL])
+  if (url)
   {
-    nglPath p { [url.path UTF8String] };
-    std::list<nglPath> paths { p };
-    ((nglApplication *) App)->OpenDocuments(paths);
+    if ([url isFileURL])
+    {
+      nglPath p { [url.path UTF8String] };
+      std::list<nglPath> paths { p };
+      ((nglApplication *) App)->OpenDocuments(paths);
+    }
+    else
+    {
+      ((nglApplication *) App)->OpenURL([url.absoluteString UTF8String]);
+    }
   }
   return YES;
 }
