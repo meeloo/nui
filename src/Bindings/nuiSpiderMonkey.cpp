@@ -5,6 +5,8 @@
  licence: see nui3/LICENCE.TXT
  */
 
+#ifdef NUI_JAVASCRIPT_BINDINGS
+
 #include "nui.h"
 
 #ifdef WIN32
@@ -719,4 +721,6 @@ void nuiSpiderMonkey::Disconnect(nuiWidget* pWidget, const nglString& rEventName
     mEvents.erase(it);
   }
 }
+
+#endif // NUI_JAVASCRIPT_BINDINGS
 

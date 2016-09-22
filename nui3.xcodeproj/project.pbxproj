@@ -117,6 +117,9 @@
 		61ED91AD1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
 		61ED91AE1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
 		61ED91AF1A70273E001AF911 /* nglStdStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 61ED91A81A70273E001AF911 /* nglStdStream.cpp */; };
+		7345F1DD1D93E55800B3010E /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
+		7345F1DE1D93E55900B3010E /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
+		7345F1DF1D93E55B00B3010E /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
 		73F0841C12E9BA0700656E84 /* nuiShape.h in Headers */ = {isa = PBXBuildFile; fileRef = E5816CFE0C3CECAB00902DFE /* nuiShape.h */; };
 		73F0841D12E9BA0700656E84 /* nglZipFS.h in Headers */ = {isa = PBXBuildFile; fileRef = E5816CAB0C3CECAB00902DFE /* nglZipFS.h */; };
 		73F0841E12E9BA0700656E84 /* nuiArc.h in Headers */ = {isa = PBXBuildFile; fileRef = E5816CB10C3CECAB00902DFE /* nuiArc.h */; };
@@ -1919,7 +1922,6 @@
 		E52C83370FFBB2FD00B7779C /* nuiRegExp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52C83350FFBB2FD00B7779C /* nuiRegExp.cpp */; };
 		E52CBD211174C07E0031DFA8 /* nuiScriptEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CBD201174C07E0031DFA8 /* nuiScriptEngine.h */; };
 		E52CBD271174C0BE0031DFA8 /* nuiScriptEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD241174C0BE0031DFA8 /* nuiScriptEngine.cpp */; };
-		E52CC07111751B530031DFA8 /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
 		E52CC07511751B620031DFA8 /* nuiSpiderMonkey.h in Headers */ = {isa = PBXBuildFile; fileRef = E52CC07211751B620031DFA8 /* nuiSpiderMonkey.h */; };
 		E52D655110322B51005BF301 /* nuiHugeImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52D654E10322B51005BF301 /* nuiHugeImage.cpp */; };
 		E52D655510322B64005BF301 /* nuiHugeImage.h in Headers */ = {isa = PBXBuildFile; fileRef = E52D655210322B64005BF301 /* nuiHugeImage.h */; };
@@ -3017,7 +3019,6 @@
 		E5D643571209AB9C009C26A9 /* nglCondition_posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E560A371113587BB00AFBEAC /* nglCondition_posix.cpp */; };
 		E5D643581209AB9C009C26A9 /* nuiObjectInspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5354C0A113832B8008F5402 /* nuiObjectInspector.cpp */; };
 		E5D643591209AB9C009C26A9 /* nuiScriptEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD241174C0BE0031DFA8 /* nuiScriptEngine.cpp */; };
-		E5D643931209AB9C009C26A9 /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
 		E5D643941209AB9C009C26A9 /* nuiMimeMultiPart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5AFA4DF117548F20021C1E1 /* nuiMimeMultiPart.cpp */; };
 		E5D643951209AB9C009C26A9 /* nuiApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5F9B19A118656B600A703BA /* nuiApplication.cpp */; };
 		E5D643961209AB9C009C26A9 /* nuiNetworkHost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E50367B011A0AD7C001F4389 /* nuiNetworkHost.cpp */; };
@@ -4020,7 +4021,6 @@
 		E5FB9CB1147D5CEE001A1829 /* nglReaderWriterLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B7A1D511347AE3005403BF /* nglReaderWriterLock.cpp */; };
 		E5FB9CB2147D5CEE001A1829 /* nglCondition_posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E560A371113587BB00AFBEAC /* nglCondition_posix.cpp */; };
 		E5FB9CB3147D5CEE001A1829 /* nuiScriptEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CBD241174C0BE0031DFA8 /* nuiScriptEngine.cpp */; };
-		E5FB9CB4147D5CEE001A1829 /* nuiSpiderMonkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E52CC06E11751B530031DFA8 /* nuiSpiderMonkey.cpp */; };
 		E5FB9CB5147D5CEE001A1829 /* nuiMimeMultiPart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5AFA4DF117548F20021C1E1 /* nuiMimeMultiPart.cpp */; };
 		E5FB9CB7147D5CEE001A1829 /* nuiNetworkHost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E50367B011A0AD7C001F4389 /* nuiNetworkHost.cpp */; };
 		E5FB9CB8147D5CEE001A1829 /* nuiSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E50367B111A0AD7C001F4389 /* nuiSocket.cpp */; };
@@ -12244,6 +12244,7 @@
 				E542A12B0C3F0A5900225219 /* nglApplication.cpp in Sources */,
 				E542A12C0C3F0A5900225219 /* nglKernel.cpp in Sources */,
 				E542A12D0C3F0A5900225219 /* nuiSpline.cpp in Sources */,
+				7345F1DD1D93E55800B3010E /* nuiSpiderMonkey.cpp in Sources */,
 				E542A12E0C3F0A5900225219 /* nuiFontInstance.cpp in Sources */,
 				E542A12F0C3F0A5900225219 /* nglImageCodec.cpp in Sources */,
 				E542A1310C3F0A5900225219 /* nglTime.cpp in Sources */,
@@ -12472,7 +12473,6 @@
 				E560A372113587BB00AFBEAC /* nglCondition_posix.cpp in Sources */,
 				E5354C0D113832B8008F5402 /* nuiObjectInspector.cpp in Sources */,
 				E52CBD271174C0BE0031DFA8 /* nuiScriptEngine.cpp in Sources */,
-				E52CC07111751B530031DFA8 /* nuiSpiderMonkey.cpp in Sources */,
 				E5AFA4E2117548F20021C1E1 /* nuiMimeMultiPart.cpp in Sources */,
 				E5F9B19D118656B600A703BA /* nuiApplication.cpp in Sources */,
 				E50367B811A0AD7C001F4389 /* nuiNetworkHost.cpp in Sources */,
@@ -12626,6 +12626,7 @@
 				E5D642721209AB9C009C26A9 /* nuiShapeView.cpp in Sources */,
 				E5D642731209AB9C009C26A9 /* nglLog.cpp in Sources */,
 				E5D642741209AB9C009C26A9 /* nuiScrollView.cpp in Sources */,
+				7345F1DE1D93E55900B3010E /* nuiSpiderMonkey.cpp in Sources */,
 				E5D642751209AB9C009C26A9 /* nuiColor.cpp in Sources */,
 				E5D642761209AB9C009C26A9 /* nuiToggleButton.cpp in Sources */,
 				E5D642781209AB9C009C26A9 /* nuiImage.cpp in Sources */,
@@ -12803,7 +12804,6 @@
 				E5D643571209AB9C009C26A9 /* nglCondition_posix.cpp in Sources */,
 				E5D643581209AB9C009C26A9 /* nuiObjectInspector.cpp in Sources */,
 				E5D643591209AB9C009C26A9 /* nuiScriptEngine.cpp in Sources */,
-				E5D643931209AB9C009C26A9 /* nuiSpiderMonkey.cpp in Sources */,
 				E5D643941209AB9C009C26A9 /* nuiMimeMultiPart.cpp in Sources */,
 				E5D643951209AB9C009C26A9 /* nuiApplication.cpp in Sources */,
 				E5D643961209AB9C009C26A9 /* nuiNetworkHost.cpp in Sources */,
@@ -13207,6 +13207,7 @@
 				E5FB9BA5147D5CEE001A1829 /* nglBitmapTools.cpp in Sources */,
 				E5FB9BA9147D5CEE001A1829 /* nuiXML.cpp in Sources */,
 				E5FB9BAB147D5CEE001A1829 /* nglZipFS.cpp in Sources */,
+				7345F1DF1D93E55B00B3010E /* nuiSpiderMonkey.cpp in Sources */,
 				E5FB9BB0147D5CEE001A1829 /* nglInputDeviceInstance.cpp in Sources */,
 				E5FB9BB4147D5CEE001A1829 /* nglImagePNGCodec.cpp in Sources */,
 				E5FB9BB9147D5CEE001A1829 /* nuiTree.cpp in Sources */,
@@ -13314,7 +13315,6 @@
 				E5FB9CB1147D5CEE001A1829 /* nglReaderWriterLock.cpp in Sources */,
 				E5FB9CB2147D5CEE001A1829 /* nglCondition_posix.cpp in Sources */,
 				E5FB9CB3147D5CEE001A1829 /* nuiScriptEngine.cpp in Sources */,
-				E5FB9CB4147D5CEE001A1829 /* nuiSpiderMonkey.cpp in Sources */,
 				E5FB9CB5147D5CEE001A1829 /* nuiMimeMultiPart.cpp in Sources */,
 				E52003931C78D3870031A12B /* nuiMessageData.cpp in Sources */,
 				E5FB9CB7147D5CEE001A1829 /* nuiNetworkHost.cpp in Sources */,

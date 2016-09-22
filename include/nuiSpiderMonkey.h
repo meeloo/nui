@@ -7,6 +7,8 @@
 
 #pragma once
 
+#ifdef NUI_JAVASCRIPT_BINDINGS
+
 #include "nui.h"
 #include "nuiBindingManager.h"
 #include "nuiBindings.h"
@@ -118,4 +120,4 @@ protected:
   nuiEventSink<nuiSpiderMonkey> mEventSink;
 };
 
-
+#endif // NUI_JAVASCRIPT_BINDINGS
