@@ -267,6 +267,7 @@ void nuiTableView::CreateCells(nuiSize Height)
         mpSource->UpdateCell(cell, *pWidgetIt++);
       }
     }
+    return;
   }
   
   mFirstVisibleCell = 0;
