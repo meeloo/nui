@@ -2841,7 +2841,7 @@ void nuiGLPainter::SetVertexBuffersPointers(const nuiRenderArray& rArray, Render
   
   if (bound % 10000 == 0)
   {
-    NGL_DEBUG(NGL_OUT("VAO/VBO %lld created %lld bound (%f cache hit)\n", created, bound, (float)bound / (float)created););
+//    NGL_DEBUG(NGL_OUT("VAO/VBO %lld created %lld bound (%f cache hit)\n", created, bound, (float)bound / (float)created););
   }
   
   NGL_ASSERT(it != rInfo.mVAOs.end());
