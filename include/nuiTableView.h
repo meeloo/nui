@@ -127,9 +127,10 @@ public:
 protected:
   bool mSelectionEnabled=false;
   bool mMultiSelectionEnabled=false;
-  int32 mSelectedCell=-1;;
+  int32 mSelectedCell=-1;
   Selection mSelection;
-  void UpdateSelectedStates();
+  bool mNeedUpdateSelection = false;
+  void UpdateSelectedCells();
 
 ///< Mousing
 public:

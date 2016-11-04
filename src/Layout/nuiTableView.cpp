@@ -114,6 +114,7 @@ bool nuiTableView::SetRect(const nuiRect& rRect)
   {
     mNeedUpdateCells=false;
     CreateCells(rRect.GetHeight()+GetOverDrawBottom()+GetOverDrawTop());
+    mNeedUpdateSelection = true;
   }
   nuiScrollView::SetRect(rRect);
   
@@ -130,23 +131,10 @@ bool nuiTableView::SetRect(const nuiRect& rRect)
 
 bool nuiTableView::Draw(nuiDrawContext* pContext)
 {
-  NGL_ASSERT(mFirstVisibleCell >= 0);
-  int32 i = mFirstVisibleCell;
-  if (IsSelectionEnabled())
-  {
-    for (Cells::const_iterator it = mVisibleCells.begin(); it != mVisibleCells.end(); ++it)
-    {
-      nuiWidget* pCell = *it;
-      pCell->SetSelected(mSelection[i++]);
-    }
-  }
   nuiScrollView::Draw(pContext);
 
   if (mDrawSeparators && mVisibleCells.size() > 1)
   {
-//    nuiRenderArray* pLines = new nuiRenderArray(GL_LINES);
-//    pLines->Reserve(mVisibleCells.size()-1);
-
     nuiColor color = mSeparatorColor;
     color.SetAlpha(color.Alpha()*GetMixedAlpha());
     pContext->EnableBlending(true);
@@ -162,17 +150,7 @@ bool nuiTableView::Draw(nuiDrawContext* pContext)
     {
       nuiSize y = (*cell)->GetRect().Top();
       pContext->DrawLine(x0, y, x1, y);
-//      pLines->SetVertex(x0,y);
-//      pLines->PushVertex();
-//      pLines->SetVertex(x1,y);
-//      pLines->PushVertex();
     }
-//    nuiColor color = mSeparatorColor;
-//    color.SetAlpha(GetMixedAlpha());
-//    pContext->EnableBlending(true);
-//    pContext->SetBlendFunc(nuiBlendTransp);
-//    pContext->SetStrokeColor(color);
-//    pContext->DrawArray(pLines);
   }
 
   return true;
@@ -210,6 +188,7 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
       --mFirstVisibleCell;
       --mLastVisibleCell;
       mpSource->UpdateCell(mFirstVisibleCell, pCell);
+      mNeedUpdateSelection = true;
     }
   }
   else if (mLastVisibleCell < lastVisibleCell)
@@ -223,9 +202,11 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
       ++mLastVisibleCell;
       ++mFirstVisibleCell;
       mpSource->UpdateCell(mLastVisibleCell, pCell);
+      mNeedUpdateSelection = true;
     }
   }
 
+  UpdateSelectedCells();
 
   if (YOffset >= 0)
     y = -(YOffset - cellHeight*mFirstVisibleCell);
@@ -427,14 +408,12 @@ void nuiTableView::SelectCell(int32 Index, bool Select)
   {
     return;
   }
-  
-  
+
   if (Select && mSelectedCell != Index)
   {
     if (mSelectedCell >= 0)
     {
       mSelection[mSelectedCell] = false;
-      Invalidate();
     }
     mSelectedCell = Index;
   }
@@ -446,11 +425,28 @@ void nuiTableView::SelectCell(int32 Index, bool Select)
   if (mSelection[Index] != Select)
   {
     mSelection[Index] = Select;
-    Invalidate();
   }
 
+  mNeedUpdateSelection = true;
+  UpdateSelectedCells();
 }
 
+void nuiTableView::UpdateSelectedCells()
+{
+  if (!mNeedUpdateSelection)
+    return;
+  mNeedUpdateSelection = false;
+  if (IsSelectionEnabled())
+  {
+    NGL_ASSERT(mFirstVisibleCell >= 0);
+    int32 cell = mFirstVisibleCell;
+    for (Cells::const_iterator it = mVisibleCells.begin(); it != mVisibleCells.end(); ++it)
+    {
+      nuiWidget* pCell = *it;
+      pCell->SetSelected(mSelection[cell++]);
+    }
+  }
+}
 //bool nuiTableView::IsSelected(int32 Index)
 //{
 //  if (mSelection.find(Index) != mSelection.end())
@@ -463,7 +459,8 @@ void nuiTableView::ClearSelection()
   for (int i = 0; i < mSelection.size(); ++i)
     mSelection[i] = false;
   mSelectedCell = -1;
-  Invalidate();
+  mNeedUpdateSelection=true;
+  UpdateSelectedCells();
 }
 
 const nuiTableView::Selection& nuiTableView::GetSelection()
