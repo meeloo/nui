@@ -32,6 +32,8 @@ public:
   virtual bool MouseClicked   (const nglMouseInfo& rInfo);
   virtual bool MouseUnclicked (const nglMouseInfo& rInfo);
   virtual bool MouseMoved     (const nglMouseInfo& rInfo);
+  virtual bool MouseUngrabbed (nglTouchId Id);
+  void OnDelayedActivation(const nuiEvent& rEvent);
 
   // Keyboard events:
   bool KeyDown(const nglKeyEvent& rEvent);
@@ -49,6 +51,7 @@ public:
 protected:
   nuiRadioButtonGroup* mpGroupManager;
   bool mCanToggle;
+  nuiEventSink<nuiRadioButton> mRadioEventSink;
 };
 
 #endif // __nuiRadioButton_h__

@@ -8,7 +8,7 @@
 #include "nui.h"
 
 nuiRadioButton::nuiRadioButton()
-  : nuiToggleButton()
+  : nuiToggleButton(), mRadioEventSink(this)
 {
   SetObjectClass("nuiRadioButton");
   SetGroup("Default");
@@ -17,7 +17,7 @@ nuiRadioButton::nuiRadioButton()
 }
 
 nuiRadioButton::nuiRadioButton(const nglString& rText)
-  : nuiToggleButton(rText)
+  : nuiToggleButton(rText), mRadioEventSink(this)
 {
   SetObjectClass("nuiRadioButton");
   SetGroup("Default");
@@ -26,7 +26,7 @@ nuiRadioButton::nuiRadioButton(const nglString& rText)
 }
 
 nuiRadioButton::nuiRadioButton(nuiStateDecoration* pDecoration)
-  : nuiToggleButton(pDecoration)
+  : nuiToggleButton(pDecoration), mRadioEventSink(this)
 {
   SetObjectClass("nuiRadioButton");
   SetGroup("Default");
@@ -35,7 +35,7 @@ nuiRadioButton::nuiRadioButton(nuiStateDecoration* pDecoration)
 }
 
 nuiRadioButton::nuiRadioButton(const nglImage& rImage)
-  : nuiToggleButton(rImage)
+  : nuiToggleButton(rImage), mRadioEventSink(this)
 {
   SetObjectClass("nuiRadioButton");
   SetGroup("Default");
@@ -117,6 +117,19 @@ bool nuiRadioButton::MouseClicked  (const nglMouseInfo& rInfo)
     else
       SetPressed(true);
     Invalidate();
+
+    if (mDelayedActivation > 0)
+    {
+      mLastTime = nglTime();
+      mUntilRepeat = mDelayedActivation;
+
+      if (!mpAutoRepeatTimer)
+      {
+        mpAutoRepeatTimer = nuiAnimation::AcquireTimer();
+        mRadioEventSink.Connect(mpAutoRepeatTimer->Tick, &nuiRadioButton::OnDelayedActivation);
+      }
+    }
+
     return true;
   }
   return false;
@@ -193,6 +206,39 @@ bool nuiRadioButton::MouseMoved(const nglMouseInfo& rInfo)
     return true;
   }
   return false;
+}
+
+bool nuiRadioButton::MouseUngrabbed(nglTouchId Id)
+{
+  nuiWidget::MouseUngrabbed(Id);
+  if (mClicked)
+  {
+    mClicked = false;
+    SetPressed(mWasPressed);
+  }
+  if (mpAutoRepeatTimer)
+  {
+    if (mDelayedActivation > 0)
+      mRadioEventSink.Disconnect(mpAutoRepeatTimer->Tick, &nuiRadioButton::OnDelayedActivation);
+    mpAutoRepeatTimer = NULL;
+    nuiAnimation::ReleaseTimer();
+  }
+  return false;
+}
+
+void nuiRadioButton::OnDelayedActivation(const nuiEvent& rEvent)
+{
+  NGL_ASSERT(mDelayedActivation > 0);
+  if (mUntilRepeat >= 0)
+  {
+    nglTime now;
+    mUntilRepeat -= (now.GetValue() - mLastTime.GetValue());
+    mLastTime = now;
+    if (mUntilRepeat < 0)
+    {
+      DelayedActivation();
+    }
+  }
 }
 
 void nuiRadioButton::SetGroup(const nglString& rGroupName)

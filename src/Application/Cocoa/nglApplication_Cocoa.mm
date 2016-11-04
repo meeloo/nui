@@ -586,8 +586,12 @@ static NSString* GetApplicationName(void)
 
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
-  NSLog(@"[NSApplication openFile: %@", filename);
-  return YES;
+  if (filename)
+  {
+    std::list<nglPath> paths { [filename UTF8String] };
+    ((nglApplication *) App)->OpenDocuments(paths);
+  }
+  return filename != nil;
 }
 
 /*
