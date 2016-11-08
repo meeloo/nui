@@ -44,18 +44,24 @@ void objCCallOnMemoryWarning();
 
 - (BOOL)application:(UIApplication *)pUIApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 {
-  //App->TimedPrint("nglUIApplicationDelegate didFinishLaunchingWithOptions");
 	assert(App);
-	NSURL *launchURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];	
-	//objCCallOnInitWithURL(pUIApplication, nglString ((CFStringRef)@"bleepbox://oauth?oauth_verifier=fffff"));
-	
-	if(launchURL)
+	NSURL *launchURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+
+	if (launchURL)
 	{
-		NSString *urlstr = [launchURL absoluteString];
-		
-		objCCallOnInitWithURL(pUIApplication, nglString ((CFStringRef)urlstr));
-	} else {
-		
+    nglString p;
+    if ([launchURL isFileURL])
+    {
+      p = [launchURL.path UTF8String];
+    }
+    else
+    {
+      p = [launchURL.absoluteString UTF8String];
+    }
+		objCCallOnInitWithURL(pUIApplication, p);
+	}
+  else
+  {
 		objCCallOnInit(pUIApplication);
 	}
   return YES;
