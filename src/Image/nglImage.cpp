@@ -608,7 +608,6 @@ bool nglImage::GetImageInfo(nglImageInfo& rInfo, nglIStream* pIFile, nglImageCod
   
   if (pIFile->GetState() != eStreamReady)
   {
-    delete pIFile;
     return false;
   }
   

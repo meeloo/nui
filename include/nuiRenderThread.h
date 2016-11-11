@@ -44,6 +44,7 @@ public:
   void SetRootWidget(nuiWidget* pRoot);
   void RunTaskOnRenderThread(nuiTask* rTask, bool OnNextFrame);
   void SetLayerTree(nuiLayer* pLayerRoot);
+  void InvalidateLayerRect(nuiLayer* pLayer, nuiRect rect);
 
   nuiPainter* GetPainter() const;
   nuiDrawContext* GetDrawContext() const;
@@ -68,7 +69,7 @@ private:
   nuiTaskQueue mNextFrameQueue;
 
   nuiRect mRect;
-  std::vector<nuiRect> mPartialRects;
+  std::map<nuiLayer*, std::vector<nuiRect> > mPartialRects;
   nuiWidget* mpRoot = nullptr;
   std::map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetContentsPainters;
   std::map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetDrawPainters;
@@ -93,6 +94,7 @@ private:
   void _SetRootWidget(nuiWidget* pWidget);
   void _SetLayerTree(nuiLayer* pRoot);
   void _RenderFrame(const nuiRef<nuiMetaPainter>& pFrame);
+  void _InvalidateLayerRect(nuiLayer* pLayer, nuiRect rect);
 
   virtual void OnStart();
 

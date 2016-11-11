@@ -128,10 +128,8 @@ bool nglThread::Start()
    pthread_t self_id;
 
    self_id = pthread_self ();
-   void* start = pthread_get_stackaddr_np (self_id);
-   int64 size = pthread_get_stacksize_np (self_id);
-   void* end = (char *)start + size;
-
+//   void* start = pthread_get_stackaddr_np (self_id);
+   size_t size = pthread_get_stacksize_np (self_id);
    mStackSize = size;
 #else
     pthread_getattr_np(mpData->thread, &attr);

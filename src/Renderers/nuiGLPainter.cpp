@@ -231,16 +231,16 @@ static uint32 totalinframe = 0;
 static uint32 total = 0;
 static nglCriticalSection gStats(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
-
-static int64 MakePOT(int64 v)
+template <typename T>
+static T MakePOT(T v)
 {
   uint i;
-  nuiSize val = 1;
-  for (i = 0; i < 32; i++)
+  double val = 1;
+  for (i = 0; i < 64; i++)
   {
     if (v <= val)
     {
-      v = val;
+      v = ToBelow(val);
       break;
     }
     val *= 2;
@@ -260,7 +260,7 @@ void nuiGLLoadMatrix(const double* pMatrix)
 #ifndef _OPENGL_ES_
   glLoadMatrixd(pMatrix);
 #else
-  NGL_ASSERT(!"no glLoadMatrixd in gles");
+  NGL_ASSERT(0)//!"no glLoadMatrixd in gles");
 #endif
 }
 
@@ -540,32 +540,26 @@ nuiGLPainter::~nuiGLPainter()
 
 void nuiGLPainter::SetViewport()
 {
-  //GetAngle(), GetCurrentWidth(), GetCurrentHeight(), mProjectionViewportStack.top(), mProjectionMatrixStack.top());
-  GLint Angle = GetAngle();
+  if (!mViewportChanged)
+    return;
+
   GLint Width = GetCurrentWidth();
   GLint Height = GetCurrentHeight();
   const nuiRect& rViewport(mProjectionViewportStack.top());
-  const nuiMatrix& rMatrix = mProjectionMatrixStack.top();
-  
-  //NGL_DEBUG(NGL_OUT("nuiGLPainter::SetViewPort(%d, %d)\n", Width, Height);)
-  
-  uint32 x, y, w, h;
+
+  int32 x, y, w, h;
   
   nuiRect r(rViewport);
-  //  if (Angle == 90 || Angle == 270)
-  //  {
-  //    uint32 tmp = Width;
-  //    Width = Height;
-  //    Height = tmp;
-  //    r.Set(r.Top(), r.Left(), r.GetHeight(), r.GetWidth());
-  //  }
-  
-  
-  x = ToBelow(r.Left());
-  w = ToBelow(r.GetWidth());
-  y = Height - ToBelow(r.Bottom());
-  h = ToBelow(r.GetHeight());
-  
+  if (r.GetWidth() == 0 || r.GetHeight() == 0)
+    r.SetSize((float)Width, (float)Height);
+//  NGL_DEBUG(NGL_OUT("nuiGLPainter::SetViewPort(%d, %d) (%s)\n", Width, Height, r.GetValue().GetChars());)
+
+
+  x = ToNearest(r.Left());
+  w = ToNearest(r.GetWidth());
+  y = Height - ToNearest(r.Bottom());
+  h = ToNearest(r.GetHeight());
+
   {
     const float scale = mpContext->GetScale();
     x *= scale;
@@ -574,9 +568,12 @@ void nuiGLPainter::SetViewport()
     h *= scale;
   }
   
+  NGL_ASSERT(x >= 0);
+//  NGL_ASSERT(y >= 0);
   nuiCheckForGLErrors();
   glViewport(x, y, w, h);
-  
+//  NGL_DEBUG(NGL_OUT("nuiGLPainter::SetViewPort Actual(%d, %d, %d, %d)\n", x, y, w, h);)
+
   if (mpSurface)
   {
     mSurfaceMatrix.SetScaling(1.0f, -1.0f, 1.0f);
@@ -591,7 +588,8 @@ void nuiGLPainter::SetViewport()
   //  {
   //    mSurfaceMatrix.Rotate(angle, 0 ,0, 1);
   //  }
-  
+
+  mViewportChanged = false;
   nuiCheckForGLErrors();
 }
 
@@ -626,9 +624,10 @@ void nuiGLPainter::ResetOpenGLState()
   mScissorOn = false;
   
   
-  SetViewport();
+  //SetViewport();
   
   glDisable(GL_DEPTH_TEST);
+//  printf("DISABLE scissor test\n");
   glDisable(GL_SCISSOR_TEST);
   glDisable(GL_STENCIL_TEST);
   glDisable(GL_BLEND);
@@ -766,22 +765,23 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
     nuiCheckForGLErrors();
   }
 
-  if (mClip.mEnabled || ForceApply)
+  if (mpClippingStack.top().mEnabled || ForceApply)
   {
     uint32 width = GetCurrentWidth();
     uint32 height = GetCurrentHeight();
 
-    nuiRect clip(mClip);
+    nuiRect clip(mpClippingStack.top());
 
     int x,y,w,h;
     uint angle = (mpSurface && mpSurface->GetRenderToTexture()) ? 0 : mAngle;
-    x = ToBelow(clip.Left());
-    y = ToBelow(height - clip.Bottom());
-    w = ToBelow(clip.GetWidth());
-    h = ToBelow(clip.GetHeight());
+    x = ToNearest(clip.Left());
+    y = ToNearest(height - clip.Bottom());
+    w = ToNearest(clip.GetWidth());
+    h = ToNearest(clip.GetHeight());
 
     if (!mScissorOn || ForceApply)
     {
+//      printf("Enable scissor test\n");
       glEnable(GL_SCISSOR_TEST);
       mScissorOn = true;
     }
@@ -810,6 +810,7 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
       {
 //        NGL_OUT("%p scissor: %d %d %d %d (%s)\n", mpSurface, x, y, w, h, mpSurface->GetObjectName().GetChars());
       }
+//      NGL_OUT("scissor: %d %d %d %d\n", x, y, w, h);
       glScissor(x, y, w, h);
     }
     nuiCheckForGLErrors();
@@ -818,6 +819,7 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
   {
     if (mScissorOn || ForceApply)
     {
+//      printf("Disable scissor test\n");
       glDisable(GL_SCISSOR_TEST);
       mScissorOn = false;
     }
@@ -845,9 +847,14 @@ void nuiGLPainter::SetState(const nuiRenderState& rState, bool ForceApply)
 void nuiGLPainter::SetSize(uint32 w, uint32 h)
 {
   NUI_RETURN_IF_RENDERING_DISABLED;
+  if (mWidth == w && mHeight == h)
+    return;
+
   NGL_DEBUG(NGL_LOG("painter", NGL_LOG_DEBUG, "nuiGLPainter::SetSize(%d, %d)\n", w, h);)
+//  NGL_OUT("GLPainter::SetSize %d x %d -> %d x %d\n", mWidth, mHeight, w, h);
   mWidth = w;
   mHeight = h;
+  mViewportChanged = true;
 }
 
 void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, int slot)
@@ -981,6 +988,8 @@ void nuiGLPainter::Clear(bool color, bool depth, bool stencil)
   mRenderOperations++;
   NUI_RETURN_IF_RENDERING_DISABLED;
 
+  SetViewport();
+
   glClearColor(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
 #ifdef _OPENGL_ES_
     glClearDepthf(mFinalState.mClearDepth);
@@ -1000,68 +1009,6 @@ void nuiGLPainter::Clear(bool color, bool depth, bool stencil)
   nuiCheckForGLErrors();
 }
 
-/*
- void nuiGLPainter::BlurRect(const nuiRect& rRect, uint Strength)
- {
- nuiRect Rect = rRect;
- if (mClippingRect.mEnabled)
- Rect.Intersect(mClippingRect,rRect);
- nuiRect size = Rect.Size();
-
- nuiTexture* pScratchPad = GetScratchPad(ToZero(size.GetWidth()), ToZero(size.GetHeight()));
-
- if (!pScratchPad)
- return;
-
- SetTexture(pScratchPad);
-
- glPushMatrix();
- glLoadIdentity();
-
- EnableBlending(true);
- EnableTexturing(true);
- SetBlendFunc(nuiBlendTransp);
-
- do
- {
- glCopyTexSubImage2D(
- GL_TEXTURE_2D, 0,
- 0, 0,
- ToZero(rRect.mLeft), ToZero(mHeight) - 1 - ToZero(rRect.mTop) - ToZero(rRect.GetHeight()),
- ToZero(rRect.GetWidth()), ToZero(rRect.GetHeight())
- );
-
- SetFillColor(nuiColor(1,1,1,.15f));
- nuiRect rect = Rect;
-
- rect.Move(-1,-1);
- DrawImage(rect,size);
- rect.Move(1,0);
- DrawImage(rect,size);
- rect.Move(1,0);
- DrawImage(rect,size);
-
- rect.Move(-2,1);
- DrawImage(rect,size);
- rect.Move(1,0);
- DrawImage(rect,size);
- rect.Move(1,0);
- DrawImage(rect,size);
-
- rect.Move(-2,1);
- DrawImage(rect,size);
- rect.Move(0,1);
- DrawImage(rect,size);
- rect.Move(0,1);
- DrawImage(rect,size);
- } while ((long)(Strength--) > 0);
-
- EnableBlending(false);
- EnableTexturing(false);
-
- glPopMatrix();
- }
- */
 
 
 #define LOGENUM(XXX) case XXX: { NGL_OUT("%s\n", #XXX); } break;
@@ -1076,7 +1023,9 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     pArray->Release();
     return;
   }
-  
+
+  SetViewport();
+
   if (pArray->GetDebug())
   {
     NGL_OUT("Texturing %s (%p)\n", YESNO(mFinalState.mTexturing), mFinalState.mpTexture[0]);
@@ -1094,7 +1043,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     ops++;
   }
 
-  const nuiMatrix& rM(mMatrixStack.top());
+  const nuiMatrix& rM(GetMatrix());
   float bounds[6];
   pArray->GetBounds(bounds);
   
@@ -1125,12 +1074,13 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     bounds[3] += rM.Elt.M14;
     bounds[4] += rM.Elt.M24;
     //bounds[5] += rM.Elt.M34;
-    
+
+    nuiRect clip = mpClippingStack.top();
     if (
-        (bounds[0] > mClip.Right()) ||
-        (bounds[1] > mClip.Bottom()) ||
-        (bounds[3] < mClip.Left()) ||
-        (bounds[4] < mClip.Top())
+        (bounds[0] > clip.Right()) ||
+        (bounds[1] > clip.Bottom()) ||
+        (bounds[3] < clip.Left()) ||
+        (bounds[4] < clip.Top())
         )
     {
       pArray->Release();
@@ -1203,7 +1153,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   }
   
   
-  if (mFinalState.mpTexture && pArray->IsArrayEnabled(nuiRenderArray::eTexCoord))
+  if (mFinalState.mpTexture[0] && pArray->IsArrayEnabled(nuiRenderArray::eTexCoord))
   {
     if (mTextureScale[1] < 0)
     {
@@ -1216,8 +1166,8 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   }
   
   mFinalState.mpShaderState->SetSurfaceMatrix(mSurfaceMatrix, false);
-  mFinalState.mpShaderState->SetProjectionMatrix(mProjectionMatrixStack.top(), false);
-  mFinalState.mpShaderState->SetModelViewMatrix(mMatrixStack.top(), false);
+  mFinalState.mpShaderState->SetProjectionMatrix(GetProjectionMatrix(), false);
+  mFinalState.mpShaderState->SetModelViewMatrix(GetMatrix(), false);
   
   uint32 s = pArray->GetSize();
 
@@ -1235,7 +1185,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     return;
   }
   
-  if (mClip.GetWidth() <= 0 || mClip.GetHeight() <= 0)
+  if (mpClippingStack.top().GetWidth() <= 0 || mpClippingStack.top().GetHeight() <= 0)
   {
     pArray->Release();
     return;
@@ -2271,7 +2221,8 @@ void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
 
 void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 {
-  //NGL_OUT("nuiGLPainter::SetSurface %p\n", pSurface);
+//  NGL_OUT("nuiGLPainter::SetSurface %p\n", pSurface);
+  mViewportChanged = true;
   if (!mpSurface && pSurface)
   {
     //#ifdef _OPENGL_ES_
@@ -2280,9 +2231,14 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
     nuiCheckForGLErrors();
     //#endif
-    
+    mOriginalWidth = mWidth;
+    mOriginalHeight = mHeight;
   }
-  
+  else if (mpSurface && !pSurface)
+  {
+    SetSize(mOriginalWidth, mOriginalHeight);
+  }
+
   if (pSurface)
     pSurface->Acquire();
   
@@ -2303,7 +2259,9 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     
     GLint width = (GLint)pSurface->GetWidth();
     GLint height = (GLint)pSurface->GetHeight();
-    
+
+    //SetSize(width, height);
+
     float scale = mpContext->GetScale();
     width *= scale;
     height *= scale;
@@ -2564,6 +2522,7 @@ void nuiGLPainter::RenderArrayInfo::Draw() const
 
 bool nuiCheckForGLErrorsReal()
 {
+  return true;
   GLenum err = GL_NO_ERROR;
 #if 1 // Globally enable/disable OpenGL error checking
   //#ifdef NGL_DEBUG
@@ -2663,8 +2622,7 @@ void nuiGLPainter::LoadProjectionMatrix(const nuiRect& rViewport, const nuiMatri
   NUI_RETURN_IF_RENDERING_DISABLED;
   
   nuiPainter::LoadProjectionMatrix(rViewport, rMatrix);
-  
-  SetViewport();
+  mViewportChanged = true;
 }
 
 void nuiGLPainter::MultProjectionMatrix(const nuiMatrix& rMatrix)
@@ -2672,8 +2630,7 @@ void nuiGLPainter::MultProjectionMatrix(const nuiMatrix& rMatrix)
   NUI_RETURN_IF_RENDERING_DISABLED;
   
   nuiPainter::MultProjectionMatrix(rMatrix);
-  
-  SetViewport();
+  mViewportChanged = true;
 }
 
 void nuiGLPainter::PushProjectionMatrix()
@@ -2681,6 +2638,7 @@ void nuiGLPainter::PushProjectionMatrix()
   NUI_RETURN_IF_RENDERING_DISABLED;
   
   nuiPainter::PushProjectionMatrix();
+  mViewportChanged = true;
 }
 
 void nuiGLPainter::PopProjectionMatrix()
@@ -2688,7 +2646,7 @@ void nuiGLPainter::PopProjectionMatrix()
   NUI_RETURN_IF_RENDERING_DISABLED;
   
   nuiPainter::PopProjectionMatrix();
-  SetViewport();
+  mViewportChanged = true;
 }
 
 

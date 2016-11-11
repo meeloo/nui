@@ -98,7 +98,7 @@ public:
   virtual void EnableClipping(bool set);
   virtual bool GetClipRect(nuiRect& rRect, bool LocalRect) const;
 
-  virtual uint32 GetClipStackSize() const;
+  virtual size_t GetClipStackSize() const;
 
   virtual uint32 GetRectangleTextureSupport() const;
 
@@ -121,7 +121,8 @@ public:
 
   // Debug:
   virtual void AddBreakPoint();
-  
+  virtual void AddPrint(const char* str);
+
   void DEBUG_EnableDrawArray(bool set) const;
   bool DEBUG_GetEnableDrawArray() const;
   
@@ -142,15 +143,14 @@ protected:
 
   const nuiRenderState mDefaultState;
   const nuiRenderState* mpState = &mDefaultState;
-  std::stack<nuiClipper> mpClippingStack;
   uint32 mWidth;
   uint32 mHeight;
   uint32 mAngle;
 
-  nuiClipper mClip;
   std::stack<nuiMatrix> mMatrixStack;
   std::stack<nuiMatrix> mProjectionMatrixStack;
   std::stack<nuiRect> mProjectionViewportStack;
+  std::stack<nuiClipper> mpClippingStack;
 
   uint32 mRenderOperations;
   uint32 mVertices;

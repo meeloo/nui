@@ -187,7 +187,6 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
     mIsRendering(false),
     mpCSS(NULL)
 {
-  mNeedInvalidateOnSetRect = true;
   mClearBackground = true;
   SetObjectClass("nuiTopLevel");
 

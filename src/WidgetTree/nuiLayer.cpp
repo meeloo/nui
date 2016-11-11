@@ -258,13 +258,18 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     name.CFormat("layer contents %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
     pContentsPainter->SetName(name);
 
-
-    pContext->ResetState();
-    pContext->Set2DProjectionMatrix(nuiRect(mWidth, mHeight));
-    pContext->ResetClipRect();
+//    pContentsPainter->SetSize(ToNearest(mWidth), ToNearest(mHeight));
 
     if (mpSurface)
+    {
+      pContentsPainter->PushProjectionMatrix();
       pContentsPainter->SetSurface(mpSurface);
+      nuiMatrix m;
+      nuiRect r(mpSurface->GetWidth(), mpSurface->GetHeight());
+      m.Translate(-1.0f, 1.0f, 0.0f);
+      m.Scale(2.0f/r.GetWidth(), -2.0f/r.GetHeight(), 1.0f);
+      pContentsPainter->LoadProjectionMatrix(r, m);
+    }
 
     float offsetX = mOffsetX;
     float offsetY = mOffsetY;
@@ -296,7 +301,10 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
 
     if (mpSurface)
+    {
+      pContentsPainter->PopProjectionMatrix();
       pContentsPainter->SetSurface(nullptr);
+    }
 
     if (offsetX != 0 || offsetY != 0)
     {
@@ -376,8 +384,19 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //    NGL_OUT("Draw is false for %p %s %s\n", mpWidgetContents, mpWidgetContents->GetObjectName().GetChars(), mpWidgetContents->GetObjectClass().GetChars());
   }
 
+  if (mClipContents)
+  {
+    mpDrawPainter->PushClipping();
+    mpDrawPainter->EnableClipping(mClipContents);
+
+    mpDrawPainter->Clip(dst);
+  }
+
   if (mpWidgetContents)
   {
+    nglString str;
+    str.CFormat("Draw Layer for widget %s", name.GetChars());
+//    mpDrawPainter->AddPrint(str.GetChars());
 //    NGL_OUT("Update layer contents with widget [%p %s] ( (%f, %f) / (%f x %f))\n",
 //            mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
 //            mpWidgetContents->GetRect().Left(), mpWidgetContents->GetRect().Top(),
@@ -387,12 +406,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     {
       if (!mChildWidgets.empty())
       {
-        mpDrawPainter->PushClipping();
-        nuiRect clp(mpWidgetContents->GetRect().Size());
-        mpDrawPainter->EnableClipping(mClipContents);
-//        clp.Move(mOffsetX, mOffsetY);
-        mpDrawPainter->Clip(clp);
-        
+
         for (auto widget : mChildWidgets)
         {
           mpDrawPainter->PushMatrix();
@@ -408,7 +422,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //                  widget->GetRect().Left(), widget->GetRect().Top(),
 //                  widget->GetRect().GetWidth(), widget->GetRect().GetHeight());
         }
-        mpDrawPainter->PopClipping();
+
       }
     }
   }
@@ -425,12 +439,17 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   }
   level--;
 
+  if (mClipContents)
+    mpDrawPainter->PopClipping();
+
   pContext->PopMatrix();
   pContext->SetPainter(pPainter);
 
   pRenderThread->SetLayerDrawPainter(this, mpDrawPainter);
   if (mpWidgetContents)
+  {
     pRenderThread->SetWidgetDrawPainter(mpWidgetContents, mpDrawPainter);
+  }
 }
 
 nuiMetaPainter* nuiLayer::GetDrawPainter() const

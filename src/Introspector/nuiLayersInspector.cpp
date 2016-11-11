@@ -263,9 +263,18 @@ void nuiLayersInspector::OnLayerSelection(const nuiEvent& rEvent)
     nuiImage* pImage = new nuiImage();
     pImage->SetPosition(nuiFill);
     pImage->SetFillRule(nuiCenter);
+    pImage->SetTexture(pLayer->GetTexture());
+
+    nuiDecoration* pDeco = nuiDecoration::Get("nuiLayerIntrospectorBg");
+    if (!pDeco)
+    {
+      pDeco = new nuiColorDecoration("nuiLayerIntrospectorBg", nuiRect(0,0,0,0), nuiColor("gray"), 0);
+    }
+
+    pImage->SetDecoration(pDeco);
+
     mpAttributeGrid->SetCell(0, i, new nuiLabel("Contents"));
     mpAttributeGrid->SetCell(1, i, pImage);
-    pImage->SetTexture(pLayer->GetTexture());
     i++;
   }
   

@@ -575,6 +575,7 @@ void nuiObject::AddAttribute(const nglString& rName, nuiAttributeBase* pAttribut
   pAttribute->SetOrder(mUniqueAttributeOrder);
 
   NGL_ASSERT(mClassNameIndex < mClassAttributes.size());
+  delete mClassAttributes[mClassNameIndex][rName];
   mClassAttributes[mClassNameIndex][rName] = pAttribute;
 }
 
@@ -592,6 +593,7 @@ void nuiObject::AddAttribute(nuiAttributeBase* pAttribute)
   ngl_atomic_inc(mUniqueAttributeOrder);
   pAttribute->SetOrder(mUniqueAttributeOrder);
 
+  delete mClassAttributes[mClassNameIndex][pAttribute->GetName()];
   mClassAttributes[mClassNameIndex][pAttribute->GetName()] = pAttribute;
 }
 
@@ -602,6 +604,7 @@ void nuiObject::AddInstanceAttribute(const nglString& rName, nuiAttributeBase* p
   pAttribute->SetOrder(mUniqueAttributeOrder);
   pAttribute->SetAsInstanceAttribute(true);
 
+  delete mInstanceAttributes[rName];
   mInstanceAttributes[rName] = pAttribute;
 }
 
@@ -612,6 +615,7 @@ void nuiObject::AddInstanceAttribute(nuiAttributeBase* pAttribute)
   pAttribute->SetOrder(mUniqueAttributeOrder);
   pAttribute->SetAsInstanceAttribute(true);
 
+  delete mInstanceAttributes[pAttribute->GetName()];
   mInstanceAttributes[pAttribute->GetName()] = pAttribute;
 }
 

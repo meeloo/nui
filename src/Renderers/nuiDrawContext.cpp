@@ -69,6 +69,7 @@ void nuiDrawContext::StopRendering()
 
 void nuiDrawContext::SetPainter(nuiPainter* pPainter)
 {
+//  pPainter->SetSize(GetWidth(), GetHeight());
   mpPainter = pPainter;
 }
 
@@ -85,6 +86,11 @@ void nuiDrawContext::SetState(const nuiRenderState& rState)
 void nuiDrawContext::AddBreakPoint()
 {
   mpPainter->AddBreakPoint();
+}
+
+void nuiDrawContext::AddPrint(const char* str)
+{
+  mpPainter->AddPrint(str);
 }
 
 /****************************************************************************
@@ -128,7 +134,6 @@ bool nuiDrawContext::EnableClipping(bool set)
 //  nuiRect r;
 //  if (mpPainter->GetClipRect(r, false) == set)
 //    return true;
-  
   mpPainter->EnableClipping(set);
   mStateChanges++;
   return true;
@@ -1866,6 +1871,10 @@ int nuiDrawContext::GetHeight() const
 
 void nuiDrawContext::SetSurface(nuiSurface* pSurface)
 {
+  if (pSurface)
+    mpPainter->SetSize(pSurface->GetWidth(), pSurface->GetHeight());
+  else
+    mpPainter->SetSize(GetWidth(), GetHeight());
   mpPainter->SetSurface(pSurface);
   mStateChanges++;
 }

@@ -512,7 +512,6 @@ void nuiWidget::Init()
 {
   mDebugLevel = 0; // No debug by default.
   mCanRespectConstraint = false; ///< By default the widgets don't care about the constraints imposed by their parents. Only few ones care about this.
-  mNeedInvalidateOnSetRect = true;
   mDrawingInCache = false;
 
   mTrashed = false;
@@ -592,8 +591,9 @@ void nuiWidget::Init()
   NUI_ADD_EVENT(PreMouseMoved);
   NUI_ADD_EVENT(PreMouseWheelMoved);
   
-//  SetLayerPolicy(nuiDrawPolicyDrawSelf);
-  SetLayerPolicy(nuiDrawPolicyDrawNone);
+  SetLayerPolicy(nuiDrawPolicyDrawSelf);
+  //SetLayerPolicy(nuiDrawPolicyDrawTree);
+  //SetLayerPolicy(nuiDrawPolicyDrawNone);
 }
 
 bool nuiWidget::SetObjectClass(const nglString& rName)
@@ -1028,6 +1028,18 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
     r.mBottom = MAX(vec1[1], MAX(vec2[1], MAX(vec3[1], vec4[1]) ) );
   }
 
+  if (mpBackingLayer)
+  {
+    nuiRenderThread* pRenderThread = GetRenderThread();
+    if (pRenderThread)
+    {
+      nuiRect rect(0,0,1000, 1000);
+//      rect.Move(GetOverDrawLeft(), GetOverDrawTop());
+      pRenderThread->InvalidateLayerRect(mpBackingLayer, rect);
+    }
+    return;
+  }
+
   r.Move(rect.Left(), rect.Top());
 
   if (mpParent)
@@ -1111,7 +1123,7 @@ void nuiWidget::InvalidateLayout()
     return;
   }
 
-  if ((!mNeedSelfLayout && HasUserRect()))
+  if ((!GetNeedLayout() && HasUserRect()))
   {
     UpdateLayout();
     return;
@@ -1146,7 +1158,7 @@ void nuiWidget::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOn
 {
   CheckValid();
 
-  if ((!mNeedSelfLayout && HasUserSize())) // A child can't change the ideal position of its parent so we can stop broadcasting if the parent has a fixed ideal size.
+  if ((!GetNeedLayout() && HasUserSize())) // A child can't change the ideal position of its parent so we can stop broadcasting if the parent has a fixed ideal size.
   {
     UpdateLayout();
     return;
@@ -1188,9 +1200,13 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   
   if (mAutoClip)
   {
+//    pContext->AddPrint("nuiWidget::InternalDrawWidget AutoClip");
     pContext->PushClipping();
     if (mpDecoration)
-      pContext->Clip(_self_and_decorations);
+    {
+      nuiRect r(_self_and_decorations);
+      pContext->Clip(r);
+    }
     pContext->EnableClipping(true);
   }
   
@@ -1217,6 +1233,7 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   ////////////////////// Draw the widget
   if (mAutoClip)
   {
+//    pContext->AddPrint("nuiWidget::InternalDrawWidget AutoClipSelf");
     pContext->PushClipping();
     pContext->Clip(_self);
   }
@@ -1253,7 +1270,10 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   NGL_ASSERT(clipdepth == newclipdepth);
   
   if (mAutoClip)
+  {
+//    pContext->AddPrint("nuiWidget::InternalDrawWidget AutoClip Pop");
     pContext->PopClipping();
+  }
   
   pContext->PopState();
   
@@ -1274,17 +1294,21 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
   
 //  NGL_OUT("nuiWidget::UpdateCache %p %s %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
   
-  nuiRect clip;
-  pContext->GetClipRect(clip, true);
+//  nuiRect clip;
+//  pContext->GetClipRect(clip, true);
   nuiRect _self = GetOverDrawRect(true, false);
   nuiRect _self_and_decorations = GetOverDrawRect(true, true);
-  nuiRect inter;
-  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
-  
+//  nuiRect inter;
+//  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
+
   _self.Intersect(_self, mVisibleRect);
   _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
-  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
-  
+//  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
+  if (1)
+  {
+  mCurrentlyOnScreen = true;
+  }
+
   //    printf("nuiWidget::DrawWidget[%s][%s] -> SelfRendering\n", GetObjectClass().GetChars(), GetObjectName().GetChars());
   nuiRef<nuiPainter> pSavedPainter = pContext->GetPainter();
   mpRenderCache = nuiNewRef<nuiMetaPainter>();
@@ -1856,12 +1880,6 @@ nuiRenderThread* nuiWidget::GetRenderThread()
     return pRoot->GetRenderThread();
   else
     return NULL;
-}
-
-bool nuiWidget::HasLayoutChanged() const
-{
-  CheckValid();
-  return mNeedSelfLayout;
 }
 
 bool nuiWidget::GetHover() const
@@ -4090,6 +4108,18 @@ bool nuiWidget::GetClickThru() const
 void nuiWidget::AddInvalidRect(const nuiRect& rRect)
 {
   CheckValid();
+
+  if (mpBackingLayer)
+  {
+    nuiRenderThread* pRenderThread = GetRenderThread();
+    if (pRenderThread)
+    {
+      nuiRect r(rRect);
+      r.Move(GetOverDrawLeft(), GetOverDrawTop());
+      pRenderThread->InvalidateLayerRect(mpBackingLayer, r);
+    }
+  }
+#if 0
 //  NGL_OUT("+++ AddInvalidRect in %s %s %s\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), rRect.GetValue().GetChars());
   int count = mDirtyRects.size();
   
@@ -4116,6 +4146,7 @@ void nuiWidget::AddInvalidRect(const nuiRect& rRect)
   // Found no rect to blend into, let's create a new one:
 //  NGL_OUT("--- AddInvalidRect OK %s\n", rRect.GetValue().GetChars());
   mDirtyRects.push_back(rRect);
+#endif
 }
 
 bool nuiWidget::GetAutoClip() const
@@ -5752,14 +5783,7 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
     NGL_OUT("nuiWidget::SetSelfRect on '%s' (%f, %f - %f, %f)\n", GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
 #endif
 
-  bool inval = mNeedInvalidateOnSetRect;
-  if (!(mRect == rRect))
-    inval = true;
-
-  if (inval)
-  {
-    Invalidate();
-  }
+  Invalidate();
 
   if (mForceIdealSize)
   {
@@ -5775,10 +5799,7 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
     mVisibleRect = GetOverDrawRect(true, true);
   }
 
-  if (inval)
-  {
-    Invalidate();
-  }
+  Invalidate();
 
 
   DebugRefreshInfo();
@@ -5833,6 +5854,7 @@ bool nuiWidget::SetRect(const nuiRect& rRect)
       pItem->GetIdealRect();
       pItem->SetLayout(rect);
     }
+    delete pIt;
   }
 
   DebugRefreshInfo();

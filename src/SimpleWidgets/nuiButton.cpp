@@ -132,6 +132,7 @@ nuiButton::nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired)
   EnableInteractiveDecoration(true);
   
   SetDecoration(pDeco, eDecorationOverdraw, AlreadyAcquired);
+  SetLayerPolicy(nuiDrawPolicyDrawTree);
   
   SetBorders(mDefaultBorders);
   SetWantKeyboardFocus(true);

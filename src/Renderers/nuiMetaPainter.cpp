@@ -243,9 +243,10 @@ void nuiMetaPainter::DrawArray(nuiRenderArray* pRenderArray)
 
 void nuiMetaPainter::SetSize(uint32 w, uint32 h)
 {
+//  printf("nuiMetaPainter::SetSize(%d, %d)\n", w, h);
   StoreOpCode(eSetSize);
-  StoreInt(w);
-  StoreInt(h);
+  StoreInt((int32)w);
+  StoreInt((int32)h);
 
   mWidth = w;
   mHeight = h;
@@ -456,6 +457,14 @@ void nuiMetaPainter::AddBreakPoint()
   StoreOpCode(eBreak);
 }
 
+void nuiMetaPainter::AddPrint(const char* str)
+{
+  StoreOpCode(ePrint);
+  int len = strlen(str) + 1;
+  StoreInt(len);
+  StoreBuffer(str, (uint32)len, 1);
+}
+
 void nuiMetaPainter::ReDraw(nuiDrawContext* pContext, const DrawWidgetDelegate& rDrawWidgetDelegate, const DrawLayerDelegate& rDrawLayerDelegate)
 {
   NGL_ASSERT(!mClippingDepth);
@@ -491,19 +500,19 @@ void nuiMetaPainter::Reset(nuiPainter const * pFrom)
   mSurfaces.clear();
 
   mpClippingStack = std::stack<nuiClipper>();
+  mpClippingStack.push(nuiClipper(nuiRect(-1000000, -1000000, 2000000, 2000000), false));
   mMatrixStack = std::stack<nglMatrixf>();
-
   mMatrixStack.push(nuiMatrix());
 
   if (pFrom)
   {
     mpState = &pFrom->GetState();
     pFrom->GetSize(mWidth, mHeight);
-    bool clip = pFrom->GetClipRect(mClip, false);
-    
-    nuiMatrix m(pFrom->GetMatrix());
-    mClip.Move(-m.Elt.M14, -m.Elt.M24);
-    mClip.mEnabled = clip;
+//    bool clip = pFrom->GetClipRect(mpClippingStack.top(), false);
+
+//    nuiMatrix m(pFrom->GetMatrix());
+//    mpClippingStack.top().Move(-m.Elt.M14, -m.Elt.M24);
+//    mpClippingStack.top().mEnabled = clip;
   }
     
   mWidgets.clear();
@@ -538,14 +547,24 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
   while (mOperationPos < size && currentop < last)
   {
     bool draw = currentop >= first;
-    
+
+    int32 index = mOperationPos;
+    nglString str(GetCurrentOperationDescription());
+//    printf("nuiMetaPainter %p op: %s\n", this, str.GetChars());
+    mOperationPos = index;
+
+
     OpCode code = FetchOpCode();
     switch (code)
     {
       case eSetSize:
+      {
+        int w = FetchInt();
+        int h = FetchInt();
         if (draw)
-          pPainter->SetSize(FetchInt(), FetchInt());
+          pPainter->SetSize(w, h);
         break;
+      }
       case eStartRendering:
         if (draw)
         {
@@ -553,22 +572,26 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
         }
         break;
       case eSetState:
-        if (draw)
         {
           int32 index = FetchInt();
           const nuiRenderState& rState(mRenderStates[index]);
           bool ForceApply = FetchInt() ? true : false;
-          if (DoDrawSelf)
-            pPainter->SetState(rState, ForceApply);
+          if (draw)
+          {
+            if (DoDrawSelf)
+              pPainter->SetState(rState, ForceApply);
+          }
         }
         break;
       case eDrawArray:
-        if (draw)
         {
           int32 index = FetchInt();
           nuiRenderArray* pRenderArray = mRenderArrays[index];
-          pRenderArray->Acquire(); // Pre acquire the render array as the painter will release it
-          pPainter->DrawArray(pRenderArray);
+          if (draw)
+          {
+            pRenderArray->Acquire(); // Pre acquire the render array as the painter will release it
+            pPainter->DrawArray(pRenderArray);
+          }
         }
         break;
       case eClear:
@@ -592,56 +615,60 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
             pPainter->EndSession();
         break;
       case eDrawWidget:
-        if (draw)
         {
           nuiWidget* pWidget = (nuiWidget*)FetchPointer();
-          if (rDrawWidgetDelegate)
-            rDrawWidgetDelegate(pContext, pWidget);
-          else
+          if (draw)
           {
-            nuiRef<nuiMetaPainter> pPainter = pWidget->GetRenderCache();
-            pPainter->ReDraw(pContext, rDrawWidgetDelegate, rDrawLayerDelegate);
+            if (rDrawWidgetDelegate)
+              rDrawWidgetDelegate(pContext, pWidget);
+            else
+            {
+              nuiRef<nuiMetaPainter> pPainter = pWidget->GetRenderCache();
+              pPainter->ReDraw(pContext, rDrawWidgetDelegate, rDrawLayerDelegate);
+            }
           }
         }
         break;
       case eDrawLayer:
-        if (draw)
         {
           nuiLayer* pLayer = (nuiLayer*)FetchPointer();
-          if (rDrawLayerDelegate)
-            rDrawLayerDelegate(pContext, pLayer);
-          else
-            pLayer->Draw(pContext);
+          if (draw)
+          {
+            if (rDrawLayerDelegate)
+              rDrawLayerDelegate(pContext, pLayer);
+            else
+              pLayer->Draw(pContext);
+          }
         }
         break;
       case eSetSurface:
-        if (draw)
         {
           nuiSurface* pSurface = (nuiSurface*)FetchPointer();
+          if (draw)
             pPainter->SetSurface(pSurface);
         }
         break;
       case eCreateSurface:
-        if (draw)
         {
           nuiSurface* pSurface = (nuiSurface*)FetchPointer();
-          pPainter->CreateSurface(pSurface);
+          if (draw)
+            pPainter->CreateSurface(pSurface);
         }
         break;
       case eLoadMatrix:
-        if (draw)
         {
           nuiMatrix m;
           FetchBuffer(m.Array, sizeof(nuiSize), 16);
-          pPainter->LoadMatrix(m);
+          if (draw)
+            pPainter->LoadMatrix(m);
         }
         break;
       case eMultMatrix:
-        if (draw)
         {
           nuiMatrix m;
           FetchBuffer(m.Array, sizeof(nuiSize), 16);
-          pPainter->MultMatrix(m);
+          if (draw)
+            pPainter->MultMatrix(m);
         }
         break;
       case ePopMatrix:
@@ -658,7 +685,6 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
         
         
       case eLoadProjectionMatrix:
-        if (draw)
         {
           nuiMatrix m;
           float Left, Top, Width, Height;
@@ -667,7 +693,10 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
           FetchFloat(Width);
           FetchFloat(Height);
           FetchBuffer(m.Array, sizeof(nuiSize), 16);
-          pPainter->LoadProjectionMatrix(nuiRect(Left, Top, Width, Height), m);
+          if (draw)
+          {
+            pPainter->LoadProjectionMatrix(nuiRect(Left, Top, Width, Height), m);
+          }
         }
         break;
       case eMultProjectionMatrix:
@@ -701,7 +730,6 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
           pPainter->PopClipping();
         break;
       case eClip:
-        if (draw)
         {
           nuiSize x;
           nuiSize y;
@@ -711,8 +739,11 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
           FetchFloat(y);
           FetchFloat(xx);
           FetchFloat(yy);
-          const nuiRect r(x, y, xx, yy, false);
-          pPainter->Clip(r);
+          if (draw)
+          {
+            const nuiRect r(x, y, xx, yy, false);
+            pPainter->Clip(r);
+          }
         }
         break;
       case eEnableClipping:
@@ -726,6 +757,15 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
       case eBreak:
         if (draw)
           NGL_ASSERT(false);
+        break;
+      case ePrint:
+        if (draw)
+        {
+          int len = FetchInt();
+          char str[len];
+          FetchBuffer(str, (uint32)len, 1);
+          NGL_OUT("painter print: %s\n", str);
+        }
         break;
       default:
         if (draw)
@@ -759,9 +799,14 @@ static const nglChar* GetGLMode(GLenum mode)
 
 nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
 {
-  nglString str = "???";
   mOperationPos = GetOffsetFromOperationIndex(OperationIndex);
-  
+  return nglString().Add(OperationIndex).Add(GetCurrentOperationDescription());
+}
+
+nglString nuiMetaPainter::GetCurrentOperationDescription() const
+{
+  nglString str = "???";
+
   OpCode code = FetchOpCode();
   switch (code)
   {
@@ -938,12 +983,20 @@ nglString nuiMetaPainter::GetOperationDescription(int32 OperationIndex) const
     case eBreak:
       str = "Break";
       break;
+    case ePrint:
+    {
+      int len = FetchInt();
+      char _str[len];
+      FetchBuffer(_str, (uint32)len, 1);
+      str.CFormat("Print '%s'", _str);
+    }
+      break;
     default:
       str.CFormat("Unknown operation %d", code);
       break;
   }
   
-  return nglString().Add(OperationIndex).Add(": ").Add(str);
+  return nglString().Add(": ").Add(str);
 }
 
 void nuiMetaPainter::SetName(const nglString& rName)
@@ -1073,6 +1126,13 @@ void nuiMetaPainter::UpdateIndices() const
         FetchInt();
         break;
       case eBreak:
+        break;
+      case ePrint:
+      {
+        int len = FetchInt();
+        char _str[len];
+        FetchBuffer(_str, len, 1);
+      }
         break;
       default:
         NGL_ASSERT(false);

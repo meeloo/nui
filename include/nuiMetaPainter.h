@@ -73,6 +73,8 @@ public:
 
   // Debugging and profiling
   virtual void AddBreakPoint();
+  virtual void AddPrint(const char* str);
+
   int32 GetNbOperations() const;
   void PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last, const DrawWidgetDelegate& rDrawWidgetDelegate, const DrawLayerDelegate& rDrawLayerDelegate) const;
   nglString GetOperationDescription(int32 OperationIndex) const;
@@ -133,7 +135,8 @@ protected:
     eSetSurface,
     eCreateSurface,
     
-    eBreak
+    eBreak,
+    ePrint
   };
 
 
@@ -154,7 +157,8 @@ protected:
   void FetchFloat(float& rFloat) const;
 
   int32 GetOffsetFromOperationIndex(int32 index) const;
-  
+  nglString GetCurrentOperationDescription() const;
+
   nuiRenderCache* mpCache;
   nuiRenderState mLastState;
   bool mLastStateValid;

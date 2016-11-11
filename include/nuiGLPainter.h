@@ -190,6 +190,8 @@ protected:
 
   GLint mDefaultFramebuffer;
   GLint mDefaultRenderbuffer;
+  uint32 mOriginalWidth;
+  uint32 mOriginalHeight;
 
   nuiShaderProgram* mpShader = nullptr;
   nuiShaderState* mpShaderState = nullptr;
@@ -227,6 +229,7 @@ protected:
   std::vector<nuiTexture*> mDestroyedTextures;
   std::vector<nuiRenderArray*> mDestroyedRenderArrays;
 
+  bool mViewportChanged = true;
 };
 
 bool nuiCheckForGLErrorsReal();

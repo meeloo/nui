@@ -152,7 +152,10 @@ void nuiRenderThread::SetLayerTree(nuiLayer* pLayerRoot)
   Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerTree, pLayerRoot));
 }
 
-
+void nuiRenderThread::InvalidateLayerRect(nuiLayer *pLayer, nuiRect rect)
+{
+  Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerRect, pLayer, rect));
+}
 
 void nuiRenderThread::RenderingDone(bool result)
 {
@@ -234,6 +237,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     DrawLayerContents(mpDrawContext, layer);
   }
   mDirtyLayers.clear();
+  mPartialRects.clear();
 
 
   mpDrawContext->SetClearColor(nuiColor(255,255,255));
@@ -249,9 +253,11 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   mWidgetIndentation = 0;
   
-  //NGL_OUT(">>> Draw the widget tree %p\n", this);
+//  NGL_OUT(">>> Draw the widget tree %p\n", this);
   mpDrawContext->ResetState();
+//  NGL_OUT("Reset clip rect 1\n");
   mpDrawContext->ResetClipRect();
+  mpDrawContext->EnableClipping(false);
   mpDrawContext->Set2DProjectionMatrix(mRect.Size());
   DrawWidget(mpDrawContext, mpRoot);
 
@@ -430,6 +436,43 @@ void nuiRenderThread::_SetLayerTree(nuiLayer* pRoot)
   mpLayerTreeRoot = pRoot;
 }
 
+void nuiRenderThread::_InvalidateLayerRect(nuiLayer *pLayer, nuiRect rect)
+{
+//    NGL_OUT("+++ AddInvalidRect in %s %s %s\n", pLayer->GetObjectClass().GetChars(), pLayer->GetObjectName().GetChars(), rect.GetValue().GetChars());
+
+  size_t count = 0;
+  auto it = mPartialRects.find(pLayer);
+  if (it != mPartialRects.end())
+    count = it->second.size();
+
+  nuiRect intersect;
+  nuiSize surface = rect.GetSurface();
+  if (surface == 0.0f)
+    return;
+
+  for (size_t i = 0; i < count; i++)
+  {
+    nuiRect r(it->second[i]);
+    if (intersect.Intersect(rect, r))
+    {
+      // The rectangles intersect so we create one big out of them
+      nuiRect u;
+      u.Union(rect, r);
+      // Let's remove the coalesced rect from the list
+      it->second.erase(it->second.begin() + (long)i);
+      // Try to add the new big rect to the list:
+      _InvalidateLayerRect(pLayer, u);
+      return;
+    }
+  }
+
+  // Found no rect to blend into, let's create a new one:
+  //  NGL_OUT("--- AddInvalidRect OK %s\n", rRect.GetValue().GetChars());
+  mPartialRects[pLayer].push_back(rect);
+  mDirtyLayers.insert(pLayer);
+
+}
+
 void nuiRenderThread::DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pKey)
 {
   mWidgetIndentation++;
@@ -443,11 +486,11 @@ void nuiRenderThread::DrawWidgetContents(nuiDrawContext* pContext, nuiWidget* pK
   {
 #if _DEBUG
     nglString str;
-    str.CFormat("Draw widget contents %s %p", pPainter->GetName().GetChars(), pKey);
+    str.CFormat("DrawWidgetContents %s %p", pPainter->GetName().GetChars(), pKey);
+    glPushGroupMarkerEXT(0, str.GetChars());
     nglString indent;
     indent.Fill("  ", mWidgetIndentation);
     str.Prepend(indent);
-    glPushGroupMarkerEXT(0, str.GetChars());
 //    NGL_OUT("%s\n", str.GetChars());
 #endif
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
@@ -468,13 +511,18 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
   static int count = 0;
   nglString str;
   nglString tmp;
-  tmp.Fill("  ", count);
-//  str.CFormat("%sDraw layer contents %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
-  str.CFormat("%sDraw layer contents %p", tmp.GetChars(), pKey);
+  str.CFormat("DrawLayerContents %p", pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
+//  tmp.Fill("  ", count);
+//  str.Prepend(tmp);
+  //  str.CFormat("%sDraw layer contents %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
+
 //  NGL_OUT("%s\n", str.GetChars());
+
+  count++;
 #endif
-  
+
+
   nuiRef<nuiMetaPainter> pPainter;
   auto it = mLayerContentsPainters.find(pKey);
   if (it != mLayerContentsPainters.end())
@@ -483,17 +531,47 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
 //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
 
-#if _DEBUG
-    count++;
-#endif
-    
-    pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+    size_t count = 0;
+    auto itt = mPartialRects.find(pKey);
+    if (itt != mPartialRects.end())
+      count = itt->second.size();
+
+//    uint32 Width = 0, Height = 0;
+//    pPainter->GetSize(Width, Height);
+//    nuiRect rect((float)Width, (float)Height);
+    mpDrawContext->ResetState();
+//    mpDrawContext->Set2DProjectionMatrix(rect);
+
+    if (count == 0)
+    {
+//      NGL_OUT("%sReset clip rect 2\n", tmp.GetChars());
+      mpDrawContext->ResetClipRect();
+//      NGL_OUT("%sDisable clipping\n", tmp.GetChars());
+      mpDrawContext->EnableClipping(false);
+
+      pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+    }
+    else
+    {
+
+      for (size_t i = 0; i < count; i++)
+      {
+        mpDrawContext->ResetState();
+        nuiRect cliprect(itt->second[i]); // Partial rect...
+//        NGL_OUT("%sReset clip rect 3\n", tmp.GetChars());
+        mpDrawContext->ResetClipRect();
+//        NGL_OUT("%sClip to %s\n", tmp.GetChars(), cliprect.GetValue().GetChars());
+        mpDrawContext->Clip(cliprect);
+//        NGL_OUT("%sDisable clipping\n", tmp.GetChars());
+        mpDrawContext->EnableClipping(false);
+        pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+      }
+    }
+
+  }
 
 #if _DEBUG
-    count--;
-#endif
-  }
-#if _DEBUG
+  count--;
   glPopGroupMarkerEXT();
 #endif
 
@@ -523,11 +601,11 @@ void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)
   {
 #if _DEBUG
     nglString str;
-    str.CFormat("Draw widget %s %p", pPainter->GetName().GetChars(), pKey);
-    nglString indent;
-    indent.Fill("  ", mWidgetIndentation);
-    str.Prepend(indent);
+    str.CFormat("DrawWidget %s %p", pPainter->GetName().GetChars(), pKey);
     glPushGroupMarkerEXT(0, str.GetChars());
+//    nglString indent;
+//    indent.Fill("  ", mWidgetIndentation);
+//    str.Prepend(indent);
 //    NGL_OUT("%s\n", str.GetChars());
 #endif
     pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidget), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
@@ -545,10 +623,11 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
 #if _DEBUG
   static int count = 0;
   nglString str;
-  nglString tmp;
-  tmp.Fill("  ", count);
-  str.CFormat("%sDraw layer %s %s %p", tmp.GetChars(), pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
+  str.CFormat("DrawLayer %s %s %p", pKey->GetObjectClass().GetChars(), pKey->GetObjectName().GetChars(), pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
+//  nglString tmp;
+//  tmp.Fill("  ", count);
+//  tmp.Add(str);
 //  NGL_OUT("%s\n", str.GetChars());
 #endif
   
@@ -556,7 +635,7 @@ void nuiRenderThread::DrawLayer(nuiDrawContext* pContext, nuiLayer* pKey)
   if (it != mLayerDrawPainters.end())
   {
     nuiRef<nuiMetaPainter> pPainter = it->second;
-    //    NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
+//        NGL_OUT("DrawLayer %p (%p - %d)\n", pKey, pPainter, pPainter->GetRefCount());
     NGL_ASSERT(pPainter);
     
 #if _DEBUG
@@ -627,7 +706,7 @@ void nuiRenderThread::DumpStats()
   for (size_t i = 0; i < MIN(20, sortedlayers.size()); i++)
   {
     const std::pair<nuiLayer*, nuiRenderingStat> &stat(sortedlayers[i]);
-    NGL_OUT("%d: %p %f %d %s\n", i, stat.first, stat.second.mTime, stat.second.mCount, stat.second.mName.GetChars());
+//    NGL_OUT("%d: %p %f %d %s\n", i, stat.first, stat.second.mTime, stat.second.mCount, stat.second.mName.GetChars());
   }
 }
 

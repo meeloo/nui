@@ -10,6 +10,7 @@
 ///////////////////////////////////
 // nuiPainter implementation:
 
+static const nuiClipper nuiMaxClipper(nuiRect(-10000000, -10000000, 20000000, 20000000), false);
 std::set<nuiPainter*> nuiPainter::gpPainters;
 
 nuiPainter::nuiPainter(nglContext* pContext)
@@ -17,10 +18,11 @@ nuiPainter::nuiPainter(nglContext* pContext)
   ResetStats();
   mWidth = 0;
   mHeight = 0;
+  mpClippingStack.push(nuiMaxClipper);
   mMatrixStack.push(nuiMatrix());
   mProjectionMatrixStack.push(nuiMatrix());
   mProjectionViewportStack.push(nuiRect());
-  
+
   mDummyMode = false;
   mpSurface = NULL;
 
@@ -31,31 +33,26 @@ nuiPainter::nuiPainter(nglContext* pContext)
 
 nuiPainter::~nuiPainter() 
 {
-  // Empty the clip stack:
-  mpClippingStack = std::stack<nuiClipper>();
 }
+
 
 void nuiPainter::StartRendering()
 {
-  mpClippingStack = std::stack<nuiClipper>();
-
-  uint32 w = mWidth, h = mHeight;
-  mClip.Set(0, 0, w, h);
-  
-  while (!mMatrixStack.empty())
-    mMatrixStack.pop();
-  mMatrixStack.push(nuiMatrix());
-
-  while (!mProjectionMatrixStack.empty())
-  {
-    mProjectionMatrixStack.pop();
-    mProjectionViewportStack.pop();
-  }
+  int32 w = GetCurrentWidth(), h = GetCurrentHeight();
   nuiMatrix m;
   m.Translate(-1.0f, 1.0f, 0.0f);
-  m.Scale(2.0f/(float)mWidth, -2.0f/(float)mHeight, 1.0f);
+  m.Scale(2.0f/(float)w, -2.0f/(float)h, 1.0f);
+
+
+  mpClippingStack = std::stack<nuiClipper>();
+  mMatrixStack = std::stack<nglMatrixf>();
+  mProjectionMatrixStack = std::stack<nglMatrixf>();
+  mProjectionViewportStack = std::stack<nuiRect>();
+
+  mpClippingStack.push(nuiMaxClipper);
+  mMatrixStack.push(nuiMatrix());
   mProjectionMatrixStack.push(m);
-  mProjectionViewportStack.push(nuiRect(0, 0, mWidth, mHeight));
+  mProjectionViewportStack.push(nuiRect(0, 0, w, h));
 }
 
 void nuiPainter::PushMatrix()
@@ -84,6 +81,7 @@ void nuiPainter::MultMatrix(const nuiMatrix& Matrix)
 
 const nuiMatrix& nuiPainter::GetMatrix() const
 {
+  NGL_ASSERT(!mMatrixStack.empty());
   return mMatrixStack.top();
 }
 
@@ -107,7 +105,7 @@ void nuiPainter::LoadProjectionMatrix(const nuiRect& rViewport, const nuiMatrix&
   NGL_ASSERT(!mProjectionMatrixStack.empty());
   mProjectionMatrixStack.top() = rMatrix;
 
-  nuiMatrix LocalMatrix(mMatrixStack.top());
+  nuiMatrix LocalMatrix(mMatrixStack.empty()?nuiMatrix():mMatrixStack.top());
   nuiVector vec1(rViewport.Left(), rViewport.Top(), 0.0f);
   nuiVector vec2(rViewport.Right(), rViewport.Bottom(), 0.0f);
   vec1 = LocalMatrix * vec1;
@@ -123,11 +121,13 @@ void nuiPainter::MultProjectionMatrix(const nuiMatrix& rMatrix)
 
 const nuiMatrix& nuiPainter::GetProjectionMatrix() const
 {
+  NGL_ASSERT(!mProjectionMatrixStack.empty());
   return mProjectionMatrixStack.top();
 }
 
 const nuiRect& nuiPainter::GetProjectionViewport() const
 {
+  NGL_ASSERT(!mProjectionMatrixStack.empty());
   return mProjectionViewportStack.top();
 }
 
@@ -135,15 +135,17 @@ const nuiRect& nuiPainter::GetProjectionViewport() const
 // Clipping using Scissor :
 void nuiPainter::PushClipping()
 {
-  mpClippingStack.push(mClip);
+  NGL_ASSERT(!mpClippingStack.empty());
+  mpClippingStack.push(mpClippingStack.top());
+//  NGL_OUT("Push Clip (%s)\n", mpClippingStack.top().GetValue().GetChars());
 }
 
 void nuiPainter::PopClipping()
 {
-  NGL_ASSERT(mpClippingStack.size());
-
-  mClip = mpClippingStack.top();
+  NGL_ASSERT(!mpClippingStack.empty());
   mpClippingStack.pop();
+//  NGL_OUT("Pop Clip to %s\n", mpClippingStack.top().GetValue().GetChars());
+  NGL_ASSERT(!mpClippingStack.empty());
 }
 
 void nuiPainter::Clip(const nuiRect& rRect)
@@ -153,29 +155,33 @@ void nuiPainter::Clip(const nuiRect& rRect)
   p1 = m * p1;
   p2 = m * p2;
   nuiRect l(p1[0], p1[1], p2[0], p2[1], false);
-  /*bool res = (unused)*/ mClip.Intersect(mClip,l);
+  /*bool res = (unused)*/ mpClippingStack.top().Intersect(mpClippingStack.top(),l);
+//  NGL_OUT("Clip %s -> %s\n", l.GetValue().GetChars(), mpClippingStack.top().GetValue().GetChars());
 }
 
 void nuiPainter::ResetClipRect()
 {
-  uint32 w=mWidth, h=mHeight;
-  mClip.Set(0, 0, w, h);
+  NGL_ASSERT(!mpClippingStack.empty());
+  int32 w = GetCurrentWidth(), h = GetCurrentHeight();
+  mpClippingStack.top().Set(0, 0, w, h);
+//  NGL_OUT("Reset Clip to %s\n", mpClippingStack.top().GetValue().GetChars());
 }
 
 void nuiPainter::EnableClipping(bool set)
 {
-  mClip.mEnabled = set;
+  NGL_ASSERT(!mpClippingStack.empty());
+  mpClippingStack.top().mEnabled = set;
 }
 
 bool nuiPainter::GetClipRect(nuiRect& rRect, bool LocalRect) const
 {
-  if (mClip.mEnabled)
+  if (mpClippingStack.top().mEnabled)
   {
-    rRect = mClip;
+    rRect = mpClippingStack.top();
   }
   else
   {
-    rRect.Set(0, 0, mWidth, mHeight);
+    rRect.Set(0, 0, GetCurrentWidth(), GetCurrentHeight());
   }
   
   if (LocalRect)
@@ -189,7 +195,7 @@ bool nuiPainter::GetClipRect(nuiRect& rRect, bool LocalRect) const
     v2 = m * v2;
     rRect.Set(v1[0], v1[1], v2[0], v2[1], false);
   }
-  return mClip.mEnabled;
+  return mpClippingStack.top().mEnabled;
 }
 
 
@@ -215,7 +221,7 @@ uint32 nuiPainter::GetBatches() const
   return mBatches;
 }
 
-uint32 nuiPainter::GetClipStackSize() const
+size_t nuiPainter::GetClipStackSize() const
 {
   return mpClippingStack.size();
 }
@@ -258,7 +264,7 @@ void nuiPainter::DelNeedTextureBackingStore()
 
 void nuiPainter::SetSurface(nuiSurface* pSurface)
 {
-  NGL_OUT("nuiPainter::SetSurface %p\n", pSurface);
+//  NGL_OUT("nuiPainter::SetSurface %p\n", pSurface);
   
   if (pSurface)
     pSurface->Acquire();
@@ -270,7 +276,7 @@ void nuiPainter::SetSurface(nuiSurface* pSurface)
 
 void nuiPainter::CreateSurface(nuiSurface* pSurface)
 {
-  NGL_OUT("nuiPainter::SetSurface %p\n", pSurface);
+//  NGL_OUT("nuiPainter::SetSurface %p\n", pSurface);
   if (pSurface)
     pSurface->Acquire();
   if (mpSurface)
@@ -288,8 +294,8 @@ nuiSurface* nuiPainter::GetSurface() const
 
 void nuiPainter::GetSize(uint32& rX, uint32& rY) const
 {
-  rX = mWidth;
-  rY = mHeight;
+  rX = GetCurrentWidth();
+  rY = GetCurrentHeight();
 }
 
 const nuiRenderState& nuiPainter::GetState() const
@@ -341,6 +347,11 @@ int32 nuiPainter::GetCurrentHeight() const
 void nuiPainter::AddBreakPoint()
 {
   // do nothing by default, this is only used to debug defered rendering (i.e. nuiMetaPainter).
+}
+
+void nuiPainter::AddPrint(const char* str)
+{
+
 }
 
 void nuiPainter::BroadcastDestroyTexture(nuiTexture* pTexture)

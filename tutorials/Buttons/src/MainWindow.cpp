@@ -313,8 +313,8 @@ void MainWindow::OnCreation()
         prout->SetBackgroundColor(nuiColor(0, 255, 0, 128));
     //    prout->SetPosition(nuiFillVertical);
         button->SetPosition(pos[i]);
-        button->SetTrace(true);
-        button->SetDebug(1000);
+//        button->SetTrace(true);
+//        button->SetDebug(1000);
 //        nuiAttributeAnimation* anim = new nuiAttributeAnimation();
 //        anim->SetTargetObject(prout);
 //        anim->SetTargetAttribute("Alpha");
@@ -327,7 +327,7 @@ void MainWindow::OnCreation()
 
         mEventSink.Connect(button->Activated, [=](const nuiEvent& event)
         {
-          printf("pouet %p - %p\n", this, button);
+//          printf("pouet %p - %p\n", this, button);
 #if DUMMY_DEBUGGER
           switch (i % 3)
           {

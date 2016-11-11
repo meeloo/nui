@@ -57,7 +57,7 @@ nuiMessageParser::nuiMessageParser()
 
 nuiMessageParser::~nuiMessageParser()
 {
-
+  delete mpCurrentMessage;
 }
 
 void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<bool(nuiMessage*)> onNewMessage)
@@ -176,7 +176,12 @@ void nuiMessageParser::Parse(const std::vector<uint8>& rData, std::function<bool
             NGL_OUT("Done Reading Message: %s\n", mpCurrentMessage->GetDescription().GetChars());
 #endif
             if (!onNewMessage(mpCurrentMessage))
+            {
+              delete mpCurrentMessage;
+              mpCurrentMessage = nullptr;
               return;
+            }
+            delete mpCurrentMessage;
             mpCurrentMessage = new nuiMessage();
             mState = Waiting;
 

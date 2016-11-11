@@ -122,8 +122,8 @@ void Application::OnInit()
       Width = current_mode.GetWidth();
       Height = current_mode.GetHeight();
 #else
-      Width = 320;
-      Height = 240;
+      Width = 800;
+      Height = 600;
 #endif
     }
   }

@@ -263,6 +263,7 @@ float nuiMatrixNode_Translation::GetZ() const
 nuiMatrixNode_Scale::nuiMatrixNode_Scale()
 {
   nuiMatrixNode_Scale::Init();
+  Set(1, 1, 1);
 }
 
 nuiMatrixNode_Scale::nuiMatrixNode_Scale(float X, float Y, float Z)
@@ -276,7 +277,7 @@ void nuiMatrixNode_Scale::Init()
   if (SetObjectClass("nuiMatrixNode_Scale"))
   {
     AddAttribute(new nuiAttribute<const nglVectorf&>
-                 (nglString("Scale"), nuiUnitVector,
+                 (nglString("ScaleVector"), nuiUnitVector,
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::GetScaleVector),
                   nuiMakeDelegate(this, &nuiMatrixNode_Scale::SetScaleVector)));
     

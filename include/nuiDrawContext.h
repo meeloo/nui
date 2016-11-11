@@ -224,6 +224,7 @@ public:
   //@}
 
   void AddBreakPoint();
+  void AddPrint(const char* str);
 
   void SetSurface(nuiSurface* pSurface);
   nuiSurface* GetSurface() const;
