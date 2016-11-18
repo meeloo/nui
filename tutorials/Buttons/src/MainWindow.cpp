@@ -286,7 +286,7 @@ void MainWindow::OnCreation()
   });
 
 
-  int test = 0;
+  int test = 1;
   switch (test)
   {
   case 0:
@@ -462,7 +462,7 @@ void MainWindow::OnCreation()
         pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
       } break;
 
-    case 4:
+  case 4:
       {
         nuiSplitter* pSplitter = new nuiSplitter(nuiVertical);
         AddChild(pSplitter);
@@ -482,7 +482,7 @@ void MainWindow::OnCreation()
         pSplitter->AddChild(pButton);
         pSplitter->AddChild(pInspector);
       } break;
-    case 5:
+  case 5:
     {
       nuiScrollView* pScroll = new nuiScrollView();
       nuiList* pList = new nuiList();

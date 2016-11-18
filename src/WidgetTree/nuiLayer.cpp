@@ -242,6 +242,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
   mDraw = !ShouldSkipRendering;
+
 //  mDraw = true;
   
   UpdateSurface(pRenderThread);
@@ -374,14 +375,16 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     pContext->DrawImage(dst, src);
 
 //    pContext->SetBlendFunc(nuiBlendTransp);
-//  pContext->SetStrokeColor(nuiColor(255, 0, 0, 128));
-//  pContext->EnableTexturing(false);
-//  pContext->DrawRect(dst, eStrokeShape);
-//  pContext->EnableTexturing(true);
+//    pContext->SetStrokeColor(nuiColor(255, 0, 0, 128));
+//    pContext->EnableTexturing(false);
+//    pContext->DrawRect(dst, eStrokeShape);
+//    pContext->EnableTexturing(true);
   }
   else
   {
 //    NGL_OUT("Draw is false for %p %s %s\n", mpWidgetContents, mpWidgetContents->GetObjectName().GetChars(), mpWidgetContents->GetObjectClass().GetChars());
+    dst = nuiRect(GetWidth(), GetHeight());
+    dst.Move(mOffsetX, mOffsetY);
   }
 
   if (mClipContents)
@@ -389,14 +392,17 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     mpDrawPainter->PushClipping();
     mpDrawPainter->EnableClipping(mClipContents);
 
+//    NGL_OUT("Clip Layers %p %s %s\n", this, GetObjectName().GetChars(), dst.GetValue().GetChars());
     mpDrawPainter->Clip(dst);
   }
 
   if (mpWidgetContents)
   {
-    nglString str;
-    str.CFormat("Draw Layer for widget %s", name.GetChars());
+//    {
+//    nglString str;
+//    str.CFormat("Draw Layer for widget %s", name.GetChars());
 //    mpDrawPainter->AddPrint(str.GetChars());
+//    }
 //    NGL_OUT("Update layer contents with widget [%p %s] ( (%f, %f) / (%f x %f))\n",
 //            mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
 //            mpWidgetContents->GetRect().Left(), mpWidgetContents->GetRect().Top(),

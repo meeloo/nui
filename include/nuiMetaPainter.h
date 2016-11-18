@@ -167,7 +167,7 @@ protected:
   int32 mNbDrawLayer;
   int32 mNbDrawArray;
   int32 mNbClearColor;
-  mutable int32 mOperationPos;
+  mutable size_t mOperationPos;
   int32 mNbOperations;
     
   nglString mName;

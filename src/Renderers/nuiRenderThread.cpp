@@ -214,7 +214,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   mpDrawContext->ResetClipRect();
 
   // Update Layers:
-  glPushGroupMarkerEXT(0, "Update dirty layers");
+  glPushGroupMarkerEXT(0, "Create new layers");
   
   // Create needed surfaces once for this frame:
   //    NGL_OUT("Create surface for current frame\n");
@@ -229,8 +229,11 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       count++;
     }
   }
+
+  glPopGroupMarkerEXT();
   //    NGL_OUT("DONE - Create surface for current frame (%d)\n", count);
   
+  glPushGroupMarkerEXT(0, "Update dirty layers");
 //  NGL_OUT("*** Update %d layers\n", mDirtyLayers.size());
   for (auto layer : mDirtyLayers)
   {
@@ -238,6 +241,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   }
   mDirtyLayers.clear();
   mPartialRects.clear();
+  glPopGroupMarkerEXT();
 
 
   mpDrawContext->SetClearColor(nuiColor(255,255,255));
@@ -253,18 +257,25 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   mWidgetIndentation = 0;
   
+  glPushGroupMarkerEXT(0, "Reset State");
 //  NGL_OUT(">>> Draw the widget tree %p\n", this);
   mpDrawContext->ResetState();
 //  NGL_OUT("Reset clip rect 1\n");
   mpDrawContext->ResetClipRect();
   mpDrawContext->EnableClipping(false);
   mpDrawContext->Set2DProjectionMatrix(mRect.Size());
-  DrawWidget(mpDrawContext, mpRoot);
+  glPopGroupMarkerEXT();
 
+  glPushGroupMarkerEXT(0, "Draw widget tree");
+  DrawWidget(mpDrawContext, mpRoot);
+  glPopGroupMarkerEXT();
+
+  glPushGroupMarkerEXT(0, "Finish Rendering");
   mpDrawContext->StopRendering();
   mpPainter->EndSession();
   mpContext->EndSession();
-  
+  glPopGroupMarkerEXT();
+
   mpContext->GetLock().Unlock();
 
   App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, true));

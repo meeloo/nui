@@ -20,12 +20,12 @@
 		61FD87341A181218001118DA /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87331A181218001118DA /* GLKit.framework */; };
 		61FD87361A18211A001118DA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87351A18211A001118DA /* CoreGraphics.framework */; };
 		61FD87381A182151001118DA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87371A182151001118DA /* QuartzCore.framework */; };
+		C3B1FD731DDF606C009B11ED /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 612094A51A39B64F006CACE7 /* CoreVideo.framework */; };
 		C3E9C1391D1F553C00DEBED4 /* css in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1371D1F553C00DEBED4 /* css */; };
 		C3E9C13A1D1F553C00DEBED4 /* decorations in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1381D1F553C00DEBED4 /* decorations */; };
 		C3E9C1471D1F557300DEBED4 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1411D1F557300DEBED4 /* icon.icns */; };
 		C3E9C1481D1F557300DEBED4 /* icon.ico in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1421D1F557300DEBED4 /* icon.ico */; };
 		C3E9C1491D1F557300DEBED4 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1431D1F557300DEBED4 /* icon.png */; };
-		C3EF4C8B1D1F4D4A00D9158E /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 612094A51A39B64F006CACE7 /* CoreVideo.framework */; };
 		C3EF4C8C1D1F4D4A00D9158E /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F379185CBB5700D97CA6 /* CoreAudio.framework */; };
 		C3EF4C8D1D1F4D4A00D9158E /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F37A185CBB5700D97CA6 /* CoreAudioKit.framework */; };
 		C3EF4C8E1D1F4D4A00D9158E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F37B185CBB5700D97CA6 /* CoreFoundation.framework */; };
@@ -34,24 +34,17 @@
 		C3EF4C911D1F4D4A00D9158E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F377185CBB3600D97CA6 /* OpenGL.framework */; };
 		C3EF4C921D1F4D4A00D9158E /* libnuiCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F36B185CBB1800D97CA6 /* libnuiCocoa.a */; };
 		C3EF4C931D1F4D4A00D9158E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E55E77A2185BBC62005F01B1 /* Cocoa.framework */; };
-		C3EF4C951D1F4D4A00D9158E /* Buttons.2008.sln in Resources */ = {isa = PBXBuildFile; fileRef = E55E77D9185CBAA8005F01B1 /* Buttons.2008.sln */; };
 		C3EF4C961D1F4D4A00D9158E /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E5185CBAA8005F01B1 /* icon.icns */; };
 		C3EF4C971D1F4D4A00D9158E /* icon.ico in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E6185CBAA8005F01B1 /* icon.ico */; };
-		C3EF4C981D1F4D4A00D9158E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E55E77AB185BBC62005F01B1 /* InfoPlist.strings */; };
 		C3EF4C991D1F4D4A00D9158E /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E7185CBAA8005F01B1 /* icon.png */; };
 		C3EF4C9A1D1F4D4A00D9158E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DD185CBAA8005F01B1 /* Info.plist */; };
 		C3EF4C9B1D1F4D4A00D9158E /* Buttons.2005.vcproj in Resources */ = {isa = PBXBuildFile; fileRef = E55E77D8185CBAA8005F01B1 /* Buttons.2005.vcproj */; };
 		C3EF4C9C1D1F4D4A00D9158E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E55E77BA185BBC62005F01B1 /* Images.xcassets */; };
 		C3EF4C9D1D1F4D4A00D9158E /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E4185CBAA8005F01B1 /* image.png */; };
 		C3EF4C9E1D1F4D4A00D9158E /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DB185CBAA8005F01B1 /* CMakeLists.txt */; };
-		C3EF4C9F1D1F4D4A00D9158E /* resource.rc in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DE185CBAA8005F01B1 /* resource.rc */; };
 		C3EF4CA01D1F4D4A00D9158E /* dlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DC185CBAA8005F01B1 /* dlist.plist */; };
-		C3EF4CA11D1F4D4A00D9158E /* Buttons.2008.vcproj in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DA185CBAA8005F01B1 /* Buttons.2008.vcproj */; };
 		C3EF4CA21D1F4D4A00D9158E /* main.css in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E1185CBAA8005F01B1 /* main.css */; };
-		C3EF4CA31D1F4D4A00D9158E /* Buttons.2005.sln in Resources */ = {isa = PBXBuildFile; fileRef = E55E77D7185CBAA8005F01B1 /* Buttons.2005.sln */; };
 		C3EF4CA41D1F4D4A00D9158E /* button1.png in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E3185CBAA8005F01B1 /* button1.png */; };
-		C3EF4CC11D1F4DA000D9158E /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = C3EF4CAF1D1F4DA000D9158E /* CMakeLists.txt */; };
-		C3EF4CC41D1F4DA000D9158E /* resource.rc in Resources */ = {isa = PBXBuildFile; fileRef = C3EF4CB21D1F4DA000D9158E /* resource.rc */; };
 		C3EF4CCB1D1F4DA000D9158E /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3EF4CBD1D1F4DA000D9158E /* Application.cpp */; };
 		C3EF4CCC1D1F4DA000D9158E /* MainWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3EF4CBF1D1F4DA000D9158E /* MainWindow.cpp */; };
 		E516F376185CBB2E00D97CA6 /* libnuiCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F36B185CBB1800D97CA6 /* libnuiCocoa.a */; };
@@ -357,9 +350,6 @@
 		E516F60C185D159100D97CA6 /* libnuiCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F36B185CBB1800D97CA6 /* libnuiCocoa.a */; };
 		E516F60D185D159100D97CA6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E55E77A2185BBC62005F01B1 /* Cocoa.framework */; };
 		E516F60F185D159100D97CA6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E55E77BA185BBC62005F01B1 /* Images.xcassets */; };
-		E516F61B185D159A00D97CA6 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F5B8185CDB2F00D97CA6 /* AudioToolbox.framework */; };
-		E516F61C185D159A00D97CA6 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F379185CBB5700D97CA6 /* CoreAudio.framework */; };
-		E516F61D185D159A00D97CA6 /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F37A185CBB5700D97CA6 /* CoreAudioKit.framework */; };
 		E516F61E185D159A00D97CA6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F37B185CBB5700D97CA6 /* CoreFoundation.framework */; };
 		E516F61F185D159A00D97CA6 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F37C185CBB5700D97CA6 /* CoreMIDI.framework */; };
 		E516F620185D159A00D97CA6 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516F37D185CBB5700D97CA6 /* CoreServices.framework */; };
@@ -475,14 +465,9 @@
 		E55E77A3185BBC62005F01B1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E55E77A2185BBC62005F01B1 /* Cocoa.framework */; };
 		E55E77AD185BBC62005F01B1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E55E77AB185BBC62005F01B1 /* InfoPlist.strings */; };
 		E55E77BB185BBC62005F01B1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E55E77BA185BBC62005F01B1 /* Images.xcassets */; };
-		E55E77ED185CBAA8005F01B1 /* Buttons.2005.sln in Resources */ = {isa = PBXBuildFile; fileRef = E55E77D7185CBAA8005F01B1 /* Buttons.2005.sln */; };
-		E55E77EE185CBAA8005F01B1 /* Buttons.2005.vcproj in Resources */ = {isa = PBXBuildFile; fileRef = E55E77D8185CBAA8005F01B1 /* Buttons.2005.vcproj */; };
-		E55E77EF185CBAA8005F01B1 /* Buttons.2008.sln in Resources */ = {isa = PBXBuildFile; fileRef = E55E77D9185CBAA8005F01B1 /* Buttons.2008.sln */; };
-		E55E77F0185CBAA8005F01B1 /* Buttons.2008.vcproj in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DA185CBAA8005F01B1 /* Buttons.2008.vcproj */; };
 		E55E77F1185CBAA8005F01B1 /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DB185CBAA8005F01B1 /* CMakeLists.txt */; };
 		E55E77F2185CBAA8005F01B1 /* dlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DC185CBAA8005F01B1 /* dlist.plist */; };
 		E55E77F3185CBAA8005F01B1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DD185CBAA8005F01B1 /* Info.plist */; };
-		E55E77F4185CBAA8005F01B1 /* resource.rc in Resources */ = {isa = PBXBuildFile; fileRef = E55E77DE185CBAA8005F01B1 /* resource.rc */; };
 		E55E77F5185CBAA8005F01B1 /* main.css in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E1185CBAA8005F01B1 /* main.css */; };
 		E55E77F6185CBAA8005F01B1 /* button1.png in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E3185CBAA8005F01B1 /* button1.png */; };
 		E55E77F7185CBAA8005F01B1 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = E55E77E4185CBAA8005F01B1 /* image.png */; };
@@ -662,6 +647,7 @@
 		61FD87331A181218001118DA /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
 		61FD87351A18211A001118DA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		61FD87371A182151001118DA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		C3B1FD711DDF5F9C009B11ED /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C3E9C1371D1F553C00DEBED4 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = resources/css; sourceTree = "<group>"; };
 		C3E9C1381D1F553C00DEBED4 /* decorations */ = {isa = PBXFileReference; lastKnownFileType = folder; name = decorations; path = resources/decorations; sourceTree = "<group>"; };
 		C3E9C1411D1F557300DEBED4 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
@@ -981,7 +967,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3EF4C8B1D1F4D4A00D9158E /* CoreVideo.framework in Frameworks */,
 				C3EF4C8C1D1F4D4A00D9158E /* CoreAudio.framework in Frameworks */,
 				C3EF4C8D1D1F4D4A00D9158E /* CoreAudioKit.framework in Frameworks */,
 				C3EF4C8E1D1F4D4A00D9158E /* CoreFoundation.framework in Frameworks */,
@@ -1171,9 +1156,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E516F61B185D159A00D97CA6 /* AudioToolbox.framework in Frameworks */,
-				E516F61C185D159A00D97CA6 /* CoreAudio.framework in Frameworks */,
-				E516F61D185D159A00D97CA6 /* CoreAudioKit.framework in Frameworks */,
+				C3B1FD731DDF606C009B11ED /* CoreVideo.framework in Frameworks */,
 				E516F61E185D159A00D97CA6 /* CoreFoundation.framework in Frameworks */,
 				E516F61F185D159A00D97CA6 /* CoreMIDI.framework in Frameworks */,
 				E516F620185D159A00D97CA6 /* CoreServices.framework in Frameworks */,
@@ -2017,6 +2000,7 @@
 		E55E77A1185BBC62005F01B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C3B1FD711DDF5F9C009B11ED /* CoreGraphics.framework */,
 				612094A51A39B64F006CACE7 /* CoreVideo.framework */,
 				61FD87371A182151001118DA /* QuartzCore.framework */,
 				61FD87351A18211A001118DA /* CoreGraphics.framework */,
@@ -2602,13 +2586,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3E9C1491D1F557300DEBED4 /* icon.png in Resources */,
-				C3EF4C951D1F4D4A00D9158E /* Buttons.2008.sln in Resources */,
-				C3EF4CC11D1F4DA000D9158E /* CMakeLists.txt in Resources */,
 				C3EF4C961D1F4D4A00D9158E /* icon.icns in Resources */,
 				C3EF4C971D1F4D4A00D9158E /* icon.ico in Resources */,
 				C3E9C1471D1F557300DEBED4 /* icon.icns in Resources */,
-				C3EF4C981D1F4D4A00D9158E /* InfoPlist.strings in Resources */,
-				C3EF4CC41D1F4DA000D9158E /* resource.rc in Resources */,
 				C3EF4C991D1F4D4A00D9158E /* icon.png in Resources */,
 				C3EF4C9A1D1F4D4A00D9158E /* Info.plist in Resources */,
 				C3EF4C9B1D1F4D4A00D9158E /* Buttons.2005.vcproj in Resources */,
@@ -2616,13 +2596,10 @@
 				C3E9C1481D1F557300DEBED4 /* icon.ico in Resources */,
 				C3EF4C9D1D1F4D4A00D9158E /* image.png in Resources */,
 				C3EF4C9E1D1F4D4A00D9158E /* CMakeLists.txt in Resources */,
-				C3EF4C9F1D1F4D4A00D9158E /* resource.rc in Resources */,
 				C3EF4CA01D1F4D4A00D9158E /* dlist.plist in Resources */,
 				C3E9C13A1D1F553C00DEBED4 /* decorations in Resources */,
 				C3E9C1391D1F553C00DEBED4 /* css in Resources */,
-				C3EF4CA11D1F4D4A00D9158E /* Buttons.2008.vcproj in Resources */,
 				C3EF4CA21D1F4D4A00D9158E /* main.css in Resources */,
-				C3EF4CA31D1F4D4A00D9158E /* Buttons.2005.sln in Resources */,
 				C3EF4CA41D1F4D4A00D9158E /* button1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2987,21 +2964,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E55E77EF185CBAA8005F01B1 /* Buttons.2008.sln in Resources */,
 				E55E77F8185CBAA8005F01B1 /* icon.icns in Resources */,
 				E55E77F9185CBAA8005F01B1 /* icon.ico in Resources */,
 				E55E77AD185BBC62005F01B1 /* InfoPlist.strings in Resources */,
 				E55E77FA185CBAA8005F01B1 /* icon.png in Resources */,
 				E55E77F3185CBAA8005F01B1 /* Info.plist in Resources */,
-				E55E77EE185CBAA8005F01B1 /* Buttons.2005.vcproj in Resources */,
 				E55E77BB185BBC62005F01B1 /* Images.xcassets in Resources */,
 				E55E77F7185CBAA8005F01B1 /* image.png in Resources */,
 				E55E77F1185CBAA8005F01B1 /* CMakeLists.txt in Resources */,
-				E55E77F4185CBAA8005F01B1 /* resource.rc in Resources */,
 				E55E77F2185CBAA8005F01B1 /* dlist.plist in Resources */,
-				E55E77F0185CBAA8005F01B1 /* Buttons.2008.vcproj in Resources */,
 				E55E77F5185CBAA8005F01B1 /* main.css in Resources */,
-				E55E77ED185CBAA8005F01B1 /* Buttons.2005.sln in Resources */,
 				E55E77F6185CBAA8005F01B1 /* button1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3913,6 +3885,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tutorials/Tutorials-Prefix.pch";
 				INFOPLIST_FILE = "Tutorials/Tutorials-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3925,6 +3898,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tutorials/Tutorials-Prefix.pch";
 				INFOPLIST_FILE = "Tutorials/Tutorials-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

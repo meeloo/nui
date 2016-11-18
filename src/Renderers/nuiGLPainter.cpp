@@ -1075,13 +1075,13 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     bounds[4] += rM.Elt.M24;
     //bounds[5] += rM.Elt.M34;
 
-    nuiRect clip = mpClippingStack.top();
-    if (
+    nuiClipper clip = mpClippingStack.top();
+    if (clip.mEnabled && (
         (bounds[0] > clip.Right()) ||
         (bounds[1] > clip.Bottom()) ||
         (bounds[3] < clip.Left()) ||
         (bounds[4] < clip.Top())
-        )
+        ))
     {
       pArray->Release();
       {
@@ -1096,7 +1096,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
       return;
     }
   }
-  
+
   // Shader selection:
   mpShader = mpState->mpShader;
   mpShaderState = mpState->mpShaderState;

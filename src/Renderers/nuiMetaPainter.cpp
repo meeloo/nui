@@ -72,7 +72,7 @@ void nuiMetaPainter::StoreInt(int32 Val)
   if (mDummyMode)
     return;
   
-  uint pos = mOperations.size();
+  size_t pos = mOperations.size();
   mOperations.resize(pos + sizeof(Val));
   *(int32*)&(mOperations[pos]) = Val;
 }
@@ -82,7 +82,7 @@ void nuiMetaPainter::StoreFloat(float Val)
   if (mDummyMode)
     return;
   
-  uint pos = mOperations.size();
+  size_t pos = mOperations.size();
   mOperations.resize(pos + sizeof(Val));
   *(float*)&(mOperations[pos]) = Val;
 }
@@ -92,7 +92,7 @@ void nuiMetaPainter::StoreFloat(double Val)
   if (mDummyMode)
     return;
   
-  uint pos = mOperations.size();
+  size_t pos = mOperations.size();
   mOperations.resize(pos + sizeof(Val));
   *(double*)&(mOperations[pos]) = Val;
 }
@@ -102,7 +102,7 @@ void nuiMetaPainter::StorePointer(void* pVal)
   if (mDummyMode)
     return;
   
-  uint pos = mOperations.size();
+  size_t pos = mOperations.size();
   mOperations.resize(pos + sizeof(void*));
   *(void**)&(mOperations[pos]) = pVal;
 }
@@ -112,8 +112,8 @@ void nuiMetaPainter::StoreBuffer(const void* pBuffer, uint ElementSize, uint Ele
   if (mDummyMode)
     return;
 
-  uint size = ElementSize * ElementCount;
-  uint pos = mOperations.size();
+  size_t size = ElementSize * ElementCount;
+  size_t pos = mOperations.size();
   mOperations.resize(pos + size);
   memcpy(&mOperations[pos], pBuffer, size);
 }
@@ -528,7 +528,7 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
 {
   nuiPainter* pPainter = pContext->GetPainter();
   mOperationPos = 0;
-  uint size = mOperations.size();
+  size_t size = mOperations.size();
   
   const bool DoDrawChild = mNbDrawChild;
   const bool DoDrawLayer = mNbDrawLayer;
@@ -549,8 +549,10 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
     bool draw = currentop >= first;
 
     int32 index = mOperationPos;
-    nglString str(GetCurrentOperationDescription());
+//    {
+//    nglString str(GetCurrentOperationDescription());
 //    printf("nuiMetaPainter %p op: %s\n", this, str.GetChars());
+//    }
     mOperationPos = index;
 
 
