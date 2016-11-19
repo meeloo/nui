@@ -700,6 +700,7 @@ nuiWidget::~nuiWidget()
 
   if (mpBackingLayer)
     mpBackingLayer->Release();
+  mpBackingLayer = nullptr;
 
   delete mpSolver;
 
