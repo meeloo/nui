@@ -224,9 +224,12 @@ int32 nuiAudioDecoder::ReadDE(std::vector<void*> buffers, int32 sampleframes, nu
     mpPrivate->AdjustPreroll(buffers.size(), prerollsize);
 
     Seek(offset);
-    if (InternalReadDE(mpPrivate->mPrerollBuffers, prerollsize, eSampleFloat32) != prerollsize)
-      return 0;
-
+    if (prerollsize)
+    {
+      if (InternalReadDE(mpPrivate->mPrerollBuffers, prerollsize, eSampleFloat32) != prerollsize)
+        return 0;
+    }
+    
     // We should have read enough dummy samples now:
     mCurrentPosition = mPosition;
   }
