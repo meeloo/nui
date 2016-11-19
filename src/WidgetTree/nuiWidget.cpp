@@ -774,12 +774,16 @@ void nuiWidget::UpdateTopLevel()
   {
     nuiWidget* pParent = mpParent;
     nuiWidget* pTop = nullptr;
+    bool AncestorWillDrawTree = false;
     while (pParent)
     {
+      AncestorWillDrawTree |= (mpParent->GetLayerPolicy() & nuiDrawPolicyDrawChildren) || mpParent->GetAncestorWillDrawTree();
       pTop = pParent;
       pParent = pParent->GetParent();
     }
-    
+
+    SetAncestorWillDrawTree(AncestorWillDrawTree);
+
     if (pTop)
       mpTopLevel = dynamic_cast<nuiTopLevel*>(pTop);
     
@@ -6289,7 +6293,7 @@ nuiWidget* nuiWidget::GetParentLayerWidget() const
 
 void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
 {
-  if (policy != nuiDrawPolicyDrawNone)
+  if (policy != nuiDrawPolicyDrawNone && !GetAncestorWillDrawTree())
   {
     if (!mpBackingLayer)
     {
@@ -6307,7 +6311,31 @@ void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
     }
     mpBackingLayer = nullptr;
   }
+
+  UpdateChildrenDrawPolicy();
 }
+
+void nuiWidget::SetAncestorWillDrawTree(bool set)
+{
+  mAncestorWillDrawTree = set;
+  InternalSetLayerPolicy(GetLayerPolicy()); // This should automatically update children and the layer accordingly
+  Invalidate();
+}
+
+bool nuiWidget::GetAncestorWillDrawTree() const
+{
+  return mAncestorWillDrawTree;
+}
+
+void nuiWidget::UpdateChildrenDrawPolicy()
+{
+  bool set = GetAncestorWillDrawTree() || (GetLayerPolicy() & nuiDrawPolicyDrawChildren);
+  for (auto child : mpChildren)
+  {
+    child->SetAncestorWillDrawTree(set);
+  }
+}
+
 
 void nuiWidget::SetLayerPolicy(nuiDrawPolicy policy)
 {
@@ -6320,7 +6348,6 @@ void nuiWidget::SetLayerPolicy(nuiDrawPolicy policy)
   
   if (GetTopLevel())
     InvalidateLayout();
-  
 }
 
 nuiDrawPolicy nuiWidget::GetLayerPolicy() const

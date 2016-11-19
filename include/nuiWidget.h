@@ -1068,9 +1068,13 @@ protected:
   nuiWidgetList mpChildren;
   nuiLayer* mpBackingLayer = nullptr;
   nuiDrawPolicy mLayerPolicy = nuiDrawPolicyDrawNone;
+  void SetAncestorWillDrawTree(bool set);
+  bool GetAncestorWillDrawTree() const;
+  bool mAncestorWillDrawTree = false;
 
   void UpdateTopLevel();  
   void InternalSetLayerPolicy(nuiDrawPolicy policy);
+  void UpdateChildrenDrawPolicy();
 
   void CallBuilt();
 
