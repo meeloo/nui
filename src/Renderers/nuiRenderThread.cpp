@@ -257,6 +257,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   mWidgetIndentation = 0;
   
+  mpDrawContext->StartRendering();
   glPushGroupMarkerEXT(0, "Reset State");
 //  NGL_OUT(">>> Draw the widget tree %p\n", this);
   mpDrawContext->ResetState();

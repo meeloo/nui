@@ -5145,7 +5145,7 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 {
   CheckValid();
 
-  if (mLayerPolicy == nuiDrawPolicyDrawSelf)
+  if (mpBackingLayer && mLayerPolicy == nuiDrawPolicyDrawSelf)
   {
     mpBackingLayer->AddChildWidget(pChild);
     return;
@@ -5776,7 +5776,7 @@ nuiRect nuiWidget::CalcIdealSize()
   }
   delete pIt;
 
-  DebugRefreshInfo();
+//  DebugRefreshInfo();
   return temp.Size();
 }
 

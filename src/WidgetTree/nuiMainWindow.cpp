@@ -889,6 +889,15 @@ bool nuiMainWindow::OnKeyDown(const nglKeyEvent& rEvent)
         mDebugSlowRedraw = !mDebugSlowRedraw;
         InvalidateLayout();
       }
+      else if (rEvent.mKey == NK_O)
+      {
+        DBG_SetMouseOverObject(!DBG_GetMouseOverObject());
+      }
+      else if (rEvent.mKey == NK_L)
+      {
+        InvalidateLayout();
+        Invalidate();
+      }
 #if 0
 #ifndef _UIKIT_
       else if (rEvent.mKey == NK_S)

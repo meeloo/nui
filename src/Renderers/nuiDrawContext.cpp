@@ -1215,7 +1215,7 @@ const nuiMatrix& nuiDrawContext::GetProjectionMatrix() const
 
 void nuiDrawContext::Set2DProjectionMatrix(const nuiRect& rRect)
 {
-  //printf("Set2DProjectionMatrix: %s\n", rRect.GetValue().GetChars());
+//  printf("Set2DProjectionMatrix: %s\n", rRect.GetValue().GetChars());
   nuiMatrix m;
   m.Translate(-1.0f, 1.0f, 0.0f);
   m.Scale(2.0f/rRect.GetWidth(), -2.0f/rRect.GetHeight(), 1.0f);
@@ -1871,10 +1871,6 @@ int nuiDrawContext::GetHeight() const
 
 void nuiDrawContext::SetSurface(nuiSurface* pSurface)
 {
-  if (pSurface)
-    mpPainter->SetSize(pSurface->GetWidth(), pSurface->GetHeight());
-  else
-    mpPainter->SetSize(GetWidth(), GetHeight());
   mpPainter->SetSurface(pSurface);
   mStateChanges++;
 }

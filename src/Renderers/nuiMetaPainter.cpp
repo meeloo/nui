@@ -7,6 +7,8 @@
 
 #include "nui.h"
 
+#define LOG_OPERATIONS 0
+
 int64 nuiMetaPainter::Count = 0;
 static nglCriticalSection gCountCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
@@ -524,8 +526,16 @@ int32 nuiMetaPainter::GetNbOperations() const
   return mNbOperations;
 }
 
+
 void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 last, const DrawWidgetDelegate& rDrawWidgetDelegate, const DrawLayerDelegate& rDrawLayerDelegate) const
 {
+#if LOG_OPERATIONS
+  static int log_depth = 0;
+  nglString logstart;
+  for (int i = 0; i < log_depth; i++)
+    logstart += "  ";
+#endif
+
   nuiPainter* pPainter = pContext->GetPainter();
   mOperationPos = 0;
   size_t size = mOperations.size();
@@ -549,10 +559,17 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
     bool draw = currentop >= first;
 
     int32 index = mOperationPos;
-//    {
-//    nglString str(GetCurrentOperationDescription());
-//    printf("nuiMetaPainter %p op: %s\n", this, str.GetChars());
-//    }
+#if LOG_OPERATIONS
+    {
+      if (!index)
+      {
+
+        printf("nuiMetaPainter %p %s--------------------------------------- %s\n", this, logstart.GetChars(), GetName().GetChars());
+      }
+      nglString str(GetCurrentOperationDescription());
+      printf("nuiMetaPainter %p %s%s\n", this, logstart.GetChars(), str.GetChars());
+    }
+#endif
     mOperationPos = index;
 
 
@@ -618,6 +635,9 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
         break;
       case eDrawWidget:
         {
+#if LOG_OPERATIONS
+          log_depth++;
+#endif
           nuiWidget* pWidget = (nuiWidget*)FetchPointer();
           if (draw)
           {
@@ -626,13 +646,22 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
             else
             {
               nuiRef<nuiMetaPainter> pPainter = pWidget->GetRenderCache();
-              pPainter->ReDraw(pContext, rDrawWidgetDelegate, rDrawLayerDelegate);
+              if (pPainter)
+              {
+                pPainter->ReDraw(pContext, rDrawWidgetDelegate, rDrawLayerDelegate);
+              }
             }
           }
+#if LOG_OPERATIONS
+          log_depth--;
+#endif
         }
         break;
       case eDrawLayer:
         {
+#if LOG_OPERATIONS
+          log_depth++;
+#endif
           nuiLayer* pLayer = (nuiLayer*)FetchPointer();
           if (draw)
           {
@@ -642,6 +671,9 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
               pLayer->Draw(pContext);
           }
         }
+#if LOG_OPERATIONS
+        log_depth--;
+#endif
         break;
       case eSetSurface:
         {
@@ -998,7 +1030,7 @@ nglString nuiMetaPainter::GetCurrentOperationDescription() const
       break;
   }
   
-  return nglString().Add(": ").Add(str);
+  return str;
 }
 
 void nuiMetaPainter::SetName(const nglString& rName)

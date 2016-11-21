@@ -2240,7 +2240,10 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
   }
 
   if (pSurface)
+  {
     pSurface->Acquire();
+    SetSize(pSurface->GetWidth(), pSurface->GetHeight());
+  }
   
   if (mpSurface)
   {
