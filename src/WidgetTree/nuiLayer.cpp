@@ -117,8 +117,8 @@ void nuiLayer::SetObjectName(const nglString &rName)
   nglString name = GetObjectName();
   auto it = mLayers.find(name);
   NGL_ASSERT(it != mLayers.end());
-  mLayers[rName] = this;
   mLayers.erase(it);
+  mLayers[rName] = this;
   App->GetMainQueue().Post(nuiMakeTask(&LayersChanged, &nuiEventSource::SendEvent));
 
   nuiNode::SetObjectName(rName);
