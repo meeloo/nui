@@ -33,6 +33,11 @@ void objCCallOnMemoryWarning();
   [super dealloc];
 }
 
+- (UIWindow*) window
+{
+  return [[UIApplication sharedApplication] keyWindow];
+}
+
 - (void) applicationDidFinishLaunching:       (UIApplication*) pUIApplication
 {
   //App->TimedPrint("nglUIApplicationDelegate applicationDidFinishLaunching");
