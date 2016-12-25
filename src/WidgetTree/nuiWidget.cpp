@@ -1334,7 +1334,7 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
     bool old = mRenderCacheIsEmpty;
     mRenderCacheIsEmpty = mpRenderCache->GetNbDrawArray() == 0;
     mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
-    if (old != mRenderCacheIsEmpty || mLayerPolicy == nuiDrawPolicyDrawSelf)
+    //if (old != mRenderCacheIsEmpty || mLayerPolicy == nuiDrawPolicyDrawSelf)
     {
       // If the render cache has changed from empty to full or from full to empty we need to update the layer draw operations
       mpBackingLayer->UpdateDraw(pRenderThread, GetDrawContext());
@@ -5714,8 +5714,8 @@ void nuiWidget::SetVisible(bool Visible)
       else // Otherwise set visible = false
       {
         Invalidate();
-        mVisible = false;
         InvalidateLayout();
+        mVisible = false;
         VisibilityChanged();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);

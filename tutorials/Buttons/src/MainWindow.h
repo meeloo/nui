@@ -37,10 +37,12 @@ protected:
   void OnRadioPressed(const nuiEvent& rEvent);
   
   bool LoadCSS(const nglPath& rPath);
-  
+
+  bool KeyDown(const nglKeyEvent& rEvent);
 private:
   
   nuiLabel* mpLabel;
+  nuiWidget* mpHiddenWidget;
   nuiEventSink<MainWindow> mEventSink;
 
 #if DUMMY_DEBUGGER

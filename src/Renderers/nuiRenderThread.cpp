@@ -299,7 +299,7 @@ void nuiRenderThread::_Exit()
 
 void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
-//  NGL_OUT("_SetWidgetDrawPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pPainter);
+//  NGL_OUT("_SetWidgetDrawPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), (void*)pPainter);
   auto it = mWidgetDrawPainters.find(pWidget);
   if (it != mWidgetDrawPainters.end())
   {
@@ -328,7 +328,7 @@ void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPa
 
 void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
-  //  NGL_OUT("_SetWidgetContentsPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), pPainter);
+//    NGL_OUT("_SetWidgetContentsPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), (void*)pPainter);
   auto it = mWidgetContentsPainters.find(pWidget);
   if (it != mWidgetContentsPainters.end())
   {
@@ -357,7 +357,7 @@ void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMe
 
 void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
-//  NGL_OUT("_SetLayerDrawPainter %p (%p)\n", pLayer, pPainter);
+//  NGL_OUT("_SetLayerDrawPainter %p (%p) %s\n", pLayer, (void*)pPainter, pPainter?pPainter->GetName().GetChars():"NULL");
   auto it = mLayerDrawPainters.find(pLayer);
   if (it != mLayerDrawPainters.end())
   {
@@ -386,7 +386,7 @@ void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPaint
 
 void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
-//  NGL_OUT("_SetLayerContentsPainter %p (%p - %d)\n", pLayer, pPainter, SetLayerContentsPainterCounter);
+//  NGL_OUT("_SetLayerContentsPainter %p (%p) %s\n", pLayer, (void*)pPainter, pPainter?pPainter->GetName().GetChars():"NULL");
   auto it = mLayerContentsPainters.find(pLayer);
   if (it != mLayerContentsPainters.end())
   {

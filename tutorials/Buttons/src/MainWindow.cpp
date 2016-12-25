@@ -267,6 +267,14 @@ void MainWindow::OnClose()
   App->Quit();
 }
 
+bool MainWindow::KeyDown(const nglKeyEvent& rEvent)
+{
+  NGL_OUT("\n\nSet Widget %s\n", mpHiddenWidget->IsVisible()?"HIDDEN":"VISIBLE");
+  mpHiddenWidget->SetVisible(!mpHiddenWidget->IsVisible());
+  return true;
+}
+
+
 void MainWindow::OnCreation()
 {
   nuiMessage msg;
@@ -292,7 +300,7 @@ void MainWindow::OnCreation()
   case 0:
     {
       nuiPosition pos[] = {
-        nuiTopLeft, nuiNoPosition, nuiTop, nuiTopRight,
+        nuiNoPosition, nuiTopLeft, nuiTop, nuiTopRight,
         nuiLeft, nuiCenter, nuiRight,
         nuiBottomLeft, nuiBottom, nuiBottomRight,
         nuiNoPosition
@@ -308,6 +316,7 @@ void MainWindow::OnCreation()
       AddChild(btn);
       btn->SetPosition(nuiCenter);
       btn->SetVisible(false);
+      mpHiddenWidget = btn;
 
       for (int i = 0; pos[i] != nuiNoPosition; i++)
       {
