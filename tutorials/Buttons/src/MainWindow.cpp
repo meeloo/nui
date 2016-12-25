@@ -286,13 +286,13 @@ void MainWindow::OnCreation()
   });
 
 
-  int test = 2;
+  int test = 0;
   switch (test)
   {
   case 0:
     {
       nuiPosition pos[] = {
-        nuiTopLeft, nuiTop, nuiTopRight,
+        nuiTopLeft, nuiNoPosition, nuiTop, nuiTopRight,
         nuiLeft, nuiCenter, nuiRight,
         nuiBottomLeft, nuiBottom, nuiBottomRight,
         nuiNoPosition
@@ -303,7 +303,12 @@ void MainWindow::OnCreation()
         "BottomLeft", "Bottom", "BottomRight",
         NULL
       };
-      
+
+      nuiWidget* btn = new nuiButton("GetSome shit written in the window pal");
+      AddChild(btn);
+      btn->SetPosition(nuiCenter);
+      btn->SetVisible(false);
+
       for (int i = 0; pos[i] != nuiNoPosition; i++)
       {
         nuiLabel* prout = new nuiLabel(name[i]);
@@ -344,6 +349,7 @@ void MainWindow::OnCreation()
               break;
           }
 #endif
+          btn->SetVisible(!btn->IsVisible());
         });
 
         AddChild(button);
