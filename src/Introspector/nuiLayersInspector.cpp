@@ -7,6 +7,7 @@
 
 
 #include "nui.h"
+#include "nuiMetaPainterInspector.h"
 
 nuiLayersInspector::nuiLayersInspector(nuiRenderThread* pRenderThread)
 : mSink(this), mpRenderThread(pRenderThread)
@@ -253,7 +254,7 @@ void nuiLayersInspector::OnLayerSelection(const nuiEvent& rEvent)
   if (rows)
     mpAttributeGrid->RemoveRows(0, rows);
   
-  rows = attributes.size() + 1;
+  rows = attributes.size() + 2;
   if (rows)
   {
     mpAttributeGrid->AddRows(0, rows);
@@ -291,7 +292,14 @@ void nuiLayersInspector::OnLayerSelection(const nuiEvent& rEvent)
     ++it_a;
     i++;
   }
-  
 
+  {
+    auto pPainterInspector = new nuiMetaPainterInspector();
+    auto pScroll = new nuiScrollView(true, false);
+    pScroll->AddChild(pPainterInspector);
+    pScroll->SetForceNoSmartScroll(true);
+    mpAttributeGrid->SetCell(1, i, pScroll);
+    pPainterInspector->SetTarget(pLayer->GetDrawPainter());
+  }
 }
 

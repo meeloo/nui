@@ -1410,6 +1410,12 @@
 		BCFE081F0E050AB90073662D /* nuiDialogSelectFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BCFE081B0E050AB90073662D /* nuiDialogSelectFile.cpp */; };
 		BCFE08240E050ACB0073662D /* nuiDialogSelectDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = BCFE08200E050ACB0073662D /* nuiDialogSelectDirectory.h */; };
 		BCFE08250E050ACB0073662D /* nuiDialogSelectFile.h in Headers */ = {isa = PBXBuildFile; fileRef = BCFE08210E050ACB0073662D /* nuiDialogSelectFile.h */; };
+		C35AB0371E0E890200CE4C2C /* nuiMetaPainterInspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C35AB0351E0E890200CE4C2C /* nuiMetaPainterInspector.cpp */; };
+		C35AB0381E0E890200CE4C2C /* nuiMetaPainterInspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C35AB0351E0E890200CE4C2C /* nuiMetaPainterInspector.cpp */; };
+		C35AB0391E0E890200CE4C2C /* nuiMetaPainterInspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C35AB0351E0E890200CE4C2C /* nuiMetaPainterInspector.cpp */; };
+		C35AB03E1E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */; };
+		C35AB03F1E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */; };
+		C35AB0401E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */; };
 		C3885B8F1C791F0300E2C8B7 /* nuiProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */; };
 		C3885B901C791F0300E2C8B7 /* nuiProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */; };
 		C3885B911C791F0300E2C8B7 /* nuiProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */; };
@@ -4316,6 +4322,8 @@
 		BCFE081B0E050AB90073662D /* nuiDialogSelectFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDialogSelectFile.cpp; path = src/Dialogs/nuiDialogSelectFile.cpp; sourceTree = SOURCE_ROOT; };
 		BCFE08200E050ACB0073662D /* nuiDialogSelectDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDialogSelectDirectory.h; path = include/nuiDialogSelectDirectory.h; sourceTree = SOURCE_ROOT; };
 		BCFE08210E050ACB0073662D /* nuiDialogSelectFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDialogSelectFile.h; path = include/nuiDialogSelectFile.h; sourceTree = SOURCE_ROOT; };
+		C35AB0351E0E890200CE4C2C /* nuiMetaPainterInspector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiMetaPainterInspector.cpp; path = Introspector/nuiMetaPainterInspector.cpp; sourceTree = "<group>"; };
+		C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiMetaPainterInspector.h; path = include/nuiMetaPainterInspector.h; sourceTree = SOURCE_ROOT; };
 		C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiProtocol.h; path = include/nuiProtocol.h; sourceTree = SOURCE_ROOT; };
 		C389717C1C602474003F2232 /* nuiDebugServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDebugServer.cpp; path = Introspector/nuiDebugServer.cpp; sourceTree = "<group>"; };
 		C38971841C6024B6003F2232 /* nuiDebugServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDebugServer.h; path = include/nuiDebugServer.h; sourceTree = SOURCE_ROOT; };
@@ -6264,6 +6272,8 @@
 				E572AA0D1BD7DFF40093D57C /* nuiLayersInspector.cpp */,
 				C389717C1C602474003F2232 /* nuiDebugServer.cpp */,
 				C38971841C6024B6003F2232 /* nuiDebugServer.h */,
+				C35AB0351E0E890200CE4C2C /* nuiMetaPainterInspector.cpp */,
+				C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */,
 			);
 			name = Introspector;
 			sourceTree = "<group>";
@@ -9408,6 +9418,7 @@
 				73F0856E12E9BA0700656E84 /* ngl_uikit.h in Headers */,
 				73F0856F12E9BA0700656E84 /* nglApplication_UIKit.h in Headers */,
 				73F0857012E9BA0700656E84 /* nglDragAndDrop_UIKit.h in Headers */,
+				C35AB0401E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */,
 				73F0857212E9BA0700656E84 /* nglWindow_UIKit.h in Headers */,
 				73F0857312E9BA0700656E84 /* nglImageCGCodec.h in Headers */,
 				73F0857412E9BA0700656E84 /* nglPath_Cocoa.h in Headers */,
@@ -9953,6 +9964,7 @@
 				E5429FCB0C3F0A5900225219 /* nuiRect.h in Headers */,
 				E5429FCC0C3F0A5900225219 /* nglIZip.h in Headers */,
 				E5429FCE0C3F0A5900225219 /* nuiCommand.h in Headers */,
+				C35AB03E1E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */,
 				E5429FD00C3F0A5900225219 /* nglPath.h in Headers */,
 				E5429FD20C3F0A5900225219 /* nglOFile.h in Headers */,
 				E5429FD40C3F0A5900225219 /* nuiUserArea.h in Headers */,
@@ -10513,6 +10525,7 @@
 				E5D6406B1209AB9C009C26A9 /* nuiWidgetMatcher.h in Headers */,
 				E5D6406C1209AB9C009C26A9 /* nuiAudioConvert.h in Headers */,
 				E5D6406D1209AB9C009C26A9 /* nuiAudioFifo.h in Headers */,
+				C35AB03F1E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */,
 				E5D6406E1209AB9C009C26A9 /* nuiAudioResampler.h in Headers */,
 				C3E9C1661D1F8BC100DEBED4 /* debug.h in Headers */,
 				E5D6406F1209AB9C009C26A9 /* nuiCSS.h in Headers */,
@@ -11873,6 +11886,7 @@
 				73F086CB12E9BA0700656E84 /* nuiTask.cpp in Sources */,
 				73F086CC12E9BA0700656E84 /* nuiMatrixNode.cpp in Sources */,
 				73F086CD12E9BA0700656E84 /* nuiSpriteView.cpp in Sources */,
+				C35AB0391E0E890200CE4C2C /* nuiMetaPainterInspector.cpp in Sources */,
 				73F086CE12E9BA0700656E84 /* nuiNavigationBar.cpp in Sources */,
 				73F086CF12E9BA0700656E84 /* nuiNavigationController.cpp in Sources */,
 				73F086D012E9BA0700656E84 /* nuiViewController.cpp in Sources */,
@@ -12249,6 +12263,7 @@
 				E542A12F0C3F0A5900225219 /* nglImageCodec.cpp in Sources */,
 				E542A1310C3F0A5900225219 /* nglTime.cpp in Sources */,
 				E542A1320C3F0A5900225219 /* nuiObject.cpp in Sources */,
+				C35AB0371E0E890200CE4C2C /* nuiMetaPainterInspector.cpp in Sources */,
 				E542A1340C3F0A5900225219 /* nui.cpp in Sources */,
 				E542A1350C3F0A5900225219 /* nuiSlider.cpp in Sources */,
 				E542A1360C3F0A5900225219 /* nuiGradient.cpp in Sources */,
@@ -12542,6 +12557,7 @@
 				E5D642121209AB9C009C26A9 /* nglString.cpp in Sources */,
 				E5D642131209AB9C009C26A9 /* nglCPUInfo.cpp in Sources */,
 				E5D642141209AB9C009C26A9 /* nuiUserArea.cpp in Sources */,
+				C35AB0381E0E890200CE4C2C /* nuiMetaPainterInspector.cpp in Sources */,
 				E5D642151209AB9C009C26A9 /* nglBitmapTools.cpp in Sources */,
 				E5D642171209AB9C009C26A9 /* nuiGrid.cpp in Sources */,
 				E5D642181209AB9C009C26A9 /* nuiHotKey.cpp in Sources */,

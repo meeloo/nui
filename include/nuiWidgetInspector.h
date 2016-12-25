@@ -10,12 +10,12 @@
 
 #include "nuiTreeView.h"
 #include "nuiWidget.h"
+#include "nuiMetaPainterInspector.h"
 
 class nuiVBox;
 class nuiGrid;
 class nuiWidgetProxy;
 class nuiFolderPane;
-class nuiMetaPainterInspector;
 
 class nuiWidgetInspectorNode : public nuiTreeNode
 {

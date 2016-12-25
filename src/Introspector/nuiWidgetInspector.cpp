@@ -6,40 +6,7 @@
  */
 
 #include "nui.h"
-
-class nuiMetaPainterInspector : public nuiWidget
-  {
-  public:
-    nuiMetaPainterInspector()
-    {
-      mpBox = new nuiVBox();
-      AddChild(mpBox);
-    }
-
-    void SetTarget(const nuiWidget* pTarget)
-    {
-      mpBox->Clear();
-      if (!pTarget)
-        return;
-
-      nuiMetaPainter* pPainter = pTarget->GetRenderCache();
-      if (!pPainter)
-        return;
-      
-      int32 count = pPainter->GetNbOperations();
-      for (int32 i = 0; i < count; i++)
-      {
-        nglString str;
-        str = pPainter->GetOperationDescription(i);
-        mpBox->AddCell(new nuiLabel(str));
-      }
-    }
-    
-  private:
-    ~nuiMetaPainterInspector() {};
-    nuiMetaPainter* mpPainter;
-    nuiVBox* mpBox;
-  };
+#include "nuiMetaPainterInspector.h"
 
 ///////// nuiWidgetInspectorNode:
 
