@@ -43,6 +43,7 @@
   CADisplayLink*  mDisplayLink;
 	UITextField*    mpTextField;
 	BOOL            mKeyboardVisible;
+  NSMutableArray<UIKeyCommand *>* mHotkeys;
 }
 
 - (id) initWithNGLWindow: (nglWindow*) pNGLWindow;
@@ -57,6 +58,11 @@
 - (void)showKeyboard;
 - (void)hideKeyboard;
 - (void)initializeKeyboard;
+
+// Hotkeys
+- (void)addHotKeyChar:(nuiHotKeyChar*)hotkey;
+- (void)delHotKeyChar:(nuiHotKeyChar*)hotkey;
+
 @end///< nglUIWindow
 
 #endif//__nglWindow_UIKit_h__

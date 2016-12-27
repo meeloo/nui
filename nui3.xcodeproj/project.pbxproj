@@ -5513,7 +5513,7 @@
 		E5816CCC0C3CECAB00902DFE /* nuiGLPainter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = nuiGLPainter.h; path = ../../include/nuiGLPainter.h; sourceTree = "<group>"; };
 		E5816CCD0C3CECAB00902DFE /* nuiGradient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = nuiGradient.h; path = ../../include/nuiGradient.h; sourceTree = "<group>"; };
 		E5816CCE0C3CECAB00902DFE /* nuiGrid.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = nuiGrid.h; path = ../../include/nuiGrid.h; sourceTree = "<group>"; };
-		E5816CCF0C3CECAB00902DFE /* nuiHotKey.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = nuiHotKey.h; path = ../../include/nuiHotKey.h; sourceTree = "<group>"; };
+		E5816CCF0C3CECAB00902DFE /* nuiHotKey.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 30; name = nuiHotKey.h; path = ../../include/nuiHotKey.h; sourceTree = "<group>"; };
 		E5816CD10C3CECAB00902DFE /* nuiImage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = nuiImage.h; path = ../../include/nuiImage.h; sourceTree = "<group>"; };
 		E5816CD20C3CECAB00902DFE /* nuiInit.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = nuiInit.h; path = ../../include/nuiInit.h; sourceTree = "<group>"; };
 		E5816CD60C3CECAB00902DFE /* nuiLabel.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = nuiLabel.h; path = ../../include/nuiLabel.h; sourceTree = "<group>"; };

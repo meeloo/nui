@@ -8,6 +8,10 @@
 #include "nui.h"
 #include <iterator>
 
+#ifdef _UIKIT_
+# include "../../Window/UIKit/nglWindow_UIKit.h"
+#endif
+
 #define PARTIAL_REDRAW_DEFAULT true
 
 #if 0 //defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
@@ -2411,6 +2415,10 @@ nuiHotKey* nuiTopLevel::RegisterHotKeyChar(const nglString& rName, nglChar Trigg
       pHotKeyChar->SetDescription(rDescription);
     }
     pHotKeyChar->Register();
+
+#ifdef _UIKIT_
+    [[UIApplication sharedApplication].keyWindow addHotKeyChar:pHotKeyChar];
+#endif
 
     std::map<nglString, nuiSimpleEventSource<nuiWidgetActivated>*>::const_iterator it = mHotKeyEvents.find(rName);
     if (it == mHotKeyEvents.end())

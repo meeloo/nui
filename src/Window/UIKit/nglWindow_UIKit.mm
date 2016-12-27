@@ -508,6 +508,75 @@ const nglChar* gpWindowErrorTable[] =
 	return NO;
 }
 
+// Hardware keyboard support
+- (BOOL)canBecomeFirstResponder
+{
+  return YES;
+}
+
+- (NSArray*)keyCommands
+{
+//  return [mHotkeys copy];
+
+  return @[
+           [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow modifierFlags:0 action:@selector(handleHotKey) discoverabilityTitle:@"Left"],
+           [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow modifierFlags:0 action:@selector(handleHotKey) discoverabilityTitle:@"Right"],
+           [UIKeyCommand keyCommandWithInput:UIKeyInputUpArrow modifierFlags:0 action:@selector(handleHotKey) discoverabilityTitle:@"Up"],
+           [UIKeyCommand keyCommandWithInput:UIKeyInputDownArrow modifierFlags:0 action:@selector(handleHotKey) discoverabilityTitle:@"Down"],
+           ];
+}
+
+inline static UIKeyModifierFlags GetUIKeyModifier(const nuiKeyModifier& M)
+{
+  UIKeyModifierFlags ret = 0;
+  if (M & nuiControlKey)
+  {
+    ret |= UIKeyModifierControl;
+  }
+  if (M & nuiAltKey)
+  {
+    ret |= UIKeyModifierAlternate;
+  }
+  if (M & nuiShiftKey)
+  {
+    ret |= UIKeyModifierShift;
+  }
+  if (M & nuiMetaKey)
+  {
+    ret |= UIKeyModifierCommand;
+  }
+  return ret;
+}
+
+- (void)addHotKeyChar:(nuiHotKeyChar*)hotkey
+{
+  /*
+  char c = hotkey->GetTrigger();
+  UIKeyCommand* key_command = [UIKeyCommand keyCommandWithInput:[NSString stringWithUTF8String:&c]
+                                                  modifierFlags:GetUIKeyModifier(hotkey->GetModifiers())
+                                                         action:@selector(handleHotKey:)
+                                           discoverabilityTitle:[NSString stringWithUTF8String:hotkey->GetName().GetChars()]];
+
+  if (!mHotkeys)
+  {
+    mHotkeys = [[NSMutableArray alloc] initWithArray:@[key_command]];
+  }
+  else
+  {
+    [mHotkeys addObject:key_command];
+  }
+  */
+}
+
+- (void)delHotKeyChar:(nuiHotKeyChar*)hotkey
+{
+}
+- (void)handleHotKey:(UIKeyCommand *)keyCommand
+{
+  NSLog(@"---------> keyCommand received! %@", keyCommand);
+}
+
+
 @end///< nglUIWindow
 
 
