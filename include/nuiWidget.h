@@ -1075,6 +1075,7 @@ protected:
   void UpdateTopLevel();  
   void InternalSetLayerPolicy(nuiDrawPolicy policy);
   void UpdateChildrenDrawPolicy();
+  void UpdateChildrenVisibility();
 
   void CallBuilt();
 

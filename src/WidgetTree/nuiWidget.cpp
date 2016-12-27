@@ -5650,6 +5650,7 @@ void nuiWidget::SetVisible(bool Visible)
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
         InternalSetLayerPolicy(mLayerPolicy);
+        UpdateChildrenVisibility();
       }
     }
   }
@@ -6334,6 +6335,20 @@ void nuiWidget::UpdateChildrenDrawPolicy()
   for (auto child : mpChildren)
   {
     child->SetAncestorWillDrawTree(set);
+  }
+}
+
+void nuiWidget::UpdateChildrenVisibility()
+{
+  if (IsVisible())  
+  {
+    Invalidate();
+    InvalidateLayout();
+    for (auto child : mpChildren)
+    {
+      BroadcastInvalidate(child);
+      child->UpdateChildrenVisibility();
+    }
   }
 }
 
