@@ -111,24 +111,26 @@ void nuiRenderThread::DestroyLayer(nuiLayer* pLayer)
 
 void nuiRenderThread::SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
+//  NGL_OUT("SetWidgetDrawPainter %p (%p) [%s]\n", pWidget, (void*)pPainter, pWidget->GetObjectName().GetChars());
   Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetDrawPainter, pWidget, pPainter));
 }
 
 void nuiRenderThread::SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
+//  NGL_OUT("SetWidgetContentsPainter %p (%p) [%s]\n", pWidget, (void*)pPainter, pWidget->GetObjectName().GetChars());
   Post(nuiMakeTask(this, &nuiRenderThread::_SetWidgetContentsPainter, pWidget, pPainter));
 }
 
 void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
-//  NGL_OUT("SetLayerDrawPainter %p (%p %d)\n", pLayer, pPainter, pPainter->GetRefCount());
+//  NGL_OUT("SetLayerDrawPainter %p (%p) [%s]\n", pLayer, (void*)pPainter, pLayer->GetObjectName().GetChars());
 //  pPainter->nuiRefCount::SetTrace(true);
   Post(nuiMakeTask(this, &nuiRenderThread::_SetLayerDrawPainter, pLayer, pPainter));
 }
 
 void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
-//  NGL_OUT("SetLayerContentsPainter %p -> %p\n", pLayer, pPainter);
+//  NGL_OUT("SetLayerContentsPainter %p -> %p [%s]\n", pLayer, (void*)pPainter, pLayer->GetObjectName().GetChars());
   nuiTask* task = nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter);
 
   Post(task);

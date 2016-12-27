@@ -1038,9 +1038,8 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
     nuiRenderThread* pRenderThread = GetRenderThread();
     if (pRenderThread)
     {
-      nuiRect rect(0,0,1000, 1000);
-//      rect.Move(GetOverDrawLeft(), GetOverDrawTop());
-      pRenderThread->InvalidateLayerRect(mpBackingLayer, rect);
+      rect.Move(-GetOverDrawLeft(), -GetOverDrawTop());
+      pRenderThread->InvalidateLayerRect(mpBackingLayer, rRect);
     }
     return;
   }
