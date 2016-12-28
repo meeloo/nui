@@ -60,6 +60,9 @@ void nuiNode::Init()
   AddMatrixNode(mpPosition);
   AddMatrixNode(mpPivot);
   AddMatrixNode(mpScale);
+  mpScale->Release();
+  mpPosition->Release();
+  mpPivot->Release();
 }
 
 void nuiNode::InitAttributes()

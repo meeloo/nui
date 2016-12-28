@@ -67,7 +67,7 @@ void nuiObject::Init(const nglString& rObjectName)
   {
     {
       CheckValid();
-#ifdef _DEBUG_
+#ifdef _NUI_DEBUG_OBJECTS_
       mpTrace->mClass = obj;
 #endif
       
@@ -192,11 +192,13 @@ nuiObject::~nuiObject()
 
   mInstanceAttributes.clear();
 
+#ifdef _NUI_DEBUG_OBJECTS_
   if (mpTrace)
   {
     nglCriticalSectionGuard g(gObjectTraceCS);
     mpTrace->mAlive = false;
   }
+#endif
 }
 
 
@@ -218,11 +220,13 @@ const nglString& nuiObject::GetObjectName() const
 void nuiObject::SetObjectName(const nglString& rName)
 {
   CheckValid();
+#ifdef _NUI_DEBUG_OBJECTS_
   if (mpTrace)
   {
     nglCriticalSectionGuard g(gObjectTraceCS);
     mpTrace->mName = rName;
   }
+#endif
 
   mObjectName = rName;
 
@@ -242,7 +246,7 @@ void nuiObject::SetObjectName(const nglString& rName)
 bool nuiObject::SetObjectClass(const nglString& rClass)
 {
   CheckValid();
-#ifdef _DEBUG_
+#ifdef _NUI_DEBUG_OBJECTS_
   mpTrace->mClass = rClass;
 #endif
 
