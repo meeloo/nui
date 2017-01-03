@@ -130,7 +130,10 @@ void nuiRenderThread::SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainte
 
 void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
 {
-//  NGL_OUT("SetLayerContentsPainter %p -> %p [%s]\n", pLayer, (void*)pPainter, pLayer->GetObjectName().GetChars());
+  if (!pPainter)
+  {
+//    NGL_OUT("SetLayerContentsPainter %p -> %p [%s]\n", pLayer, (void*)pPainter, pLayer->GetObjectName().GetChars());
+  }
   nuiTask* task = nuiMakeTask(this, &nuiRenderThread::_SetLayerContentsPainter, pLayer, pPainter);
 
   Post(task);
@@ -138,7 +141,7 @@ void nuiRenderThread::SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPa
 
 void nuiRenderThread::InvalidateLayerContents(nuiLayer* pLayer)
 {
-//  NGL_OUT("InvalidateLayerContents %p\n", pLayer);
+//  NGL_OUT("InvalidateLayerContents %p [%s]\n", pLayer, pLayer->GetObjectName().GetChars());
   Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerContents, pLayer));
 }
 
@@ -156,6 +159,7 @@ void nuiRenderThread::SetLayerTree(nuiLayer* pLayerRoot)
 
 void nuiRenderThread::InvalidateLayerRect(nuiLayer *pLayer, nuiRect rect)
 {
+//  NGL_OUT("InvalidateLayerContents %p %s [%s]\n", pLayer, rect.GetValue().GetChars(), pLayer->GetObjectName().GetChars());
   Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerRect, pLayer, rect));
 }
 
@@ -173,7 +177,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   }
 //  NGL_OUT("[nuiRenderThread] render %p\n", this);
 
-//  NGL_OUT("Widget %d / ContentsLayer %d / DrawLayer %d / DirtyLayers %d (total meta painters %d)\n", mWidgetPainters.size(), mLayerContentsPainters.size(), mLayerDrawPainters.size(), mDirtyLayers.size(), (int32)nuiMetaPainter::GetNbInstances());
+//  NGL_OUT("Widget Contents %d / ContentsLayer %d / DrawLayer %d / DirtyLayers %d (total meta painters %d)\n", mWidgetContentsPainters.size(), mLayerContentsPainters.size(), mLayerDrawPainters.size(), mDirtyLayers.size(), (int32)nuiMetaPainter::GetNbInstances());
 
 //    NGL_ASSERT(0);
   auto it = mWidgetDrawPainters.find(mpRoot);
@@ -410,6 +414,7 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaP
     {
       mLayerContentsPainters.erase(it);
       mDirtyLayers.erase(pLayer);
+//      NGL_OUT("_SetLayerContentsPainter %p (%p) %s\n", pLayer, (void*)pPainter, pPainter?pPainter->GetName().GetChars():"NULL");
     }
     mpContext->GetLock().Unlock();
     return;
@@ -421,6 +426,7 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaP
   }
   else
   {
+//    NGL_OUT("_SetLayerContentsPainter %p (%p) %s\n", pLayer, (void*)pPainter, pPainter?pPainter->GetName().GetChars():"NULL");
     mDirtyLayers.erase(pLayer);
   }
 

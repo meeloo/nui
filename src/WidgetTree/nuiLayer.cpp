@@ -241,12 +241,13 @@ bool nuiLayer::UpdateSurface(nuiRenderThread* pRenderThread)
 void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering)
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
+  bool oldDraw = mDraw;
   mDraw = !ShouldSkipRendering;
 
 //  mDraw = true;
   
   UpdateSurface(pRenderThread);
-  if (mSurfaceChanged)
+  if (mSurfaceChanged || (oldDraw != mDraw && mDraw))
   { // Surface has changed
     mSurfaceChanged = false;
 

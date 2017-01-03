@@ -55,7 +55,7 @@ public:
   nuiRenderThread* GetRenderThread();
   static void SetRenderer(nuiRenderer Renderer = eOpenGL2);
   static nuiRenderer GetRenderer();
-  virtual nglContext* GetNGLContext() const = 0;
+  virtual nglContext* GetNGLContext() const;
   void OnRenderingDone(nuiRenderThread* pThread, bool Result);
   //@}
 

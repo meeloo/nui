@@ -1002,7 +1002,21 @@ void nuiWidget::InvalidateRect(const nuiRect& rRect)
     BroadcastInvalidateRect(this, tmp);
   }
   
-  Invalidate();
+  NGL_ASSERT(nglThread::GetCurThreadID() == App->GetMainThreadID());
+  if (GetDebug())
+  {
+    NGL_OUT("  nuiWidget::Invalidate '%s' [%s] (thread: %d)\n",  GetObjectClass().GetChars(), GetObjectName().GetChars(), nglThread::GetCurThreadID());
+  }
+
+  mNeedSelfRedraw = true;
+
+  if (!IsVisible(true))
+  {
+    return;
+  }
+
+  if (mpParent)
+    mpParent->BroadcastInvalidate(this);
   DebugRefreshInfo();
 }
 
@@ -1061,8 +1075,6 @@ void nuiWidget::Invalidate()
 //  }
 
   CheckValid();
-  if ((mNeedSelfRedraw))
-    return;
 
   NGL_ASSERT(nglThread::GetCurThreadID() == App->GetMainThreadID());
   if (GetDebug())
