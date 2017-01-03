@@ -1038,8 +1038,7 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
     nuiRenderThread* pRenderThread = GetRenderThread();
     if (pRenderThread)
     {
-      rect.Move(-GetOverDrawLeft(), -GetOverDrawTop());
-      pRenderThread->InvalidateLayerRect(mpBackingLayer, rRect);
+      pRenderThread->InvalidateLayerRect(mpBackingLayer, r);
     }
     return;
   }
@@ -1202,13 +1201,18 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   if (ApplyMatrix && !IsMatrixIdentity())
     pContext->MultMatrix(GetMatrix());
   
+  nuiRect r(GetVisibleRect());
   if (mAutoClip)
   {
-//    pContext->AddPrint("nuiWidget::InternalDrawWidget AutoClip");
     pContext->PushClipping();
     if (mpDecoration)
     {
-      nuiRect r(_self_and_decorations);
+      if (GetDebug())
+      {
+        nuiRect clip;
+        pContext->GetClipRect(clip, true);
+        NGL_OUT("InternalDrawWidget %s %s %s [clip %s]\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), _self_and_decorations.GetValue().GetChars(), clip.GetValue().GetChars());
+      }
       pContext->Clip(r);
     }
     pContext->EnableClipping(true);
@@ -1268,8 +1272,20 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
     pContext->PopState();
   }
   
-  mDrawingInCache = false;
+  if (GetDebug())
+  {
+    pContext->PushState();
+    pContext->ResetState();
+    pContext->EnableBlending(true);
+    pContext->EnableClipping(false);
+    pContext->SetFillColor(nuiColor(1.0f, 0.0f, 0.0f, 0.2f));
+    pContext->SetStrokeColor(nuiColor(1.0f, 0.0f, 0.0f, 0.8f));
+    pContext->DrawRect(r, eStrokeAndFillShape);
+    pContext->PopState();
+  }
   
+  mDrawingInCache = false;
+
   uint32 newclipdepth = pContext->GetClipStackSize();
   NGL_ASSERT(clipdepth == newclipdepth);
   
@@ -6300,7 +6316,12 @@ void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
     {
       nglString name;
       name.CFormat("WidgetLayer_%s_%s_%p", GetObjectClass().GetChars(), GetObjectName().GetChars(), this);
-      mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(mRect.GetWidth()), ToNearest(mRect.GetHeight()));
+      nuiRect r = GetVisibleRect().Size();//GetOverDrawRect(true, true).Size();
+      mpBackingLayer = nuiLayer::CreateLayer(name, ToNearest(r.GetWidth()), ToNearest(r.GetHeight()));
+      if (GetDebug())
+      {
+        NGL_OUT("Create widget layer %s\n", name.GetChars());
+      }
       mpBackingLayer->SetContents(this);
     }
   }

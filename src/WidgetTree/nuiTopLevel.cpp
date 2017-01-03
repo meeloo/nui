@@ -1103,10 +1103,15 @@ bool nuiTopLevel::CallKeyDown (const nglKeyEvent& rEvent)
     UpdateWidgetsCSS();
     return true;
   }
-  
-  
+
   UpdateWidgetsCSS();
-  return false;
+
+  if (mpWatchedWidget)
+  {
+    Invalidate();
+  }
+
+return false;
 }
 
 bool nuiTopLevel::CallKeyUp (const nglKeyEvent& rEvent)
@@ -1131,6 +1136,12 @@ bool nuiTopLevel::CallKeyUp (const nglKeyEvent& rEvent)
   }
 
   UpdateWidgetsCSS();
+
+  if (mpWatchedWidget)
+  {
+    Invalidate();
+  }
+
   return false;
 }
 
@@ -1948,6 +1959,48 @@ bool nuiTopLevel::Draw(class nuiDrawContext *pContext)
   if (mpDraggedWidget)
     DrawChild(pContext, mpDraggedWidget);
 
+  if (mpWatchedWidget)
+  {
+    nuiWidget *pParent = mpWatchedWidget->GetParent();
+    nuiRect r(mpWatchedWidget->GetRect());
+    nuiRect r0(mpWatchedWidget->GetVisibleRect());
+    nuiRect r2(mpWatchedWidget->GetBorderedRect());
+    nuiRect r3(mpWatchedWidget->GetOverDrawRect(false, true));
+    if (IsKeyDown(NK_CTRL))
+    {
+      if (pParent)
+        mpWatchedWidget->LocalToLocal(pParent, r0);
+      r = r0;
+      printf("visible rect %s\n", r.GetValue().GetChars());
+    }
+    else if (IsKeyDown(NK_ALT))
+    {
+      r = r2;
+      printf("bordered rect %s\n", r.GetValue().GetChars());
+    }
+    else if (IsKeyDown(NK_META))
+    {
+      r = r3;
+      printf("overdraw rect %s\n", r.GetValue().GetChars());
+    }
+    else
+    {
+      printf("layout rect %s\n", r.GetValue().GetChars());
+    }
+
+    if (pParent)
+      pParent->LocalToGlobal(r);
+
+    pContext->ResetState();
+    pContext->ResetClipRect();
+    pContext->SetStrokeColor(nuiColor(0.0f,0.0f,1.0f,0.5f));
+    pContext->SetFillColor(nuiColor(0.0f,0.0f,1.0f,.25f));
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(nuiBlendTransp);
+    pContext->DrawRect(r, eStrokeAndFillShape);
+    pContext->ResetState();
+  }
+
   return true;
 }
 
@@ -1980,30 +2033,7 @@ bool nuiTopLevel::DrawTree(class nuiDrawContext *pContext) ///< Draw caches only
   mDirtyWidgets.clear();
   
   mDirtyRects.clear();
-//
-//  if (mpWatchedWidget)
-//  {
-//    nuiRect r(mpWatchedWidget->GetRect());
-//    nuiRect r2(mpWatchedWidget->GetBorderedRect().Size());
-//    nuiRect r3(mpWatchedWidget->GetOverDrawRect(true, true).Size());
-//    if (IsKeyDown(NK_ALT))
-//      r = r2;
-//    else if (IsKeyDown(NK_META))
-//      r = r3;
-//    
-//    if (mpWatchedWidget->GetParent())
-//      mpWatchedWidget->GetParent()->LocalToGlobal(r);
-//    
-//    pContext->ResetState();
-//    pContext->ResetClipRect();
-//    pContext->SetStrokeColor(nuiColor(0.0f,0.0f,1.0f,0.5f));
-//    pContext->SetFillColor(nuiColor(0.0f,0.0f,1.0f,.25f));
-//    pContext->EnableBlending(true);
-//    pContext->SetBlendFunc(nuiBlendTransp);
-//    pContext->DrawRect(r, eStrokeAndFillShape);
-//    pContext->ResetState();
-//  }
-  
+
   mIsDrawing = false;
   
   return true;
@@ -2822,4 +2852,3 @@ float nuiTopLevel::GetScaleInv() const
 {
   return nuiGetInvScaleFactor();
 }
-

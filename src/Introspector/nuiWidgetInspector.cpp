@@ -236,6 +236,7 @@ mWISink(this)
   mpCRawType = NULL;
 #endif
   mpIdealRect = NULL;
+  mpOverdrawRect = NULL;
   mpUserRect = NULL;
   mpHasUserSize = NULL;
   mpHasUserPos = NULL;
@@ -343,6 +344,9 @@ void nuiWidgetInfo::RebuildInfo(bool Reconstruct)
     text = mpTarget->GetIdealRect().GetValue();
     mpIdealRect->SetText(text);
     
+    text = mpTarget->GetOverDrawRect(true, true).GetValue();
+    mpOverdrawRect->SetText(text);
+
     text = mpTarget->GetUserRect().GetValue();
     mpUserRect->SetText(text);
     
@@ -539,6 +543,13 @@ void nuiWidgetInfo::BuildInfo()
     mpIdealRect->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(1, index++, mpIdealRect);
     
+    pLabel = new nuiLabel("Overdraw Rect");
+    pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
+    pBox->SetCell(0, index, pLabel);
+    mpOverdrawRect = new nuiLabel();
+    mpOverdrawRect->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
+    pBox->SetCell(1, index++, mpOverdrawRect);
+
     pLabel = new nuiLabel("User Rect");
     pLabel->SetFont(nuiFont::GetFont("INTROSPECTOR_FONT_NORMAL"));
     pBox->SetCell(0, index, pLabel);

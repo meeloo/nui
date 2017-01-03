@@ -62,6 +62,7 @@ protected:
 #endif
   nuiLabel* mpIdealRect;
   nuiLabel* mpUserRect;
+  nuiLabel* mpOverdrawRect;
   nuiLabel* mpHasUserSize;
   nuiLabel* mpHasUserPos;
   nuiLabel* mpRect;

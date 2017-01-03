@@ -155,7 +155,14 @@ void nuiPainter::Clip(const nuiRect& rRect)
   p1 = m * p1;
   p2 = m * p2;
   nuiRect l(p1[0], p1[1], p2[0], p2[1], false);
+  if (mpClippingStack.top().mEnabled)
+  {
   /*bool res = (unused)*/ mpClippingStack.top().Intersect(mpClippingStack.top(),l);
+  }
+  else
+  {
+    /*bool res = (unused)*/ mpClippingStack.top() = l;
+  }
 //  NGL_OUT("Clip %s -> %s\n", l.GetValue().GetChars(), mpClippingStack.top().GetValue().GetChars());
 }
 

@@ -78,12 +78,12 @@ void nuiTextureInspector::UpdateTextures()
   pScrollView2->AddChild(mpAttributeGrid);
 
   nuiWidget* pCont = new nuiWidget();
-  nuiColorDecoration* pColDec = new nuiColorDecoration("TextureInspectorBg", nuiColor(128, 128, 128), 0, nuiColor(0, 0, 0), eFillShape, nuiBlendTransp, nuiRect(0,0,0,0));
+  nuiColorDecoration* pColDec = new nuiColorDecoration("TextureInspectorBg", nuiColor(64, 64, 64), 1, nuiColor(0, 0, 0), eStrokeAndFillShape, nuiBlendTransp, nuiRect(0,0,0,0));
   pCont->SetDecoration(pColDec);
   pSplitter->AddChild(pCont);
   mpImage = new nuiImage();
   mpImage->SetPosition(nuiCenter);
-  //mpImage->SetDecoration("INTROSPECTOR_TEXTURE_BORDER");
+  mpImage->SetDecoration("INTROSPECTOR_TEXTURE_BORDER");
   pCont->AddChild(mpImage);
   
   mSink.Connect(pList->SelectionChanged, &nuiTextureInspector::OnTextureSelection, (void*)pList);
