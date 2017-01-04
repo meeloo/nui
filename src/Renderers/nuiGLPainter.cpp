@@ -1872,7 +1872,7 @@ void nuiGLPainter::_DestroySurface(nuiSurface* pSurface)
   }
   FramebufferInfo info = it->second;
 
-  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, 0);
+//  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, 0);
   NGL_ASSERT(info.mFramebuffer > 0);
   glDeleteFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
   if (info.mRenderbuffer > 0)
