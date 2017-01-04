@@ -1874,13 +1874,21 @@ void nuiGLPainter::_DestroySurface(nuiSurface* pSurface)
 
 //  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, 0);
   NGL_ASSERT(info.mFramebuffer > 0);
+
   glDeleteFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
+
   if (info.mRenderbuffer > 0)
+  {
     glDeleteRenderbuffersNUI(1, (GLuint*)&info.mRenderbuffer);
+  }
   if (info.mDepthbuffer > 0)
+  {
     glDeleteRenderbuffersNUI(1, (GLuint*)&info.mDepthbuffer);
+  }
   if (info.mStencilbuffer > 0)
+  {
     glDeleteRenderbuffersNUI(1, (GLuint*)&info.mStencilbuffer);
+  }
 
 //  NGL_OUT("nuiGLPainter::DestroySurface %p (fbo %d tx %d)\n", pSurface, info.mFramebuffer, info.mTexture);
   mFramebuffers.erase(it);
