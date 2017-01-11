@@ -663,20 +663,13 @@ void nglPath::Split(std::vector<nglString>& rElements)
 
 bool nglIsFileVisible(const nglString& rPathName)
 {
-#if (defined _CARBON_ || defined _COCOA_)
-  FSRef ref;
-  OSStatus err = FSPathMakeRefWithOptions((const UInt8*) rPathName.GetStdString(eUTF8).c_str(), kFSPathMakeRefDoNotFollowLeafSymlink, &ref, 0);
-  if (err == noErr)
-  {
-    LSItemInfoRecord info;
-    err = LSCopyItemInfoForRef(&ref, kLSRequestBasicFlagsOnly, &info);
-    if (err == noErr)
-    {
-      return ((info.flags & kLSItemInfoIsInvisible) == 0);
-    }
-  }
-  return true;
+#if (defined _CARBON_ || defined _COCOA_ || defined _UIKIT_)
+  NSURL* url = [NSURL fileURLWithPath:[NSString stringWithUTF8String:rPathName.GetChars()]];
+  NSNumber* boolVal = nil;
+  [url getResourceValue:&boolVal forKey:NSURLIsHiddenKey error:nil];
+  return ![boolVal boolValue];
 #else
+# pragma warning Need proper nglIsFileVisible implementation for this target
   return true;
 #endif
 }
