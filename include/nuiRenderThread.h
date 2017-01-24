@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <unordered_map>
+
 class nuiMetaPainter;
 class nuiLayer;
 
@@ -69,12 +71,12 @@ private:
   nuiTaskQueue mNextFrameQueue;
 
   nuiRect mRect;
-  std::map<nuiLayer*, std::vector<nuiRect> > mPartialRects;
+  std::unordered_map<nuiLayer*, std::vector<nuiRect> > mPartialRects;
   nuiWidget* mpRoot = nullptr;
-  std::map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetContentsPainters;
-  std::map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetDrawPainters;
-  std::map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerContentsPainters;
-  std::map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerDrawPainters;
+  std::unordered_map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetContentsPainters;
+  std::unordered_map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetDrawPainters;
+  std::unordered_map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerContentsPainters;
+  std::unordered_map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerDrawPainters;
   std::set<nuiLayer*> mDirtyLayers;
   nglContext* mpContext = nullptr;
   nuiDrawContext* mpDrawContext = nullptr;
