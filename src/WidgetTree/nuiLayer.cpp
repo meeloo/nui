@@ -261,6 +261,7 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     pContentsPainter->SetName(name);
 
 //    pContentsPainter->SetSize(ToNearest(mWidth), ToNearest(mHeight));
+    int64 priority = std::numeric_limits<int64>::max();
 
     if (mpSurface)
     {
@@ -275,6 +276,8 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
 
     float offsetX = mOffsetX;
     float offsetY = mOffsetY;
+//    float offsetX = -2;
+//    float offsetY = -2;
 //    float offsetX = mOffsetX + (mpWidgetContents ? -mpWidgetContents->GetRect().Left() : 0);
 //    float offsetY = mOffsetY + (mpWidgetContents ? -mpWidgetContents->GetRect().Top() : 0);
 
@@ -282,7 +285,8 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     {
       pContext->Translate(-offsetX, -offsetY);
     }
-    
+
+//    pContext->Clip(nuiRect(-4, -4, 80 + mpSurface->GetWidth(), 80 + mpSurface->GetHeight()));
     if (mpWidgetContents)
     {
       pContext->SetClearColor(mClearColor);
@@ -292,6 +296,12 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
 //      pContext->EnableTexturing(false);
 //      pContext->DrawRect(nuiRect(GetWidth(), GetHeight()), eStrokeShape);
 //      pContext->EnableTexturing(true);
+      nuiWidget *pWidget = mpWidgetContents;
+      while (pWidget)
+      {
+        pWidget = pWidget->GetParent();
+        priority--;
+      }
     }
     else if (mDrawContentsDelegate)
     {
@@ -300,6 +310,10 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
       
       mDrawContentsDelegate(this, pContext);
     }
+
+    pContentsPainter->SetPriority(priority);
+
+
     // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
 
     if (mpSurface)
