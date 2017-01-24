@@ -806,10 +806,10 @@ void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
         h *= scale;
       }
       
-      if (mpSurface)
-      {
+//      if (mpSurface)
+//      {
 //        NGL_OUT("%p scissor: %d %d %d %d (%s)\n", mpSurface, x, y, w, h, mpSurface->GetObjectName().GetChars());
-      }
+//      }
 //      NGL_OUT("scissor: %d %d %d %d\n", x, y, w, h);
       glScissor(x, y, w, h);
     }
@@ -989,6 +989,7 @@ void nuiGLPainter::Clear(bool color, bool depth, bool stencil)
   NUI_RETURN_IF_RENDERING_DISABLED;
 
   SetViewport();
+  ApplyState(*mpState, mForceApply);
 
   glClearColor(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
 #ifdef _OPENGL_ES_
