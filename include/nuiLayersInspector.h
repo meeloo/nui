@@ -36,4 +36,5 @@ protected:
   nuiList* mpLayerList = nullptr;
   nuiComboBox* mpSortCombo = nullptr;
   nuiRenderThread* mpRenderThread = nullptr;
+  nuiToggleButton* mpShowHiddenLayers = nullptr;
 };

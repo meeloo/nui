@@ -88,6 +88,9 @@ void nuiLayersInspector::Setup()
   pHeader->AddCell(mpSortCombo);
   pBox->AddCell(pHeader);
 
+  mpShowHiddenLayers = new nuiToggleButton("Show All Layers");
+  pHeader->AddCell(mpShowHiddenLayers);
+
   pHeader->AddCell(nullptr);
   pHeader->SetCellExpand(pHeader->GetNbCells() - 1, nuiExpandShrinkAndGrow);
 
@@ -121,6 +124,7 @@ void nuiLayersInspector::Setup()
   pScrollView2->AddChild(mpAttributeGrid);
   
   mSink.Connect(mpSortCombo->SelectionChanged, &nuiLayersInspector::OnUpdateLayers, nullptr);
+  mSink.Connect(mpShowHiddenLayers->Activated, &nuiLayersInspector::OnUpdateLayers, nullptr);
   mSink.Connect(mpLayerList->SelectionChanged, &nuiLayersInspector::OnLayerSelection, (void*)mpLayerList);
 }
 
@@ -136,7 +140,9 @@ void nuiLayersInspector::UpdateLayers()
   std::vector<nuiLayer*> sortedlayers;
   for (const auto& it : layers)
   {
-    sortedlayers.push_back(it.second.Ptr());
+    nuiLayer* pLayer = it.second.Ptr();
+    if (pLayer->GetTexture() || mpShowHiddenLayers->IsPressed())
+      sortedlayers.push_back(it.second.Ptr());
   }
   
   nuiTreeNode* pSelection = mpSortCombo->GetSelected();
