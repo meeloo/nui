@@ -100,7 +100,10 @@ public:
   {
     return Count;
   }
-  
+
+  void SetPriority(int64 priority);
+  int64 GetPriority() const;
+
 #ifdef _DEBUG_
   void DBGSetReferenceObject(const nuiObject* pRef);
 #endif
@@ -191,6 +194,7 @@ protected:
 //  virtual void OnAcquired() const;
 //  virtual void OnReleased() const;
     int32 mClippingDepth = 0;
+  int64 mPriority = std::numeric_limits<int64>::max();
 };
 
 #endif // __nuiMetaPainter_h__

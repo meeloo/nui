@@ -1245,3 +1245,13 @@ const std::vector<nuiSurface*>& nuiMetaPainter::GetSurfaces() const
     return mSurfaces;
 }
 
+void nuiMetaPainter::SetPriority(int64 priority)
+{
+  mPriority = priority;
+}
+
+int64 nuiMetaPainter::GetPriority() const
+{
+  return mPriority;
+}
+
