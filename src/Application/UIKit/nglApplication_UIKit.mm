@@ -200,11 +200,14 @@ void objCCallOnMemoryWarning();
   std::map<nglString, nglString> infos;
   for (id key in userInfo)
   {
-    nglString _key((CFStringRef)key);
-    nglString _value((CFStringRef)[userInfo objectForKey:key]);
-    infos[_key] = _value;
-
-    NGL_OUT("Notif params: %s -> %s\n", _key.GetChars(), _value.GetChars());
+    id _value = [userInfo objectForKey:key];
+    if (_value && [_value isKindOfClass:[NSString class]])
+    {
+      infos[[key UTF8String]] = [_value UTF8String];
+#ifdef _DEBUG_
+      NGL_OUT("Notif params: %s -> %s\n", [key UTF8String], [_value UTF8String]);
+#endif
+    }
   }
 
   App->DidReceiveNotification(infos);
