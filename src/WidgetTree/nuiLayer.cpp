@@ -289,6 +289,10 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
 //    pContext->Clip(nuiRect(-4, -4, 80 + mpSurface->GetWidth(), 80 + mpSurface->GetHeight()));
     if (mpWidgetContents)
     {
+      if (mpWidgetContents->GetDebug())
+      {
+        pContentsPainter->AddBreakPoint();
+      }
       pContext->SetClearColor(mClearColor);
       pContext->Clear();
       pContentsPainter->DrawWidget(pContext, mpWidgetContents);
@@ -404,11 +408,11 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 
   if (mClipContents)
   {
-    mpDrawPainter->PushClipping();
-    mpDrawPainter->EnableClipping(mClipContents);
+    pContext->PushClipping();
+    pContext->EnableClipping(mClipContents);
 
 //    NGL_OUT("Clip Layers %p %s %s\n", this, GetObjectName().GetChars(), dst.GetValue().GetChars());
-    mpDrawPainter->Clip(dst);
+    pContext->Clip(dst);
   }
 
   if (mpWidgetContents)
@@ -416,13 +420,19 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 //    {
 //    nglString str;
 //    str.CFormat("Draw Layer for widget %s", name.GetChars());
-//    mpDrawPainter->AddPrint(str.GetChars());
+//    pContext->AddPrint(str.GetChars());
 //    }
 //    NGL_OUT("Update layer contents with widget [%p %s] ( (%f, %f) / (%f x %f))\n",
 //            mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
 //            mpWidgetContents->GetRect().Left(), mpWidgetContents->GetRect().Top(),
 //            mpWidgetContents->GetRect().GetWidth(), mpWidgetContents->GetRect().GetHeight());
+
+    if (mpWidgetContents->GetDebug())
+    {
+      mpDrawPainter->AddBreakPoint();
+    }
     
+
     if (mpWidgetContents->GetLayerPolicy() == nuiDrawPolicyDrawSelf)
     {
       if (!mChildWidgets.empty())
@@ -430,13 +440,13 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 
         for (auto widget : mChildWidgets)
         {
-          mpDrawPainter->PushMatrix();
+          pContext->PushMatrix();
           nuiMatrix m;
           nuiRect r = widget->GetRect();
           m.SetTranslation(r.Left(), r.Top(), 0);
-          mpDrawPainter->MultMatrix(m);
+          pContext->MultMatrix(m);
           mpDrawPainter->DrawWidget(pContext, widget);
-          mpDrawPainter->PopMatrix();
+          pContext->PopMatrix();
 //          NGL_OUT("draw subwidget of [%p %s] -> [%p %s] ( (%f, %f) / (%f x %f))\n",
 //                  mpWidgetContents, mpWidgetContents->GetObjectClass().GetChars(),
 //                  widget, widget->GetObjectClass().GetChars(),
@@ -461,7 +471,7 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
   level--;
 
   if (mClipContents)
-    mpDrawPainter->PopClipping();
+    pContext->PopClipping();
 
   pContext->PopMatrix();
   pContext->SetPainter(pPainter);

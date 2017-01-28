@@ -102,6 +102,7 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   nuiRenderThread* pRenderThread = GetRenderThread();
   
 //  SetLayerPolicy(nuiDrawPolicyDrawNone);
+  SetLayerPolicy(nuiDrawPolicyDrawTree);
 
   if (NUI_MAINWINDOW_USE_LAYERS)
   {
@@ -165,6 +166,7 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   GetRenderThread();
 
 //  SetLayerPolicy(nuiDrawPolicyDrawNone);
+  SetLayerPolicy(nuiDrawPolicyDrawTree);
 
   if (NUI_MAINWINDOW_USE_LAYERS)
   {

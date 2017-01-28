@@ -32,6 +32,7 @@ nuiButton::nuiButton()
   mDelayedActivation = 0;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
+  SetLayerPolicy(nuiDrawPolicyDrawTree);
 
   EnableInteractiveDecoration(true);
   

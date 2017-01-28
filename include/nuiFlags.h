@@ -112,10 +112,12 @@ enum nuiTextLayoutMode
 
 enum nuiDrawPolicy
 {
-nuiDrawPolicyDrawNone     = 0, ///< Draw nothing
-nuiDrawPolicyDrawSelf     = 1 << 0,  ///< draw itself but not its children
-nuiDrawPolicyDrawChildren = 1 << 1,  ///< draw its children but not itself
-nuiDrawPolicyDrawTree     = nuiDrawPolicyDrawSelf | nuiDrawPolicyDrawChildren ///< draw itself and its children
+  nuiDrawPolicyDrawNone     = 0, ///< Draw nothing
+  nuiDrawPolicyDrawSelf     = 1 << 0,  ///< draw itself but not its children
+  nuiDrawPolicyDrawChildren = 1 << 1,  ///< draw its children but not itself
+  nuiDrawPolicyCacheChildren = 1 << 2,  ///< prevent the children to use layers as caches
+  nuiDrawPolicyDrawTree     = nuiDrawPolicyDrawSelf | nuiDrawPolicyDrawChildren, ///< draw itself and its children
+  nuiDrawPolicyCacheTree    = nuiDrawPolicyDrawSelf | nuiDrawPolicyCacheChildren ///< draw itself and its children but disable layers on the children (in order to save texture memory)
 };
 
 enum nuiEasingPreset

@@ -2819,22 +2819,20 @@ void nuiAttribute<nuiDrawPolicy>::FormatDefault(nuiDrawPolicy value, nglString &
 template <>
 bool nuiAttribute<nuiDrawPolicy>::ToString(nuiDrawPolicy Value, nglString& rString) const
 {
-  switch (Value)
+  if (Value == nuiDrawPolicyDrawNone)
   {
-    case nuiDrawPolicyDrawNone:
-      rString = "DrawNone"; break;
-    case nuiDrawPolicyDrawSelf:
-      rString = "DrawSelf"; break;
-    case nuiDrawPolicyDrawChildren:
-      rString = "DrawChildren"; break;
-    case nuiDrawPolicyDrawTree:
-      rString = "DrawTree"; break;
-      
-    default:
-      rString = "DrawSelf";
-      return false;
+    rString = "DrawNone";
+    return true;
   }
-  
+
+  if (Value & nuiDrawPolicyDrawSelf)
+    rString += "DrawSelf ";
+  if (Value & nuiDrawPolicyDrawChildren)
+    rString += "DrawChildren" ;
+  if (Value & nuiDrawPolicyCacheTree)
+    rString += "CacheChildren";
+
+  rString.Trim();
   return true;
 }
 

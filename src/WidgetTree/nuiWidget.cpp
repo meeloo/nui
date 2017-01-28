@@ -778,12 +778,14 @@ void nuiWidget::UpdateTopLevel()
     bool AncestorWillDrawTree = false;
     while (pParent)
     {
-      AncestorWillDrawTree |= (mpParent->GetLayerPolicy() & nuiDrawPolicyDrawChildren) || mpParent->GetAncestorWillDrawTree();
+      bool drawchildren = (mpParent->GetLayerPolicy() & nuiDrawPolicyDrawChildren);
+      bool cachechildren = (mpParent->GetLayerPolicy() & nuiDrawPolicyCacheChildren);
+      AncestorWillDrawTree |= cachechildren || mpParent->GetAncestorWillDrawTree();
       pTop = pParent;
       pParent = pParent->GetParent();
     }
 
-    SetAncestorWillDrawTree(AncestorWillDrawTree);
+   SetAncestorWillDrawTree(AncestorWillDrawTree);
 
     if (pTop)
       mpTopLevel = dynamic_cast<nuiTopLevel*>(pTop);
@@ -1015,8 +1017,12 @@ void nuiWidget::InvalidateRect(const nuiRect& rRect)
     return;
   }
 
-  if (mpParent)
-    mpParent->BroadcastInvalidate(this);
+  nuiWidget *pTop = GetTopLevel();
+  if (pTop)
+    pTop->BroadcastInvalidate(this);
+
+//  if (mpParent)
+//    mpParent->BroadcastInvalidate(this);
   DebugRefreshInfo();
 }
 
@@ -1047,21 +1053,17 @@ void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRe
     r.mBottom = MAX(vec1[1], MAX(vec2[1], MAX(vec3[1], vec4[1]) ) );
   }
 
-  if (mpBackingLayer)
+  bool drawself = (GetLayerPolicy() & nuiDrawPolicyDrawSelf) && (this == pSender);
+  bool drawtree = (GetLayerPolicy() & nuiDrawPolicyDrawChildren) && (this != pSender);
+  if (mpBackingLayer && (drawself || drawtree))
   {
-    nuiRenderThread* pRenderThread = GetRenderThread();
-    if (pRenderThread)
-    {
-      pRenderThread->InvalidateLayerRect(mpBackingLayer, r);
-    }
-    return;
+    AddInvalidRect(r);
   }
 
   r.Move(rect.Left(), rect.Top());
 
   if (mpParent)
   {
-    mpParent->CheckValid();
     mpParent->BroadcastInvalidateRect(pSender, r);
   }
   DebugRefreshInfo();
@@ -1092,8 +1094,8 @@ void nuiWidget::Invalidate()
   nuiRect r(GetOverDrawRect(true, true));
   r.Intersect(r, GetVisibleRect());
   nuiWidget::InvalidateRect(r);
-  if (mpParent)
-    mpParent->BroadcastInvalidate(this);
+//  if (mpParent)
+//    mpParent->BroadcastInvalidate(this);
   DebugRefreshInfo();
 }
 
@@ -1101,7 +1103,7 @@ void nuiWidget::BroadcastInvalidate(nuiWidgetPtr pSender)
 {
   CheckValid();
 
-  if (mLayerPolicy & nuiDrawPolicyDrawChildren)
+  if (mLayerPolicy & (nuiDrawPolicyDrawChildren | nuiDrawPolicyCacheChildren))
     Invalidate();
 
   if (mpParent)
@@ -1213,20 +1215,23 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   if (ApplyMatrix && !IsMatrixIdentity())
     pContext->MultMatrix(GetMatrix());
   
-  nuiRect r(GetVisibleRect());
+//  nuiRect r(GetVisibleRect());
+  nuiRect r(_self_and_decorations);
   if (mAutoClip)
   {
     pContext->PushClipping();
     if (mpDecoration)
     {
-      if (GetDebug())
-      {
-        nuiRect clip;
-        pContext->GetClipRect(clip, true);
-        NGL_OUT("InternalDrawWidget %s %s %s [clip %s]\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), _self_and_decorations.GetValue().GetChars(), clip.GetValue().GetChars());
-      }
       pContext->Clip(r);
     }
+
+    if (GetDebug())
+    {
+      nuiRect clip;
+      pContext->GetClipRect(clip, true);
+      NGL_OUT("InternalDrawWidget %s %s %s [clip %s]\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), _self_and_decorations.GetValue().GetChars(), clip.GetValue().GetChars());
+    }
+
     pContext->EnableClipping(true);
   }
   
@@ -1325,7 +1330,7 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
   uint32 clippingstacksize = pContext->GetClipStackSize();
   
 //  NGL_OUT("nuiWidget::UpdateCache %p %s %s\n", this, GetObjectClass().GetChars(), GetObjectName().GetChars());
-  
+
 //  nuiRect clip;
 //  pContext->GetClipRect(clip, true);
   nuiRect _self = GetOverDrawRect(true, false);
@@ -1334,7 +1339,7 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
 //  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
 
   _self.Intersect(_self, mVisibleRect);
-  _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
+//  _self_and_decorations.Intersect(_self_and_decorations, mVisibleRect);
 //  mCurrentlyOnScreen = inter.Intersect(_self_and_decorations, clip);
   if (1)
   {
@@ -1359,7 +1364,8 @@ void nuiWidget::UpdateCache(nuiDrawContext* pContext, nuiRenderThread* pRenderTh
   if (mpBackingLayer)
   {
     bool old = mRenderCacheIsEmpty;
-    mRenderCacheIsEmpty = mpRenderCache->GetNbDrawArray() == 0;
+    bool drawChildren = mLayerPolicy & (nuiDrawPolicyDrawChildren + nuiDrawPolicyCacheChildren);
+    mRenderCacheIsEmpty = (mpRenderCache->GetNbDrawArray() == 0) && !drawChildren;
     mpBackingLayer->UpdateContents(pRenderThread, GetDrawContext(), mRenderCacheIsEmpty);
     //if (old != mRenderCacheIsEmpty || mLayerPolicy == nuiDrawPolicyDrawSelf)
     {
@@ -3208,8 +3214,8 @@ void nuiWidget::AddMatrixNode(nuiMatrixNode* pNode)
   nuiWidget::InvalidateRect(GetOverDrawRect(true, true));
   Invalidate();
   
-  if (mpParent)
-    mpParent->BroadcastInvalidate(this);
+//  if (mpParent)
+//    mpParent->BroadcastInvalidate(this);
   DebugRefreshInfo();
 }
 
@@ -3230,8 +3236,8 @@ void nuiWidget::DelMatrixNode(uint32 index)
   nuiWidget::InvalidateRect(GetOverDrawRect(true, true));
   Invalidate();
   
-  if (mpParent)
-    mpParent->BroadcastInvalidate(this);
+//  if (mpParent)
+//    mpParent->BroadcastInvalidate(this);
   DebugRefreshInfo();
 }
 
@@ -3323,8 +3329,8 @@ void nuiWidget::SetMatrix(const nuiMatrix& rMatrix)
   nuiWidget::InvalidateRect(GetOverDrawRect(true, true));
   Invalidate();
   
-  if (mpParent)
-    mpParent->BroadcastInvalidate(this);
+//  if (mpParent)
+//    mpParent->BroadcastInvalidate(this);
   DebugRefreshInfo();
 }
 
@@ -4147,10 +4153,13 @@ void nuiWidget::AddInvalidRect(const nuiRect& rRect)
     if (pRenderThread)
     {
       nuiRect r(rRect);
-      r.Move(GetOverDrawLeft(), GetOverDrawTop());
+      nuiSize Left, Top, Right, Bottom;
+      GetOverDraw(Left, Top, Right, Bottom, true);
+      r.Move(Left, Top);
       pRenderThread->InvalidateLayerRect(mpBackingLayer, r);
     }
   }
+
 #if 0
 //  NGL_OUT("+++ AddInvalidRect in %s %s %s\n", GetObjectClass().GetChars(), GetObjectName().GetChars(), rRect.GetValue().GetChars());
   int count = mDirtyRects.size();
@@ -5086,7 +5095,7 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
   
   delete pIt;
   
-  BroadcastInvalidate(this);
+  InvalidateRect(GetVisibleRect());
 }
 
 void nuiWidget::CallDisconnectTopLevel(nuiTopLevel* pTopLevel)
@@ -5172,7 +5181,7 @@ void nuiWidget::DrawChild(nuiDrawContext* pContext, nuiWidget* pChild)
 {
   CheckValid();
 
-  if (mpBackingLayer && mLayerPolicy == nuiDrawPolicyDrawSelf)
+  if (mpBackingLayer && (mLayerPolicy == nuiDrawPolicyDrawSelf))
   {
     mpBackingLayer->AddChildWidget(pChild);
     return;
@@ -5618,6 +5627,7 @@ void nuiWidget::SetVisible(bool Visible)
       {
         Invalidate();
         mVisible = true;
+        InternalSetLayerPolicy(GetLayerPolicy());
         InvalidateLayout();
         VisibilityChanged();
         //pShowAnim->SetTime(0, eAnimFromStart);
@@ -5626,17 +5636,16 @@ void nuiWidget::SetVisible(bool Visible)
         //        pShowAnim->Play();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-        InternalSetLayerPolicy(mLayerPolicy);
       }
       else // otherwise set visible = true
       {
         Invalidate();
         mVisible = true;
+        InternalSetLayerPolicy(GetLayerPolicy());
         InvalidateLayout();
         VisibilityChanged();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-        InternalSetLayerPolicy(mLayerPolicy);
       }
     }
     else if (pShowAnim && pShowAnim->IsPlaying())
@@ -5656,6 +5665,7 @@ void nuiWidget::SetVisible(bool Visible)
       {
         mNeedSelfRedraw = false; ///< Forcing parent broadcast
         mVisible = true; ///< Changing flag before tests in invalidate(s)
+        InternalSetLayerPolicy(GetLayerPolicy());
         Invalidate();
         InvalidateLayout();
         VisibilityChanged();
@@ -5665,18 +5675,17 @@ void nuiWidget::SetVisible(bool Visible)
         //        pShowAnim->Play();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-        InternalSetLayerPolicy(mLayerPolicy);
       }
       else // otherwise set visible = true
       {
         mNeedSelfRedraw = false;  ///< Forcing parent broadcast
         mVisible = true; ///< Changing flag before tests in invalidate(s)
+        InternalSetLayerPolicy(GetLayerPolicy());
         Invalidate();
         InvalidateLayout();
         VisibilityChanged();
         DebugRefreshInfo();
         ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
-        InternalSetLayerPolicy(mLayerPolicy);
         UpdateChildrenVisibility();
       }
     }
@@ -5719,7 +5728,7 @@ void nuiWidget::SetVisible(bool Visible)
         {///< May need iteration of children
           pRenderThread->SetWidgetDrawPainter(this, nullptr);
           pRenderThread->SetWidgetContentsPainter(this, nullptr);
-          InternalSetLayerPolicy(nuiDrawPolicyDrawNone);
+          InternalSetLayerPolicy(GetLayerPolicy());
         }
       }
     }
@@ -5753,7 +5762,7 @@ void nuiWidget::SetVisible(bool Visible)
         {///< May need iteration of children
           pRenderThread->SetWidgetDrawPainter(this, nullptr);
           pRenderThread->SetWidgetContentsPainter(this, nullptr);
-          InternalSetLayerPolicy(nuiDrawPolicyDrawNone);
+          InternalSetLayerPolicy(GetLayerPolicy());
         }
       }
     }
@@ -5816,16 +5825,19 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
     NGL_OUT("nuiWidget::SetSelfRect on '%s' (%f, %f - %f, %f)\n", GetObjectClass().GetChars(), rRect.mLeft, rRect.mTop, rRect.GetWidth(), rRect.GetHeight());
 #endif
 
-  Invalidate();
+  nuiRect r(rRect);
 
   if (mForceIdealSize)
   {
-    mRect.Set(rRect.Left(), rRect.Top(), mIdealRect.GetWidth(), mIdealRect.GetHeight());
+    r.Set(rRect.Left(), rRect.Top(), mIdealRect.GetWidth(), mIdealRect.GetHeight());
   }
-  else
-  {
-    mRect = rRect;
-  }
+
+  if (r == mRect)
+    return true;
+
+  Invalidate();
+
+  mRect = r;
 
   if (!mOverrideVisibleRect)
   {
@@ -5833,7 +5845,6 @@ bool nuiWidget::SetSelfRect(const nuiRect& rRect)
   }
 
   Invalidate();
-
 
   DebugRefreshInfo();
 
@@ -5903,7 +5914,7 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
     mInSetRect = true;
     SetRect(rect);
     mInSetRect = false;
-    Invalidate();
+//    Invalidate();
   }
   else
   {
@@ -6322,7 +6333,7 @@ nuiWidget* nuiWidget::GetParentLayerWidget() const
 
 void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
 {
-  if (policy != nuiDrawPolicyDrawNone && !GetAncestorWillDrawTree())
+  if (IsVisible() && policy != nuiDrawPolicyDrawNone && !GetAncestorWillDrawTree())
   {
     if (!mpBackingLayer)
     {
@@ -6363,7 +6374,7 @@ bool nuiWidget::GetAncestorWillDrawTree() const
 
 void nuiWidget::UpdateChildrenDrawPolicy()
 {
-  bool set = GetAncestorWillDrawTree() || (GetLayerPolicy() & nuiDrawPolicyDrawChildren);
+  bool set = (GetAncestorWillDrawTree() || (GetLayerPolicy() & nuiDrawPolicyCacheChildren));
   for (auto child : mpChildren)
   {
     child->SetAncestorWillDrawTree(set);
@@ -6376,9 +6387,11 @@ void nuiWidget::UpdateChildrenVisibility()
   {
     Invalidate();
     InvalidateLayout();
+    nuiWidget *pTop  = GetTopLevel();
     for (auto child : mpChildren)
     {
-      BroadcastInvalidate(child);
+      if (pTop)
+        pTop->BroadcastInvalidate(child);
       child->UpdateChildrenVisibility();
     }
   }

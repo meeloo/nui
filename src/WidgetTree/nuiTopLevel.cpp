@@ -2196,6 +2196,13 @@ nuiSize nuiTopLevel::GetStatusBarSize() const
 
 void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect)
 {
+  nuiWidget::BroadcastInvalidateRect(pSender, rRect);
+  return;
+
+
+
+
+
 //  nglString senderclass = pSender->GetObjectClass();
 //  if (senderclass == "nuiMainWindow"
 //      || senderclass == "nuiNavigationController"
@@ -2224,14 +2231,18 @@ void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& r
 
   r.Set(vec1[0], vec1[1], vec2[0], vec2[1], false);
 
-//  NGL_OUT("nuiTopLevel::BroadcastInvalidateRect %s / %s / 0x%x RECT:%s\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender, rRect.GetValue().GetChars());
+  NGL_OUT("nuiTopLevel::BroadcastInvalidateRect %s / %s / 0x%x RECT:%s\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender, rRect.GetValue().GetChars());
   AddInvalidRect(r);
-  if (mpBackingLayer)
-  {
-    nuiRenderThread *pRenderThread = GetRenderThread();
-    if (pRenderThread)
-      pRenderThread->InvalidateLayerContents(mpBackingLayer);
-  }
+//  nuiRenderThread *pRenderThread = GetRenderThread();
+//  if (pRenderThread)
+//  {
+//    if (mpBackingLayer)
+//    {
+////      pRenderThread->InvalidateLayerContents(mpBackingLayer);
+//      pRenderThread->InvalidateLayerRect(mpBackingLayer, r);
+//    }
+////    pRenderThread->InvalidateLayerRect(nullptr, r);
+//  }
   mDirtyWidgets.insert(pSender);
   DebugRefreshInfo();
 }

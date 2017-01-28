@@ -300,7 +300,8 @@ void MainWindow::OnCreation()
   case 0:
     {
       nuiPosition pos[] = {
-        nuiNoPosition, nuiTopLeft, nuiTop, nuiTopRight,
+        //nuiNoPosition,
+        nuiTopLeft, nuiTop, nuiTopRight,
         nuiLeft, nuiCenter, nuiRight,
         nuiBottomLeft, nuiBottom, nuiBottomRight,
         nuiNoPosition
@@ -312,10 +313,10 @@ void MainWindow::OnCreation()
         NULL
       };
 
-      nuiWidget* btn = new nuiButton("GetSome shit written in the window pal");
+      nuiWidget* btn = new nuiToggleButton("GetSome shit written in the window pal");
       AddChild(btn);
       btn->SetPosition(nuiCenter);
-      btn->SetVisible(false);
+      btn->SetVisible(true);
       mpHiddenWidget = btn;
 
       for (int i = 0; pos[i] != nuiNoPosition; i++)
