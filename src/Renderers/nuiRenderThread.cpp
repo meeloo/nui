@@ -40,7 +40,7 @@ std::set<nuiRenderThread*> nuiRenderThread::mThreads;
 nglCriticalSection nuiRenderThread::ThreadsCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
-: mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone)
+: mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone), mRenderingLock("nuiRenderThread::RenderingLock"), StatsCS("nuiRenderThread::StatCS")
 {
   nglCriticalSectionGuard g(ThreadsCS);
   mThreads.insert(this);
@@ -224,6 +224,7 @@ NGL_OUT("#######################################################################
   // Try locking
   if (!TryLockRendering())
   {
+    NGL_OUT("Unable to lock rendering thread???\n");
     return;
   }
 
@@ -372,10 +373,8 @@ NGL_OUT("#######################################################################
   glPopGroupMarkerEXT();
 
   mpContext->GetLock().Unlock();
-
-  App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, true));
-
   UnlockRendering();
+  App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, true));
 
 //  DumpStats();
 }

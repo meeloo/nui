@@ -2349,7 +2349,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
   ResetOpenGLState();
 }
 
-nglCriticalSection nuiGLPainter::RenderArrayInfo::mHeapCS;
+nglCriticalSection nuiGLPainter::RenderArrayInfo::mHeapCS("nuiGLPainter::mHeapCS");
 std::list<nuiGLPainter::RenderArrayInfo*> nuiGLPainter::RenderArrayInfo::mHeap;
 
 nuiGLPainter::RenderArrayInfo* nuiGLPainter::RenderArrayInfo::Create(nuiRenderArray* pRenderArray)

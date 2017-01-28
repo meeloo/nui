@@ -444,6 +444,7 @@ nglString nuiTCPClient::GetDesc() const
 //////////////////////////
 //class nuiPipe
 nuiPipe::nuiPipe()
+: mCS("nuiPipeCS")
 {
 
 }

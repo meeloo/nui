@@ -9,6 +9,7 @@
 
 
 nglReaderWriterLock::nglReaderWriterLock()
+: mCS("nglReaderWriterLock::mCS"), mCSWriter("nglReaderWriterLock::mCSWriter")
 {
   mReaders = 0;
   mWriter = 0;
