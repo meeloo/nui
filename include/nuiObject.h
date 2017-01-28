@@ -14,7 +14,7 @@
 #include "nuiRefCount.h"
 
 #ifdef _DEBUG_
-#define _NUI_DEBUG_OBJECTS_
+//#define _NUI_DEBUG_OBJECTS_
 #endif
 
 class nuiEventSource;
