@@ -69,6 +69,20 @@ void objCCallOnMemoryWarning();
   {
 		objCCallOnInit(pUIApplication);
 	}
+
+  // Check if we have a notification to display
+  NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+
+  if (notification)
+  {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
+                                                        message:notification[@"aps"][@"alert"]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
+  }
+
   return YES;
 }
 
@@ -197,21 +211,22 @@ void objCCallOnMemoryWarning();
 ///////// Notifications:
 - (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo
 {
-  std::map<nglString, nglString> infos;
-  for (id key in userInfo)
+  if (pUIApp.applicationState == UIApplicationStateActive)
   {
-    id _value = [userInfo objectForKey:key];
-    if (_value && [_value isKindOfClass:[NSString class]])
-    {
-      infos[[key UTF8String]] = [_value UTF8String];
-#ifdef _DEBUG_
-      NGL_OUT("Notif params: %s -> %s\n", [key UTF8String], [_value UTF8String]);
-#endif
-    }
-  }
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
+                                                        message:userInfo[@"aps"][@"alert"]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
 
-  App->DidReceiveNotification(infos);
+    [alertView show];
+  }
+  else if (pUIApp.applicationState == UIApplicationStateBackground || pUIApp.applicationState == UIApplicationStateInactive)
+  {
+    // Do something else rather than showing an alert view, because it won't be displayed.
+  }
 }
+
 
 //- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 //{
