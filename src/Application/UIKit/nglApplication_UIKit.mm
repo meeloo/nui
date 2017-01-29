@@ -70,6 +70,7 @@ void objCCallOnMemoryWarning();
 		objCCallOnInit(pUIApplication);
 	}
 
+  /*
   // Check if we have a notification to display
   NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 
@@ -82,6 +83,7 @@ void objCCallOnMemoryWarning();
                                               otherButtonTitles:nil];
     [alertView show];
   }
+  */
 
   return YES;
 }
@@ -211,6 +213,7 @@ void objCCallOnMemoryWarning();
 ///////// Notifications:
 - (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo
 {
+  /*
   if (pUIApp.applicationState == UIApplicationStateActive)
   {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
@@ -225,6 +228,22 @@ void objCCallOnMemoryWarning();
   {
     // Do something else rather than showing an alert view, because it won't be displayed.
   }
+  */
+
+  std::map<nglString, nglString> infos;
+  for (id key in userInfo)
+  {
+    id _value = [userInfo objectForKey:key];
+    if (_value && [_value isKindOfClass:[NSString class]])
+    {
+      infos[[key UTF8String]] = [_value UTF8String];
+#ifdef _DEBUG_
+      NGL_OUT("Notif params: %s -> %s\n", [key UTF8String], [_value UTF8String]);
+#endif
+    }
+  }
+
+  App->DidReceiveNotification(infos);
 }
 
 
