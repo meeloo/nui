@@ -75,6 +75,8 @@ public:
 
   void SetOpacity(float v);
   float GetOpacity() const;
+  bool IsOpaque() const;
+  bool IsTransparent() const;
 
   void Set(float r=0.0f,float g=0.0f, float b=0.0f, float a=1.0f, bool Premultiplied = false)
   {

@@ -37,6 +37,7 @@ nuiStateDecoration::nuiStateDecoration(const nglString& rName, const nglString& 
     SetState(nuiStateDisabled | nuiStateSelected, GetDecoration(rDisabledSelected));
     SetState(nuiStateDisabled | nuiStatePressed, GetDecoration(rDisabledSelected));
   }
+  UpdateOpaqueness();
 }
 
 
@@ -54,6 +55,7 @@ nuiStateDecoration::nuiStateDecoration(const nglString& rName, const nglString& 
   SetState(nuiStateDisabled | nuiStateReleased, GetDecoration(rDisabled));
   SetState(nuiStateDisabled | nuiStateSelected, GetDecoration(rDisabledSelected));
   SetState(nuiStateDisabled | nuiStatePressed, GetDecoration(rDisabledSelected));
+  UpdateOpaqueness();
 } 
 
 
@@ -429,6 +431,7 @@ void nuiStateDecoration::SetState(nuiStateDescription State, nuiDecoration* pDec
   else
     mStates.erase(State);
   
+  UpdateOpaqueness();
   Changed();
 }
 
@@ -610,6 +613,13 @@ void nuiStateDecoration::SetDecoSelected(const nglString& rPath)
     SetState(nuiStateSelected, pDeco);
 }
 
-
+void nuiStateDecoration::UpdateOpaqueness()
+{
+  bool opaque = true;
+  for (auto deco : mStates)
+  {
+    opaque = opaque && deco.second->GetOpaque();
+  }
+}
 
 

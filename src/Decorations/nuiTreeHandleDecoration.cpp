@@ -21,7 +21,7 @@ nuiTreeHandleDecoration::nuiTreeHandleDecoration(const nglString& rName, nuiColo
     
   // on the front layer by default
   mLayer = eLayerFront;
-
+  SetOpaque(false);
 }
 
 

@@ -111,7 +111,8 @@ public:
   
   nuiTexture* GetProxyTexture() const;
   const nuiRect& GetProxyRect() const;
-  
+
+  bool HasAlphaChannel() const;
 protected:
   friend class nuiSurface;
   static nuiTexture* GetTexture(nuiSurface* pSurface); ///< Create a texture from an existing nuiSurface.

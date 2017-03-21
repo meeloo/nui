@@ -33,8 +33,10 @@ public:
   
   void RedrawOnHover(bool set);
   bool GetRedrawOnHover() const;
-  
-  
+
+  NUI_GETSETDO(bool, Opaque, Changed());
+  NUI_GETSETDO(nuiBlendFunc, BlendFunc, Changed());
+
   virtual void DrawBack(nuiDrawContext* pContext, nuiWidget* pWidget, const nuiRect& rRect);
   virtual void DrawFront(nuiDrawContext* pContext, nuiWidget* pWidget, const nuiRect& rRect);
   virtual void Draw(nuiDrawContext* pContext, nuiWidget* pWidget, const nuiRect& rRect);
@@ -68,12 +70,14 @@ public:
 protected:
   virtual ~nuiDecoration();
   
+  nuiDecorationLayer mLayer;
+  nuiBlendFunc mBlendFunc = nuiBlendTransp;
   bool mUseWidgetAlpha : 1;
   bool mBorderEnabled : 1;
   bool mRedrawOnHover : 1;
+  bool mOpaque        : 1;
 
-  nuiDecorationLayer mLayer;
-    
+
 private:
   
   static void AddDecoration(nuiDecoration* pDecoration);

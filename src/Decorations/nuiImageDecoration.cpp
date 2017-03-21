@@ -44,7 +44,7 @@ nuiImageDecoration::nuiImageDecoration(const nglString& rName, const nglPath& rT
   if (SetObjectClass("nuiImageDecoration"))
     InitAttributes();
 	
-  mpTexture = nuiTexture::GetTexture(rTexturePath);
+  SetTexturePath(rTexturePath);
 }
 
 
@@ -165,13 +165,15 @@ void nuiImageDecoration::SetTexturePath(nglPath path)
   }
   
   if (GetSourceClientRect() == nuiRect(0,0,0,0))
-    SetSourceClientRect(nuiRect(0, 0, mpTexture->GetWidth(), mpTexture->GetHeight()));
+    SetSourceClientRect(nuiRect(0, 0, (int32)mpTexture->GetWidth(), (int32)mpTexture->GetHeight()));
   if (pOld)
     pOld->Release();
   
   SetRepeatX(mRepeatX);
   SetRepeatY(mRepeatY);
-  
+
+  SetOpaque(mpTexture?!mpTexture->HasAlphaChannel():true);
+
   Changed();
 }
 
@@ -199,8 +201,15 @@ void nuiImageDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, cons
   rect.RoundToBelow();
   
   pContext->EnableTexturing(true);
-  pContext->EnableBlending(true);
-  pContext->SetBlendFunc(nuiBlendTransp);
+  if (GetOpaque())
+  {
+    pContext->EnableBlending(true);
+  }
+  else
+  {
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(mBlendFunc);
+  }
   pContext->SetTexture(mpTexture);
   nuiColor col(mColor);
   if (mUseWidgetAlpha && pWidget)
@@ -257,22 +266,16 @@ nuiSize nuiImageDecoration::GetBorder(nuiPosition position, const nuiWidget* pWi
   {
     case nuiLeft:
       return mClientRect.Left();
-      break;
     case nuiRight:
       return w - mClientRect.Right();
-      break;
     case nuiTop:
       return mClientRect.Top();
-      break;
     case nuiBottom:
       return h - mClientRect.Bottom();
-      break;
     case nuiFillHorizontal:
       return w - mClientRect.GetWidth();
-      break;
     case nuiFillVertical:
       return h - mClientRect.GetHeight();
-      break;
     case nuiNoPosition: break;
     case nuiTopLeft: break;
     case nuiTopRight: break;
@@ -287,7 +290,7 @@ nuiSize nuiImageDecoration::GetBorder(nuiPosition position, const nuiWidget* pWi
     case nuiFillBottom: break;
   }
   //we should'nt arrive here
-  return NULL;
+  return 0.0f;
 }
 
 void nuiImageDecoration::GetBorders(const nuiWidget* pWidget, float& rLeft, float& rRight, float& rTop, float& rBottom, float& rHorizontal, float& rVertical) const

@@ -1310,6 +1310,27 @@ void nuiTexture::DetachSurface()
   mpSurface = nullptr;
 }
 
+bool nuiTexture::HasAlphaChannel() const
+{
+  switch (GetPixelFormat())
+  {
+    case eImagePixelNone:
+    case eImagePixelIndex:
+    case eImagePixelRGB:
+#if (!defined NUI_IOS) && (!defined _ANDROID_)
+    case eImagePixelBGR:
+#endif
+    case eImagePixelLum:
+      return false;
+
+    case eImagePixelAlpha:
+    case eImagePixelLumA:
+    case eImagePixelRGBA:
+      return true;
+  }
+
+  return false;
+}
 
 nuiSimpleEventSource<0> nuiTexture::TexturesChanged;
 

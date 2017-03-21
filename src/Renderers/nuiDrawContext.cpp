@@ -1680,7 +1680,6 @@ void nuiDrawContext::DrawMarkee(const nuiRect& rRect, const nuiColor& rColor)
 {
   EnableAntialiasing(false);
   EnableBlending(true);
-  EnableBlending(true);
   SetBlendFunc(nuiBlendTransp);
   EnableTexturing(false);
   nuiColor col = rColor;

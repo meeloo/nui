@@ -17,6 +17,7 @@ nuiDecoration::nuiDecoration(const nglString& rName)
   mUseWidgetAlpha = true;
   mBorderEnabled = true;
   mRedrawOnHover = false;
+  mOpaque = true;
 
   
   mLayer = eLayerBack;
@@ -50,6 +51,16 @@ void nuiDecoration::InitAttributes()
                 nuiMakeDelegate(this, &nuiDecoration::GetLayer), 
                 nuiMakeDelegate(this, &nuiDecoration::SetLayer)));
   
+  AddAttribute(new nuiAttribute<bool>
+               (nglString("Opaque"), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiDecoration::GetOpaque),
+                nuiMakeDelegate(this, &nuiDecoration::SetOpaque)));
+
+  AddAttribute(new nuiAttribute<nuiBlendFunc>
+               (nglString("BlendFunc"), nuiUnitNone,
+                nuiMakeDelegate(this, &nuiDecoration::GetBlendFunc),
+                nuiMakeDelegate(this, &nuiDecoration::SetBlendFunc)));
+
 }
 
 

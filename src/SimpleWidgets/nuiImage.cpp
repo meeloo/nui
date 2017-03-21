@@ -146,6 +146,26 @@ void nuiImage::SetTexture(nuiTexture* pTex)
 //  mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
+  if (pTex)
+  {
+    switch (pTex->GetPixelFormat())
+    {
+      case eImagePixelNone:
+      case eImagePixelIndex:
+      case eImagePixelRGB:
+      case eImagePixelLum:
+#if (!defined NUI_IOS) && (!defined _ANDROID_)
+      case eImagePixelBGR:
+#endif
+        SetBlendFunc(nuiBlendSource);
+        break;
+      case eImagePixelRGBA:
+      case eImagePixelAlpha:
+      case eImagePixelLumA:
+        SetBlendFunc(nuiBlendTransp);
+        break;
+    }
+  }
   SetProperty("Source", "Memory Buffer");
   ResetTextureRect();
   Invalidate();
@@ -282,6 +302,7 @@ nuiRect nuiImage::CalcIdealSize()
 void nuiImage::SetUseAlpha(bool Alpha)
 {
   mUseAlpha = Alpha;
+  SetLayerBlendFunc(mUseAlpha ? nuiBlendTransp : nuiBlendSource);
   Invalidate();
 }
 

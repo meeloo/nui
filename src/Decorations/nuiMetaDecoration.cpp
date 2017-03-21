@@ -176,6 +176,12 @@ void nuiMetaDecoration::GetBorders(const nuiWidget* pWidget, float& rLeft, float
 void nuiMetaDecoration::AddDecoration(nuiDecoration* pDeco)
 {
   mDecorations.push_back(pDeco);
+  bool opaque = true;
+  for (auto deco : mDecorations)
+  {
+    opaque = opaque && deco->GetOpaque();
+  }
+  SetOpaque(opaque);
   Changed();
 }
 

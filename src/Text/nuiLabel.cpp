@@ -178,6 +178,7 @@ void nuiLabel::InitAttributes()
 void nuiLabel::InitProperties()
 {
   mCanRespectConstraint = true;
+  SetLayerBlendFunc(nuiBlendTransp);
 }
 
 void nuiLabel::_SetFont(const nglString& rFontSymbol)

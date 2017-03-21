@@ -111,6 +111,6 @@ private:
   bool mUseSourceClientRect;
 
   
-  
+  void UpdateOpaqueness();
 
 };

@@ -28,11 +28,12 @@ nuiButton::nuiButton()
   SetRedrawOnHover(false);
   mAutoRepeat = false;
   mRepeatDelay = 0.5;
-  mRepeatMinDelay = 0.01;
+  mRepeatMinDelay = 0.01f;
   mDelayedActivation = 0;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
   SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerBlendFunc(nuiBlendTransp);
 
   EnableInteractiveDecoration(true);
   
@@ -66,6 +67,7 @@ nuiButton::nuiButton(const nglString& rText)
   AddChild(pLabel);
   pLabel->SetPosition(nuiCenter);
   SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerBlendFunc(nuiBlendTransp);
   SetRedrawOnHover(false);
   EnableInteractiveDecoration(true);
   
@@ -102,6 +104,7 @@ nuiButton::nuiButton(const nglImage& rImage)
   AddChild(pImage);
   pImage->SetPosition(nuiCenter);
   SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerBlendFunc(nuiBlendTransp);
 
   SetBorders(mDefaultBorders);
   SetWantKeyboardFocus(true);
@@ -134,7 +137,8 @@ nuiButton::nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired)
   
   SetDecoration(pDeco, eDecorationOverdraw, AlreadyAcquired);
   SetLayerPolicy(nuiDrawPolicyDrawTree);
-  
+  SetLayerBlendFunc(nuiBlendTransp);
+
   SetBorders(mDefaultBorders);
   SetWantKeyboardFocus(true);
   SetFocusVisible(true);

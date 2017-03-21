@@ -466,3 +466,13 @@ float nuiColor::GetOpacity() const
   c.UnPremultiply();
   return c.mAlpha;
 }
+
+bool nuiColor::IsOpaque() const
+{
+  return mAlpha == 1.0f;
+}
+
+bool nuiColor::IsTransparent() const
+{
+  return mAlpha != 1.0f;
+}

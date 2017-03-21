@@ -17,8 +17,8 @@ nuiColorDecoration::nuiColorDecoration(const nglString& rName)
   mFillColor = nuiColor(0,0,0);
   mStrokeColor = nuiColor(0,0,0);
   mShapeMode = eFillShape;
-  mBlendFunc = nuiBlendTransp;
   mClientRect = nuiRect(0,0,0,0);
+  SetOpaque(false);
 }
 
 
@@ -34,6 +34,7 @@ nuiColorDecoration::nuiColorDecoration(const nglString& rName, const nuiRect& rC
   mShapeMode = ShapeMode;
   mBlendFunc = BlendFunc;
   mClientRect = rClientRect;
+  SetOpaque(false);
 }
 
 
@@ -49,6 +50,7 @@ nuiColorDecoration::nuiColorDecoration(const nglString& rName, const nuiColor& r
   mShapeMode = ShapeMode;
   mBlendFunc = BlendFunc;
   mClientRect = rClientRect;
+  SetOpaque(false);
 }
 
 
@@ -95,10 +97,17 @@ void nuiColorDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, cons
   pContext->PushState();
   pContext->ResetState();
   pContext->EnableAntialiasing(false);
-  pContext->EnableBlending(true);
-  pContext->SetBlendFunc(mBlendFunc);
+  if (mOpaque)
+  {
+    pContext->EnableBlending(false);
+  }
+  else
+  {
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(mBlendFunc);
+  }
   pContext->EnableTexturing(false);
-  
+
   nuiColor fillColor = mFillColor;
   nuiColor strokeColor = mStrokeColor;
   if (pWidget && mUseWidgetAlpha)

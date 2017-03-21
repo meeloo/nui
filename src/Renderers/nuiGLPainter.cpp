@@ -288,12 +288,12 @@ void nuiGLPainter::BlendFuncSeparate(GLenum src, GLenum dst, GLenum srcalpha, GL
   }
 #else
 #if GL_OES_blend_equation_separate
-  //    if (glBlendFuncSeparateOES)
-  //    {
-  //      glBlendFuncSeparateOES(src, dst, srcalpha, dstalpha);
-  //      mTwoPassBlend = false;
-  //    }
-  //    else
+  if (/* DISABLES CODE */ (1))//glBlendFuncSeparateOES)
+  {
+    glBlendFuncSeparate(src, dst, srcalpha, dstalpha);
+    mTwoPassBlend = false;
+  }
+  else
   {
     glBlendFunc(src, dst);
     if (src != srcalpha || dst != dstalpha)
@@ -1377,7 +1377,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     }
   }
   
-  glBindVertexArray(0);
+//  glBindVertexArray(0);
   
   //  ResetVertexPointers(*pArray);
   pArray->Release();
@@ -2346,7 +2346,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
 #endif
   }
   
-  ResetOpenGLState();
+  //ResetOpenGLState();
 }
 
 nglCriticalSection nuiGLPainter::RenderArrayInfo::mHeapCS("nuiGLPainter::mHeapCS");
@@ -2455,14 +2455,10 @@ void nuiGLPainter::RenderArrayInfo::Destroy()
 
   for (auto vao : mVAOs)
   {
-    glBindVertexArray(0);
     glDeleteVertexArrays(1, (GLuint*)&vao.second);
     nuiCheckForGLErrors();
   }
   mVAOs.clear();
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
   glDeleteBuffers(1, &mVertexBuffer);
   nuiCheckForGLErrors();
@@ -2889,6 +2885,10 @@ void nuiGLPainter::DestroyRenderArray(nuiRenderArray* pArray)
 void nuiGLPainter::FinalizeRenderArrays()
 {
   nglCriticalSectionGuard g(mRenderingCS);
+  glBindVertexArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
   for (auto array : mDestroyedRenderArrays)
     _DestroyRenderArray(array);
   mDestroyedRenderArrays.clear();

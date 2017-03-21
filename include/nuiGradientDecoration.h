@@ -103,5 +103,6 @@ private:
   
 
   void InitAttributes();
+  void UpdateOpaqueness();
 };
 

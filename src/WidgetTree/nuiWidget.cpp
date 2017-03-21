@@ -495,6 +495,11 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetLayerPolicy),
                 nuiMakeDelegate(this, &nuiWidget::SetLayerPolicy)));
 
+  AddAttribute(new nuiAttribute<nuiBlendFunc>
+               ("LayerBlendFunc", nuiUnitCustom,
+                nuiMakeDelegate(this, &nuiWidget::GetLayerBlendFunc),
+                nuiMakeDelegate(this, &nuiWidget::SetLayerBlendFunc)));
+
   AddAttribute(new nuiAttribute<bool>
                ("DrawToLayer", nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetDrawToLayer)));
@@ -3934,7 +3939,11 @@ void nuiWidget::SetDecoration(nuiDecoration* pDecoration, nuiDecorationMode Mode
   mpDecoration = pDecoration;
 
   SetDecorationMode(Mode);
-  
+
+  if (pDecoration && mLayerBlendFunc == nuiBlendSource && !pDecoration->GetOpaque())
+    SetLayerBlendFunc(nuiBlendTransp);
+
+
   InvalidateLayout();
 }
 
@@ -6345,6 +6354,7 @@ void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
       {
         NGL_OUT("Create widget layer %s\n", name.GetChars());
       }
+      mpBackingLayer->SetBlendFunc(mLayerBlendFunc);
       mpBackingLayer->SetContents(this);
     }
   }

@@ -91,7 +91,6 @@ private:
   nuiColor mStrokeBottomColor;
   nuiBorderMode mBorderMode;
   nuiBorderType mBorderType;
-  nuiBlendFunc mBlendFunc;
   nuiRect mClientRect;
 
 };

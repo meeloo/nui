@@ -13,6 +13,8 @@
 # import <Foundation/NSAutoreleasePool.h>
 #endif
 
+#import <sys/kdebug_signpost.h>
+
 #define NUI_ENABLE_THREADED_RENDERING 1
 
 #if _DEBUG
@@ -35,6 +37,12 @@
 #define NUI_LOG_INVALLAYERRECT 0
 #define NUI_LOG_INVALLAYERCONTENTS 0
 #endif
+
+double gTotal = 0;
+double gResetState = 0;
+double gPartialRedraw = 0;
+double gGlobalRedraw = 0;
+double gPainterRedraw = 0;
 
 std::set<nuiRenderThread*> nuiRenderThread::mThreads;
 nglCriticalSection nuiRenderThread::ThreadsCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
@@ -182,6 +190,10 @@ void nuiRenderThread::SetLayerTree(nuiLayer* pLayerRoot)
 
 void nuiRenderThread::InvalidateLayerRect(nuiLayer *pLayer, nuiRect rect)
 {
+  if (rect.GetWidth() == 1024)
+  {
+    NGL_OUT("InvalidateLayerRect %p %s [%s]\n", pLayer, rect.GetValue().GetChars(), pLayer?pLayer->GetObjectName().GetChars():"ROOT");
+  }
 #if NUI_LOG_INVALLAYERRECT
   NGL_OUT("InvalidateLayerRect %p %s [%s]\n", pLayer, rect.GetValue().GetChars(), pLayer?pLayer->GetObjectName().GetChars():"ROOT");
 #endif
@@ -195,12 +207,15 @@ void nuiRenderThread::RenderingDone(bool result)
 
 void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 {
+  kdebug_signpost_start(0, (uintptr_t)this, 0, 0, 0);
   if (ngl_atomic_dec(mRenderingTicks) > 0)
   {
 //    NGL_OUT("[nuiRenderThread] skipping frame\n");
+    kdebug_signpost_end(0, (uintptr_t)this, 0, 0, 0);
     return;
   }
-  //  NGL_OUT("[nuiRenderThread] render %p\n", this);
+
+//  NGL_OUT("[nuiRenderThread] render %p\n", this);
 #if NUI_LOG_RENDERING
 NGL_OUT("#######################################################################################\n");
   NGL_OUT("Widget Contents %d / ContentsLayer %d / DrawLayer %d / DirtyLayers %d (total meta painters %d)\n", mWidgetContentsPainters.size(), mLayerContentsPainters.size(), mLayerDrawPainters.size(), mDirtyLayers.size(), (int32)nuiMetaPainter::GetNbInstances());
@@ -211,6 +226,7 @@ NGL_OUT("#######################################################################
   if (it == mWidgetDrawPainters.end())
   {
     App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, false));
+    kdebug_signpost_end(0, (uintptr_t)this, 1, 0, 0);
     return;
   }
   
@@ -218,6 +234,7 @@ NGL_OUT("#######################################################################
   if (pRootPainter == nullptr)
   {
     App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, false));
+    kdebug_signpost_end(0, (uintptr_t)this, 2, 0, 0);
     return;
   }
 
@@ -225,11 +242,13 @@ NGL_OUT("#######################################################################
   if (!TryLockRendering())
   {
     NGL_OUT("Unable to lock rendering thread???\n");
+    kdebug_signpost_end(0, (uintptr_t)this, 3, 0, 0);
     return;
   }
 
   mpContext->GetLock().Lock();
-  
+  kdebug_signpost_start(1, (uintptr_t)this, 0, 0, 0);
+
   mpPainter->ResetStats();
   mpContext->BeginSession();
   mpPainter->BeginSession();
@@ -243,7 +262,9 @@ NGL_OUT("#######################################################################
     pTask->Run();
     pTask->Release();
   }
-  
+  kdebug_signpost_end(1, (uintptr_t)this, 0, 0, 0);
+  kdebug_signpost_start(2, (uintptr_t)this, 0, 0, 0);
+
   mpDrawContext->ResetState();
   mpDrawContext->ResetClipRect();
 
@@ -251,7 +272,7 @@ NGL_OUT("#######################################################################
   glPushGroupMarkerEXT(0, "Create new layers");
   
   // Create needed surfaces once for this frame:
-  //    NGL_OUT("Create surface for current frame\n");
+//  NGL_OUT("[nuiRenderThread] Create surface for current frame %p\n", this);
   int count = 0;
   for (auto elem : mLayerContentsPainters)
   {
@@ -266,7 +287,10 @@ NGL_OUT("#######################################################################
 
   glPopGroupMarkerEXT();
   //    NGL_OUT("DONE - Create surface for current frame (%d)\n", count);
-  
+  kdebug_signpost_end(2, (uintptr_t)this, 0, 0, 0);
+  kdebug_signpost_start(3, (uintptr_t)this, 0, 0, 0);
+
+//  NGL_OUT("[nuiRenderThread] List %d dirty layers %p\n", mDirtyLayers.size(), this);
   glPushGroupMarkerEXT(0, "Update dirty layers");
 #if NUI_LOG_RENDERING
   NGL_OUT("*** Update %d layers\n", mDirtyLayers.size());
@@ -284,12 +308,14 @@ NGL_OUT("#######################################################################
     }
   }
 
+//  NGL_OUT("[nuiRenderThread] Sort %d dirty layers %p\n", mDirtyLayers.size(), this);
   std::sort(layers.begin(), layers.end(), [](auto& a, auto& b)
             {
               return a.second->GetPriority() < b.second->GetPriority();
             }
             );
 
+//  NGL_OUT("[nuiRenderThread] Update %d dirty layers %p\n", mDirtyLayers.size(), this);
   int i = 0;
   for (auto layer : layers)
   {
@@ -304,6 +330,19 @@ NGL_OUT("#######################################################################
   }
   glPopGroupMarkerEXT();
 
+  kdebug_signpost_end(3, (uintptr_t)this, 0, 0, 0);
+  float layercount = layers.size();
+//  NGL_OUT("#########\nTotal %f\nResetState %f\nPartial %f\nGlobal %f\nPainter %f\n", (float)gTotal, (float)gResetState, (float)gPartialRedraw, (float)gGlobalRedraw, (float)gPainterRedraw);
+//  NGL_OUT(">>>>> Averages\nTotal %f\nResetState %f\nPartial %f\nGlobal %f\nPainter %f\n#######\n", (float)gTotal / layercount, (float)gResetState / layercount, (float)gPartialRedraw / layercount, (float)gGlobalRedraw / layercount, (float)gPainterRedraw / layercount);
+
+  gTotal = 0;
+  gResetState = 0;
+  gPartialRedraw = 0;
+  gGlobalRedraw = 0;
+  gPainterRedraw = 0;
+
+//  NGL_OUT("[nuiRenderThread] Draw Widget Tree %p\n", this);
+  kdebug_signpost_start(4, (uintptr_t)this, 0, 0, 0);
 
   mpDrawContext->SetClearColor(nuiColor(255,255,255));
   //  if (mClearBackground)
@@ -318,7 +357,7 @@ NGL_OUT("#######################################################################
   
   mWidgetIndentation = 0;
   
-  mpDrawContext->StartRendering();
+//  mpDrawContext->StartRendering();
   glPushGroupMarkerEXT(0, "Reset State");
 //  NGL_OUT(">>> Draw the widget tree %p\n", this);
   mpDrawContext->ResetState();
@@ -362,10 +401,13 @@ NGL_OUT("#######################################################################
 
 
   glPopGroupMarkerEXT();
+  kdebug_signpost_end(4, (uintptr_t)this, 0, 0, 0);
+  kdebug_signpost_start(5, (uintptr_t)this, 0, 0, 0);
 
   mDirtyLayers.clear();
   mPartialRects.clear();
 
+//  NGL_OUT("[nuiRenderThread] Stop Rendering %p\n", this);
   glPushGroupMarkerEXT(0, "Finish Rendering");
   mpDrawContext->StopRendering();
   mpPainter->EndSession();
@@ -376,7 +418,10 @@ NGL_OUT("#######################################################################
   UnlockRendering();
   App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, true));
 
+//  NGL_OUT("[nuiRenderThread] render DONE %p\n", this);
 //  DumpStats();
+  kdebug_signpost_end(5, (uintptr_t)this, 0, 0, 0);
+  kdebug_signpost_end(0, (uintptr_t)this, 4, 0, 0);
 }
 
 void nuiRenderThread::_SetRect(const nuiRect& rRect)
@@ -620,17 +665,17 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
   nglTime start;
 
 #if NUI_LOG_DRAWLAYERCONTENTS
-  static int count = 0;
+  static int indent_count = 0;
   nglString str;
   nglString tmp;
   str.CFormat("DrawLayerContents %p", pKey);
   glPushGroupMarkerEXT(0, str.GetChars());
-  tmp.Fill("  ", count);
+  tmp.Fill("  ", indent_count);
   str.Prepend(tmp);
   str.CFormat("%sDraw layer contents %p", tmp.GetChars(), pKey);
   NGL_OUT("%s\n", str.GetChars());
 
-  count++;
+  indent_count++;
 #endif
 
 
@@ -655,26 +700,30 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
     mpDrawContext->ResetState();
 //    mpDrawContext->Set2DProjectionMatrix(rect);
 
+    gResetState += nglTime() - start;
+    nglTime start2;
+
     if (count == 0)
     {
       glPushGroupMarkerEXT(0, "Full Redraw");
 #if NUI_LOG_DRAWLAYERCONTENTS
-      NGL_OUT("%sReset clip rect 2\n", tmp.GetChars());
+      NGL_OUT("%sFull redraw\n", tmp.GetChars());
 #endif
 
       mpDrawContext->ResetClipRect();
-
-#if NUI_LOG_DRAWLAYERCONTENTS
-      NGL_OUT("%sDisable clipping\n", tmp.GetChars());
-#endif
       mpDrawContext->EnableClipping(true);
 
       pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
       glPopGroupMarkerEXT();
+
+      gGlobalRedraw += nglTime() - start2;
     }
     else
     {
       glPushGroupMarkerEXT(0, "Partial redraw");
+#if NUI_LOG_DRAWLAYERCONTENTS
+      NGL_OUT("%sPartial redraw\n", tmp.GetChars());
+#endif
 
       for (size_t i = 0; i < count; i++)
       {
@@ -684,23 +733,12 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
         s.CFormat("rect %d %s", i, cliprect.GetValue().GetChars());
         glPushGroupMarkerEXT(0, s.GetChars());
         mpDrawContext->ResetState();
-#if NUI_LOG_DRAWLAYERCONTENTS
-        NGL_OUT("%sPush clipping\n", tmp.GetChars());
-#endif
         mpDrawContext->PushClipping();
-#if NUI_LOG_DRAWLAYERCONTENTS
-        NGL_OUT("%sClip to %s\n", tmp.GetChars(), cliprect.GetValue().GetChars());
-#endif
         mpDrawContext->Clip(cliprect);
-#if NUI_LOG_DRAWLAYERCONTENTS
-        NGL_OUT("%sDisable clipping\n", tmp.GetChars());
-#endif
         mpDrawContext->EnableClipping(true);
-        if (pPainter->GetName().Find("layer draw 280.000000 x 48.000000 WidgetLayer_HBox_HBox") == 0)
-        {
-          NGL_OUT("REDRAW!\n");
-        }
+        nglTime start3;
         pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+        gPainterRedraw += nglTime() - start3;
 
         mpDrawContext->PopClipping();
 
@@ -708,12 +746,13 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
       }
 
       glPopGroupMarkerEXT();
+      gPartialRedraw += nglTime() - start2;
     }
 
   }
 
 #if NUI_LOG_DRAWLAYERCONTENTS
-  count--;
+  indent_count--;
   glPopGroupMarkerEXT();
 #endif
 
@@ -728,6 +767,8 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
     stats.mTime += diff;
     stats.mName = pPainter->GetName();
   }
+
+  gTotal += nglTime() - start;
 }
 
 void nuiRenderThread::DrawWidget(nuiDrawContext* pContext, nuiWidget* pKey)

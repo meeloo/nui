@@ -49,7 +49,6 @@ private:
   float mStrokeSize;
   nuiColor mFillColor, mStrokeColor;
   nuiShapeMode mShapeMode;
-  nuiBlendFunc mBlendFunc;
   nuiRect mClientRect;
 
 };

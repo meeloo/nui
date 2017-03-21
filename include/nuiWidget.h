@@ -839,6 +839,7 @@ public:
   nuiLayer* GetLayer() const;
   nuiWidget* GetParentLayerWidget() const;
   nuiLayer* GetParentLayer() const;
+  NUI_GETSETDO(nuiBlendFunc, LayerBlendFunc, if (mpBackingLayer) mpBackingLayer->SetBlendFunc(mLayerBlendFunc); Invalidate());
   //@}
 
   template <typename T>
@@ -1071,6 +1072,7 @@ protected:
   void SetAncestorWillDrawTree(bool set);
   bool GetAncestorWillDrawTree() const;
   bool mAncestorWillDrawTree = false;
+  nuiBlendFunc mLayerBlendFunc = nuiBlendSource;
 
   void UpdateTopLevel();  
   void InternalSetLayerPolicy(nuiDrawPolicy policy);

@@ -30,6 +30,7 @@ public:
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
   NUI_GETSETDO(nuiColor, ClearColor, Change());
+  NUI_GETSETDO(nuiBlendFunc, BlendFunc, Change());
 
   virtual void SetObjectName(const nglString &rName);
 
@@ -51,6 +52,7 @@ private:
   float mOffsetX = 0;
   float mOffsetY = 0;
   nuiColor mClearColor;
+  nuiBlendFunc mBlendFunc = nuiBlendSource;
 
   nuiSurface* mpSurface = nullptr;
   bool UpdateSurface(nuiRenderThread* pRenderThread);

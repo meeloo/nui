@@ -118,7 +118,15 @@ const nglString& nglCriticalSection::GetLabel() const
 // virtual from nglLock
 void nglCriticalSection::_Lock(nglThread::ID threadID)
 {
-	mpPrivate->lock();
+//  nglTime start;
+
+  mpPrivate->lock();
+
+//  nglTime end;
+//  if (end - start > 0.02)
+//  {
+//    NGL_OUT("Long Critical Section %s %p %f", GetLabel().GetChars(), this, (float)(end - start));
+//  }
 }
 
 

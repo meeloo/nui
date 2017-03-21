@@ -220,8 +220,17 @@ void nuiGradientDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, c
   pContext->ResetState();
   
   pContext->EnableAntialiasing(false);
-  pContext->EnableBlending(true);
-  pContext->SetBlendFunc(nuiBlendTransp);
+
+  if (GetOpaque())
+  {
+    pContext->EnableBlending(true);
+  }
+  else
+  {
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(mBlendFunc);
+  }
+
   pContext->EnableTexturing(false);
 
   
@@ -239,8 +248,8 @@ void nuiGradientDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, c
   nuiGradient gradient;
   if (!mUserOffsets)
     InitOffsets();
-  gradient.AddStop(c1, mOffset1);
-  gradient.AddStop(c2, mOffset2);
+  gradient.AddStop(c1, (nuiSize)mOffset1);
+  gradient.AddStop(c2, (nuiSize)mOffset2);
   if (mGradientType == nuiGradient4Colors)
   {
     if (mUseWidgetAlpha && pWidget)
@@ -250,8 +259,8 @@ void nuiGradientDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, c
       c4.Multiply(widgetAlpha);
     }
 
-    gradient.AddStop(c3, mOffset3);
-    gradient.AddStop(c4, mOffset4);
+    gradient.AddStop(c3, (nuiSize)mOffset3);
+    gradient.AddStop(c4, (nuiSize)mOffset4);
   }
 
   if (mOrientation == nuiVertical)
@@ -540,5 +549,12 @@ nuiShapeMode nuiGradientDecoration::GetShapeMode() const
   return mShapeMode;
 }
 
+void nuiGradientDecoration::UpdateOpaqueness()
+{
+  if (mColor1.IsOpaque() && mColor2.IsOpaque() && mColor3.IsOpaque() && mColor4.IsOpaque())
+    SetOpaque(true);
+  else
+    SetOpaque(false);
+}
 
 

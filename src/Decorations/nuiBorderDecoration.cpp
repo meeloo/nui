@@ -17,7 +17,6 @@ nuiBorderDecoration::nuiBorderDecoration(const nglString& rName)
   mStrokeColor = nuiColor(0,0,0);
   mBorderType = eBorderAll;
   mBorderMode = eBorderNormal;
-  mBlendFunc = nuiBlendTransp;
   mClientRect = nuiRect(0,0,0,0);
   
   mUseStrokeGlobalColor = true;
@@ -25,6 +24,8 @@ nuiBorderDecoration::nuiBorderDecoration(const nglString& rName)
   mUseStrokeRightColor  = false;
   mUseStrokeTopColor  = false;
   mUseStrokeBottomColor  = false;
+
+  SetOpaque(false);
 }
 
 nuiBorderDecoration::~nuiBorderDecoration()
@@ -90,8 +91,15 @@ void nuiBorderDecoration::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, con
   pContext->ResetState();
 
   pContext->EnableAntialiasing(false);
-  pContext->EnableBlending(true);
-  pContext->SetBlendFunc(mBlendFunc);
+  if (mOpaque)
+  {
+    pContext->EnableBlending(false);
+  }
+  else
+  {
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(mBlendFunc);
+  }
   pContext->EnableTexturing(false);
 
   pContext->SetLineWidth(mStrokeSize);

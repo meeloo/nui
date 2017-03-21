@@ -34,6 +34,8 @@ nuiFrame::nuiFrame(const nglString& rName, nuiTexture* pTexture, const nuiRect& 
   mInterpolated = true;
   if (mpTexture)
     mTexturePath = mpTexture->GetSource();
+  if (mpTexture)
+    SetOpaque(!mpTexture->HasAlphaChannel());
 }
 
 nuiFrame::nuiFrame(const nglString& rName, const nglPath& rTexturePath, const nuiRect& rClientRect, const nuiColor& rColor)
@@ -136,6 +138,8 @@ void nuiFrame::SetTexturePath(const nglPath& rPath)
     mpTexture->SetMagFilter(GL_NEAREST);
   }
   
+  if (mpTexture)
+    SetOpaque(!mpTexture->HasAlphaChannel());
   mNeedUpdate = true;
   Changed();
 }
@@ -320,8 +324,17 @@ void nuiFrame::Draw(nuiDrawContext* pContext, nuiWidget* pWidget, const nuiRect&
     }
   }
   pContext->EnableTexturing(true);
-  pContext->EnableBlending(true);
-  pContext->SetBlendFunc(nuiBlendTransp);
+
+  if (GetOpaque())
+  {
+    pContext->EnableBlending(true);
+  }
+  else
+  {
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(mBlendFunc);
+  }
+
   pContext->SetTexture(mpTexture);
   pContext->SetFillColor(color);
   pContext->DrawArray(pArray);

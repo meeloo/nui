@@ -83,6 +83,10 @@ nuiLayer::nuiLayer(const nglString& rName, int width, int height)
                  ("ClearColor", nuiUnitCustom,
                   nuiMakeDelegate(this, &nuiLayer::GetClearColor),
                   nuiMakeDelegate(this, &nuiLayer::SetClearColor)));
+    AddAttribute(new nuiAttribute<nuiBlendFunc>
+                 ("BlendFunc", nuiUnitCustom,
+                  nuiMakeDelegate(this, &nuiLayer::GetBlendFunc),
+                  nuiMakeDelegate(this, &nuiLayer::SetBlendFunc)));
   }
 
   {
@@ -388,8 +392,8 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 
     pContext->SetTexture(pTex);
     pContext->SetFillColor(nuiColor(1.0f, 1.0f, 1.0f, 1.0f));
-    pContext->SetBlendFunc(nuiBlendTransp);
-    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(mBlendFunc);
+    pContext->EnableBlending(mBlendFunc != nuiBlendSource);
     
     pContext->DrawImage(dst, src);
 
