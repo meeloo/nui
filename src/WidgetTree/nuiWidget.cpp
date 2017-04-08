@@ -1244,7 +1244,7 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
   
   
   ////////////////////// Draw the Underlay
-  if (mpDecoration && mDecorationEnabled)
+  if (mpDecoration && mDecorationEnabled && !mpBackingLayer)
   {      
     pContext->PushState();
     nuiRect sizerect(GetRect().Size());
@@ -1278,7 +1278,7 @@ bool nuiWidget::InternalDrawWidget(nuiDrawContext* pContext, const nuiRect& _sel
     pContext->PopClipping();
   
   ////////////////////// Draw the Overlay
-  if (mpDecoration && mDecorationEnabled)
+  if (mpDecoration && mDecorationEnabled && !mpBackingLayer)
   {
     pContext->PushState();
     nuiRect sizerect(GetRect().Size());

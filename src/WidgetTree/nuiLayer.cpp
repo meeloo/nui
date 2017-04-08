@@ -370,8 +370,24 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
 
   nuiRect dst;
   
+  nuiDecoration *pDecoration = nullptr;
+  if (mpWidgetContents && mpWidgetContents->IsDecorationEnabled())
+  {
+    pDecoration = mpWidgetContents->GetDecoration();
+  }
+
+  if (pDecoration)
+  {
+    pContext->PushState();
+    nuiRect sizerect(mpWidgetContents->GetRect().Size());
+    pDecoration->ClientToGlobalRect(sizerect, mpWidgetContents);
+    pDecoration->DrawBack(pContext, mpWidgetContents, sizerect);
+    pContext->PopState();
+  }
+
   if (mDraw)
   {
+
     nuiTexture* pTex = nullptr;
     if (mpTextureContents)
     {
@@ -473,6 +489,17 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     mpDrawPainter->DrawLayer(pContext, pLayer);
   }
   level--;
+
+  if (pDecoration)
+  {
+    pContext->PushState();
+    nuiRect sizerect(mpWidgetContents->GetRect().Size());
+    pDecoration->ClientToGlobalRect(sizerect, mpWidgetContents);
+    pDecoration->DrawFront(pContext, mpWidgetContents, sizerect);
+    pContext->PopState();
+  }
+
+
 
   if (mClipContents)
     pContext->PopClipping();
