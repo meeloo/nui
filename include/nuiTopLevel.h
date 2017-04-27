@@ -74,7 +74,7 @@ public:
   virtual bool Ungrab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo);
   virtual nuiWidgetPtr GetGrab() const; ///< Returns the object that currently has the mouse focus.
   virtual bool CancelGrab(); ///< Cancel any current ongoing grab action and empty the grab stack.
-  bool StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo); ///< Try to assign the mouse/touch grab for the given mouse event to the given widget, canceling the event if necessary. If a widget already has acquired the grab it is refused and the function returns false.
+  bool StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo, bool Force=false); ///< Try to assign the mouse/touch grab for the given mouse event to the given widget, canceling the event if necessary. If a widget already has acquired the grab it is refused and the function returns false.
 
   virtual bool SetFocus(nuiWidgetPtr pWidget); ///< Redirect all keyboard events to this object.
   virtual nuiWidgetPtr GetFocus() const; ///< Returns the object that currently has the keyboard focus.

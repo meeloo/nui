@@ -522,16 +522,17 @@ bool nuiTopLevel::Grab(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
     return false;
   }
   
-  if (pWidget && !pWidget->AcceptsMultipleGrabs() ///< Checks if the Widget has been grabbed by another touches
-      && HasGrab(pWidget))
+  if (pWidget && HasGrab(pWidget)) ///< Checks if the Widget has been grabbed by another touches
   {
-
-  NGL_TOUCHES_DEBUG( NGL_OUT("TouchId[%d] ", mMouseInfo.TouchId) );
-  NGL_TOUCHES_DEBUG( NGL_OUT("%s of type %s already grabbed from other touch(es)\n", 
-          pWidget->GetObjectName().GetChars(),
-          pWidget->GetObjectClass().GetChars()) );
-
-    return false;
+    NGL_TOUCHES_DEBUG( NGL_OUT("TouchId[%d] ", mMouseInfo.TouchId) );
+    NGL_TOUCHES_DEBUG( NGL_OUT("%s of type %s already grabbed from other touch(es)\n",
+                               pWidget->GetObjectName().GetChars(),
+                               pWidget->GetObjectClass().GetChars()) );
+    
+    if (!pWidget->AcceptsMultipleGrabs())
+    {
+      return false;
+    }
   }
   if (pWidget)
   {
@@ -619,6 +620,21 @@ NGL_TOUCHES_DEBUG( NGL_OUT("CancelGrab()\n") );
       }
 #endif
       pGrab->MouseUngrabbed(touchId);
+      
+      std::vector<nuiWidgetPtr> containers;
+      nuiWidgetPtr pParent = pGrab->GetParent();
+      while (pParent)
+      {
+        containers.push_back(pParent);
+        pParent = pParent->GetParent();
+      }
+      
+      bool hook = false;
+      for (int32 i = containers.size() - 1; i >= 0 && !hook; i--)
+      {
+        containers[i]->MouseUngrabbed(touchId);
+      }
+
       pGrab = NULL;
     }
   }
@@ -629,7 +645,7 @@ NGL_TOUCHES_DEBUG( NGL_OUT("CancelGrab()\n") );
   return true;
 }
 
-bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo)
+bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInfo, bool Force)
 {
   NGL_ASSERT(pWidget);
   
@@ -643,13 +659,12 @@ bool nuiTopLevel::StealMouseEvent(nuiWidgetPtr pWidget, const nglMouseInfo& rInf
   nuiWidgetPtr oldgrab = GetGrab(rInfo.TouchId);
   if (oldgrab)
   {
-    if (!oldgrab->RequestStolenMouse(rInfo))
+    if (!Force && !oldgrab->RequestStolenMouse(rInfo))
     {
       return false;
     }
+    DispatchMouseCanceled(pWidget, rInfo);
   }
-
-  DispatchMouseCanceled(pWidget, rInfo);
 
   pWidget->MouseClicked(rInfo);
   Grab(pWidget, rInfo);

@@ -260,6 +260,7 @@ void nuiToggleButton::OnDelayedActivation(const nuiEvent& rEvent)
     mLastTime = now;
     if (mUntilRepeat < 0)
     {
+      GetTopLevel()->CancelGrab();
       DelayedActivation();
     }
   }
