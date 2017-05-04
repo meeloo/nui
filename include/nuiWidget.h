@@ -1072,7 +1072,7 @@ protected:
   void SetAncestorWillDrawTree(bool set);
   bool GetAncestorWillDrawTree() const;
   bool mAncestorWillDrawTree = false;
-  nuiBlendFunc mLayerBlendFunc = nuiBlendSource;
+  nuiBlendFunc mLayerBlendFunc = nuiBlendTransp;
 
   void UpdateTopLevel();  
   void InternalSetLayerPolicy(nuiDrawPolicy policy);

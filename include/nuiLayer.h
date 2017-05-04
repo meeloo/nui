@@ -52,7 +52,7 @@ private:
   float mOffsetX = 0;
   float mOffsetY = 0;
   nuiColor mClearColor;
-  nuiBlendFunc mBlendFunc = nuiBlendSource;
+  nuiBlendFunc mBlendFunc = nuiBlendTransp;
 
   nuiSurface* mpSurface = nullptr;
   bool UpdateSurface(nuiRenderThread* pRenderThread);
