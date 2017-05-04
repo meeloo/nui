@@ -1,9 +1,9 @@
 /*
-  NUI3 - C++ cross-platform GUI framework for OpenGL based applications
-  Copyright (C) 2002-2003 Sebastien Metrot
+ NUI3 - C++ cross-platform GUI framework for OpenGL based applications
+ Copyright (C) 2002-2003 Sebastien Metrot
 
-  licence: see nui3/LICENCE.TXT
-*/
+ licence: see nui3/LICENCE.TXT
+ */
 
 #include "nui.h"
 #include "MainWindow.h"
@@ -31,11 +31,11 @@ class ButtonCellSource : public nuiCellSource
 {
 public:
   ButtonCellSource() : nuiCellSource() {}
-  
+
   nuiWidget* CreateCell()
   {
-//    nuiButton* pButton = new nuiButton("Button 0");
-//    return pButton;
+    //    nuiButton* pButton = new nuiButton("Button 0");
+    //    return pButton;
     nuiHBox* pHBox = new nuiHBox();
     pHBox->SetExpand(nuiExpandShrinkAndGrow);
     pHBox->SetEqualizeCells(true);
@@ -48,7 +48,7 @@ public:
 
     return pHBox;
   }
-  
+
   void UpdateCell(int32 index, nuiWidget* pCell)
   {
     nuiHBox* pHBox = (nuiHBox*)pCell;
@@ -60,7 +60,7 @@ public:
       ((nuiLabel*)pButton->GetChild(0))->SetText(label);
     }
   }
-  
+
   uint32 GetNumberOfCells()
   {
     return 4096;
@@ -72,7 +72,7 @@ class ComplexCellSource : public nuiCellSource
 {
 public:
   ComplexCellSource() : nuiCellSource() {}
-  
+
   nuiWidget* CreateCell()
   {
     nuiHBox* pBox = new nuiHBox(0);
@@ -82,7 +82,7 @@ public:
     nuiToggleButton* pBtn = new nuiToggleButton("toggleButton");
     pBtn->SetObjectName("MyButton");
     pBox->AddCell(pBtn);
-    
+
     pBtn = new nuiToggleButton("toggleButton");
     pBtn->SetObjectName("MyButton");
     pBox->AddCell(pBtn);
@@ -104,7 +104,7 @@ public:
     pBox->AddCell(pBtn, nuiCenter);
     return pBox;
   }
-  
+
   void UpdateCell(int32 index, nuiWidget* pCell)
   {
     nuiHBox* pBox = (nuiHBox*)pCell;
@@ -112,7 +112,7 @@ public:
     label.CFormat("Button %d", index+1);
     ((nuiLabel*)pBox->GetChild(0)->GetChild(0))->SetText(label);
   }
-  
+
   uint32 GetNumberOfCells()
   {
     return 21;
@@ -122,33 +122,33 @@ public:
 static const char* vertex_shader =
 SHADER_STRING
 (
- 
-attribute vec4 Position;
-attribute vec3 Normal;
-attribute vec4 Color;
-uniform mat4 SurfaceMatrix;
-uniform mat4 ModelViewMatrix;
-uniform mat4 ProjectionMatrix;
-uniform vec4 Offset;
-varying vec4 ColorVar;
-varying vec3 NormalVar;
 
-void main()
+ attribute vec4 Position;
+ attribute vec3 Normal;
+ attribute vec4 Color;
+ uniform mat4 SurfaceMatrix;
+ uniform mat4 ModelViewMatrix;
+ uniform mat4 ProjectionMatrix;
+ uniform vec4 Offset;
+ varying vec4 ColorVar;
+ varying vec3 NormalVar;
+
+ void main()
 {
   ColorVar = Color;
   NormalVar = Normal;
   gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
 }
- 
-);
+
+ );
 
 static const char* fragment_shader =
 SHADER_STRING
 (
-varying vec4 ColorVar;
-varying vec3 NormalVar;
+ varying vec4 ColorVar;
+ varying vec3 NormalVar;
 
-void main()
+ void main()
 {
   float feather = 1.;
   float ref = abs(NormalVar.y);
@@ -156,14 +156,14 @@ void main()
   float smooth = smoothstep(width - feather, width + feather, ref);
   gl_FragColor = vec4(ColorVar.xyz, ColorVar.w * vec4(1.0 - sqrt(smooth)));
 }
- 
-);
+
+ );
 
 ////////////////////////////////////////////////////////////////////////////////
 class nuiStrokeTest : public nuiWidget
 {
 public:
-  
+
   nuiStrokeTest()
   {
     if (SetObjectClass("nuiStrokeTest"))
@@ -180,19 +180,19 @@ public:
     mpShape = new nuiShape();
     mpShape->LineTo(nuiPoint(50, 50));
     mpShape->LineTo(nuiPoint(200, 50));
-//      mpShape->LineTo(nuiPoint(180, 180));
-//      mpShape->LineTo(nuiPoint(231, 200));
-//    mpShape->LineTo(nuiPoint(70, 180));
-//      mpShape->LineTo(nuiPoint(200, 50));
+    //      mpShape->LineTo(nuiPoint(180, 180));
+    //      mpShape->LineTo(nuiPoint(231, 200));
+    //    mpShape->LineTo(nuiPoint(70, 180));
+    //      mpShape->LineTo(nuiPoint(200, 50));
     mpShape->LineTo(nuiPoint(200, 225));
-//    mpShape->LineTo(nuiPoint(50, 80));
+    //    mpShape->LineTo(nuiPoint(50, 80));
 
     mpShader = new nuiShaderProgram("Stroker");
     mpShader->AddShader(eVertexShader, vertex_shader);
     mpShader->AddShader(eFragmentShader, fragment_shader);
     mpShader->Link();
     mpShaderState = mpShader->GetCurrentState();
-    
+
     nuiAttribBase Attrib(GetAttribute("StrokeWidth"));
     if (Attrib.IsValid())
     {
@@ -201,12 +201,12 @@ public:
       AddChild(pEditor);
     }
   }
-  
+
   nuiRect CalcIdealSize()
   {
     return nuiRect(200, 200);
   }
-  
+
   bool Draw(nuiDrawContext* pContext)
   {
     pContext->EnableBlending(true);
@@ -214,8 +214,8 @@ public:
     pContext->SetFillColor(nuiColor("blue"));
     pContext->SetShader(mpShader, mpShaderState);
     pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, nuiLineJoinRound, nuiLineCapBut, 1.));
-    
-    
+
+
     return true;
   }
 
@@ -233,7 +233,7 @@ private:
  */
 
 MainWindow::MainWindow(const nglContextInfo& rContextInfo, const nglWindowInfo& rInfo, bool ShowFPS, const nglContext* pShared )
-  : nuiMainWindow(rContextInfo, rInfo, pShared, nglPath(ePathCurrent)), mEventSink(this)
+: nuiMainWindow(rContextInfo, rInfo, pShared, nglPath(ePathCurrent)), mEventSink(this)
 {
   SetDebugMode(true);
   //App->GetLog().SetLevel("nuiTexture", NGL_LOG_ALWAYS);
@@ -269,8 +269,17 @@ void MainWindow::OnClose()
 
 bool MainWindow::KeyDown(const nglKeyEvent& rEvent)
 {
-  NGL_OUT("\n\nSet Widget %s\n", mpHiddenWidget->IsVisible()?"HIDDEN":"VISIBLE");
-  mpHiddenWidget->SetVisible(!mpHiddenWidget->IsVisible());
+  bool vis = mpHiddenWidget2->IsVisible();
+  if (mpHiddenWidget1)
+  {
+    NGL_OUT("\n\nSet Widget1 %s\n", vis?"HIDDEN":"VISIBLE");
+    mpHiddenWidget1->SetVisible(!vis);
+  }
+  if (mpHiddenWidget2)
+  {
+    NGL_OUT("Set Widget2 %s\n", vis?"HIDDEN":"VISIBLE");
+    mpHiddenWidget2->SetVisible(!vis);
+  }
   return true;
 }
 
@@ -297,7 +306,7 @@ void MainWindow::OnCreation()
   int test = 0;
   switch (test)
   {
-  case 0:
+    case 0:
     {
       nuiPosition pos[] = {
         //nuiNoPosition,
@@ -317,7 +326,7 @@ void MainWindow::OnCreation()
       AddChild(btn);
       btn->SetPosition(nuiCenter);
       btn->SetVisible(true);
-      mpHiddenWidget = btn;
+      mpHiddenWidget2 = btn;
 
       for (int i = 0; pos[i] != nuiNoPosition; i++)
       {
@@ -326,104 +335,104 @@ void MainWindow::OnCreation()
         button->AddChild(prout);
         prout->SetBackground(true);
         prout->SetBackgroundColor(nuiColor(0, 255, 0, 128));
-    //    prout->SetPosition(nuiFillVertical);
+        //    prout->SetPosition(nuiFillVertical);
         button->SetPosition(pos[i]);
-//        button->SetTrace(true);
-//        button->SetDebug(1000);
-//        nuiAttributeAnimation* anim = new nuiAttributeAnimation();
-//        anim->SetTargetObject(prout);
-//        anim->SetTargetAttribute("Alpha");
-//        anim->SetCaptureStartOnPlay(true);
-//        anim->SetEndValue(0.5);
-//        anim->SetEasing(nuiEasingSinus);
-//        anim->SetDuration(1.0f);
-//        prout->AddAnimation("Fade", anim);
-//        anim->Play(100000, eAnimLoopPingPong);
+        //        button->SetTrace(true);
+        //        button->SetDebug(1000);
+        //        nuiAttributeAnimation* anim = new nuiAttributeAnimation();
+        //        anim->SetTargetObject(prout);
+        //        anim->SetTargetAttribute("Alpha");
+        //        anim->SetCaptureStartOnPlay(true);
+        //        anim->SetEndValue(0.5);
+        //        anim->SetEasing(nuiEasingSinus);
+        //        anim->SetDuration(1.0f);
+        //        prout->AddAnimation("Fade", anim);
+        //        anim->Play(100000, eAnimLoopPingPong);
 
         mEventSink.Connect(button->Activated, [=](const nuiEvent& event)
-        {
-//          printf("pouet %p - %p\n", this, button);
+                           {
+                             //          printf("pouet %p - %p\n", this, button);
 #if DUMMY_DEBUGGER
-          switch (i % 3)
-          {
-            case 0:
-              mpMessageClient->Post(nuiMessage("HelloWorld"));
-              mpMessageClient->Post(nuiMessage("HelloWorld2", i));
-              break;
-            case 1:
-              mpMessageClient->Post(nuiMessage("HelloWorld"));
-              mpMessageClient->Post(nuiMessage("HelloWorld3", i, 1.1f, 1.2, "pouet!"));
-              break;
-            default:
-              mpMessageClient->Post(nuiMessage("HelloWorld"));
-              break;
-          }
+                             switch (i % 3)
+                             {
+                               case 0:
+                                 mpMessageClient->Post(nuiMessage("HelloWorld"));
+                                 mpMessageClient->Post(nuiMessage("HelloWorld2", i));
+                                 break;
+                               case 1:
+                                 mpMessageClient->Post(nuiMessage("HelloWorld"));
+                                 mpMessageClient->Post(nuiMessage("HelloWorld3", i, 1.1f, 1.2, "pouet!"));
+                                 break;
+                               default:
+                                 mpMessageClient->Post(nuiMessage("HelloWorld"));
+                                 break;
+                             }
 #endif
-          btn->SetVisible(!btn->IsVisible());
-        });
+                             //          btn->SetVisible(!btn->IsVisible());
+                           });
 
         AddChild(button);
       }
-      
-//      nuiVBox* pBox = new nuiVBox();
-//      
-//      nuiFolderPane* pPane1 = new nuiFolderPane();
-//      pPane1->SetTitle("Prout");
-//      pPane1->SetContents(new nuiLabel("Contents bleh..."));
-//
-//      nuiFolderPane* pPane2 = new nuiFolderPane();
-//      pPane2->SetTitle("Prout 2");
-//      pPane2->SetContents(new nuiLabel("Contents bleh...2"));
-//      pBox->AddCell(pPane1);
-//      pBox->AddCell(pPane2);
-//      
-//      pBox->SetExpand(nuiExpandFixed);
-//      pBox->SetAllCellsExpand(nuiExpandFixed);
-//
-//      nuiScrollView* pScrollView = new nuiScrollView();
-//      pScrollView->AddChild(pBox);
-//
-//      AddChild(pScrollView);
+
+      //      nuiVBox* pBox = new nuiVBox();
+      //
+      //      nuiFolderPane* pPane1 = new nuiFolderPane();
+      //      pPane1->SetTitle("Prout");
+      //      pPane1->SetContents(new nuiLabel("Contents bleh..."));
+      //
+      //      nuiFolderPane* pPane2 = new nuiFolderPane();
+      //      pPane2->SetTitle("Prout 2");
+      //      pPane2->SetContents(new nuiLabel("Contents bleh...2"));
+      //      pBox->AddCell(pPane1);
+      //      pBox->AddCell(pPane2);
+      //
+      //      pBox->SetExpand(nuiExpandFixed);
+      //      pBox->SetAllCellsExpand(nuiExpandFixed);
+      //
+      //      nuiScrollView* pScrollView = new nuiScrollView();
+      //      pScrollView->AddChild(pBox);
+      //
+      //      AddChild(pScrollView);
 
       return;
     }break;
-    
-  case 1:
+
+    case 1:
     {
       ButtonCellSource* pSource = new ButtonCellSource();
-    //  ComplexCellSource* pSource = new ComplexCellSource();
+      //  ComplexCellSource* pSource = new ComplexCellSource();
       nuiTableView* pListView = new nuiTableView(pSource);
       AddChild(pListView);
       nuiWidget* pChild = CreateTestDelChildren();
       AddChild(pChild);
 
-//      nuiScrollView* pSView = new nuiScrollView(false, true);
-//      AddChild(pSView);
-//      pSView->SetPosition(nuiFill);
-//      pSView->SetUserWidth(256);
-//      
-//      nuiVBox* pVBox = new nuiVBox();
-//      pVBox->SetBorderRight(42);
-//      pVBox->SetExpand(nuiExpandShrinkAndGrow);
-//      pSView->AddChild(pVBox);
-//      nuiButton* pButton;
-//    
-//      for (int i = 0; i < 128; i++)
-//      {
-//        nglString str;
-//        str.CFormat("Button %d", i);
-//        pButton = new nuiButton(str);
-//        pButton->SetObjectName(str);
-//        pButton->SetUserHeight(42);
-//        pVBox->AddCell(pButton);
-//      }
-      
+      //      nuiScrollView* pSView = new nuiScrollView(false, true);
+      //      AddChild(pSView);
+      //      pSView->SetPosition(nuiFill);
+      //      pSView->SetUserWidth(256);
+      //
+      //      nuiVBox* pVBox = new nuiVBox();
+      //      pVBox->SetBorderRight(42);
+      //      pVBox->SetExpand(nuiExpandShrinkAndGrow);
+      //      pSView->AddChild(pVBox);
+      //      nuiButton* pButton;
+      //
+      //      for (int i = 0; i < 128; i++)
+      //      {
+      //        nglString str;
+      //        str.CFormat("Button %d", i);
+      //        pButton = new nuiButton(str);
+      //        pButton->SetObjectName(str);
+      //        pButton->SetUserHeight(42);
+      //        pVBox->AddCell(pButton);
+      //      }
+
       return;
     } break;
 
-  case 2:
+    case 2:
     {
-    // create a vertical box for the layout
+      // create a vertical box for the layout
       nuiVBox* pMainBox = new nuiVBox(0);
       pMainBox->SetExpand(nuiExpandShrinkAndGrow);
       pMainBox->SetPosition(nuiFillVertical);
@@ -462,54 +471,54 @@ void MainWindow::OnCreation()
       pPane->AddAnimation("Fade", pAnim);
       pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
 
-//      AddChild(new nuiIntrospector(pMainBox));
+      //      AddChild(new nuiIntrospector(pMainBox));
     } break;
 
-  case 3:
-      {
-        nuiLabel* pLabel = new nuiLabel("My Label");
-        pLabel->SetPosition(nuiCenter);
-        AddChild(pLabel);
+    case 3:
+    {
+      nuiLabel* pLabel = new nuiLabel("My Label");
+      pLabel->SetPosition(nuiCenter);
+      AddChild(pLabel);
 
+      nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
+      pAnim->SetTargetAttribute("Alpha");
+      pAnim->SetTargetObject(pLabel);
+      pLabel->AddAnimation("Fade", pAnim);
+      pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
+    } break;
+
+    case 4:
+    {
+      nuiSplitter* pSplitter = new nuiSplitter(nuiVertical);
+      AddChild(pSplitter);
+      nuiButton* pButton = new nuiButton("My Button");
+      pButton->SetPosition(nuiCenter);
+
+      if (0)
+      {
         nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
         pAnim->SetTargetAttribute("Alpha");
-        pAnim->SetTargetObject(pLabel);
-        pLabel->AddAnimation("Fade", pAnim);
+        pAnim->SetTargetObject(pButton);
+        pButton->AddAnimation("Fade", pAnim);
         pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
-      } break;
+      }
 
-  case 4:
-      {
-        nuiSplitter* pSplitter = new nuiSplitter(nuiVertical);
-        AddChild(pSplitter);
-        nuiButton* pButton = new nuiButton("My Button");
-        pButton->SetPosition(nuiCenter);
-
-        if (0)
-        {
-          nuiAttributeAnim<float>* pAnim = new nuiAttributeAnim<float>(0.5, 1.0);
-          pAnim->SetTargetAttribute("Alpha");
-          pAnim->SetTargetObject(pButton);
-          pButton->AddAnimation("Fade", pAnim);
-          pAnim->Play(100000000, nuiAnimLoop::eAnimLoopPingPong);
-        }
-        
-        nuiWidgetInfo* pInspector = new nuiWidgetInfo(pButton);
-        pSplitter->AddChild(pButton);
-        pSplitter->AddChild(pInspector);
-      } break;
-  case 5:
+      nuiWidgetInfo* pInspector = new nuiWidgetInfo(pButton);
+      pSplitter->AddChild(pButton);
+      pSplitter->AddChild(pInspector);
+    } break;
+    case 5:
     {
       nuiScrollView* pScroll = new nuiScrollView();
       nuiList* pList = new nuiList();
-      
+
       for (int i = 0; i < 100; i++)
       {
         nglString str;
         str.CFormat("Item %d", i);
         pList->AddChild(new nuiLabel(str));
       }
-      
+
       pScroll->AddChild(pList);
       AddChild(pScroll);
     } break;
@@ -542,7 +551,7 @@ nuiWidget* MainWindow::Tutorial_Buttons()
 {
   nuiHBox* pBox = new nuiHBox(0);
   //pBox->EnableSurface(true);
-  
+
   // a simple button
   nuiButton* pBtn = new nuiButton("button");
   pBtn->SetObjectName("MyButton");
@@ -672,7 +681,7 @@ nuiWidget* MainWindow::Tutorial_RadioButtons2()
 nuiWidget* MainWindow::CreateTestDelChildren()
 {
   nuiWidget* pWidget = new nuiWidget();
-  
+
   nuiButton* pButton = new nuiButton("Recreate view");
   pButton->SetUserHeight(48);
   pButton->SetPosition(nuiFillTop);
@@ -807,21 +816,22 @@ bool MainWindow::LoadCSS(const nglPath& rPath)
     NGL_OUT("Unable to open CSS source file '%ls'\n", rPath.GetChars());
     return false;
   }
-  
+
   nuiCSS* pCSS = new nuiCSS();
   bool res = pCSS->Load(*pF, rPath);
   delete pF;
-  
+
   if (res)
   {
     nuiMainWindow::SetCSS(pCSS);
     return true;
   }
-  
+
   NGL_OUT("%ls\n", pCSS->GetErrorString().GetChars());
-  
+
   delete pCSS;
   return false;
 }
+
 
 

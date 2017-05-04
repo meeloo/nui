@@ -42,7 +42,8 @@ protected:
 private:
   
   nuiLabel* mpLabel;
-  nuiWidget* mpHiddenWidget;
+  nuiWidget* mpHiddenWidget1 = nullptr;
+  nuiWidget* mpHiddenWidget2 = nullptr;
   nuiEventSink<MainWindow> mEventSink;
 
 #if DUMMY_DEBUGGER
