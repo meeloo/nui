@@ -8,6 +8,7 @@
 #include "nglWindow_UIKit.h"
 
 #include <GL/gl.h>
+#include <Metal/Metal.h>
 
 #define NGL_WINDOW_FPS 60.0f
 
@@ -140,12 +141,14 @@ const nglChar* gpWindowErrorTable[] =
   if (self)
   {
     mpNGLWindow = pNGLWindow;
-    CAMetalLLayer *layer = (CAMetalLayer *)self.layer;
+    CAMetalLayer *layer = (CAMetalLayer *)self.layer;
     layer.opaque = YES;
-    layer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    [NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking,
-                                    kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
-                                    nil];
+    layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+//    layer.device = MTLCreateSystemDefaultDevice();
+//    layer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                    [NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking,
+//                                    kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
+//                                    nil];
 
     self.contentScaleFactor = [[UIScreen mainScreen] scale];
     self.multipleTouchEnabled = YES;
@@ -195,11 +198,13 @@ const nglChar* gpWindowErrorTable[] =
 - (void)loadView
 {
   UIView* pView = nil;
-  if (pNGLWindow->GetContext().GetTargetAPI() == eTargetAPI_OpenGL)
+  nglContextInfo Info;
+  mpNGLWindow->GetContextInfo(Info);
+  if (Info.TargetAPI == eTargetAPI_OpenGL)
   {
     pView = [[[nglUIView_GL alloc] initWithNGLWindow:mpNGLWindow] autorelease];
   }
-  else if (pNGLWindow->GetContext().GetTargetAPI() == eTargetAPI_OpenGL)
+  else if (Info.TargetAPI == eTargetAPI_OpenGL)
   {
     pView = [[[nglUIView_Metal alloc] initWithNGLWindow:mpNGLWindow] autorelease];
   }
@@ -220,7 +225,7 @@ const nglChar* gpWindowErrorTable[] =
 -(NSUInteger)supportedInterfaceOrientations
 {
   NSInteger mask = UIInterfaceOrientationMaskAll;
-  return mask;
+  return (NSUInteger)mask;
 }
 @end
 

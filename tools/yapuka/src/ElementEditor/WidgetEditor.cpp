@@ -106,10 +106,7 @@ WidgetEditor::WidgetEditor(ElementDesc* pDesc, ElementInspector* pInspector)
 	{
     const nuiWidgetDesc& desc = *it;
 		nuiLabel* pLabel = new nuiLabel(desc.GetClassName());
-    if (!desc.GetClassGroup().Compare("Container"))
-      mpContainerList->AddChild(pLabel);
-    else
-      mpWidgetList->AddChild(pLabel);
+    mpWidgetList->AddChild(pLabel);
     
 	}
 
