@@ -76,11 +76,11 @@ const nglChar* gpWindowErrorTable[] =
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// nglUIView ///////////////////////////////////////////////////////////////////
+// nglUIView_GL ///////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-#pragma mark nglUIView
+#pragma mark nglUIView_GL
 
-@implementation nglUIView
+@implementation nglUIView_GL
 
 + (Class)layerClass
 {
@@ -115,7 +115,54 @@ const nglChar* gpWindowErrorTable[] =
 {
   CGRect frame = [self frame];
 //  NGL_OUT("layoutSubviews with frame %d - %d\n", (uint)frame.size.width, (uint)frame.size.height);
-  mpNGLWindow->UpdateLayer();
+  mpNGLWindow->UpdateGLLayer();
+  mpNGLWindow->SetSize((uint)frame.size.width, (uint)frame.size.height);
+  [super layoutSubviews];
+}
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+// nglUIView_Metal ///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglUIView_Metal
+
+@implementation nglUIView_Metal
+
++ (Class)layerClass
+{
+  return [CAMetalLayer class];
+}
+
+- (id) initWithNGLWindow: (nglWindow*) pNGLWindow
+{
+  self = [super init];
+  if (self)
+  {
+    mpNGLWindow = pNGLWindow;
+    CAMetalLLayer *layer = (CAMetalLayer *)self.layer;
+    layer.opaque = YES;
+    layer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking,
+                                    kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
+                                    nil];
+
+    self.contentScaleFactor = [[UIScreen mainScreen] scale];
+    self.multipleTouchEnabled = YES;
+
+  }
+  return self;
+}
+- (void) dealloc
+{
+  [super dealloc];
+}
+
+- (void) layoutSubviews
+{
+  CGRect frame = [self frame];
+  //  NGL_OUT("layoutSubviews with frame %d - %d\n", (uint)frame.size.width, (uint)frame.size.height);
+  mpNGLWindow->UpdateGLLayer();
   mpNGLWindow->SetSize((uint)frame.size.width, (uint)frame.size.height);
   [super layoutSubviews];
 }
@@ -147,7 +194,16 @@ const nglChar* gpWindowErrorTable[] =
 
 - (void)loadView
 {
-  nglUIView* pView = [[[nglUIView alloc] initWithNGLWindow:mpNGLWindow] autorelease];
+  UIView* pView = nil;
+  if (pNGLWindow->GetContext().GetTargetAPI() == eTargetAPI_OpenGL)
+  {
+    pView = [[[nglUIView_GL alloc] initWithNGLWindow:mpNGLWindow] autorelease];
+  }
+  else if (pNGLWindow->GetContext().GetTargetAPI() == eTargetAPI_OpenGL)
+  {
+    pView = [[[nglUIView_Metal alloc] initWithNGLWindow:mpNGLWindow] autorelease];
+  }
+
   self.view = pView;
 }
 
@@ -640,14 +696,14 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   [_window setRootViewController: _viewctrl];
 
   NGL_ASSERT(_viewctrl.view);
-  nglUIView* _view = (nglUIView*)_viewctrl.view;
+  UIView* _view = (UIView*)_viewctrl.view;
   mpUIView = _view;
   mpCALayer = _view.layer;
 
   NGL_LOG("window", NGL_LOG_INFO, "trying to create GLES context");
   rContext.Dump(NGL_LOG_INFO);
   
-  if ((rContext.TargetAPI != eTargetAPI_OpenGL) && (rContext.TargetAPI != eTargetAPI_OpenGL2))
+  if ((rContext.TargetAPI != eTargetAPI_OpenGL) && (rContext.TargetAPI != eTargetAPI_OpenGL2) && (rContext.TargetAPI != eTargetAPI_Metal))
   {
     // UIKit Implementation only supports OpenGLES renderer so far
     NGL_LOG("window", NGL_LOG_INFO, "bad renderer");
@@ -656,12 +712,15 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   }
 	
 
-  mpEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-  UpdateLayer();
-  bool currentOk = MakeCurrent();
-  NGL_ASSERT(currentOk);
+  if (rContext.TargetAPI != eTargetAPI_Metal)
+  {
+    mpEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    UpdateGLLayer();
+    bool currentOk = MakeCurrent();
+    NGL_ASSERT(currentOk);
+  }
   Build(rContext);
-  
+
 	CGRect r = [(nglUIWindow*)mpUIWindow frame];
 	NSLog(@"currentFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
 	r = [UIScreen mainScreen].applicationFrame;
@@ -738,7 +797,7 @@ nglWindow::~nglWindow()
   Unregister();
 }
 
-void nglWindow::UpdateLayer()
+void nglWindow::UpdateGLLayer()
 {
   GetLock().Lock();
 

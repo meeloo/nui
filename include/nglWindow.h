@@ -946,7 +946,7 @@ public:
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
 
   void DisplayTicked();
-  void UpdateLayer();
+  void UpdateGLLayer();
 #endif
 
 #ifdef _COCOA_

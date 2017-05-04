@@ -13,6 +13,8 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 #import <CoreServices/CoreServices.h>
+#import <Metal/Metal.h>
+#import <QuartzCore/CAMetalLayer.h>
 
 #define NGL_WINDOW_FPS 60.0f
 
@@ -1182,7 +1184,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   //[pNSWindow makeKeyAndVisible];
   
   
-  if (rContext.TargetAPI != eTargetAPI_OpenGL && rContext.TargetAPI != eTargetAPI_OpenGL2)
+  if (rContext.TargetAPI != eTargetAPI_OpenGL && rContext.TargetAPI != eTargetAPI_OpenGL2 && rContext.TargetAPI != eTargetAPI_Metal)
   {
     NGL_LOG("window", NGL_LOG_INFO, "bad renderer");
     NGL_ASSERT(0);

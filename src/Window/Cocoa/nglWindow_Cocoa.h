@@ -3,6 +3,8 @@
 #include <Cocoa/Cocoa.h>
 #import <QuartzCore/QuartzCore.h>
 #import <OpenGL/OpenGL.h>
+#import <Metal/Metal.h>
+#import <QuartzCore/CAMetalLayer.h>
 
 /*
 ** nglNSView

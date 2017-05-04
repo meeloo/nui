@@ -8,10 +8,23 @@
 
 
 /*
- ** nglUIView
+ ** nglUIView_GL
  */
 
-@interface nglUIView : UIView
+@interface nglUIView_GL : UIView
+{
+@private
+  nglWindow* mpNGLWindow;
+}
+- (id)  initWithNGLWindow: (nglWindow*) pNGLWindow;
+
+@end
+
+/*
+ ** nglUIView_Metal
+ */
+
+@interface nglUIView_Metal : UIView
 {
 @private
   nglWindow* mpNGLWindow;
