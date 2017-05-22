@@ -1033,6 +1033,10 @@ void nuiWidget::InvalidateRect(const nuiRect& rRect)
 
 void nuiWidget::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect)
 {
+  if (GetDebug())
+  {
+    NGL_OUT("  nuiWidget::InvalidateRect '%s' [%s]\n",  GetObjectClass().GetChars(), GetObjectName().GetChars());
+  }
   CheckValid();
   nuiRect r = rRect;
   nuiRect rect = GetRect();
@@ -1156,7 +1160,10 @@ void nuiWidget::InvalidateLayout()
 
   if (mpParent && broadcast)
   {
-    //NGL_OUT("InvalidateLayout + Broadcast from %s\n", GetObjectClass().GetChars());
+    if (GetDebug())
+    {
+      NGL_OUT("InvalidateLayout + Broadcast from %s\n", GetObjectClass().GetChars());
+    }
     mpParent->BroadcastInvalidateLayout(this, false);
   }
   DebugRefreshInfo();
@@ -1170,7 +1177,10 @@ void nuiWidget::ForcedInvalidateLayout()
   
   if (mpParent && broadcast)
   {
-    //NGL_OUT("InvalidateLayout + Broadcast from %s\n", GetObjectClass().GetChars());
+    if (GetDebug())
+    {
+      NGL_OUT("InvalidateLayout + Broadcast from %s\n", GetObjectClass().GetChars());
+    }
     mpParent->BroadcastInvalidateLayout(this, false);
   }
   DebugRefreshInfo();
@@ -1182,6 +1192,10 @@ void nuiWidget::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOn
 
   if ((!GetNeedLayout() && HasUserSize())) // A child can't change the ideal position of its parent so we can stop broadcasting if the parent has a fixed ideal size.
   {
+    if (GetDebug() || pSender->GetDebug())
+    {
+      NGL_OUT("nuiWidget::BroadcastInvalidateLayout UpdateLayout %s / %s / 0x%x\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
+    }
     UpdateLayout();
     return;
   }
@@ -1194,14 +1208,17 @@ void nuiWidget::BroadcastInvalidateLayout(nuiWidgetPtr pSender, bool BroadCastOn
 
   if (mpParent)
   {
+    if (GetDebug() || pSender->GetDebug())
+    {
+      NGL_OUT("nuiWidget::BroadcastInvalidateLayout %s / %s / 0x%x\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
+    }
     mpParent->BroadcastInvalidateLayout(pSender, BroadCastOnly);
-//    NGL_OUT("nuiWidget::BroadcastInvalidateLayout %s / %s / 0x%x\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
   }
 
 #ifdef DEBUG
   if (GetDebug() || pSender->GetDebug())
   {
-    //NGL_OUT("nuiWidget::BroadcastInvalidateLayout SKIP %s / %s / 0x%x\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
+    NGL_OUT("nuiWidget::BroadcastInvalidateLayout SKIP %s / %s / 0x%x\n", pSender->GetObjectClass().GetChars(), pSender->GetObjectName().GetChars(), pSender);
   }
 #endif
 
@@ -5923,7 +5940,7 @@ void nuiWidget::InternalSetLayout(const nuiRect& rect, bool PositionChanged, boo
     mInSetRect = true;
     SetRect(rect);
     mInSetRect = false;
-//    Invalidate();
+    Invalidate();
   }
   else
   {

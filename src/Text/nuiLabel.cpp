@@ -452,6 +452,10 @@ nuiRect nuiLabel::GetLayoutRect()
 
 void nuiLabel::SetText(const nglString& Text)
 {
+  if (GetDebug())
+  {
+    NGL_OUT("nuiLabel::SetText(\"%s\") [%s]\n", Text.GetChars(), mText.GetChars());
+  }
   if (GetToolTip() == mText) // Reset the tooltip shown when text is truncated as it's maybe no more usefull
     SetToolTip(nglString::Empty);
   nglString t(mText);
@@ -459,9 +463,19 @@ void nuiLabel::SetText(const nglString& Text)
   mText.TrimRight("\n\r\t");
   mText.Replace('\r','\n');
   if (t == mText) // Only redisplay if the text has really changed!
+  {
+    if (GetDebug())
+    {
+      NGL_OUT("nuiLabel::SetText early exit\n");
+    }
     return;
+  }
   mTextChanged = true;
   InvalidateLayout();
+  if (GetDebug())
+  {
+    NGL_OUT("nuiLabel::SetText done [%s]\n", mText.GetChars());
+  }
 }
 
 const nglString& nuiLabel::GetText() const

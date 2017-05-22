@@ -790,7 +790,10 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
         break;
       case eBreak:
         if (draw)
-          NGL_ASSERT(false);
+        {
+//          NGL_ASSERT(false);
+          NGL_OUT("nuiMetaPainter Break %p %s\n", this, GetName().GetChars());
+        }
         break;
       case ePrint:
         if (draw)
