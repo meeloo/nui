@@ -546,6 +546,8 @@ void nuiGLPainter::SetViewport()
   GLint Width = GetCurrentWidth();
   GLint Height = GetCurrentHeight();
   const nuiRect& rViewport(mProjectionViewportStack.top());
+  NGL_ASSERT(rViewport.Left() >= 0);
+  NGL_ASSERT(rViewport.Top() >= 0);
 
   int32 x, y, w, h;
   
@@ -556,9 +558,18 @@ void nuiGLPainter::SetViewport()
 
 
   x = ToNearest(r.Left());
-  w = ToNearest(r.GetWidth());
   y = Height - ToNearest(r.Bottom());
+//  NGL_ASSERT(x >= 0);
+//  NGL_ASSERT(y >= 0);
+
+//  x = nuiClamp(x, 0, Width - 1);
+//  y = nuiClamp(y, 0, Height - 1);
+
+  w = ToNearest(r.GetWidth());
   h = ToNearest(r.GetHeight());
+
+//  w = nuiClamp(w, 0, Width - x);
+//  h = nuiClamp(h, 0, Height - y);
 
   {
     const float scale = mpContext->GetScale();
@@ -567,8 +578,8 @@ void nuiGLPainter::SetViewport()
     w *= scale;
     h *= scale;
   }
-  
-  NGL_ASSERT(x >= 0);
+
+//  NGL_ASSERT(x >= 0);
 //  NGL_ASSERT(y >= 0);
   nuiCheckForGLErrors();
   glViewport(x, y, w, h);

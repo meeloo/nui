@@ -103,6 +103,8 @@ void nuiPainter::PopProjectionMatrix()
 void nuiPainter::LoadProjectionMatrix(const nuiRect& rViewport, const nuiMatrix& rMatrix)
 {
   NGL_ASSERT(!mProjectionMatrixStack.empty());
+  NGL_ASSERT(rViewport.Left() >= 0);
+  NGL_ASSERT(rViewport.Top() >= 0);
   mProjectionMatrixStack.top() = rMatrix;
 
   nuiMatrix LocalMatrix(mMatrixStack.empty()?nuiMatrix():mMatrixStack.top());
@@ -110,6 +112,8 @@ void nuiPainter::LoadProjectionMatrix(const nuiRect& rViewport, const nuiMatrix&
   nuiVector vec2(rViewport.Right(), rViewport.Bottom(), 0.0f);
   vec1 = LocalMatrix * vec1;
   vec2 = LocalMatrix * vec2;
+  NGL_ASSERT(vec1[0] >= 0);
+  NGL_ASSERT(vec1[1] >= 0);
   mProjectionViewportStack.top().Set(vec1[0], vec1[1], vec2[0], vec2[1], false);
 }
 
@@ -117,6 +121,8 @@ void nuiPainter::MultProjectionMatrix(const nuiMatrix& rMatrix)
 {
   NGL_ASSERT(!mProjectionMatrixStack.empty());
   mProjectionMatrixStack.top() *= rMatrix;
+  NGL_ASSERT(mProjectionMatrixStack.top().GetTranslation()[0] >= 0);
+  NGL_ASSERT(mProjectionMatrixStack.top().GetTranslation()[1] >= 0);
 }
 
 const nuiMatrix& nuiPainter::GetProjectionMatrix() const
