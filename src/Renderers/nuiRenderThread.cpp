@@ -712,8 +712,12 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
 
       mpDrawContext->ResetClipRect();
       mpDrawContext->EnableClipping(true);
+      mpDrawContext->PushMatrix();
+      mpDrawContext->LoadMatrix(nuiMatrix());
 
       pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+
+      mpDrawContext->PopMatrix();
       glPopGroupMarkerEXT();
 
       gGlobalRedraw += nglTime() - start2;
@@ -736,8 +740,12 @@ void nuiRenderThread::DrawLayerContents(nuiDrawContext* pContext, nuiLayer* pKey
         mpDrawContext->PushClipping();
         mpDrawContext->Clip(cliprect);
         mpDrawContext->EnableClipping(true);
+        mpDrawContext->PushMatrix();
+        mpDrawContext->LoadMatrix(nuiMatrix());
         nglTime start3;
         pPainter->ReDraw(mpDrawContext, nuiMakeDelegate(this, &nuiRenderThread::DrawWidgetContents), nuiMakeDelegate(this, &nuiRenderThread::DrawLayer));
+        mpDrawContext->PopMatrix();
+
         gPainterRedraw += nglTime() - start3;
 
         mpDrawContext->PopClipping();
