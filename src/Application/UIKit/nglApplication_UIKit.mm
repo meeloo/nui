@@ -51,6 +51,9 @@ void objCCallOnMemoryWarning();
 {
 	assert(App);
 	NSURL *launchURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+  
+  App->SetUIApplication(pUIApplication);
+  App->SetLaunchOptions(launchOptions);
 
 	if (launchURL)
 	{
@@ -69,7 +72,7 @@ void objCCallOnMemoryWarning();
   {
 		objCCallOnInit(pUIApplication);
 	}
-
+  
   // Check if we have a notification to display
   NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 
@@ -271,8 +274,13 @@ void objCCallOnMemoryWarning();
 {
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<NSString *, id> *)options
 {
+  App->SetOpenURL(url);
+  App->SetOpenURLOptions(options);
+  
   if (url)
   {
     if ([url isFileURL])

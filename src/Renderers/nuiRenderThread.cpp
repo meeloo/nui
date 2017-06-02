@@ -44,6 +44,9 @@ double gPartialRedraw = 0;
 double gGlobalRedraw = 0;
 double gPainterRedraw = 0;
 
+#define kdebug_signpost_start
+#define kdebug_signpost_end
+
 std::set<nuiRenderThread*> nuiRenderThread::mThreads;
 nglCriticalSection nuiRenderThread::ThreadsCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
