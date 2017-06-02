@@ -534,10 +534,20 @@ protected:
   friend void objCCallOnDeactivation();
   friend void objCCallOnMemoryWarning();
 
-  void* mpUIApplication;
+  void* mpUIApplication { nullptr };    // Type: UIApplication*
+  void* mpLaunchOptions { nullptr };    // Type: NSDictionary*
+  void* mpOpenURL { nullptr };          // Type: NSURL*
+  void* mpOpenURLOptions { nullptr };   // Type: NSDictionary<UIApplicationOpenURLOptionsKey, id>*
 
 public:
-	void * GetUIApplication() { return mpUIApplication; }
+  inline void SetUIApplication(void* pApplication) { mpUIApplication = pApplication; }
+	inline void* GetUIApplication() { return mpUIApplication; }
+  inline void SetLaunchOptions(void* pDict) { mpLaunchOptions = pDict; }
+  inline void* GetLaunchOptions() { return mpLaunchOptions; }
+  inline void SetOpenURL(void* pURL) { mpOpenURL = pURL; }
+  inline void* GetOpenURL() { return mpOpenURL; }
+  inline void SetOpenURLOptions(void* pURLOptionDict) { mpOpenURLOptions = pURLOptionDict; }
+  inline void* GetOpenURLOptions() { return mpOpenURLOptions; }
 
 #endif//_UIKIT_
 

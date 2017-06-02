@@ -41,7 +41,8 @@ const nglChar* gpKernelErrorTable[] =
 nglKernel::nglKernel()
 : mKernelEventSink(this)
 {
-  mpUIApplication = NULL;
+  mpUIApplication = nil;
+  mpLaunchOptions = nil;
 
   Init();
   
@@ -81,7 +82,6 @@ void nglKernel::NonBlockingHeartBeat()
   // #TODO #FIXME
   // How can we keep the UI alive in cocoa?
 }
-
 
 void objCCallOnInit(void* pUIApplication)
 {
