@@ -91,7 +91,7 @@ public:
 
   bool IsValid() const;
   
-  static const nuiTextureMap& Enum();
+  static const nuiTextureMap Enum();
   static nuiSimpleEventSource<0> TexturesChanged;
   
   

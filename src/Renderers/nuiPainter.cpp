@@ -391,3 +391,7 @@ void nuiPainter::BroadcastDestroyRenderArray(nuiRenderArray* pArray)
   }
 }
 
+nglImage* nuiPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) const
+{
+  return nullptr;
+}

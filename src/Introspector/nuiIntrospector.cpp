@@ -150,7 +150,9 @@ void nuiIntrospector::ShowDecorationInspector(const nuiEvent& rEvent)
 
 void nuiIntrospector::ShowTextureInspector(const nuiEvent& rEvent)
 {
-  SetCell(CELL_CLIENT, new nuiTextureInspector()); 
+  nuiTopLevel* pTop = mpTarget->GetTopLevel();
+  nuiMainWindow* pWindow = dynamic_cast<nuiMainWindow*>(pTop);
+  SetCell(CELL_CLIENT, new nuiTextureInspector(pWindow));
   rEvent.Cancel();
 }
 

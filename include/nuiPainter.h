@@ -137,6 +137,8 @@ public:
   virtual void DestroySurface(nuiSurface* pSurface) = 0;
   virtual void DestroyRenderArray(nuiRenderArray* pSurface) = 0;
 
+  virtual nglImage* CreateImageFromGPUTexture(const nuiTexture* pTexture) const;
+
 protected:
   virtual ~nuiPainter();
   nuiSurface* mpSurface;

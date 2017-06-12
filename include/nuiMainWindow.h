@@ -62,6 +62,7 @@ public:
   void DBG_DisplayMouseOverObject(); ///< Displays a frame over the object currently pointed to by the mouse.
   void DBG_SetMouseOverObject(bool set);
   bool DBG_GetMouseOverObject();
+  void DBG_DumpAllTexturesToFolder(const nglPath& rFolder);
   //@}
 
   void SetQuitOnClose(bool Set);

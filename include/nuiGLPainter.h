@@ -72,6 +72,7 @@ public:
 
   virtual void DestroyRenderArray(nuiRenderArray* pArray);
 
+  virtual nglImage* CreateImageFromGPUTexture(const nuiTexture* pTexture) const;
   
 protected:
   class TextureInfo

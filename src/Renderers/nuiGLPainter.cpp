@@ -2919,6 +2919,36 @@ void nuiGLPainter::_DestroyRenderArray(nuiRenderArray* pArray)
   mRenderArrays.erase(it);
 }
 
+nglImage* nuiGLPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) const
+{
+  if (!pTexture)
+    return nullptr;
+
+  nglCriticalSectionGuard tg(mTexturesCS);
+  auto it = mTextures.find(const_cast<nuiTexture *>(pTexture));
+  if (it == mTextures.end())
+  {
+    nglImage *pT = pTexture->GetImage();
+    if (pT)
+      return new nglImage(*pT);
+    return nullptr;
+  }
+  NGL_ASSERT(it != mTextures.end());
+
+  GLuint id = pTexture->GetTextureID();
+  GLenum target = pTexture->GetTarget();
+  if (!id || !target)
+    return nullptr;
+
+  nuiTexture* pGLTexture = nuiTexture::BindTexture(id, target);
+
+  nglImageInfo info(pGLTexture->GetWidth(), pGLTexture->GetHeight(), 32);
+  glGetTexImage(target, 0, GL_RGBA, GL_RGBA, info.mpBuffer);
+
+  pGLTexture->Release();
+  nglImage* pImage = new nglImage(info);
+  return pImage;
+}
 
 
 std::map<nuiTexture*, nuiGLPainter::TextureInfo> nuiGLPainter::mTextures;

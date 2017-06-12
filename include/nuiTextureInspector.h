@@ -16,7 +16,7 @@ class nuiText;
 class nuiTextureInspector : public nuiWidget
 {
 public:
-  nuiTextureInspector();
+  nuiTextureInspector(nuiMainWindow* pWindow);
 
 protected:
   virtual ~nuiTextureInspector();
@@ -24,9 +24,11 @@ protected:
   
   void OnTexturesChanged(const nuiEvent& rEvent);
   void OnTextureSelection(const nuiEvent& rEvent);
+  void OnDumpTextures(const nuiEvent& rEvent);
   void UpdateTextures();
   
   nuiImage* mpImage;
   nuiGrid* mpAttributeGrid;
   nuiSlotsSink mSlot;
+  nuiMainWindow* mpWindow;
 };

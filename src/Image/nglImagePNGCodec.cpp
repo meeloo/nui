@@ -325,8 +325,25 @@ bool nglImagePNGCodec::Save(nglOStream* pOStream)
   nglImageInfo Info;
   mpImage->GetInfo(Info);
 
+  int type = 0;
+  switch (Info.mBytesPerPixel)
+  {
+    case 1:
+      type = PNG_COLOR_TYPE_GRAY;
+      break;
+    case 2:
+      type = PNG_COLOR_TYPE_GRAY_ALPHA;
+      break;
+    case 3:
+      type = PNG_COLOR_TYPE_RGB;
+      break;
+    case 4:
+      type = PNG_COLOR_TYPE_RGBA;
+      break;
+  }
+
   png_set_IHDR( png_ptr, info_ptr, Info.mWidth, Info.mHeight, Info.mBitDepth/Info.mBytesPerPixel, 
-                Info.mBytesPerPixel == 4 ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB, 
+                type,
                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT 
               );
 

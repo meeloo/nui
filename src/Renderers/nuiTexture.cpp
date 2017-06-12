@@ -1159,8 +1159,9 @@ bool nuiTexture::GetAutoMipMap() const
   return mAutoMipMap;
 }
 
-const nuiTextureMap& nuiTexture::Enum()
+const nuiTextureMap nuiTexture::Enum()
 {
+  nglCriticalSectionGuard g(gTextureReloadCS);
   return mpTextures;
 }
 

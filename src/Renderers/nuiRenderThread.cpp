@@ -203,6 +203,49 @@ void nuiRenderThread::InvalidateLayerRect(nuiLayer *pLayer, nuiRect rect)
   Post(nuiMakeTask(this, &nuiRenderThread::_InvalidateLayerRect, pLayer, rect));
 }
 
+void nuiRenderThread::DumpAllTexturesToFolder(const nglPath& rFolderPath)
+{
+    Post(nuiMakeTask(this, &nuiRenderThread::_DumpAllTexturesToFolder, rFolderPath));
+}
+
+void nuiRenderThread::_DumpAllTexturesToFolder(const nglPath FolderPath)
+{
+  if (!FolderPath.Exists())
+  {
+    FolderPath.Create(true);
+  }
+
+  if (FolderPath.IsLeaf())
+  {
+    return;
+  }
+
+  mpContext->BeginSession();
+  mpPainter->BeginSession();
+
+  auto textures = nuiTexture::Enum();
+  for (auto it : textures)
+  {
+    nuiTexture* pTexture = it.second;
+    nglImage* pImage = mpPainter->CreateImageFromGPUTexture(pTexture);
+    if (pImage)
+    {
+      nglPath path(FolderPath);
+      nglString name;
+      name.CFormat("%p", pTexture);
+      path += name;
+
+      nglImageCodec* codec = nglImage::CreateCodec("PNG");
+
+      bool result = pImage->Save(path, codec);
+      NGL_OUT("[%s] Saved Texture %p to '%s'\n", (result?"OK": "FAILED"), pTexture, path.GetChars());
+      delete pImage;
+      delete codec;
+    }
+
+  }
+}
+
 void nuiRenderThread::RenderingDone(bool result)
 {
   mRenderingDone(this, result);

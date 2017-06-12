@@ -60,6 +60,9 @@ public:
   static void DestroyWidget(nuiWidget* pWidget);
   static void DestroyLayer(nuiLayer* pLayer);
 
+
+  void DumpAllTexturesToFolder(const nglPath& rFolderPath);
+
   std::map<nuiLayer*, nuiRenderingStat> GetStats() const;
 
 private:
@@ -97,6 +100,9 @@ private:
   void _SetLayerTree(nuiLayer* pRoot);
   void _RenderFrame(const nuiRef<nuiMetaPainter>& pFrame);
   void _InvalidateLayerRect(nuiLayer* pLayer, nuiRect rect);
+
+  void _DumpAllTexturesToFolder(const nglPath FolderPath);
+
 
   virtual void OnStart();
 

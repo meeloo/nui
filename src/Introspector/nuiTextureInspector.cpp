@@ -8,8 +8,8 @@
 
 #include "nui.h"
 
-nuiTextureInspector::nuiTextureInspector()
-: mSink(this)
+nuiTextureInspector::nuiTextureInspector(nuiMainWindow* pWindow)
+: mSink(this), mpWindow(pWindow)
 {
   SetObjectClass("nuiTextureInspector");
   
@@ -40,9 +40,17 @@ void nuiTextureInspector::OnTexturesChanged(const nuiEvent& rEvent)
 void nuiTextureInspector::UpdateTextures()
 {
   Clear();
-  
+  nuiVBox* vbox = new nuiVBox();
+  vbox->SetExpand(nuiExpandShrinkAndGrow);
+  AddChild(vbox);
+  nuiButton* pDumpTextures = new nuiButton("Dump All Textures");
+  mSink.Connect(pDumpTextures->Activated, &nuiTextureInspector::OnDumpTextures);
+  vbox->AddCell(pDumpTextures);
+  vbox->SetCellExpand(0, nuiExpandFixed);
+
   nuiSplitter* pSplitter = new nuiSplitter(nuiVertical);
-  AddChild(pSplitter);
+  vbox->AddCell(pSplitter);
+  vbox->SetCellExpand(1, nuiExpandShrinkAndGrow);
   nuiSplitter* pSplit = new nuiSplitter(nuiHorizontal);
   pSplitter->AddChild(pSplit);
   pSplitter->SetMasterChild(false);
@@ -181,5 +189,14 @@ void nuiTextureInspector::OnTextureSelection(const nuiEvent& rEvent)
     ++it_a;
     i++;
   }
+}
+
+void nuiTextureInspector::OnDumpTextures(const nuiEvent& rEvent)
+{
+  nglPath tmp(ePathUserDesktop);
+  nglString name;
+  name.CFormat("nui Application %p", App);
+  tmp += name;
+  mpWindow->DBG_DumpAllTexturesToFolder(tmp);
 }
 

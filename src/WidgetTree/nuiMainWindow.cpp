@@ -728,6 +728,13 @@ bool nuiMainWindow::DBG_GetMouseOverInfo()
   return mDisplayMouseOverInfo;
 }
 
+void nuiMainWindow::DBG_DumpAllTexturesToFolder(const nglPath& rFolder)
+{
+  nuiRenderThread* pRenderThread = GetRenderThread();
+  pRenderThread->DumpAllTexturesToFolder(rFolder);
+}
+
+
 void nuiMainWindow::InvalidateTimer(const nuiEvent& rEvent)
 {
 #ifdef _UIKIT_
