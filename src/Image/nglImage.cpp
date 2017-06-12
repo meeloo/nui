@@ -797,6 +797,7 @@ nglImage* nglImage::Crop(uint32 x, uint32 y, uint32 width, uint32 height)
   newInfo.mHeight = height;
   newInfo.mBytesPerLine = newInfo.mWidth * newInfo.mBytesPerPixel;
   newInfo.mOwnBuffer = false;
+  newInfo.mpBuffer = nullptr; // If we don't clear mpBuffer AllocateBuffer will release the cloned one...
   newInfo.AllocateBuffer();
   
   // build new image

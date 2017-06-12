@@ -2931,12 +2931,26 @@ nglImage* nuiGLPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) co
     nglImage *pT = pTexture->GetImage();
     if (pT)
       return new nglImage(*pT);
-    return nullptr;
+
+    nuiTexture *pProxy = pTexture->GetProxyTexture();
+    if (pProxy)
+    {
+      nglImage* pProxyImage = CreateImageFromGPUTexture(pProxy);
+      nuiRect r(pTexture->GetProxyRect());
+      nglImage* pImage = pProxyImage->Crop(r.Left(), r.Top(), r.GetWidth(), r.GetHeight());
+      delete pProxyImage;
+      return pImage;
+//      return pProxyImage;
+    }
+    else
+      return nullptr;
   }
   NGL_ASSERT(it != mTextures.end());
 
   GLuint id = pTexture->GetTextureID();
-  GLenum target = pTexture->GetTarget();
+  if (!id)
+    id = (GLuint)it->second.mTexture;
+  GLenum target = GetTextureTarget(pTexture->IsPowerOfTwo());;
   if (!id || !target)
     return nullptr;
 

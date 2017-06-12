@@ -232,7 +232,7 @@ void nuiRenderThread::_DumpAllTexturesToFolder(const nglPath FolderPath)
     {
       nglPath path(FolderPath);
       nglString name;
-      name.CFormat("%p", pTexture);
+      name.CFormat("%s.png", pTexture->GetSource().GetChars());
       path += name;
 
       nglImageCodec* codec = nglImage::CreateCodec("PNG");
