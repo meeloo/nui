@@ -118,4 +118,5 @@ private:
   mutable nglCriticalSection StatsCS;
   std::map<nuiLayer*, nuiRenderingStat> mLayerStats;
   void DumpStats();
+  bool mUseSignPosts = false;
 };

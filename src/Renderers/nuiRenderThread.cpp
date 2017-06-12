@@ -11,9 +11,9 @@
 
 #if (defined _UIKIT_) || (defined _COCOA_)
 # import <Foundation/NSAutoreleasePool.h>
+# import <sys/kdebug_signpost.h>
 #endif
 
-#import <sys/kdebug_signpost.h>
 
 #define NUI_ENABLE_THREADED_RENDERING 1
 
@@ -55,6 +55,9 @@ nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawCont
 {
   nglCriticalSectionGuard g(ThreadsCS);
   mThreads.insert(this);
+#if (defined _UIKIT_) || (defined _COCOA_)
+  mUseSignPosts = true;
+#endif
 }
 
 nuiRenderThread::~nuiRenderThread()
@@ -205,7 +208,7 @@ void nuiRenderThread::InvalidateLayerRect(nuiLayer *pLayer, nuiRect rect)
 
 void nuiRenderThread::DumpAllTexturesToFolder(const nglPath& rFolderPath)
 {
-    Post(nuiMakeTask(this, &nuiRenderThread::_DumpAllTexturesToFolder, rFolderPath));
+  Post(nuiMakeTask(this, &nuiRenderThread::_DumpAllTexturesToFolder, rFolderPath));
 }
 
 void nuiRenderThread::_DumpAllTexturesToFolder(const nglPath FolderPath)
@@ -253,11 +256,13 @@ void nuiRenderThread::RenderingDone(bool result)
 
 void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
 {
-  kdebug_signpost_start(0, (uintptr_t)this, 0, 0, 0);
+  if (mUseSignPosts)
+    kdebug_signpost_start(0, (uintptr_t)this, 0, 0, 0);
   if (ngl_atomic_dec(mRenderingTicks) > 0)
   {
 //    NGL_OUT("[nuiRenderThread] skipping frame\n");
-    kdebug_signpost_end(0, (uintptr_t)this, 0, 0, 0);
+    if (mUseSignPosts)
+      kdebug_signpost_end(0, (uintptr_t)this, 0, 0, 0);
     return;
   }
 
@@ -272,7 +277,8 @@ NGL_OUT("#######################################################################
   if (it == mWidgetDrawPainters.end())
   {
     App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, false));
-    kdebug_signpost_end(0, (uintptr_t)this, 1, 0, 0);
+    if (mUseSignPosts)
+      kdebug_signpost_end(0, (uintptr_t)this, 1, 0, 0);
     return;
   }
   
@@ -280,7 +286,8 @@ NGL_OUT("#######################################################################
   if (pRootPainter == nullptr)
   {
     App->GetMainQueue().Post(nuiMakeTask(this, &nuiRenderThread::RenderingDone, false));
-    kdebug_signpost_end(0, (uintptr_t)this, 2, 0, 0);
+    if (mUseSignPosts)
+      kdebug_signpost_end(0, (uintptr_t)this, 2, 0, 0);
     return;
   }
 
@@ -288,12 +295,14 @@ NGL_OUT("#######################################################################
   if (!TryLockRendering())
   {
     NGL_OUT("Unable to lock rendering thread???\n");
-    kdebug_signpost_end(0, (uintptr_t)this, 3, 0, 0);
+    if (mUseSignPosts)
+      kdebug_signpost_end(0, (uintptr_t)this, 3, 0, 0);
     return;
   }
 
   mpContext->GetLock().Lock();
-  kdebug_signpost_start(1, (uintptr_t)this, 0, 0, 0);
+  if (mUseSignPosts)
+    kdebug_signpost_start(1, (uintptr_t)this, 0, 0, 0);
 
   mpPainter->ResetStats();
   mpContext->BeginSession();
@@ -308,8 +317,11 @@ NGL_OUT("#######################################################################
     pTask->Run();
     pTask->Release();
   }
-  kdebug_signpost_end(1, (uintptr_t)this, 0, 0, 0);
-  kdebug_signpost_start(2, (uintptr_t)this, 0, 0, 0);
+  if (mUseSignPosts)
+  {
+    kdebug_signpost_end(1, (uintptr_t)this, 0, 0, 0);
+    kdebug_signpost_start(2, (uintptr_t)this, 0, 0, 0);
+  }
 
   mpDrawContext->ResetState();
   mpDrawContext->ResetClipRect();
@@ -333,8 +345,11 @@ NGL_OUT("#######################################################################
 
   glPopGroupMarkerEXT();
   //    NGL_OUT("DONE - Create surface for current frame (%d)\n", count);
-  kdebug_signpost_end(2, (uintptr_t)this, 0, 0, 0);
-  kdebug_signpost_start(3, (uintptr_t)this, 0, 0, 0);
+  if (mUseSignPosts)
+  {
+    kdebug_signpost_end(2, (uintptr_t)this, 0, 0, 0);
+    kdebug_signpost_start(3, (uintptr_t)this, 0, 0, 0);
+  }
 
 //  NGL_OUT("[nuiRenderThread] List %d dirty layers %p\n", mDirtyLayers.size(), this);
   glPushGroupMarkerEXT(0, "Update dirty layers");
@@ -376,7 +391,8 @@ NGL_OUT("#######################################################################
   }
   glPopGroupMarkerEXT();
 
-  kdebug_signpost_end(3, (uintptr_t)this, 0, 0, 0);
+  if (mUseSignPosts)
+    kdebug_signpost_end(3, (uintptr_t)this, 0, 0, 0);
   float layercount = layers.size();
 //  NGL_OUT("#########\nTotal %f\nResetState %f\nPartial %f\nGlobal %f\nPainter %f\n", (float)gTotal, (float)gResetState, (float)gPartialRedraw, (float)gGlobalRedraw, (float)gPainterRedraw);
 //  NGL_OUT(">>>>> Averages\nTotal %f\nResetState %f\nPartial %f\nGlobal %f\nPainter %f\n#######\n", (float)gTotal / layercount, (float)gResetState / layercount, (float)gPartialRedraw / layercount, (float)gGlobalRedraw / layercount, (float)gPainterRedraw / layercount);
@@ -388,7 +404,8 @@ NGL_OUT("#######################################################################
   gPainterRedraw = 0;
 
 //  NGL_OUT("[nuiRenderThread] Draw Widget Tree %p\n", this);
-  kdebug_signpost_start(4, (uintptr_t)this, 0, 0, 0);
+  if (mUseSignPosts)
+    kdebug_signpost_start(4, (uintptr_t)this, 0, 0, 0);
 
   mpDrawContext->SetClearColor(nuiColor(255,255,255));
   //  if (mClearBackground)
@@ -447,8 +464,11 @@ NGL_OUT("#######################################################################
 
 
   glPopGroupMarkerEXT();
-  kdebug_signpost_end(4, (uintptr_t)this, 0, 0, 0);
-  kdebug_signpost_start(5, (uintptr_t)this, 0, 0, 0);
+  if (mUseSignPosts)
+  {
+    kdebug_signpost_end(4, (uintptr_t)this, 0, 0, 0);
+    kdebug_signpost_start(5, (uintptr_t)this, 0, 0, 0);
+  }
 
   mDirtyLayers.clear();
   mPartialRects.clear();
@@ -466,8 +486,11 @@ NGL_OUT("#######################################################################
 
 //  NGL_OUT("[nuiRenderThread] render DONE %p\n", this);
 //  DumpStats();
-  kdebug_signpost_end(5, (uintptr_t)this, 0, 0, 0);
-  kdebug_signpost_end(0, (uintptr_t)this, 4, 0, 0);
+  if (mUseSignPosts)
+  {
+    kdebug_signpost_end(5, (uintptr_t)this, 0, 0, 0);
+    kdebug_signpost_end(0, (uintptr_t)this, 4, 0, 0);
+  }
 }
 
 void nuiRenderThread::_SetRect(const nuiRect& rRect)
