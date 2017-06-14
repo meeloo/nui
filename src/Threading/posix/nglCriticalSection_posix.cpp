@@ -71,7 +71,7 @@ bool nglCriticalSectionPrivate::tryLock () const
 void nglCriticalSectionPrivate::unlock () const
 {
 	int res = pthread_mutex_unlock(&cmutex);
-  NGL_ASSERT(res == 0);
+//  NGL_ASSERT(res == 0);
 }
 
 
