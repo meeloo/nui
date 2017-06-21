@@ -33,6 +33,7 @@
 //- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
 - (void) application: (UIApplication*) pUIApp didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 - (void) application: (UIApplication*) pUIApp didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+- (void) application: (UIApplication*) pUIApp didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings;
 
 // Handling Local Notifications
 - (void) application: (UIApplication*) pUIApp didReceiveLocalNotification:(UILocalNotification *)notification;

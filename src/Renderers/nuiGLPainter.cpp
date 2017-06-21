@@ -2921,6 +2921,11 @@ void nuiGLPainter::_DestroyRenderArray(nuiRenderArray* pArray)
 
 nglImage* nuiGLPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) const
 {
+#ifdef _UIKIT_
+  return nullptr;
+  
+#elif defined __APPLE__
+  
   if (!pTexture)
     return nullptr;
 
@@ -2962,6 +2967,7 @@ nglImage* nuiGLPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) co
   pGLTexture->Release();
   nglImage* pImage = new nglImage(info);
   return pImage;
+#endif
 }
 
 

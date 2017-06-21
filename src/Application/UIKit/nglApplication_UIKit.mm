@@ -268,6 +268,11 @@ void objCCallOnMemoryWarning();
   App->DidRegisterForRemoteNotifications(token); // Send an empty token
 }
 
+-(void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+{
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterUserNotificationSettings" object:nil];
+}
+
 
 // Handling Local Notifications
 - (void) application: (UIApplication*) pUIApp didReceiveLocalNotification:(UILocalNotification *)notification

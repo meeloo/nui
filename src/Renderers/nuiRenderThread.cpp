@@ -56,7 +56,7 @@ nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawCont
   nglCriticalSectionGuard g(ThreadsCS);
   mThreads.insert(this);
 #if (defined _UIKIT_) || (defined _COCOA_)
-  mUseSignPosts = true;
+//  mUseSignPosts = true;
 #endif
 }
 
