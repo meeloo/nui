@@ -2962,7 +2962,46 @@ nglImage* nuiGLPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) co
   nuiTexture* pGLTexture = nuiTexture::BindTexture(id, target);
 
   nglImageInfo info(pGLTexture->GetWidth(), pGLTexture->GetHeight(), 32);
+
+#if 0
   glGetTexImage(target, 0, GL_RGBA, GL_RGBA, info.mpBuffer);
+#else
+  //Generate a new FBO. It will contain your texture.
+  GLuint offscreen_framebuffer = 0;
+  glGenFramebuffersNUI(1, &offscreen_framebuffer);
+  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, offscreen_framebuffer);
+
+  //Create the texture
+//  glGenTextures(1, &my_texture);
+//  glBindTexture(GL_TEXTURE_2D, id);
+//  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,  width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+//  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+//  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+  //Bind the texture to your FBO
+  glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, id, 0);
+
+  //Test if everything failed
+  GLenum status = glCheckFramebufferStatusNUI(GL_FRAMEBUFFER_NUI);
+  if(status != GL_FRAMEBUFFER_COMPLETE_NUI) {
+    printf("failed to make complete framebuffer object %x", status);
+  }
+
+  //Bind the FBO
+  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, offscreen_framebuffer);
+  // set the viewport as the FBO won't be the same dimension as the screen
+  glViewport(0, 0, info.mWidth, info.mHeight);
+
+  glReadPixels(0, 0, info.mWidth, info.mHeight, GL_RGBA, GL_UNSIGNED_BYTE, info.mpBuffer);
+
+  //Bind your main FBO again
+//  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, screen_framebuffer);
+  // set the viewport as the FBO won't be the same dimension as the screen
+//  glViewport(0, 0, screen_width, screen_height);
+
+  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, 0);
+  glDeleteFramebuffersNUI(1, &offscreen_framebuffer);
+#endif
 
   pGLTexture->Release();
   nglImage* pImage = new nglImage(info);
