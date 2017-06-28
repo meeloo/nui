@@ -30,7 +30,7 @@
 // Handling Remote Notifications
 
 - (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo;
-//- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
+- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
 - (void) application: (UIApplication*) pUIApp didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 - (void) application: (UIApplication*) pUIApp didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
 - (void) application: (UIApplication*) pUIApp didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings;

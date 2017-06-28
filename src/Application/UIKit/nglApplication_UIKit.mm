@@ -214,6 +214,9 @@ void objCCallOnMemoryWarning();
 ///////// Notifications:
 - (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo
 {
+  NSDictionary *userInfoDict = [NSDictionary dictionaryWithObject:userInfo forKey:@"userInfo"];
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"didReceiveRemoteNotification" object:nil userInfo:userInfoDict];
+  
   if (pUIApp.applicationState == UIApplicationStateActive)
   {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
@@ -248,18 +251,30 @@ void objCCallOnMemoryWarning();
 }
 
 
-//- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
-//{
-//
-//}
+- (void) application: (UIApplication*) pUIApp didReceiveRemoteNotification: (NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+{
+  NSDictionary *userInfoDict = [NSDictionary dictionaryWithObject:userInfo forKey:@"userInfo"];
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"didReceiveRemoteNotification:fetchCompletionHandler" object:nil userInfo:userInfoDict];
+  handler(UIBackgroundFetchResultNewData);
+}
+
+- (void)application:(UIApplication *)pUIApp handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler
+{
+  NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionaryWithObject:userInfo forKey:@"userInfo"];
+  userInfoDict[@"identifier"] = identifier;
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"handleActionWithIdentifier:forRemoteNotification" object:nil userInfo:userInfoDict];
+  completionHandler();
+}
 
 - (void) application: (UIApplication*) pUIApp didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
+  NSDictionary *userInfo = [NSDictionary dictionaryWithObject:deviceToken forKey:@"deviceToken"];
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterForRemoteNotificationsWithDeviceToken" object:nil userInfo:userInfo];
+  
   std::vector<uint8> token;
   token.resize(deviceToken.length);
   [deviceToken getBytes:&token[0] length:token.size()];
   App->DidRegisterForRemoteNotifications(token);
-
 }
 
 - (void) application: (UIApplication*) pUIApp didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -270,7 +285,8 @@ void objCCallOnMemoryWarning();
 
 -(void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterUserNotificationSettings" object:nil];
+  NSDictionary *userInfo = [NSDictionary dictionaryWithObject:notificationSettings forKey:@"notificationSettings"];
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterUserNotificationSettings" object:nil userInfo:userInfo];
 }
 
 
