@@ -947,6 +947,8 @@ public:
 
   void DisplayTicked();
   void UpdateGLLayer();
+  id <MTLDevice> mMetalDevice = nil;
+  id <MTLCommandQueue> mMetalCommandQueue = nil;
 #endif
 
 #ifdef _COCOA_
@@ -956,6 +958,7 @@ public:
   void* mpNSGLContext;
   void* mpNSPixelFormat;
   bool mIsReady;
+  void* mMetalDevice = nullptr;
 private:
   void InternalInit(const nglContextInfo& rContext,
                     const nglWindowInfo& rInfo,

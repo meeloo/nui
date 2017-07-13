@@ -200,11 +200,11 @@ const nglChar* gpWindowErrorTable[] =
   UIView* pView = nil;
   nglContextInfo Info;
   mpNGLWindow->GetContextInfo(Info);
-  if (Info.TargetAPI == eTargetAPI_OpenGL)
+  if (Info.TargetAPI == eTargetAPI_OpenGL2)
   {
     pView = [[[nglUIView_GL alloc] initWithNGLWindow:mpNGLWindow] autorelease];
   }
-  else if (Info.TargetAPI == eTargetAPI_OpenGL)
+  else if (Info.TargetAPI == eTargetAPI_OpenGL2)
   {
     pView = [[[nglUIView_Metal alloc] initWithNGLWindow:mpNGLWindow] autorelease];
   }
@@ -708,7 +708,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   NGL_LOG("window", NGL_LOG_INFO, "trying to create GLES context");
   rContext.Dump(NGL_LOG_INFO);
   
-  if ((rContext.TargetAPI != eTargetAPI_OpenGL) && (rContext.TargetAPI != eTargetAPI_OpenGL2) && (rContext.TargetAPI != eTargetAPI_Metal))
+  if (((rContext.TargetAPI != eTargetAPI_OpenGL2) && (rContext.TargetAPI != eTargetAPI_Metal))
   {
     // UIKit Implementation only supports OpenGLES renderer so far
     NGL_LOG("window", NGL_LOG_INFO, "bad renderer");

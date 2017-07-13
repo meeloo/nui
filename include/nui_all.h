@@ -168,6 +168,7 @@ typedef double nuiSize;
   #include "nuiSurface.h"
   #include "nuiPainter.h"
   #include "nuiGLPainter.h"
+  #include "nuiMetalPainter.h"
   #include "nuiMetaPainter.h"
   #include "nuiSoftwarePainter.h"
 

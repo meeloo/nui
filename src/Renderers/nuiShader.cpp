@@ -464,7 +464,7 @@ void nuiShaderState::SetDifuseColor(const nuiColor& rDifuseColor, bool Apply)
 
 void nuiShaderState::Apply() const
 {
-  for (int32 i = 0; i < mUniforms.size(); i++)
+  for (size_t i = 0; i < mUniforms.size(); i++)
     mUniforms[i].Apply();
 }
 

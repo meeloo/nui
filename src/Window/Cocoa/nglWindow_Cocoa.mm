@@ -193,12 +193,15 @@ float nuiGetInvScaleFactor()
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-// nglNSView ///////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark nglNSView
+NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 
-@implementation nglNSView
+
+////////////////////////////////////////////////////////////////////////////////
+// nglNSView_OpenGL ///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglNSView_OpenGL
+
+@implementation nglNSView_OpenGL
 - (id)initWithNGLWindow:(nglWindow*)pNGLWindow
 {
   self = [super init];
@@ -306,9 +309,6 @@ float nuiGetInvScaleFactor()
   mpNGLWindow->CallOnRescale([[self window] backingScaleFactor]);
 }
 
-NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
-
-
 // Drag and drop:
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
@@ -338,6 +338,166 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 
 @end
 
+
+////////////////////////////////////////////////////////////////////////////////
+// nglNSView_Metal ///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark nglNSView_Metal
+
+@implementation nglNSView_Metal
++ (Class)layerClass
+{
+  return [CAMetalLayer class];
+}
+
+- (id)initWithNGLWindow:(nglWindow*)pNGLWindow
+{
+  self = [super init];
+  if(self == nil)
+    return nil;
+
+  mpNGLWindow = pNGLWindow;
+
+  [self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
+
+  CAMetalLayer *layer = (CAMetalLayer *)self.layer;
+  layer.opaque = YES;
+  layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+  layer.device = (id<MTLDevice>)mpNGLWindow->mMetalDevice;
+  layer.framebufferOnly = YES;
+
+  return self;
+}
+
+-(void) dealloc
+{
+  [super dealloc];
+}
+
+
+- (void) windowDidResize: (NSNotification *)notification
+{
+  mpNGLWindow->GetLock().Lock();
+
+  nglNSWindow* win = (nglNSWindow*)[notification object];
+  NSRect rect;
+  rect = [win frame];
+  NSRect clientRect = [win contentRectForFrameRect: rect];
+  [win resize: clientRect.size];
+
+//  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
+//  if (_context)
+//    [_context update];
+  CAMetalLayer *layer = (CAMetalLayer *)self.layer;
+  layer.drawableSize = CGSizeMake(clientRect.size.width, clientRect.size.height);
+
+  mpNGLWindow->GetLock().Unlock();
+
+  mpNGLWindow->CallOnPaint();
+}
+
+-(void)windowWillClose:(NSNotification *)note
+{
+  //[[NSApplication sharedApplication] terminate:self];
+  [super windowWillClose:note];
+  mpNGLWindow->CallOnDestruction();
+}
+
+- (void)lockFocus
+{
+  // make sure we are ready to draw
+  [super lockFocus];
+
+  // when we are about to draw, make sure we are linked to the view
+  // It is not possible to call setView: earlier (will yield 'invalid drawable')
+//  if (context)
+//  {
+//    if ([context view] != self)
+//    {
+//      [context setView:self];
+//    }
+//  }
+
+  if (!mInitiated)
+  {
+    mInitiated = true;
+    mpNGLWindow->CallOnCreation();
+  }
+
+  // make us the current OpenGL context
+//  if (context)
+//    [context makeCurrentContext];
+}
+
+// this is called whenever the view changes (is unhidden or resized)
+- (void)drawRect:(NSRect)frameRect
+{
+  mpNGLWindow->GetLock().Lock();
+//  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
+//  if (_context)
+//    [_context update];
+  mpNGLWindow->GetLock().Unlock();
+  //  mpNGLWindow->CallOnPaint();
+}
+
+// this tells the window manager that nothing behind our view is visible
+-(BOOL) isOpaque
+{
+  return YES;
+}
+
+- (void)keyDown:(NSEvent *)theEvent
+{
+  if (![(nglNSWindow*)[self window] keyDown:theEvent])
+    [super keyDown: theEvent];
+}
+
+- (void)keyUp:(NSEvent *)theEvent
+{
+  if (![(nglNSWindow*)[self window] keyUp:theEvent])
+    [super keyUp: theEvent];
+}
+
+- (void)flagsChanged:(NSEvent *)theEvent
+{
+  if (![(nglNSWindow*)[self window] flagsChanged:theEvent])
+    [super flagsChanged: theEvent];
+}
+
+- (void)viewDidChangeBackingProperties
+{
+  [super viewDidChangeBackingProperties];
+  mpNGLWindow->CallOnRescale([[self window] backingScaleFactor]);
+}
+
+// Drag and drop:
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+  return [(nglNSWindow*)[self window] draggingEntered:sender];
+}
+
+- (NSDragOperation)draggingUpdated:(id < NSDraggingInfo >)sender
+{
+  return [(nglNSWindow*)[self window] draggingUpdated:sender];
+}
+
+
+- (void)draggingExited:(id <NSDraggingInfo>)sender
+{
+  return [(nglNSWindow*)[self window] draggingExited:sender];
+}
+
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+{
+  return [(nglNSWindow*)[self window] prepareForDragOperation:sender];
+}
+
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+  return [(nglNSWindow*)[self window] performDragOperation:sender];
+}
+
+@end
 
 ////////////////////////////////////////////////////////////////////////////////
 // nglNSWindow /////////////////////////////////////////////////////////////////
@@ -812,7 +972,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   /*------------------------------------------------------
    method called whenever a drag enters our drop zone
    --------------------------------------------------------*/
-  nglNSView* pView = [self contentView];
+  NSView* pView = [self contentView];
 
   mpDropObject = new nglDragAndDrop(eDropEffectCopy, NULL, 0, 0);
 
@@ -1148,43 +1308,60 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
   SetTitle(rInfo.Title);
 
-  nglNSView* _view = [[nglNSView alloc] initWithNGLWindow:this];
+  id<NSWindowDelegate> _view = nil;
+  switch (rContext.TargetAPI)
+  {
+    case eTargetAPI_OpenGL2:
+    {
+      _view = [[nglNSView_OpenGL alloc] initWithNGLWindow:this];
+    } break;
+
+    case eTargetAPI_Metal:
+    {
+      mMetalDevice = MTLCreateSystemDefaultDevice();
+      _view = [[nglNSView_Metal alloc] initWithNGLWindow:this];
+    } break;
+  }
+
   mpNSView = _view;
-  [_window setContentView: _view];
+  [_window setContentView: (NSView*)_view];
   [_window setDelegate: _view];
   
   if ([_view respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)])
-    [_view setWantsBestResolutionOpenGLSurface: YES];
-  
-  NSOpenGLPixelFormatAttribute attribs[] =
+    [(NSView*)_view setWantsBestResolutionOpenGLSurface: YES];
+
+  if (rContext.TargetAPI == eTargetAPI_OpenGL2)
   {
-    NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
-    NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16,
-    NSOpenGLPFAAccelerated,
-    NSOpenGLPFABackingStore,
-//    NSOpenGLPFAMultisample,
-//    NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
-//    NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)4,
-    //NSOpenGLPFAWindow,
-    NSOpenGLPFANoRecovery,
-    (NSOpenGLPixelFormatAttribute)0
-  };
-  NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
-  mpNSPixelFormat = format;
-  NSOpenGLContext* _context = [[NSOpenGLContext alloc] initWithFormat: format shareContext: _shared_ctx];
+    NSOpenGLPixelFormatAttribute attribs[] =
+    {
+      NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
+      NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16,
+      NSOpenGLPFAAccelerated,
+      NSOpenGLPFABackingStore,
+  //    NSOpenGLPFAMultisample,
+  //    NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
+  //    NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)4,
+      //NSOpenGLPFAWindow,
+      NSOpenGLPFANoRecovery,
+      (NSOpenGLPixelFormatAttribute)0
+    };
+    NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+    mpNSPixelFormat = format;
+    NSOpenGLContext* _context = [[NSOpenGLContext alloc] initWithFormat: format shareContext: _shared_ctx];
 
-  GLint v = 1;
-  [_context setValues:&v forParameter:NSOpenGLCPSwapInterval];
-  [_context setView: _view];
-  [_context makeCurrentContext];
-  mpNSGLContext = _context;
+    GLint v = 1;
+    [_context setValues:&v forParameter:NSOpenGLCPSwapInterval];
+    [_context setView: (NSView*)_view];
+    [_context makeCurrentContext];
+    mpNSGLContext = _context;
+  }
 
-  CallOnRescale([_window backingScaleFactor]);
+  CallOnRescale((float)[_window backingScaleFactor]);
 
   //[pNSWindow makeKeyAndVisible];
   
   
-  if (rContext.TargetAPI != eTargetAPI_OpenGL && rContext.TargetAPI != eTargetAPI_OpenGL2 && rContext.TargetAPI != eTargetAPI_Metal)
+  if (rContext.TargetAPI != eTargetAPI_OpenGL2 && rContext.TargetAPI != eTargetAPI_Metal)
   {
     NGL_LOG("window", NGL_LOG_INFO, "bad renderer");
     NGL_ASSERT(0);
@@ -1464,14 +1641,20 @@ void nglWindow::AcquireDisplayLink()
   }
 
   NSOpenGLContext* _context = (NSOpenGLContext*)mpNSGLContext;
-  NSOpenGLPixelFormat* _pixelFormat = (NSOpenGLPixelFormat*)mpNSPixelFormat;
-  CGLContextObj cglContext = [_context CGLContextObj];
-  CGLPixelFormatObj cglPixelFormat = [_pixelFormat CGLPixelFormatObj];
-
-  if (kCVReturnSuccess != CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat))
+  if (_context)
   {
-    NGL_LOG("window", NGL_LOG_INFO, "CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext returned an error");
-    NGL_ASSERT(0);
+    NSOpenGLPixelFormat* _pixelFormat = (NSOpenGLPixelFormat*)mpNSPixelFormat;
+    CGLContextObj cglContext = [_context CGLContextObj];
+    CGLPixelFormatObj cglPixelFormat = [_pixelFormat CGLPixelFormatObj];
+
+    if (kCVReturnSuccess != CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat))
+    {
+      NGL_LOG("window", NGL_LOG_INFO, "CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext returned an error");
+      NGL_ASSERT(0);
+    }
+  }
+  else // Metal?
+  {
   }
 
   if (kCVReturnSuccess != CVDisplayLinkStart(mDisplayLink))

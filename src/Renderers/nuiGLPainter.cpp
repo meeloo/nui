@@ -356,11 +356,7 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   gpPainters.insert(this);
 
   nuiCheckForGLErrors();
-  mCanRectangleTexture = 0;
-  mTextureTarget = 0;
   mTwoPassBlend = false;
-  mDefaultFramebuffer = 0;
-  mDefaultRenderbuffer = 0;
   mForceApply = false;
   mClientVertex = false;
   mClientColor = false;

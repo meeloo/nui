@@ -1574,7 +1574,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     
     SetPortWindowPort(mWindow);  /* set port to new window */
     
-    if (rContext.TargetAPI == eTargetAPI_OpenGL)
+    if (rContext.TargetAPI == eTargetAPI_OpenGL2)
     {
       if (!Build(mWindow, rContext, pShared, rInfo.Flags & FullScreen))
         return; // An error is already raised by nglContext's code
@@ -1646,7 +1646,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     
     SetPortWindowPort(mWindow);  /* set port to new window */
     
-    if (rContext.TargetAPI == eTargetAPI_OpenGL)
+    if (rContext.TargetAPI == eTargetAPI_OpenGL2)
     {
       if (!Build(mWindow, rContext, pShared, rInfo.Flags & FullScreen))
         return; // An error is already raised by nglContext's code

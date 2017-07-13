@@ -21,6 +21,8 @@
 		61FD87361A18211A001118DA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87351A18211A001118DA /* CoreGraphics.framework */; };
 		61FD87381A182151001118DA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87371A182151001118DA /* QuartzCore.framework */; };
 		C3B1FD731DDF606C009B11ED /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 612094A51A39B64F006CACE7 /* CoreVideo.framework */; };
+		C3D8FE6D1F072E4300ADE75D /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3D8FE681F072E4300ADE75D /* Metal.framework */; };
+		C3D8FE731F0734D700ADE75D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3D8FE721F0734D700ADE75D /* Quartz.framework */; };
 		C3E9C1391D1F553C00DEBED4 /* css in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1371D1F553C00DEBED4 /* css */; };
 		C3E9C13A1D1F553C00DEBED4 /* decorations in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1381D1F553C00DEBED4 /* decorations */; };
 		C3E9C1471D1F557300DEBED4 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1411D1F557300DEBED4 /* icon.icns */; };
@@ -649,6 +651,10 @@
 		61FD87351A18211A001118DA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		61FD87371A182151001118DA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		C3B1FD711DDF5F9C009B11ED /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C3D8FE681F072E4300ADE75D /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		C3D8FE6E1F07342600ADE75D /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		C3D8FE701F07347700ADE75D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C3D8FE721F0734D700ADE75D /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		C3E9C1371D1F553C00DEBED4 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = resources/css; sourceTree = "<group>"; };
 		C3E9C1381D1F553C00DEBED4 /* decorations */ = {isa = PBXFileReference; lastKnownFileType = folder; name = decorations; path = resources/decorations; sourceTree = "<group>"; };
 		C3E9C1411D1F557300DEBED4 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
@@ -1189,6 +1195,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3D8FE731F0734D700ADE75D /* Quartz.framework in Frameworks */,
+				C3D8FE6D1F072E4300ADE75D /* Metal.framework in Frameworks */,
 				612094A61A39B64F006CACE7 /* CoreVideo.framework in Frameworks */,
 				E516F37E185CBB5700D97CA6 /* CoreAudio.framework in Frameworks */,
 				E516F37F185CBB5700D97CA6 /* CoreAudioKit.framework in Frameworks */,
@@ -2003,7 +2011,11 @@
 		E55E77A1185BBC62005F01B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C3D8FE721F0734D700ADE75D /* Quartz.framework */,
+				C3D8FE701F07347700ADE75D /* QuartzCore.framework */,
+				C3D8FE6E1F07342600ADE75D /* MetalKit.framework */,
 				E5EAABA11EBBC5230057531F /* Metal.framework */,
+				C3D8FE681F072E4300ADE75D /* Metal.framework */,
 				C3B1FD711DDF5F9C009B11ED /* CoreGraphics.framework */,
 				612094A51A39B64F006CACE7 /* CoreVideo.framework */,
 				61FD87371A182151001118DA /* QuartzCore.framework */,

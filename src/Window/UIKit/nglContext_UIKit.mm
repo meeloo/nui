@@ -91,7 +91,7 @@ bool nglContextInfo::Enum(uint Index, nglContextInfo& rInfo)
   rInfo.RenderToTexture=0;
   rInfo.CopyOnSwap=0;
 */
-  rInfo.TargetAPI = eTargetAPI_OpenGL;
+  rInfo.TargetAPI = eTargetAPI_OpenGL2;
 /*
   NGL_OUT(
     "config %d: rgba=%d:%d:%d:%d(%d), ds=%d:%d, caveat=%04x, native=%d, level=%d, surface=%04x, visual=%04x, id=%d\n",

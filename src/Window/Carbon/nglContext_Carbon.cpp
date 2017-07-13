@@ -283,7 +283,7 @@ bool nglContext::Build(WindowRef Win, const nglContextInfo& rInfo, const nglCont
 
 bool nglContext::BuildOpenGLFromExisting(WindowRef Win, AGLContext Ctx)
 {
-  mTargetAPI = eTargetAPI_OpenGL;
+  mTargetAPI = eTargetAPI_OpenGL2;
   
   mFullscreen = false;
 

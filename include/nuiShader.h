@@ -205,6 +205,7 @@ protected:
   void        BindAttribLocation(GLint index, GLchar* name);
 
   friend class nuiGLPainter;
+  friend class nuiMetalPainter;
 
   GLint GetVAPositionLocation() const;
   GLint GetVATexCoordLocation() const;

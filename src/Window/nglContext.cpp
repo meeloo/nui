@@ -18,7 +18,7 @@ nglContextInfo::nglContextInfo()
 {
   nglVideoMode mode;
 
-  TargetAPI = eTargetAPI_OpenGL;
+  TargetAPI = eTargetAPI_OpenGL2;
 
   FrameCnt    = 2;
   switch (mode.GetDepth())
@@ -272,6 +272,10 @@ void nglContext::InitPainter()
 #ifndef __NUI_NO_GL__
     case eOpenGL2:
       mpPainter = new nuiGLPainter(this);
+      NGL_OUT("nuiGLPainter created\n");
+      break;
+    case eMetal:
+      mpPainter = new nuiMetalPainter(this);
       NGL_OUT("nuiGLPainter created\n");
       break;
 #endif
