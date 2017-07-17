@@ -131,6 +131,7 @@ protected:
 
   void ApplyState(const nuiRenderState& rState, bool ForceApply);
   void ApplyTexture(const nuiRenderState& rState, bool ForceApply, int slot);
+  void ApplyShaderState(nuiShaderState* pState);
 
   GLenum GetTextureTarget(bool POT) const;
   void UploadTexture(nuiTexture* pTexture, int slot);

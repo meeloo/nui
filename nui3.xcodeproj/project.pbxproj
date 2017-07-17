@@ -6676,6 +6676,8 @@
 			indentWidth = 2;
 			sourceTree = "<group>";
 			tabWidth = 2;
+			usesTabs = 0;
+			wrapsLines = 1;
 		};
 		E58167400C3CEC1300902DFE /* Products */ = {
 			isa = PBXGroup;
@@ -10854,6 +10856,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
+				CLASSPREFIX = nui;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = libNUI;
 				TargetAttributes = {

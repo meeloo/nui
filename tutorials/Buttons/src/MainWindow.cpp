@@ -191,7 +191,7 @@ public:
     mpShader->AddShader(eVertexShader, vertex_shader);
     mpShader->AddShader(eFragmentShader, fragment_shader);
     mpShader->Link();
-    mpShaderState = mpShader->GetCurrentState();
+    mpShaderState = mpShader->NewState();
 
     nuiAttribBase Attrib(GetAttribute("StrokeWidth"));
     if (Attrib.IsValid())

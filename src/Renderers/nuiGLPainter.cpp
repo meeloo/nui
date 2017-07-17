@@ -442,8 +442,8 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
     mpShader_TextureVertexColor->AddShader(eVertexShader, TextureVertexColor_VTX);
     mpShader_TextureVertexColor->AddShader(eFragmentShader, TextureVertexColor_FGT);
     mpShader_TextureVertexColor->Link();
-    mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-    mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
+//    mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
   }
   nuiCheckForGLErrors();
   
@@ -454,8 +454,8 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
     mpShader_TextureAlphaVertexColor->AddShader(eVertexShader, TextureAlphaVertexColor_VTX);
     mpShader_TextureAlphaVertexColor->AddShader(eFragmentShader, TextureAlphaVertexColor_FGT);
     mpShader_TextureAlphaVertexColor->Link();
-    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
+//    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
   }
   nuiCheckForGLErrors();
   
@@ -466,9 +466,9 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
     mpShader_TextureDifuseColor->AddShader(eVertexShader, TextureDifuseColor_VTX);
     mpShader_TextureDifuseColor->AddShader(eFragmentShader, TextureDifuseColor_FGT);
     mpShader_TextureDifuseColor->Link();
-    mpShader_TextureDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-    mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-    mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
+//    mpShader_TextureDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+//    mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
   }
   nuiCheckForGLErrors();
   
@@ -479,9 +479,9 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
     mpShader_TextureAlphaDifuseColor->AddShader(eVertexShader, TextureAlphaDifuseColor_VTX);
     mpShader_TextureAlphaDifuseColor->AddShader(eFragmentShader, TextureAlphaDifuseColor_FGT);
     mpShader_TextureAlphaDifuseColor->Link();
-    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
+//    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+//    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
   }
   nuiCheckForGLErrors();
   
@@ -492,7 +492,7 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
     mpShader_VertexColor->AddShader(eVertexShader, VertexColor_VTX);
     mpShader_VertexColor->AddShader(eFragmentShader, VertexColor_FGT);
     mpShader_VertexColor->Link();
-    mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
   nuiCheckForGLErrors();
   
@@ -503,8 +503,8 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
     mpShader_DifuseColor->AddShader(eVertexShader, DifuseColor_VTX);
     mpShader_DifuseColor->AddShader(eFragmentShader, DifuseColor_FGT);
     mpShader_DifuseColor->Link();
-    mpShader_DifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-    mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_DifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+//    mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
   nuiCheckForGLErrors();
   
@@ -1147,8 +1147,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     
     pShader->Acquire();
     mpShader = pShader;
-    mpShaderState = pShader->GetCurrentState();
-    mpShaderState->Acquire();
+    mpShaderState = pShader->NewState();
   }
   
   NGL_ASSERT(mpShader != NULL);
@@ -1168,14 +1167,14 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
       NGL_ASSERT(mFinalState.mpTexture[0]->GetSurface() != NULL);
       //      printf("REVERSED SURFACE TEXTURE");
     }
-    mFinalState.mpShaderState->SetTextureTranslate(mTextureTranslate, false);
+    mFinalState.mpShaderState->SetTextureTranslate(mTextureTranslate);
     //mTextureScale = nglVector2f(1,1);
-    mFinalState.mpShaderState->SetTextureScale(mTextureScale, false);
+    mFinalState.mpShaderState->SetTextureScale(mTextureScale);
   }
   
-  mFinalState.mpShaderState->SetSurfaceMatrix(mSurfaceMatrix, false);
-  mFinalState.mpShaderState->SetProjectionMatrix(GetProjectionMatrix(), false);
-  mFinalState.mpShaderState->SetModelViewMatrix(GetMatrix(), false);
+  mFinalState.mpShaderState->SetSurfaceMatrix(mSurfaceMatrix);
+  mFinalState.mpShaderState->SetProjectionMatrix(GetProjectionMatrix());
+  mFinalState.mpShaderState->SetModelViewMatrix(GetMatrix());
   
   uint32 s = pArray->GetSize();
 
@@ -1244,9 +1243,9 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   }
   
   if (mpSurface)
-    mFinalState.mpShaderState->SetOffset(-hackX, -hackY, false);
+    mFinalState.mpShaderState->SetOffset(-hackX, -hackY);
   else
-    mFinalState.mpShaderState->SetOffset(hackX, hackY, false);
+    mFinalState.mpShaderState->SetOffset(hackX, hackY);
   
   
   if (!pArray->IsArrayEnabled(nuiRenderArray::eColor))
@@ -1273,10 +1272,11 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     mB = c.Blue();
     mA = c.Alpha();
     
-    mFinalState.mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA), false);
+    mFinalState.mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA));
   }
   
-  mFinalState.mpShader->SetState(*mFinalState.mpShaderState, true);
+//  mFinalState.mpShader->SetState(*mFinalState.mpShaderState);
+  ApplyShaderState(mFinalState.mpShaderState);
   
   if (pArray->IsStatic())
   {
@@ -3003,6 +3003,41 @@ nglImage* nuiGLPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) co
   nglImage* pImage = new nglImage(info);
   return pImage;
 #endif
+}
+
+void nuiGLPainter::ApplyShaderState(nuiShaderState* pState)
+{
+  nuiShaderProgram* pProgram = pState->GetProgram();
+  NGL_ASSERT(pProgram == mFinalState.mpShader);
+  const uint8* pData = (uint8*)pState->GetStateData();
+  for (size_t i = 0; i < pProgram->GetUniformCount(); i++)
+  {
+    const nuiUniformDesc& rDesc(pProgram->GetUniformDesc(i));
+    const uint8* pD = pData + rDesc.mOffset;
+    switch (rDesc.mType)
+    {
+      case GL_FLOAT:              glUniform1fv(rDesc.mLocation, rDesc.mCount, (GLfloat*)pData);  break;
+      case GL_FLOAT_VEC2:         glUniform2fv(rDesc.mLocation, rDesc.mCount, (GLfloat*)pData);  break;
+      case GL_FLOAT_VEC3:         glUniform3fv(rDesc.mLocation, rDesc.mCount, (GLfloat*)pData);  break;
+      case GL_FLOAT_VEC4:         glUniform4fv(rDesc.mLocation, rDesc.mCount, (GLfloat*)pData);  break;
+        
+      case GL_INT:                glUniform1iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+      case GL_INT_VEC2:           glUniform2iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+      case GL_INT_VEC3:           glUniform3iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+      case GL_INT_VEC4:           glUniform4iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+      case GL_UNSIGNED_INT:       glUniform1iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+        
+      case GL_FLOAT_MAT2:         glUniformMatrix2fv(rDesc.mLocation, rDesc.mCount, GL_FALSE, (GLfloat*)pData);  break;
+      case GL_FLOAT_MAT3:         glUniformMatrix3fv(rDesc.mLocation, rDesc.mCount, GL_FALSE, (GLfloat*)pData);  break;
+      case GL_FLOAT_MAT4:         glUniformMatrix4fv(rDesc.mLocation, rDesc.mCount, GL_FALSE, (GLfloat*)pData);  break;
+        
+      case GL_SAMPLER_2D:         glUniform1iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+      case GL_SAMPLER_CUBE:       glUniform1iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+        
+      default:
+        NGL_ASSERT(0);
+    }
+  }
 }
 
 

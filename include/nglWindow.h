@@ -947,8 +947,8 @@ public:
 
   void DisplayTicked();
   void UpdateGLLayer();
-  id <MTLDevice> mMetalDevice = nil;
-  id <MTLCommandQueue> mMetalCommandQueue = nil;
+  void* mMetalDevice = nil; // id <MTLDevice>
+  void* mMetalCommandQueue = nil; // id <MTLCommandQueue>
 #endif
 
 #ifdef _COCOA_

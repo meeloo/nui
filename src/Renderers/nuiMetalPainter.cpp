@@ -264,8 +264,8 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_TextureVertexColor->AddShader(eVertexShader, TextureVertexColor_VTX);
     mpShader_TextureVertexColor->AddShader(eFragmentShader, TextureVertexColor_FGT);
     mpShader_TextureVertexColor->Link();
-    mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-    mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
+//    mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
   }
 
   mpShader_TextureAlphaVertexColor = nuiShaderProgram::GetProgram("TextureAlphaVertexColor");
@@ -275,8 +275,8 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_TextureAlphaVertexColor->AddShader(eVertexShader, TextureAlphaVertexColor_VTX);
     mpShader_TextureAlphaVertexColor->AddShader(eFragmentShader, TextureAlphaVertexColor_FGT);
     mpShader_TextureAlphaVertexColor->Link();
-    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
+//    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
   }
 
   mpShader_TextureDifuseColor = nuiShaderProgram::GetProgram("TextureDiffuseColor");
@@ -286,9 +286,9 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_TextureDifuseColor->AddShader(eVertexShader, TextureDifuseColor_VTX);
     mpShader_TextureDifuseColor->AddShader(eFragmentShader, TextureDifuseColor_FGT);
     mpShader_TextureDifuseColor->Link();
-    mpShader_TextureDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-    mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-    mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
+//    mpShader_TextureDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+//    mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
   }
 
   mpShader_TextureAlphaDifuseColor = nuiShaderProgram::GetProgram("TextureAlphaDifuseColor");
@@ -298,9 +298,9 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_TextureAlphaDifuseColor->AddShader(eVertexShader, TextureAlphaDifuseColor_VTX);
     mpShader_TextureAlphaDifuseColor->AddShader(eFragmentShader, TextureAlphaDifuseColor_FGT);
     mpShader_TextureAlphaDifuseColor->Link();
-    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
+//    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+//    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
   }
 
   mpShader_VertexColor = nuiShaderProgram::GetProgram("VertexColor");
@@ -310,7 +310,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_VertexColor->AddShader(eVertexShader, VertexColor_VTX);
     mpShader_VertexColor->AddShader(eFragmentShader, VertexColor_FGT);
     mpShader_VertexColor->Link();
-    mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
 
   mpShader_DifuseColor = nuiShaderProgram::GetProgram("DifuseColor");
@@ -320,8 +320,8 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_DifuseColor->AddShader(eVertexShader, DifuseColor_VTX);
     mpShader_DifuseColor->AddShader(eFragmentShader, DifuseColor_FGT);
     mpShader_DifuseColor->Link();
-    mpShader_DifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-    mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
+//    mpShader_DifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
+//    mpShader_DifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
   
   mpCurrentRenderArrayInfo = NULL;
@@ -886,7 +886,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     
     pShader->Acquire();
     mpShader = pShader;
-    mpShaderState = pShader->GetCurrentState();
+//    mpShaderState = pShader->GetCurrentState();
     mpShaderState->Acquire();
   }
   
@@ -907,14 +907,14 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       NGL_ASSERT(mFinalState.mpTexture[0]->GetSurface() != NULL);
       //      printf("REVERSED SURFACE TEXTURE");
     }
-    mFinalState.mpShaderState->SetTextureTranslate(mTextureTranslate, false);
+    mFinalState.mpShaderState->SetTextureTranslate(mTextureTranslate);
     //mTextureScale = nglVector2f(1,1);
-    mFinalState.mpShaderState->SetTextureScale(mTextureScale, false);
+    mFinalState.mpShaderState->SetTextureScale(mTextureScale);
   }
   
-  mFinalState.mpShaderState->SetSurfaceMatrix(mSurfaceMatrix, false);
-  mFinalState.mpShaderState->SetProjectionMatrix(GetProjectionMatrix(), false);
-  mFinalState.mpShaderState->SetModelViewMatrix(GetMatrix(), false);
+  mFinalState.mpShaderState->SetSurfaceMatrix(mSurfaceMatrix);
+  mFinalState.mpShaderState->SetProjectionMatrix(GetProjectionMatrix());
+  mFinalState.mpShaderState->SetModelViewMatrix(GetMatrix());
   
   uint32 s = pArray->GetSize();
 
@@ -983,9 +983,9 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   }
   
   if (mpSurface)
-    mFinalState.mpShaderState->SetOffset(-hackX, -hackY, false);
+    mFinalState.mpShaderState->SetOffset(-hackX, -hackY);
   else
-    mFinalState.mpShaderState->SetOffset(hackX, hackY, false);
+    mFinalState.mpShaderState->SetOffset(hackX, hackY);
   
   
   if (!pArray->IsArrayEnabled(nuiRenderArray::eColor))
@@ -1012,10 +1012,10 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     mB = c.Blue();
     mA = c.Alpha();
     
-    mFinalState.mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA), false);
+    mFinalState.mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA));
   }
   
-  mFinalState.mpShader->SetState(*mFinalState.mpShaderState, true);
+//  mFinalState.mpShader->SetState(*mFinalState.mpShaderState);
   
   if (pArray->IsStatic())
   {
