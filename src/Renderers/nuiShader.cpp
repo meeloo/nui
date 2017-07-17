@@ -87,6 +87,7 @@ nuiShaderState::nuiShaderState(const nuiShaderState& rOriginal)
 : mpProgram(rOriginal.mpProgram)
 {
   //NGL_OUT("nuiShaderState Ctor %p (from %p)\n", this, &rOriginal);
+  mData.resize(rOriginal.mData.size());
 }
 
 nuiShaderState::~nuiShaderState()
@@ -260,7 +261,10 @@ const void* nuiShaderState::GetStateData() const
 ///
 void nuiShaderState::Set(GLint loc, const float* pV, int32 count)
 {
-  memcpy(&mData[0] + loc, pV, count * sizeof(float));
+  size_t index = mpProgram->GetUniformDescIndex(loc);
+  const auto& desc = mpProgram->GetUniformDesc(index);
+  size_t offset = desc.mOffset;
+  memcpy(&mData[0] + offset, pV, count * sizeof(float));
 }
 
 void nuiShaderState::Set(GLint loc, const std::vector<float>& rV)
@@ -762,8 +766,6 @@ bool nuiShaderProgram::Link()
   glUseProgram(mProgram);
   nuiCheckForGLErrors();
 
-  InitUniforms();
-  
   // Enumerate Vertex Attributes:
   {
     int total = -1;
@@ -787,33 +789,41 @@ bool nuiShaderProgram::Link()
   mVA_Color = glGetAttribLocation(mProgram, "Color");
   mVA_Normal = glGetAttribLocation(mProgram, "Normal");
 
+  InitUniforms();
+  
+  mProjectionMatrix = GetUniformLocation(NUI_PROJECTION_MATRIX_NAME);
+  mModelViewMatrix = GetUniformLocation(NUI_MODELVIEW_MATRIX_NAME);
+  mSurfaceMatrix = GetUniformLocation(NUI_SURFACE_MATRIX_NAME);
+  mOffset = GetUniformLocation(NUI_OFFSET_NAME);
+  mTextureScale = GetUniformLocation(NUI_TEXTURE_SCALE_NAME);
+  mTextureTranslate = GetUniformLocation(NUI_TEXTURE_TRANSLATE_NAME);
+  mDifuseColor = GetUniformLocation(NUI_DIFUSE_COLOR_NAME);
+  
   return true;
 }
 
 void nuiShaderProgram::InitUniforms()
 {
-  GLuint pgm = GetProgram();
+  GLuint total = 0;
+  glGetProgramiv(mProgram, GL_ACTIVE_UNIFORMS, (GLint*)&total);
+  size_t offset = 0;
+  for (GLuint i = 0; i < total; ++i)
   {
-    int total = -1;
-    glGetProgramiv(pgm, GL_ACTIVE_UNIFORMS, &total);
-    size_t offset = 0;
-    for (int i = 0; i < total; ++i)
-    {
-      int name_len = -1;
-      int num = -1;
-      GLenum type = GL_ZERO;
-      char name[100];
-      glGetActiveUniform(pgm, GLuint(i), sizeof(name)-1, &name_len, &num, &type, name);
-      name[name_len] = 0;
-      //glBindAttribLocation(pgm, i, name);
-      GLuint location = glGetUniformLocation(pgm, name);
-      
+    GLint name_len = 100;
+    GLint num = -1;
+    GLenum type = GL_ZERO;
+    char name[name_len+1];
+    glGetActiveUniform(mProgram, i, sizeof(name)-1, &name_len, &num, &type, name);
+    name[name_len] = 0;
+    //glBindAttribLocation(mProgram, i, name);
+    GLint location = glGetUniformLocation(mProgram, name);
+    
 //      rIndexMap[location] = i;
-      //NGL_OUT("ShaderProgram %p Uniform: %d %s %s[%d]\n", pProgram, location, Type2String(type), name , num);
-      auto desc = ShaderParamTypeDesc[type];
-      offset += desc.mSize * desc.mComponentSize;
-      mUniforms.push_back(nuiUniformDesc(name, type, num, location, offset, this));
-    }
+    NGL_OUT("ShaderProgram %p Uniform: %d %s %s[%d]\n", this, location, Type2String(type), name , num);
+    auto desc = gParamTypeMap[type];
+    mUniformIndexes[location] = mUniforms.size();
+    mUniforms.push_back(nuiUniformDesc(name, type, num, location, offset, this));
+    offset += desc.mSize * desc.mComponentSize;
   }
 }
 
@@ -864,10 +874,19 @@ const size_t nuiShaderProgram::GetUniformCount() const
   return mUniforms.size();
 }
 
-const nuiUniformDesc& nuiShaderProgram::GetUniformDesc(size_t i) const
+const nuiUniformDesc& nuiShaderProgram::GetUniformDesc(size_t index) const
 {
-  return mUniforms[i];
+  return mUniforms[index];
 }
+
+size_t nuiShaderProgram::GetUniformDescIndex(GLint location) const
+{
+  auto it = mUniformIndexes.find(location);
+  if (it != mUniformIndexes.end())
+    return it->second;
+  return -1;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 GLint nuiShaderProgram::GetProjectionMatrixLocation() const

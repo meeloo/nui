@@ -146,6 +146,7 @@ public:
 
   const size_t GetUniformCount() const;
   const nuiUniformDesc& GetUniformDesc(size_t i) const;
+  size_t GetUniformDescIndex(GLint location) const;
 
   GLint GetProgram() const;
 
@@ -233,6 +234,7 @@ private:
   GLint mDifuseColor;
 
   std::vector<nuiUniformDesc> mUniforms;
+  std::unordered_map<int, int> mUniformIndexes;
 
 };
 
