@@ -13,8 +13,6 @@
 
 //#define NUI_RETURN_IF_RENDERING_DISABLED return;
 #define NUI_RETURN_IF_RENDERING_DISABLED
-//#define NUI_USE_GL_VERTEX_BUFFER
-#define NUI_COMPLEX_SHAPE_THRESHOLD 6
 
 //#define NUI_USE_ANTIALIASING
 #ifdef NUI_USE_ANTIALIASING
@@ -1319,9 +1317,12 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
     uint32 arraycount = pArray->GetIndexArrayCount();
     
+    nuiCheckForGLErrors();
     if (!arraycount)
     {
+      nuiCheckForGLErrors();
       glDrawArrays(mode, 0, s);
+      nuiCheckForGLErrors();
     }
     else
     {
@@ -1329,19 +1330,27 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
       {
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_) || (defined _ANDROID_)
+        nuiCheckForGLErrors();
         glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
+        nuiCheckForGLErrors();
 #else
+        nuiCheckForGLErrors();
         glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
+        nuiCheckForGLErrors();
 #endif
       }
     }
     nuiCheckForGLErrors();
     
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+    nuiCheckForGLErrors();
     glBlendFunc(mSrcAlpha, mDstAlpha);
+    nuiCheckForGLErrors();
+
     if (!arraycount)
     {
       glDrawArrays(mode, 0, s);
+      nuiCheckForGLErrors();
     }
     else
     {
@@ -1350,8 +1359,10 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_) || (defined _ANDROID_)
         glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
+        nuiCheckForGLErrors();
 #else
         glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
+        nuiCheckForGLErrors();
 #endif
       }
     }
@@ -1376,10 +1387,11 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_) || (defined _ANDROID_)
         glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
+        nuiCheckForGLErrors();
 #else
         glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
-#endif
         nuiCheckForGLErrors();
+#endif
       }
     }
   }
@@ -2384,7 +2396,7 @@ void nuiGLPainter::RenderArrayInfo::Recycle(nuiGLPainter::RenderArrayInfo* pInfo
 nuiGLPainter::RenderArrayInfo::RenderArrayInfo(nuiRenderArray* pRenderArray)
 {
   mpRenderArray = NULL;
-  mVertexBuffer = -1;
+  mVertexBuffer = 0;
 
   if (pRenderArray)
     Rebind(pRenderArray);
@@ -2400,8 +2412,7 @@ void nuiGLPainter::RenderArrayInfo::Rebind(nuiRenderArray* pRenderArray)
 {
   mpRenderArray = pRenderArray;
 
-  int32 count = pRenderArray->GetSize();
-  NGL_ASSERT(mVertexBuffer == -1);
+  size_t count = pRenderArray->GetSize();
   glGenBuffers(1, &mVertexBuffer);
   nuiCheckForGLErrors();
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -2537,7 +2548,7 @@ void nuiGLPainter::RenderArrayInfo::Draw() const
 
 bool nuiCheckForGLErrorsReal()
 {
-  return true;
+//  return true;
   GLenum err = GL_NO_ERROR;
 #if 1 // Globally enable/disable OpenGL error checking
   //#ifdef NGL_DEBUG
@@ -3016,23 +3027,23 @@ void nuiGLPainter::ApplyShaderState(nuiShaderState* pState)
     const uint8* pD = pData + rDesc.mOffset;
     switch (rDesc.mType)
     {
-      case GL_FLOAT:              glUniform1fv(rDesc.mLocation, rDesc.mCount, (GLfloat*)pData);  break;
-      case GL_FLOAT_VEC2:         glUniform2fv(rDesc.mLocation, rDesc.mCount, (GLfloat*)pData);  break;
-      case GL_FLOAT_VEC3:         glUniform3fv(rDesc.mLocation, rDesc.mCount, (GLfloat*)pData);  break;
-      case GL_FLOAT_VEC4:         glUniform4fv(rDesc.mLocation, rDesc.mCount, (GLfloat*)pData);  break;
+      case GL_FLOAT:              glUniform1fv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLfloat*)pD);  break;
+      case GL_FLOAT_VEC2:         glUniform2fv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLfloat*)pD);  break;
+      case GL_FLOAT_VEC3:         glUniform3fv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLfloat*)pD);  break;
+      case GL_FLOAT_VEC4:         glUniform4fv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLfloat*)pD);  break;
         
-      case GL_INT:                glUniform1iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
-      case GL_INT_VEC2:           glUniform2iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
-      case GL_INT_VEC3:           glUniform3iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
-      case GL_INT_VEC4:           glUniform4iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
-      case GL_UNSIGNED_INT:       glUniform1iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+      case GL_INT:                glUniform1iv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLint*)pD);  break;
+      case GL_INT_VEC2:           glUniform2iv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLint*)pD);  break;
+      case GL_INT_VEC3:           glUniform3iv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLint*)pD);  break;
+      case GL_INT_VEC4:           glUniform4iv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLint*)pD);  break;
+      case GL_UNSIGNED_INT:       glUniform1iv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLint*)pD);  break;
         
-      case GL_FLOAT_MAT2:         glUniformMatrix2fv(rDesc.mLocation, rDesc.mCount, GL_FALSE, (GLfloat*)pData);  break;
-      case GL_FLOAT_MAT3:         glUniformMatrix3fv(rDesc.mLocation, rDesc.mCount, GL_FALSE, (GLfloat*)pData);  break;
-      case GL_FLOAT_MAT4:         glUniformMatrix4fv(rDesc.mLocation, rDesc.mCount, GL_FALSE, (GLfloat*)pData);  break;
+      case GL_FLOAT_MAT2:         glUniformMatrix2fv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, GL_FALSE, (GLfloat*)pD);  break;
+      case GL_FLOAT_MAT3:         glUniformMatrix3fv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, GL_FALSE, (GLfloat*)pD);  break;
+      case GL_FLOAT_MAT4:         glUniformMatrix4fv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, GL_FALSE, (GLfloat*)pD);  break;
         
-      case GL_SAMPLER_2D:         glUniform1iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
-      case GL_SAMPLER_CUBE:       glUniform1iv(rDesc.mLocation, rDesc.mCount, (GLint*)pData);  break;
+      case GL_SAMPLER_2D:         glUniform1iv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLint*)pD);  break;
+      case GL_SAMPLER_CUBE:       glUniform1iv((GLint)rDesc.mLocation, (GLsizei)rDesc.mCount, (GLint*)pD);  break;
         
       default:
         NGL_ASSERT(0);
