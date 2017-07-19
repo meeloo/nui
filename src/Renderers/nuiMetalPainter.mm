@@ -393,7 +393,6 @@ void nuiMetalPainter::SetViewport()
 
 //  NGL_ASSERT(x >= 0);
 //  NGL_ASSERT(y >= 0);
-  nuiCheckForGLErrors();
 //  Set Metal ViewPort to (x, y, w, h);
 //  NGL_DEBUG(NGL_OUT("nuiMetalPainter::SetViewPort Actual(%d, %d, %d, %d)\n", x, y, w, h);)
 
@@ -574,7 +573,6 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
     mFinalState.mColorBuffer = rState.mColorBuffer;
     GLboolean m = mFinalState.mColorBuffer ? GL_TRUE : GL_FALSE;
 //    glColorMask(m, m, m, m);
-    nuiCheckForGLErrors();
   }
 
   if (mpClippingStack.top().mEnabled || ForceApply)
@@ -625,7 +623,6 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
 //      NGL_OUT("scissor: %d %d %d %d\n", x, y, w, h);
 //      glScissor(x, y, w, h);
     }
-    nuiCheckForGLErrors();
   }
   else
   {
@@ -755,7 +752,6 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
 //    v |= GL_STENCIL_BUFFER_BIT;
 
 //  glClear(v);
-  nuiCheckForGLErrors();
 }
 
 
@@ -888,8 +884,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     
     pShader->Acquire();
     mpShader = pShader;
-//    mpShaderState = pShader->GetCurrentState();
-    mpShaderState->Acquire();
+//    mpShaderState->Acquire();
   }
   
   NGL_ASSERT(mpShader != NULL);
@@ -909,14 +904,14 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       NGL_ASSERT(mFinalState.mpTexture[0]->GetSurface() != NULL);
       //      printf("REVERSED SURFACE TEXTURE");
     }
-    mFinalState.mpShaderState->SetTextureTranslate(mTextureTranslate);
+//    mFinalState.mpShaderState->SetTextureTranslate(mTextureTranslate);
     //mTextureScale = nglVector2f(1,1);
-    mFinalState.mpShaderState->SetTextureScale(mTextureScale);
+//    mFinalState.mpShaderState->SetTextureScale(mTextureScale);
   }
   
-  mFinalState.mpShaderState->SetSurfaceMatrix(mSurfaceMatrix);
-  mFinalState.mpShaderState->SetProjectionMatrix(GetProjectionMatrix());
-  mFinalState.mpShaderState->SetModelViewMatrix(GetMatrix());
+//  mFinalState.mpShaderState->SetSurfaceMatrix(mSurfaceMatrix);
+//  mFinalState.mpShaderState->SetProjectionMatrix(GetProjectionMatrix());
+//  mFinalState.mpShaderState->SetModelViewMatrix(GetMatrix());
   
   uint32 s = pArray->GetSize();
 
@@ -984,10 +979,10 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 #endif
   }
   
-  if (mpSurface)
-    mFinalState.mpShaderState->SetOffset(-hackX, -hackY);
-  else
-    mFinalState.mpShaderState->SetOffset(hackX, hackY);
+//  if (mpSurface)
+//    mFinalState.mpShaderState->SetOffset(-hackX, -hackY);
+//  else
+//    mFinalState.mpShaderState->SetOffset(hackX, hackY);
   
   
   if (!pArray->IsArrayEnabled(nuiRenderArray::eColor))
@@ -1014,7 +1009,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     mB = c.Blue();
     mA = c.Alpha();
     
-    mFinalState.mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA));
+//    mFinalState.mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA));
   }
   
 //  mFinalState.mpShader->SetState(*mFinalState.mpShaderState);
@@ -1196,7 +1191,6 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
       //      if (mpSharedContext)
       //      {
       //        mpSharedContext->MakeCurrent();
-      //        nuiCheckForGLErrors();
       //        changedctx = true;
       //      }
 
@@ -1344,7 +1338,7 @@ void nuiMetalPainter::_DestroySurface(nuiSurface* pSurface)
   FramebufferInfo info = it->second;
 
 //  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, 0);
-  NGL_ASSERT(info.mFramebuffer > 0);
+//  NGL_ASSERT(info.mFramebuffer > 0);
 
 //  glDeleteFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
 
@@ -1436,7 +1430,7 @@ void nuiMetalPainter::CreateSurface(nuiSurface* pSurface)
 
 //  glGenFramebuffersNUI(1, (GLuint*)&info.mFramebuffer);
 //  NGL_OUT("glGenFramebuffersNUI %p '%s' -> %d (%d x %d)\n", pSurface, pSurface->GetObjectName().GetChars(), info.mFramebuffer, pSurface->GetWidth(), pSurface->GetHeight());
-  NGL_ASSERT(info.mFramebuffer);
+//  NGL_ASSERT(info.mFramebuffer);
 
 #ifdef _UIKIT_
 #ifdef NGL_DEBUG
@@ -1444,7 +1438,6 @@ void nuiMetalPainter::CreateSurface(nuiSurface* pSurface)
 //        glLabelObjectEXT(GL_BUFFER_OBJECT_EXT, info.mFramebuffer, 0, pTexture->GetSource().GetChars());
 //      else
 //        glLabelObjectEXT(GL_BUFFER_OBJECT_EXT, info.mFramebuffer, 0, pSurface->GetObjectName().GetChars());
-//      nuiCheckForGLErrors();
 #endif
 #endif
 

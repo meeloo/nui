@@ -354,6 +354,21 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   return [CAMetalLayer class];
 }
 
+- (CALayer *)makeBackingLayer
+{
+  _metalLayer = [CAMetalLayer layer];
+  _metalLayer.opaque = YES;
+  _metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+  _metalLayer.device = (id<MTLDevice>)mpNGLWindow->GetMetalDevice();
+  _metalLayer.framebufferOnly = YES;
+  return _metalLayer;
+}
+
+//- (BOOL) wantsUpdateLayer {
+//  return YES;
+//}
+
+
 - (id)initWithNGLWindow:(nglWindow*)pNGLWindow
 {
   self = [super init];
@@ -363,13 +378,9 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   mpNGLWindow = pNGLWindow;
 
   [self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
-
-  CAMetalLayer* layer = (CAMetalLayer *)self.layer;
-  layer.opaque = YES;
-  layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-  layer.device = (id<MTLDevice>)mpNGLWindow->GetMetalDevice();
-  layer.framebufferOnly = YES;
-
+  
+  self.wantsLayer = YES;
+  
   return self;
 }
 
@@ -1750,6 +1761,12 @@ void nglWindow::EndSession()
     [commandEncoder endEncoding];
     [commandBuffer presentDrawable:drawable];
     [commandBuffer commit];
+
+    mMetalDrawable = nullptr;
+    mMetalDestinationTexture = nullptr;
+    
+    mMetalCommandBuffer = nullptr;
+    mMetalCommandEncoder = nullptr;
   }
   
 #endif

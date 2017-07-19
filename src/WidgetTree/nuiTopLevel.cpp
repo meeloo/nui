@@ -223,7 +223,7 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   EnablePartialRedraw(PARTIAL_REDRAW_DEFAULT);
 
   SetWantKeyboardFocus(true);
-  SetFocusVisible(false);
+  mShowFocus = false;
   SetMouseCursor(eCursorArrow);
 
   mDirtyWidgets.insert(this);

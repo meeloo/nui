@@ -23,7 +23,6 @@
   nglWindow* mpNGLWindow;
   NSTimer* mpRefreshTimer;
   bool mInitiated;
-
 }
 @end
 
