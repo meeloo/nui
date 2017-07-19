@@ -153,3 +153,69 @@ void nglContext::Build(const nglContextInfo& rInfo)
   InitPainter();
 }
 
+void* nglContext::GetMetalDevice() const // id <MTLDevice>
+{
+  return mMetalDevice;
+}
+
+void* nglContext::GetMetalCommandQueue() const // id <MTLCommandQueue>
+{
+  return mMetalCommandQueue;
+}
+
+void* nglContext::GetMetalDestinationTexture() const
+{
+  return mMetalDestinationTexture;
+}
+
+void* nglContext::GetMetalDrawable() const
+{
+  return mMetalDrawable;
+}
+
+void* nglContext::GetMetalCommandEncoder() const
+{
+  return mMetalCommandEncoder;
+}
+
+void* nglContext::GetMetalCommandBuffer() const
+{
+  return mMetalCommandBuffer;
+}
+
+void nglContext::AddMarker(const char* title)
+{
+  if (mMetalDevice)
+  {
+    [(id<MTLCommandEncoder>)mMetalCommandEncoder insertDebugSignpost:[NSString stringWithCString:title]];
+  }
+  else
+  {
+    glInsertEventMarkerEXT(0, title);
+  }
+}
+
+void nglContext::StartMarkerGroup(const char* title)
+{
+  if (mMetalDevice)
+  {
+    [(id<MTLCommandEncoder>)mMetalCommandEncoder pushDebugGroup:[NSString stringWithCString:title]];
+  }
+  else
+  {
+    glPushGroupMarkerEXT(0, title);
+  }
+}
+
+void nglContext::StopMarkerGroup()
+{
+  if (mMetalDevice)
+  {
+    [(id<MTLCommandEncoder>)mMetalCommandEncoder popDebugGroup];
+  }
+  else
+  {
+    glPopGroupMarkerEXT();
+  }
+}
+

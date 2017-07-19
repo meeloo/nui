@@ -947,18 +947,15 @@ public:
 
   void DisplayTicked();
   void UpdateGLLayer();
-  void* mMetalDevice = nil; // id <MTLDevice>
-  void* mMetalCommandQueue = nil; // id <MTLCommandQueue>
 #endif
 
 #ifdef _COCOA_
 public:
   void SetDraggedObject(nglDragAndDrop* pDragged) { mpDragged = pDragged; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
-  void* mpNSGLContext;
-  void* mpNSPixelFormat;
+  void* mpNSGLContext = nullptr;
+  void* mpNSPixelFormat = nullptr;
   bool mIsReady;
-  void* mMetalDevice = nullptr;
 private:
   void InternalInit(const nglContextInfo& rContext,
                     const nglWindowInfo& rInfo,
@@ -966,14 +963,14 @@ private:
 
 
   uint32 mWidth, mHeight;
-  void* mpNSWindow;
-  void* mpNSWindowCtrl;
-  void* mpNSView;
+  void* mpNSWindow = nullptr;
+  void* mpNSWindowCtrl = nullptr;
+  void* mpNSView = nullptr;
 
   nglContextInfo mContextInfo;
   StateChange mState;
-  nglDragAndDrop* mpDragged;
-  nglTimer* mpAnimationTimer;
+  nglDragAndDrop* mpDragged = nullptr;
+  nglTimer* mpAnimationTimer = nullptr;
   nglTime mLastTick;
 
   CFRunLoopTimerRef mpCFRunLoopTimer;
@@ -985,6 +982,10 @@ private:
   void AcquireDisplayLink();
   void ReleaseDisplayLink();
   friend CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* pNGLWindow);
+#endif
+  
+#if (defined _COCOA_) || (defined _UIKIT_)
+  virtual void* GetMetalLayer() const; // CAMetalLayer
 #endif
   
 #ifdef _WIN32_
@@ -1024,11 +1025,11 @@ protected:
 #ifdef _WIN32_ // Win32 Drag And drop Support
   friend class          nglDropTarget;
 
-  class nglDropTarget*  mpDropTarget;
-  class nglDropSource*  mpDropSource;
+  class nglDropTarget*  mpDropTarget = nullptr;
+  class nglDropSource*  mpDropSource = nullptr;
   bool  mOnDragging;
 //   UINT  mDragMessageId;
-  class nglPBuffer* mpPBuffer;
+  class nglPBuffer* mpPBuffer = nullptr;
   bool mPBufferDisabled;
 #endif//_WIN32_
 

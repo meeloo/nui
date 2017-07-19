@@ -1426,8 +1426,8 @@
 		C38971851C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
 		C38971861C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
 		C38971871C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
-		C3D8FE661F072E1C00ADE75D /* nuiMetalPainter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.cpp */; };
-		C3D8FE671F072E1C00ADE75D /* nuiMetalPainter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.cpp */; };
+		C3D8FE661F072E1C00ADE75D /* nuiMetalPainter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.mm */; };
+		C3D8FE671F072E1C00ADE75D /* nuiMetalPainter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.mm */; };
 		C3E9C15D1D1F8BC100DEBED4 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */; };
 		C3E9C15E1D1F8BC100DEBED4 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */; };
 		C3E9C15F1D1F8BC100DEBED4 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */; };
@@ -4108,7 +4108,7 @@
 		C389717C1C602474003F2232 /* nuiDebugServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDebugServer.cpp; path = Introspector/nuiDebugServer.cpp; sourceTree = "<group>"; };
 		C38971841C6024B6003F2232 /* nuiDebugServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDebugServer.h; path = include/nuiDebugServer.h; sourceTree = SOURCE_ROOT; };
 		C3D8FE641F071E7700ADE75D /* nuiMetalPainter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nuiMetalPainter.h; path = include/nuiMetalPainter.h; sourceTree = SOURCE_ROOT; };
-		C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = nuiMetalPainter.cpp; sourceTree = "<group>"; };
+		C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = nuiMetalPainter.mm; sourceTree = "<group>"; };
 		C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssocVector.h; sourceTree = "<group>"; };
 		C3E9C14C1D1F8BC100DEBED4 /* constraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constraint.h; sourceTree = "<group>"; };
 		C3E9C14D1D1F8BC100DEBED4 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
@@ -8388,7 +8388,7 @@
 				E5816DB00C3CECAB00902DFE /* nuiGLPainter.cpp */,
 				E5816CCC0C3CECAB00902DFE /* nuiGLPainter.h */,
 				C3D8FE641F071E7700ADE75D /* nuiMetalPainter.h */,
-				C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.cpp */,
+				C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.mm */,
 				E5816DB40C3CECAB00902DFE /* nuiMetaPainter.cpp */,
 				E5816CDD0C3CECAB00902DFE /* nuiMetaPainter.h */,
 				E5816DB60C3CECAB00902DFE /* nuiPainter.cpp */,
@@ -11079,7 +11079,7 @@
 				73F0865212E9BA0700656E84 /* nuiAudioFifo.cpp in Sources */,
 				E59206481B854F7E00BEA4D5 /* nuiWidgetInspector.cpp in Sources */,
 				73F0865312E9BA0700656E84 /* nuiCSS.cpp in Sources */,
-				C3D8FE671F072E1C00ADE75D /* nuiMetalPainter.cpp in Sources */,
+				C3D8FE671F072E1C00ADE75D /* nuiMetalPainter.mm in Sources */,
 				73F0865412E9BA0700656E84 /* nuiStateDecoration.cpp in Sources */,
 				73F0865512E9BA0700656E84 /* nuiCSV.cpp in Sources */,
 				73F0865612E9BA0700656E84 /* nglUTFStringConv.cpp in Sources */,
@@ -11975,7 +11975,7 @@
 				E5D642C91209AB9C009C26A9 /* nuiStringAttributeEditor.cpp in Sources */,
 				E5D642CA1209AB9C009C26A9 /* nuiAttribute.cpp in Sources */,
 				E5D642CB1209AB9C009C26A9 /* nuiLabelAttribute.cpp in Sources */,
-				C3D8FE661F072E1C00ADE75D /* nuiMetalPainter.cpp in Sources */,
+				C3D8FE661F072E1C00ADE75D /* nuiMetalPainter.mm in Sources */,
 				E5D642CC1209AB9C009C26A9 /* nuiBooleanAttributeEditor.cpp in Sources */,
 				E5D642CD1209AB9C009C26A9 /* nuiNativeResourceVolume.cpp in Sources */,
 				E5D642CE1209AB9C009C26A9 /* nuiDecoration.cpp in Sources */,

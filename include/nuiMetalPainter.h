@@ -19,21 +19,21 @@ public:
   nuiMetalDebugGuard(const nglString& rString)
   {
 #if defined DEBUG && defined _UIKIT_
-//    glPushGroupMarkerEXT(0, rString.GetChars());
+    mpContext->StartMarkerGroup(rString.GetChars());
 #endif
   }
 
   nuiMetalDebugGuard(const char* pString)
   {
 #if defined DEBUG && defined _UIKIT_
-//    glPushGroupMarkerEXT(0, pString);
+    mpContext->StartMarkerGroup(pString);
 #endif
   }
 
   ~nuiMetalDebugGuard()
   {
 #if defined DEBUG && defined _UIKIT_
-//    glPopGroupMarkerEXT();
+    mpContext->StopMarkerGroup();
 #endif
   }
 };
@@ -217,6 +217,9 @@ protected:
   std::vector<nuiRenderArray*> mDestroyedRenderArrays;
 
   bool mViewportChanged = true;
+  
+  void* mDrawable = nullptr;
+  void* mBackBuffer = nullptr;
 };
 
 #endif //   #ifndef __NUI_NO_GL__

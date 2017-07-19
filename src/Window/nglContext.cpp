@@ -265,13 +265,13 @@ void nglContext::Dump(uint Level) const
 void nglContext::InitPainter()
 {
   NGL_OUT("Init Painter\n");
-  nuiCheckForGLErrors();
   NGL_ASSERT(mpPainter == nullptr);
   switch (mTargetAPI)
   {
 #ifndef __NUI_NO_GL__
     case eOpenGL2:
       mpPainter = new nuiGLPainter(this);
+      nuiCheckForGLErrors();
       NGL_OUT("nuiGLPainter created\n");
       break;
     case eMetal:
@@ -297,12 +297,10 @@ void nglContext::InitPainter()
   }
 
   NGL_ASSERT(mpPainter != nullptr);
-  nuiCheckForGLErrors();
 }
 
 nuiPainter* nglContext::GetPainter() const
 {
   return mpPainter;
 }
-
 

@@ -1951,9 +1951,9 @@ void nuiGLPainter::CreateSurface(nuiSurface* pSurface)
 
 #if defined DEBUG && defined _UIKIT_
   if (pTexture)
-    glPushGroupMarkerEXT(0, pTexture->GetSource().GetChars());
+    mpContext->StartMarkerGroup(pTexture->GetSource().GetChars());
   else
-    glPushGroupMarkerEXT(0, pSurface->GetObjectName().GetChars());
+    mpContext->StartMarkerGroup(pSurface->GetObjectName().GetChars());
   nuiCheckForGLErrors();
 #endif
 
@@ -2277,7 +2277,7 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
   {
     mpSurface->Release();
 #if defined DEBUG && defined _UIKIT_
-    glPopGroupMarkerEXT();
+    mpContext->StopMarkerGroup;
 #endif
   }
   mpSurface = pSurface;
@@ -2301,9 +2301,9 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     
 #if defined DEBUG && defined _UIKIT_
     if (pTexture)
-      glPushGroupMarkerEXT(0, pTexture->GetSource().GetChars());
+      mpContext->StartMarkerGroup(pTexture->GetSource().GetChars());
     else
-      glPushGroupMarkerEXT(0, pSurface->GetObjectName().GetChars());
+      mpContext->StartMarkerGroup(pSurface->GetObjectName().GetChars());
     nuiCheckForGLErrors();
 #endif
     

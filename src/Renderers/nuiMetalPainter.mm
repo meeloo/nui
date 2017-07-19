@@ -7,6 +7,8 @@
 
 
 #include "nui.h"
+#import <Metal/Metal.h>
+#import <QuartzCore/CAMetalLayer.h>
 
 #ifndef __NUI_NO_GL__
 
@@ -423,7 +425,7 @@ void nuiMetalPainter::StartRendering()
   for (auto pArray : mFrameArrays)
     pArray->Release();
   mFrameArrays.clear();
-
+  
   ResetMetalState();
 }
 
@@ -1385,10 +1387,10 @@ void nuiMetalPainter::CreateSurface(nuiSurface* pSurface)
   nuiTexture* pTexture = pSurface->GetTexture();
 
 #if defined DEBUG && defined _UIKIT_
-//  if (pTexture)
-//    glPushGroupMarkerEXT(0, pTexture->GetSource().GetChars());
-//  else
-//    glPushGroupMarkerEXT(0, pSurface->GetObjectName().GetChars());
+  if (pTexture)
+    mpContext->StartMarkerGroup(pTexture->GetSource().GetChars());
+  else
+    mpContext->StartMarkerGroup(pSurface->GetObjectName().GetChars());
 #endif
 
   if (pTexture && !pTexture->IsPowerOfTwo())
@@ -1579,10 +1581,10 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     nuiTexture* pTexture = pSurface->GetTexture();
     
 #if defined DEBUG && defined _UIKIT_
-//    if (pTexture)
-//      glPushGroupMarkerEXT(0, pTexture->GetSource().GetChars());
-//    else
-//      glPushGroupMarkerEXT(0, pSurface->GetObjectName().GetChars());
+    if (pTexture)
+      mpContext->StartMarkerGroup(pTexture->GetSource().GetChars());
+    else
+      mpContext->StartMarkerGroup(pSurface->GetObjectName().GetChars());
 #endif
     
     if (create)

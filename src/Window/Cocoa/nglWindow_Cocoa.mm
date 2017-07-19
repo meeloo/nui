@@ -345,6 +345,10 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 #pragma mark nglNSView_Metal
 
 @implementation nglNSView_Metal
+{
+  CAMetalLayer* _metalLayer;
+}
+
 + (Class)layerClass
 {
   return [CAMetalLayer class];
@@ -360,10 +364,10 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 
   [self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
 
-  CAMetalLayer *layer = (CAMetalLayer *)self.layer;
+  CAMetalLayer* layer = (CAMetalLayer *)self.layer;
   layer.opaque = YES;
   layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-  layer.device = (id<MTLDevice>)mpNGLWindow->mMetalDevice;
+  layer.device = (id<MTLDevice>)mpNGLWindow->GetMetalDevice();
   layer.framebufferOnly = YES;
 
   return self;
@@ -1689,8 +1693,36 @@ void nglWindow::BeginSession()
 #ifdef _DEBUG_WINDOW_
   NGL_LOG("window", NGL_LOG_INFO, "BeginSession\n");
 #endif
-  NGL_ASSERT(mpNSGLContext);
-  [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
+  if (mpNSGLContext)
+  {
+    [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
+  }
+  else
+  {
+    if (!mMetalDestinationTexture)
+    {
+      CAMetalLayer* layer = (CAMetalLayer*)GetMetalLayer();
+      id<CAMetalDrawable> drawable = [layer nextDrawable];
+      mMetalDrawable = drawable;
+      id<MTLTexture> texture = drawable.texture;
+      mMetalDestinationTexture = texture;
+
+      MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
+      passDescriptor.colorAttachments[0].texture = texture;
+      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+      passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
+      passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 0.0, 1.0);
+      
+      id<MTLDevice> device = (id<MTLDevice>)GetMetalDevice();
+      
+      id<MTLCommandQueue> commandQueue = [device newCommandQueue];
+      id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
+      mMetalCommandBuffer = commandBuffer;
+      id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+      mMetalCommandEncoder = commandEncoder;
+
+    }
+  }
 }
 
 void nglWindow::EndSession()
@@ -1704,10 +1736,22 @@ void nglWindow::EndSession()
   NGL_LOG("window", NGL_LOG_INFO, "EndSession\n");
 #endif
 
-  NGL_ASSERT(mpNSGLContext);
-glFlush();
-//  [(NSOpenGLContext*)mpNSGLContext flushBuffer];
-  [NSOpenGLContext clearCurrentContext];
+  if (mpNSGLContext)
+  {
+    glFlush();
+    [NSOpenGLContext clearCurrentContext];
+  }
+  else
+  {
+    id<MTLRenderCommandEncoder> commandEncoder = (id<MTLRenderCommandEncoder>)GetMetalCommandEncoder();
+    id<MTLCommandBuffer> commandBuffer = (id<MTLCommandBuffer>)GetMetalCommandBuffer();
+    id<CAMetalDrawable> drawable = (id<CAMetalDrawable>)GetMetalDrawable();
+
+    [commandEncoder endEncoding];
+    [commandBuffer presentDrawable:drawable];
+    [commandBuffer commit];
+  }
+  
 #endif
 }
 
@@ -1715,10 +1759,18 @@ bool nglWindow::MakeCurrent() const
 {
   nglThread::ID threadid = nglThread::GetCurThreadID();
   NGL_ASSERT(mCurrentThread == 0 || mCurrentThread == threadid);
-  NGL_ASSERT(mpNSGLContext);
-  [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
+  if (mpNSGLContext)
+  {
+    [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
+  }
   return true;
 }
+
+void* nglWindow::GetMetalLayer() const
+{
+  return (void*)((NSView*)mpNSView).layer;
+}
+
 
 void nglWindow::Invalidate()
 {

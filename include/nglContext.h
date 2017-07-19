@@ -223,6 +223,20 @@ if (HasExtension("GL_ARB_texture_compression"))
 
   nglLock& GetLock() noexcept { return mLock; }
 
+
+#if (defined _UIKIT_) || (defined _COCOA_)
+  void* GetMetalDevice() const; // id <MTLDevice>
+  void* GetMetalCommandQueue() const; // id <MTLCommandQueue>
+  virtual void* GetMetalLayer() const = 0;
+  void* GetMetalDestinationTexture() const;
+  void* GetMetalDrawable() const;
+  void* GetMetalCommandEncoder() const;
+  void* GetMetalCommandBuffer() const;
+#endif
+
+  void AddMarker(const char* title);
+  void StartMarkerGroup(const char* title);
+  void StopMarkerGroup();
 protected:
   void CallOnRescale(float NewScale);
   float mScale;
@@ -313,6 +327,15 @@ protected:
 #ifdef _COCOA_
   nglContextInfo mContextInfo;
   void Build(const nglContextInfo& rInfo);
+#endif
+  
+#if (defined _UIKIT_) || (defined _COCOA_)
+  void* mMetalDevice = nil; // id <MTLDevice>
+  void* mMetalCommandQueue = nil; // id <MTLCommandQueue>
+  void* mMetalDrawable = nil;
+  void* mMetalDestinationTexture = nil; // id <MTLTexture>
+  void* mMetalCommandEncoder = nil;
+  void* mMetalCommandBuffer = nil;
 #endif
 
 #ifdef _ANDROID_

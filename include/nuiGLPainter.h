@@ -24,21 +24,21 @@ public:
   nuiGLDebugGuard(const nglString& rString)
   {
 #if defined DEBUG && defined _UIKIT_
-    glPushGroupMarkerEXT(0, rString.GetChars());
+    mpContext->StartMarkerGroup(rString.GetChars());
 #endif
   }
 
   nuiGLDebugGuard(const char* pString)
   {
 #if defined DEBUG && defined _UIKIT_
-    glPushGroupMarkerEXT(0, pString);
+    mpContext->StartMarkerGroup(pString);
 #endif
   }
 
   ~nuiGLDebugGuard()
   {
 #if defined DEBUG && defined _UIKIT_
-    glPopGroupMarkerEXT();
+    mpContext->StopMarkerGroup();
 #endif
   }
 };
