@@ -24,6 +24,9 @@
   NSTimer* mpRefreshTimer;
   bool mInitiated;
 }
+
+@property (readonly)CAMetalLayer* metalLayer;
+
 @end
 
 

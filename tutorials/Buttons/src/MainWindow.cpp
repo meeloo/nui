@@ -187,7 +187,7 @@ public:
     mpShape->LineTo(nuiPoint(200, 225));
     //    mpShape->LineTo(nuiPoint(50, 80));
 
-    mpShader = new nuiShaderProgram("Stroker");
+    mpShader = new nuiShaderProgram(((nuiMainWindow*)GetTopLevel())->GetNGLContext(), "Stroker");
     mpShader->AddShader(eVertexShader, vertex_shader);
     mpShader->AddShader(eFragmentShader, fragment_shader);
     mpShader->Link();

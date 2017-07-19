@@ -433,10 +433,10 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   nuiCheckForGLErrors();
   mUseShaders = true;
   
-  mpShader_TextureVertexColor = nuiShaderProgram::GetProgram("TextureVertexColor");
+  mpShader_TextureVertexColor = nuiShaderProgram::GetProgram(mpContext, "TextureVertexColor");
   if (!mpShader_TextureVertexColor)
   {
-    mpShader_TextureVertexColor = new nuiShaderProgram("TextureVertexColor");
+    mpShader_TextureVertexColor = new nuiShaderProgram(mpContext, "TextureVertexColor");
     mpShader_TextureVertexColor->AddShader(eVertexShader, TextureVertexColor_VTX);
     mpShader_TextureVertexColor->AddShader(eFragmentShader, TextureVertexColor_FGT);
     mpShader_TextureVertexColor->Link();
@@ -445,10 +445,10 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   }
   nuiCheckForGLErrors();
   
-  mpShader_TextureAlphaVertexColor = nuiShaderProgram::GetProgram("TextureAlphaVertexColor");
+  mpShader_TextureAlphaVertexColor = nuiShaderProgram::GetProgram(mpContext, "TextureAlphaVertexColor");
   if (!mpShader_TextureAlphaVertexColor)
   {
-    mpShader_TextureAlphaVertexColor = new nuiShaderProgram("TextureAlphaVertexColor");
+    mpShader_TextureAlphaVertexColor = new nuiShaderProgram(mpContext, "TextureAlphaVertexColor");
     mpShader_TextureAlphaVertexColor->AddShader(eVertexShader, TextureAlphaVertexColor_VTX);
     mpShader_TextureAlphaVertexColor->AddShader(eFragmentShader, TextureAlphaVertexColor_FGT);
     mpShader_TextureAlphaVertexColor->Link();
@@ -457,10 +457,10 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   }
   nuiCheckForGLErrors();
   
-  mpShader_TextureDifuseColor = nuiShaderProgram::GetProgram("TextureDiffuseColor");
+  mpShader_TextureDifuseColor = nuiShaderProgram::GetProgram(mpContext, "TextureDiffuseColor");
   if (!mpShader_TextureDifuseColor)
   {
-    mpShader_TextureDifuseColor = new nuiShaderProgram("TextureDiffuseColor");
+    mpShader_TextureDifuseColor = new nuiShaderProgram(mpContext, "TextureDiffuseColor");
     mpShader_TextureDifuseColor->AddShader(eVertexShader, TextureDifuseColor_VTX);
     mpShader_TextureDifuseColor->AddShader(eFragmentShader, TextureDifuseColor_FGT);
     mpShader_TextureDifuseColor->Link();
@@ -470,10 +470,10 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   }
   nuiCheckForGLErrors();
   
-  mpShader_TextureAlphaDifuseColor = nuiShaderProgram::GetProgram("TextureAlphaDifuseColor");
+  mpShader_TextureAlphaDifuseColor = nuiShaderProgram::GetProgram(mpContext, "TextureAlphaDifuseColor");
   if (!mpShader_TextureAlphaDifuseColor)
   {
-    mpShader_TextureAlphaDifuseColor = new nuiShaderProgram("TextureAlphaDifuseColor");
+    mpShader_TextureAlphaDifuseColor = new nuiShaderProgram(mpContext, "TextureAlphaDifuseColor");
     mpShader_TextureAlphaDifuseColor->AddShader(eVertexShader, TextureAlphaDifuseColor_VTX);
     mpShader_TextureAlphaDifuseColor->AddShader(eFragmentShader, TextureAlphaDifuseColor_FGT);
     mpShader_TextureAlphaDifuseColor->Link();
@@ -483,10 +483,10 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   }
   nuiCheckForGLErrors();
   
-  mpShader_VertexColor = nuiShaderProgram::GetProgram("VertexColor");
+  mpShader_VertexColor = nuiShaderProgram::GetProgram(mpContext, "VertexColor");
   if (!mpShader_VertexColor)
   {
-    mpShader_VertexColor = new nuiShaderProgram("VertexColor");
+    mpShader_VertexColor = new nuiShaderProgram(mpContext, "VertexColor");
     mpShader_VertexColor->AddShader(eVertexShader, VertexColor_VTX);
     mpShader_VertexColor->AddShader(eFragmentShader, VertexColor_FGT);
     mpShader_VertexColor->Link();
@@ -494,10 +494,10 @@ nuiGLPainter::nuiGLPainter(nglContext* pContext)
   }
   nuiCheckForGLErrors();
   
-  mpShader_DifuseColor = nuiShaderProgram::GetProgram("DifuseColor");
+  mpShader_DifuseColor = nuiShaderProgram::GetProgram(mpContext, "DifuseColor");
   if (!mpShader_DifuseColor)
   {
-    mpShader_DifuseColor = new nuiShaderProgram("DifuseColor");
+    mpShader_DifuseColor = new nuiShaderProgram(mpContext, "DifuseColor");
     mpShader_DifuseColor->AddShader(eVertexShader, DifuseColor_VTX);
     mpShader_DifuseColor->AddShader(eFragmentShader, DifuseColor_FGT);
     mpShader_DifuseColor->Link();

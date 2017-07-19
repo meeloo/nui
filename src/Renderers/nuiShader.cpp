@@ -8,6 +8,9 @@
 //
 
 #include "nui.h"
+#if defined _UIKIT_ || defined _COCOA_
+#import <Metal/Metal.h>
+#endif
 
 static const char* defaultVertexShader =
 "attribute vec4 Position;\n\
@@ -461,6 +464,7 @@ public:
   bool IsValid() const;
   const nglString& GetError() const;
 
+  const nglString& GetSource() const;
 protected:
   virtual ~nuiShader();
 
@@ -539,8 +543,10 @@ bool nuiShader::Load()
 
 void nuiShader::Delete()
 {
-  NGL_ASSERT(mShader != 0);
-  glDeleteShader(mShader);
+  if (mShader != 0)
+  {
+    glDeleteShader(mShader);
+  }
   mShader = 0;
 }
 
@@ -559,6 +565,11 @@ const nglString& nuiShader::GetError() const
   return mError;
 }
 
+const nglString& nuiShader::GetSource() const
+{
+  return mSource;
+}
+
 
 ////////////////////// nuiShader Program:
 #ifdef _OPENGL_ES_
@@ -567,15 +578,15 @@ nglString nuiShaderProgram::mDefaultPrefix("precision mediump float;\n");
 nglString nuiShaderProgram::mDefaultPrefix;
 #endif
 
-nuiShaderProgram::nuiShaderProgram(const nglString& rName)
-: mName(rName), mProgram(0), mPrefix(mDefaultPrefix)
+nuiShaderProgram::nuiShaderProgram(nglContext* pContext, const nglString& rName)
+: mName(rName), mProgram(0), mPrefix(mDefaultPrefix), mpContext(pContext)
 {
   NGL_ASSERT(gpPrograms.find(rName) == gpPrograms.end());
   gpPrograms[rName] = this;
   Init();
 }
 
-nuiShaderProgram* nuiShaderProgram::GetProgram(const nglString& rName)
+nuiShaderProgram* nuiShaderProgram::GetProgram(nglContext* pContext, const nglString& rName)
 {
   auto it = gpPrograms.find(rName);
   if (it == gpPrograms.end())
@@ -714,91 +725,137 @@ GLint nuiShaderProgram::GetVertexAttribLocation(const nglString& name)
   return glGetAttribLocation(mProgram, name.GetChars());
 }
 
+void* nuiShaderProgram::GetMetalLibrary() const
+{
+  return mpMetalLibrary;
+}
+
+void* nuiShaderProgram::GetMetalFunction(const nglString& rFunctionName) const
+{
+  id<MTLLibrary> library = (id<MTLLibrary>)mpMetalLibrary;
+  id<MTLFunction> function = [library newFunctionWithName:(NSString*)rFunctionName.ToCFString()];
+  return function;
+}
+
+
 bool nuiShaderProgram::Link()
 {
-  mProgram = glCreateProgram();
-
-  nuiShaderKind kinds[] =
+  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+  if (device)
   {
-    eVertexShader,
-    eFragmentShader
-  };
-  for (int i = 0; i < 2; i++)
-  {
-    nuiShaderKind k = kinds[i];
-    std::map<GLenum, nuiShader*>::iterator it = mShaders.find(k);
+    // This is a metal display
+    nglString source;
+    auto it =  mShaders.find(eVertexShader);
     if (it != mShaders.end())
     {
       nuiShader* pShader = it->second;
-      if (!pShader->Load())
-      {
-        nuiCheckForGLErrors();
-        NGL_LOG("painter", NGL_LOG_ERROR, "nuiShaderProgram::Link() Unable to load shader: %s", pShader->GetError().GetChars());
-        return false;
-      }
-
-      glAttachShader(mProgram, pShader->GetShader());
-      nuiCheckForGLErrors();
+      source.Add(pShader->GetSource());
     }
-  }
-
-
-  glLinkProgram(mProgram);
-  nuiCheckForGLErrors();
-
-  // 3
-  GLint linkSuccess;
-  glGetProgramiv(mProgram, GL_LINK_STATUS, &linkSuccess);
-  nuiCheckForGLErrors();
-  if (linkSuccess == GL_FALSE)
-  {
-    GLchar messages[256];
-    glGetProgramInfoLog(mProgram, sizeof(messages), 0, &messages[0]);
-    nuiCheckForGLErrors();
-    NGL_LOG("painter", NGL_LOG_ERROR, "nuiShaderProgram::Link() %s", messages);
-    return false;
-  }
-
-  glValidateProgram(mProgram);
-  nuiCheckForGLErrors();
-
-
-  glUseProgram(mProgram);
-  nuiCheckForGLErrors();
-
-  // Enumerate Vertex Attributes:
-  {
-    int total = -1;
-    glGetProgramiv(mProgram, GL_ACTIVE_ATTRIBUTES, &total);
-    for (int i = 0; i < total; ++i)
+    
+    it =  mShaders.find(eFragmentShader);
+    if (it != mShaders.end())
     {
-      int name_len = -1;
-      int num = -1;
-      GLenum type = GL_ZERO;
-      char name[100];
-      glGetActiveAttrib(mProgram, GLuint(i), sizeof(name)-1, &name_len, &num, &type, name);
-      name[name_len] = 0;
-      GLuint location = glGetAttribLocation(mProgram, name);
+      nuiShader* pShader = it->second;
+      source.Add(pShader->GetSource());
+    }
 
-      mAttribMap[name] = nuiVertexAttribDesc(name, type, num, location);
+    NSError* error = nil;
+    id<MTLLibrary> library = [device newLibraryWithSource:(NSString*)source.ToCFString() options:nil error:&error];;
+    mpMetalLibrary = library;
+    if (!library || error)
+    {
+      NSString* reason = error.localizedDescription;
+      nglString msg((CFStringRef)reason);
+      NGL_OUT("Metal Shader compilation error:\n%s\n", msg.GetChars());
+      return false;
     }
   }
+  else
+  {
+    mProgram = glCreateProgram();
 
-  mVA_Position = glGetAttribLocation(mProgram, "Position");
-  mVA_TexCoord = glGetAttribLocation(mProgram, "TexCoord");
-  mVA_Color = glGetAttribLocation(mProgram, "Color");
-  mVA_Normal = glGetAttribLocation(mProgram, "Normal");
+    nuiShaderKind kinds[] =
+    {
+      eVertexShader,
+      eFragmentShader
+    };
+    for (int i = 0; i < 2; i++)
+    {
+      nuiShaderKind k = kinds[i];
+      std::map<GLenum, nuiShader*>::iterator it = mShaders.find(k);
+      if (it != mShaders.end())
+      {
+        nuiShader* pShader = it->second;
+        if (!pShader->Load())
+        {
+          nuiCheckForGLErrors();
+          NGL_LOG("painter", NGL_LOG_ERROR, "nuiShaderProgram::Link() Unable to load shader: %s", pShader->GetError().GetChars());
+          return false;
+        }
 
-  InitUniforms();
-  
-  mProjectionMatrix = GetUniformLocation(NUI_PROJECTION_MATRIX_NAME);
-  mModelViewMatrix = GetUniformLocation(NUI_MODELVIEW_MATRIX_NAME);
-  mSurfaceMatrix = GetUniformLocation(NUI_SURFACE_MATRIX_NAME);
-  mOffset = GetUniformLocation(NUI_OFFSET_NAME);
-  mTextureScale = GetUniformLocation(NUI_TEXTURE_SCALE_NAME);
-  mTextureTranslate = GetUniformLocation(NUI_TEXTURE_TRANSLATE_NAME);
-  mDifuseColor = GetUniformLocation(NUI_DIFUSE_COLOR_NAME);
-  
+        glAttachShader(mProgram, pShader->GetShader());
+        nuiCheckForGLErrors();
+      }
+    }
+
+
+    glLinkProgram(mProgram);
+    nuiCheckForGLErrors();
+
+    // 3
+    GLint linkSuccess;
+    glGetProgramiv(mProgram, GL_LINK_STATUS, &linkSuccess);
+    nuiCheckForGLErrors();
+    if (linkSuccess == GL_FALSE)
+    {
+      GLchar messages[256];
+      glGetProgramInfoLog(mProgram, sizeof(messages), 0, &messages[0]);
+      nuiCheckForGLErrors();
+      NGL_LOG("painter", NGL_LOG_ERROR, "nuiShaderProgram::Link() %s", messages);
+      return false;
+    }
+
+    glValidateProgram(mProgram);
+    nuiCheckForGLErrors();
+
+
+    glUseProgram(mProgram);
+    nuiCheckForGLErrors();
+
+    // Enumerate Vertex Attributes:
+    {
+      int total = -1;
+      glGetProgramiv(mProgram, GL_ACTIVE_ATTRIBUTES, &total);
+      for (int i = 0; i < total; ++i)
+      {
+        int name_len = -1;
+        int num = -1;
+        GLenum type = GL_ZERO;
+        char name[100];
+        glGetActiveAttrib(mProgram, GLuint(i), sizeof(name)-1, &name_len, &num, &type, name);
+        name[name_len] = 0;
+        GLuint location = glGetAttribLocation(mProgram, name);
+
+        mAttribMap[name] = nuiVertexAttribDesc(name, type, num, location);
+      }
+    }
+
+    mVA_Position = glGetAttribLocation(mProgram, "Position");
+    mVA_TexCoord = glGetAttribLocation(mProgram, "TexCoord");
+    mVA_Color = glGetAttribLocation(mProgram, "Color");
+    mVA_Normal = glGetAttribLocation(mProgram, "Normal");
+
+    InitUniforms();
+    
+    mProjectionMatrix = GetUniformLocation(NUI_PROJECTION_MATRIX_NAME);
+    mModelViewMatrix = GetUniformLocation(NUI_MODELVIEW_MATRIX_NAME);
+    mSurfaceMatrix = GetUniformLocation(NUI_SURFACE_MATRIX_NAME);
+    mOffset = GetUniformLocation(NUI_OFFSET_NAME);
+    mTextureScale = GetUniformLocation(NUI_TEXTURE_SCALE_NAME);
+    mTextureTranslate = GetUniformLocation(NUI_TEXTURE_TRANSLATE_NAME);
+    mDifuseColor = GetUniformLocation(NUI_DIFUSE_COLOR_NAME);
+  }
+
   return true;
 }
 

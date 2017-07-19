@@ -349,11 +349,6 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   CAMetalLayer* _metalLayer;
 }
 
-+ (Class)layerClass
-{
-  return [CAMetalLayer class];
-}
-
 - (CALayer *)makeBackingLayer
 {
   _metalLayer = [CAMetalLayer layer];
@@ -361,13 +356,19 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   _metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
   _metalLayer.device = (id<MTLDevice>)mpNGLWindow->GetMetalDevice();
   _metalLayer.framebufferOnly = YES;
+  self.layer = _metalLayer;
   return _metalLayer;
 }
 
-//- (BOOL) wantsUpdateLayer {
-//  return YES;
-//}
+- (CAMetalLayer *)metalLayer
+{
+  return _metalLayer;
+}
 
+- (BOOL)wantsUpdateLayer
+{
+  return YES;
+}
 
 - (id)initWithNGLWindow:(nglWindow*)pNGLWindow
 {
@@ -380,6 +381,8 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   [self registerForDraggedTypes: [NSArray arrayWithObjects: @"public.file-url", NSFilenamesPboardType,(NSString*)kUTTypePlainText,(NSString*)kUTTypeUTF8PlainText, NSURLPboardType, NSFilesPromisePboardType, nil]];
   
   self.wantsLayer = YES;
+  self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
+  [self setNeedsDisplay:YES];
   
   return self;
 }
@@ -418,42 +421,25 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   mpNGLWindow->CallOnDestruction();
 }
 
-- (void)lockFocus
+
+// this is called whenever the view changes (is unhidden or resized)
+- (void)updateLayer
 {
-  // make sure we are ready to draw
-  [super lockFocus];
-
-  // when we are about to draw, make sure we are linked to the view
-  // It is not possible to call setView: earlier (will yield 'invalid drawable')
-//  if (context)
-//  {
-//    if ([context view] != self)
-//    {
-//      [context setView:self];
-//    }
-//  }
-
   if (!mInitiated)
   {
     mInitiated = true;
     mpNGLWindow->CallOnCreation();
   }
-
-  // make us the current OpenGL context
-//  if (context)
-//    [context makeCurrentContext];
-}
-
-// this is called whenever the view changes (is unhidden or resized)
-- (void)drawRect:(NSRect)frameRect
-{
+  
   mpNGLWindow->GetLock().Lock();
-//  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
-//  if (_context)
-//    [_context update];
   mpNGLWindow->GetLock().Unlock();
-  //  mpNGLWindow->CallOnPaint();
+  mpNGLWindow->CallOnPaint();
 }
+
+//- (void)drawRect:(NSRect)dirtyRect
+//{
+//  [self updateLayer];
+//}
 
 // this tells the window manager that nothing behind our view is visible
 -(BOOL) isOpaque
@@ -1785,7 +1771,7 @@ bool nglWindow::MakeCurrent() const
 
 void* nglWindow::GetMetalLayer() const
 {
-  return (void*)((NSView*)mpNSView).layer;
+  return (void*)((nglNSView_Metal*)mpNSView).metalLayer;
 }
 
 

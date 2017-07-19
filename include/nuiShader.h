@@ -120,9 +120,9 @@ private:
 class nuiShaderProgram : public nuiRefCount
 {
 public:
-  static nuiShaderProgram* GetProgram(const nglString& rName);
+  static nuiShaderProgram* GetProgram(nglContext* pContext, const nglString& rName);
 
-  nuiShaderProgram(const nglString& rName);
+  nuiShaderProgram(nglContext* pContext, const nglString& rName);
 
   void SetPrefix(const nglString& rPrefix);
   static void SetDefaultPrefix(const nglString& rDefaultPrefix);
@@ -148,7 +148,9 @@ public:
   const nuiUniformDesc& GetUniformDesc(size_t i) const;
   size_t GetUniformDescIndex(GLint location) const;
 
-  GLint GetProgram() const;
+  GLint GetProgram() const; // GL Program
+  void* GetMetalLibrary() const; // Metal library
+  void* GetMetalFunction(const nglString& rFunctionName) const;
 
   static void ClearAll();
   
@@ -205,6 +207,7 @@ protected:
   GLint GetVANormalLocation() const;
 
 private:
+  nglContext* mpContext;
   nglString mName;
   static std::map<nglString, nuiShaderProgram*> gpPrograms;
   void Init();
@@ -216,6 +219,8 @@ private:
   std::map<GLuint, int32> mUniformMap;
 
   std::map<GLenum, nuiShader*> mShaders;
+  
+  void* mpMetalLibrary = nullptr;
 
   GLint mVA_Position;
   GLint mVA_TexCoord;
