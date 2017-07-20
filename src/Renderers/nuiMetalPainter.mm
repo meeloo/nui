@@ -23,38 +23,88 @@
 #endif
 
 static const char* TextureVertexColor_VTX =
-SHADER_STRING (
-               attribute vec4 Position;
-               attribute vec2 TexCoord;
-               attribute vec4 Color;
-               uniform mat4 SurfaceMatrix;
-               uniform mat4 ModelViewMatrix;
-               uniform mat4 ProjectionMatrix;
-               uniform vec4 Offset;
-               uniform vec2 TextureTranslate;
-               uniform vec2 TextureScale;
-               varying vec2 TexCoordVar;
-               varying vec4 ColorVar;
+SHADER_STRING
+(
+using namespace metal;
+
                
-               void main()
-               {
-                 TexCoordVar = TexCoord * TextureScale + TextureTranslate;
-                 ColorVar = Color;
-                 gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
-               }
-               );
+struct Transforms
+{
+  float4x4 SurfaceMatrix;
+  float4x4 ModelViewMatrix;
+  float4x4 ProjectionMatrix;
+  float4 Offset;
+  float2 TextureTranslate;
+  float2 TextureScale;
+};
+
+struct Vertex
+{
+  float4 Position [[position]];
+  float4 Color;
+  float2 TexCoord;
+};
+               
+vertex Vertex vertex_main(
+                          constant Transforms &transforms [[buffer(0)]],
+                          constant float4 *position [[buffer(1)]],
+                          constant float4 *color [[buffer(2)]],
+                          constant float2 *texCoord [[buffer(3)]],
+                          uint vid [[vertex_id]])
+{
+  Vertex vert;
+
+  vert.TexCoord = texCoord[vid] * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Color = color[vid];
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (position[vid]  + transforms.Offset));
+
+  return vert;
+}
+               
+fragment float4 fragment_main(Vertex vert [[stage_in]],
+                              constant Transforms &tranforms [[buffer(0)]],
+                              texture2d<float> texture [[texture(0)]],
+                              sampler textureSampler [[sampler(0)]]
+                              )
+{
+  return vert.Color * texture.sample(textureSampler, vert.TexCoord);
+}
+);
+/*
+ attribute vec4 Position;
+ attribute vec2 TexCoord;
+ attribute vec4 Color;
+ uniform mat4 SurfaceMatrix;
+ uniform mat4 ModelViewMatrix;
+ uniform mat4 ProjectionMatrix;
+ uniform vec4 Offset;
+ uniform vec2 TextureTranslate;
+ uniform vec2 TextureScale;
+
+ varying vec2 TexCoordVar;
+ varying vec4 ColorVar;
+
+ void main()
+ {
+   TexCoordVar = TexCoord * TextureScale + TextureTranslate;
+   ColorVar = Color;
+   gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
+ }
+*/
 
 static const char* TextureVertexColor_FGT =
 SHADER_STRING (
-               uniform sampler2D texture;
-               varying vec4 ColorVar;
-               varying vec2 TexCoordVar;
-               void main()
+               );
+/*
+uniform sampler2D texture;
+varying vec4 ColorVar;
+varying vec2 TexCoordVar;
+void main()
 {
   gl_FragColor = ColorVar * texture2D(texture, TexCoordVar);
   //gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
-               );
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 static const char* TextureAlphaVertexColor_VTX =

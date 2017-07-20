@@ -10,7 +10,97 @@
 #include "nui.h"
 #if defined _UIKIT_ || defined _COCOA_
 #import <Metal/Metal.h>
+#import <QuartzCore/CAMetalLayer.h>
 #endif
+
+static const char* types[] = {
+  "Buffer",
+  "ThreadgroupMemory",
+  "Texture",
+  "Sampler"
+};
+
+static const char* dataTypes[] = {
+  "None",
+  
+  "Struct",
+  "Array",
+  
+  "Float",
+  "Float2",
+  "Float3",
+  "Float4",
+  
+  "Float2x2",
+  "Float2x3",
+  "Float2x4",
+  
+  "Float3x2",
+  "Float3x3",
+  "Float3x4",
+  
+  "Float4x2",
+  "Float4x3",
+  "Float4x4",
+  
+  "Half",
+  "Half2",
+  "Half3",
+  "Half4",
+  
+  "Half2x2",
+  "Half2x3",
+  "Half2x4",
+  
+  "Half3x2",
+  "Half3x3",
+  "Half3x4",
+  
+  "Half4x2",
+  "Half4x3",
+  "Half4x4",
+  
+  "Int",
+  "Int2",
+  "Int3",
+  "Int4",
+  
+  "UInt",
+  "UInt2",
+  "UInt3",
+  "UInt4",
+  
+  "Short",
+  "Short2",
+  "Short3",
+  "Short4",
+  
+  "UShort",
+  "UShort2",
+  "UShort3",
+  "UShort4",
+  
+  "Char",
+  "Char2",
+  "Char3",
+  "Char4",
+  
+  "UChar",
+  "UChar2",
+  "UChar3",
+  "UChar4",
+  
+  "Bool",
+  "Bool2",
+  "Bool3",
+  "Bool4",
+  
+  
+  "Texture",
+  "Sampler",
+  "Pointer"
+};
+
 
 static const char* defaultVertexShader =
 "attribute vec4 Position;\n\
@@ -737,6 +827,37 @@ void* nuiShaderProgram::GetMetalFunction(const nglString& rFunctionName) const
   return function;
 }
 
+void* nuiShaderProgram::GetMetalPipelineState() const // id<MTLRenderPipelineState>
+{
+  return mMetalPipelineState;
+}
+
+void DumpStructMember(MTLStructMember* member)
+{
+  NGL_OUT("\t\t%s member %d %s (@%d - %d)\n", types[member.dataType], [member.name UTF8String], member.offset, member.argumentIndex);
+}
+
+void DumpArgument(const char* domain, MTLArgument* argument)
+{
+  nglString n((CFStringRef)argument.name);
+  if (argument.bufferDataType == MTLDataTypeStruct)
+  {
+    NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
+    for (MTLStructMember* member in argument.bufferStructType.attributeKeys)
+    {
+      DumpStructMember(member);
+    }
+  }
+  else if (argument.bufferPointerType)
+  {
+    NGL_OUT("\t%s Argument [[%s %d]] - %s (%s)\n", domain, types[argument.type], argument.index, n.GetChars(), dataTypes[argument.bufferDataType]);
+  }
+  else
+  {
+    NGL_OUT("\%s Argument [[%s %d]] - %s (%s)\n", domain, types[argument.type], argument.index, n.GetChars(), dataTypes[argument.bufferDataType]);
+  }
+
+}
 
 bool nuiShaderProgram::Link()
 {
@@ -769,6 +890,33 @@ bool nuiShaderProgram::Link()
       NGL_OUT("Metal Shader compilation error:\n%s\n", msg.GetChars());
       return false;
     }
+    
+    
+    id<MTLFunction> vertex_function = [library newFunctionWithName:@"vertex_main"];
+    id<MTLFunction> fragment_function = [library newFunctionWithName:@"fragment_main"];
+    
+    CAMetalLayer* metalLayer = (CAMetalLayer*)mpContext->GetMetalLayer();
+    MTLAutoreleasedRenderPipelineReflection reflection = nil;
+    MTLRenderPipelineDescriptor *descriptor = [MTLRenderPipelineDescriptor new];
+    descriptor.vertexFunction = vertex_function;
+    descriptor.fragmentFunction = fragment_function;
+    descriptor.colorAttachments[0].pixelFormat = metalLayer.pixelFormat;
+    
+    id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:descriptor options:MTLPipelineOptionArgumentInfo+MTLPipelineOptionBufferTypeInfo reflection:&reflection error:&error];
+
+    NGL_OUT("Function %s\n", nglString((CFStringRef)vertex_function.name).GetChars());
+    for (MTLArgument* argument in reflection.vertexArguments)
+    {
+      DumpArgument("Vertex", argument);
+    }
+
+    NGL_OUT("Function %s\n", nglString((CFStringRef)fragment_function.name).GetChars());
+    for (MTLArgument* argument in reflection.fragmentArguments)
+    {
+      DumpArgument("Fragent", argument);
+    }
+    
+    pipelineState = nil;
   }
   else
   {

@@ -151,6 +151,7 @@ public:
   GLint GetProgram() const; // GL Program
   void* GetMetalLibrary() const; // Metal library
   void* GetMetalFunction(const nglString& rFunctionName) const;
+  void* GetMetalPipelineState() const; // id<MTLRenderPipelineState>
 
   static void ClearAll();
   
@@ -221,7 +222,8 @@ private:
   std::map<GLenum, nuiShader*> mShaders;
   
   void* mpMetalLibrary = nullptr;
-
+  void* mMetalPipelineState = nullptr;
+  
   GLint mVA_Position;
   GLint mVA_TexCoord;
   GLint mVA_Color;
