@@ -236,11 +236,16 @@ and in NGL user application code.
   #ifndef __cplusplus
 //  #if defined(_OBJC_)
 		#include <UIKit/UIKit.h>
+    #import <Metal/Metal.h>
+    #import <QuartzCore/CAMetalLayer.h>
   #endif
+
+  #define _METAL_
 
   #include <stdlib.h>
   #include <stddef.h>
   #include <limits.h>
+
 
   typedef int8_t    int8;
   typedef int16_t   int16;
@@ -261,6 +266,8 @@ and in NGL user application code.
   //  #if defined(_OBJC_)
   #include <Cocoa/Cocoa.h>
   #include <CoreGraphics/CoreGraphics.h>
+  #import <Metal/Metal.h>
+  #import <QuartzCore/CAMetalLayer.h>
   #endif
 
   #include <ApplicationServices/ApplicationServices.h>
@@ -268,6 +275,8 @@ and in NGL user application code.
   #include <stdlib.h>
   #include <stddef.h>
   #include <limits.h>
+
+  #define _METAL_
 
   typedef int8_t    int8;
   typedef int16_t   int16;

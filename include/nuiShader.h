@@ -243,6 +243,11 @@ private:
   std::vector<nuiUniformDesc> mUniforms;
   std::unordered_map<int, int> mUniformIndexes;
 
+  // Metal helpers:
+#ifdef _METAL_
+  void ParseStructMember(int depth, const nglString& parentName, void* _member);
+  void ParseArgument(const char* domain, void* _argument);
+#endif
 };
 
 #define SHADER_STRING(text) #text

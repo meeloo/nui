@@ -8,10 +8,8 @@
 //
 
 #include "nui.h"
-#if defined _UIKIT_ || defined _COCOA_
 #import <Metal/Metal.h>
 #import <QuartzCore/CAMetalLayer.h>
-#endif
 
 static const char* types[] = {
   "Buffer",
@@ -317,22 +315,22 @@ static const char* Type2String(GLenum type)
 {
   switch (type)
   {
-    case GL_FLOAT:        return "float"; break;
-    case GL_FLOAT_VEC2:   return "vec2"; break;
-    case GL_FLOAT_VEC3:   return "vec3"; break;
-    case GL_FLOAT_VEC4:   return "vec4"; break;
+    case GL_FLOAT:        return "float";
+    case GL_FLOAT_VEC2:   return "vec2";
+    case GL_FLOAT_VEC3:   return "vec3";
+    case GL_FLOAT_VEC4:   return "vec4";
 
-    case GL_INT:          return "int"; break;
-    case GL_INT_VEC2:     return "ivec2"; break;
-    case GL_INT_VEC3:     return "ivec3"; break;
-    case GL_INT_VEC4:     return "ivec4"; break;
-    case GL_UNSIGNED_INT: return "uint"; break;
-    case GL_SAMPLER_2D:   return "sampler2D"; break;
-    case GL_SAMPLER_CUBE: return "samplerCube"; break;
+    case GL_INT:          return "int";
+    case GL_INT_VEC2:     return "ivec2";
+    case GL_INT_VEC3:     return "ivec3";
+    case GL_INT_VEC4:     return "ivec4";
+    case GL_UNSIGNED_INT: return "uint";
+    case GL_SAMPLER_2D:   return "sampler2D";
+    case GL_SAMPLER_CUBE: return "samplerCube";
 
-    case GL_FLOAT_MAT2:   return "mat2"; break;
-    case GL_FLOAT_MAT3:   return "mat3"; break;
-    case GL_FLOAT_MAT4:   return "mat4"; break;
+    case GL_FLOAT_MAT2:   return "mat2";
+    case GL_FLOAT_MAT3:   return "mat3";
+    case GL_FLOAT_MAT4:   return "mat4";
 
     default:
       NGL_ASSERT(0);
@@ -832,23 +830,28 @@ void* nuiShaderProgram::GetMetalPipelineState() const // id<MTLRenderPipelineSta
   return mMetalPipelineState;
 }
 
-void DumpStructMember(int depth, MTLStructMember* member)
+#if defined _METAL_
+void nuiShaderProgram::ParseStructMember(int depth, const nglString& parentName, void* _member)
 {
+  MTLStructMember* member = (MTLStructMember*)_member;
   nglString indent("\t\t");
   for (int i = 0; i < depth; i++)
     indent.Add("\t");
-  NGL_OUT("%s%s %s (@%d - %d)\n", indent.GetChars(), dataTypes[member.dataType], [member.name UTF8String], member.offset, member.argumentIndex);
+    NGL_OUT("%s%s %s.%s (@%d)\n", indent.GetChars(), dataTypes[member.dataType], parentName.GetChars(), [member.name UTF8String], member.offset);
   if (member.dataType == MTLDataTypeStruct)
   {
     for (MTLStructMember* smember in member.structType.members)
     {
-      DumpStructMember(depth + 1, smember);
+      nglString parent(parentName);
+      parent.Add(".").Add((CFStringRef)member.name);
+      ParseStructMember(depth + 1, parent, smember);
     }
   }
 }
 
-void DumpArgument(const char* domain, MTLArgument* argument)
+void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
 {
+  MTLArgument* argument = (MTLArgument*)_argument;
   nglString n((CFStringRef)argument.name);
   if (argument.type == MTLArgumentTypeBuffer)
   {
@@ -857,12 +860,25 @@ void DumpArgument(const char* domain, MTLArgument* argument)
       NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
       for (MTLStructMember* member in argument.bufferStructType.members)
       {
-        DumpStructMember(0, member);
+        ParseStructMember(0, nglString((CFStringRef)argument.name), member);
       }
     }
     else
     {
-      NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s (%d)\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars(), argument.arrayLength);
+      bool isArray = false;
+      if (@available(macOS 10_13, *)) {
+        isArray = argument.arrayLength > 1;
+      }
+      if (isArray)
+      {
+        if (@available(macOS 10_13, *)) {
+          NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s (array size %d)\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars(), argument.arrayLength);
+        }
+      }
+      else
+      {
+        NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars());
+      }
     }
   }
   else
@@ -871,9 +887,11 @@ void DumpArgument(const char* domain, MTLArgument* argument)
   }
 
 }
+#endif
 
 bool nuiShaderProgram::Link()
 {
+#ifdef _METAL_
   id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
   if (device)
   {
@@ -920,18 +938,19 @@ bool nuiShaderProgram::Link()
     NGL_OUT("Function %s\n", nglString((CFStringRef)vertex_function.name).GetChars());
     for (MTLArgument* argument in reflection.vertexArguments)
     {
-      DumpArgument("Vertex", argument);
+      ParseArgument("Vertex", argument);
     }
 
     NGL_OUT("Function %s\n", nglString((CFStringRef)fragment_function.name).GetChars());
     for (MTLArgument* argument in reflection.fragmentArguments)
     {
-      DumpArgument("Fragment", argument);
+      ParseArgument("Fragment", argument);
     }
     
     pipelineState = nil;
   }
   else
+#endif
   {
     mProgram = glCreateProgram();
 

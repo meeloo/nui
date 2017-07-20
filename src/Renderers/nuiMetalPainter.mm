@@ -36,6 +36,12 @@ struct Transforms
   float4 Offset;
   float2 TextureTranslate;
   float2 TextureScale;
+  struct Test
+  {
+    int pouet;
+    float4 hahaha[2];
+    float4x4 bleh;
+  } test;
 };
 
 struct Vertex
