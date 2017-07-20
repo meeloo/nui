@@ -832,29 +832,42 @@ void* nuiShaderProgram::GetMetalPipelineState() const // id<MTLRenderPipelineSta
   return mMetalPipelineState;
 }
 
-void DumpStructMember(MTLStructMember* member)
+void DumpStructMember(int depth, MTLStructMember* member)
 {
-  NGL_OUT("\t\t%s member %d %s (@%d - %d)\n", types[member.dataType], [member.name UTF8String], member.offset, member.argumentIndex);
+  nglString indent("\t\t");
+  for (int i = 0; i < depth; i++)
+    indent.Add("\t");
+  NGL_OUT("%s%s %s (@%d - %d)\n", indent.GetChars(), dataTypes[member.dataType], [member.name UTF8String], member.offset, member.argumentIndex);
+  if (member.dataType == MTLDataTypeStruct)
+  {
+    for (MTLStructMember* smember in member.structType.members)
+    {
+      DumpStructMember(depth + 1, smember);
+    }
+  }
 }
 
 void DumpArgument(const char* domain, MTLArgument* argument)
 {
   nglString n((CFStringRef)argument.name);
-  if (argument.bufferDataType == MTLDataTypeStruct)
+  if (argument.type == MTLArgumentTypeBuffer)
   {
-    NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
-    for (MTLStructMember* member in argument.bufferStructType.attributeKeys)
+    if (argument.bufferDataType == MTLDataTypeStruct)
     {
-      DumpStructMember(member);
+      NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
+      for (MTLStructMember* member in argument.bufferStructType.members)
+      {
+        DumpStructMember(0, member);
+      }
     }
-  }
-  else if (argument.bufferPointerType)
-  {
-    NGL_OUT("\t%s Argument [[%s %d]] - %s (%s)\n", domain, types[argument.type], argument.index, n.GetChars(), dataTypes[argument.bufferDataType]);
+    else
+    {
+      NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s (%d)\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars(), argument.arrayLength);
+    }
   }
   else
   {
-    NGL_OUT("\%s Argument [[%s %d]] - %s (%s)\n", domain, types[argument.type], argument.index, n.GetChars(), dataTypes[argument.bufferDataType]);
+    NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
   }
 
 }
@@ -913,7 +926,7 @@ bool nuiShaderProgram::Link()
     NGL_OUT("Function %s\n", nglString((CFStringRef)fragment_function.name).GetChars());
     for (MTLArgument* argument in reflection.fragmentArguments)
     {
-      DumpArgument("Fragent", argument);
+      DumpArgument("Fragment", argument);
     }
     
     pipelineState = nil;
