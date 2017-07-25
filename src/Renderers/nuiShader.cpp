@@ -830,14 +830,116 @@ void* nuiShaderProgram::GetMetalPipelineState() const // id<MTLRenderPipelineSta
   return mMetalPipelineState;
 }
 
+static GLenum GLTypeFromMetalType(MTLDataType type)
+{
+  switch (type)
+  {
+    case MTLDataTypeNone: return 0;
+
+    case MTLDataTypeStruct: return 0;
+    case MTLDataTypeArray: return 0;
+      
+    case MTLDataTypeFloat: return GL_FLOAT;
+    case MTLDataTypeFloat2: return GL_FLOAT_VEC2;
+    case MTLDataTypeFloat3: return GL_FLOAT_VEC3;
+    case MTLDataTypeFloat4: return GL_FLOAT_VEC4;
+      
+    case MTLDataTypeFloat2x2: return GL_FLOAT_MAT2;
+    case MTLDataTypeFloat2x3: return GL_FLOAT_MAT2x3;
+    case MTLDataTypeFloat2x4: return GL_FLOAT_MAT2x4;
+      
+    case MTLDataTypeFloat3x2: return GL_FLOAT_MAT3x2;
+    case MTLDataTypeFloat3x3: return GL_FLOAT_MAT3;
+    case MTLDataTypeFloat3x4: return GL_FLOAT_MAT3x4;
+      
+    case MTLDataTypeFloat4x2: return GL_FLOAT_MAT4x2;
+    case MTLDataTypeFloat4x3: return GL_FLOAT_MAT4x3;
+    case MTLDataTypeFloat4x4: return GL_FLOAT_MAT4;
+      
+    case MTLDataTypeHalf: return GL_HALF_FLOAT;
+    case MTLDataTypeHalf2: return 0;
+    case MTLDataTypeHalf3: return 0;
+    case MTLDataTypeHalf4: return 0;
+      
+    case MTLDataTypeHalf2x2: return 0;
+    case MTLDataTypeHalf2x3: return 0;
+    case MTLDataTypeHalf2x4: return 0;
+      
+    case MTLDataTypeHalf3x2: return 0;
+    case MTLDataTypeHalf3x3: return 0;
+    case MTLDataTypeHalf3x4: return 0;
+      
+    case MTLDataTypeHalf4x2: return 0;
+    case MTLDataTypeHalf4x3: return 0;
+    case MTLDataTypeHalf4x4: return 0;
+      
+    case MTLDataTypeInt: return GL_INT;
+    case MTLDataTypeInt2: return GL_INT_VEC2;
+    case MTLDataTypeInt3: return GL_INT_VEC3;
+    case MTLDataTypeInt4: return GL_INT_VEC4;
+      
+    case MTLDataTypeUInt: return GL_UNSIGNED_INT;
+    case MTLDataTypeUInt2: return GL_UNSIGNED_INT_VEC2;
+    case MTLDataTypeUInt3: return GL_UNSIGNED_INT_VEC3;
+    case MTLDataTypeUInt4: return GL_UNSIGNED_INT_VEC4;
+      
+    case MTLDataTypeShort: return GL_SHORT;
+    case MTLDataTypeShort2: return 0;
+    case MTLDataTypeShort3: return 0;
+    case MTLDataTypeShort4: return 0;
+      
+    case MTLDataTypeUShort: return GL_UNSIGNED_SHORT;
+    case MTLDataTypeUShort2: return 0;
+    case MTLDataTypeUShort3: return 0;
+    case MTLDataTypeUShort4: return 0;
+      
+    case MTLDataTypeChar: return GL_BYTE;
+    case MTLDataTypeChar2: return 0;
+    case MTLDataTypeChar3: return 0;
+    case MTLDataTypeChar4: return 0;
+      
+    case MTLDataTypeUChar: return 0;
+    case MTLDataTypeUChar2: return 0;
+    case MTLDataTypeUChar3: return 0;
+    case MTLDataTypeUChar4: return 0;
+      
+    case MTLDataTypeBool: return GL_BOOL;
+    case MTLDataTypeBool2: return GL_BOOL_VEC2;
+    case MTLDataTypeBool3: return GL_BOOL_VEC3;
+    case MTLDataTypeBool4: return GL_BOOL_VEC4;
+      
+    case MTLDataTypeTexture: return GL_TEXTURE;
+    case MTLDataTypeSampler: return GL_SAMPLER;
+    case MTLDataTypePointer: return 0;
+  }
+  return 0;
+}
+
 #if defined _METAL_
 void nuiShaderProgram::ParseStructMember(int depth, const nglString& parentName, void* _member)
 {
   MTLStructMember* member = (MTLStructMember*)_member;
-  nglString indent("\t\t");
-  for (int i = 0; i < depth; i++)
-    indent.Add("\t");
-    NGL_OUT("%s%s %s.%s (@%d)\n", indent.GetChars(), dataTypes[member.dataType], parentName.GetChars(), [member.name UTF8String], member.offset);
+//  nglString indent("\t\t");
+//  for (int i = 0; i < depth; i++)
+//    indent.Add("\t");
+//  NGL_OUT("%s%s %s.%s (@%d)\n", indent.GetChars(), dataTypes[member.dataType], parentName.GetChars(), [member.name UTF8String], member.offset);
+  
+  nglString name(parentName);
+  name.Add(".").Add((CFStringRef)member.name);
+  auto location = mUniforms.size();
+  mUniformIndexes[location] = location;
+  int num = 1;
+  GLenum type = GLTypeFromMetalType(member.dataType);
+  
+  if (member.dataType == MTLDataTypeStruct)
+  {
+    NGL_ASSERT(member.arrayType != nil);
+    type = GLTypeFromMetalType(member.arrayType.elementType);
+    num = member.arrayType.arrayLength;
+  }
+  
+  mUniforms.push_back(nuiUniformDesc(name, type, num, location, member.offset, this));
+  
   if (member.dataType == MTLDataTypeStruct)
   {
     for (MTLStructMember* smember in member.structType.members)
@@ -857,11 +959,14 @@ void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
   {
     if (argument.bufferDataType == MTLDataTypeStruct)
     {
-      NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
+      //NGL_OUT("\t%s Argument [[%s %d]] - %s (struct size = %d)\n", domain, types[argument.type], argument.index, n.GetChars(), argument.bufferDataSize);
       for (MTLStructMember* member in argument.bufferStructType.members)
       {
         ParseStructMember(0, nglString((CFStringRef)argument.name), member);
       }
+      
+      if (!mUniformStructSize); ///  Only one struct per shader for now please, we're pretty dumb still
+        mUniformStructSize = argument.bufferDataSize;
     }
     else
     {
@@ -872,18 +977,18 @@ void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
       if (isArray)
       {
         if (@available(macOS 10_13, *)) {
-          NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s (array size %d)\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars(), argument.arrayLength);
+          //NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s (array size %d)\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars(), argument.arrayLength);
         }
       }
       else
       {
-        NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars());
+        //NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars());
       }
     }
   }
   else
   {
-    NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
+    //NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
   }
 
 }
@@ -1163,6 +1268,9 @@ GLint nuiShaderProgram::GetDifuseColorLocation() const
 
 size_t nuiShaderProgram::GetStateDataSize() const
 {
+  if (mUniformStructSize)
+    return mUniformStructSize;
+  
   size_t size = 0;
   
   for (size_t i = 0; i < GetUniformCount(); i++)
@@ -1174,6 +1282,7 @@ size_t nuiShaderProgram::GetStateDataSize() const
     size += s * cs;
   }
   
+  mUniformStructSize = size;
   return size;
 }
 

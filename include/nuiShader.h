@@ -242,6 +242,11 @@ private:
 
   std::vector<nuiUniformDesc> mUniforms;
   std::unordered_map<int, int> mUniformIndexes;
+  mutable size_t mUniformStructSize = 0;
+  
+  std::map<nglString, int> mTextureLocations;
+  std::map<nglString, int> mBuffersLocations;
+  std::map<nglString, int> mSamplerLocations;
 
   // Metal helpers:
 #ifdef _METAL_
