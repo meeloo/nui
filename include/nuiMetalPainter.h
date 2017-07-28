@@ -76,6 +76,7 @@ protected:
     
     bool mReload;
     void* mTexture;
+    void* mSampler;
   };
 
   class FramebufferInfo

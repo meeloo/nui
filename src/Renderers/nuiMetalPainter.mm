@@ -836,6 +836,9 @@ void nuiMetalPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply
       UploadTexture(mFinalState.mpTexture[slot], slot);
     }
 
+    id<MTLCommandEncoder> commandEncoder = (id<MTLCommandEncoder>) mpContext->GetMetalCommandEncoder();
+    [commandEncoder setFragmentTexture:(id<MTLTexture>)it->second.mTexture atIndex:slot];
+
     //NGL_OUT("Change texture type from 0x%x to 0x%x\n", outtarget, intarget);
   }
   else
@@ -1263,6 +1266,7 @@ nuiMetalPainter::TextureInfo::TextureInfo()
 {
   mReload = false;
   mTexture = nullptr;
+  mSampler = nullptr;
 }
 
 void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
@@ -1327,9 +1331,9 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 //      glTexParameteri(target, GL_TEXTURE_WRAP_S, pTexture->GetWrapS());
 //      glTexParameteri(target, GL_TEXTURE_WRAP_T, pTexture->GetWrapT());
 
-      int type = 8;
+      uint32 type = 8;
+      MTLPixelFormat mtlPixelFormat = MTLPixelFormatInvalid;
       GLint pixelformat = 0;
-      GLint internalPixelformat = 0;
       GLbyte* pBuffer = NULL;
       bool allocated = false;
 
@@ -1337,39 +1341,64 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
       {
         type = pImage->GetBitDepth();
         pixelformat = pImage->GetPixelFormat();
-        internalPixelformat = pImage->GetPixelFormat();
         pBuffer = (GLbyte*)pImage->GetBuffer();
 
         //#ifndef NUI_IOS
-#if (!defined NUI_IOS) && (!defined _ANDROID_)
-        if (pixelformat == GL_BGR)
-          internalPixelformat = GL_RGB;
-#endif
         switch (type)
         {
           case 16:
+//            mtlPixelFormat = MTLPixelFormatB5G6R5Unorm;
+            NGL_ASSERT(0);
+            break;
           case 15:
-//            type = GL_UNSIGNED_SHORT_5_5_5_1;
+//            mtlPixelFormat = MTLPixelFormatBGR5A1Unorm;
+            NGL_ASSERT(0);
             break;
           case 8:
-          case 24:
-          case 32:
-//            type = GL_UNSIGNED_BYTE;
+            mtlPixelFormat = MTLPixelFormatA8Unorm;
             break;
+          case 24:
+            NGL_ASSERT(0);
+            break;
+          case 32:
+            mtlPixelFormat = MTLPixelFormatRGBA8Unorm;
+            break;
+            
+          default:
+            NGL_ASSERT(0);
         }
       }
       else
       {
         NGL_ASSERT(pSurface);
+        mtlPixelFormat = MTLPixelFormatRGBA8Unorm;
       }
 
 
-      // TODO Upload Texture Image...
       {
         // Handle mipmaps and pTexture->GetAutoMipMap()
           pTexture->ResetForceReload();
 
         // Give a name to the texture for Metal Debugging
+        
+        id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+        id<MTLTexture> texture = (id<MTLTexture>)info.mTexture;
+        if (!texture)
+        {
+          MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlPixelFormat
+                                                                                                width:ToNearest(Width) height:ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
+          [device newTextureWithDescriptor:descriptor];
+        }
+        
+        MTLRegion region = MTLRegionMake2D(0, 0, ToNearest(Width), ToNearest(Height));
+        if (pBuffer)
+        {
+          [texture replaceRegion:region mipmapLevel:0 withBytes:pBuffer bytesPerRow:pTexture->GetImage()->GetBytesPerLine()];
+        }
+        info.mTexture = texture;
+        MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new]; samplerDescriptor.minFilter = MTLSamplerMinMagFilterNearest; samplerDescriptor.magFilter = MTLSamplerMinMagFilterLinear; samplerDescriptor.sAddressMode = MTLSamplerAddressModeClampToEdge; samplerDescriptor.tAddressMode = MTLSamplerAddressModeClampToEdge;
+        id<MTLSamplerState> samplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
+        info.mSampler = samplerState;
       }
 
       info.mReload = false;
@@ -1412,13 +1441,16 @@ void nuiMetalPainter::_DestroyTexture(nuiTexture* pTexture)
   TextureInfo info(it->second);
   mTextures.erase(it);
 
-  if (!info.mTexture)
-  {
-    return;
-  }
   //NGL_OUT("nuiMetalPainter::DestroyTexture 0x%x : '%s' / %d\n", pTexture, pTexture->GetSource().GetChars(), info.mTexture);
 
   // TODO Actually Delete the Texture
+  id<MTLTexture> texture = (id<MTLTexture>)info.mTexture;
+  id<MTLSamplerState> sampler = (id<MTLSamplerState>)info.mSampler;
+
+  if (texture)
+    [texture release];
+  if (sampler)
+    [sampler release];
 }
 
 nuiMetalPainter::FramebufferInfo::FramebufferInfo()
