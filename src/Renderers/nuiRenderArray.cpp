@@ -30,10 +30,10 @@ nuiRenderArray::nuiRenderArray(uint32 mode, bool Static, bool _3dmesh, bool _sha
   mCurrentVertex.mW = 1.0f;
   mCurrentVertex.mTX = 0.0f;
   mCurrentVertex.mTY = 0.0f;
-  mCurrentVertex.mR = 0;
-  mCurrentVertex.mG = 0;
-  mCurrentVertex.mB = 0;
-  mCurrentVertex.mA = 255;
+  mCurrentVertex.mRed   = 0;
+  mCurrentVertex.mGreen = 0;
+  mCurrentVertex.mBlue  = 0;
+  mCurrentVertex.mAlpha = 1.0f;
   mCurrentVertex.mNX = 0;
   mCurrentVertex.mNY = 0;
   mCurrentVertex.mNZ = 1;
@@ -188,18 +188,18 @@ void nuiRenderArray::SetColor(float r, float g, float b, float a)
   NGL_ASSERT(!std::isnan(b));
   NGL_ASSERT(!std::isnan(a));
 
-  mCurrentVertex.mR = (uint8)ToBelow(r * 255.0f);
-  mCurrentVertex.mG = (uint8)ToBelow(g * 255.0f);
-  mCurrentVertex.mB = (uint8)ToBelow(b * 255.0f);
-  mCurrentVertex.mA = (uint8)ToBelow(a * 255.0f);
+  mCurrentVertex.mRed   = r;
+  mCurrentVertex.mGreen = g;
+  mCurrentVertex.mBlue  = b;
+  mCurrentVertex.mAlpha = a;
 }
 
 void nuiRenderArray::SetColor(uint8 r, uint8 g, uint8 b, uint8 a)
 {
-  mCurrentVertex.mR = r;
-  mCurrentVertex.mG = g;
-  mCurrentVertex.mB = b;
-  mCurrentVertex.mA = a;
+  mCurrentVertex.mRed   = ((float)r)/255.0f;
+  mCurrentVertex.mGreen = ((float)g)/255.0f;
+  mCurrentVertex.mBlue  = ((float)b)/255.0f;
+  mCurrentVertex.mAlpha = ((float)a)/255.0f;
 }
 
 void nuiRenderArray::SetColor(uint32 Color)
@@ -331,18 +331,18 @@ void nuiRenderArray::SetColor(uint32 index, float r, float g, float b, float a)
   NGL_ASSERT(!std::isnan(b));
   NGL_ASSERT(!std::isnan(a));
   
-  mVertices[index].mR = (uint8)ToBelow(r * 255.0f);
-  mVertices[index].mG = (uint8)ToBelow(g * 255.0f);
-  mVertices[index].mB = (uint8)ToBelow(b * 255.0f);
-  mVertices[index].mA = (uint8)ToBelow(a * 255.0f);
+  mVertices[index].mRed   = r;
+  mVertices[index].mGreen = g;
+  mVertices[index].mBlue  = b;
+  mVertices[index].mAlpha = a;
 }
 
 void nuiRenderArray::SetColor(uint32 index, uint8 r, uint8 g, uint8 b, uint8 a)
 {
-  mVertices[index].mR = r;
-  mVertices[index].mG = g;
-  mVertices[index].mB = b;
-  mVertices[index].mA = a;
+  mVertices[index].mRed   = ((float)r)/255.0f;
+  mVertices[index].mGreen = ((float)g)/255.0f;
+  mVertices[index].mBlue  = ((float)b)/255.0f;
+  mVertices[index].mAlpha = ((float)a)/255.0f;
 }
 
 void nuiRenderArray::SetColor(uint32 index, uint32 Color)

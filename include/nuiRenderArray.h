@@ -27,18 +27,18 @@ public:
     GLfloat mZ;
     GLfloat mW;
 
-    GLfloat mTX;
-    GLfloat mTY;
-
     GLfloat mNX;
     GLfloat mNY;
     GLfloat mNZ;
     GLfloat mNW;
 
-    GLubyte mR;
-    GLubyte mG;
-    GLubyte mB;
-    GLubyte mA;
+    GLfloat mTX;
+    GLfloat mTY;
+    
+    GLfloat mRed;
+    GLfloat mGreen;
+    GLfloat mBlue;
+    GLfloat mAlpha;
   };
 
   enum StreamType

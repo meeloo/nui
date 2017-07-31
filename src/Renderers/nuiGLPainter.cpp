@@ -2708,7 +2708,7 @@ void nuiGLPainter::SetVertexPointers(const nuiRenderArray& rArray)
   if (Color != -1)
   {
     glEnableVertexAttribArray(Color);
-    glVertexAttribPointer(Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(nuiRenderArray::Vertex), &rArray.GetVertices()[0].mR);
+    glVertexAttribPointer(Color, 4, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), &rArray.GetVertices()[0].mRed);
   }
   else
   {
@@ -2791,7 +2791,7 @@ void nuiGLPainter::SetVertexBuffersPointers(const nuiRenderArray& rArray, Render
     
     if (Color != -1)
     {
-      glVertexAttribPointer(Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(nuiRenderArray::Vertex), (void*)offsetof(nuiRenderArray::Vertex, mR));
+      glVertexAttribPointer(Color, 4, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), (void*)offsetof(nuiRenderArray::Vertex, mRed));
       nuiCheckForGLErrors();
       glEnableVertexAttribArray(Color);
       nuiCheckForGLErrors();

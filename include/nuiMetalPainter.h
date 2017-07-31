@@ -112,7 +112,7 @@ protected:
     void Rebind(nuiRenderArray* pRenderArray);
 
     nuiRenderArray* mpRenderArray;
-    GLuint mVertexBuffer;
+    void* mpVertexBuffer;
     std::vector<GLuint> mIndexBuffers;
     std::vector<GLuint> mStreamBuffers;
 

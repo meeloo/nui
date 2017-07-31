@@ -38,6 +38,14 @@ struct Transforms
   float2 TextureScale;
 };
 
+ struct InputVertex
+{
+  float4 mPosition;
+  float4 mColor;
+  float4 mNormal;
+  float2 mTexCoord;
+};
+
 struct Vertex
 {
   float4 Position [[position]];
@@ -47,16 +55,14 @@ struct Vertex
                
 vertex Vertex vertex_main(
                           constant Transforms &transforms [[buffer(0)]],
-                          constant float4 *position [[buffer(1)]],
-                          constant float4 *color [[buffer(2)]],
-                          constant float2 *texCoord [[buffer(3)]],
+                          constant InputVertex *vertices [[buffer(1)]],
                           uint vid [[vertex_id]])
 {
   Vertex vert;
 
-  vert.TexCoord = texCoord[vid] * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Color = color[vid];
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (position[vid]  + transforms.Offset));
+  vert.TexCoord = vertices[vid].mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Color = vertices[vid].mColor;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
 
   return vert;
 }
@@ -93,6 +99,14 @@ SHADER_STRING
   float2 TextureScale;
 };
  
+ struct InputVertex
+{
+  float4 mPosition;
+  float4 mColor;
+  float4 mNormal;
+  float2 mTexCoord;
+};
+
  struct Vertex
 {
   float4 Position [[position]];
@@ -102,16 +116,14 @@ SHADER_STRING
  
  vertex Vertex vertex_main(
                            constant Transforms &transforms [[buffer(0)]],
-                           constant float4 *position [[buffer(1)]],
-                           constant float4 *color [[buffer(2)]],
-                           constant float2 *texCoord [[buffer(3)]],
+                           constant InputVertex *vertices [[buffer(1)]],
                            uint vid [[vertex_id]])
 {
   Vertex vert;
   
-  vert.TexCoord = texCoord[vid] * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Color = color[vid];
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (position[vid]  + transforms.Offset));
+  vert.TexCoord = vertices[vid].mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Color = vertices[vid].mColor;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -147,6 +159,14 @@ struct Transforms
   float4 DifuseColor;
 };
  
+ struct InputVertex
+{
+  float4 mPosition;
+  float4 mColor;
+  float4 mNormal;
+  float2 mTexCoord;
+};
+
  struct Vertex
 {
   float4 Position [[position]];
@@ -155,14 +175,13 @@ struct Transforms
  
 vertex Vertex vertex_main(
                            constant Transforms &transforms [[buffer(0)]],
-                           constant float4 *position [[buffer(1)]],
-                           constant float2 *texCoord [[buffer(2)]],
+                          constant InputVertex *vertices [[buffer(1)]],
                            uint vid [[vertex_id]])
 {
   Vertex vert;
   
-  vert.TexCoord = texCoord[vid] * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (position[vid]  + transforms.Offset));
+  vert.TexCoord = vertices[vid].mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -200,6 +219,14 @@ struct Transforms
   float4 DifuseColor;
 };
  
+ struct InputVertex
+{
+  float4 mPosition;
+  float4 mColor;
+  float4 mNormal;
+  float2 mTexCoord;
+};
+
 struct Vertex
 {
   float4 Position [[position]];
@@ -208,14 +235,13 @@ struct Vertex
  
 vertex Vertex vertex_main(
                            constant Transforms &transforms [[buffer(0)]],
-                           constant float4 *position [[buffer(1)]],
-                           constant float2 *texCoord [[buffer(2)]],
+                          constant InputVertex *vertices [[buffer(1)]],
                            uint vid [[vertex_id]])
 {
   Vertex vert;
   
-  vert.TexCoord = texCoord[vid] * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (position[vid]  + transforms.Offset));
+  vert.TexCoord = vertices[vid].mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -251,6 +277,14 @@ struct Transforms
   float4 Offset;
 };
                
+ struct InputVertex
+{
+  float4 mPosition;
+  float4 mColor;
+  float4 mNormal;
+  float2 mTexCoord;
+};
+ 
 struct Vertex
 {
   float4 Position [[position]];
@@ -259,14 +293,13 @@ struct Vertex
                
 vertex Vertex vertex_main(
                            constant Transforms &transforms [[buffer(0)]],
-                           constant float4 *position [[buffer(1)]],
-                           constant float4 *color [[buffer(2)]],
+                          constant InputVertex *vertices [[buffer(1)]],
                            uint vid [[vertex_id]])
 {
   Vertex vert;
   
-  vert.Color = color[vid];
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (position[vid]  + transforms.Offset));
+  vert.Color = vertices[vid].mColor;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -297,6 +330,14 @@ SHADER_STRING
   float4 DifuseColor;
 };
  
+ struct InputVertex
+{
+  float4 mPosition;
+  float4 mNormal;
+  float2 mTexCoord;
+  uchar4 mColor;
+};
+ 
  struct Vertex
 {
   float4 Position [[position]];
@@ -304,12 +345,12 @@ SHADER_STRING
  
  vertex Vertex vertex_main(
                            constant Transforms &transforms [[buffer(0)]],
-                           constant float4 *position [[buffer(1)]],
+                           constant InputVertex *vertices [[buffer(1)]],
                            uint vid [[vertex_id]])
 {
   Vertex vert;
   
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (position[vid]  + transforms.Offset));
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -1269,6 +1310,42 @@ nuiMetalPainter::TextureInfo::TextureInfo()
   mSampler = nullptr;
 }
 
+static inline MTLSamplerMinMagFilter nuiGLToMetaltextureFilter(GLenum val)
+{
+  switch (val)
+  {
+    case GL_NEAREST_MIPMAP_NEAREST:
+      return MTLSamplerMinMagFilterNearest;
+    case GL_LINEAR_MIPMAP_NEAREST:
+      return MTLSamplerMinMagFilterLinear;
+    case GL_NEAREST_MIPMAP_LINEAR:
+      return MTLSamplerMinMagFilterNearest;
+    case GL_LINEAR_MIPMAP_LINEAR:
+      return MTLSamplerMinMagFilterLinear;
+  }
+  
+  return MTLSamplerMinMagFilterLinear;
+}
+
+static inline MTLSamplerAddressMode nuiGLToMetaltextureAddressMode(GLenum val)
+{
+  switch (val)
+  {
+    case GL_CLAMP_TO_EDGE:
+      return MTLSamplerAddressModeClampToEdge;
+    case GL_CLAMP_TO_BORDER:
+      return MTLSamplerAddressModeClampToBorderColor;
+    case GL_CLAMP:
+      return MTLSamplerAddressModeClampToEdge;
+    case GL_REPEAT:
+      return MTLSamplerAddressModeRepeat;
+    case GL_MIRRORED_REPEAT:
+      return MTLSamplerAddressModeMirrorRepeat;
+  }
+  
+  return MTLSamplerAddressModeClampToEdge;
+}
+
 void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 {
 #ifdef DEBUG
@@ -1326,16 +1403,10 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
     if (reload)
     {
-//      glTexParameteri(target, GL_TEXTURE_MIN_FILTER, pTexture->GetMinFilter());
-//      glTexParameteri(target, GL_TEXTURE_MAG_FILTER, pTexture->GetMagFilter());
-//      glTexParameteri(target, GL_TEXTURE_WRAP_S, pTexture->GetWrapS());
-//      glTexParameteri(target, GL_TEXTURE_WRAP_T, pTexture->GetWrapT());
-
       uint32 type = 8;
       MTLPixelFormat mtlPixelFormat = MTLPixelFormatInvalid;
       GLint pixelformat = 0;
       GLbyte* pBuffer = NULL;
-      bool allocated = false;
 
       if (pImage)
       {
@@ -1396,7 +1467,11 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
           [texture replaceRegion:region mipmapLevel:0 withBytes:pBuffer bytesPerRow:pTexture->GetImage()->GetBytesPerLine()];
         }
         info.mTexture = texture;
-        MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new]; samplerDescriptor.minFilter = MTLSamplerMinMagFilterNearest; samplerDescriptor.magFilter = MTLSamplerMinMagFilterLinear; samplerDescriptor.sAddressMode = MTLSamplerAddressModeClampToEdge; samplerDescriptor.tAddressMode = MTLSamplerAddressModeClampToEdge;
+        MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new]; samplerDescriptor.minFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
+        samplerDescriptor.magFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
+        samplerDescriptor.sAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapS());
+        samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
+
         id<MTLSamplerState> samplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
         info.mSampler = samplerState;
       }
@@ -1773,8 +1848,8 @@ void nuiMetalPainter::RenderArrayInfo::Recycle(nuiMetalPainter::RenderArrayInfo*
 
 nuiMetalPainter::RenderArrayInfo::RenderArrayInfo(nuiRenderArray* pRenderArray)
 {
-  mpRenderArray = NULL;
-  mVertexBuffer = -1;
+  mpRenderArray = nullptr;
+  mpVertexBuffer = nullptr;
 
   if (pRenderArray)
     Rebind(pRenderArray);
@@ -1791,7 +1866,7 @@ void nuiMetalPainter::RenderArrayInfo::Rebind(nuiRenderArray* pRenderArray)
   mpRenderArray = pRenderArray;
 
   int32 count = pRenderArray->GetSize();
-  NGL_ASSERT(mVertexBuffer == -1);
+  NGL_ASSERT(mpVertexBuffer == nullptr);
 //  glGenBuffers(1, &mVertexBuffer);
 //  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 //  glBufferData(GL_ARRAY_BUFFER, sizeof(nuiRenderArray::Vertex) * count, &pRenderArray->GetVertices()[0], GL_STATIC_DRAW);
@@ -1834,7 +1909,7 @@ void nuiMetalPainter::RenderArrayInfo::Rebind(nuiRenderArray* pRenderArray)
 
 void nuiMetalPainter::RenderArrayInfo::Destroy()
 {
-  if ((GLint)mVertexBuffer == -1)
+  if (mpVertexBuffer == nullptr)
     return;
 
   for (auto vao : mVAOs)
@@ -1844,7 +1919,7 @@ void nuiMetalPainter::RenderArrayInfo::Destroy()
   mVAOs.clear();
 
 //  glDeleteBuffers(1, &mVertexBuffer);
-  mVertexBuffer = -1;
+  mpVertexBuffer = nullptr;
 
   for (uint32 i = 0; i < mIndexBuffers.size(); i++)
   {
