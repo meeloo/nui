@@ -916,7 +916,25 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
 //  glClear(v);
 }
 
-
+MTLPrimitiveType nuiMTLPrimitiveTypeFromGL(GLenum type)
+{
+  switch (type)
+  {
+    case GL_POINTS:
+      return MTLPrimitiveTypePoint;
+    case GL_LINES:
+      return MTLPrimitiveTypeLine;
+    case GL_TRIANGLES:
+      return MTLPrimitiveTypeTriangle;
+    case GL_TRIANGLE_FAN:
+      NGL_ASSERT(0); // Fans not supported in Metal
+      break;
+    case GL_TRIANGLE_STRIP:
+      return MTLPrimitiveTypeTriangleStrip;
+  }
+  
+  return MTLPrimitiveTypePoint;
+}
 
 #define LOGENUM(XXX) case XXX: { NGL_OUT("%s\n", #XXX); } break;
 
@@ -1208,6 +1226,15 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     }
   }
 
+  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+  
+  id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  [encoder setVertexBytes:mFinalState.mpShaderState->GetStateData() length:mpShaderState->GetStateDataSize() atIndex:0];
+  [encoder setVertexBytes:&pArray->GetVertex(0).mX length:pArray->GetSize()  atIndex:1];
+  [encoder setFragmentBytes:mFinalState.mpShaderState->GetStateData() length:mpShaderState->GetStateDataSize() atIndex:0];
+
+  
+  
   if (mpSurface && mTwoPassBlend && mFinalState.mBlending)
   {
 //    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
@@ -1215,6 +1242,8 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     
     if (!arraycount)
     {
+      MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
+      [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
 //      glDrawArrays(mode, 0, s);
     }
     else
@@ -1227,6 +1256,15 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 //#else
 //        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
 //#endif
+        MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
+#if (defined _UIKIT_)
+        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:0];
+        MTLIndexType indexType = MTLIndexTypeUInt16;
+#else
+        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
+        MTLIndexType indexType = MTLIndexTypeUInt32;
+#endif
+        [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
       }
     }
 
@@ -1235,6 +1273,8 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     if (!arraycount)
     {
 //      glDrawArrays(mode, 0, s);
+      MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
+      [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
     }
     else
     {
@@ -1246,6 +1286,15 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 //#else
 //        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
 //#endif
+        MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
+#if (defined _UIKIT_)
+        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:0];
+        MTLIndexType indexType = MTLIndexTypeUInt16;
+#else
+        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
+        MTLIndexType indexType = MTLIndexTypeUInt32;
+#endif
+        [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
       }
     }
 //    glBlendFunc(mSrcColor, mDstColor);
@@ -1258,6 +1307,8 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     if (!arraycount)
     {
 //      glDrawArrays(mode, 0, s);
+      MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
+      [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
     }
     else
     {
@@ -1269,6 +1320,15 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 //#else
 //        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
 //#endif
+        MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
+#if (defined _UIKIT_)
+        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:0];
+        MTLIndexType indexType = MTLIndexTypeUInt16;
+#else
+        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
+        MTLIndexType indexType = MTLIndexTypeUInt32;
+#endif
+        [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
       }
     }
   }
