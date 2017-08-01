@@ -640,10 +640,15 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
   NUI_RETURN_IF_RENDERING_DISABLED;
   //ForceApply = true;
 
+  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+  
+  id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+
   // blending
   if (ForceApply || mFinalState.mBlending != rState.mBlending)
   {
     mFinalState.mBlending = rState.mBlending;
+    encoder 
     if (mFinalState.mBlending)
     {
 //      glEnable(GL_BLEND);
@@ -1064,9 +1069,12 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     
     pShader->Acquire();
     mpShader = pShader;
-//    mpShaderState->Acquire();
   }
-  
+  if (!mpShaderState)
+    mpShaderState = mpShader->NewState();
+  else
+    mpShaderState->Acquire();
+
   NGL_ASSERT(mpShader != NULL);
   
   ApplyState(*mpState, mForceApply);
@@ -1233,7 +1241,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   [encoder setVertexBytes:&pArray->GetVertex(0).mX length:pArray->GetSize()  atIndex:1];
   [encoder setFragmentBytes:mFinalState.mpShaderState->GetStateData() length:mpShaderState->GetStateDataSize() atIndex:0];
 
-  
+  [encoder setRenderPipelineState:(id<MTLRenderPipelineState>)mpShader->GetMetalPipelineState()];
   
   if (mpSurface && mTwoPassBlend && mFinalState.mBlending)
   {
