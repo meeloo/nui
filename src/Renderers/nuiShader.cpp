@@ -1079,7 +1079,7 @@ bool nuiShaderProgram::Link()
     CAMetalLayer* metalLayer = (CAMetalLayer*)mpContext->GetMetalLayer();
     MTLAutoreleasedRenderPipelineReflection reflection = nil;
     nuiRenderState state;
-    MTLRenderPipelineDescriptor *descriptor = NewMetalRenderPipelineDescriptor(state);
+    MTLRenderPipelineDescriptor *descriptor = (MTLRenderPipelineDescriptor *)NewMetalPipelineDescriptor(state);
 
     id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:descriptor options:MTLPipelineOptionArgumentInfo+MTLPipelineOptionBufferTypeInfo reflection:&reflection error:&error];
 
