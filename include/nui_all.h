@@ -84,8 +84,8 @@ typedef double nuiSize;
 #include "nuiDecorationDefines.h"
 #include "nuiUniformDesc.h"
 #include "nuiVertexAttribDesc.h"
-#include "nuiShader.h"
 #include "nuiRenderState.h"
+#include "nuiShader.h"
 #endif
 
 #include "nuiAttributeType.h"

@@ -825,9 +825,52 @@ void* nuiShaderProgram::GetMetalFunction(const nglString& rFunctionName) const
   return function;
 }
 
-void* nuiShaderProgram::GetMetalPipelineState() const // id<MTLRenderPipelineState>
+static MTLBlendFactor GLToMetalBlendFactor(GLenum factor)
 {
-  return mMetalPipelineState;
+  switch (factor)
+  {
+    case GL_ZERO: return MTLBlendFactorZero;
+    case GL_ONE: return MTLBlendFactorOne;
+    case GL_ONE_MINUS_SRC_ALPHA: return MTLBlendFactorOneMinusSourceAlpha;
+    case GL_ONE_MINUS_DST_ALPHA: return MTLBlendFactorOneMinusDestinationAlpha;
+    case GL_SRC_COLOR: return MTLBlendFactorSourceColor;
+    case GL_DST_COLOR: return MTLBlendFactorDestinationColor;
+    case GL_SRC_ALPHA: return MTLBlendFactorSourceAlpha;
+    case GL_DST_ALPHA: return MTLBlendFactorDestinationAlpha;
+  }
+  
+  return MTLBlendFactorOne;
+}
+
+void nuiGetMetalBlendFuncFactors(nuiBlendFunc Func, MTLBlendFactor& src, MTLBlendFactor& dst)
+{
+  GLenum srcGL, dstGL;
+  nuiGetBlendFuncFactors(Func, srcGL, dstGL);
+  src = GLToMetalBlendFactor(srcGL);
+  dst = GLToMetalBlendFactor(dstGL);
+}
+
+void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRenderState) const // MTLRenderPipelineState*
+{
+  CAMetalLayer* metalLayer = (CAMetalLayer*)mpContext->GetMetalLayer();
+  MTLRenderPipelineDescriptor *descriptor = [MTLRenderPipelineDescriptor new];
+  descriptor.vertexFunction = (id<MTLFunction>)mMetalVertexFunction;
+  descriptor.fragmentFunction = (id<MTLFunction>)mMetalFragmentFunction;
+  descriptor.colorAttachments[0].pixelFormat = metalLayer.pixelFormat;
+  descriptor.colorAttachments[0].blendingEnabled = rRenderState.mBlending;
+  
+  MTLBlendFactor srcC, dstC;
+  nuiGetMetalBlendFuncFactors(rRenderState.mBlendFunc, srcC, dstC);
+  descriptor.colorAttachments[0].rgbBlendOperation = MTLBlendOperationAdd;
+  descriptor.colorAttachments[0].alphaBlendOperation = MTLBlendOperationAdd;
+  descriptor.colorAttachments[0].sourceRGBBlendFactor = srcC;
+  descriptor.colorAttachments[0].sourceAlphaBlendFactor = MTLBlendFactorOne;
+  descriptor.colorAttachments[0].destinationRGBBlendFactor = dstC;
+  descriptor.colorAttachments[0].destinationAlphaBlendFactor = MTLBlendFactorOne;
+
+  descriptor.colorAttachments[0].writeMask = MTLColorWriteMaskAll;
+  
+  return descriptor;
 }
 
 static GLenum GLTypeFromMetalType(MTLDataType type)
@@ -1030,14 +1073,14 @@ bool nuiShaderProgram::Link()
     
     id<MTLFunction> vertex_function = [library newFunctionWithName:@"vertex_main"];
     id<MTLFunction> fragment_function = [library newFunctionWithName:@"fragment_main"];
-    
+    mMetalVertexFunction = vertex_function;
+    mMetalFragmentFunction = fragment_function;
+
     CAMetalLayer* metalLayer = (CAMetalLayer*)mpContext->GetMetalLayer();
     MTLAutoreleasedRenderPipelineReflection reflection = nil;
-    MTLRenderPipelineDescriptor *descriptor = [MTLRenderPipelineDescriptor new];
-    descriptor.vertexFunction = vertex_function;
-    descriptor.fragmentFunction = fragment_function;
-    descriptor.colorAttachments[0].pixelFormat = metalLayer.pixelFormat;
-    
+    nuiRenderState state;
+    MTLRenderPipelineDescriptor *descriptor = NewMetalRenderPipelineDescriptor(state);
+
     id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:descriptor options:MTLPipelineOptionArgumentInfo+MTLPipelineOptionBufferTypeInfo reflection:&reflection error:&error];
 
     NGL_OUT("Function %s\n", nglString((CFStringRef)vertex_function.name).GetChars());

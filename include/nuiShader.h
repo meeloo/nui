@@ -149,9 +149,9 @@ public:
   size_t GetUniformDescIndex(GLint location) const;
 
   GLint GetProgram() const; // GL Program
-  void* GetMetalLibrary() const; // Metal library
-  void* GetMetalFunction(const nglString& rFunctionName) const;
-  void* GetMetalPipelineState() const; // id<MTLRenderPipelineState>
+  void* GetMetalLibrary() const; // id<MTLLibrary>
+  void* GetMetalFunction(const nglString& rFunctionName) const; // id<MTLFunction>
+  void* NewMetalPipelineDescriptor(const nuiRenderState& rRenderState) const; // MTLRenderPipelineState*
 
   static void ClearAll();
   
@@ -222,8 +222,9 @@ private:
   std::map<GLenum, nuiShader*> mShaders;
   
   void* mpMetalLibrary = nullptr;
-  void* mMetalPipelineState = nullptr;
-  
+  void* mMetalVertexFunction = nullptr;
+  void* mMetalFragmentFunction = nullptr;
+
   GLint mVA_Position;
   GLint mVA_TexCoord;
   GLint mVA_Color;

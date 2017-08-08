@@ -648,7 +648,6 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
   if (ForceApply || mFinalState.mBlending != rState.mBlending)
   {
     mFinalState.mBlending = rState.mBlending;
-    encoder 
     if (mFinalState.mBlending)
     {
 //      glEnable(GL_BLEND);
@@ -1241,7 +1240,10 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   [encoder setVertexBytes:&pArray->GetVertex(0).mX length:pArray->GetSize()  atIndex:1];
   [encoder setFragmentBytes:mFinalState.mpShaderState->GetStateData() length:mpShaderState->GetStateDataSize() atIndex:0];
 
-  [encoder setRenderPipelineState:(id<MTLRenderPipelineState>)mpShader->GetMetalPipelineState()];
+  NSError* err = nil;
+  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
+  id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
+  [encoder setRenderPipelineState:pipelineState];
   
   if (mpSurface && mTwoPassBlend && mFinalState.mBlending)
   {
