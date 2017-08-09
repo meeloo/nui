@@ -11,6 +11,9 @@
 #import <Metal/Metal.h>
 #import <QuartzCore/CAMetalLayer.h>
 
+#define NUI_SHADER_INTROSPECT_LOGS 1
+
+
 static const char* types[] = {
   "Buffer",
   "ThreadgroupMemory",
@@ -178,7 +181,7 @@ nuiShaderState::nuiShaderState(const nuiShaderState& rOriginal)
 : mpProgram(rOriginal.mpProgram)
 {
   //NGL_OUT("nuiShaderState Ctor %p (from %p)\n", this, &rOriginal);
-  mData.resize(rOriginal.mData.size());
+  mData = rOriginal.mData;
 }
 
 nuiShaderState::~nuiShaderState()
@@ -962,11 +965,13 @@ static GLenum GLTypeFromMetalType(MTLDataType type)
 void nuiShaderProgram::ParseStructMember(int depth, const nglString& parentName, void* _member)
 {
   MTLStructMember* member = (MTLStructMember*)_member;
-//  nglString indent("\t\t");
-//  for (int i = 0; i < depth; i++)
-//    indent.Add("\t");
-//  NGL_OUT("%s%s %s.%s (@%d)\n", indent.GetChars(), dataTypes[member.dataType], parentName.GetChars(), [member.name UTF8String], member.offset);
-  
+#if NUI_SHADER_INTROSPECT_LOGS
+  nglString indent("\t\t");
+  for (int i = 0; i < depth; i++)
+    indent.Add("\t");
+  NGL_OUT("%s%s %s.%s (@%d)\n", indent.GetChars(), dataTypes[member.dataType], parentName.GetChars(), [member.name UTF8String], member.offset);
+#endif //NUI_SHADER_INTROSPECT_LOGS
+
   nglString name(parentName);
   name.Add(".").Add((CFStringRef)member.name);
   auto location = mUniforms.size();
@@ -1002,14 +1007,17 @@ void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
   {
     if (argument.bufferDataType == MTLDataTypeStruct)
     {
-      //NGL_OUT("\t%s Argument [[%s %d]] - %s (struct size = %d)\n", domain, types[argument.type], argument.index, n.GetChars(), argument.bufferDataSize);
+#if NUI_SHADER_INTROSPECT_LOGS
+      NGL_OUT("\t%s Argument [[%s %d]] - %s (struct size = %d)\n", domain, types[argument.type], argument.index, n.GetChars(), argument.bufferDataSize);
+#endif //NUI_SHADER_INTROSPECT_LOGS
+
       for (MTLStructMember* member in argument.bufferStructType.members)
       {
         ParseStructMember(0, nglString((CFStringRef)argument.name), member);
       }
       
-      if (!mUniformStructSize); ///  Only one struct per shader for now please, we're pretty dumb still
-        mUniformStructSize = argument.bufferDataSize;
+//      if (!mUniformStructSize); ///  Only one struct per shader for now please, we're pretty dumb still
+//        mUniformStructSize = argument.bufferDataSize;
     }
     else
     {
@@ -1020,18 +1028,24 @@ void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
       if (isArray)
       {
         if (@available(macOS 10_13, *)) {
-          //NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s (array size %d)\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars(), argument.arrayLength);
+#if NUI_SHADER_INTROSPECT_LOGS
+          NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s (array size %d)\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars(), argument.arrayLength);
+#endif //NUI_SHADER_INTROSPECT_LOGS
         }
       }
       else
       {
-        //NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars());
+#if NUI_SHADER_INTROSPECT_LOGS
+        NGL_OUT("\t%s Argument [[%s %d]] - %s[?] %s\n", domain, types[argument.type], argument.index, dataTypes[argument.bufferDataType], n.GetChars());
+#endif //NUI_SHADER_INTROSPECT_LOGS
       }
     }
   }
   else
   {
-    //NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
+#if NUI_SHADER_INTROSPECT_LOGS
+    NGL_OUT("\t%s Argument [[%s %d]] - %s\n", domain, types[argument.type], argument.index, n.GetChars());
+#endif //NUI_SHADER_INTROSPECT_LOGS
   }
 
 }
@@ -1083,13 +1097,17 @@ bool nuiShaderProgram::Link()
 
     id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:descriptor options:MTLPipelineOptionArgumentInfo+MTLPipelineOptionBufferTypeInfo reflection:&reflection error:&error];
 
+#if NUI_SHADER_INTROSPECT_LOGS
     NGL_OUT("Function %s\n", nglString((CFStringRef)vertex_function.name).GetChars());
+#endif //NUI_SHADER_INTROSPECT_LOGS
     for (MTLArgument* argument in reflection.vertexArguments)
     {
       ParseArgument("Vertex", argument);
     }
 
+#if NUI_SHADER_INTROSPECT_LOGS
     NGL_OUT("Function %s\n", nglString((CFStringRef)fragment_function.name).GetChars());
+#endif //NUI_SHADER_INTROSPECT_LOGS
     for (MTLArgument* argument in reflection.fragmentArguments)
     {
       ParseArgument("Fragment", argument);

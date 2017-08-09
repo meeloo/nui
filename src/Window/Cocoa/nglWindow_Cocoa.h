@@ -11,19 +11,10 @@
 */
 
 @interface nglNSView_OpenGL : NSView<NSWindowDelegate>
-{
-  nglWindow* mpNGLWindow;
-  NSTimer* mpRefreshTimer;
-  bool mInitiated;
-}
+
 @end
 
 @interface nglNSView_Metal : NSView<NSWindowDelegate>
-{
-  nglWindow* mpNGLWindow;
-  NSTimer* mpRefreshTimer;
-  bool mInitiated;
-}
 
 @property (readonly)CAMetalLayer* metalLayer;
 

@@ -202,6 +202,12 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 #pragma mark nglNSView_OpenGL
 
 @implementation nglNSView_OpenGL
+{
+  nglWindow* mpNGLWindow;
+  NSTimer* mpRefreshTimer;
+  bool mInitiated;
+}
+
 - (id)initWithNGLWindow:(nglWindow*)pNGLWindow
 {
   self = [super init];
@@ -347,6 +353,9 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 @implementation nglNSView_Metal
 {
   CAMetalLayer* _metalLayer;
+  nglWindow* mpNGLWindow;
+  NSTimer* mpRefreshTimer;
+  bool mInitiated;
 }
 
 - (CALayer *)makeBackingLayer
@@ -359,6 +368,19 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   self.layer = _metalLayer;
   return _metalLayer;
 }
+
+- (void)lockFocus
+{
+  // make sure we are ready to draw
+  [super lockFocus];
+  
+  if (!mInitiated)
+  {
+    mInitiated = true;
+    mpNGLWindow->CallOnCreation();
+  }
+}
+
 
 - (CAMetalLayer *)metalLayer
 {
@@ -395,6 +417,12 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 
 - (void) windowDidResize: (NSNotification *)notification
 {
+  if (!mInitiated)
+  {
+    mInitiated = true;
+    mpNGLWindow->CallOnCreation();
+  }
+
   mpNGLWindow->GetLock().Lock();
 
   nglNSWindow* win = (nglNSWindow*)[notification object];
@@ -412,6 +440,15 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   mpNGLWindow->GetLock().Unlock();
 
   mpNGLWindow->CallOnPaint();
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+  if (!mInitiated)
+  {
+    mInitiated = true;
+    mpNGLWindow->CallOnCreation();
+  }
 }
 
 -(void)windowWillClose:(NSNotification *)note

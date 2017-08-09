@@ -1237,9 +1237,27 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   
   id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
   [encoder setVertexBytes:mFinalState.mpShaderState->GetStateData() length:mpShaderState->GetStateDataSize() atIndex:0];
-  [encoder setVertexBytes:&pArray->GetVertex(0).mX length:pArray->GetSize()  atIndex:1];
+  size_t vertexcount = pArray->GetSize();
+  size_t vertexsize = sizeof(nuiRenderArray::Vertex);
+  id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:0];
+  [encoder setVertexBuffer:vertices offset:0 atIndex:1];
   [encoder setFragmentBytes:mFinalState.mpShaderState->GetStateData() length:mpShaderState->GetStateDataSize() atIndex:0];
 
+  for (int i = 0; i < 8; i++)
+  {
+    auto it = mTextures.end();
+    nuiTexture* pTexture = mFinalState.mpTexture[i];
+    if (pTexture)
+    {
+      it = mTextures.find(pTexture);
+      id<MTLTexture> texture = (id<MTLTexture>)it->second.mTexture;
+      id<MTLSamplerState> sampler = (id<MTLSamplerState>)it->second.mSampler;
+      NGL_ASSERT((texture != nil && sampler != nil) || (texture == nil && sampler == nil));
+      [encoder setFragmentTexture:texture atIndex:i];
+      [encoder setFragmentSamplerState:sampler atIndex:i];
+    }
+  }
+  
   NSError* err = nil;
   MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
   id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
