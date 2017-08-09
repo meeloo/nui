@@ -219,3 +219,8 @@ void nglContext::StopMarkerGroup()
   }
 }
 
+void nglContext::SetMetalCommandEncoder(void* encoder)
+{
+  id<MTLCommandEncoder> commandEncoder = (id<MTLCommandEncoder>)mMetalCommandEncoder;
+  mMetalCommandEncoder = encoder;
+}

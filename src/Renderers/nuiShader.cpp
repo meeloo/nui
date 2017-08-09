@@ -962,6 +962,21 @@ static GLenum GLTypeFromMetalType(MTLDataType type)
 }
 
 #if defined _METAL_
+GLint nuiShaderProgram::GetMetalUniformLocation(const char* uniform) const
+{
+  nglString name("transforms.");
+  name.Add(uniform);
+  for (size_t i = 0; i < mUniforms.size(); i++)
+  {
+    if (mUniforms[i].mName == name)
+    {
+      return mUniforms[i].mLocation;
+    }
+  }
+  return -1;
+}
+
+
 void nuiShaderProgram::ParseStructMember(int depth, const nglString& parentName, void* _member)
 {
   MTLStructMember* member = (MTLStructMember*)_member;
@@ -1113,6 +1128,14 @@ bool nuiShaderProgram::Link()
       ParseArgument("Fragment", argument);
     }
     
+    mProjectionMatrix = GetMetalUniformLocation(NUI_PROJECTION_MATRIX_NAME);
+    mModelViewMatrix = GetMetalUniformLocation(NUI_MODELVIEW_MATRIX_NAME);
+    mSurfaceMatrix = GetMetalUniformLocation(NUI_SURFACE_MATRIX_NAME);
+    mOffset = GetMetalUniformLocation(NUI_OFFSET_NAME);
+    mTextureScale = GetMetalUniformLocation(NUI_TEXTURE_SCALE_NAME);
+    mTextureTranslate = GetMetalUniformLocation(NUI_TEXTURE_TRANSLATE_NAME);
+    mDifuseColor = GetMetalUniformLocation(NUI_DIFUSE_COLOR_NAME);
+    
     pipelineState = nil;
   }
   else
@@ -1228,6 +1251,7 @@ void nuiShaderProgram::InitUniforms()
     mUniforms.push_back(nuiUniformDesc(name, type, num, location, offset, this));
     offset += desc.mSize * desc.mComponentSize;
   }
+  
 }
 
 bool nuiShaderProgram::Validate() const

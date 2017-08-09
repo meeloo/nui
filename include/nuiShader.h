@@ -253,6 +253,7 @@ private:
 #ifdef _METAL_
   void ParseStructMember(int depth, const nglString& parentName, void* _member);
   void ParseArgument(const char* domain, void* _argument);
+  GLint GetMetalUniformLocation(const char* uniform) const;
 #endif
 };
 

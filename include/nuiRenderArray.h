@@ -32,13 +32,13 @@ public:
     GLfloat mNZ;
     GLfloat mNW;
 
-    GLfloat mTX;
-    GLfloat mTY;
-    
     GLfloat mRed;
     GLfloat mGreen;
     GLfloat mBlue;
     GLfloat mAlpha;
+    
+    GLfloat mTX;
+    GLfloat mTY;
   };
 
   enum StreamType

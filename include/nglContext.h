@@ -232,6 +232,8 @@ if (HasExtension("GL_ARB_texture_compression"))
   void* GetMetalDrawable() const;
   void* GetMetalCommandEncoder() const;
   void* GetMetalCommandBuffer() const;
+  void SetMetalCommandEncoder(void* encoder); /// Setting a new command encoder will automatically send endEncoding to the current one before replacing it.
+
 #endif
 
   void AddMarker(const char* title);
