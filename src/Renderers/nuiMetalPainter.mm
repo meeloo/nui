@@ -333,9 +333,9 @@ SHADER_STRING
  struct InputVertex
 {
   float4 mPosition;
+  float4 mColor;
   float4 mNormal;
   float2 mTexCoord;
-  uchar4 mColor;
 };
  
  struct Vertex
@@ -511,9 +511,9 @@ nuiMetalPainter::~nuiMetalPainter()
 
 void nuiMetalPainter::SetViewport()
 {
-  if (!mViewportChanged)
-    return;
-
+//  if (!mViewportChanged)
+//    return;
+  
   GLint Width = GetCurrentWidth();
   GLint Height = GetCurrentHeight();
   const nuiRect& rViewport(mProjectionViewportStack.top());
@@ -553,6 +553,12 @@ void nuiMetalPainter::SetViewport()
 //  NGL_ASSERT(x >= 0);
 //  NGL_ASSERT(y >= 0);
 //  Set Metal ViewPort to (x, y, w, h);
+  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+  
+  id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  MTLViewport viewport = { (double)x, (double)y, (double)w, (double)h, (double)-1, (double)1 };
+  [encoder setViewport:viewport];
+  
 //  NGL_DEBUG(NGL_OUT("nuiMetalPainter::SetViewPort Actual(%d, %d, %d, %d)\n", x, y, w, h);)
 
   if (mpSurface)
@@ -643,7 +649,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
   id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
   
   id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
-
+  
   // blending
   if (ForceApply || mFinalState.mBlending != rState.mBlending)
   {
@@ -681,25 +687,27 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
 //    glDepthMask(mFinalState.mDepthWrite ? GL_TRUE : GL_FALSE);
   }
 
-  if (ForceApply || mFinalState.mCulling != rState.mCulling)
+  mFinalState.mCulling = rState.mCulling;
+  mFinalState.mCullingMode = rState.mCullingMode;
+  if (mFinalState.mCulling)
   {
-    mFinalState.mCulling = rState.mCulling;
-//    if (mFinalState.mCulling)
-//    {
-//      glEnable(GL_CULL_FACE);
-//    }
-//    else
-//    {
-//      glDisable(GL_CULL_FACE);
-//    }
+    switch (mFinalState.mCullingMode)
+    {
+      case GL_FRONT:
+        [encoder setCullMode:MTLCullModeFront];
+        break;
+        
+      case GL_BACK:
+        [encoder setCullMode:MTLCullModeBack];
+        break;
+    }
   }
-
-  if (ForceApply || mFinalState.mCullingMode != rState.mCullingMode)
+  else
   {
-    mFinalState.mCullingMode = rState.mCullingMode;
-//    glCullFace(mFinalState.mCullingMode);
+    [encoder setCullMode:MTLCullModeNone];
   }
-
+  
+  
 
   // We don't care about the font in the lower layer of rendering
   //nuiFont* mpFont;
@@ -738,7 +746,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
 //    glColorMask(m, m, m, m);
   }
 
-  if (mpClippingStack.top().mEnabled || ForceApply)
+  if (mpClippingStack.top().mEnabled)
   {
     uint32 width = GetCurrentWidth();
     uint32 height = GetCurrentHeight();
@@ -759,42 +767,33 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
       mScissorOn = true;
     }
 
-    if (mScissorX != x || mScissorY != y || mScissorW != w || mScissorH != h || ForceApply)
+    mScissorX = x;
+    mScissorY = y;
+    mScissorW = w;
+    mScissorH = h;
+
+    if (mpSurface)
     {
-      mScissorX = x;
-      mScissorY = y;
-      mScissorW = w;
-      mScissorH = h;
-
-      if (mpSurface)
-      {
-        y = mpSurface->GetHeight() - (y + h);
-      }
-
-      {
-        float scale = mpContext->GetScale();
-        x *= scale;
-        y *= scale;
-        w *= scale;
-        h *= scale;
-      }
-      
-//      if (mpSurface)
-//      {
-//        NGL_OUT("%p scissor: %d %d %d %d (%s)\n", mpSurface, x, y, w, h, mpSurface->GetObjectName().GetChars());
-//      }
-//      NGL_OUT("scissor: %d %d %d %d\n", x, y, w, h);
-//      glScissor(x, y, w, h);
+      y = mpSurface->GetHeight() - (y + h);
     }
+
+    {
+      float scale = mpContext->GetScale();
+      x *= scale;
+      y *= scale;
+      w *= scale;
+      h *= scale;
+    }
+    
+    if (w ==0) w = 1;
+    if (h ==0) h = 1;
+    MTLScissorRect rect = {(NSUInteger)x, (NSUInteger)y, (NSUInteger)w, (NSUInteger)h};
+    [encoder setScissorRect:rect];
   }
   else
   {
-    if (mScissorOn || ForceApply)
-    {
-//      printf("Disable scissor test\n");
-//      glDisable(GL_SCISSOR_TEST);
-      mScissorOn = false;
-    }
+    MTLScissorRect rect = {(NSUInteger)0, (NSUInteger)0, (NSUInteger)GetCurrentWidth(), (NSUInteger)GetCurrentHeight()};
+    [encoder setScissorRect:rect];
   }
 
   mFinalState.mClearColor = rState.mClearColor;
@@ -1246,6 +1245,28 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   
   [encoder setFragmentBytes:stateData length:stateDataSize atIndex:0];
   
+  MTLVertexDescriptor *vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];
+  vertexDescriptor.attributes[0].format = MTLVertexFormatFloat4;
+  vertexDescriptor.attributes[0].bufferIndex = 1;
+  vertexDescriptor.attributes[0].offset = offsetof(nuiRenderArray::Vertex, mX);
+  
+  vertexDescriptor.attributes[1].format = MTLVertexFormatFloat4;
+  vertexDescriptor.attributes[1].bufferIndex = 1;
+  vertexDescriptor.attributes[1].offset = offsetof(nuiRenderArray::Vertex, mRed);
+  
+  vertexDescriptor.attributes[2].format = MTLVertexFormatFloat4;
+  vertexDescriptor.attributes[2].bufferIndex = 1;
+  vertexDescriptor.attributes[2].offset = offsetof(nuiRenderArray::Vertex, mNX);
+  
+  vertexDescriptor.attributes[3].format = MTLVertexFormatFloat2;
+  vertexDescriptor.attributes[3].bufferIndex = 1;
+  vertexDescriptor.attributes[3].offset = offsetof(nuiRenderArray::Vertex, mTX);
+  
+  vertexDescriptor.layouts[0].stride = 0;
+  vertexDescriptor.layouts[0].stepFunction = MTLVertexStepFunctionConstant;
+  vertexDescriptor.layouts[1].stride = sizeof(nuiRenderArray::Vertex);
+  vertexDescriptor.layouts[1].stepFunction = MTLVertexStepFunctionPerVertex;
+  
   for (int i = 0; i < 8; i++)
   {
     auto it = mTextures.end();
@@ -1268,6 +1289,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   
   NSError* err = nil;
   MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
+  pipelineDesc.vertexDescriptor = vertexDescriptor;
   id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
   [encoder setRenderPipelineState:pipelineState];
   
@@ -1504,7 +1526,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
       MTLPixelFormat mtlPixelFormat = MTLPixelFormatInvalid;
       GLint pixelformat = 0;
       GLbyte* pBuffer = NULL;
-
+      
       if (pImage)
       {
         type = pImage->GetBitDepth();
@@ -1540,6 +1562,9 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
       {
         NGL_ASSERT(pSurface);
         mtlPixelFormat = MTLPixelFormatBGRA8Unorm;
+        float scale = mpContext->GetScale();
+        Width *= scale;
+        Height *= scale;
       }
 
 
@@ -1748,13 +1773,13 @@ void nuiMetalPainter::CreateSurface(nuiSurface* pSurface)
 //        glLabelObjectEXT(GL_BUFFER_OBJECT_EXT, info.mFramebuffer, 0, pSurface->GetObjectName().GetChars());
 #endif
 #endif
-
+  
   MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
-
+  
   ///< We definetly need a color attachement, either a texture, or a renderbuffer
   if (pTexture && pSurface->GetRenderToTexture())
   {
-//    glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, info.mTexture, 0);
+    //    glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, info.mTexture, 0);
     passDescriptor.colorAttachments[0].texture = (id<MTLTexture>)tit->second.mTexture;
     passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
     passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
@@ -1918,6 +1943,19 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
   {
     /// !pSurface
 //    glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, mDefaultFramebuffer);
+    id<MTLTexture> texture = (id<MTLTexture>)mpContext->GetMetalDestinationTexture();
+    
+    MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
+    passDescriptor.colorAttachments[0].texture = texture;
+    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
+    passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
+    
+    id<MTLRenderCommandEncoder> oldCommandEncoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+    [oldCommandEncoder endEncoding];
+    
+    id<MTLCommandBuffer> commandBuffer = (id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
+    id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+    mpContext->SetMetalCommandEncoder(commandEncoder);
   }
 }
 

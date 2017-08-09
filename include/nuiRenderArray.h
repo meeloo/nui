@@ -27,15 +27,15 @@ public:
     GLfloat mZ;
     GLfloat mW;
 
-    GLfloat mNX;
-    GLfloat mNY;
-    GLfloat mNZ;
-    GLfloat mNW;
-
     GLfloat mRed;
     GLfloat mGreen;
     GLfloat mBlue;
     GLfloat mAlpha;
+    
+    GLfloat mNX;
+    GLfloat mNY;
+    GLfloat mNZ;
+    GLfloat mNW;
     
     GLfloat mTX;
     GLfloat mTY;

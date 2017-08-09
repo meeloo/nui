@@ -1736,6 +1736,7 @@ void nglWindow::BeginSession()
     if (!mMetalDestinationTexture)
     {
       CAMetalLayer* layer = (CAMetalLayer*)GetMetalLayer();
+      layer.contentsScale = GetScale();
       id<CAMetalDrawable> drawable = [layer nextDrawable];
       mMetalDrawable = drawable;
       id<MTLTexture> texture = drawable.texture;
