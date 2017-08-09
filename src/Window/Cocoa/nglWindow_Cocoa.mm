@@ -1745,7 +1745,7 @@ void nglWindow::BeginSession()
       passDescriptor.colorAttachments[0].texture = texture;
       passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-      passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 0.0, 1.0);
+      passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
       
       id<MTLDevice> device = (id<MTLDevice>)GetMetalDevice();
       

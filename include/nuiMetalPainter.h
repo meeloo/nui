@@ -72,11 +72,9 @@ protected:
   class TextureInfo
   {
   public:
-    TextureInfo();
-    
-    bool mReload;
-    void* mTexture;
-    void* mSampler;
+    bool mReload = false;
+    void* mTexture = nullptr;
+    void* mSampler = nullptr;
   };
 
   class FramebufferInfo

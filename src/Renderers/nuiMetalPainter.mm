@@ -1247,8 +1247,13 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   {
     auto it = mTextures.end();
     nuiTexture* pTexture = mFinalState.mpTexture[i];
+
     if (pTexture)
     {
+      nuiTexture* pProxy = pTexture->GetProxyTexture();
+      if (pProxy)
+        pTexture = pProxy;
+
       it = mTextures.find(pTexture);
       id<MTLTexture> texture = (id<MTLTexture>)it->second.mTexture;
       id<MTLSamplerState> sampler = (id<MTLSamplerState>)it->second.mSampler;
@@ -1391,13 +1396,6 @@ void nuiMetalPainter::EndSession()
 }
 
 
-nuiMetalPainter::TextureInfo::TextureInfo()
-{
-  mReload = false;
-  mTexture = nullptr;
-  mSampler = nullptr;
-}
-
 static inline MTLSamplerMinMagFilter nuiGLToMetaltextureFilter(GLenum val)
 {
   switch (val)
@@ -1440,6 +1438,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
   nuiMetalDebugGuard g("nuiMetalPainter::UploadTexture()");
 #endif
 
+  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
   nuiTexture* pProxy = pTexture->GetProxyTexture();
   if (pProxy)
     pTexture = pProxy;
@@ -1463,6 +1462,13 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
   {
     info.mReload = false;
     info.mTexture = _id;
+    MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new]; samplerDescriptor.minFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
+    samplerDescriptor.magFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
+    samplerDescriptor.sAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapS());
+    samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
+    
+    id<MTLSamplerState> samplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
+    info.mSampler = samplerState;
   }
 
   //NGL_OUT("Apply Target: 0x%x\n", target);
@@ -1540,13 +1546,12 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
         // Give a name to the texture for Metal Debugging
         
-        id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
         id<MTLTexture> texture = (id<MTLTexture>)info.mTexture;
         if (!texture)
         {
           MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlPixelFormat
                                                                                                 width:ToNearest(Width) height:ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
-          [device newTextureWithDescriptor:descriptor];
+          texture = [device newTextureWithDescriptor:descriptor];
         }
         
         MTLRegion region = MTLRegionMake2D(0, 0, ToNearest(Width), ToNearest(Height));
@@ -1555,7 +1560,8 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
           [texture replaceRegion:region mipmapLevel:0 withBytes:pBuffer bytesPerRow:pTexture->GetImage()->GetBytesPerLine()];
         }
         info.mTexture = texture;
-        MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new]; samplerDescriptor.minFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
+        MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new];
+        samplerDescriptor.minFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
         samplerDescriptor.magFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
         samplerDescriptor.sAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapS());
         samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
@@ -1578,6 +1584,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
   mTextureTranslate = nglVector2f(0.0f, 0.0f);
 //  mTextureScale = nglVector2f(rx, ry);
+  NGL_ASSERT((info.mTexture != nil && info.mSampler != nil));
 }
 
 void nuiMetalPainter::DestroyTexture(nuiTexture* pTexture)
@@ -1700,20 +1707,6 @@ void nuiMetalPainter::CreateSurface(nuiSurface* pSurface)
     mpContext->StartMarkerGroup(pSurface->GetObjectName().GetChars());
 #endif
 
-  if (pTexture && !pTexture->IsPowerOfTwo())
-  {
-    switch (GetRectangleTextureSupport())
-    {
-      case 0:
-        width  = MakePOT(width);
-        height = MakePOT(height);
-        break;
-      case 1:
-      case 2:
-        break;
-    }
-  }
-
   FramebufferInfo info;
 
   if (pTexture && pSurface->GetRenderToTexture())
@@ -1726,16 +1719,11 @@ void nuiMetalPainter::CreateSurface(nuiSurface* pSurface)
       it = mTextures.insert(mTextures.begin(), std::pair<nuiTexture*, TextureInfo>(pTexture, TextureInfo()));
     NGL_ASSERT(it != mTextures.end());
     
-    TextureInfo& tinfo(it->second);
-    
-//    glGenTextures(1, (GLuint*)&tinfo.mTexture);
-//    info.mTexture = tinfo.mTexture;
-
     NGL_ASSERT(width > 0);
     NGL_ASSERT(height > 0);
 
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
+    UploadTexture(pTexture, 0);
+    
 //    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, tinfo.mTexture);
     
   }
