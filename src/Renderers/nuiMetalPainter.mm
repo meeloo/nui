@@ -578,11 +578,12 @@ void nuiMetalPainter::SetViewport()
   if (mpSurface)
   {
     mSurfaceMatrix.SetIdentity();
-    mSurfaceMatrix.SetScaling(1.0f, -1.0f, 1.0f);
+//    mSurfaceMatrix.SetScaling(1.0f, -1.0f, 1.0f);
   }
   else
   {
-    mSurfaceMatrix.SetScaling(1.0f, -1.0f, 1.0f);
+    mSurfaceMatrix.SetIdentity();
+//    mSurfaceMatrix.SetScaling(1.0f, 1.0f, 1.0f);
   }
   
   float angle = GetAngle();
@@ -771,7 +772,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
     int x,y,w,h;
     uint angle = (mpSurface && mpSurface->GetRenderToTexture()) ? 0 : mAngle;
     x = ToNearest(clip.Left());
-    y = ToNearest(height - clip.Bottom());
+    y = ToNearest(clip.Top());
     w = ToNearest(clip.GetWidth());
     h = ToNearest(clip.GetHeight());
 
@@ -789,7 +790,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
 
     if (mpSurface)
     {
-      y = mpSurface->GetHeight() - (y + h);
+//      y = mpSurface->GetHeight() - (y + h);
     }
 
     {
