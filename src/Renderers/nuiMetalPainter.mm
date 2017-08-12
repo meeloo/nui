@@ -40,10 +40,10 @@ struct Transforms
 
  struct InputVertex
 {
-  float4 mPosition;
-  float4 mColor;
-  float4 mNormal;
-  float2 mTexCoord;
+  float4 mPosition  [[ attribute(0) ]];
+  float4 mColor     [[ attribute(1) ]];
+  float4 mNormal    [[ attribute(2) ]];
+  float2 mTexCoord  [[ attribute(3) ]];
 };
 
 struct Vertex
@@ -54,25 +54,27 @@ struct Vertex
 };
                
 vertex Vertex vertex_main(
+                          InputVertex vertex_in [[ stage_in ]],
                           constant Transforms &transforms [[buffer(0)]],
-                          constant InputVertex *vertices [[buffer(1)]],
                           uint vid [[vertex_id]])
 {
   Vertex vert;
 
-  vert.TexCoord = vertices[vid].mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Color = vertices[vid].mColor;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
+  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Color = vertex_in.mColor;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
 
   return vert;
 }
                
-fragment float4 fragment_main(Vertex vert [[stage_in]],
+fragment float4 fragment_main(
+                              Vertex vert [[stage_in]],
                               constant Transforms &transforms [[buffer(0)]],
                               texture2d<float> texture [[texture(0)]],
                               sampler textureSampler [[sampler(0)]]
                               )
 {
+//  return float4(1,0,0,1);
   return vert.Color * texture.sample(textureSampler, vert.TexCoord);
 }
 );
@@ -101,10 +103,10 @@ SHADER_STRING
  
  struct InputVertex
 {
-  float4 mPosition;
-  float4 mColor;
-  float4 mNormal;
-  float2 mTexCoord;
+  float4 mPosition  [[ attribute(0) ]];
+  float4 mColor     [[ attribute(1) ]];
+  float4 mNormal    [[ attribute(2) ]];
+  float2 mTexCoord  [[ attribute(3) ]];
 };
 
  struct Vertex
@@ -115,26 +117,29 @@ SHADER_STRING
 };
  
  vertex Vertex vertex_main(
+                           InputVertex vertex_in [[ stage_in ]],
                            constant Transforms &transforms [[buffer(0)]],
-                           constant InputVertex *vertices [[buffer(1)]],
                            uint vid [[vertex_id]])
 {
   Vertex vert;
   
-  vert.TexCoord = vertices[vid].mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Color = vertices[vid].mColor;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
+  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Color = vertex_in.mColor;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
  
- fragment float4 fragment_main(Vertex vert [[stage_in]],
+ fragment float4 fragment_main(
+                               Vertex vert [[stage_in]],
                                constant Transforms &transforms [[buffer(0)]],
                                texture2d<float> texture [[texture(0)]],
                                sampler textureSampler [[sampler(0)]]
                                )
 {
+//  return float4(0,0,1,1);
   return vert.Color * texture.sample(textureSampler, vert.TexCoord)[3];
+//  return texture.sample(textureSampler, vert.TexCoord)[0];
 }
 );
 
@@ -161,10 +166,10 @@ struct Transforms
  
  struct InputVertex
 {
-  float4 mPosition;
-  float4 mColor;
-  float4 mNormal;
-  float2 mTexCoord;
+  float4 mPosition  [[ attribute(0) ]];
+  float4 mColor     [[ attribute(1) ]];
+  float4 mNormal    [[ attribute(2) ]];
+  float2 mTexCoord  [[ attribute(3) ]];
 };
 
  struct Vertex
@@ -174,24 +179,26 @@ struct Transforms
 };
  
 vertex Vertex vertex_main(
-                           constant Transforms &transforms [[buffer(0)]],
-                          constant InputVertex *vertices [[buffer(1)]],
-                           uint vid [[vertex_id]])
+                          InputVertex vertex_in [[ stage_in ]],
+                          constant Transforms &transforms [[buffer(0)]],
+                          uint vid [[vertex_id]])
 {
   Vertex vert;
   
-  vert.TexCoord = vertices[vid].mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
+  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
  
-fragment float4 fragment_main(Vertex vert [[stage_in]],
+fragment float4 fragment_main(
+                              Vertex vert [[stage_in]],
                               constant Transforms &transforms [[buffer(0)]],
                               texture2d<float> texture [[texture(0)]],
                               sampler textureSampler [[sampler(0)]]
                               )
 {
+//  return float4(1,0,0,1);
   return transforms.DifuseColor * texture.sample(textureSampler, vert.TexCoord);
 }
 
@@ -221,10 +228,10 @@ struct Transforms
  
  struct InputVertex
 {
-  float4 mPosition;
-  float4 mColor;
-  float4 mNormal;
-  float2 mTexCoord;
+  float4 mPosition  [[ attribute(0) ]];
+  float4 mColor     [[ attribute(1) ]];
+  float4 mNormal    [[ attribute(2) ]];
+  float2 mTexCoord  [[ attribute(3) ]];
 };
 
 struct Vertex
@@ -234,24 +241,26 @@ struct Vertex
 };
  
 vertex Vertex vertex_main(
-                           constant Transforms &transforms [[buffer(0)]],
-                          constant InputVertex *vertices [[buffer(1)]],
-                           uint vid [[vertex_id]])
+                          InputVertex vertex_in [[ stage_in ]],
+                          constant Transforms &transforms [[buffer(0)]],
+                          uint vid [[vertex_id]])
 {
   Vertex vert;
   
-  vert.TexCoord = vertices[vid].mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
+  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
  
-fragment float4 fragment_main(Vertex vert [[stage_in]],
-                               constant Transforms &transforms [[buffer(0)]],
-                               texture2d<float> texture [[texture(0)]],
-                               sampler textureSampler [[sampler(0)]]
-                               )
+fragment float4 fragment_main(
+                              Vertex vert [[stage_in]],
+                              constant Transforms &transforms [[buffer(0)]],
+                              texture2d<float> texture [[texture(0)]],
+                              sampler textureSampler [[sampler(0)]]
+                              )
 {
+//  return float4(0,1,0,1);
   float v = texture.sample(textureSampler, vert.TexCoord)[3];
   return transforms.DifuseColor * float4(v, v, v, v);
 }
@@ -279,10 +288,10 @@ struct Transforms
                
  struct InputVertex
 {
-  float4 mPosition;
-  float4 mColor;
-  float4 mNormal;
-  float2 mTexCoord;
+  float4 mPosition  [[ attribute(0) ]];
+  float4 mColor     [[ attribute(1) ]];
+  float4 mNormal    [[ attribute(2) ]];
+  float2 mTexCoord  [[ attribute(3) ]];
 };
  
 struct Vertex
@@ -292,20 +301,22 @@ struct Vertex
 };
                
 vertex Vertex vertex_main(
-                           constant Transforms &transforms [[buffer(0)]],
-                          constant InputVertex *vertices [[buffer(1)]],
-                           uint vid [[vertex_id]])
+                          InputVertex vertex_in [[ stage_in ]],
+                          constant Transforms &transforms [[buffer(0)]],
+                          uint vid [[vertex_id]]
+                          )
 {
   Vertex vert;
   
-  vert.Color = vertices[vid].mColor;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
+  vert.Color = vertex_in.mColor;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
                
 fragment float4 fragment_main(Vertex vert [[stage_in]])
 {
+//  return float4(1,1,0,1);
   return vert.Color;
 }
                
@@ -332,10 +343,10 @@ SHADER_STRING
  
  struct InputVertex
 {
-  float4 mPosition;
-  float4 mColor;
-  float4 mNormal;
-  float2 mTexCoord;
+  float4 mPosition  [[ attribute(0) ]];
+  float4 mColor     [[ attribute(1) ]];
+  float4 mNormal    [[ attribute(2) ]];
+  float2 mTexCoord  [[ attribute(3) ]];
 };
  
  struct Vertex
@@ -344,21 +355,24 @@ SHADER_STRING
 };
  
  vertex Vertex vertex_main(
+                           InputVertex vertex_in [[ stage_in ]],
                            constant Transforms &transforms [[buffer(0)]],
-                           constant InputVertex *vertices [[buffer(1)]],
-                           uint vid [[vertex_id]])
+                           uint vid [[vertex_id]]
+                           )
 {
   Vertex vert;
   
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertices[vid].mPosition  + transforms.Offset));
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
  
- fragment float4 fragment_main(Vertex vert [[stage_in]],
+ fragment float4 fragment_main(
+                               Vertex vert [[stage_in]],
                                constant Transforms &transforms [[buffer(0)]]
                                )
 {
+//  return float4(1,0,1,1);
   return transforms.DifuseColor;
 }
  
@@ -563,11 +577,12 @@ void nuiMetalPainter::SetViewport()
 
   if (mpSurface)
   {
+    mSurfaceMatrix.SetIdentity();
     mSurfaceMatrix.SetScaling(1.0f, -1.0f, 1.0f);
   }
   else
   {
-    mSurfaceMatrix.SetIdentity();
+    mSurfaceMatrix.SetScaling(1.0f, -1.0f, 1.0f);
   }
   
   float angle = GetAngle();
@@ -1231,45 +1246,41 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       mpLastArray = pArray;
     }
   }
-
+  
+  // Metal Specific part:
   id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
-  
   id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
-  const void* stateData = mpShaderState->GetStateData();
-  size_t stateDataSize = mpShaderState->GetStateDataSize();
-  [encoder setVertexBytes:stateData length:stateDataSize atIndex:0];
-  size_t vertexcount = pArray->GetSize();
-  size_t vertexsize = sizeof(nuiRenderArray::Vertex);
-  id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModeShared];
-  [encoder setVertexBuffer:vertices offset:0 atIndex:1];
   
-  [encoder setFragmentBytes:stateData length:stateDataSize atIndex:0];
+  // Create the metal pipeline descriptor:
+  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
   
-  MTLVertexDescriptor *vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];
-  vertexDescriptor.attributes[0].format = MTLVertexFormatFloat4;
-  vertexDescriptor.attributes[0].bufferIndex = 1;
-  vertexDescriptor.attributes[0].offset = offsetof(nuiRenderArray::Vertex, mX);
-  
-  vertexDescriptor.attributes[1].format = MTLVertexFormatFloat4;
-  vertexDescriptor.attributes[1].bufferIndex = 1;
-  vertexDescriptor.attributes[1].offset = offsetof(nuiRenderArray::Vertex, mRed);
-  
-  vertexDescriptor.attributes[2].format = MTLVertexFormatFloat4;
-  vertexDescriptor.attributes[2].bufferIndex = 1;
-  vertexDescriptor.attributes[2].offset = offsetof(nuiRenderArray::Vertex, mNX);
-  
-  vertexDescriptor.attributes[3].format = MTLVertexFormatFloat2;
-  vertexDescriptor.attributes[3].bufferIndex = 1;
-  vertexDescriptor.attributes[3].offset = offsetof(nuiRenderArray::Vertex, mTX);
-  
-  vertexDescriptor.layouts[0].stride = 0;
-  vertexDescriptor.layouts[0].stepFunction = MTLVertexStepFunctionConstant;
-  vertexDescriptor.layouts[1].stride = sizeof(nuiRenderArray::Vertex);
-  vertexDescriptor.layouts[1].stepFunction = MTLVertexStepFunctionPerVertex;
-  
-  for (int i = 0; i < 8; i++)
   {
-    auto it = mTextures.end();
+    // Uniforms
+    {
+      const void* stateData = mpShaderState->GetStateData();
+      size_t stateDataSize = mpShaderState->GetStateDataSize();
+      [encoder setVertexBytes:stateData length:stateDataSize atIndex:0];
+      [encoder setFragmentBytes:stateData length:stateDataSize atIndex:0];
+    }
+    
+    // Vertex Data:
+    {
+      size_t vertexcount = pArray->GetSize();
+      size_t vertexsize = sizeof(nuiRenderArray::Vertex);
+      
+      id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModeShared];
+      [encoder setVertexBuffer:vertices offset:0 atIndex:1];
+    }
+    
+    // Create the pipeline state from all the gathered informations:
+    NSError* err = nil;
+    id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
+    [encoder setRenderPipelineState:pipelineState];
+  }
+  
+  // Set Textures:
+  for (uint i = 0; i < 8; i++)
+  {
     nuiTexture* pTexture = mFinalState.mpTexture[i];
 
     if (pTexture)
@@ -1278,7 +1289,8 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       if (pProxy)
         pTexture = pProxy;
 
-      it = mTextures.find(pTexture);
+      auto it = mTextures.find(pTexture);
+      NGL_ASSERT(it != mTextures.end());
       id<MTLTexture> texture = (id<MTLTexture>)it->second.mTexture;
       id<MTLSamplerState> sampler = (id<MTLSamplerState>)it->second.mSampler;
       NGL_ASSERT((texture != nil && sampler != nil) || (texture == nil && sampler == nil));
@@ -1287,11 +1299,6 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     }
   }
   
-  NSError* err = nil;
-  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
-  pipelineDesc.vertexDescriptor = vertexDescriptor;
-  id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
-  [encoder setRenderPipelineState:pipelineState];
   
   if (mpSurface && mTwoPassBlend && mFinalState.mBlending)
   {
@@ -1581,6 +1588,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
                                                                                                 width:ToNearest(Width) height:ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
           descriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
           texture = [device newTextureWithDescriptor:descriptor];
+          texture.label = (NSString*)pTexture->GetSource().ToCFString();
         }
         
         MTLRegion region = MTLRegionMake2D(0, 0, ToNearest(Width), ToNearest(Height));

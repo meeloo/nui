@@ -873,6 +873,37 @@ void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRender
 
   descriptor.colorAttachments[0].writeMask = MTLColorWriteMaskAll;
   
+  size_t vertexsize = sizeof(nuiRenderArray::Vertex);
+  
+  MTLVertexDescriptor *vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];
+  // Position:
+  vertexDescriptor.attributes[0].format = MTLVertexFormatFloat4;
+  vertexDescriptor.attributes[0].bufferIndex = 1;
+  vertexDescriptor.attributes[0].offset = offsetof(nuiRenderArray::Vertex, mX);
+  
+  // Color:
+  vertexDescriptor.attributes[1].format = MTLVertexFormatFloat4;
+  vertexDescriptor.attributes[1].bufferIndex = 1;
+  vertexDescriptor.attributes[1].offset = offsetof(nuiRenderArray::Vertex, mRed);
+  
+  // Normal:
+  vertexDescriptor.attributes[2].format = MTLVertexFormatFloat4;
+  vertexDescriptor.attributes[2].bufferIndex = 1;
+  vertexDescriptor.attributes[2].offset = offsetof(nuiRenderArray::Vertex, mNX);
+  
+  // Texture coordinates:
+  vertexDescriptor.attributes[3].format = MTLVertexFormatFloat2;
+  vertexDescriptor.attributes[3].bufferIndex = 1;
+  vertexDescriptor.attributes[3].offset = offsetof(nuiRenderArray::Vertex, mTX);
+  
+  vertexDescriptor.layouts[0].stride = 0;
+  vertexDescriptor.layouts[0].stepFunction = MTLVertexStepFunctionConstant;
+  
+  vertexDescriptor.layouts[1].stride = vertexsize;
+  vertexDescriptor.layouts[1].stepFunction = MTLVertexStepFunctionPerVertex;
+  
+  descriptor.vertexDescriptor = vertexDescriptor;
+  
   return descriptor;
 }
 
@@ -1111,7 +1142,15 @@ bool nuiShaderProgram::Link()
     MTLRenderPipelineDescriptor *descriptor = (MTLRenderPipelineDescriptor *)NewMetalPipelineDescriptor(state);
 
     id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:descriptor options:MTLPipelineOptionArgumentInfo+MTLPipelineOptionBufferTypeInfo reflection:&reflection error:&error];
-
+    
+    if (!pipelineState || error)
+    {
+      NSString* reason = error.localizedDescription;
+      nglString msg((CFStringRef)reason);
+      NGL_OUT("Metal Shader compilation error:\n%s\n", msg.GetChars());
+      return false;
+    }
+    
 #if NUI_SHADER_INTROSPECT_LOGS
     NGL_OUT("Function %s\n", nglString((CFStringRef)vertex_function.name).GetChars());
 #endif //NUI_SHADER_INTROSPECT_LOGS
