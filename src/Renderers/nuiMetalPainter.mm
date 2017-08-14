@@ -820,7 +820,6 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   mFinalState.mClearColor = rState.mClearColor;
   mFinalState.mStrokeColor = rState.mStrokeColor;
   mFinalState.mFillColor = rState.mFillColor;
-
 }
 
 void nuiMetalPainter::SetState(const nuiRenderState& rState, bool ForceApply)
@@ -1802,7 +1801,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     {
       //    glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, info.mTexture, 0);
       passDescriptor.colorAttachments[0].texture = (id<MTLTexture>)tit->second.mTexture;
-      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
       passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
       
