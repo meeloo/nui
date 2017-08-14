@@ -265,7 +265,9 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
       kdebug_signpost_end(0, (uintptr_t)this, 0, 0, 0);
     return;
   }
-
+  
+  nglGuard<nglLock> guard(mpContext->GetLock());
+  
 //  NGL_OUT("[nuiRenderThread] render %p\n", this);
 #if NUI_LOG_RENDERING
 NGL_OUT("#######################################################################################\n");

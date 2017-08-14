@@ -672,6 +672,7 @@ nglString nuiShaderProgram::mDefaultPrefix;
 nuiShaderProgram::nuiShaderProgram(nglContext* pContext, const nglString& rName)
 : mName(rName), mProgram(0), mPrefix(mDefaultPrefix), mpContext(pContext)
 {
+  NGL_ASSERT(mpContext != nullptr);
   NGL_ASSERT(gpPrograms.find(rName) == gpPrograms.end());
   gpPrograms[rName] = this;
   Init();
@@ -853,7 +854,7 @@ void nuiGetMetalBlendFuncFactors(nuiBlendFunc Func, MTLBlendFactor& src, MTLBlen
   dst = GLToMetalBlendFactor(dstGL);
 }
 
-void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRenderState) const // MTLRenderPipelineState*
+void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRenderState) const // MTLRenderPipelineDescriptor*
 {
   CAMetalLayer* metalLayer = (CAMetalLayer*)mpContext->GetMetalLayer();
   MTLRenderPipelineDescriptor *descriptor = [MTLRenderPipelineDescriptor new];

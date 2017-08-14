@@ -361,6 +361,8 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 - (CALayer *)makeBackingLayer
 {
   _metalLayer = [CAMetalLayer layer];
+  NSWindow* window = (NSWindow*)mpNGLWindow->GetOSInfo()->mpNSWindow;
+  _metalLayer.contentsScale =  window.backingScaleFactor;
   _metalLayer.opaque = YES;
   _metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
   _metalLayer.device = (id<MTLDevice>)mpNGLWindow->GetMetalDevice();
@@ -429,14 +431,15 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   NSRect rect;
   rect = [win frame];
   NSRect clientRect = [win contentRectForFrameRect: rect];
+  CAMetalLayer *layer = (CAMetalLayer *)self.layer;
+  float scale = self.window.backingScaleFactor;
+  layer.drawableSize = CGSizeMake(clientRect.size.width * scale, clientRect.size.height * scale);
   [win resize: clientRect.size];
 
 //  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
 //  if (_context)
 //    [_context update];
-  CAMetalLayer *layer = (CAMetalLayer *)self.layer;
-  layer.drawableSize = CGSizeMake(clientRect.size.width, clientRect.size.height);
-
+  
   mpNGLWindow->GetLock().Unlock();
 
   mpNGLWindow->CallOnPaint();
@@ -1736,7 +1739,6 @@ void nglWindow::BeginSession()
     if (!mMetalDestinationTexture)
     {
       CAMetalLayer* layer = (CAMetalLayer*)GetMetalLayer();
-      layer.contentsScale = GetScale();
       id<CAMetalDrawable> drawable = [layer nextDrawable];
       mMetalDrawable = drawable;
       id<MTLTexture> texture = drawable.texture;

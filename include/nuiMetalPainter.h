@@ -77,19 +77,6 @@ protected:
     void* mSampler = nullptr;
   };
 
-  class FramebufferInfo
-  {
-  public:
-    FramebufferInfo();
-    
-    bool mReload;
-    GLint mFramebuffer;
-    GLint mTexture; ///< the framebuffer can be used to render to a texture
-    GLint mRenderbuffer; ///< or a render buffer
-    GLint mDepthbuffer;
-    GLint mStencilbuffer;
-  };
-
   class RenderArrayInfo
   {
   public:
@@ -122,8 +109,8 @@ protected:
   void SetSurface(nuiSurface* pSurface);
   void CreateSurface(nuiSurface* pSurface);
 
-  void ApplyState(const nuiRenderState& rState, bool ForceApply);
-  void ApplyTexture(const nuiRenderState& rState, bool ForceApply, int slot);
+  void ApplyState(const nuiRenderState& rState);
+  void ApplyTexture(const nuiRenderState& rState, int slot);
 
   void UploadTexture(nuiTexture* pTexture, int slot);
   
@@ -132,14 +119,11 @@ protected:
   static uint32 mActiveContexts;
   nglContext* mpContext;
   nuiRenderState mFinalState;
-  bool mForceApply;
 
   static std::map<nuiTexture*, TextureInfo> mTextures;
-  static std::map<nuiSurface*, FramebufferInfo> mFramebuffers;
   static std::vector<nuiRenderArray*> mFrameArrays;
   static std::map<nuiRenderArray*, RenderArrayInfo*> mRenderArrays;
   static nglCriticalSection mTexturesCS;
-  static nglCriticalSection mFramebuffersCS;
   static nglCriticalSection mFrameArraysCS;
   static nglCriticalSection mRenderArraysCS;
 
@@ -150,7 +134,6 @@ protected:
   int32 mScissorY;
   int32 mScissorW;
   int32 mScissorH;
-  bool mScissorOn;
   bool mTwoPassBlend;
   GLenum mSrcColor;
   GLenum mDstColor;
@@ -199,6 +182,7 @@ protected:
   nuiShaderProgram* mpShader_TextureAlphaDifuseColor;
   nuiShaderProgram* mpShader_DifuseColor;
   nuiShaderProgram* mpShader_VertexColor;
+  nuiShaderProgram* mpShader_ClearColor;
   
   nuiMatrix mSurfaceMatrix;
   
