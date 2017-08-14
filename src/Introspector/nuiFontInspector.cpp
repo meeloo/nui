@@ -149,36 +149,37 @@ void nuiFontInspector::UpdateFonts()
   UpdatingFonts--;
 }
 
-bool nuiFontInspector::SetRect(const nuiRect& rRect)
-{
-  UpdatingFonts++;
-
-  bool res = nuiWidget::SetSelfRect(rRect);
-  
-  UpdatingFonts--;
-  
-  return res;
-}
-
-bool nuiFontInspector::Draw(nuiDrawContext* pContext)
-{
-  UpdatingFonts++;
-  
-  bool res = nuiWidget::Draw(pContext);
-  
-  UpdatingFonts--;
-  
-  return res;
-}
-
-nuiRect nuiFontInspector::CalcIdealSize()
-{
-  UpdatingFonts++;
-  
-  nuiRect res = nuiWidget::CalcIdealSize();
-  
-  UpdatingFonts--;
-  
-  return res;
-}
+//bool nuiFontInspector::SetRect(const nuiRect& rRect)
+//{
+//  UpdatingFonts++;
+//
+//  bool res = nuiWidget::SetSelfRect(rRect);
+//  
+//  UpdatingFonts--;
+//  
+//  return res;
+//}
+//
+//bool nuiFontInspector::Draw(nuiDrawContext* pContext)
+//{
+//  UpdatingFonts++;
+//  
+//  bool res = nuiWidget::Draw(pContext);
+//  
+//  UpdatingFonts--;
+//  
+//  return res;
+//}
+//
+//nuiRect nuiFontInspector::CalcIdealSize()
+//{
+//  UpdatingFonts++;
+//  
+//  nuiRect res = nuiWidget::CalcIdealSize();
+//  
+//  UpdatingFonts--;
+//  
+//  return res;
+//}
+//
 

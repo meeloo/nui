@@ -17,9 +17,9 @@ public:
   nuiFontInspector();
 
 
-  virtual bool SetRect(const nuiRect& rRect);
-  virtual bool Draw(nuiDrawContext* pContext);
-  virtual nuiRect CalcIdealSize();
+//  virtual bool SetRect(const nuiRect& rRect);
+//  virtual bool Draw(nuiDrawContext* pContext);
+//  virtual nuiRect CalcIdealSize();
 
 protected:
   virtual ~nuiFontInspector();
