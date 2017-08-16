@@ -1752,12 +1752,17 @@ void nglWindow::BeginSession()
       
       id<MTLDevice> device = (id<MTLDevice>)GetMetalDevice();
       
+      static int frame = 0;
       id<MTLCommandQueue> commandQueue = [device newCommandQueue];
+      commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", frame];
       id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
+      commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", frame];
       mMetalCommandBuffer = commandBuffer;
       id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+      commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", frame];
       mMetalCommandEncoder = commandEncoder;
-
+      
+      frame++;
     }
   }
 }

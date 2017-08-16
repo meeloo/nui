@@ -921,7 +921,7 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
 //  [encoder setViewport:viewport];
   
   ApplyState(*mpState);
-  float c[4] = { mpState->mFillColor.Red(), mpState->mFillColor.Green(), mpState->mFillColor.Blue(), mpState->mFillColor.Alpha() };
+  float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
   MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) mpShader_ClearColor->NewMetalPipelineDescriptor(*mpState);
   
   MTLVertexDescriptor *vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];  
@@ -1889,6 +1889,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     id<MTLRenderCommandEncoder> commandEncoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
     [commandEncoder endEncoding];
     commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+    commandEncoder.label = [NSString stringWithUTF8String:pSurface->GetObjectName().GetChars()];
     mpContext->SetMetalCommandEncoder(commandEncoder);
     
     
@@ -1912,6 +1913,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     
     id<MTLCommandBuffer> commandBuffer = (id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
     id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+    commandEncoder.label = [NSString stringWithUTF8String:"main encoder"];
     mpContext->SetMetalCommandEncoder(commandEncoder);
   }
 }
