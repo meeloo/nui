@@ -449,8 +449,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_TextureVertexColor)
   {
     mpShader_TextureVertexColor = new nuiShaderProgram(mpContext, "TextureVertexColor");
-    mpShader_TextureVertexColor->AddShader(eVertexShader, TextureVertexColor_VTX);
-    mpShader_TextureVertexColor->AddShader(eFragmentShader, nglString());
+    mpShader_TextureVertexColor->AddShader(eMetalShader, TextureVertexColor_VTX);
     mpShader_TextureVertexColor->Link();
 //    mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
 //    mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
@@ -460,8 +459,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_TextureAlphaVertexColor)
   {
     mpShader_TextureAlphaVertexColor = new nuiShaderProgram(mpContext, "TextureAlphaVertexColor");
-    mpShader_TextureAlphaVertexColor->AddShader(eVertexShader, TextureAlphaVertexColor_VTX);
-    mpShader_TextureAlphaVertexColor->AddShader(eFragmentShader, nglString());
+    mpShader_TextureAlphaVertexColor->AddShader(eMetalShader, TextureAlphaVertexColor_VTX);
     mpShader_TextureAlphaVertexColor->Link();
 //    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
 //    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
@@ -471,8 +469,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_TextureDifuseColor)
   {
     mpShader_TextureDifuseColor = new nuiShaderProgram(mpContext, "TextureDiffuseColor");
-    mpShader_TextureDifuseColor->AddShader(eVertexShader, TextureDifuseColor_VTX);
-    mpShader_TextureDifuseColor->AddShader(eFragmentShader, nglString());
+    mpShader_TextureDifuseColor->AddShader(eMetalShader, TextureDifuseColor_VTX);
     mpShader_TextureDifuseColor->Link();
 //    mpShader_TextureDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
 //    mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
@@ -483,8 +480,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_TextureAlphaDifuseColor)
   {
     mpShader_TextureAlphaDifuseColor = new nuiShaderProgram(mpContext, "TextureAlphaDifuseColor");
-    mpShader_TextureAlphaDifuseColor->AddShader(eVertexShader, TextureAlphaDifuseColor_VTX);
-    mpShader_TextureAlphaDifuseColor->AddShader(eFragmentShader, nglString());
+    mpShader_TextureAlphaDifuseColor->AddShader(eMetalShader, TextureAlphaDifuseColor_VTX);
     mpShader_TextureAlphaDifuseColor->Link();
 //    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
 //    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
@@ -495,8 +491,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_VertexColor)
   {
     mpShader_VertexColor = new nuiShaderProgram(mpContext, "VertexColor");
-    mpShader_VertexColor->AddShader(eVertexShader, VertexColor_VTX);
-    mpShader_VertexColor->AddShader(eFragmentShader, nglString());
+    mpShader_VertexColor->AddShader(eMetalShader, VertexColor_VTX);
     mpShader_VertexColor->Link();
 //    mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
@@ -505,8 +500,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_DifuseColor)
   {
     mpShader_DifuseColor = new nuiShaderProgram(mpContext, "DifuseColor");
-    mpShader_DifuseColor->AddShader(eVertexShader, DifuseColor_VTX);
-    mpShader_DifuseColor->AddShader(eFragmentShader, nglString());
+    mpShader_DifuseColor->AddShader(eMetalShader, DifuseColor_VTX);
     mpShader_DifuseColor->Link();
   }
   
@@ -514,8 +508,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_ClearColor)
   {
     mpShader_ClearColor = new nuiShaderProgram(mpContext, "ClearColor");
-    mpShader_ClearColor->AddShader(eVertexShader, ClearColor_VTX);
-    mpShader_ClearColor->AddShader(eFragmentShader, nglString());
+    mpShader_ClearColor->AddShader(eMetalShader, ClearColor_VTX);
     mpShader_ClearColor->Link();
   }
   
@@ -916,10 +909,7 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   mRenderOperations++;
   NUI_RETURN_IF_RENDERING_DISABLED;
 
-  SetViewport();
-//  MTLViewport viewport = { (double)x, (double)y, (double)w, (double)h, (double)-1, (double)1 };
-//  [encoder setViewport:viewport];
-  
+  SetViewport();  
   ApplyState(*mpState);
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
   MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) mpShader_ClearColor->NewMetalPipelineDescriptor(*mpState);
@@ -1568,16 +1558,23 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
       MTLPixelFormat mtlPixelFormat = MTLPixelFormatInvalid;
       GLint pixelformat = 0;
       GLbyte* pBuffer = NULL;
+      GLbyte* pNewBuffer = nullptr;
+      bool allocatedBuffer = false;
+      uint32 bytesPerLine = 0;
       
       if (pImage)
       {
         type = pImage->GetBitDepth();
         pixelformat = pImage->GetPixelFormat();
         pBuffer = (GLbyte*)pImage->GetBuffer();
-
+        bytesPerLine = pTexture->GetImage()->GetBytesPerLine();
+        
         //#ifndef NUI_IOS
         switch (type)
         {
+          case 8:
+            mtlPixelFormat = MTLPixelFormatA8Unorm;
+            break;
           case 16:
 //            mtlPixelFormat = MTLPixelFormatB5G6R5Unorm;
             NGL_ASSERT(0);
@@ -1586,11 +1583,24 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 //            mtlPixelFormat = MTLPixelFormatBGR5A1Unorm;
             NGL_ASSERT(0);
             break;
-          case 8:
-            mtlPixelFormat = MTLPixelFormatA8Unorm;
-            break;
           case 24:
-            NGL_ASSERT(0);
+            { //  Crude convertion from 24 to 32 bits images:
+              if (pBuffer)
+              {
+                uint32 count = ToNearest(Width) * ToNearest(Height);
+                pNewBuffer = new GLbyte[4 * count];
+                for (uint32 i = 0; i < count; i++)
+                {
+                  pNewBuffer[i * 4 + 0] = pBuffer[i * 3 + 0];
+                  pNewBuffer[i * 4 + 1] = pBuffer[i * 3 + 1];
+                  pNewBuffer[i * 4 + 2] = pBuffer[i * 3 + 2];
+                  pNewBuffer[i * 4 + 3] = 255;
+                }
+                pBuffer = pNewBuffer;
+                bytesPerLine = bytesPerLine + bytesPerLine / 3;
+              }
+            }
+            mtlPixelFormat = MTLPixelFormatRGBA8Unorm;
             break;
           case 32:
             mtlPixelFormat = MTLPixelFormatRGBA8Unorm;
@@ -1629,7 +1639,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         MTLRegion region = MTLRegionMake2D(0, 0, ToNearest(Width), ToNearest(Height));
         if (pBuffer)
         {
-          [texture replaceRegion:region mipmapLevel:0 withBytes:pBuffer bytesPerRow:pTexture->GetImage()->GetBytesPerLine()];
+          [texture replaceRegion:region mipmapLevel:0 withBytes:pBuffer bytesPerRow:bytesPerLine];
         }
         info.mTexture = texture;
         MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new];
@@ -1650,7 +1660,9 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         pTexture->ReleaseBuffer();
       }
 #endif
-
+      
+      if (pNewBuffer)
+        delete[] pNewBuffer;
     }
   }
 

@@ -715,8 +715,8 @@ void nuiShaderProgram::Init()
 
 nuiShaderProgram::~nuiShaderProgram()
 {
-  std::map<GLenum, nuiShader*>::iterator it = mShaders.begin();
-  std::map<GLenum, nuiShader*>::iterator end = mShaders.end();
+  auto it = mShaders.begin();
+  auto end = mShaders.end();
   while (it != end)
   {
     it->second->Release();
@@ -788,6 +788,8 @@ GLint nuiShaderProgram::GetUniformLocation(const char *name)
 
 GLint nuiShaderProgram::GetUniformLocation(const nglString& name)
 {
+  if (mpMetalLibrary)
+    return GetMetalUniformLocation(name.GetChars());
 	return glGetUniformLocation(mProgram, name.GetChars());
 }
 
@@ -1106,20 +1108,13 @@ bool nuiShaderProgram::Link()
   {
     // This is a metal display
     nglString source;
-    auto it =  mShaders.find(eVertexShader);
+    auto it =  mShaders.find(eMetalShader);
     if (it != mShaders.end())
     {
       nuiShader* pShader = it->second;
       source.Add(pShader->GetSource());
     }
     
-    it =  mShaders.find(eFragmentShader);
-    if (it != mShaders.end())
-    {
-      nuiShader* pShader = it->second;
-      source.Add(pShader->GetSource());
-    }
-
     NSError* error = nil;
     id<MTLLibrary> library = [device newLibraryWithSource:(NSString*)source.ToCFString() options:nil error:&error];;
     mpMetalLibrary = library;
@@ -1191,7 +1186,7 @@ bool nuiShaderProgram::Link()
     for (int i = 0; i < 2; i++)
     {
       nuiShaderKind k = kinds[i];
-      std::map<GLenum, nuiShader*>::iterator it = mShaders.find(k);
+      auto it = mShaders.find(k);
       if (it != mShaders.end())
       {
         nuiShader* pShader = it->second;

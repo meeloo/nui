@@ -13,7 +13,8 @@
 enum nuiShaderKind
 {
   eVertexShader = GL_VERTEX_SHADER,
-  eFragmentShader = GL_FRAGMENT_SHADER
+  eFragmentShader = GL_FRAGMENT_SHADER,
+  eMetalShader
 };
 
 #define NUI_PROJECTION_MATRIX_NAME "ProjectionMatrix"
@@ -219,7 +220,7 @@ private:
   std::map<nglString, nuiVertexAttribDesc> mAttribMap;
   std::map<GLuint, int32> mUniformMap;
 
-  std::map<GLenum, nuiShader*> mShaders;
+  std::map<nuiShaderKind, nuiShader*> mShaders;
   
   void* mpMetalLibrary = nullptr;
   void* mMetalVertexFunction = nullptr;
