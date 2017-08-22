@@ -294,6 +294,9 @@ void nuiDrawContext::SetTexture(nuiTexture* pTex, int slot)
   {
     pTex->CheckValid();
     pTex->Acquire();
+    // Validate that the texture is not crap:
+    NGL_ASSERT(pTex->GetWidth() > 0);
+    NGL_ASSERT(pTex->GetHeight() > 0);
   }
   if (pOld)
     pOld->Release();

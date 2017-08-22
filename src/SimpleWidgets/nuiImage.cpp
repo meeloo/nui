@@ -138,7 +138,16 @@ void nuiImage::SetTexture(nuiTexture* pTex)
     return;
 
   if (pTex)
-    pTex->Acquire();
+  {
+    if (pTex->IsValid())
+    {
+      pTex->Acquire();
+    }
+    else
+    {
+      pTex = nullptr;
+    }
+  }
   if (mpTexture)
     mpTexture->Release();
 

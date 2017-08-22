@@ -1307,21 +1307,25 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   for (uint i = 0; i < 8; i++)
   {
     nuiTexture* pTexture = mFinalState.mpTexture[i];
-
+    nuiTexture* pProxy = nullptr;
+    id<MTLTexture> texture = nil;
+    id<MTLSamplerState> sampler = nil;
+    
     if (pTexture)
     {
-      nuiTexture* pProxy = pTexture->GetProxyTexture();
+     pProxy = pTexture->GetProxyTexture();
       if (pProxy)
         pTexture = pProxy;
 
       auto it = mTextures.find(pTexture);
       NGL_ASSERT(it != mTextures.end());
-      id<MTLTexture> texture = (id<MTLTexture>)it->second.mTexture;
-      id<MTLSamplerState> sampler = (id<MTLSamplerState>)it->second.mSampler;
-      NGL_ASSERT((texture != nil && sampler != nil) || (texture == nil && sampler == nil));
-      [encoder setFragmentTexture:texture atIndex:i];
-      [encoder setFragmentSamplerState:sampler atIndex:i];
+      texture = (id<MTLTexture>)it->second.mTexture;
+      sampler = (id<MTLSamplerState>)it->second.mSampler;
     }
+    NGL_OUT("Setting texture[%d] = %p / %p (%p%s)\n", i, texture, sampler, pTexture, (pProxy?" [Proxy]":""));
+    NGL_ASSERT((pTexture != nullptr && texture != nil && sampler != nil) || (pTexture == nullptr && texture == nil && sampler == nil));
+    [encoder setFragmentTexture:texture atIndex:i];
+    [encoder setFragmentSamplerState:sampler atIndex:i];
   }
   
   
