@@ -849,9 +849,9 @@ void nuiTexture::Init()
 
 bool nuiTexture::IsValid() const
 {
-  if (mpSurface || mpProxyTexture)
-    return GetWidth() && GetHeight();
-  return mpImage && mpImage->IsValid() && GetWidth() && GetHeight();
+  if (mpImage)
+    return mpImage->IsValid() && GetWidth() && GetHeight();
+  return GetWidth() && GetHeight();
 }
 
 

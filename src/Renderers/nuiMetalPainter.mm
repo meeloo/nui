@@ -1618,9 +1618,6 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
       {
         NGL_ASSERT(pSurface);
         mtlPixelFormat = MTLPixelFormatBGRA8Unorm;
-//        float scale = mpContext->GetScale();
-//        Width *= scale;
-//        Height *= scale;
       }
 
 
@@ -1644,6 +1641,10 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         if (pBuffer)
         {
           [texture replaceRegion:region mipmapLevel:0 withBytes:pBuffer bytesPerRow:bytesPerLine];
+        }
+        else
+        {
+          NGL_ASSERT(pSurface);
         }
         info.mTexture = texture;
         MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new];
