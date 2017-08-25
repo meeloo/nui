@@ -796,6 +796,10 @@ GLint nuiShaderProgram::GetUniformLocation(const nglString& name)
 int32 nuiShaderProgram::GetUniformIndex(const char *name)
 {
   GLint loc = GetUniformLocation(name);
+ 
+  if (mpMetalLibrary)
+    return loc;
+  
   if (loc >= 0)
     return mUniformMap[loc];
   return -1;
@@ -804,6 +808,10 @@ int32 nuiShaderProgram::GetUniformIndex(const char *name)
 int32 nuiShaderProgram::GetUniformIndex(const nglString& name)
 {
   GLint loc = GetUniformLocation(name);
+
+  if (mpMetalLibrary)
+    return loc;
+  
   if (loc >= 0)
     return mUniformMap[loc];
   return -1;

@@ -322,7 +322,8 @@ nuiTexture* nuiDrawContext::GetTexture(int slot) const
 void nuiDrawContext::SetShader(nuiShaderProgram* pShader, nuiShaderState* pShaderState)
 {
   nuiShaderProgram* pOld = mCurrentState.mpShader;
-  if (pShader == pOld)
+  nuiShaderState* pOldState = mCurrentState.mpShaderState;
+  if (pShader == pOld && pShaderState == pOldState)
     return;
 
   mCurrentState.mpShader = pShader ;

@@ -1322,7 +1322,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       texture = (id<MTLTexture>)it->second.mTexture;
       sampler = (id<MTLSamplerState>)it->second.mSampler;
     }
-    NGL_OUT("Setting texture[%d] = %p / %p (%p%s)\n", i, texture, sampler, pTexture, (pProxy?" [Proxy]":""));
+//    NGL_OUT("Setting texture[%d] = %p / %p (%p%s)\n", i, texture, sampler, pTexture, (pProxy?" [Proxy]":""));
     NGL_ASSERT((pTexture != nullptr && texture != nil && sampler != nil) || (pTexture == nullptr && texture == nil && sampler == nil));
     [encoder setFragmentTexture:texture atIndex:i];
     [encoder setFragmentSamplerState:sampler atIndex:i];
