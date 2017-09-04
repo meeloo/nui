@@ -9,6 +9,9 @@
 #include <OpenGLES/EAGLDrawable.h>
 #include <OpenGLES/ES1/glext.h>
 #include <OpenGLES/ES2/glext.h>
+#include <OpenGLES/ES3/glext.h>
+
+#include <Metal/Metal.h>
 
 #include <QuartzCore/QuartzCore.h>
 
@@ -135,6 +138,78 @@ nglContext::nglContext()
 
 nglContext::~nglContext()
 {
+}
+
+void* nglContext::GetMetalDevice() const // id <MTLDevice>
+{
+  return mMetalDevice;
+}
+
+void* nglContext::GetMetalCommandQueue() const // id <MTLCommandQueue>
+{
+  return mMetalCommandQueue;
+}
+
+void* nglContext::GetMetalDestinationTexture() const
+{
+  return mMetalDestinationTexture;
+}
+
+void* nglContext::GetMetalDrawable() const
+{
+  return mMetalDrawable;
+}
+
+void* nglContext::GetMetalCommandEncoder() const
+{
+  return mMetalCommandEncoder;
+}
+
+void* nglContext::GetMetalCommandBuffer() const
+{
+  return mMetalCommandBuffer;
+}
+
+void nglContext::AddMarker(const char* title)
+{
+  if (mMetalDevice)
+  {
+    [(id<MTLCommandEncoder>)mMetalCommandEncoder insertDebugSignpost:[NSString stringWithCString:title]];
+  }
+  else
+  {
+    glInsertEventMarkerEXT(0, title);
+  }
+}
+
+void nglContext::StartMarkerGroup(const char* title)
+{
+  if (mMetalDevice)
+  {
+    [(id<MTLCommandEncoder>)mMetalCommandEncoder pushDebugGroup:[NSString stringWithCString:title]];
+  }
+  else
+  {
+    glPushGroupMarkerEXT(0, title);
+  }
+}
+
+void nglContext::StopMarkerGroup()
+{
+  if (mMetalDevice)
+  {
+    [(id<MTLCommandEncoder>)mMetalCommandEncoder popDebugGroup];
+  }
+  else
+  {
+    glPopGroupMarkerEXT();
+  }
+}
+
+void nglContext::SetMetalCommandEncoder(void* encoder)
+{
+  id<MTLCommandEncoder> commandEncoder = (id<MTLCommandEncoder>)mMetalCommandEncoder;
+  mMetalCommandEncoder = encoder;
 }
 
 bool nglContext::GetContextInfo(nglContextInfo& rInfo) const

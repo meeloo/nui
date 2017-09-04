@@ -16,26 +16,28 @@
 class nuiMetalDebugGuard
 {
 public:
-  nuiMetalDebugGuard(const nglString& rString)
+  nuiMetalDebugGuard(nglContext* pContext, const nglString& rString) : mpContext(pContext)
   {
-#if defined DEBUG && defined _UIKIT_
+#if defined DEBUG
     mpContext->StartMarkerGroup(rString.GetChars());
 #endif
   }
 
-  nuiMetalDebugGuard(const char* pString)
+  nuiMetalDebugGuard(nglContext* pContext, const char* pString) : mpContext(pContext)
   {
-#if defined DEBUG && defined _UIKIT_
+#if defined DEBUG
     mpContext->StartMarkerGroup(pString);
 #endif
   }
 
   ~nuiMetalDebugGuard()
   {
-#if defined DEBUG && defined _UIKIT_
+#if defined DEBUG
     mpContext->StopMarkerGroup();
 #endif
   }
+  
+  nglContext* mpContext = nullptr;
 };
 
 class nuiMetalPainter : public nuiPainter

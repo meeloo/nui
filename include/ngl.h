@@ -416,6 +416,10 @@ typedef wchar_t nglUChar;
 #   include <GLES2/gl2ext.h>
 #   include <GLES2/gl2platform.h>
 
+#   include <GLES3/gl3.h>
+#   include <GLES3/gl3ext.h>
+#   include <GLES2/gl3platform.h>
+
     // Fake GLU for OpenGLES
     typedef double GLdouble;
     typedef double GLclampd;
@@ -445,6 +449,8 @@ typedef wchar_t nglUChar;
 #    include <OpenGLES/ES1/glext.h>
 #    include <OpenGLES/ES2/gl.h>
 #    include <OpenGLES/ES2/glext.h>
+#    include <OpenGLES/ES3/gl.h>
+#    include <OpenGLES/ES3/glext.h>
 
 // Fake GLU for OpenGLES
     typedef double GLdouble;

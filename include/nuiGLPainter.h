@@ -21,14 +21,14 @@
 class nuiGLDebugGuard
 {
 public:
-  nuiGLDebugGuard(const nglString& rString)
+  nuiGLDebugGuard(nglContext* pContext, const nglString& rString) : mpContext(pContext)
   {
 #if defined DEBUG && defined _UIKIT_
     mpContext->StartMarkerGroup(rString.GetChars());
 #endif
   }
 
-  nuiGLDebugGuard(const char* pString)
+  nuiGLDebugGuard(nglContext* pContext, const char* pString) : mpContext(pContext)
   {
 #if defined DEBUG && defined _UIKIT_
     mpContext->StartMarkerGroup(pString);
@@ -41,6 +41,8 @@ public:
     mpContext->StopMarkerGroup();
 #endif
   }
+  
+  nglContext* mpContext = nullptr;
 };
 
 class nuiGLPainter : public nuiPainter

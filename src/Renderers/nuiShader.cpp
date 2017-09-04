@@ -933,6 +933,7 @@ static GLenum GLTypeFromMetalType(MTLDataType type)
     case MTLDataTypeFloat4: return GL_FLOAT_VEC4;
       
     case MTLDataTypeFloat2x2: return GL_FLOAT_MAT2;
+#ifdef _COCOA_
     case MTLDataTypeFloat2x3: return GL_FLOAT_MAT2x3;
     case MTLDataTypeFloat2x4: return GL_FLOAT_MAT2x4;
       
@@ -945,6 +946,8 @@ static GLenum GLTypeFromMetalType(MTLDataType type)
     case MTLDataTypeFloat4x4: return GL_FLOAT_MAT4;
       
     case MTLDataTypeHalf: return GL_HALF_FLOAT;
+#endif
+      
     case MTLDataTypeHalf2: return 0;
     case MTLDataTypeHalf3: return 0;
     case MTLDataTypeHalf4: return 0;

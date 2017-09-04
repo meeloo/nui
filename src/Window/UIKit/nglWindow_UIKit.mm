@@ -116,7 +116,7 @@ const nglChar* gpWindowErrorTable[] =
 {
   CGRect frame = [self frame];
 //  NGL_OUT("layoutSubviews with frame %d - %d\n", (uint)frame.size.width, (uint)frame.size.height);
-  mpNGLWindow->UpdateGLLayer();
+  mpNGLWindow->UpdateLayer();
   mpNGLWindow->SetSize((uint)frame.size.width, (uint)frame.size.height);
   [super layoutSubviews];
 }
@@ -129,11 +129,20 @@ const nglChar* gpWindowErrorTable[] =
 #pragma mark nglUIView_Metal
 
 @implementation nglUIView_Metal
+{
+  CAMetalLayer* _metalLayer;
+}
 
 + (Class)layerClass
 {
   return [CAMetalLayer class];
 }
+
+- (CAMetalLayer *)metalLayer
+{
+  return _metalLayer;
+}
+
 
 - (id) initWithNGLWindow: (nglWindow*) pNGLWindow
 {
@@ -141,11 +150,11 @@ const nglChar* gpWindowErrorTable[] =
   if (self)
   {
     mpNGLWindow = pNGLWindow;
-    CAMetalLayer *layer = (CAMetalLayer *)self.layer;
-    layer.opaque = YES;
-    layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-//    layer.device = MTLCreateSystemDefaultDevice();
-//    layer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+    _metalLayer = (CAMetalLayer *)self.layer;
+    _metalLayer.opaque = YES;
+    _metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+//    _metalLayer.device = MTLCreateSystemDefaultDevice();
+//    _metalLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
 //                                    [NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking,
 //                                    kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
 //                                    nil];
@@ -165,7 +174,7 @@ const nglChar* gpWindowErrorTable[] =
 {
   CGRect frame = [self frame];
   //  NGL_OUT("layoutSubviews with frame %d - %d\n", (uint)frame.size.width, (uint)frame.size.height);
-  mpNGLWindow->UpdateGLLayer();
+  mpNGLWindow->UpdateLayer();
   mpNGLWindow->SetSize((uint)frame.size.width, (uint)frame.size.height);
   [super layoutSubviews];
 }
@@ -204,7 +213,7 @@ const nglChar* gpWindowErrorTable[] =
   {
     pView = [[[nglUIView_GL alloc] initWithNGLWindow:mpNGLWindow] autorelease];
   }
-  else if (Info.TargetAPI == eTargetAPI_OpenGL2)
+  else if (Info.TargetAPI == eTargetAPI_Metal)
   {
     pView = [[[nglUIView_Metal alloc] initWithNGLWindow:mpNGLWindow] autorelease];
   }
@@ -689,6 +698,8 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   mAutoRotate = true;
   mAngle = rInfo.Rotate;
 
+  mContextInfo = rContext;
+  
   nglUIWindow* _window = [[nglUIWindow alloc] initWithNGLWindow: this];
   mpUIWindow = _window;
   mOSInfo.mpUIWindow = _window;
@@ -723,6 +734,10 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     UpdateGLLayer();
     bool currentOk = MakeCurrent();
     NGL_ASSERT(currentOk);
+  }
+  else
+  {
+    UpdateMetalLayer();
   }
   Build(rContext);
 
@@ -802,6 +817,22 @@ nglWindow::~nglWindow()
   Unregister();
 }
 
+void nglWindow::UpdateLayer()
+{
+  if (mpEAGLContext)
+  {
+    UpdateGLLayer();
+  }
+  else if (GetMetalDevice())
+  {
+    UpdateMetalLayer();
+  }
+  else
+  {
+    NGL_ASSERT(0); // Whoops?
+  }
+}
+
 void nglWindow::UpdateGLLayer()
 {
   GetLock().Lock();
@@ -846,6 +877,23 @@ void nglWindow::UpdateGLLayer()
   }
 
 //  [EAGLContext setCurrentContext: nil];
+
+  GetLock().Unlock();
+}
+
+void nglWindow::UpdateMetalLayer()
+{
+  GetLock().Lock();
+  
+  NGL_ASSERT(!mpEAGLContext);
+  UIWindow* window = (UIWindow*)GetOSInfo()->mpUIWindow;
+  nglUIView_Metal* metalView = (nglUIView_Metal*)mpUIView;
+  CAMetalLayer* metalLayer = (CAMetalLayer*)metalView.layer;
+  metalLayer.contentsScale =  window.contentScaleFactor;
+  metalLayer.opaque = YES;
+  metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+  metalLayer.device = (id<MTLDevice>)GetMetalDevice();
+  metalLayer.framebufferOnly = YES;
 
   GetLock().Unlock();
 }
@@ -1010,6 +1058,11 @@ bool nglWindow::MakeCurrent() const
 {
   NGL_ASSERT(mpEAGLContext);
   return [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext] == YES;
+}
+
+void* nglWindow::GetMetalLayer() const
+{
+  return (void*)((nglUIView_Metal*)mpUIView).metalLayer;
 }
 
 void nglWindow::Invalidate()

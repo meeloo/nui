@@ -616,7 +616,7 @@ void nuiGLPainter::ResetOpenGLState()
 {
   BeginSession();
 #ifdef DEBUG
-  nuiGLDebugGuard g("nuiGLPainter::ResetOpenGLState");
+  nuiGLDebugGuard g(mpContext, "nuiGLPainter::ResetOpenGLState");
 #endif
   
   //NUI_RETURN_IF_RENDERING_DISABLED;
@@ -666,7 +666,7 @@ void nuiGLPainter::ResetOpenGLState()
 void nuiGLPainter::ApplyState(const nuiRenderState& rState, bool ForceApply)
 {
 #ifdef DEBUG
-  nuiGLDebugGuard g("nuiGLPainter::ApplyState()");
+  nuiGLDebugGuard g(mpContext, "nuiGLPainter::ApplyState()");
 #endif
 
   //TEST_FBO_CREATION();
@@ -865,7 +865,7 @@ void nuiGLPainter::SetSize(uint32 w, uint32 h)
 void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, int slot)
 {
 #ifdef DEBUG
-  nuiGLDebugGuard g("nuiGLPainter::ApplTexture()");
+  nuiGLDebugGuard g(mpContext, "nuiGLPainter::ApplTexture()");
 #endif
 
   NGL_ASSERT(slot < NUI_MAX_TEXTURE_UNITS);
@@ -1039,7 +1039,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   }
   
 #ifdef DEBUG
-  nuiGLDebugGuard g("nuiGLPainter::DrawArray");
+  nuiGLDebugGuard g(mpContext, "nuiGLPainter::DrawArray");
 #endif
 
   static uint32 ops = 0;
@@ -1465,7 +1465,7 @@ nuiGLPainter::TextureInfo::TextureInfo()
 void nuiGLPainter::UploadTexture(nuiTexture* pTexture, int slot)
 {
 #ifdef DEBUG
-  nuiGLDebugGuard g("nuiGLPainter::UploadTexture()");
+  nuiGLDebugGuard g(mpContext, "nuiGLPainter::UploadTexture()");
 #endif
 
   if (mActiveTextureSlot != slot)

@@ -20,6 +20,8 @@ This class is not available if the _NOGFX_ symbol is defined.
 #ifdef _UIKIT_
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
+#import <OpenGLES/ES3/gl.h>
+#import <OpenGLES/ES3/glext.h>
 #endif
 
 //#ifdef _COCOA_
@@ -946,7 +948,9 @@ public:
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
 
   void DisplayTicked();
+  void UpdateLayer();
   void UpdateGLLayer();
+  void UpdateMetalLayer();
 #endif
 
 #ifdef _COCOA_

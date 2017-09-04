@@ -8,7 +8,9 @@
 
 #include "nui.h"
 #import <Metal/Metal.h>
+#ifdef _COCOA_
 #import <QuartzCore/CAMetalLayer.h>
+#endif
 
 #ifndef __NUI_NO_GL__
 
@@ -627,7 +629,7 @@ void nuiMetalPainter::ResetMetalState()
 {
   BeginSession();
 #ifdef DEBUG
-  nuiMetalDebugGuard g("nuiMetalPainter::ResetMetalState");
+  nuiMetalDebugGuard g(mpContext, "nuiMetalPainter::ResetMetalState");
 #endif
   
   mScissorX = -1;
@@ -668,7 +670,7 @@ void nuiMetalPainter::ResetMetalState()
 void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
 {
 #ifdef DEBUG
-  nuiMetalDebugGuard g("nuiMetalPainter::ApplyState()");
+  nuiMetalDebugGuard g(mpContext, "nuiMetalPainter::ApplyState()");
 #endif
 
   //TEST_FBO_CREATION();
@@ -838,7 +840,7 @@ void nuiMetalPainter::SetSize(uint32 w, uint32 h)
 void nuiMetalPainter::ApplyTexture(const nuiRenderState& rState, int slot)
 {
 #ifdef DEBUG
-  nuiMetalDebugGuard g("nuiMetalPainter::ApplTexture()");
+  nuiMetalDebugGuard g(mpContext, "nuiMetalPainter::ApplTexture()");
 #endif
 
   NGL_ASSERT(slot < NUI_MAX_TEXTURE_UNITS);
@@ -995,7 +997,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   }
   
 #ifdef DEBUG
-  nuiMetalDebugGuard g("nuiMetalPainter::DrawArray");
+  nuiMetalDebugGuard g(mpContext, "nuiMetalPainter::DrawArray");
 #endif
 
   static uint32 ops = 0;
@@ -1480,10 +1482,10 @@ static inline MTLSamplerAddressMode nuiGLToMetaltextureAddressMode(GLenum val)
   {
     case GL_CLAMP_TO_EDGE:
       return MTLSamplerAddressModeClampToEdge;
+#ifdef _COCOA_
     case GL_CLAMP_TO_BORDER:
       return MTLSamplerAddressModeClampToBorderColor;
-    case GL_CLAMP:
-      return MTLSamplerAddressModeClampToEdge;
+#endif
     case GL_REPEAT:
       return MTLSamplerAddressModeRepeat;
     case GL_MIRRORED_REPEAT:
@@ -1496,7 +1498,7 @@ static inline MTLSamplerAddressMode nuiGLToMetaltextureAddressMode(GLenum val)
 void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 {
 #ifdef DEBUG
-  nuiMetalDebugGuard g("nuiMetalPainter::UploadTexture()");
+  nuiMetalDebugGuard g(mpContext, "nuiMetalPainter::UploadTexture()");
 #endif
 
   id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();

@@ -88,8 +88,6 @@ public:
     - at least 16 bits of depth buffer
     - main plane layer (not overlay, not underlay)
   */
-  nglContextInfo(const nglContextInfo& rInfo);  ///< Copy constructor
-  //@}
 
   /** @name Logging */
   //@{

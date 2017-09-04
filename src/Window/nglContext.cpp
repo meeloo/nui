@@ -66,37 +66,6 @@ nglContextInfo::nglContextInfo()
 #endif
 }
 
-nglContextInfo::nglContextInfo(const nglContextInfo& rInfo)
-{
-  FrameCnt        = rInfo.FrameCnt;
-  FrameBitsR      = rInfo.FrameBitsR;
-  FrameBitsG      = rInfo.FrameBitsG;
-  FrameBitsB      = rInfo.FrameBitsB;
-  FrameBitsA      = rInfo.FrameBitsA;
-  DepthBits       = rInfo.DepthBits;
-  StencilBits     = rInfo.StencilBits;
-  AccumBitsR      = rInfo.AccumBitsR;
-  AccumBitsG      = rInfo.AccumBitsG;
-  AccumBitsB      = rInfo.AccumBitsB;
-  AccumBitsA      = rInfo.AccumBitsA;
-  AuxCnt          = rInfo.AuxCnt;
-  AABufferCnt     = rInfo.AABufferCnt;
-  AASampleCnt     = rInfo.AASampleCnt;
-  Stereo          = rInfo.Stereo;
-  Offscreen       = rInfo.Offscreen;
-  RenderToTexture = rInfo.RenderToTexture;
-  CopyOnSwap      = rInfo.CopyOnSwap;
-  VerticalSync    = rInfo.VerticalSync;
-
-#ifdef _WIN32_
-  mPFD = 0;
-#endif
-#ifdef _X11_
-  mpXVisualInfo = NULL;
-#endif
-}
-
-
 void nglContextInfo::Dump(uint Level) const
 {
   const nglChar* human_readable[5] = { "none", "single", "double", "triple", ">3 (waw!)" };
@@ -276,7 +245,7 @@ void nglContext::InitPainter()
       break;
     case eMetal:
       mpPainter = new nuiMetalPainter(this);
-      NGL_OUT("nuiGLPainter created\n");
+      NGL_OUT("nuiMetalPainter created\n");
       break;
 #endif
 #ifndef __NUI_NO_D3D__
