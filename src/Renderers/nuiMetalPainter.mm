@@ -914,8 +914,10 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   SetViewport();  
   ApplyState(*mpState);
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
-  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) mpShader_ClearColor->NewMetalPipelineDescriptor(*mpState);
-  
+  nuiRenderState state(*mpState);
+  state.mBlending = false;
+  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) mpShader_ClearColor->NewMetalPipelineDescriptor(state);
+
   MTLVertexDescriptor *vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];  
   vertexDescriptor.layouts[0].stride = 0;
   vertexDescriptor.layouts[0].stepFunction = MTLVertexStepFunctionConstant;
