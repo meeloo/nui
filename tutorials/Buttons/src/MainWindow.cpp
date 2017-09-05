@@ -159,12 +159,76 @@ SHADER_STRING
 
  );
 
+static const char* metal_shader =
+SHADER_STRING
+(
+ using namespace metal;
+ 
+ 
+ struct Transforms
+{
+  float4x4 SurfaceMatrix;
+  float4x4 ModelViewMatrix;
+  float4x4 ProjectionMatrix;
+  float4 Offset;
+  float2 TextureTranslate;
+  float2 TextureScale;
+};
+ 
+ struct InputVertex
+{
+  float4 mPosition  [[ attribute(0) ]];
+  float4 mColor     [[ attribute(1) ]];
+  float4 mNormal    [[ attribute(2) ]];
+  float2 mTexCoord  [[ attribute(3) ]];
+};
+ 
+ struct Vertex
+{
+  float4 Position [[position]];
+  float4 Color;
+  float4 Normal;
+  float2 TexCoord;
+};
+ 
+ vertex Vertex vertex_main(
+                           InputVertex vertex_in [[ stage_in ]],
+                           constant Transforms &transforms [[buffer(0)]],
+                           uint vid [[vertex_id]])
+{
+  Vertex vert;
+  
+  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.Color = vertex_in.mColor;
+  vert.Normal = vertex_in.mNormal;
+  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
+  
+  return vert;
+}
+ 
+ fragment float4 fragment_main(
+                               Vertex vert [[stage_in]],
+                               constant Transforms &transforms [[buffer(0)]],
+                               texture2d<float> texture [[texture(0)]],
+                               sampler textureSampler [[sampler(0)]]
+                               )
+{
+  float feather = 1.;
+  float ref = abs(vert.Normal.y);
+  float width = vert.Normal.z;
+  float smooth = smoothstep(width - feather, width + feather, ref);
+  return float4(vert.Color.xyz, vert.Color.w * (1.0 - sqrt(smooth)));
+}
+
+ 
+ );
+
 ////////////////////////////////////////////////////////////////////////////////
 class nuiStrokeTest : public nuiWidget
 {
 public:
 
-  nuiStrokeTest()
+  nuiStrokeTest(nglContext* pContext)
   {
     if (SetObjectClass("nuiStrokeTest"))
     {
@@ -179,17 +243,18 @@ public:
 
     mpShape = new nuiShape();
     mpShape->LineTo(nuiPoint(50, 50));
-    mpShape->LineTo(nuiPoint(200, 50));
-    //      mpShape->LineTo(nuiPoint(180, 180));
-    //      mpShape->LineTo(nuiPoint(231, 200));
-    //    mpShape->LineTo(nuiPoint(70, 180));
-    //      mpShape->LineTo(nuiPoint(200, 50));
-    mpShape->LineTo(nuiPoint(200, 225));
-    //    mpShape->LineTo(nuiPoint(50, 80));
+//    mpShape->LineTo(nuiPoint(200, 50));
+    mpShape->LineTo(nuiPoint(70, 180));
+          mpShape->LineTo(nuiPoint(180, 180));
+//          mpShape->LineTo(nuiPoint(231, 200));
+//          mpShape->LineTo(nuiPoint(200, 50));
+//    mpShape->LineTo(nuiPoint(200, 225));
+//        mpShape->LineTo(nuiPoint(50, 80));
 
-    mpShader = new nuiShaderProgram(((nuiMainWindow*)GetTopLevel())->GetNGLContext(), "Stroker");
+    mpShader = new nuiShaderProgram(pContext, "Stroker");
     mpShader->AddShader(eVertexShader, vertex_shader);
     mpShader->AddShader(eFragmentShader, fragment_shader);
+    mpShader->AddShader(eMetalShader, metal_shader);
     mpShader->Link();
     mpShaderState = mpShader->NewState();
 
@@ -269,7 +334,7 @@ void MainWindow::OnClose()
 
 bool MainWindow::KeyDown(const nglKeyEvent& rEvent)
 {
-  bool vis = mpHiddenWidget2->IsVisible();
+  bool vis = mpHiddenWidget2?mpHiddenWidget2->IsVisible():true;
   if (mpHiddenWidget1)
   {
     NGL_OUT("\n\nSet Widget1 %s\n", vis?"HIDDEN":"VISIBLE");
@@ -303,7 +368,7 @@ void MainWindow::OnCreation()
   });
 
 
-  int test = 0;
+  int test = 6;
   switch (test)
   {
     case 0:
@@ -524,7 +589,7 @@ void MainWindow::OnCreation()
     } break;
     case 6:
     {
-      AddChild(new nuiStrokeTest());
+      AddChild(new nuiStrokeTest(GetNGLContext()));
     }
   }
 }
