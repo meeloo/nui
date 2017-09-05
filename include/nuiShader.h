@@ -14,7 +14,7 @@ enum nuiShaderKind
 {
   eVertexShader = GL_VERTEX_SHADER,
   eFragmentShader = GL_FRAGMENT_SHADER,
-  eMetalShader
+  eMetalShader  = GL_VERTEX_SHADER + GL_FRAGMENT_SHADER
 };
 
 #define NUI_PROJECTION_MATRIX_NAME "ProjectionMatrix"
