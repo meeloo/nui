@@ -107,7 +107,14 @@ void nuiRenderArray::PushVertex()
 
   // Grow the bounding rect:
   UpdateBounds(mCurrentVertex.mX, mCurrentVertex.mY, mCurrentVertex.mZ);
-
+  
+  if (mDebug)
+  {
+    nglString f;
+    f.CFormat("Vertex %d:  %3f %3f - %3f %3f (%3f %3f %3f %3f)", mVertices.size(), mCurrentVertex.mX, mCurrentVertex.mY, mCurrentVertex.mTX, mCurrentVertex.mTY, mCurrentVertex.mRed, mCurrentVertex.mGreen, mCurrentVertex.mBlue, mCurrentVertex.mAlpha);
+    NGL_OUT("%s\n", f.GetChars());
+  }
+  
   mVertices.push_back(mCurrentVertex);
 }
 
