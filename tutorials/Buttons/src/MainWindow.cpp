@@ -154,7 +154,7 @@ SHADER_STRING
   float ref = abs(NormalVar.y);
   float width = NormalVar.z;
   float smooth = smoothstep(width - feather, width + feather, ref);
-  gl_FragColor = vec4(ColorVar.xyz, ColorVar.w * vec4(1.0 - sqrt(smooth)));
+  gl_FragColor = ColorVar * (1.0 - sqrt(smooth));
 }
 
  );
@@ -213,11 +213,13 @@ SHADER_STRING
                                sampler textureSampler [[sampler(0)]]
                                )
 {
-  float feather = 1.;
+  float feather = 0.2;
   float ref = abs(vert.Normal.y);
   float width = vert.Normal.z;
   float smooth = smoothstep(width - feather, width + feather, ref);
-  return float4(vert.Color.xyz, vert.Color.w * (1.0 - sqrt(smooth)));
+  float alpha = (1.0 - sqrt(smooth));
+  alpha = 1;
+  return vert.Color * alpha;
 }
 
  
@@ -246,10 +248,10 @@ public:
 //    mpShape->LineTo(nuiPoint(200, 50));
     mpShape->LineTo(nuiPoint(70, 180));
           mpShape->LineTo(nuiPoint(180, 180));
-//          mpShape->LineTo(nuiPoint(231, 200));
+          mpShape->LineTo(nuiPoint(231, 300));
 //          mpShape->LineTo(nuiPoint(200, 50));
 //    mpShape->LineTo(nuiPoint(200, 225));
-//        mpShape->LineTo(nuiPoint(50, 80));
+//        mpShape->LineTo(nuiPoint(50, 280));
 
     mpShader = new nuiShaderProgram(pContext, "Stroker");
     mpShader->AddShader(eVertexShader, vertex_shader);
@@ -280,7 +282,7 @@ public:
     pContext->SetShader(mpShader, mpShaderState);
     pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, nuiLineJoinRound, nuiLineCapBut, 1.));
 
-
+    DrawChildren(pContext);
     return true;
   }
 
@@ -289,7 +291,7 @@ private:
   nuiShape* mpShape = nullptr;
   nuiShaderProgram *mpShader = nullptr;
   nuiShaderState *mpShaderState = nullptr;
-  float mStrokeWidth = 10;
+  float mStrokeWidth = 50;
 };
 
 
