@@ -150,11 +150,12 @@ SHADER_STRING
 
  void main()
 {
-  float feather = 1.;
+  float feather = .5;
   float ref = abs(NormalVar.y);
   float width = NormalVar.z;
   float smooth = smoothstep(width - feather, width + feather, ref);
-  gl_FragColor = ColorVar * (1.0 - sqrt(smooth));
+  float alpha = (1.0 - sqrt(smooth));
+  gl_FragColor = ColorVar * alpha;
 }
 
  );
@@ -213,12 +214,15 @@ SHADER_STRING
                                sampler textureSampler [[sampler(0)]]
                                )
 {
-  float feather = 0.2;
+  float feather = 0.1;
   float ref = abs(vert.Normal.y);
   float width = vert.Normal.z;
   float smooth = smoothstep(width - feather, width + feather, ref);
   float alpha = (1.0 - sqrt(smooth));
 //  alpha = 1;
+  
+//  return float4(0, vert.Normal.yz, 1);
+
   return vert.Color * alpha;
 }
 
@@ -238,25 +242,57 @@ public:
                    (nglString("StrokeWidth"), nuiUnitSize,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetStrokeWidth),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetStrokeWidth),
-                    nuiRange(1, 0.125, 150, .1, .1, 0)
+                    nuiRange(1, 0.0125, 70, .1, .1, 0)
                     ));
 
+      AddAttribute(new nuiAttribute<float>
+                   (nglString("Scale"), nuiUnitSize,
+                    nuiMakeDelegate(this, &nuiStrokeTest::GetScale),
+                    nuiMakeDelegate(this, &nuiStrokeTest::SetScale),
+                    nuiRange(1, 1, 10, .1, .1, 0)
+                    ));
+
+      AddAttribute(new nuiAttribute<float>
+                   (nglString("AngleInc"), nuiUnitSize,
+                    nuiMakeDelegate(this, &nuiStrokeTest::GetAngleInc),
+                    nuiMakeDelegate(this, &nuiStrokeTest::SetAngleInc),
+                    nuiRange(1, 0.01, 3, .1, .1, 0)
+                    ));
     }
 
     mpShape = new nuiShape();
-//    mpShape->LineTo(nuiPoint(50, 50));
-//    mpShape->LineTo(nuiPoint(200, 50));
-//    mpShape->LineTo(nuiPoint(50, 180));
-//          mpShape->LineTo(nuiPoint(180, 180));
-//          mpShape->LineTo(nuiPoint(180, 300));
+//    mpShape->LineTo(nuiPoint(10, 50));
+//    mpShape->LineTo(nuiPoint(100, 50));
+//    if (0)
+//    {
+//      mpShape->LineTo(nuiPoint(10, 10));
+//      mpShape->LineTo(nuiPoint(100, 25));
+//      mpShape->LineTo(nuiPoint(10, 50));
+//    }
+//    else
+//    {
+//      mpShape->LineTo(nuiPoint(10, 50));
+//      mpShape->LineTo(nuiPoint(100, 25));
+//      mpShape->LineTo(nuiPoint(10, 10));
+//    }
 //          mpShape->LineTo(nuiPoint(200, 50));
 //    mpShape->LineTo(nuiPoint(200, 225));
 //        mpShape->LineTo(nuiPoint(50, 280));
-    for (int i = 0; i < 20; i++)
+    float centerX = 0;
+    float centerY = 0;
+    float x = 0;
+    float y = 0;
+    float angle = 0;
+    float length = 10;
+    for (int i = 0; i < 2000; i++)
     {
-      float x = 30 + ((float)rand() / (float)RAND_MAX) * 500;
-      float y = 30 + ((float)rand() / (float)RAND_MAX) * 500;
+      x = centerX + sin(angle) * length;
+      y = centerY + cos(angle) * length;
       mpShape->LineTo(nuiPoint(x, y));
+//      angle += ((float)(rand()-(RAND_MAX/2)) / (float)RAND_MAX) * (M_PI/4);
+//      length += ((float)(rand()) / (float)RAND_MAX) * 20;
+      angle += 0.2;
+      length += 1.0;
     }
 
     mpShader = new nuiShaderProgram(pContext, "Stroker");
@@ -266,12 +302,20 @@ public:
     mpShader->Link();
     mpShaderState = mpShader->NewState();
 
-    nuiAttribBase Attrib(GetAttribute("StrokeWidth"));
-    if (Attrib.IsValid())
+    nuiVBox* box = new nuiVBox();
+    box->SetPosition(nuiBottomRight);
+    AddChild(box);
+
+    char* attribs[] = {"StrokeWidth", "AngleInc", "Scale", nullptr};
+    
+    for (int i = 0; attribs[i]; i++)
     {
-      nuiAttributeEditor* pEditor = Attrib.GetEditor();
-      pEditor->SetPosition(nuiTopLeft);
-      AddChild(pEditor);
+      nuiAttribBase Attrib(GetAttribute(attribs[i]));
+      if (Attrib.IsValid())
+      {
+        nuiAttributeEditor* pEditor = Attrib.GetEditor();
+        box->AddCell(pEditor);
+      }
     }
   }
 
@@ -286,18 +330,26 @@ public:
     pContext->SetBlendFunc(nuiBlendTransp);
     pContext->SetFillColor(nuiColor("blue"));
     pContext->SetShader(mpShader, mpShaderState);
-    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, nuiLineJoinRound, nuiLineCapBut, 1.));
+    pContext->PushMatrix();
+    pContext->Translate(mRect.GetWidth()/2, mRect.GetHeight()/2);
+    pContext->Scale(mScale, mScale);
+    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, nuiLineJoinBevel, nuiLineCapBut, 1.));
+    pContext->PopMatrix();
 
     DrawChildren(pContext);
     return true;
   }
 
   NUI_GETSETDO(float , StrokeWidth, Invalidate());
+  NUI_GETSETDO(float , Scale, Invalidate());
+  NUI_GETSETDO(float , AngleInc, Invalidate());
 private:
   nuiShape* mpShape = nullptr;
   nuiShaderProgram *mpShader = nullptr;
   nuiShaderState *mpShaderState = nullptr;
   float mStrokeWidth = 5;
+  float mScale = 1;
+  float mAngleInc = 0.2;
 };
 
 

@@ -50,8 +50,8 @@ void Application::OnInit()
   bool ShowFPS = false;
 //  nuiRenderer Renderer = eDirect3D;
 
-  nuiRenderer Renderer = eMetal;
-//  nuiRenderer Renderer = eOpenGL2;
+//  nuiRenderer Renderer = eMetal;
+  nuiRenderer Renderer = eOpenGL2;
 //  nuiRenderer Renderer = eSoftware;
 
   // Accept NGL default options

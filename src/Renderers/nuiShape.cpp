@@ -347,12 +347,15 @@ nuiRenderObject* nuiShape::Outline(float Quality, float LineWidth, nuiLineJoin L
 
 }
 
+#define NUI_DEBUG_STROKER 0
+#define NUI_LOG_STROKER(X) if (NUI_DEBUG_STROKER) { X }
+
 static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, const nuiVector& _p1, const nuiVector& pma, const nuiVector& pmb, const nuiVector& nextPointInLine, nuiRenderArray* pArray, float HLWR, float HLW, const nuiColor& left, const nuiColor& right, const nuiVector& _v0, const nuiVector& n1)
 {
   nglString val0, val1;
   _p0.GetValue(val0);
   _p1.GetValue(val1);
-  NGL_OUT("nuiCreateRoundCap in between %s and %s\n", val0.GetChars(), val1.GetChars());
+  NUI_LOG_STROKER(NGL_OUT("nuiCreateRoundCap in between %s and %s\n", val0.GetChars(), val1.GetChars());)
 
   const float EPSILON = 0.0001f;
 
@@ -399,8 +402,8 @@ static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, con
     }
   }
 
-  const float GAIN = 2.0f;
-  int nsegments = ToBelow(fabs(angleDiff * radius) / GAIN);
+  const float GAIN = 1.0f;
+  int nsegments = MAX(1, ToBelow(fabs(angleDiff * radius) / GAIN));
 
   float angleInc = angleDiff / (float)nsegments;
 
@@ -409,10 +412,12 @@ static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, con
   nuiColor exterior_color = left;
 
   bool revert = ( _v0 * n1 ) < 0;
+  float valRef = -pArray->GetCurrentVertex().mNY;
+  float val = pArray->GetCurrentVertex().mNZ;
 
   if (revert)
   {
-    NGL_OUT("       Initial Round vertices (revert)\n");
+    NUI_LOG_STROKER(NGL_OUT("       Initial Round vertices  [reverted]\n");)
     interior_vertex = pma;
     interior_color = left;
     exterior_color = right;
@@ -421,48 +426,79 @@ static void nuiCreateRoundCap(const nuiVector& center, const nuiVector& _p0, con
     pArray->SetColor(interior_color);
     pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
     pArray->PushVertex();
-  }
 
-  NGL_OUT("       First Round vertices\n");
-  pArray->SetVertex(_p0);
-  pArray->SetColor(exterior_color);
-  pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
-  pArray->PushVertex();
-
-  nuiColor mix = left;
-  mix.Mix(right, 0.5);
-  NGL_OUT("       Round vertices\n");
-  for (int i = 0; i < nsegments; i++)
-  {
-    pArray->SetVertex(interior_vertex);
-    if (!i)
-      pArray->SetColor(interior_color);
-    else
-      pArray->SetColor(nuiColor("black"));
-    pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
-    pArray->PushVertex();
-
-    pArray->SetVertex(center[0] + radius * cosf(orgAngle0 + angleInc * i), center[1] + radius * sinf(orgAngle0 + angleInc * i) );
+    NUI_LOG_STROKER(NGL_OUT("       First Round vertices [reverted]\n");)
+    pArray->SetVertex(_p0);
     pArray->SetColor(exterior_color);
     pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
     pArray->PushVertex();
+    
+    NUI_LOG_STROKER(NGL_OUT("       Center Round vertices [reverted]\n");)
+    pArray->SetVertex(center);
+    pArray->SetColor(exterior_color);
+    pArray->SetNormal(pArray->GetCurrentVertex().mNX, 0, pArray->GetCurrentVertex().mNZ);
+    pArray->PushVertex();
+  }
+  else{
+    NUI_LOG_STROKER(NGL_OUT("       First Round vertices\n");)
+    pArray->SetVertex(_p0);
+    pArray->SetColor(exterior_color);
+    pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
+    pArray->PushVertex();
+    
+    pArray->SetVertex(pmb);
+    pArray->SetColor(interior_color);
+    pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
+    pArray->PushVertex();
+    
+    NUI_LOG_STROKER(NGL_OUT("       Center Round vertices\n");)
+    pArray->SetVertex(center);
+    pArray->SetColor(exterior_color);
+    pArray->SetNormal(pArray->GetCurrentVertex().mNX, 0, pArray->GetCurrentVertex().mNZ);
+    pArray->PushVertex();
+
+    valRef = -valRef;
   }
 
-  NGL_OUT("       Round vertices DONE\n");
+
+  
+  nuiColor mix = left;
+  mix.Mix(right, 0.5);
+  NUI_LOG_STROKER(NGL_OUT("       Round vertices\n");)
+  for (int i = 0; i < nsegments+1; i++)
+  {
+    pArray->SetVertex(center);
+    pArray->SetColor(interior_color);
+    pArray->SetNormal(pArray->GetCurrentVertex().mNX, 0, val);
+    pArray->PushVertex();
+
+    nuiVector exterior_point(center[0] + radius * cosf(orgAngle0 + angleInc * i), center[1] + radius * sinf(orgAngle0 + angleInc * i), 0);
+    pArray->SetVertex(exterior_point);
+    pArray->SetColor(exterior_color);
+    pArray->SetNormal(pArray->GetCurrentVertex().mNX, -valRef, val);
+    pArray->PushVertex();
+  }
+
+  pArray->SetVertex(interior_vertex);
+  pArray->SetColor(interior_color);
+  pArray->SetNormal(pArray->GetCurrentVertex().mNX, valRef, val);
+  pArray->PushVertex();
+
+  NUI_LOG_STROKER(NGL_OUT("       Round vertices DONE\n");)
 }
 
 static void nuiAddRound(nuiRenderArray* pArray, float length, const nuiVector& p0, const nuiVector& p0a, const nuiVector& p0b, const nuiVector& p1, const nuiVector& p1a, const nuiVector& p1b, const nuiVector& p2, const nuiVector& pma, const nuiVector& pmb, float HalfLineWidthRef, float HalfLineWidth, float l0, float l1, const nuiColor& left, const nuiColor& right, const nuiVector& v0, const nuiVector& n1)
 {
   if ( ( v0 * n1 ) > 0 )
   {
-    NGL_OUT("   First case\n");
+    NUI_LOG_STROKER(NGL_OUT("   First case\n");)
     nuiCreateRoundCap(p1, p0a, p1a, pma, pmb, p2, pArray, HalfLineWidthRef, HalfLineWidth, left, right, v0, n1);
     
-    NGL_OUT("   Next Vertexes (first case)\n");
-    pArray->SetVertex(pmb);
-    pArray->SetColor(right);
-    pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
-    pArray->PushVertex();
+    NUI_LOG_STROKER(NGL_OUT("   Next Vertexes (first case)\n");)
+//    pArray->SetVertex(pmb);
+//    pArray->SetColor(right);
+//    pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
+//    pArray->PushVertex();
 
     pArray->SetVertex( p1a );
     pArray->SetColor(left);
@@ -476,21 +512,16 @@ static void nuiAddRound(nuiRenderArray* pArray, float length, const nuiVector& p
   }
   else
   {
-    NGL_OUT("   Second case\n");
+    NUI_LOG_STROKER(NGL_OUT("   Second case\n");)
     nuiCreateRoundCap(p1, p0b, p1b, pma, pmb, p2, pArray, HalfLineWidthRef, HalfLineWidth ,left, right, v0, n1);
     
-    NGL_OUT("   Next Vertexes (second case)\n");
-    pArray->SetVertex( pma );
-    pArray->SetColor(left);
-    pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
-    pArray->PushVertex();
-    
+    NUI_LOG_STROKER(NGL_OUT("   Next Vertexes (second case)\n");)
     pArray->SetVertex( p1b );
     pArray->SetColor(right);
     pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
     pArray->PushVertex();
   }
-  NGL_OUT("   Round Done\n");
+  NUI_LOG_STROKER(NGL_OUT("   Round Done\n");)
 }
 
 
@@ -626,7 +657,7 @@ static void nuiAddMiter(nuiRenderArray* pArray, float length, const nuiVector& p
 // Adapted from https://github.com/paulhoux/Cinder-Samples/blob/master/GeometryShader/assets/shaders/lines1.geom
 static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, float LineWidth, nuiLineJoin LineJoin, nuiLineCap LineCap, float MiterLimit, bool closed)
 {
-  NGL_OUT("StrokeSubPath\n");
+  NUI_LOG_STROKER(NGL_OUT("StrokeSubPath\n");)
   const float HalfLineWidth = LineWidth / 2;
   const float HalfLineWidthRef = HalfLineWidth + .5f;
   
@@ -636,7 +667,7 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
   pArray->EnableArray(nuiRenderArray::eNormal);
   pArray->EnableArray(nuiRenderArray::eColor);
   pArray->SetShape(true);
-  pArray->SetDebug(true);
+  NUI_LOG_STROKER(pArray->SetDebug(true);)
 
   size_t count = subpath.size() - 2;
   for (size_t i = 0; i < count; i++)
@@ -682,8 +713,8 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     nuiVector pmb = p1 - length * miter; // the other side
 
 #if 1
-    nuiColor left(.5f, .5f, .5f, .5f);
-    nuiColor right(.5f, .5f, .5f, .5f);
+    nuiColor left(.5f, .5f, .5f, 1.f);
+    nuiColor right(.5f, .5f, .5f, 1.f);
 #else
     nuiColor left(255, 0, 0, 128);
     nuiColor right(0, 0, 255, 128);
@@ -708,12 +739,12 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     {
       if ( LineJoin == nuiLineJoinRound)
       {
-        NGL_OUT("Add Round Join\n");
+        NUI_LOG_STROKER(NGL_OUT("Add Round Join\n");)
         nuiAddRound(pArray, length, p0, p0a, p0b, p1, p1a, p1b, p2, pma, pmb, HalfLineWidthRef, HalfLineWidth, l0, l1, left, right, v0, n1);
       }
       else if (LineJoin == nuiLineJoinBevel)
       {
-        NGL_OUT("Add Bevel Join\n");
+        NUI_LOG_STROKER(NGL_OUT("Add Bevel Join\n");)
         nuiAddBevel(pArray, length, p0, p0a, p0b, p1, p1a, p1b, pma, pmb, HalfLineWidthRef, HalfLineWidth, l0, l1, left, right, v0, n1);
       }
       else
@@ -721,12 +752,12 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
         // prevent excessively long miters at sharp corners
         if (( v0 * v1 ) < -MiterLimit)
         {
-          NGL_OUT("Add Bevel Join (Miter limit)\n");
+          NUI_LOG_STROKER(NGL_OUT("Add Bevel Join (Miter limit)\n");)
           nuiAddBevel(pArray, length, p0, p0a, p0b, p1, p1a, p1b, pma, pmb, HalfLineWidthRef, HalfLineWidth, l0, l1, left, right, v0, n1);
         }
         else
         {
-          NGL_OUT("Add Miter Join\n");
+          NUI_LOG_STROKER(NGL_OUT("Add Miter Join\n");)
           nuiAddMiter(pArray, length, p0, p0a, p0b, p1, p1a, p1b, pma, pmb, HalfLineWidthRef, HalfLineWidth, l0, l1, left, right, v0, n1);
         }
       }
