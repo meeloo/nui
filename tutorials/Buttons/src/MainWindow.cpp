@@ -218,7 +218,7 @@ SHADER_STRING
   float width = vert.Normal.z;
   float smooth = smoothstep(width - feather, width + feather, ref);
   float alpha = (1.0 - sqrt(smooth));
-  alpha = 1;
+//  alpha = 1;
   return vert.Color * alpha;
 }
 
@@ -244,14 +244,20 @@ public:
     }
 
     mpShape = new nuiShape();
-    mpShape->LineTo(nuiPoint(50, 50));
+//    mpShape->LineTo(nuiPoint(50, 50));
 //    mpShape->LineTo(nuiPoint(200, 50));
-    mpShape->LineTo(nuiPoint(70, 180));
-          mpShape->LineTo(nuiPoint(180, 180));
-          mpShape->LineTo(nuiPoint(231, 300));
+//    mpShape->LineTo(nuiPoint(50, 180));
+//          mpShape->LineTo(nuiPoint(180, 180));
+//          mpShape->LineTo(nuiPoint(180, 300));
 //          mpShape->LineTo(nuiPoint(200, 50));
 //    mpShape->LineTo(nuiPoint(200, 225));
 //        mpShape->LineTo(nuiPoint(50, 280));
+    for (int i = 0; i < 20; i++)
+    {
+      float x = 30 + ((float)rand() / (float)RAND_MAX) * 500;
+      float y = 30 + ((float)rand() / (float)RAND_MAX) * 500;
+      mpShape->LineTo(nuiPoint(x, y));
+    }
 
     mpShader = new nuiShaderProgram(pContext, "Stroker");
     mpShader->AddShader(eVertexShader, vertex_shader);
@@ -291,7 +297,7 @@ private:
   nuiShape* mpShape = nullptr;
   nuiShaderProgram *mpShader = nullptr;
   nuiShaderState *mpShaderState = nullptr;
-  float mStrokeWidth = 50;
+  float mStrokeWidth = 5;
 };
 
 
