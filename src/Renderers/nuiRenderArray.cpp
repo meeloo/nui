@@ -111,7 +111,7 @@ void nuiRenderArray::PushVertex()
   if (mDebug)
   {
     nglString f;
-    f.CFormat("Vertex %d:  %3f %3f - %3f %3f (%3f %3f %3f %3f)", mVertices.size(), mCurrentVertex.mX, mCurrentVertex.mY, mCurrentVertex.mTX, mCurrentVertex.mTY, mCurrentVertex.mRed, mCurrentVertex.mGreen, mCurrentVertex.mBlue, mCurrentVertex.mAlpha);
+    f.CFormat("Vertex %d:  (p %3f %3f) - [t %3f %3f] (c %3f %3f %3f %3f) [n %3f %3f %3f]", mVertices.size(), mCurrentVertex.mX, mCurrentVertex.mY, mCurrentVertex.mTX, mCurrentVertex.mTY, mCurrentVertex.mRed, mCurrentVertex.mGreen, mCurrentVertex.mBlue, mCurrentVertex.mAlpha, mCurrentVertex.mNX, mCurrentVertex.mNY, mCurrentVertex.mNZ);
     NGL_OUT("%s\n", f.GetChars());
   }
   

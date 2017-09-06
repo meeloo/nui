@@ -171,6 +171,13 @@ public:
   void SetNormal(uint32 index, const nuiVector& rVf);
   void SetNormal(uint32 index, const nuiVector3& rV3f);
 
+  const Vertex& GetCurrentVertex() const
+  {
+    return mCurrentVertex;
+  }
+  
+
+  
   void PushVertex();
   
   IndexArray& GetIndexArray(uint32 ArrayIndex);
