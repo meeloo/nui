@@ -266,6 +266,8 @@ NUI_DECLARE_ATTRIBUTE_TYPE(nglQuaternionf);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiBlendFunc);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiExpandMode);
 NUI_DECLARE_ATTRIBUTE_TYPE(nuiTextLayoutMode);
+NUI_DECLARE_ATTRIBUTE_TYPE(nuiLineJoin);
+NUI_DECLARE_ATTRIBUTE_TYPE(nuiLineCap);
 #endif
 
 template <typename T>
@@ -2917,6 +2919,151 @@ template <>
 nuiAttributeEditor* nuiAttribute<nuiObject*>::GetDefaultEditor(void* pTarget)
 {
   return nuiCreateGenericAttributeEditor(pTarget, this);
+}
+#endif
+
+//********************************
+//
+// LineJoin
+//
+
+template class nuiAttribute<nuiLineJoin>;
+
+template <>
+void nuiAttribute<nuiLineJoin>::FormatDefault(nuiLineJoin value, nglString & string) const
+{
+  ToString(value, string);
+}
+
+template <>
+bool nuiAttribute<nuiLineJoin>::ToString(nuiLineJoin Value, nglString& rString) const
+{
+  switch (Value)
+  {
+    case nuiLineJoinBevel:
+      rString = "Bevel"; break;
+    case nuiLineJoinMiter:
+      rString = "Miter"; break;
+    case nuiLineJoinRound:
+      rString = "Round"; break;
+      
+    default:
+      rString = "UnknownLineJoinMode";
+      return false;
+  }
+  
+  return true;
+  
+}
+
+template <>
+bool nuiAttribute<nuiLineJoin>::FromString(nuiLineJoin& rValue, const nglString& rString) const
+{
+  if (!rString.Compare("Bevel", false))
+  {
+    rValue = nuiLineJoinBevel;
+    return true;
+  }
+  else if (!rString.Compare("Miter", false))
+  {
+    rValue = nuiLineJoinMiter;
+    return true;
+  }
+  else if (!rString.Compare("Round", false))
+  {
+    rValue = nuiLineJoinRound;
+    return true;
+  }
+  
+  rValue = nuiLineJoinBevel;
+  return false;
+}
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiLineJoin>::GetDefaultEditor(void* pTarget)
+{
+  std::vector<std::pair<nglString, nuiLineJoin> > values;
+  values.push_back(std::make_pair("Bevel", nuiLineJoinBevel));
+  values.push_back(std::make_pair("Miter", nuiLineJoinMiter));
+  values.push_back(std::make_pair("Round", nuiLineJoinRound));
+  if (GetDimension() == 0)
+    return new nuiComboAttributeEditor<nuiLineJoin>(nuiAttrib<nuiLineJoin>(pTarget, this), values);
+  else
+    return nuiCreateGenericAttributeEditor(pTarget, this);
+}
+#endif
+
+
+//********************************
+//
+// LineCap
+//
+
+template class nuiAttribute<nuiLineCap>;
+
+template <>
+void nuiAttribute<nuiLineCap>::FormatDefault(nuiLineCap value, nglString & string) const
+{
+  ToString(value, string);
+}
+
+template <>
+bool nuiAttribute<nuiLineCap>::ToString(nuiLineCap Value, nglString& rString) const
+{
+  switch (Value)
+  {
+    case nuiLineCapBut:
+      rString = "But"; break;
+    case nuiLineCapRound:
+      rString = "Round"; break;
+    case nuiLineCapSquare:
+      rString = "Square"; break;
+      
+    default:
+      rString = "UnknownLineCapMode";
+      return false;
+  }
+  
+  return true;
+  
+}
+
+template <>
+bool nuiAttribute<nuiLineCap>::FromString(nuiLineCap& rValue, const nglString& rString) const
+{
+  if (!rString.Compare("But", false))
+  {
+    rValue = nuiLineCapBut;
+    return true;
+  }
+  else if (!rString.Compare("Round", false))
+  {
+    rValue = nuiLineCapRound;
+    return true;
+  }
+  else if (!rString.Compare("Square", false))
+  {
+    rValue = nuiLineCapSquare;
+    return true;
+  }
+  
+  rValue = nuiLineCapBut;
+  return false;
+}
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiLineCap>::GetDefaultEditor(void* pTarget)
+{
+  std::vector<std::pair<nglString, nuiLineCap> > values;
+  values.push_back(std::make_pair("But", nuiLineCapBut));
+  values.push_back(std::make_pair("Round", nuiLineCapRound));
+  values.push_back(std::make_pair("Square", nuiLineCapSquare));
+  if (GetDimension() == 0)
+    return new nuiComboAttributeEditor<nuiLineCap>(nuiAttrib<nuiLineCap>(pTarget, this), values);
+  else
+    return nuiCreateGenericAttributeEditor(pTarget, this);
 }
 #endif
 

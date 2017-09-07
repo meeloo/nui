@@ -2385,6 +2385,46 @@ nuiAttributeEditor* nuiAttribute<nuiDrawPolicy>::GetDefaultEditor(void* pTarget)
 
 //********************************
 //
+// LineJoin
+//
+
+template <>
+bool nuiAttribute<nuiLineJoin>::ToString(nuiLineJoin Value, nglString& rString) const;
+
+template <>
+bool nuiAttribute<nuiLineJoin>::FromString(nuiLineJoin& rValue, const nglString& rString) const;
+
+template <>
+void nuiAttribute<nuiLineJoin>::FormatDefault(nuiLineJoin value, nglString& string) const;
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiLineJoin>::GetDefaultEditor(void* pTarget);
+#endif
+
+//********************************
+//
+// LineCap
+//
+
+template <>
+bool nuiAttribute<nuiLineCap>::ToString(nuiLineCap Value, nglString& rString) const;
+
+template <>
+bool nuiAttribute<nuiLineCap>::FromString(nuiLineCap& rValue, const nglString& rString) const;
+
+template <>
+void nuiAttribute<nuiLineCap>::FormatDefault(nuiLineCap value, nglString& string) const;
+
+#ifndef _MINUI3_
+template <>
+nuiAttributeEditor* nuiAttribute<nuiLineCap>::GetDefaultEditor(void* pTarget);
+#endif
+
+
+
+//********************************
+//
 // nuiObject*
 //
 
