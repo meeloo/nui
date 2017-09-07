@@ -136,7 +136,7 @@ SHADER_STRING
  void main()
 {
   ColorVar = Color;
-  NormalVar = Normal;
+  NormalVar = (ModelViewMatrix * vec4(Normal, 0)).xyz;
   gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
 }
 
@@ -201,7 +201,7 @@ SHADER_STRING
   
   vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
   vert.Color = vertex_in.mColor;
-  vert.Normal = vertex_in.mNormal;
+  vert.Normal = transforms.ModelViewMatrix * vertex_in.mNormal;
   vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
@@ -256,44 +256,31 @@ public:
                    (nglString("AngleInc"), nuiUnitSize,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetAngleInc),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetAngleInc),
-                    nuiRange(1, 0.01, 3, .1, .1, 0)
+                    nuiRange(1, -3, 3, .1, .1, 0)
                     ));
+
+      AddAttribute(new nuiAttribute<float>
+                   (nglString("LengthInc"), nuiUnitSize,
+                    nuiMakeDelegate(this, &nuiStrokeTest::GetLengthInc),
+                    nuiMakeDelegate(this, &nuiStrokeTest::SetLengthInc),
+                    nuiRange(1, 0.01, 10, .1, .1, 0)
+                    ));
+
+      AddAttribute(new nuiAttribute<nuiLineJoin>
+                   (nglString("LineJoin"), nuiUnitNone,
+                    nuiMakeDelegate(this, &nuiStrokeTest::GetLineJoin),
+                    nuiMakeDelegate(this, &nuiStrokeTest::SetLineJoin)
+                    ));
+
+      AddAttribute(new nuiAttribute<nuiLineCap>
+                   (nglString("LineCap"), nuiUnitNone,
+                    nuiMakeDelegate(this, &nuiStrokeTest::GetLineCap),
+                    nuiMakeDelegate(this, &nuiStrokeTest::SetLineCap)
+                    ));
+
     }
 
-    mpShape = new nuiShape();
-//    mpShape->LineTo(nuiPoint(10, 50));
-//    mpShape->LineTo(nuiPoint(100, 50));
-//    if (0)
-//    {
-//      mpShape->LineTo(nuiPoint(10, 10));
-//      mpShape->LineTo(nuiPoint(100, 25));
-//      mpShape->LineTo(nuiPoint(10, 50));
-//    }
-//    else
-//    {
-//      mpShape->LineTo(nuiPoint(10, 50));
-//      mpShape->LineTo(nuiPoint(100, 25));
-//      mpShape->LineTo(nuiPoint(10, 10));
-//    }
-//          mpShape->LineTo(nuiPoint(200, 50));
-//    mpShape->LineTo(nuiPoint(200, 225));
-//        mpShape->LineTo(nuiPoint(50, 280));
-    float centerX = 0;
-    float centerY = 0;
-    float x = 0;
-    float y = 0;
-    float angle = 0;
-    float length = 10;
-    for (int i = 0; i < 2000; i++)
-    {
-      x = centerX + sin(angle) * length;
-      y = centerY + cos(angle) * length;
-      mpShape->LineTo(nuiPoint(x, y));
-//      angle += ((float)(rand()-(RAND_MAX/2)) / (float)RAND_MAX) * (M_PI/4);
-//      length += ((float)(rand()) / (float)RAND_MAX) * 20;
-      angle += 0.2;
-      length += 1.0;
-    }
+    CreateShape();
 
     mpShader = new nuiShaderProgram(pContext, "Stroker");
     mpShader->AddShader(eVertexShader, vertex_shader);
@@ -306,7 +293,7 @@ public:
     box->SetPosition(nuiBottomRight);
     AddChild(box);
 
-    char* attribs[] = {"StrokeWidth", "AngleInc", "Scale", nullptr};
+    char* attribs[] = {"StrokeWidth", "AngleInc", "LengthInc", "Scale", "LineJoin", "LineCap", nullptr};
     
     for (int i = 0; attribs[i]; i++)
     {
@@ -319,6 +306,52 @@ public:
     }
   }
 
+  void CreateShape()
+  {
+    if (mpShape)
+    {
+      mpShape->Release();
+      mpShape = nullptr;
+    }
+    
+    mpShape = new nuiShape();
+    //    mpShape->LineTo(nuiPoint(10, 50));
+    //    mpShape->LineTo(nuiPoint(100, 50));
+    //    if (0)
+    //    {
+    //      mpShape->LineTo(nuiPoint(10, 10));
+    //      mpShape->LineTo(nuiPoint(100, 25));
+    //      mpShape->LineTo(nuiPoint(10, 50));
+    //    }
+    //    else
+    //    {
+    //      mpShape->LineTo(nuiPoint(10, 50));
+    //      mpShape->LineTo(nuiPoint(100, 25));
+    //      mpShape->LineTo(nuiPoint(10, 10));
+    //    }
+    //          mpShape->LineTo(nuiPoint(200, 50));
+    //    mpShape->LineTo(nuiPoint(200, 225));
+    //        mpShape->LineTo(nuiPoint(50, 280));
+    float centerX = 0;
+    float centerY = 0;
+    float x = 0;
+    float y = 0;
+    float angle = 0;
+    float length = 10;
+    for (int i = 0; i < 2000; i++)
+    {
+      x = centerX + sin(angle) * length;
+      y = centerY + cos(angle) * length;
+      mpShape->LineTo(nuiPoint(x, y));
+      //      angle += ((float)(rand()-(RAND_MAX/2)) / (float)RAND_MAX) * (M_PI/4);
+      //      length += ((float)(rand()) / (float)RAND_MAX) * 20;
+      angle += mAngleInc;
+      length += mLengthInc;
+    }
+
+    Invalidate();
+  }
+  
   nuiRect CalcIdealSize()
   {
     return nuiRect(200, 200);
@@ -333,16 +366,19 @@ public:
     pContext->PushMatrix();
     pContext->Translate(mRect.GetWidth()/2, mRect.GetHeight()/2);
     pContext->Scale(mScale, mScale);
-    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, nuiLineJoinBevel, nuiLineCapBut, 1.));
+    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, mLineJoin, mLineCap, 1.));
     pContext->PopMatrix();
 
     DrawChildren(pContext);
     return true;
   }
 
-  NUI_GETSETDO(float , StrokeWidth, Invalidate());
-  NUI_GETSETDO(float , Scale, Invalidate());
-  NUI_GETSETDO(float , AngleInc, Invalidate());
+  NUI_GETSETDO(float, StrokeWidth, Invalidate());
+  NUI_GETSETDO(float, Scale, Invalidate());
+  NUI_GETSETDO(float, AngleInc, CreateShape());
+  NUI_GETSETDO(float, LengthInc, CreateShape());
+  NUI_GETSETDO(nuiLineJoin, LineJoin, CreateShape());
+  NUI_GETSETDO(nuiLineCap, LineCap, CreateShape());
 private:
   nuiShape* mpShape = nullptr;
   nuiShaderProgram *mpShader = nullptr;
@@ -350,6 +386,9 @@ private:
   float mStrokeWidth = 5;
   float mScale = 1;
   float mAngleInc = 0.2;
+  float mLengthInc = 1.0;
+  nuiLineJoin mLineJoin = nuiLineJoinBevel;
+  nuiLineCap mLineCap = nuiLineCapBut;
 };
 
 
