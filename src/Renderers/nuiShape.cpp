@@ -720,20 +720,101 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     nuiColor right(0, 0, 255, 128);
 #endif
 
-    pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
 
     if ((i == 0 || i == count - 1) && !closed)
     {
       // make ends
-      pArray->SetVertex( p1a );
-      pArray->SetColor(left);
-      pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
-      pArray->PushVertex();
+      if (LineCap == nuiLineCapBut || LineCap == nuiLineCapSquare)
+      {
+        // just a small rectangle out of three triangles at the begining:
+        float offRef = HalfLineWidthRef;
+        float off = HalfLineWidth;
+        if (LineCap == nuiLineCapBut)
+        {
+          offRef = .5;
+          off = 0.1;
+        }
+        
+        nuiVector offset = v0 * offRef;
+        nuiVector sa = p1a - offset;
+        nuiVector sp = p1  - offset;
+        nuiVector sb = p1b - offset;
 
-      pArray->SetVertex( p1b );
-      pArray->SetColor(right);
-      pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
-      pArray->PushVertex();
+        // first half
+        pArray->SetVertex( sp );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, -offRef, off);
+        pArray->PushVertex();
+        
+        pArray->SetVertex( sb );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, -offRef, off);
+        pArray->PushVertex();
+        
+        pArray->SetVertex( p1 );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, 0, off);
+        pArray->PushVertex();
+        
+        pArray->SetVertex( p1b );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, -offRef, off);
+        pArray->PushVertex();
+
+        pArray->PushVertex();
+
+        
+        // Second half
+        pArray->SetVertex( sp );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, offRef, off);
+        pArray->PushVertex();
+        pArray->PushVertex();
+
+        pArray->SetVertex( p1 );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, 0, off);
+        pArray->PushVertex();
+
+        pArray->SetVertex( sa );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, offRef, off);
+        pArray->PushVertex();
+
+        pArray->SetVertex( p1a );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, offRef, off);
+        pArray->PushVertex();
+
+        // The actual start
+        pArray->SetVertex( p1a );
+        pArray->SetColor(left);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
+        pArray->PushVertex();
+
+        pArray->SetVertex( p1b );
+        pArray->SetColor(right);
+        pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
+        pArray->PushVertex();
+
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+      }
+      else
+      {
+        {
+          pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+
+          pArray->SetVertex( p1a );
+          pArray->SetColor(left);
+          pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
+          pArray->PushVertex();
+          
+          pArray->SetVertex( p1b );
+          pArray->SetColor(right);
+          pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
+          pArray->PushVertex();
+        }
+      }
     }
     else
     {

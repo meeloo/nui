@@ -126,17 +126,20 @@ SHADER_STRING
  attribute vec4 Position;
  attribute vec3 Normal;
  attribute vec4 Color;
+ 
  uniform mat4 SurfaceMatrix;
  uniform mat4 ModelViewMatrix;
  uniform mat4 ProjectionMatrix;
  uniform vec4 Offset;
+ 
  varying vec4 ColorVar;
  varying vec3 NormalVar;
 
  void main()
 {
   ColorVar = Color;
-  NormalVar = (ModelViewMatrix * vec4(Normal, 0)).xyz;
+//  NormalVar = (ModelViewMatrix * vec4(Normal, 0)).xyz;
+  NormalVar = Normal;
   gl_Position = (SurfaceMatrix * ProjectionMatrix * ModelViewMatrix * (Position  + Offset));
 }
 
@@ -147,10 +150,11 @@ SHADER_STRING
 (
  varying vec4 ColorVar;
  varying vec3 NormalVar;
+ uniform float Feather;
 
  void main()
 {
-  float feather = .5;
+  float feather = .5;//Feather;
   float ref = abs(NormalVar.y);
   float width = NormalVar.z;
   float smooth = smoothstep(width - feather, width + feather, ref);
@@ -174,6 +178,7 @@ SHADER_STRING
   float4 Offset;
   float2 TextureTranslate;
   float2 TextureScale;
+  float Feather;
 };
  
  struct InputVertex
@@ -214,7 +219,7 @@ SHADER_STRING
                                sampler textureSampler [[sampler(0)]]
                                )
 {
-  float feather = 0.1;
+  float feather = transforms.Feather;
   float ref = abs(vert.Normal.y);
   float width = vert.Normal.z;
   float smooth = smoothstep(width - feather, width + feather, ref);
@@ -250,6 +255,13 @@ public:
                     nuiMakeDelegate(this, &nuiStrokeTest::GetScale),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetScale),
                     nuiRange(1, 1, 10, .1, .1, 0)
+                    ));
+
+      AddAttribute(new nuiAttribute<float>
+                   (nglString("Feather"), nuiUnitSize,
+                    nuiMakeDelegate(this, &nuiStrokeTest::GetFeather),
+                    nuiMakeDelegate(this, &nuiStrokeTest::SetFeather),
+                    nuiRange(1, 0, 1, .05, .05, 0)
                     ));
 
       AddAttribute(new nuiAttribute<float>
@@ -293,7 +305,7 @@ public:
     box->SetPosition(nuiBottomRight);
     AddChild(box);
 
-    char* attribs[] = {"StrokeWidth", "AngleInc", "LengthInc", "Scale", "LineJoin", "LineCap", nullptr};
+    char* attribs[] = {"StrokeWidth", "Feather", "AngleInc", "LengthInc", "Scale", "LineJoin", "LineCap", nullptr};
     
     for (int i = 0; attribs[i]; i++)
     {
@@ -362,6 +374,7 @@ public:
     pContext->EnableBlending(true);
     pContext->SetBlendFunc(nuiBlendTransp);
     pContext->SetFillColor(nuiColor("blue"));
+    mpShaderState->Set("Feather", mFeather);
     pContext->SetShader(mpShader, mpShaderState);
     pContext->PushMatrix();
     pContext->Translate(mRect.GetWidth()/2, mRect.GetHeight()/2);
@@ -374,6 +387,7 @@ public:
   }
 
   NUI_GETSETDO(float, StrokeWidth, Invalidate());
+  NUI_GETSETDO(float, Feather, Invalidate());
   NUI_GETSETDO(float, Scale, Invalidate());
   NUI_GETSETDO(float, AngleInc, CreateShape());
   NUI_GETSETDO(float, LengthInc, CreateShape());
@@ -385,10 +399,11 @@ private:
   nuiShaderState *mpShaderState = nullptr;
   float mStrokeWidth = 5;
   float mScale = 1;
-  float mAngleInc = 0.2;
-  float mLengthInc = 1.0;
-  nuiLineJoin mLineJoin = nuiLineJoinBevel;
-  nuiLineCap mLineCap = nuiLineCapBut;
+  float mAngleInc = 0.01;
+  float mLengthInc = 20.0;
+  float mFeather = 0.5;
+  nuiLineJoin mLineJoin = nuiLineJoinRound;
+  nuiLineCap mLineCap = nuiLineCapSquare;
 };
 
 
