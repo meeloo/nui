@@ -366,7 +366,11 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 
   [self setAcceptsMouseMovedEvents:TRUE];
 
-  self.tabbingMode = NSWindowTabbingModeDisallowed;
+  if ([self respondsToSelector:@selector(setTabbingMode:)])
+  {
+    self.tabbingMode = NSWindowTabbingModeDisallowed;
+  }
+  
   return self;
 }
 

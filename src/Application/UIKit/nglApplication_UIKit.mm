@@ -318,6 +318,16 @@ void objCCallOnMemoryWarning();
   return YES;
 }
 
+- (BOOL) application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+  restorationHandler:(void (^)(NSArray *_Nullable))restorationHandler
+{
+  __strong NSMutableDictionary *userInfoDict = [NSMutableDictionary new];
+  userInfoDict[@"userActivity"] = userActivity;
+  userInfoDict[@"restorationHandler"] = restorationHandler;
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"continueUserActivity:restorationHandler" object:nil userInfo:userInfoDict];
+  return YES;
+}
+
 @end///< nglUIApplicationDelegate
 
 /*
