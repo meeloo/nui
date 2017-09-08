@@ -221,12 +221,6 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   return self;
 }
 
--(void) dealloc
-{
-  [super dealloc];              
-}
-
-
 - (void) windowDidResize: (NSNotification *)notification
 {
   mpNGLWindow->GetLock().Lock();
@@ -236,7 +230,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   rect = [win frame];
   [win resize: [win contentRectForFrameRect: rect].size];
 
-  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
+  NSOpenGLContext* _context = (__bridge NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
   [_context update];
 
   mpNGLWindow->GetLock().Unlock();
@@ -247,13 +241,12 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 -(void)windowWillClose:(NSNotification *)note
 {
   //[[NSApplication sharedApplication] terminate:self];
-  [super windowWillClose:note];
   mpNGLWindow->CallOnDestruction();
 }
 
 - (void)lockFocus
 {
-  NSOpenGLContext* context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
+  NSOpenGLContext* context = (__bridge NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
   
   // make sure we are ready to draw
   [super lockFocus];
@@ -279,7 +272,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 - (void)drawRect:(NSRect)frameRect
 {
   mpNGLWindow->GetLock().Lock();
-  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
+  NSOpenGLContext* _context = (__bridge NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
   [_context update];
   mpNGLWindow->GetLock().Unlock();
 //  mpNGLWindow->CallOnPaint();
@@ -361,11 +354,11 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 - (CALayer *)makeBackingLayer
 {
   _metalLayer = [CAMetalLayer layer];
-  NSWindow* window = (NSWindow*)mpNGLWindow->GetOSInfo()->mpNSWindow;
+  NSWindow* window = (__bridge NSWindow*)mpNGLWindow->GetOSInfo()->mpNSWindow;
   _metalLayer.contentsScale =  window.backingScaleFactor;
   _metalLayer.opaque = YES;
   _metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-  _metalLayer.device = (id<MTLDevice>)mpNGLWindow->GetMetalDevice();
+  _metalLayer.device = (__bridge id<MTLDevice>)mpNGLWindow->GetMetalDevice();
   _metalLayer.framebufferOnly = YES;
   self.layer = _metalLayer;
   return _metalLayer;
@@ -411,12 +404,6 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   return self;
 }
 
--(void) dealloc
-{
-  [super dealloc];
-}
-
-
 - (void) windowDidResize: (NSNotification *)notification
 {
   if (!mInitiated)
@@ -457,7 +444,6 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 -(void)windowWillClose:(NSNotification *)note
 {
   //[[NSApplication sharedApplication] terminate:self];
-  [super windowWillClose:note];
   mpNGLWindow->CallOnDestruction();
 }
 
@@ -575,7 +561,6 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 - (void) dealloc
 {
   [self Unregister];
-  [super dealloc];
 }
 
 - (void) clearWindow
@@ -749,8 +734,8 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 {
   NSString *chars = [theEvent characters];
   NSString *rawchars = [theEvent charactersIgnoringModifiers];
-  nglString c((CFStringRef)chars);
-  nglString rc((CFStringRef)rawchars);
+  nglString c((__bridge CFStringRef)chars);
+  nglString rc((__bridge CFStringRef)rawchars);
   //printf("Key Down: '%s' / '%s'.\n", c.GetChars(), rc.GetChars());
   if ( [rawchars length] == 1 )
   {
@@ -773,8 +758,8 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 {
   NSString *chars = [theEvent characters];
   NSString *rawchars = [theEvent charactersIgnoringModifiers];
-  nglString c((CFStringRef)chars);
-  nglString rc((CFStringRef)rawchars);
+  nglString c((__bridge CFStringRef)chars);
+  nglString rc((__bridge CFStringRef)rawchars);
   //printf("Key Up: '%s' / '%s'.\n", c.GetChars(), rc.GetChars());
   if ( [rawchars length] == 1 )
   {
@@ -882,7 +867,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
       for (std::list<nglString>::const_iterator it = rFiles.begin(); it != rFiles.end(); ++it)
       {
         const nglString& rFile = *it;
-        NSString* file = (NSString*)rFile.ToCFString();
+        NSString* file = (NSString*)CFBridgingRelease(rFile.ToCFString());
         [pArray addObject: file];
       }
       NSPasteboard *pboard = [NSPasteboard pasteboardWithName: NSDragPboard];
@@ -1043,7 +1028,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
     for (int i = 0; i < [filenames count]; i++)
     {
       NSString* fname = [filenames objectAtIndex:i];
-      nglString str((CFStringRef)fname);
+      nglString str((__bridge CFStringRef)fname);
       pObj->AddFile(str);
       NSLog(@"File %d: %@\n", i, fname);
     }
@@ -1057,7 +1042,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
     for (int i = 0; i < [filenames count]; i++)
     {
       NSString* fname = [filenames objectAtIndex:i];
-      nglString str((CFStringRef)fname);
+      nglString str((__bridge CFStringRef)fname);
       pObj->AddFile(str);
       NSLog(@"URL %d: %@\n", i, fname);
     }
@@ -1068,18 +1053,18 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   if ( [types containsObject:(NSString*)kUTTypeUTF8PlainText] )
   {
     NSData* data = [pboard dataForType:(NSString*)kUTTypeUTF8PlainText];
-    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     nglDataTextObject* pObj = new nglDataTextObject("ngl/Text");
-    pObj->SetData(nglString((CFStringRef)string));
+    pObj->SetData(nglString((__bridge CFStringRef)string));
     mpDropObject->AddType(pObj);
     NSLog(@"UTF8 text String: %@\n", string);
   }
   else if ( [types containsObject:(NSString*)kUTTypePlainText] )
   {
     NSData* data = [pboard dataForType:(NSString*)kUTTypePlainText];
-    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     nglDataTextObject* pObj = new nglDataTextObject("ngl/Text");
-    pObj->SetData(nglString((CFStringRef)string));
+    pObj->SetData(nglString((__bridge CFStringRef)string));
                   mpDropObject->AddType(pObj);
     NSLog(@"Plain text String: %@\n", string);
   }
@@ -1087,9 +1072,9 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   if ( [types containsObject:(NSString*)kUTTypeText] )
   {
     NSData* data = [pboard dataForType:(NSString*)kUTTypeText];
-    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     nglDataTextObject* pObj = new nglDataTextObject("ngl/Text");
-    pObj->SetData(nglString((CFStringRef)string));
+    pObj->SetData(nglString((__bridge CFStringRef)string));
                   mpDropObject->AddType(pObj);
     NSLog(@"Text String: %@\n", string);
   }
@@ -1340,13 +1325,13 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   NSOpenGLContext* _shared_ctx = nil;
   if (pShared)
   {
-    _shared_ctx = (NSOpenGLContext*)((nglWindow*)pShared)->mpNSGLContext;
+    _shared_ctx = (__bridge NSOpenGLContext*)((nglWindow*)pShared)->mpNSGLContext;
   }
 
   
   nglNSWindow* _window = [[nglNSWindow alloc] initWithFrame:rect andNGLWindow: this];
-  mOSInfo.mpNSWindow = _window;
-  mpNSWindow = _window;
+  mOSInfo.mpNSWindow = (__bridge void*)_window;
+  mpNSWindow = (void*)CFBridgingRetain(_window);
 
   SetTitle(rInfo.Title);
 
@@ -1360,12 +1345,12 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
     case eTargetAPI_Metal:
     {
-      mMetalDevice = MTLCreateSystemDefaultDevice();
+      mMetalDevice = (void*)CFBridgingRetain(MTLCreateSystemDefaultDevice());
       _view = [[nglNSView_Metal alloc] initWithNGLWindow:this];
     } break;
   }
 
-  mpNSView = _view;
+  mpNSView = (void*)CFBridgingRetain(_view);
   [_window setContentView: (NSView*)_view];
   [_window setDelegate: _view];
   
@@ -1388,14 +1373,14 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
       (NSOpenGLPixelFormatAttribute)0
     };
     NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
-    mpNSPixelFormat = format;
+    mpNSPixelFormat = (void*)CFBridgingRetain(format);
     NSOpenGLContext* _context = [[NSOpenGLContext alloc] initWithFormat: format shareContext: _shared_ctx];
 
     GLint v = 1;
     [_context setValues:&v forParameter:NSOpenGLCPSwapInterval];
     [_context setView: (NSView*)_view];
     [_context makeCurrentContext];
-    mpNSGLContext = _context;
+    mpNSGLContext = (void*)CFBridgingRetain(_context);
   }
 
   CallOnRescale((float)[_window backingScaleFactor]);
@@ -1427,8 +1412,10 @@ nglWindow::~nglWindow()
 {
   CallOnDestruction();
   ReleaseTimer();
-  [(id)mpNSWindow clearWindow];
-  [(id)mpNSWindow release];
+  [(__bridge id)mpNSWindow clearWindow];
+  [(__bridge id)mpNSWindow close];
+  CFBridgingRelease(mpNSWindow);
+  CFBridgingRelease(mpNSView);
   Unregister();
 }
 
@@ -1444,16 +1431,16 @@ void nglWindow::SetState (StateChange State)
 	switch (State)
 	{
 		case eHide:
-      [(id)mpNSWindow hide:nil];
+      [(__bridge id)mpNSWindow hide:nil];
 			break;
 		case eShow:
-      [(id)mpNSWindow makeKeyAndOrderFront:nil];
+      [(__bridge id)mpNSWindow makeKeyAndOrderFront:nil];
 			break;
 		case eMinimize:
-      [(id)mpNSWindow makeKeyAndOrderFront:nil];
+      [(__bridge id)mpNSWindow makeKeyAndOrderFront:nil];
 			break;
 		case eMaximize:
-      [(id)mpNSWindow makeKeyAndOrderFront:nil];
+      [(__bridge id)mpNSWindow makeKeyAndOrderFront:nil];
 			break;
 	};
 }
@@ -1501,15 +1488,14 @@ bool nglWindow::SetPosition (int XPos, int YPos)
 
 nglString nglWindow::GetTitle() const
 {
-  NSString* pR = [(id)mpNSWindow title];
-  nglString r((CFStringRef)pR);
-  [pR release];
+  NSString* pR = [(__bridge id)mpNSWindow title];
+  nglString r((__bridge CFStringRef)pR);
   return r;
 }
 
 void nglWindow::SetTitle (const nglString& rTitle)
 {
-  [(id)mpNSWindow setTitle: (NSString*)rTitle.ToCFString()];
+  [(__bridge id)mpNSWindow setTitle: (NSString*)CFBridgingRelease(rTitle.ToCFString())];
 }
 
 bool IsThisKeyDown(const short theKey)
@@ -1682,10 +1668,10 @@ void nglWindow::AcquireDisplayLink()
     NGL_ASSERT(0);
   }
 
-  NSOpenGLContext* _context = (NSOpenGLContext*)mpNSGLContext;
+  NSOpenGLContext* _context = (__bridge NSOpenGLContext*)mpNSGLContext;
   if (_context)
   {
-    NSOpenGLPixelFormat* _pixelFormat = (NSOpenGLPixelFormat*)mpNSPixelFormat;
+    NSOpenGLPixelFormat* _pixelFormat = (__bridge NSOpenGLPixelFormat*)mpNSPixelFormat;
     CGLContextObj cglContext = [_context CGLContextObj];
     CGLPixelFormatObj cglPixelFormat = [_pixelFormat CGLPixelFormatObj];
 
@@ -1733,17 +1719,17 @@ void nglWindow::BeginSession()
 #endif
   if (mpNSGLContext)
   {
-    [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
+    [(__bridge NSOpenGLContext*)mpNSGLContext makeCurrentContext];
   }
   else
   {
     if (!mMetalDestinationTexture)
     {
-      CAMetalLayer* layer = (CAMetalLayer*)GetMetalLayer();
+      CAMetalLayer* layer = (__bridge CAMetalLayer*)GetMetalLayer();
       id<CAMetalDrawable> drawable = [layer nextDrawable];
-      mMetalDrawable = drawable;
+      mMetalDrawable = (void*)CFBridgingRetain(drawable);
       id<MTLTexture> texture = drawable.texture;
-      mMetalDestinationTexture = texture;
+      mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
 
       MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
       passDescriptor.colorAttachments[0].texture = texture;
@@ -1751,17 +1737,17 @@ void nglWindow::BeginSession()
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
       passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
       
-      id<MTLDevice> device = (id<MTLDevice>)GetMetalDevice();
+      id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
       
       static int frame = 0;
       id<MTLCommandQueue> commandQueue = [device newCommandQueue];
       commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", frame];
       id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
       commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", frame];
-      mMetalCommandBuffer = commandBuffer;
+      mMetalCommandBuffer = (void*)CFBridgingRetain(commandBuffer);
       id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
       commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", frame];
-      mMetalCommandEncoder = commandEncoder;
+      mMetalCommandEncoder = (__bridge void*)commandEncoder;
       
       frame++;
     }
@@ -1786,14 +1772,20 @@ void nglWindow::EndSession()
   }
   else
   {
-    id<MTLRenderCommandEncoder> commandEncoder = (id<MTLRenderCommandEncoder>)GetMetalCommandEncoder();
-    id<MTLCommandBuffer> commandBuffer = (id<MTLCommandBuffer>)GetMetalCommandBuffer();
-    id<CAMetalDrawable> drawable = (id<CAMetalDrawable>)GetMetalDrawable();
+    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetMetalCommandEncoder();
+    id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)GetMetalCommandBuffer();
+    id<CAMetalDrawable> drawable = (__bridge id<CAMetalDrawable>)GetMetalDrawable();
 
     [commandEncoder endEncoding];
     [commandBuffer presentDrawable:drawable];
     [commandBuffer commit];
 
+    CFBridgingRelease(mMetalDrawable);
+    CFBridgingRelease(mMetalDestinationTexture);
+    
+    CFBridgingRelease(mMetalCommandBuffer);
+//    CFBridgingRelease(mMetalCommandEncoder);
+    
     mMetalDrawable = nullptr;
     mMetalDestinationTexture = nullptr;
     
@@ -1810,14 +1802,14 @@ bool nglWindow::MakeCurrent() const
   NGL_ASSERT(mCurrentThread == 0 || mCurrentThread == threadid);
   if (mpNSGLContext)
   {
-    [(NSOpenGLContext*)mpNSGLContext makeCurrentContext];
+    [(__bridge NSOpenGLContext*)mpNSGLContext makeCurrentContext];
   }
   return true;
 }
 
 void* nglWindow::GetMetalLayer() const
 {
-  return (void*)((nglNSView_Metal*)mpNSView).metalLayer;
+  return (__bridge void*)((__bridge nglNSView_Metal*)mpNSView).metalLayer;
 }
 
 
@@ -1825,7 +1817,7 @@ void nglWindow::Invalidate()
 {
   //printf("nglWindow::Invalidate()\n");
 //  [(nglNSWindow*)mpNSWindow invalidate];
-  [(NSView*)this->mpNSView setNeedsDisplay: YES];
+  [(__bridge NSView*)this->mpNSView setNeedsDisplay: YES];
 }
 
 bool nglWindow::SetCursor(nuiMouseCursor Cursor)
@@ -1950,7 +1942,7 @@ bool nglWindow::IsEnteringText() const
 bool nglWindow::Drag(nglDragAndDrop* pDragObject)
 {
   mpDragged = pDragObject;
-  return [(nglNSWindow*)mpNSWindow startDragging: mpDragged];
+  return [(__bridge nglNSWindow*)mpNSWindow startDragging: mpDragged];
 }
 
 nglDropEffect nglWindow::OnCanDrop(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo::Flags Button)

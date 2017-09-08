@@ -513,11 +513,6 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_ClearColor->AddShader(eMetalShader, ClearColor_VTX);
     mpShader_ClearColor->Link();
   }
-  
-  
-  mpCurrentRenderArrayInfo = NULL;
-  mpLastArray = NULL;
-
 }
 
 nuiMetalPainter::~nuiMetalPainter()
@@ -583,9 +578,7 @@ void nuiMetalPainter::SetViewport()
 //  NGL_ASSERT(x >= 0);
 //  NGL_ASSERT(y >= 0);
 //  Set Metal ViewPort to (x, y, w, h);
-  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
-  
-  id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
   MTLViewport viewport = { (double)x, (double)y, (double)w, (double)h, (double)-1, (double)1 };
   [encoder setViewport:viewport];
   
@@ -662,7 +655,6 @@ void nuiMetalPainter::ResetMetalState()
   
   mFinalState = nuiRenderState();
   mpState = &mDefaultState;
-  mpLastArray = NULL;
 }
 
 
@@ -676,9 +668,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   //TEST_FBO_CREATION();
   NUI_RETURN_IF_RENDERING_DISABLED;
   
-  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
-  
-  id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
   
   // blending
   if (mFinalState.mBlending != rState.mBlending)
@@ -916,7 +906,7 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
   nuiRenderState state(*mpState);
   state.mBlending = false;
-  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) mpShader_ClearColor->NewMetalPipelineDescriptor(state);
+  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) CFBridgingRelease(mpShader_ClearColor->NewMetalPipelineDescriptor(state));
 
   MTLVertexDescriptor *vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];  
   vertexDescriptor.layouts[0].stride = 0;
@@ -924,8 +914,8 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   
   pipelineDesc.vertexDescriptor = vertexDescriptor;
   
-  id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
-  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
   NSError* err = nil;
   id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
   if (err)
@@ -1150,12 +1140,16 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   if (!s)
   {
     pArray->Release();
+    mpShaderState->Release();
+    mpShaderState = nullptr;
     return;
   }
   
   if (mpClippingStack.top().GetWidth() <= 0 || mpClippingStack.top().GetHeight() <= 0)
   {
     pArray->Release();
+    mpShaderState->Release();
+    mpShaderState = nullptr;
     return;
   }
   
@@ -1236,46 +1230,12 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     mFinalState.mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA));
   }
   
-//  mFinalState.mpShader->SetState(*mFinalState.mpShaderState);
-  
-  if (pArray->IsStatic())
-  {
-    nglCriticalSectionGuard rag(mRenderArraysCS);
-    auto it = mRenderArrays.find(pArray);
-    if (it == mRenderArrays.end())
-    {
-      mRenderArrays[pArray] = RenderArrayInfo::Create(pArray);
-      it = mRenderArrays.find(pArray);
-    }
-    NGL_ASSERT(it != mRenderArrays.end());
-    mpCurrentRenderArrayInfo = it->second;
-    RenderArrayInfo& rInfo(*it->second);
-    
-    if (mpLastArray != pArray)
-    {
-      SetVertexBuffersPointers(*pArray, rInfo);
-      mpLastArray = pArray;
-    }
-  }
-  else
-  {
-    if (mpLastArray != pArray)
-    {
-      if (mpCurrentRenderArrayInfo)
-      {
-        mpCurrentRenderArrayInfo = NULL;
-      }
-      SetVertexPointers(*pArray);
-      mpLastArray = pArray;
-    }
-  }
-  
   // Metal Specific part:
-  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
-  id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
   
   // Create the metal pipeline descriptor:
-  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
+  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) CFBridgingRelease(mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState));
   
   {
     // Uniforms
@@ -1323,8 +1283,8 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 
       auto it = mTextures.find(pTexture);
       NGL_ASSERT(it != mTextures.end());
-      texture = (id<MTLTexture>)it->second.mTexture;
-      sampler = (id<MTLSamplerState>)it->second.mSampler;
+      texture = (__bridge id<MTLTexture>)it->second.mTexture;
+      sampler = (__bridge id<MTLSamplerState>)it->second.mSampler;
     }
 //    NGL_OUT("Setting texture[%d] = %p / %p (%p%s)\n", i, texture, sampler, pTexture, (pProxy?" [Proxy]":""));
     NGL_ASSERT((pTexture != nullptr && texture != nil && sampler != nil) || (pTexture == nullptr && texture == nil && sampler == nil));
@@ -1435,6 +1395,8 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   
   //  ResetVertexPointers(*pArray);
   pArray->Release();
+  mpShaderState->Release();
+  mpShaderState = nullptr;
 }
 
 
@@ -1503,7 +1465,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
   nuiMetalDebugGuard g(mpContext, "nuiMetalPainter::UploadTexture()");
 #endif
 
-  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+  id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
   nuiTexture* pProxy = pTexture->GetProxyTexture();
   if (pProxy)
     pTexture = pProxy;
@@ -1533,7 +1495,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
     samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
     
     id<MTLSamplerState> samplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
-    info.mSampler = samplerState;
+    info.mSampler = (void*)CFBridgingRetain(samplerState);
   }
 
   //NGL_OUT("Apply Target: 0x%x\n", target);
@@ -1631,14 +1593,14 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
         // Give a name to the texture for Metal Debugging
         
-        id<MTLTexture> texture = (id<MTLTexture>)info.mTexture;
+        id<MTLTexture> texture = (__bridge id<MTLTexture>)info.mTexture;
         if (!texture)
         {
           MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlPixelFormat
                                                                                                 width:ToNearest(Width) height:ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
           descriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
           texture = [device newTextureWithDescriptor:descriptor];
-          texture.label = (NSString*)pTexture->GetSource().ToCFString();
+          texture.label = (__bridge NSString*)pTexture->GetSource().ToCFString();
         }
         
         MTLRegion region = MTLRegionMake2D(0, 0, ToNearest(Width), ToNearest(Height));
@@ -1650,7 +1612,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         {
           NGL_ASSERT(pSurface);
         }
-        info.mTexture = texture;
+        info.mTexture = (void*)CFBridgingRetain(texture);
         MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new];
         samplerDescriptor.minFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
         samplerDescriptor.magFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
@@ -1658,7 +1620,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
 
         id<MTLSamplerState> samplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
-        info.mSampler = samplerState;
+        info.mSampler = (void*)CFBridgingRetain(samplerState);
       }
 
       info.mReload = false;
@@ -1707,13 +1669,10 @@ void nuiMetalPainter::_DestroyTexture(nuiTexture* pTexture)
   //NGL_OUT("nuiMetalPainter::DestroyTexture 0x%x : '%s' / %d\n", pTexture, pTexture->GetSource().GetChars(), info.mTexture);
 
   // TODO Actually Delete the Texture
-  id<MTLTexture> texture = (id<MTLTexture>)info.mTexture;
-  id<MTLSamplerState> sampler = (id<MTLSamplerState>)info.mSampler;
-
-  if (texture)
-    [texture release];
-  if (sampler)
-    [sampler release];
+  CFRelease(info.mTexture);
+  CFRelease(info.mSampler);
+  info.mTexture = nullptr;
+  info.mSampler = nullptr;
 }
 
 void nuiMetalPainter::DestroySurface(nuiSurface* pSurface)
@@ -1785,7 +1744,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     //NGL_OUT("nuiMetalPainter::CreateSurface %p\n", pSurface);
     NGL_ASSERT(pSurface != nullptr);
     
-    id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+    id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
     
 #if defined DEBUG && defined _UIKIT_
     if (pTexture)
@@ -1821,7 +1780,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     if (pTexture && pSurface->GetRenderToTexture())
     {
       //    glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, info.mTexture, 0);
-      passDescriptor.colorAttachments[0].texture = (id<MTLTexture>)tit->second.mTexture;
+      passDescriptor.colorAttachments[0].texture = (__bridge id<MTLTexture>)tit->second.mTexture;
       passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
       passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
@@ -1905,13 +1864,13 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
       //                                 info.mStencilbuffer);
     }
     
-    id<MTLCommandQueue> commandQueue = (id<MTLCommandQueue>)mpContext->GetMetalCommandQueue();
-    id<MTLCommandBuffer> commandBuffer = (id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
-    id<MTLRenderCommandEncoder> commandEncoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+    id<MTLCommandQueue> commandQueue = (__bridge id<MTLCommandQueue>)mpContext->GetMetalCommandQueue();
+    id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
+    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
     [commandEncoder endEncoding];
     commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
     commandEncoder.label = [NSString stringWithUTF8String:pSurface->GetObjectName().GetChars()];
-    mpContext->SetMetalCommandEncoder(commandEncoder);
+    mpContext->SetMetalCommandEncoder((__bridge void*)commandEncoder);
     
     
     //  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, DefaultFrameBuffer);
@@ -1922,177 +1881,20 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
   {
     /// !pSurface
 //    glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, mDefaultFramebuffer);
-    id<MTLTexture> texture = (id<MTLTexture>)mpContext->GetMetalDestinationTexture();
+    id<MTLTexture> texture = (__bridge id<MTLTexture>)mpContext->GetMetalDestinationTexture();
     
     MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     passDescriptor.colorAttachments[0].texture = texture;
     passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
     passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
     
-    id<MTLRenderCommandEncoder> oldCommandEncoder = (id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+    id<MTLRenderCommandEncoder> oldCommandEncoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
     [oldCommandEncoder endEncoding];
     
-    id<MTLCommandBuffer> commandBuffer = (id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
+    id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
     id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
     commandEncoder.label = [NSString stringWithUTF8String:"main encoder"];
-    mpContext->SetMetalCommandEncoder(commandEncoder);
-  }
-}
-
-nglCriticalSection nuiMetalPainter::RenderArrayInfo::mHeapCS("nuiMetalPainter::mHeapCS");
-std::list<nuiMetalPainter::RenderArrayInfo*> nuiMetalPainter::RenderArrayInfo::mHeap;
-
-nuiMetalPainter::RenderArrayInfo* nuiMetalPainter::RenderArrayInfo::Create(nuiRenderArray* pRenderArray)
-{
-  nglCriticalSectionGuard g(mHeapCS);
-  if (!mHeap.empty())
-  {
-    RenderArrayInfo* pInfo = mHeap.front();
-    mHeap.pop_front();
-    pInfo->Rebind(pRenderArray);
-    return pInfo;
-  }
-  else
-  {
-    return new RenderArrayInfo(pRenderArray);
-  }
-}
-
-void nuiMetalPainter::RenderArrayInfo::Recycle(nuiMetalPainter::RenderArrayInfo* pInfo)
-{
-  pInfo->Destroy();
-}
-
-
-nuiMetalPainter::RenderArrayInfo::RenderArrayInfo(nuiRenderArray* pRenderArray)
-{
-  mpRenderArray = nullptr;
-  mpVertexBuffer = nullptr;
-
-  if (pRenderArray)
-    Rebind(pRenderArray);
-}
-
-nuiMetalPainter::RenderArrayInfo::~RenderArrayInfo()
-{
-  Destroy();
-}
-
-
-void nuiMetalPainter::RenderArrayInfo::Rebind(nuiRenderArray* pRenderArray)
-{
-  mpRenderArray = pRenderArray;
-
-  int32 count = pRenderArray->GetSize();
-  NGL_ASSERT(mpVertexBuffer == nullptr);
-//  glGenBuffers(1, &mVertexBuffer);
-//  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-//  glBufferData(GL_ARRAY_BUFFER, sizeof(nuiRenderArray::Vertex) * count, &pRenderArray->GetVertices()[0], GL_STATIC_DRAW);
-
-  if (pRenderArray->GetIndexArrayCount() > 0)
-  {
-    uint32 indexcount = pRenderArray->GetIndexArrayCount();
-    mIndexBuffers.resize(indexcount);
-
-    for (uint32 i = 0; i < indexcount; i++)
-    {
-//      glGenBuffers(1, &mIndexBuffers[i]);
-//      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[i]);
-      const nuiRenderArray::IndexArray& indices(pRenderArray->GetIndexArray(i));
-//      glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.mIndices.size() * sizeof(GLushort), &indices.mIndices[0], GL_STATIC_DRAW);
-    }
-  }
-
-  int streamcount = pRenderArray->GetStreamCount();
-  mStreamBuffers.resize(streamcount);
-  for (int i = 0; i < streamcount; i++)
-  {
-    const nuiRenderArray::StreamDesc& stream(pRenderArray->GetStream(i));
-
-//    glGenBuffers(1, &mStreamBuffers[i]);
-//    glBindBuffer(GL_ARRAY_BUFFER, mStreamBuffers[i]);
-    int32 s = 1;
-    switch (stream.mType)
-    {
-      case nuiRenderArray::eFloat: s = 4; break;
-      case nuiRenderArray::eInt: s = 4; break;
-      case nuiRenderArray::eByte: s = 1; break;
-    }
-//    glBufferData(GL_ARRAY_BUFFER, count * stream.mCount * s, stream.mData.mpFloats, GL_STATIC_DRAW);
-  }
-
-//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//  glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void nuiMetalPainter::RenderArrayInfo::Destroy()
-{
-  if (mpVertexBuffer == nullptr)
-    return;
-
-  for (auto vao : mVAOs)
-  {
-//    glDeleteVertexArrays(1, (GLuint*)&vao.second);
-  }
-  mVAOs.clear();
-
-//  glDeleteBuffers(1, &mVertexBuffer);
-  mpVertexBuffer = nullptr;
-
-  for (uint32 i = 0; i < mIndexBuffers.size(); i++)
-  {
-//    glDeleteBuffers(1, &mIndexBuffers[i]);
-  }
-  mIndexBuffers.clear();
-
-  for (uint32 i = 0; i < mStreamBuffers.size(); i++)
-  {
-//    glDeleteBuffers(1, &mStreamBuffers[i]);
-  }
-
-  mStreamBuffers.clear();
-  {
-    nglCriticalSectionGuard g(mHeapCS);
-    mHeap.push_back(this);
-  }
-}
-
-void nuiMetalPainter::RenderArrayInfo::BindVertices() const
-{
-//  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-}
-
-void nuiMetalPainter::RenderArrayInfo::BindStream(int index) const
-{
-//  glBindBuffer(GL_ARRAY_BUFFER, mStreamBuffers[index]);
-}
-
-void nuiMetalPainter::RenderArrayInfo::BindIndices(int index) const
-{
-//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[index]);
-}
-
-void nuiMetalPainter::RenderArrayInfo::Draw() const
-{
-  BindVertices();
-
-  if (mpRenderArray->GetIndexArrayCount() > 0)
-  {
-    for (uint32 i = 0; i < mIndexBuffers.size(); i++)
-    {
-      const nuiRenderArray::IndexArray& array(mpRenderArray->GetIndexArray(i));
-      BindIndices(i);
-      
-//#ifdef _UIKIT_
-//      glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_SHORT, (void*)0);
-//#else
-//      glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, (void*)0);
-//#endif
-    }
-  }
-  else
-  {
-
+    mpContext->SetMetalCommandEncoder((__bridge void*)commandEncoder);
   }
 }
 
@@ -2162,199 +1964,14 @@ void nuiMetalPainter::PopProjectionMatrix()
 }
 
 
-
-void nuiMetalPainter::SetVertexPointers(const nuiRenderArray& rArray)
-{
-  nuiShaderProgram* pPgm = mFinalState.mpShader;
-  GLint Position = pPgm->GetVAPositionLocation();
-  GLint TexCoord = pPgm->GetVATexCoordLocation();
-  GLint Color = pPgm->GetVAColorLocation();
-  GLint Normal = pPgm->GetVANormalLocation();
-  
-  if (Position != -1)
-  {
-//    glEnableVertexAttribArray(Position);
-//    glVertexAttribPointer(Position, 3, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), &rArray.GetVertices()[0].mX);
-  }
-
-  if (TexCoord != -1)
-  {
-//    glEnableVertexAttribArray(TexCoord);
-//    glVertexAttribPointer(TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), &rArray.GetVertices()[0].mTX);
-  }
-
-  if (Color != -1)
-  {
-//    glEnableVertexAttribArray(Color);
-//    glVertexAttribPointer(Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(nuiRenderArray::Vertex), &rArray.GetVertices()[0].mR);
-  }
-
-  if (Normal != -1)
-  {
-//    glEnableVertexAttribArray(Normal);
-//    glVertexAttribPointer(Normal, 3, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), &rArray.GetVertices()[0].mNX);
-  }
-
-  int stream_count = rArray.GetStreamCount();
-  for (int i = 0; i < stream_count; i++)
-  {
-    const nuiRenderArray::StreamDesc& rDesc(rArray.GetStream(i));
-//    glEnableVertexAttribArray(rDesc.mStreamID);
-//    glVertexAttribPointer(rDesc.mStreamID, rDesc.mCount, rDesc.mType, rDesc.mNormalize ? GL_TRUE : GL_FALSE, 0, rDesc.mData.mpFloats);
-  }
-}
-
-void nuiMetalPainter::SetVertexBuffersPointers(const nuiRenderArray& rArray, RenderArrayInfo& rInfo)
-{
-  static int64 created = 0;
-  static int64 bound = 0;
-  {
-    nglCriticalSectionGuard g(gStats);
-    total++;
-  }
-  nuiShaderProgram* pPgm = mFinalState.mpShader;
-  
-  // Look for VAO:
-  auto it = rInfo.mVAOs.find(pPgm);
-  if (it == rInfo.mVAOs.end())
-  {
-    created++;
-    
-    // Create this VAO:
-    GLint vao = 0;
-//    glGenVertexArrays(1, (GLuint*)&vao);
-    rInfo.mVAOs[pPgm] = vao;
-    
-//    glBindVertexArray(vao);
-
-    GLint Position = pPgm->GetVAPositionLocation();
-    GLint TexCoord = pPgm->GetVATexCoordLocation();
-    GLint Color = pPgm->GetVAColorLocation();
-    GLint Normal = pPgm->GetVANormalLocation();
-    
-    rInfo.BindVertices();
-    if (Position != -1)
-    {
-//      glVertexAttribPointer(Position, 3, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), (void*)offsetof(nuiRenderArray::Vertex, mX));
-//      glEnableVertexAttribArray(Position);
-    }
-
-    if (TexCoord != -1)
-    {
-//      glVertexAttribPointer(TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), (void*)offsetof(nuiRenderArray::Vertex, mTX));
-//      glEnableVertexAttribArray(TexCoord);
-    }
-
-    if (Color != -1)
-    {
-//      glVertexAttribPointer(Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(nuiRenderArray::Vertex), (void*)offsetof(nuiRenderArray::Vertex, mR));
-//      glEnableVertexAttribArray(Color);
-    }
-
-    if (Normal != -1)
-    {
-//      glVertexAttribPointer(Normal, 3, GL_FLOAT, GL_FALSE, sizeof(nuiRenderArray::Vertex), (void*)offsetof(nuiRenderArray::Vertex, mNX));
-//      glEnableVertexAttribArray(Normal);
-    }
-
-    for (int i = 0; i < rArray.GetStreamCount(); i++)
-    {
-      SetStreamBuffersPointers(rArray, rInfo, i);
-    }
-    
-    return;
-  }
-  
-  bound++;
-  
-  if (bound % 10000 == 0)
-  {
-//    NGL_DEBUG(NGL_OUT("VAO/VBO %lld created %lld bound (%f cache hit)\n", created, bound, (float)bound / (float)created););
-  }
-  
-  NGL_ASSERT(it != rInfo.mVAOs.end());
-  
-  GLint vao = it->second;
-//  glBindVertexArray(vao);
-
-}
-
-void nuiMetalPainter::SetStreamBuffersPointers(const nuiRenderArray& rArray, const RenderArrayInfo& rInfo, int index)
-{
-  rInfo.BindStream(index);
-  const nuiRenderArray::StreamDesc& rDesc(rArray.GetStream(index));
-//  glVertexAttribPointer(rDesc.mStreamID, rDesc.mCount, rDesc.mType, rDesc.mNormalize ? GL_TRUE : GL_FALSE, 0, NULL);
-//  glEnableVertexAttribArray(rDesc.mStreamID);
-}
-
-
-void nuiMetalPainter::ResetVertexPointers(const nuiRenderArray& rArray)
-{
-  nuiShaderProgram* pPgm = mFinalState.mpShader;
-  GLint Position = pPgm->GetVAPositionLocation();
-  GLint TexCoord = pPgm->GetVATexCoordLocation();
-  GLint Color = pPgm->GetVAColorLocation();
-  GLint Normal = pPgm->GetVANormalLocation();
-  
-  if (Position != -1)
-  {
-//    glDisableVertexAttribArray(Position);
-  }
-  
-  if (TexCoord != -1)
-  {
-//    glDisableVertexAttribArray(TexCoord);
-  }
-  
-  if (Color != -1)
-  {
-//    glDisableVertexAttribArray(Color);
-  }
-  
-  if (Normal != -1)
-  {
-//    glDisableVertexAttribArray(Normal);
-  }
-  
-  int stream_count = rArray.GetStreamCount();
-  for (int i = 0; i < stream_count; i++)
-  {
-    const nuiRenderArray::StreamDesc& rDesc(rArray.GetStream(i));
-//    glDisableVertexAttribArray(rDesc.mStreamID);
-  }
-}
-
-
-
 void nuiMetalPainter::DestroyRenderArray(nuiRenderArray* pArray)
 {
   nglCriticalSectionGuard g(mRenderingCS);
-  mDestroyedRenderArrays.push_back(pArray);
 }
 
 void nuiMetalPainter::FinalizeRenderArrays()
 {
   nglCriticalSectionGuard g(mRenderingCS);
-//  glBindVertexArray(0);
-//  glBindBuffer(GL_ARRAY_BUFFER, 0);
-//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  for (auto array : mDestroyedRenderArrays)
-    _DestroyRenderArray(array);
-  mDestroyedRenderArrays.clear();
-}
-
-void nuiMetalPainter::_DestroyRenderArray(nuiRenderArray* pArray)
-{
-  nglCriticalSectionGuard rag(mRenderArraysCS);
-  auto it = mRenderArrays.find(pArray);
-  if (it == mRenderArrays.end())
-    return; // This render array was not stored here
-  
-  RenderArrayInfo* info(it->second);
-  RenderArrayInfo::Recycle(info);
-  
-  mRenderArrays.erase(it);
 }
 
 nglImage* nuiMetalPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) const
@@ -2365,7 +1982,6 @@ nglImage* nuiMetalPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture)
 
 std::map<nuiTexture*, nuiMetalPainter::TextureInfo> nuiMetalPainter::mTextures;
 std::vector<nuiRenderArray*> nuiMetalPainter::mFrameArrays;
-std::map<nuiRenderArray*, nuiMetalPainter::RenderArrayInfo*> nuiMetalPainter::mRenderArrays;
 nglCriticalSection nuiMetalPainter::mTexturesCS("mTexturesCS");
 nglCriticalSection nuiMetalPainter::mFrameArraysCS("mFrameArraysCS");
 nglCriticalSection nuiMetalPainter::mRenderArraysCS("mRenderArraysCS");

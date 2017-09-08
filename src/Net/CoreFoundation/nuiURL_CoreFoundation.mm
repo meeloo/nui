@@ -56,7 +56,7 @@ bool nuiURL::OpenBrowser()
   OSStatus err = LSOpenCFURLRef(url, NULL);  
   NGL_ASSERT(err == noErr);
 #else
-  [[NSApplication sharedApplication] openURL: [NSURL URLWithString: [NSString stringWithCString: s.c_str()]]];
+  [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: [NSString stringWithCString: s.c_str()]]];
 #endif
   
   // Release the URL and string

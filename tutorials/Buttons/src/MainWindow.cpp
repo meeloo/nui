@@ -379,7 +379,9 @@ public:
     pContext->PushMatrix();
     pContext->Translate(mRect.GetWidth()/2, mRect.GetHeight()/2);
     pContext->Scale(mScale, mScale);
-    pContext->DrawObject(*mpShape->Stroke(1.0, mStrokeWidth, mLineJoin, mLineCap, 1.));
+    nuiRenderObject* pObj = mpShape->Stroke(1.0, mStrokeWidth, mLineJoin, mLineCap, 1.);
+    pContext->DrawObject(*pObj);
+    delete pObj;
     pContext->PopMatrix();
 
     DrawChildren(pContext);

@@ -187,7 +187,7 @@ void nglContext::AddMarker(const char* title)
 {
   if (mMetalDevice)
   {
-    [(id<MTLCommandEncoder>)mMetalCommandEncoder insertDebugSignpost:[NSString stringWithCString:title]];
+    [(__bridge id<MTLCommandEncoder>)mMetalCommandEncoder insertDebugSignpost:[NSString stringWithCString:title]];
   }
   else
   {
@@ -199,7 +199,7 @@ void nglContext::StartMarkerGroup(const char* title)
 {
   if (mMetalDevice)
   {
-    [(id<MTLCommandEncoder>)mMetalCommandEncoder pushDebugGroup:[NSString stringWithCString:title]];
+    [(__bridge id<MTLCommandEncoder>)mMetalCommandEncoder pushDebugGroup:[NSString stringWithCString:title]];
   }
   else
   {
@@ -211,7 +211,7 @@ void nglContext::StopMarkerGroup()
 {
   if (mMetalDevice)
   {
-    [(id<MTLCommandEncoder>)mMetalCommandEncoder popDebugGroup];
+    [(__bridge id<MTLCommandEncoder>)mMetalCommandEncoder popDebugGroup];
   }
   else
   {
@@ -221,6 +221,5 @@ void nglContext::StopMarkerGroup()
 
 void nglContext::SetMetalCommandEncoder(void* encoder)
 {
-  id<MTLCommandEncoder> commandEncoder = (id<MTLCommandEncoder>)mMetalCommandEncoder;
   mMetalCommandEncoder = encoder;
 }

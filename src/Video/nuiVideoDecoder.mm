@@ -6,6 +6,7 @@
  */
 
 #import "nui.h"
+#import <AppKit/AppKit.h>
 #import <Cocoa/Cocoa.h>
 #import <CoreVideo/CoreVideo.h>
 
@@ -35,9 +36,6 @@ nuiVideoDecoder::nuiVideoDecoder(const nglPath& path)
 
 nuiVideoDecoder::~nuiVideoDecoder()
 {
-  if (mpPrivate->mpMovie)
-    [mpPrivate->mpMovie release];
-  
   delete mpPrivate;
   
   if (mpImage)
@@ -57,8 +55,6 @@ bool nuiVideoDecoder::Init()
   
   if (!mpPrivate->mpMovie)
     return false;
-  
-  [mpPrivate->mpMovie retain];
   
   CGLContextObj ctx = CGLGetCurrentContext();
   CGLPixelFormatObj pixelFormat = CGLGetPixelFormat(ctx);

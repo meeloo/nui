@@ -93,7 +93,7 @@ void objCCallOnInit(void* pUIApplication)
   NSArray* array = [[UIApplication sharedApplication] windows];
   for (uint32 i = 0; i < [array count]; i++)
   {
-    UIWindow* next = [array objectAtIndex:i];
+    id next = [array objectAtIndex:i];
     if ([next respondsToSelector:@selector(Paint)])
       [next Paint];
   }
@@ -186,5 +186,5 @@ bool nglKernel::SetClipboard(const nglString& rString)
 
 void nuiRenameCurrentThreadTo(CFStringRef name)
 {
-  [[NSThread currentThread] setName:(NSString*)name];
+  [[NSThread currentThread] setName:(__bridge NSString*)name];
 }

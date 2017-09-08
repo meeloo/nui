@@ -19,12 +19,6 @@
 
 static uint32 gNUIReferences = 0;
 
-
-#if defined(_UIKIT_)
-static NSAutoreleasePool* nui_autoreleasepool = nil;
-#endif
-
-
 bool nuiInitMinimal(void* OSHandle = NULL, nuiKernel* pKernel)
 {
   if (gNUIReferences == 0)
@@ -47,11 +41,6 @@ bool nuiInitMinimal(void* OSHandle = NULL, nuiKernel* pKernel)
 #endif
       App->CallOnInit();
     }
-
-    // On iOS, init an AutoReleasePool:
-#if defined(_UIKIT_)
-    nui_autoreleasepool = [[NSAutoreleasePool alloc] init];
-#endif
 
 #ifndef _MINUI3_
     // Init the texture manager:
@@ -123,11 +112,6 @@ bool nuiInit(void* OSHandle = NULL, nuiKernel* pKernel)
       App->CallOnInit();
     }
     
-    // On iOS, init an AutoReleasePool:
-#if defined(_UIKIT_)
-    nui_autoreleasepool = [[NSAutoreleasePool alloc] init];
-#endif
-
     NGL_LOG("font", NGL_LOG_INFO, "nuiInit Init Font Manager");
 #ifndef _MINUI3_
     // Init the texture manager:
@@ -214,12 +198,6 @@ bool nuiUninit()
 #ifndef _MINUI3_
     nuiFont::ClearAll();
     nuiTexture::ClearAll();
-    
-#if defined(_UIKIT_)
-    [nui_autoreleasepool release];
-    nui_autoreleasepool = nil;
-#endif
-    
 #endif//_MINUI3_
 
   }

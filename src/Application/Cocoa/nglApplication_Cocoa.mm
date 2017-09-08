@@ -83,7 +83,6 @@ static NSString* GetApplicationName(void)
 	submenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Edit", @"The Edit menu")];
 	[self populateEditMenu:submenu];
 	[mainMenu setSubmenu:submenu forItem:menuItem];
-  [submenu release];
 
 	/* TODO
    menuItem = [mainMenu addItemWithTitle:@"View" action:NULL keyEquivalent:@""];
@@ -97,13 +96,11 @@ static NSString* GetApplicationName(void)
 	[self populateWindowMenu:submenu];
 	[mainMenu setSubmenu:submenu forItem:menuItem];
 	[NSApp setWindowsMenu:submenu];
-  [submenu release];
 
 	menuItem = [mainMenu addItemWithTitle:@"Help" action:NULL keyEquivalent:@""];
 	submenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Help", @"The Help menu")];
 	[self populateHelpMenu:submenu];
 	[mainMenu setSubmenu:submenu forItem:menuItem];
-  [submenu release];
 
 	/* TODO
    menuItem = [mainMenu addItemWithTitle:@"Debug" action:NULL keyEquivalent:@""];
@@ -113,7 +110,6 @@ static NSString* GetApplicationName(void)
    */
 	
 	[NSApp setMainMenu:mainMenu];
-  [mainMenu release];
 }
 
 +(void) populateApplicationMenu:(NSMenu *)aMenu
@@ -366,19 +362,6 @@ static NSString* GetApplicationName(void)
 
 @implementation nglNSApplication
 
-- (void) dealloc
-{
-//  NGL_OUT("[nglNSApplication dealloc]\n");
-  [super dealloc];
-}
-
-- (BOOL) openURL: (NSURL*) pUrl
-{
-  //NGL_OUT("[nglNSApplication openURL]\n");
-  [super openURL: pUrl];
-  return true;
-}
-
 - (void) sendEvent: (NSEvent*) pEvent
 {
 //NGL_DEBUG( NGL_OUT("[nglNSApplication sendEvent]\n") );
@@ -404,7 +387,7 @@ static NSString* GetApplicationName(void)
   //NGL_OUT("[nglNSApplicationDelegate applicationDidFinishLaunching]\n");
   NGL_ASSERT(App);
   
-  objCCallOnInit(pNSApplication);
+  objCCallOnInit((__bridge void*)pNSApplication);
 }
 
 - (void)applicationDidReceiveMemoryWarning:  (NSApplication*) pUIApp
@@ -572,10 +555,10 @@ static NSString* GetApplicationName(void)
     {
       NSEnumerator *e = [[pNSApplication windows] objectEnumerator];
       
-      id win;
+      NSWindow* win;
       while ((win = [e nextObject]))
       {
-        [win release];
+        [win close];
       }	
     }
   }
@@ -681,20 +664,20 @@ void nglApplication::Quit (int Code)
 
 int nglApplication::Main(int argc, const char** argv)
 {
-//  NSAutoreleasePool *pPool = [NSAutoreleasePool new];
-  NSAutoreleasePool* pPool = [[NSAutoreleasePool alloc] init];
+#if (defined _UIKIT_) || (defined _COCOA_)
+  @autoreleasepool
+#endif
+  {
+    Init(argc, argv);
 
-  Init(argc, argv);
+    //GetLog().SetLevel("window", 100);
+    
+    nglNSApplication *applicationObject = (nglNSApplication *)[nglNSApplication sharedApplication];
 
-  //GetLog().SetLevel("window", 100);
-  
-  nglNSApplication *applicationObject = (nglNSApplication *)[nglNSApplication sharedApplication];
-
-  nglNSApplicationDelegate* appDelegate = [[nglNSApplicationDelegate alloc] init];
-  [applicationObject setDelegate:appDelegate];
-  [applicationObject run];
-  
-  [pPool release];
+    nglNSApplicationDelegate* appDelegate = [[nglNSApplicationDelegate alloc] init];
+    [applicationObject setDelegate:appDelegate];
+    [applicationObject run];
+  }
   return 0;
 }
 

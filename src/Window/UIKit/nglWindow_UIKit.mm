@@ -107,10 +107,6 @@ const nglChar* gpWindowErrorTable[] =
   }
   return self;
 }
-- (void) dealloc
-{
-  [super dealloc];
-}
 
 - (void) layoutSubviews
 {

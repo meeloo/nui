@@ -166,5 +166,5 @@ bool nglKernel::SetClipboard(const nglString& rString)
 
 void nuiRenameCurrentThreadTo(CFStringRef name)
 {
-  [[NSThread currentThread] setName:(NSString*)name];
+  [[NSThread currentThread] setName:(NSString*)CFBridgingRelease(name)];
 }

@@ -834,9 +834,9 @@ void* nuiShaderProgram::GetMetalLibrary() const
 
 void* nuiShaderProgram::GetMetalFunction(const nglString& rFunctionName) const
 {
-  id<MTLLibrary> library = (id<MTLLibrary>)mpMetalLibrary;
-  id<MTLFunction> function = [library newFunctionWithName:(NSString*)rFunctionName.ToCFString()];
-  return function;
+  id<MTLLibrary> library = (__bridge id<MTLLibrary>)mpMetalLibrary;
+  id<MTLFunction> function = [library newFunctionWithName:(NSString*)CFBridgingRelease(rFunctionName.ToCFString())];
+  return (void*)CFBridgingRetain(function);
 }
 
 static MTLBlendFactor GLToMetalBlendFactor(GLenum factor)
@@ -866,10 +866,10 @@ void nuiGetMetalBlendFuncFactors(nuiBlendFunc Func, MTLBlendFactor& src, MTLBlen
 
 void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRenderState) const // MTLRenderPipelineDescriptor*
 {
-  CAMetalLayer* metalLayer = (CAMetalLayer*)mpContext->GetMetalLayer();
+  CAMetalLayer* metalLayer = (__bridge CAMetalLayer*)mpContext->GetMetalLayer();
   MTLRenderPipelineDescriptor *descriptor = [MTLRenderPipelineDescriptor new];
-  descriptor.vertexFunction = (id<MTLFunction>)mMetalVertexFunction;
-  descriptor.fragmentFunction = (id<MTLFunction>)mMetalFragmentFunction;
+  descriptor.vertexFunction = (__bridge id<MTLFunction>)mMetalVertexFunction;
+  descriptor.fragmentFunction = (__bridge id<MTLFunction>)mMetalFragmentFunction;
   descriptor.colorAttachments[0].pixelFormat = metalLayer.pixelFormat;
   descriptor.colorAttachments[0].blendingEnabled = rRenderState.mBlending;
   
@@ -915,7 +915,8 @@ void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRender
   
   descriptor.vertexDescriptor = vertexDescriptor;
   
-  return descriptor;
+  return (void*)CFBridgingRetain(descriptor);
+//  return (__bridge void*)descriptor;
 }
 
 static GLenum GLTypeFromMetalType(MTLDataType type)
@@ -1024,7 +1025,7 @@ GLint nuiShaderProgram::GetMetalUniformLocation(const char* uniform) const
 
 void nuiShaderProgram::ParseStructMember(int depth, const nglString& parentName, void* _member)
 {
-  MTLStructMember* member = (MTLStructMember*)_member;
+  MTLStructMember* member = (__bridge MTLStructMember*)_member;
 #if NUI_SHADER_INTROSPECT_LOGS
   nglString indent("\t\t");
   for (int i = 0; i < depth; i++)
@@ -1033,7 +1034,7 @@ void nuiShaderProgram::ParseStructMember(int depth, const nglString& parentName,
 #endif //NUI_SHADER_INTROSPECT_LOGS
 
   nglString name(parentName);
-  name.Add(".").Add((CFStringRef)member.name);
+  name.Add(".").Add((__bridge CFStringRef)member.name);
   auto location = mUniforms.size();
   mUniformIndexes[location] = location;
   int num = 1;
@@ -1053,16 +1054,16 @@ void nuiShaderProgram::ParseStructMember(int depth, const nglString& parentName,
     for (MTLStructMember* smember in member.structType.members)
     {
       nglString parent(parentName);
-      parent.Add(".").Add((CFStringRef)member.name);
-      ParseStructMember(depth + 1, parent, smember);
+      parent.Add(".").Add((__bridge CFStringRef)member.name);
+      ParseStructMember(depth + 1, parent, (__bridge void*)smember);
     }
   }
 }
 
 void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
 {
-  MTLArgument* argument = (MTLArgument*)_argument;
-  nglString n((CFStringRef)argument.name);
+  MTLArgument* argument = (__bridge MTLArgument*)_argument;
+  nglString n((__bridge CFStringRef)argument.name);
   if (argument.type == MTLArgumentTypeBuffer)
   {
     if (argument.bufferDataType == MTLDataTypeStruct)
@@ -1073,7 +1074,7 @@ void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
 
       for (MTLStructMember* member in argument.bufferStructType.members)
       {
-        ParseStructMember(0, nglString((CFStringRef)argument.name), member);
+        ParseStructMember(0, nglString((__bridge CFStringRef)argument.name), (__bridge void*)member);
       }
       
 //      if (!mUniformStructSize); ///  Only one struct per shader for now please, we're pretty dumb still
@@ -1114,7 +1115,7 @@ void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
 bool nuiShaderProgram::Link()
 {
 #ifdef _METAL_
-  id<MTLDevice> device = (id<MTLDevice>)mpContext->GetMetalDevice();
+  id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
   if (device)
   {
     // This is a metal display
@@ -1127,12 +1128,12 @@ bool nuiShaderProgram::Link()
     }
     
     NSError* error = nil;
-    id<MTLLibrary> library = [device newLibraryWithSource:(NSString*)source.ToCFString() options:nil error:&error];;
-    mpMetalLibrary = library;
+    id<MTLLibrary> library = [device newLibraryWithSource:(NSString*)CFBridgingRelease(source.ToCFString()) options:nil error:&error];;
+    mpMetalLibrary = (void*)CFBridgingRetain(library);
     if (!library || error)
     {
       NSString* reason = error.localizedDescription;
-      nglString msg((CFStringRef)reason);
+      nglString msg((__bridge CFStringRef)reason);
       NGL_OUT("Metal Shader compilation error:\n%s\n", msg.GetChars());
       return false;
     }
@@ -1140,38 +1141,37 @@ bool nuiShaderProgram::Link()
     
     id<MTLFunction> vertex_function = [library newFunctionWithName:@"vertex_main"];
     id<MTLFunction> fragment_function = [library newFunctionWithName:@"fragment_main"];
-    mMetalVertexFunction = vertex_function;
-    mMetalFragmentFunction = fragment_function;
+    mMetalVertexFunction = (void*)CFBridgingRetain(vertex_function);
+    mMetalFragmentFunction = (void*)CFBridgingRetain(fragment_function);
 
-    CAMetalLayer* metalLayer = (CAMetalLayer*)mpContext->GetMetalLayer();
     MTLAutoreleasedRenderPipelineReflection reflection = nil;
     nuiRenderState state;
-    MTLRenderPipelineDescriptor *descriptor = (MTLRenderPipelineDescriptor *)NewMetalPipelineDescriptor(state);
+    MTLRenderPipelineDescriptor *descriptor = (MTLRenderPipelineDescriptor *)CFBridgingRelease(NewMetalPipelineDescriptor(state));
 
     id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:descriptor options:MTLPipelineOptionArgumentInfo+MTLPipelineOptionBufferTypeInfo reflection:&reflection error:&error];
-    
+
     if (!pipelineState || error)
     {
       NSString* reason = error.localizedDescription;
-      nglString msg((CFStringRef)reason);
+      nglString msg((__bridge CFStringRef)reason);
       NGL_OUT("Metal Shader compilation error:\n%s\n", msg.GetChars());
       return false;
     }
     
 #if NUI_SHADER_INTROSPECT_LOGS
-    NGL_OUT("Function %s\n", nglString((CFStringRef)vertex_function.name).GetChars());
+    NGL_OUT("Function %s\n", nglString((__bridge CFStringRef)vertex_function.name).GetChars());
 #endif //NUI_SHADER_INTROSPECT_LOGS
     for (MTLArgument* argument in reflection.vertexArguments)
     {
-      ParseArgument("Vertex", argument);
+      ParseArgument("Vertex", (__bridge void*)argument);
     }
 
 #if NUI_SHADER_INTROSPECT_LOGS
-    NGL_OUT("Function %s\n", nglString((CFStringRef)fragment_function.name).GetChars());
+    NGL_OUT("Function %s\n", nglString((__bridge CFStringRef)fragment_function.name).GetChars());
 #endif //NUI_SHADER_INTROSPECT_LOGS
     for (MTLArgument* argument in reflection.fragmentArguments)
     {
-      ParseArgument("Fragment", argument);
+      ParseArgument("Fragment", (__bridge void*)argument);
     }
     
     mProjectionMatrix = GetMetalUniformLocation(NUI_PROJECTION_MATRIX_NAME);

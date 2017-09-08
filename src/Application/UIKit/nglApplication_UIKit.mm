@@ -26,13 +26,6 @@ void objCCallOnMemoryWarning();
 */
 @implementation nglUIApplicationDelegate
 
-- (void) dealloc
-{
-  //App->TimedPrint("nglUIApplicationDelegate dealloc");
-  //NGL_OUT("[nglUIApplicationDelegate dealloc]\n");
-  [super dealloc];
-}
-
 - (UIWindow*) window
 {
   return [[UIApplication sharedApplication] keyWindow];
@@ -44,7 +37,7 @@ void objCCallOnMemoryWarning();
   NGL_OUT("[nglUIApplicationDelegate applicationDidFinishLaunching]\n");
   assert(App);
 
-  objCCallOnInit(pUIApplication);
+  objCCallOnInit((__bridge void*)pUIApplication);
 }
 
 - (BOOL)application:(UIApplication *)pUIApplication didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
@@ -52,8 +45,8 @@ void objCCallOnMemoryWarning();
 	assert(App);
 	NSURL *launchURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
   
-  App->SetUIApplication(pUIApplication);
-  App->SetLaunchOptions(launchOptions);
+  App->SetUIApplication((__bridge void*)pUIApplication);
+  App->SetLaunchOptions((__bridge void*)launchOptions);
 
 	if (launchURL)
 	{
@@ -66,11 +59,11 @@ void objCCallOnMemoryWarning();
     {
       p = [launchURL.absoluteString UTF8String];
     }
-		objCCallOnInitWithURL(pUIApplication, p);
+		objCCallOnInitWithURL((__bridge void*)pUIApplication, p);
 	}
   else
   {
-		objCCallOnInit(pUIApplication);
+		objCCallOnInit((__bridge void*)pUIApplication);
 	}
   
   // Check if we have a notification to display
@@ -204,7 +197,7 @@ void objCCallOnMemoryWarning();
 
   for (UIWindow* cur_win in pUIApplication.windows)
   {
-    cur_win = nil;
+    CFBridgingRelease((__bridge void*)cur_win);
   }
 
 ///< advise the kernel we're quiting
@@ -299,8 +292,8 @@ void objCCallOnMemoryWarning();
             openURL:(NSURL *)url
             options:(NSDictionary<NSString *, id> *)options
 {
-  App->SetOpenURL(url);
-  App->SetOpenURLOptions(options);
+  App->SetOpenURL((__bridge void*)url);
+  App->SetOpenURLOptions((__bridge void*)options);
   
   if (url)
   {
@@ -372,17 +365,15 @@ void nglApplication::Quit (int Code)
 int nglApplication::Main(int argc, const char** argv)
 {
   //  NSAutoreleasePool *pPool = [NSAutoreleasePool new];
-  NSAutoreleasePool* pPool = [[NSAutoreleasePool alloc] init];  
+  @autoreleasepool
   {
     //App->TimedPrint("nglApplication::Main Init");
 
     Init(argc, argv);
+
+    //App->TimedPrint("nglApplication::Main UIApplication");
+    UIApplicationMain(argc, const_cast<char**>(argv), nil, @"nglUIApplicationDelegate");
   }
-
-  //App->TimedPrint("nglApplication::Main UIApplication");
-  UIApplicationMain(argc, const_cast<char**>(argv), nil, @"nglUIApplicationDelegate");
-
-  [pPool release];
 
   return 0;
 }

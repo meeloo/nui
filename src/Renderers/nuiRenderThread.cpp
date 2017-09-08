@@ -81,20 +81,17 @@ void nuiRenderThread::OnStart()
 {
   nuiTask* pTask = nullptr;
 
-#if (defined _UIKIT_) || (defined _COCOA_)
-  NSAutoreleasePool* pPool = [[NSAutoreleasePool alloc] init];
-#endif
-
   while (mContinue && (pTask = mQueue.Get(1000)))
   {
-    pTask->Run();
-    pTask->Release();
-//    NGL_OUT("Unqueued task %p, %d left (%d contents painter requests)\n", pTask, mQueue.GetSize(), SetLayerContentsPainterCounter);
-  }
-
 #if (defined _UIKIT_) || (defined _COCOA_)
-  [pPool release];
+    @autoreleasepool
 #endif
+    {
+      pTask->Run();
+      pTask->Release();
+//    NGL_OUT("Unqueued task %p, %d left (%d contents painter requests)\n", pTask, mQueue.GetSize(), SetLayerContentsPainterCounter);
+    }
+  }
 }
 
 void nuiRenderThread::RunTaskOnRenderThread(nuiTask* pTask, bool OnNextFrame)

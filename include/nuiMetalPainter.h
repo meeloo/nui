@@ -79,34 +79,6 @@ protected:
     void* mSampler = nullptr;
   };
 
-  class RenderArrayInfo
-  {
-  public:
-
-    static RenderArrayInfo* Create(nuiRenderArray* pRenderArray);
-    static void Recycle(nuiMetalPainter::RenderArrayInfo* pInfo);
-
-    void BindVertices() const;
-    void BindStream(int index) const;
-    void BindIndices(int index) const;
-    void Draw() const;
-
-    std::map<nuiShaderProgram*, GLint> mVAOs;
-  private:
-    RenderArrayInfo(nuiRenderArray* pRenderArray);
-    ~RenderArrayInfo();
-    void Destroy();
-    void Rebind(nuiRenderArray* pRenderArray);
-
-    nuiRenderArray* mpRenderArray;
-    void* mpVertexBuffer;
-    std::vector<GLuint> mIndexBuffers;
-    std::vector<GLuint> mStreamBuffers;
-
-    static nglCriticalSection mHeapCS;
-    static std::list<RenderArrayInfo*> mHeap;
-  };
-
   virtual void ResetMetalState();
   void SetSurface(nuiSurface* pSurface);
   void CreateSurface(nuiSurface* pSurface);
@@ -124,7 +96,6 @@ protected:
 
   static std::map<nuiTexture*, TextureInfo> mTextures;
   static std::vector<nuiRenderArray*> mFrameArrays;
-  static std::map<nuiRenderArray*, RenderArrayInfo*> mRenderArrays;
   static nglCriticalSection mTexturesCS;
   static nglCriticalSection mFrameArraysCS;
   static nglCriticalSection mRenderArraysCS;
@@ -166,17 +137,6 @@ protected:
 
   nuiShaderProgram* mpShader = nullptr;
   nuiShaderState* mpShaderState = nullptr;
-
-  // Immediate mode setup:
-  void SetVertexPointers(const nuiRenderArray& rArray);
-  
-  //  VBO Setup:
-  void SetVertexBuffersPointers(const nuiRenderArray& rArray, RenderArrayInfo& rInfo);
-  void SetStreamBuffersPointers(const nuiRenderArray& rArray, const RenderArrayInfo& rInfo, int index);
-  
-  // Reset vertices modes
-  void ResetVertexPointers(const nuiRenderArray& rArray);
-  
   
   nuiShaderProgram* mpShader_TextureVertexColor;
   nuiShaderProgram* mpShader_TextureAlphaVertexColor;
@@ -188,9 +148,6 @@ protected:
   
   nuiMatrix mSurfaceMatrix;
   
-  RenderArrayInfo* mpCurrentRenderArrayInfo;
-  nuiRenderArray* mpLastArray;
-    
   void FinalizeSurfaces();
   void FinalizeTextures();
   void FinalizeRenderArrays();
@@ -199,7 +156,6 @@ protected:
   void _DestroyRenderArray(nuiRenderArray* pArray);
   std::vector<nuiSurface*> mDestroyedSurfaces;
   std::vector<nuiTexture*> mDestroyedTextures;
-  std::vector<nuiRenderArray*> mDestroyedRenderArrays;
 
   bool mViewportChanged = true;
   

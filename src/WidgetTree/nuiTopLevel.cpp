@@ -2442,10 +2442,6 @@ nuiHotKey* nuiTopLevel::RegisterHotKeyChar(const nglString& rName, nglChar Trigg
     }
     pHotKeyChar->Register();
 
-#ifdef _UIKIT_
-    [[UIApplication sharedApplication].keyWindow addHotKeyChar:pHotKeyChar];
-#endif
-
     std::map<nglString, nuiSimpleEventSource<nuiWidgetActivated>*>::const_iterator it = mHotKeyEvents.find(rName);
     if (it == mHotKeyEvents.end())
       mHotKeyEvents[rName] = new nuiSimpleEventSource<nuiWidgetActivated>();

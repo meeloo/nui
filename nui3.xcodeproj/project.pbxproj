@@ -84,7 +84,6 @@
 		406F78D112DC9F3C00DBAC43 /* nuiSoundManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 406F78C212DC9F3C00DBAC43 /* nuiSoundManager.h */; };
 		406F78D212DC9F3C00DBAC43 /* nuiVoice.h in Headers */ = {isa = PBXBuildFile; fileRef = 406F78C312DC9F3C00DBAC43 /* nuiVoice.h */; };
 		408D9BA61097436800AEE78A /* nuiVideoDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 408D9BA21097436800AEE78A /* nuiVideoDecoder.h */; };
-		408D9BA71097436800AEE78A /* nuiVideoDecoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 408D9BA31097436800AEE78A /* nuiVideoDecoder.mm */; };
 		40A459A80EFAA71F00043B1F /* nuiAudioDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 40A459A60EFAA71F00043B1F /* nuiAudioDecoder.h */; };
 		40A459AC0EFAABC400043B1F /* nuiAudioDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40A459AB0EFAABC400043B1F /* nuiAudioDecoder.cpp */; };
 		40E96FBD106D20160099D015 /* nuiAudioDecoder_OSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40E96FBA106D20160099D015 /* nuiAudioDecoder_OSX.cpp */; };
@@ -2798,7 +2797,6 @@
 		E5D6434E1209AB9C009C26A9 /* nuiStopWatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4024359210568E6F0089BA0B /* nuiStopWatch.cpp */; };
 		E5D6434F1209AB9C009C26A9 /* nuiAudioDecoder_OSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40E96FBA106D20160099D015 /* nuiAudioDecoder_OSX.cpp */; };
 		E5D643501209AB9C009C26A9 /* nuiGLUTBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5D9FEEC1082B382008D0F11 /* nuiGLUTBridge.cpp */; };
-		E5D643511209AB9C009C26A9 /* nuiVideoDecoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 408D9BA31097436800AEE78A /* nuiVideoDecoder.mm */; };
 		E5D643521209AB9C009C26A9 /* nuiAsyncIStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E540AB5C10DFAC5000791FBA /* nuiAsyncIStream.cpp */; };
 		E5D643551209AB9C009C26A9 /* nuiTextureInspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E57ECB611110A6BA00AE0A3A /* nuiTextureInspector.cpp */; };
 		E5D643561209AB9C009C26A9 /* nglReaderWriterLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B7A1D511347AE3005403BF /* nglReaderWriterLock.cpp */; };
@@ -11745,7 +11743,6 @@
 				4024359510568E6F0089BA0B /* nuiStopWatch.cpp in Sources */,
 				40E96FBD106D20160099D015 /* nuiAudioDecoder_OSX.cpp in Sources */,
 				E5D9FEEF1082B382008D0F11 /* nuiGLUTBridge.cpp in Sources */,
-				408D9BA71097436800AEE78A /* nuiVideoDecoder.mm in Sources */,
 				E540AB5F10DFAC5000791FBA /* nuiAsyncIStream.cpp in Sources */,
 				E57ECB621110A6BA00AE0A3A /* nuiTextureInspector.cpp in Sources */,
 				E5B7A1D611347AE3005403BF /* nglReaderWriterLock.cpp in Sources */,
@@ -12078,7 +12075,6 @@
 				E5D6434E1209AB9C009C26A9 /* nuiStopWatch.cpp in Sources */,
 				E5D6434F1209AB9C009C26A9 /* nuiAudioDecoder_OSX.cpp in Sources */,
 				E5D643501209AB9C009C26A9 /* nuiGLUTBridge.cpp in Sources */,
-				E5D643511209AB9C009C26A9 /* nuiVideoDecoder.mm in Sources */,
 				E5D643521209AB9C009C26A9 /* nuiAsyncIStream.cpp in Sources */,
 				E5D643551209AB9C009C26A9 /* nuiTextureInspector.cpp in Sources */,
 				E5D643561209AB9C009C26A9 /* nglReaderWriterLock.cpp in Sources */,
@@ -12655,6 +12651,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -12766,6 +12763,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
