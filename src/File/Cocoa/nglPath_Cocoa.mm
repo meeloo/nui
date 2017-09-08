@@ -18,7 +18,7 @@ nglPath nuiCocoaGetPath_UserDocuments()
 {
   NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString* docs = [paths objectAtIndex: 0];
-  nglString str((CFStringRef)docs);
+  nglString str((__bridge CFStringRef)docs);
   return nglPath(str);  
 }
 
@@ -26,7 +26,7 @@ nglPath nuiCocoaGetPath_UserDocuments()
 nglPath nuiCocoaGetPath_Temp()
 {
   NSString* docs = NSTemporaryDirectory();
-  nglString str((CFStringRef)docs);
+  nglString str((__bridge CFStringRef)docs);
   return nglPath(str);  
 }
 
@@ -34,7 +34,7 @@ nglPath nuiCocoaGetPath_App()
 {
   NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString* docs = [paths objectAtIndex: 0];
-  nglString str((CFStringRef)docs);
+  nglString str((__bridge CFStringRef)docs);
   return nglPath(str);  
 }
 
@@ -42,7 +42,7 @@ nglPath nuiCocoaGetPath_AppSettings()
 {
   NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString* docs = [paths objectAtIndex: 0];
-  nglString str((CFStringRef)docs);
+  nglString str((__bridge CFStringRef)docs);
   return nglPath(str);  
 }
 
@@ -50,7 +50,7 @@ nglPath nuiCocoaGetPath_UserPreferences()
 {
   NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString* docs = [paths objectAtIndex: 0];
-  nglString str((CFStringRef)docs);
+  nglString str((__bridge CFStringRef)docs);
   return nglPath(str);  
 }
 
@@ -58,7 +58,7 @@ nglPath nuiCocoaGetPath_UserDesktop()
 {
   NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
   NSString* docs = [paths objectAtIndex: 0];
-  nglString str((CFStringRef)docs);
+  nglString str((__bridge CFStringRef)docs);
   return nglPath(str);  
 }
 

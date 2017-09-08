@@ -1,6 +1,7 @@
 #include "nui.h"
 
 #include <QuartzCore/QuartzCore.h>
+#include <QuartzCore/CALayer.h>
 
 
 #include <string.h>
@@ -195,11 +196,6 @@ const nglChar* gpWindowErrorTable[] =
   return self;
 }
 
-- (void) dealloc
-{
-  [super dealloc];
-}
-
 - (void)loadView
 {
   UIView* pView = nil;
@@ -207,11 +203,11 @@ const nglChar* gpWindowErrorTable[] =
   mpNGLWindow->GetContextInfo(Info);
   if (Info.TargetAPI == eTargetAPI_OpenGL2)
   {
-    pView = [[[nglUIView_GL alloc] initWithNGLWindow:mpNGLWindow] autorelease];
+    pView = [[nglUIView_GL alloc] initWithNGLWindow:mpNGLWindow];
   }
   else if (Info.TargetAPI == eTargetAPI_Metal)
   {
-    pView = [[[nglUIView_Metal alloc] initWithNGLWindow:mpNGLWindow] autorelease];
+    pView = [[nglUIView_Metal alloc] initWithNGLWindow:mpNGLWindow];
   }
 
   self.view = pView;
@@ -266,14 +262,13 @@ const nglChar* gpWindowErrorTable[] =
 - (void) dealloc
 {
   [self stopDisplayLink];
-  [super dealloc];
 }
 
 - (void) startDisplayLink
 {
   if (mDisplayLink == nil)
   {
-    mDisplayLink = [[[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(displayTicked)] retain];
+    mDisplayLink = [[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(displayTicked)];
     [mDisplayLink setFrameInterval:1];
     [mDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
   }
@@ -284,7 +279,6 @@ const nglChar* gpWindowErrorTable[] =
   if (mDisplayLink != nil)
   {
     [mDisplayLink invalidate];
-    [mDisplayLink release];
     mDisplayLink = nil;
   }
 }
@@ -336,7 +330,10 @@ const nglChar* gpWindowErrorTable[] =
 
   std::vector<UITouch*> touches;
   touches.resize((uint)count);
-  [pArray getObjects: &touches[0]];
+  for (UITouch* touch in pArray)
+  {
+    touches.push_back(touch);
+  }
   
   std::vector<UITouch*>::const_iterator end = touches.end();
   for (std::vector<UITouch*>::const_iterator it = touches.begin(); it != end; ++it)
