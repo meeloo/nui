@@ -1858,11 +1858,17 @@ nuiDrawContext *nuiDrawContext::CreateDrawContext(const nuiRect& rRect, nuiPaint
 
 int nuiDrawContext::GetWidth() const
 {
+  nuiSurface* pSurface = mpPainter->GetSurface();
+  if (pSurface)
+    return pSurface->GetWidth();
   return (int)mWidth;
 }
 
 int nuiDrawContext::GetHeight() const
 {
+  nuiSurface* pSurface = mpPainter->GetSurface();
+  if (pSurface)
+    return pSurface->GetHeight();
   return (int)mHeight;
 }
 
