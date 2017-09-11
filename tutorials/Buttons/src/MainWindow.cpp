@@ -219,16 +219,29 @@ SHADER_STRING
                                sampler textureSampler [[sampler(0)]]
                                )
 {
-  float feather = transforms.Feather;
-  float ref = abs(vert.Normal.y);
-  float width = vert.Normal.z;
-  float smooth = smoothstep(width - feather, width + feather, ref);
-  float alpha = (1.0 - sqrt(smooth));
-//  alpha = 1;
-  
-//  return float4(0, vert.Normal.yz, 1);
-
-  return vert.Color * alpha;
+  if (0)
+  {
+    float feather = transforms.Feather;
+    float ref = abs(vert.Normal.y);
+      float width = vert.Normal.z;
+      float smooth = smoothstep(width - feather, width + feather, ref);
+    float alpha = (1.0 - sqrt(smooth));
+    return vert.Color * alpha;
+  }
+  else
+  {
+    float feather = transforms.Feather;
+    float ref = abs(vert.Normal.y);
+    float width = vert.Normal.z;
+    float distance = ref - width;
+    float dx = dfdx(vert.Position.x);
+    float dy = dfdy(vert.Position.y);
+    float2 diff(dx, dy);
+    float afwidth = feather * length(diff);
+    float coverage = smoothstep(-afwidth, afwidth, distance);
+    float alpha = (1.0 - sqrt(coverage));
+    return vert.Color * alpha;
+  }
 }
 
  
@@ -247,35 +260,35 @@ public:
                    (nglString("StrokeWidth"), nuiUnitSize,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetStrokeWidth),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetStrokeWidth),
-                    nuiRange(1, 0.0125, 70, .1, .1, 0)
+                    nuiRange(1, 0.0125, 70, .01, .01, 0)
                     ));
 
       AddAttribute(new nuiAttribute<float>
                    (nglString("Scale"), nuiUnitSize,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetScale),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetScale),
-                    nuiRange(1, 1, 10, .1, .1, 0)
+                    nuiRange(1, 1, 15, .01, .01, 0)
                     ));
 
       AddAttribute(new nuiAttribute<float>
                    (nglString("Feather"), nuiUnitSize,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetFeather),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetFeather),
-                    nuiRange(1, 0, 1, .05, .05, 0)
+                    nuiRange(1, 0, 2, .05, .05, 0)
                     ));
 
       AddAttribute(new nuiAttribute<float>
                    (nglString("AngleInc"), nuiUnitSize,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetAngleInc),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetAngleInc),
-                    nuiRange(1, -3, 3, .1, .1, 0)
+                    nuiRange(1, -3, 3, .01, .01, 0)
                     ));
 
       AddAttribute(new nuiAttribute<float>
                    (nglString("LengthInc"), nuiUnitSize,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetLengthInc),
                     nuiMakeDelegate(this, &nuiStrokeTest::SetLengthInc),
-                    nuiRange(1, 0.01, 10, .1, .1, 0)
+                    nuiRange(1, 0.01, 30, .01, .01, 0)
                     ));
 
       AddAttribute(new nuiAttribute<nuiLineJoin>
@@ -303,6 +316,8 @@ public:
 
     nuiVBox* box = new nuiVBox();
     box->SetPosition(nuiBottomRight);
+    nuiColorDecoration* pDeco = new nuiColorDecoration("emptyBox", nuiRect(8, 8, 8, 8), nuiColor(255, 255, 255, 128), 2, nuiColor(0, 0, 0, 64), eStrokeAndFillShape, nuiBlendTransp);
+    box->SetDecoration(pDeco);
     AddChild(box);
 
     char* attribs[] = {"StrokeWidth", "Feather", "AngleInc", "LengthInc", "Scale", "LineJoin", "LineCap", nullptr};

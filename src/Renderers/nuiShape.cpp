@@ -727,8 +727,8 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
         float off = HalfLineWidth;
         if (LineCap == nuiLineCapBut)
         {
-          offRef = .5;
-          off = 0.1;
+          offRef = 1.0;
+          off = 0.5;
         }
         
         nuiVector offset = v0 * offRef;
@@ -781,11 +781,15 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
         pArray->SetColor(left);
         pArray->SetNormal(pArray->GetCurrentVertex().mNX, offRef, off);
         pArray->PushVertex();
+        pArray->PushVertex();
 
         // The actual start
+        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
         pArray->SetVertex( p1a );
         pArray->SetColor(left);
         pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
+        pArray->PushVertex();
+        pArray->PushVertex();
         pArray->PushVertex();
 
         pArray->SetVertex( p1b );
@@ -793,7 +797,9 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
         pArray->SetNormal(pArray->GetCurrentVertex().mNX, -pArray->GetCurrentVertex().mNY, pArray->GetCurrentVertex().mNZ);
         pArray->PushVertex();
 
-        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+//        pArray->SetNormal(1, HalfLineWidthRef, HalfLineWidth);
+        
+//        return pArray;
       }
       else
       {
