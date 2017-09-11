@@ -94,6 +94,7 @@ void Application::OnInit()
       arg = GetArg(i+1);
       if (!arg.Compare("opengl")) Renderer = eOpenGL2;
       else if (!arg.Compare("direct3d")) Renderer = eDirect3D;
+      else if (!arg.Compare("metal")) Renderer = eMetal;
       else if (!arg.Compare("software")) Renderer = eSoftware;
       i++;
     }

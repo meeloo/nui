@@ -94,10 +94,6 @@ void nuiShape::AddPath(const nuiPath& rVertices)
       AddContour();
       break;
     case nuiPointTypeNormal:
-      if (rPoint[0] == 0.0f && rPoint[1] == 0.0f)
-      {
-        NGL_ASSERT(false);
-      }
       LineTo(rPoint);
       break;
     default:
