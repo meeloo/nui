@@ -625,12 +625,6 @@ void nuiMetalPainter::ResetMetalState()
   nuiMetalDebugGuard g(mpContext, "nuiMetalPainter::ResetMetalState");
 #endif
   
-  mScissorX = -1;
-  mScissorY = -1;
-  mScissorW = -1;
-  mScissorH = -1;
-  
-  
   //SetViewport();
   
 //  glDisable(GL_DEPTH_TEST);
@@ -769,39 +763,59 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   float scale = mpContext->GetScale();
   int32 width = GetCurrentWidth();
   int32 height = GetCurrentHeight();
-  
+  int x,y,w,h;
+
   if (mpClippingStack.top().mEnabled)
   {
     
     nuiRect clip(mpClippingStack.top());
 
-    int x,y,w,h;
     x = ToNearest(clip.Left());
     y = ToNearest(clip.Top());
     w = ToNearest(clip.GetWidth());
     h = ToNearest(clip.GetHeight());
 
-    mScissorX = x;
-    mScissorY = y;
-    mScissorW = w;
-    mScissorH = h;
+    if (x < 0)
+    {
+      w += x;
+      x = 0;
+    }
 
+    if (y < 0)
+    {
+      h += y;
+      y = 0;
+    }
+    
+    if (x + w > width)
+    {
+      w = width - x;
+    }
+    
+    if (y + h > height)
+    {
+      h = height - y;
+    }
+  }
+  else
+  {
+    x = 0;
+    y = 0;
+    w = width;
+    h = height;
+  }
+
+  mScissorIsFlat = (w == 0 || h == 0);
+  if (!mScissorIsFlat)
+  {
     x *= scale;
     y *= scale;
     w *= scale;
     h *= scale;
-    
-    if (w ==0) w = 1;
-    if (h ==0) h = 1;
     MTLScissorRect rect = {(NSUInteger)x, (NSUInteger)y, (NSUInteger)w, (NSUInteger)h};
     [encoder setScissorRect:rect];
   }
-  else
-  {
-    MTLScissorRect rect = {(NSUInteger)0, (NSUInteger)0, (NSUInteger)(width * scale), (NSUInteger)(height * scale)};
-    [encoder setScissorRect:rect];
-  }
-
+  
   mFinalState.mClearColor = rState.mClearColor;
   mFinalState.mStrokeColor = rState.mStrokeColor;
   mFinalState.mFillColor = rState.mFillColor;
@@ -901,6 +915,9 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   mRenderOperations++;
   NUI_RETURN_IF_RENDERING_DISABLED;
 
+  if (mScissorIsFlat)
+    return;
+  
   SetViewport();  
   ApplyState(*mpState);
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
@@ -974,7 +991,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   mRenderOperations++;
   mBatches++;
   
-  if (!mEnableDrawArray)
+  if (!mEnableDrawArray || mScissorIsFlat)
   {
     pArray->Release();
     return;
@@ -1669,8 +1686,10 @@ void nuiMetalPainter::_DestroyTexture(nuiTexture* pTexture)
   //NGL_OUT("nuiMetalPainter::DestroyTexture 0x%x : '%s' / %d\n", pTexture, pTexture->GetSource().GetChars(), info.mTexture);
 
   // TODO Actually Delete the Texture
-  CFRelease(info.mTexture);
-  CFRelease(info.mSampler);
+  if (info.mTexture)
+    CFRelease(info.mTexture);
+  if (info.mSampler)
+    CFRelease(info.mSampler);
   info.mTexture = nullptr;
   info.mSampler = nullptr;
 }

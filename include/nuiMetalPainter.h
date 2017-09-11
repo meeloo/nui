@@ -103,10 +103,7 @@ protected:
   nglCriticalSection mRenderingCS;
 
   int64 dummy = 0;
-  int32 mScissorX;
-  int32 mScissorY;
-  int32 mScissorW;
-  int32 mScissorH;
+  bool mScissorIsFlat = false;
   bool mTwoPassBlend;
   GLenum mSrcColor;
   GLenum mDstColor;
