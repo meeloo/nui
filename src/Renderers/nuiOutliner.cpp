@@ -289,7 +289,8 @@ bool nuiOutliner::Tessellate(nuiPath& rPoints, float Quality) const
       count = ii - offset;
       if (Vertices[i].GetType() == nuiPointTypeStop)
         count--;
-      Tessellate(rPoints, Vertices, offset, count, Quality);
+      if (count > 0)
+        Tessellate(rPoints, Vertices, offset, count, Quality);
 
       offset = ii;
     }
