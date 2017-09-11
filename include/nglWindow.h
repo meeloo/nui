@@ -367,6 +367,12 @@ window = new nglWindow (context, info, NULL);
     \param rVertical vertical resolution in DPI
     \return true if \p rHorizontal and \p rVertical contain valid information
   */
+  nuiOrientation GetLayoutOrientation() const { return mLayoutOrientation; }
+  /*!<
+   Retrieve device orientation.
+   \return nuiOrientation
+   */
+
   uint GetRotation() const;           ///< Return the current (user area) rotation angle
   virtual void SetRotation(uint Angle); ///< Set the current (user area) rotation angle
   void EnableAutoRotation(bool set); ///< Change the rotation and size of the screen to follow the device's screen orientation (this is the default behaviour).
@@ -733,6 +739,14 @@ window = new nglWindow (context, info, NULL);
     This event is only triggered if the window has the focus (ie. has received
     a OnActivation() event).
   */
+  
+  virtual void OnOrientation(nuiOrientation Orientation);
+  /*!<
+    This method is called when the device orientation changes.
+    \param Orientation New orientation.
+    \return void
+   */
+
   virtual bool OnRotation(uint Angle);
   /*!<
    This method is called when a rotation of the device is detected.
@@ -798,7 +812,7 @@ private:
   bool               mAutoRotate;
   bool               mComposingText;
   nglString          mComposedText;
-
+  nuiOrientation     mLayoutOrientation { nuiHorizontal };
   void Register();
   void Unregister();
   static std::vector<nglWindow*> mpWindows;
@@ -829,6 +843,7 @@ public:
   bool CallOnMouseWheel (nglMouseInfo& rInfo);
   bool CallOnMouseMove  (nglMouseInfo& rInfo);
   bool CallOnMouseCanceled  (nglMouseInfo& rInfo);
+  void CallOnOrientation(nuiOrientation Orientation);
   bool CallOnRotation(uint Angle);
   void CallOnRescale(float NewScale);
 
@@ -969,7 +984,7 @@ private:
 
   nglContextInfo mContextInfo;
   StateChange mState;
-  nglDragAndDrop* mpDragged;
+  nglDragAndDrop* mpDragged { nullptr };
   nglTimer* mpAnimationTimer;
   nglTime mLastTick;
 
@@ -982,6 +997,10 @@ private:
   void AcquireDisplayLink();
   void ReleaseDisplayLink();
   friend CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* pNGLWindow);
+  
+public:
+  bool IsDragging() { return mpDragged != nullptr; }
+
 #endif
   
 #ifdef _WIN32_

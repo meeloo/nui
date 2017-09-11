@@ -283,6 +283,8 @@ void nuiMainWindow::Paint()
   //nuiStopWatch watch("nuiMainWindow::Paint");
   //  do
   //  {
+  if (GetLayoutOrientation() != mpNGLWindow->GetLayoutOrientation())
+    DispatchLayoutOrientation(mpNGLWindow->GetLayoutOrientation());
   GetIdealRect();
   SetLayout(nuiRect(0, 0, mpNGLWindow->GetWidth(), mpNGLWindow->GetHeight()));
   
@@ -1327,6 +1329,11 @@ bool nuiMainWindow::NGLWindow::OnMouseWheel(nglMouseInfo& rInfo)
 bool nuiMainWindow::NGLWindow::OnMouseCanceled (nglMouseInfo& rInfo)
 {
   return mpMainWindow->OnMouseCanceled(rInfo);
+}
+
+void nuiMainWindow::NGLWindow::OnOrientation(nuiOrientation Orientation)
+{
+  mpMainWindow->DispatchLayoutOrientation(Orientation);
 }
 
 bool nuiMainWindow::NGLWindow::OnRotation(uint Angle)

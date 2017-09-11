@@ -212,6 +212,14 @@ const nglChar* gpWindowErrorTable[] =
   self.view = pView;
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator
+                                :(id <UIViewControllerTransitionCoordinator>)coordinator
+{
+  [super viewWillTransitionToSize: size withTransitionCoordinator: coordinator];
+  mpNGLWindow->CallOnOrientation(size.width > size.height ? nuiHorizontal : nuiVertical);
+}
+
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
   return YES;

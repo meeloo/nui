@@ -402,7 +402,16 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   NSPoint p = [self mouseLocationOutsideOfEventStream];
   info.X = p.x;
   info.Y = [self contentRectForFrameRect:[self frame]].size.height - p.y;
-  mpNGLWindow->CallOnMouseUnclick(info);
+
+  if (mpNGLWindow->IsDragging())
+  {
+    mpNGLWindow->OnDropped(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
+    mpNGLWindow->OnDragStop(false);
+  }
+  else
+  {
+    mpNGLWindow->CallOnMouseUnclick(info);
+  }
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
@@ -414,7 +423,14 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   info.X = p.x;
   info.Y = [self contentRectForFrameRect:[self frame]].size.height - p.y;
   mpLastMouseMoved = theEvent;
-  mpNGLWindow->CallOnMouseMove(info);
+  if (mpNGLWindow->IsDragging())
+  {
+    mpNGLWindow->OnCanDrop(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
+  }
+  else
+  {
+    mpNGLWindow->CallOnMouseMove(info);
+  }
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -425,7 +441,14 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   NSPoint p = [self mouseLocationOutsideOfEventStream];
   info.X = p.x;
   info.Y = [self contentRectForFrameRect:[self frame]].size.height - p.y;
-  mpNGLWindow->CallOnMouseMove(info);
+  if (mpNGLWindow->IsDragging())
+  {
+    mpNGLWindow->OnCanDrop(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
+  }
+  else
+  {
+    mpNGLWindow->CallOnMouseMove(info);
+  }
 }
 
 ////
@@ -704,6 +727,10 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
            pasteboard:pboard
                source:self
             slideBack:YES];
+    }
+    else ///< Internal type for dnd assumed
+    {
+      mpNGLWindow->SetDraggedObject(pDragged);
     }
     //    else
     //    {
@@ -1056,6 +1083,20 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   //  }
   //
   // Allow other character to be handled (or not and beep)
+  
+  if (mpNGLWindow->IsDragging())
+  {
+    unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
+
+    switch (c)
+    {
+        // Handle [ESC] key
+      case 27: {
+        mpNGLWindow->OnDragStop(true);
+      }
+    }
+  }
+
   [super keyDown:event];
 }
 
