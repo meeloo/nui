@@ -252,7 +252,7 @@ class nuiStrokeTest : public nuiWidget
 {
 public:
 
-  nuiStrokeTest(nglContext* pContext)
+  nuiStrokeTest(nglContext* pContext) : mSink(this)
   {
     if (SetObjectClass("nuiStrokeTest"))
     {
@@ -291,6 +291,13 @@ public:
                     nuiRange(1, 0.01, 30, .01, .01, 0)
                     ));
 
+      AddAttribute(new nuiAttribute<float>
+                   (nglString("LengthMul"), nuiUnitSize,
+                    nuiMakeDelegate(this, &nuiStrokeTest::GetLengthMul),
+                    nuiMakeDelegate(this, &nuiStrokeTest::SetLengthMul),
+                    nuiRange(1, 0.96, 1.04, .001, .001, 0)
+                    ));
+      
       AddAttribute(new nuiAttribute<nuiLineJoin>
                    (nglString("LineJoin"), nuiUnitNone,
                     nuiMakeDelegate(this, &nuiStrokeTest::GetLineJoin),
@@ -320,7 +327,21 @@ public:
     box->SetDecoration(pDeco);
     AddChild(box);
 
-    char* attribs[] = {"StrokeWidth", "Feather", "AngleInc", "LengthInc", "Scale", "LineJoin", "LineCap", nullptr};
+    // Combo box for the presets:
+    nuiTreeNode* pSettings = new nuiTreeNode("Settings");
+    for (int i = 0; mSettings[i].mName; i++)
+    {
+      nuiTreeNode* pSetting = new nuiTreeNode(mSettings[i].mName);
+      pSetting->SetToken(new nuiToken<int>(i));
+      pSettings->AddChild(pSetting);
+    }
+    mpSettingsBox = new nuiComboBox(pSettings, true);
+    mpSettingsBox->SetSelected((uint32)0);
+    box->AddCell(mpSettingsBox);
+    mSink.Connect(mpSettingsBox->SelectionChanged, &nuiStrokeTest::SetSettings);
+    
+    // All the attributes
+    char* attribs[] = {"StrokeWidth", "Feather", "AngleInc", "LengthInc", "LengthMul", "Scale", "LineJoin", "LineCap", nullptr};
     
     for (int i = 0; attribs[i]; i++)
     {
@@ -331,8 +352,15 @@ public:
         box->AddCell(pEditor);
       }
     }
+
+    // To output the settings
+    nuiButton* printSettings = new nuiButton("Print Settings");
+    mSink.Connect(printSettings->Activated, &nuiStrokeTest::PrintSettings);
+    box->AddCell(printSettings);
   }
 
+  nuiEventSink<nuiStrokeTest> mSink;
+  
   void CreateShape()
   {
     if (mpShape)
@@ -374,6 +402,7 @@ public:
       //      length += ((float)(rand()) / (float)RAND_MAX) * 20;
       angle += mAngleInc;
       length += mLengthInc;
+      length *= mLengthMul;
     }
 
     Invalidate();
@@ -408,19 +437,172 @@ public:
   NUI_GETSETDO(float, Scale, Invalidate());
   NUI_GETSETDO(float, AngleInc, CreateShape());
   NUI_GETSETDO(float, LengthInc, CreateShape());
+  NUI_GETSETDO(float, LengthMul, CreateShape());
   NUI_GETSETDO(nuiLineJoin, LineJoin, CreateShape());
   NUI_GETSETDO(nuiLineCap, LineCap, CreateShape());
 private:
   nuiShape* mpShape = nullptr;
   nuiShaderProgram *mpShader = nullptr;
   nuiShaderState *mpShaderState = nullptr;
+  
+  typedef struct Settings
+  {
+    const char* mName;
+    float mStrokeWidth;
+    float mScale;
+    float mAngleInc;
+    float mLengthInc;
+    float mLengthMul;
+    float mFeather;
+    nuiLineJoin mLineJoin;
+    nuiLineCap mLineCap;
+  } Settings;
+
+  void ApplySettings(const Settings& settings)
+  {
+    nuiAttrib<float>(GetAttribute("StrokeWidth")).Set(settings.mStrokeWidth);
+    nuiAttrib<float>(GetAttribute("Scale")).Set(settings.mScale);
+    nuiAttrib<float>(GetAttribute("AngleInc")).Set(settings.mAngleInc);
+    nuiAttrib<float>(GetAttribute("LengthInc")).Set(settings.mLengthInc);
+    nuiAttrib<float>(GetAttribute("LengthMul")).Set(settings.mLengthMul);
+    nuiAttrib<float>(GetAttribute("Feather")).Set(settings.mFeather);
+    nuiAttrib<nuiLineJoin>(GetAttribute("LineJoin")).Set(settings.mLineJoin);
+    nuiAttrib<nuiLineCap>(GetAttribute("LineCap")).Set(settings.mLineCap);
+    CreateShape();
+  }
+  
   float mStrokeWidth = 5;
   float mScale = 1;
   float mAngleInc = 0.01;
   float mLengthInc = 20.0;
+  float mLengthMul = 1.001;
   float mFeather = 0.5;
   nuiLineJoin mLineJoin = nuiLineJoinRound;
   nuiLineCap mLineCap = nuiLineCapSquare;
+  
+  const Settings mSettings[8] = {
+    {
+      "Ugly Default",
+      5, //    float mStrokeWidth;
+      1, //    float mScale;
+      0.01, //    float mAngleInc;
+      20.0, //    float mLengthInc;
+      1.001, //    float mLengthMul;
+      0.5, //    float mFeather;
+      nuiLineJoinRound, //    nuiLineJoin mLineJoin;
+      nuiLineCapSquare //    nuiLineCap mLineCap;
+    },
+    
+    {
+      "Sphere??",
+      1.938, //    float mStrokeWidth;
+      1, //    float mScale;
+      0.1224997, //    float mAngleInc;
+      0.22534391, //    float mLengthInc;
+      0.9992494, //    float mLengthMul;
+      0.7125, //    float mFeather;
+      nuiLineJoinRound, //    nuiLineJoin mLineJoin;
+      nuiLineCapSquare //    nuiLineCap mLineCap;
+    },
+    
+    {
+      "Miters Everywhere",
+      11.604180, //    float mStrokeWidth;
+      1.000000, //    float mScale;
+      2.052759, //    float mAngleInc;
+      30.000000, //    float mLengthInc;
+      1.020024, //    float mLengthMul;
+      0.487500, //    float mFeather;
+      nuiLineJoinMiter, //    nuiLineJoin mLineJoin;
+      nuiLineCapSquare //    nuiLineCap mLineCap;
+    },
+    
+    {
+      "Heavy & Round",
+      37.630783, //    float mStrokeWidth;
+      1.000000, //    float mScale;
+      2.052759, //    float mAngleInc;
+      30.000000, //    float mLengthInc;
+      1.040000, //    float mLengthMul;
+      0.487500, //    float mFeather;
+      nuiLineJoinRound, //    nuiLineJoin mLineJoin;
+      nuiLineCapSquare //    nuiLineCap mLineCap;
+    },
+
+    {
+      "Big Spiral",
+      70.000000, //    float mStrokeWidth;
+      1.000000, //    float mScale;
+      0.122500, //    float mAngleInc;
+      4.255250, //    float mLengthInc;
+      0.993750, //    float mLengthMul;
+      0.500000, //    float mFeather;
+      nuiLineJoinRound, //    nuiLineJoin mLineJoin;
+      nuiLineCapSquare //    nuiLineCap mLineCap;
+    },
+    
+    {
+      "Another Spiral",
+      70.000000, //    float mStrokeWidth;
+      1.000000, //    float mScale;
+      0.122500, //    float mAngleInc;
+      4.255250, //    float mLengthInc;
+      0.997750, //    float mLengthMul;
+      0.500000, //    float mFeather;
+      nuiLineJoinRound, //    nuiLineJoin mLineJoin;
+      nuiLineCapSquare //    nuiLineCap mLineCap;
+    },
+
+    {
+      "Some squares",
+      31.725588, //    float mStrokeWidth;
+      1.000000, //    float mScale;
+      1.565259, //    float mAngleInc;
+      30.000000, //    float mLengthInc;
+      1.040000, //    float mLengthMul;
+      0.487500, //    float mFeather;
+      nuiLineJoinRound, //    nuiLineJoin mLineJoin;
+      nuiLineCapSquare //    nuiLineCap mLineCap;
+    },
+
+
+    { 0 }
+
+  };
+
+  void PrintSettings(const nuiEvent& event)
+  {
+    nglString Join, Cap;
+    GetAttribute("LineJoin").ToString(Join);
+    GetAttribute("LineCap").ToString(Cap);
+    NGL_OUT(
+            "{\n\
+  \"new setting\",\n\
+  %f, //    float mStrokeWidth;\n\
+  %f, //    float mScale;\n\
+  %f, //    float mAngleInc;\n\
+  %f, //    float mLengthInc;\n\
+  %f, //    float mLengthMul;\n\
+  %f, //    float mFeather;\n\
+  nuiLineJoin%s, //    nuiLineJoin mLineJoin;\n\
+  nuiLineCap%s //    nuiLineCap mLineCap;\n\
+}\n", mStrokeWidth,
+            mScale,
+            mAngleInc,
+            mLengthInc,
+            mLengthMul,
+            mFeather,
+            Join.GetChars(),
+            Cap.GetChars());
+  }
+  
+  nuiComboBox* mpSettingsBox = nullptr;
+  void SetSettings(const nuiEvent&event)
+  {
+    int index;
+    nuiGetTokenValue(mpSettingsBox->GetSelected()->GetToken(), index);
+    ApplySettings(mSettings[index]);
+  }
 };
 
 
