@@ -419,8 +419,10 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   rect = [win frame];
   NSRect clientRect = [win contentRectForFrameRect: rect];
   CAMetalLayer *layer = (CAMetalLayer *)self.layer;
-  float scale = self.window.backingScaleFactor;
+  double scale = self.window.backingScaleFactor;
   layer.drawableSize = CGSizeMake(clientRect.size.width * scale, clientRect.size.height * scale);
+  NGL_OUT("Window resized to %d x %d (content scale = %f)\n", (int)clientRect.size.width, (int)clientRect.size.height, (float)layer.contentsScale);
+  NGL_OUT("Changed drawable size to %d x %d\n", (int)layer.drawableSize.width, (int)layer.drawableSize.height);
   [win resize: clientRect.size];
 
 //  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
@@ -833,7 +835,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 //////////
 - (void)resize: (NSSize) size
 {
-  //printf("resize %f x %f\n", size.width, size.height);
+  NGL_OUT("Cocoa Window resize %f x %f\n", size.width, size.height);
   mpNGLWindow->CallOnResize(ToNearest(size.width), ToNearest(size.height));
 }
 
@@ -1729,6 +1731,9 @@ void nglWindow::BeginSession()
       id<CAMetalDrawable> drawable = [layer nextDrawable];
       mMetalDrawable = (void*)CFBridgingRetain(drawable);
       id<MTLTexture> texture = drawable.texture;
+      NGL_ASSERT(texture.width == layer.drawableSize.width);
+      NGL_ASSERT(texture.height == layer.drawableSize.height);
+      NGL_OUT("Next drawable size is %d x %d\n", (int)texture.width, (int)texture.height);
       mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
 
       MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];

@@ -219,6 +219,9 @@ if (HasExtension("GL_ARB_texture_compression"))
   float GetScale() const;
   float GetScaleInv() const;
 
+  virtual uint GetWidth() const = 0;
+  virtual uint GetHeight() const = 0;
+
   nglLock& GetLock() noexcept { return mLock; }
 
 

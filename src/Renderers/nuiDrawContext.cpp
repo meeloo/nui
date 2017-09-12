@@ -1848,7 +1848,6 @@ void nuiDrawContext::DrawSliderForeground(nuiSlider* pSlider)
 nuiDrawContext *nuiDrawContext::CreateDrawContext(const nuiRect& rRect, nuiPainter* pPainter)
 {
   nuiDrawContext* pC = new nuiDrawContext(rRect);
-  pPainter->SetSize(ToNearest(rRect.GetWidth()), ToNearest(rRect.GetHeight()));
   pC->SetPainter(pPainter);
   pC->Set2DProjectionMatrix(rRect);
   return pC;

@@ -51,7 +51,6 @@ public:
   nuiGLPainter(nglContext* pContext);
   virtual ~nuiGLPainter();
   
-  virtual void SetSize(uint32 sizex, uint32 sizey);
   virtual void StartRendering();
   virtual void SetState(const nuiRenderState& rState, bool ForceApply = false);
   virtual void DrawArray(nuiRenderArray* pArray);
@@ -194,8 +193,6 @@ protected:
 
   GLint mDefaultFramebuffer;
   GLint mDefaultRenderbuffer;
-  uint32 mOriginalWidth;
-  uint32 mOriginalHeight;
 
   nuiShaderProgram* mpShader = nullptr;
   nuiShaderState* mpShaderState = nullptr;
@@ -234,6 +231,10 @@ protected:
   std::vector<nuiRenderArray*> mDestroyedRenderArrays;
 
   bool mViewportChanged = true;
+  
+  virtual int32 GetCurrentWidth() const;
+  virtual int32 GetCurrentHeight() const;
+
 };
 
 bool nuiCheckForGLErrorsReal();

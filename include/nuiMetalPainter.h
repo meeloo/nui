@@ -46,7 +46,6 @@ public:
   nuiMetalPainter(nglContext* pContext);
   virtual ~nuiMetalPainter();
   
-  virtual void SetSize(uint32 sizex, uint32 sizey);
   virtual void StartRendering();
   virtual void SetState(const nuiRenderState& rState, bool ForceApply = false);
   virtual void DrawArray(nuiRenderArray* pArray);
@@ -127,11 +126,6 @@ protected:
   nglVector2f mTextureTranslate;
   nglVector2f mTextureScale;
 
-  GLint mDefaultFramebuffer;
-  GLint mDefaultRenderbuffer;
-  uint32 mOriginalWidth;
-  uint32 mOriginalHeight;
-
   nuiShaderProgram* mpShader = nullptr;
   nuiShaderState* mpShaderState = nullptr;
   
@@ -158,6 +152,10 @@ protected:
   
   void* mDrawable = nullptr;
   void* mBackBuffer = nullptr;
+  
+  virtual int32 GetCurrentWidth() const;
+  virtual int32 GetCurrentHeight() const;
+
 };
 
 #endif //   #ifndef __NUI_NO_GL__

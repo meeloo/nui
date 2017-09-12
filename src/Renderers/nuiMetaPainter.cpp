@@ -243,17 +243,6 @@ void nuiMetaPainter::DrawArray(nuiRenderArray* pRenderArray)
 }
 
 
-void nuiMetaPainter::SetSize(uint32 w, uint32 h)
-{
-//  printf("nuiMetaPainter::SetSize(%d, %d)\n", w, h);
-  StoreOpCode(eSetSize);
-  StoreInt((int32)w);
-  StoreInt((int32)h);
-
-  mWidth = w;
-  mHeight = h;
-}
-
 void nuiMetaPainter::DrawWidget(nuiDrawContext* pContext, nuiWidget* pWidget)
 {
   if (mDrawChildrenImmediat)
@@ -509,7 +498,6 @@ void nuiMetaPainter::Reset(nuiPainter const * pFrom)
   if (pFrom)
   {
     mpState = &pFrom->GetState();
-    pFrom->GetSize(mWidth, mHeight);
 //    bool clip = pFrom->GetClipRect(mpClippingStack.top(), false);
 
 //    nuiMatrix m(pFrom->GetMatrix());
@@ -576,14 +564,6 @@ void nuiMetaPainter::PartialReDraw(nuiDrawContext* pContext, int32 first, int32 
     OpCode code = FetchOpCode();
     switch (code)
     {
-      case eSetSize:
-      {
-        int w = FetchInt();
-        int h = FetchInt();
-        if (draw)
-          pPainter->SetSize(w, h);
-        break;
-      }
       case eStartRendering:
         if (draw)
         {
@@ -847,13 +827,6 @@ nglString nuiMetaPainter::GetCurrentOperationDescription() const
   OpCode code = FetchOpCode();
   switch (code)
   {
-    case eSetSize:
-      {
-        int32 w = FetchInt();
-        int32 h = FetchInt();
-        str.CFormat("SetSize(%d, %d)", w, h);
-      }
-      break;
     case eStartRendering:
       {
         nuiSize x, y;
@@ -1069,10 +1042,6 @@ void nuiMetaPainter::UpdateIndices() const
     OpCode code = FetchOpCode();
     switch (code)
     {
-      case eSetSize:
-        FetchInt();
-        FetchInt();
-        break;
       case eStartRendering:
         break;
       case eSetState:
@@ -1256,5 +1225,15 @@ void nuiMetaPainter::SetPriority(int64 priority)
 int64 nuiMetaPainter::GetPriority() const
 {
   return mPriority;
+}
+
+int32 nuiMetaPainter::GetCurrentWidth() const
+{
+  return 0;
+}
+
+int32 nuiMetaPainter::GetCurrentHeight() const
+{
+  return 0;
 }
 

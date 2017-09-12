@@ -849,19 +849,6 @@ void nuiGLPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   //ApplyState(rState, ForceApply);
 }
 
-void nuiGLPainter::SetSize(uint32 w, uint32 h)
-{
-  NUI_RETURN_IF_RENDERING_DISABLED;
-  if (mWidth == w && mHeight == h)
-    return;
-
-  NGL_DEBUG(NGL_LOG("painter", NGL_LOG_DEBUG, "nuiGLPainter::SetSize(%d, %d)\n", w, h);)
-//  NGL_OUT("GLPainter::SetSize %d x %d -> %d x %d\n", mWidth, mHeight, w, h);
-  mWidth = w;
-  mHeight = h;
-  mViewportChanged = true;
-}
-
 void nuiGLPainter::ApplyTexture(const nuiRenderState& rState, bool ForceApply, int slot)
 {
 #ifdef DEBUG
@@ -2259,18 +2246,11 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     glGetIntegerv(GL_RENDERBUFFER_BINDING_NUI, (GLint *) &mDefaultRenderbuffer);
     nuiCheckForGLErrors();
     //#endif
-    mOriginalWidth = mWidth;
-    mOriginalHeight = mHeight;
-  }
-  else if (mpSurface && !pSurface)
-  {
-    SetSize(mOriginalWidth, mOriginalHeight);
   }
 
   if (pSurface)
   {
     pSurface->Acquire();
-    SetSize(pSurface->GetWidth(), pSurface->GetHeight());
   }
   
   if (mpSurface)
@@ -2290,8 +2270,6 @@ void nuiGLPainter::SetSurface(nuiSurface* pSurface)
     
     GLint width = (GLint)pSurface->GetWidth();
     GLint height = (GLint)pSurface->GetHeight();
-
-    //SetSize(width, height);
 
     float scale = mpContext->GetScale();
     width *= scale;
@@ -3061,5 +3039,18 @@ nglCriticalSection nuiGLPainter::mFramebuffersCS("mFramebuffersCS");
 nglCriticalSection nuiGLPainter::mFrameArraysCS("mFrameArraysCS");
 nglCriticalSection nuiGLPainter::mRenderArraysCS("mRenderArraysCS");
 
+int32 nuiGLPainter::GetCurrentWidth() const
+{
+  if (mpSurface)
+    return mpSurface->GetWidth();
+  return mpContext->GetWidth();
+}
+
+int32 nuiGLPainter::GetCurrentHeight() const
+{
+  if (mpSurface)
+    return mpSurface->GetHeight();
+  return mpContext->GetHeight();
+}
 
 #endif //   #ifndef __NUI_NO_GL__

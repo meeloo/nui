@@ -69,7 +69,6 @@ class nuiPainter : public nuiRefCount
 public:
   nuiPainter(nglContext* pContext = NULL);
 
-  virtual void SetSize(uint32 sizex, uint32 sizey) = 0;
   virtual void StartRendering();
   virtual void BeginSession() = 0;
   virtual void EndSession() = 0;
@@ -145,8 +144,6 @@ protected:
 
   const nuiRenderState mDefaultState;
   const nuiRenderState* mpState = &mDefaultState;
-  uint32 mWidth;
-  uint32 mHeight;
   uint32 mAngle;
 
   std::stack<nuiMatrix> mMatrixStack;
@@ -165,8 +162,9 @@ protected:
   void AddNeedTextureBackingStore();
   void DelNeedTextureBackingStore();
 
-  int32 GetCurrentWidth() const;
-  int32 GetCurrentHeight() const;
+  virtual int32 GetCurrentWidth() const = 0;
+  virtual int32 GetCurrentHeight() const = 0;
+  
   virtual void DestroyTexture(nuiTexture* pTexture) = 0;
   static std::set<nuiPainter*> gpPainters;
 };

@@ -28,7 +28,6 @@ public:
   nuiMetaPainter(nglContext* pContext = NULL);
   virtual ~nuiMetaPainter();
 
-  virtual void SetSize(uint32 sizex, uint32 sizey);
   virtual void StartRendering();
   virtual void SetState(const nuiRenderState& rState, bool ForceApply = false);
   virtual void SetSurface(nuiSurface* pSurface);
@@ -111,7 +110,6 @@ protected:
   // Rendering Operations OpCodes:
   enum OpCode
   {
-    eSetSize,
     eStartRendering,
     eSetState,
     eDrawArray,
@@ -195,6 +193,9 @@ protected:
 //  virtual void OnReleased() const;
     int32 mClippingDepth = 0;
   int64 mPriority = std::numeric_limits<int64>::max();
+  
+  virtual int32 GetCurrentWidth() const;
+  virtual int32 GetCurrentHeight() const;
 };
 
 #endif // __nuiMetaPainter_h__

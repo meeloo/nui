@@ -432,8 +432,6 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   gpPainters.insert(this);
 
   mTwoPassBlend = false;
-  mDefaultFramebuffer = 0;
-  mDefaultRenderbuffer = 0;
   mClientVertex = false;
   mClientColor = false;
   mClientTexCoord = false;
@@ -663,7 +661,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   NUI_RETURN_IF_RENDERING_DISABLED;
   
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
-  
+
   // blending
   if (mFinalState.mBlending != rState.mBlending)
   {
@@ -774,28 +772,6 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
     y = ToNearest(clip.Top());
     w = ToNearest(clip.GetWidth());
     h = ToNearest(clip.GetHeight());
-
-    if (x < 0)
-    {
-      w += x;
-      x = 0;
-    }
-
-    if (y < 0)
-    {
-      h += y;
-      y = 0;
-    }
-    
-    if (x + w > width)
-    {
-      w = width - x;
-    }
-    
-    if (y + h > height)
-    {
-      h = height - y;
-    }
   }
   else
   {
@@ -805,9 +781,32 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
     h = height;
   }
 
+  if (x < 0)
+  {
+    w += x;
+    x = 0;
+  }
+  
+  if (y < 0)
+  {
+    h += y;
+    y = 0;
+  }
+  
+  if (x + w > width)
+  {
+    w = width - x;
+  }
+  
+  if (y + h > height)
+  {
+    h = height - y;
+  }
+
   mScissorIsFlat = (w == 0 || h == 0);
   if (!mScissorIsFlat)
   {
+
     x *= scale;
     y *= scale;
     w *= scale;
@@ -826,19 +825,6 @@ void nuiMetalPainter::SetState(const nuiRenderState& rState, bool ForceApply)
   NUI_RETURN_IF_RENDERING_DISABLED;
 
   mpState = &rState;
-}
-
-void nuiMetalPainter::SetSize(uint32 w, uint32 h)
-{
-  NUI_RETURN_IF_RENDERING_DISABLED;
-  if (mWidth == w && mHeight == h)
-    return;
-
-  NGL_DEBUG(NGL_LOG("painter", NGL_LOG_DEBUG, "nuiMetalPainter::SetSize(%d, %d)\n", w, h);)
-//  NGL_OUT("GLPainter::SetSize %d x %d -> %d x %d\n", mWidth, mHeight, w, h);
-  mWidth = w;
-  mHeight = h;
-  mViewportChanged = true;
 }
 
 void nuiMetalPainter::ApplyTexture(const nuiRenderState& rState, int slot)
@@ -1719,19 +1705,10 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
 {
 //  NGL_OUT("nuiMetalPainter::SetSurface %p\n", pSurface);
   mViewportChanged = true;
-//  if (!mpSurface && pSurface)
-//  {
-//  }
-//  else if (mpSurface && !pSurface)
-//  {
-//    SetSize(mOriginalWidth, mOriginalHeight);
-//  }
-//
 
   if (pSurface)
   {
     pSurface->Acquire();
-    SetSize(pSurface->GetWidth(), pSurface->GetHeight());
   }
   
   if (mpSurface)
@@ -1744,8 +1721,6 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
   {
     GLint width = (GLint)pSurface->GetWidth();
     GLint height = (GLint)pSurface->GetHeight();
-
-    //SetSize(width, height);
 
     float scale = mpContext->GetScale();
     width *= scale;
@@ -2005,5 +1980,19 @@ nglCriticalSection nuiMetalPainter::mTexturesCS("mTexturesCS");
 nglCriticalSection nuiMetalPainter::mFrameArraysCS("mFrameArraysCS");
 nglCriticalSection nuiMetalPainter::mRenderArraysCS("mRenderArraysCS");
 
+
+int32 nuiMetalPainter::GetCurrentWidth() const
+{
+  if (mpSurface)
+    return mpSurface->GetWidth();
+  return mpContext->GetWidth();
+}
+
+int32 nuiMetalPainter::GetCurrentHeight() const
+{
+  if (mpSurface)
+    return mpSurface->GetHeight();
+  return mpContext->GetHeight();
+}
 
 #endif //   #ifndef __NUI_NO_GL__

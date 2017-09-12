@@ -16,8 +16,6 @@ std::set<nuiPainter*> nuiPainter::gpPainters;
 nuiPainter::nuiPainter(nglContext* pContext)
 {
   ResetStats();
-  mWidth = 0;
-  mHeight = 0;
   mpClippingStack.push(nuiMaxClipper);
   mMatrixStack.push(nuiMatrix());
   mProjectionMatrixStack.push(nuiMatrix());
@@ -340,21 +338,6 @@ int32 nuiPainter::GetAngle() const
     return 0;
   return mAngle;
 }
-
-int32 nuiPainter::GetCurrentWidth() const
-{
-  if (mpSurface)
-    return mpSurface->GetWidth();
-  return mWidth;
-}
-
-int32 nuiPainter::GetCurrentHeight() const
-{
-  if (mpSurface)
-    return mpSurface->GetHeight();
-  return mHeight;
-}
-
 
 // Debug:
 void nuiPainter::AddBreakPoint()
