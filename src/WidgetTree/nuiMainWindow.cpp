@@ -285,7 +285,7 @@ void nuiMainWindow::Paint()
   //  {
   GetIdealRect();
   nuiRect rect(0, 0, mpNGLWindow->GetWidth(), mpNGLWindow->GetHeight());
-  NGL_OUT("SetLayout from top: %f x %f (%s)\n", (float)(mpNGLWindow->GetWidth() * GetScale()), (float)(mpNGLWindow->GetHeight() * GetScale()), rect.GetValue().GetChars());
+//  NGL_OUT("SetLayout from top: %f x %f (%s)\n", (float)(mpNGLWindow->GetWidth() * GetScale()), (float)(mpNGLWindow->GetHeight() * GetScale()), rect.GetValue().GetChars());
   SetLayout(rect);
   
   //  } while (IsTrashFull());
