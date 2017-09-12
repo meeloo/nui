@@ -683,6 +683,10 @@ static nuiRenderArray* StrokeSubPath(const std::vector<nuiVector>& subpath, floa
     // determine the normal of each of the 3 segments (previous, current, next)
     nuiVector n0 = nuiVector( -v0[1], v0[0], v0[2], 0 ); // perpendicular to [p0, p1]
     nuiVector n1 = nuiVector( -v1[1], v1[0], v1[2], 0 ); // perpendicular to [p1, p2]
+    if (n0.SquaredLength() == 0)
+      n0 = nuiVector(1, 0, 0);
+    if (n1.SquaredLength() == 0)
+      n1 = nuiVector(1, 0, 0);
 
     // determine miter lines by averaging the normals of the 2 segments
     nuiVector miter = n0 + n1;	// miter at start of current segment
