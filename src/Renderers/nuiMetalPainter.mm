@@ -593,7 +593,7 @@ void nuiMetalPainter::SetViewport()
 //    mSurfaceMatrix.SetScaling(1.0f, 1.0f, 1.0f);
   }
   
-  float angle = GetAngle();
+//  float angle = GetAngle();
   //  if (angle != 0.0f)
   //  {
   //    mSurfaceMatrix.Rotate(angle, 0 ,0, 1);
@@ -679,7 +679,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   if (mFinalState.mBlendFunc != rState.mBlendFunc)
   {
     mFinalState.mBlendFunc = rState.mBlendFunc;
-    GLenum src, dst;
+//    GLenum src, dst;
 //    nuiGetBlendFuncFactors(rState.mBlendFunc, src, dst);
 //    BlendFuncSeparate(src, dst);
   }
@@ -705,12 +705,16 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   {
     switch (mFinalState.mCullingMode)
     {
-      case GL_FRONT:
+      case eCullingFront:
         [encoder setCullMode:MTLCullModeFront];
         break;
         
-      case GL_BACK:
+      case eCullingBack:
         [encoder setCullMode:MTLCullModeBack];
+        break;
+      
+      case eCullingBoth:
+        [encoder setCullMode:MTLCullModeNone];
         break;
     }
   }
@@ -754,7 +758,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   if (mFinalState.mColorBuffer != rState.mColorBuffer)
   {
     mFinalState.mColorBuffer = rState.mColorBuffer;
-    GLboolean m = mFinalState.mColorBuffer ? GL_TRUE : GL_FALSE;
+//    GLboolean m = mFinalState.mColorBuffer ? GL_TRUE : GL_FALSE;
 //    glColorMask(m, m, m, m);
   }
 
@@ -1486,8 +1490,6 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
   float Width = pTexture->GetUnscaledWidth();
   float Height = pTexture->GetUnscaledHeight();
 
-  bool changedctx = false;
-
   nglCriticalSectionGuard tg(mTexturesCS);
   std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
   if (it == mTextures.end())
@@ -1517,15 +1519,8 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
     bool firstload = false;
     bool reload = info.mReload;
 
-    uint i;
     if (info.mTexture == nullptr)
     { // Generate a texture
-      //      if (mpSharedContext)
-      //      {
-      //        mpSharedContext->MakeCurrent();
-      //        changedctx = true;
-      //      }
-
       //NGL_OUT("nuiMetalPainter::UploadTexture 0x%x : '%s' / %d\n", pTexture, pTexture->GetSource().GetChars(), info.mTexture);
       firstload = true;
       reload = true;
@@ -1539,16 +1534,15 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
       uint32 type = 8;
       MTLPixelFormat mtlPixelFormat = MTLPixelFormatInvalid;
       GLint pixelformat = 0;
-      GLbyte* pBuffer = NULL;
-      GLbyte* pNewBuffer = nullptr;
-      bool allocatedBuffer = false;
+      uint8* pBuffer = NULL;
+      uint8* pNewBuffer = nullptr;
       uint32 bytesPerLine = 0;
       
       if (pImage)
       {
         type = pImage->GetBitDepth();
         pixelformat = pImage->GetPixelFormat();
-        pBuffer = (GLbyte*)pImage->GetBuffer();
+        pBuffer = (uint8*)pImage->GetBuffer();
         bytesPerLine = pTexture->GetImage()->GetBytesPerLine();
         
         //#ifndef NUI_IOS
@@ -1569,8 +1563,8 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
             { //  Crude convertion from 24 to 32 bits images:
               if (pBuffer)
               {
-                uint32 count = ToNearest(Width) * ToNearest(Height);
-                pNewBuffer = new GLbyte[4 * count];
+                uint32 count = (uint32)ToNearest(Width) * (uint32)ToNearest(Height);
+                pNewBuffer = new uint8[4 * count];
                 for (uint32 i = 0; i < count; i++)
                 {
                   pNewBuffer[i * 4 + 0] = pBuffer[i * 3 + 0];
@@ -1609,13 +1603,15 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         if (!texture)
         {
           MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlPixelFormat
-                                                                                                width:ToNearest(Width) height:ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
+                                                                                                width:(uint32)ToNearest(Width) height:(uint32)ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
           descriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
           texture = [device newTextureWithDescriptor:descriptor];
-          texture.label = (__bridge NSString*)pTexture->GetSource().ToCFString();
+          CFStringRef str = pTexture->GetSource().ToCFString();
+          texture.label = (__bridge NSString*)str;
+          CFRelease(str);
         }
         
-        MTLRegion region = MTLRegionMake2D(0, 0, ToNearest(Width), ToNearest(Height));
+        MTLRegion region = MTLRegionMake2D(0, 0, (uint32)ToNearest(Width), (uint32)ToNearest(Height));
         if (pBuffer)
         {
           NGL_ASSERT(!pSurface);
@@ -1748,8 +1744,6 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     //NGL_OUT("nuiMetalPainter::CreateSurface %p\n", pSurface);
     NGL_ASSERT(pSurface != nullptr);
     
-    id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
-    
 #if defined DEBUG && defined _UIKIT_
     if (pTexture)
       mpContext->StartMarkerGroup(pTexture->GetSource().GetChars());
@@ -1827,7 +1821,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
       }
       else
       {
-        int32 depth = pSurface->GetDepth();
+//        int32 depth = pSurface->GetDepth();
         //      if (depth <= 16)
         //        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT16, width, height);
         //      else if (depth <= 24)
@@ -1868,7 +1862,6 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
       //                                 info.mStencilbuffer);
     }
     
-    id<MTLCommandQueue> commandQueue = (__bridge id<MTLCommandQueue>)mpContext->GetMetalCommandQueue();
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
     id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
     [commandEncoder endEncoding];
