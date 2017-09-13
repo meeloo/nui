@@ -206,7 +206,8 @@ SHADER_STRING
   
   vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
   vert.Color = vertex_in.mColor;
-  vert.Normal = transforms.ModelViewMatrix * vertex_in.mNormal;
+//  vert.Normal = transforms.ModelViewMatrix * vertex_in.mNormal;
+  vert.Normal = vertex_in.mNormal;
   vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
@@ -240,6 +241,8 @@ SHADER_STRING
     float afwidth = feather * length(diff);
     float coverage = smoothstep(-afwidth, afwidth, distance);
     float alpha = (1.0 - sqrt(coverage));
+//    alpha = 1.0 - ((coverage));
+//    alpha = 1.0 - smoothstep(-feather, feather, coverage);
     return vert.Color * alpha;
   }
 }
