@@ -137,6 +137,7 @@ protected:
   nuiShaderProgram* mpShader_DifuseColor;
   nuiShaderProgram* mpShader_VertexColor;
   nuiShaderProgram* mpShader_ClearColor;
+  void* mpClearColor_pipelineDescriptor;
   
   nuiMatrix mSurfaceMatrix;
   

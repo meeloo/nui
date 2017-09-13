@@ -407,6 +407,9 @@ public:
       length += mLengthInc;
       length *= mLengthMul;
     }
+    
+    delete mpObj;
+    mpObj = mpShape->Stroke(1.0, mStrokeWidth, mLineJoin, mLineCap, 1.);
 
     Invalidate();
   }
@@ -426,16 +429,21 @@ public:
     pContext->PushMatrix();
     pContext->Translate(mRect.GetWidth()/2, mRect.GetHeight()/2);
     pContext->Scale(mScale, mScale);
-    nuiRenderObject* pObj = mpShape->Stroke(1.0, mStrokeWidth, mLineJoin, mLineCap, 1.);
-    pContext->DrawObject(*pObj);
-    delete pObj;
+    uint32 count = mpObj->GetSize();
+    for (uint32 i = 0; i < count; i++)
+    {
+      nuiRenderArray* pArray = mpObj->GetArray(i);
+      pArray->Acquire();
+      pContext->DrawArray(pArray);
+    }
+
     pContext->PopMatrix();
 
     DrawChildren(pContext);
     return true;
   }
 
-  NUI_GETSETDO(float, StrokeWidth, Invalidate());
+  NUI_GETSETDO(float, StrokeWidth, CreateShape());
   NUI_GETSETDO(float, Feather, Invalidate());
   NUI_GETSETDO(float, Scale, Invalidate());
   NUI_GETSETDO(float, AngleInc, CreateShape());
@@ -447,6 +455,7 @@ private:
   nuiShape* mpShape = nullptr;
   nuiShaderProgram *mpShader = nullptr;
   nuiShaderState *mpShaderState = nullptr;
+  nuiRenderObject* mpObj = nullptr;
   
   typedef struct Settings
   {

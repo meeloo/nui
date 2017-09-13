@@ -510,6 +510,17 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_ClearColor = new nuiShaderProgram(mpContext, "ClearColor");
     mpShader_ClearColor->AddShader(eMetalShader, ClearColor_VTX);
     mpShader_ClearColor->Link();
+
+    nuiRenderState state(*mpState);
+    state.mBlending = false;
+    MTLRenderPipelineDescriptor* pipelineDesc = (__bridge MTLRenderPipelineDescriptor*) mpShader_ClearColor->NewMetalPipelineDescriptor(state);
+    
+    MTLVertexDescriptor *vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];
+    vertexDescriptor.layouts[0].stride = 0;
+    vertexDescriptor.layouts[0].stepFunction = MTLVertexStepFunctionConstant;
+    
+    pipelineDesc.vertexDescriptor = vertexDescriptor;
+    mpClearColor_pipelineDescriptor = (void*)CFBridgingRetain(pipelineDesc);
   }
 }
 
@@ -922,14 +933,8 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
   nuiRenderState state(*mpState);
   state.mBlending = false;
-  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) CFBridgingRelease(mpShader_ClearColor->NewMetalPipelineDescriptor(state));
+  MTLRenderPipelineDescriptor* pipelineDesc = (__bridge MTLRenderPipelineDescriptor*)mpClearColor_pipelineDescriptor;
 
-  MTLVertexDescriptor *vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];  
-  vertexDescriptor.layouts[0].stride = 0;
-  vertexDescriptor.layouts[0].stepFunction = MTLVertexStepFunctionConstant;
-  
-  pipelineDesc.vertexDescriptor = vertexDescriptor;
-  
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
   id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
   NSError* err = nil;
@@ -939,7 +944,6 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
     NGL_ASSERT(0);
     NGL_OUT("Error creating MTLRenderPipelineState: %s\n", err.localizedDescription.UTF8String);
   }
-  
   
   [encoder setRenderPipelineState:pipelineState];
   [encoder setFragmentBytes:c length:4*4 atIndex:0];
@@ -1251,7 +1255,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
   
   // Create the metal pipeline descriptor:
-  MTLRenderPipelineDescriptor* pipelineDesc = (MTLRenderPipelineDescriptor*) CFBridgingRelease(mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState));
+  MTLRenderPipelineDescriptor* pipelineDesc = (__bridge MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
   
   {
     // Uniforms

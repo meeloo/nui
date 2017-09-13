@@ -731,6 +731,9 @@ nuiShaderProgram::~nuiShaderProgram()
     NGL_ASSERT(it != gpPrograms.end());
     gpPrograms.erase(it);
   }
+  
+  for (auto it : mMetalPipelines)
+    CFBridgingRelease(it.second);
 }
 
 void nuiShaderProgram::AddShaderFromPath(nuiShaderKind shaderType, const nglPath& rPath)
@@ -864,8 +867,26 @@ void nuiGetMetalBlendFuncFactors(nuiBlendFunc Func, MTLBlendFactor& src, MTLBlen
   dst = GLToMetalBlendFactor(dstGL);
 }
 
+uint64 nuiGetHashFromRenderState(const nuiRenderState& rState)
+{
+  uint64 hash = 0;
+  if (rState.mBlending)
+    hash |= 1;
+  hash |= ((uint32)rState.mBlendFunc) << 1;
+  return hash;
+}
+
 void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRenderState) const // MTLRenderPipelineDescriptor*
 {
+  uint64 hash = nuiGetHashFromRenderState(rRenderState);
+  auto it = mMetalPipelines.find(hash);
+  if (it != mMetalPipelines.end())
+  {
+    MTLRenderPipelineDescriptor *descriptor = (__bridge MTLRenderPipelineDescriptor*)it->second;
+    CFBridgingRetain(descriptor);
+    return (__bridge void*)descriptor;
+  }
+  
   CAMetalLayer* metalLayer = (__bridge CAMetalLayer*)mpContext->GetMetalLayer();
   MTLRenderPipelineDescriptor *descriptor = [MTLRenderPipelineDescriptor new];
   descriptor.vertexFunction = (__bridge id<MTLFunction>)mMetalVertexFunction;
@@ -915,7 +936,10 @@ void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRender
   
   descriptor.vertexDescriptor = vertexDescriptor;
   
-  return (void*)CFBridgingRetain(descriptor);
+  void* pipeline = (void*)CFBridgingRetain(descriptor);
+  mMetalPipelines[hash] = pipeline;
+  CFBridgingRetain(descriptor);
+  return pipeline;
 //  return (__bridge void*)descriptor;
 }
 

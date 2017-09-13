@@ -255,6 +255,8 @@ private:
   void ParseStructMember(int depth, const nglString& parentName, void* _member);
   void ParseArgument(const char* domain, void* _argument);
   GLint GetMetalUniformLocation(const char* uniform) const;
+  mutable std::unordered_map<uint64, void*> mMetalPipelines;
+
 #endif
 };
 
