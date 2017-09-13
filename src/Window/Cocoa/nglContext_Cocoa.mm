@@ -221,5 +221,10 @@ void nglContext::StopMarkerGroup()
 
 void nglContext::SetMetalCommandEncoder(void* encoder)
 {
-  mMetalCommandEncoder = encoder;
+  if (mMetalCommandEncoder)
+    CFBridgingRelease(mMetalCommandEncoder);
+  if (encoder)
+    mMetalCommandEncoder = (void*)CFBridgingRetain((__bridge id<MTLCommandEncoder>)encoder);
+  else
+    mMetalCommandEncoder = nullptr;
 }

@@ -1752,7 +1752,7 @@ void nglWindow::BeginSession()
       mMetalCommandBuffer = (void*)CFBridgingRetain(commandBuffer);
       id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
       commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", frame];
-      mMetalCommandEncoder = (__bridge void*)commandEncoder;
+      SetMetalCommandEncoder((__bridge void*)commandEncoder);
       
       frame++;
     }
@@ -1789,13 +1789,12 @@ void nglWindow::EndSession()
     CFBridgingRelease(mMetalDestinationTexture);
     
     CFBridgingRelease(mMetalCommandBuffer);
-//    CFBridgingRelease(mMetalCommandEncoder);
+    SetMetalCommandEncoder(nullptr);
     
     mMetalDrawable = nullptr;
     mMetalDestinationTexture = nullptr;
     
     mMetalCommandBuffer = nullptr;
-    mMetalCommandEncoder = nullptr;
   }
   
 #endif
