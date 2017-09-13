@@ -757,17 +757,28 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
     GLboolean m = mFinalState.mColorBuffer ? GL_TRUE : GL_FALSE;
 //    glColorMask(m, m, m, m);
   }
+
+  ApplyScissor(rState);
   
+  mFinalState.mClearColor = rState.mClearColor;
+  mFinalState.mStrokeColor = rState.mStrokeColor;
+  mFinalState.mFillColor = rState.mFillColor;
+}
+
+void nuiMetalPainter::ApplyScissor(const nuiRenderState& rState)
+{
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+
   float scale = mpContext->GetScale();
   int32 width = GetCurrentWidth();
   int32 height = GetCurrentHeight();
   int x,y,w,h;
-
+  
   if (mpClippingStack.top().mEnabled)
   {
     
     nuiRect clip(mpClippingStack.top());
-
+    
     x = ToNearest(clip.Left());
     y = ToNearest(clip.Top());
     w = ToNearest(clip.GetWidth());
@@ -780,7 +791,7 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
     w = width;
     h = height;
   }
-
+  
   if (x < 0)
   {
     w += x;
@@ -802,11 +813,11 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   {
     h = height - y;
   }
-
+  
   mScissorIsFlat = (w == 0 || h == 0);
   if (!mScissorIsFlat)
   {
-
+    
     x *= scale;
     y *= scale;
     w *= scale;
@@ -814,10 +825,6 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
     MTLScissorRect rect = {(NSUInteger)x, (NSUInteger)y, (NSUInteger)w, (NSUInteger)h};
     [encoder setScissorRect:rect];
   }
-  
-  mFinalState.mClearColor = rState.mClearColor;
-  mFinalState.mStrokeColor = rState.mStrokeColor;
-  mFinalState.mFillColor = rState.mFillColor;
 }
 
 void nuiMetalPainter::SetState(const nuiRenderState& rState, bool ForceApply)
@@ -905,7 +912,9 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
     return;
   
   SetViewport();  
-  ApplyState(*mpState);
+  ApplyScissor(*mpState);
+  mFinalState.mClearColor = mpState->mClearColor;
+  
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
   nuiRenderState state(*mpState);
   state.mBlending = false;
@@ -1609,6 +1618,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         MTLRegion region = MTLRegionMake2D(0, 0, ToNearest(Width), ToNearest(Height));
         if (pBuffer)
         {
+          NGL_ASSERT(!pSurface);
           [texture replaceRegion:region mipmapLevel:0 withBytes:pBuffer bytesPerRow:bytesPerLine];
         }
         else

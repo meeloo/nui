@@ -83,6 +83,7 @@ protected:
   void CreateSurface(nuiSurface* pSurface);
 
   void ApplyState(const nuiRenderState& rState);
+  void ApplyScissor(const nuiRenderState& rState);
   void ApplyTexture(const nuiRenderState& rState, int slot);
 
   void UploadTexture(nuiTexture* pTexture, int slot);
