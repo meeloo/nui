@@ -5129,6 +5129,11 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
   
   delete pIt;
   
+  if (mpParent)
+  {
+    SetLayoutOrientation(mpParent->GetLayoutOrientation());
+  }
+
   InvalidateRect(GetVisibleRect());
 }
 

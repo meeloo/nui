@@ -279,11 +279,15 @@ bool nuiLayoutConstraint::Set(const nglString& rDescription)
 //////////////
 // nuiLayout:
 nuiLayout::nuiLayout()
+: mLayoutSink(this)
 {
   if (SetObjectClass("nuiLayout"))
   {
     //
   }
+  
+  mLayoutSink.Connect(HorizontallyOriented, &nuiLayout::UpdateChildConstraints);
+  mLayoutSink.Connect(VerticallyOriented, &nuiLayout::UpdateChildConstraints);
 }
 
 nuiLayout::~nuiLayout()
@@ -373,6 +377,18 @@ nuiAnchorType nuiLayout::GetVerticalAnchorType(const nglString& rName) const
     return eAnchorAbsolute;
 
   return it->second.mType;
+}
+
+void nuiLayout::UpdateChildConstraints(const nuiEvent& rEvent)
+{
+  IteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    SetConstraint(pItem, pItem->GetProperty("Layout"));
+    pItem->SetAutoUpdateLayout(true);
+  }
+  delete pIt;
 }
 
 bool nuiLayout::AddChild(nuiWidgetPtr pChild)

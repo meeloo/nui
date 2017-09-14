@@ -779,7 +779,7 @@ public:
 
   void SetLayoutOrientation(nuiOrientation Orientation);
   nuiOrientation GetLayoutOrientation() { return mLayoutOrientation; }
-  nuiOrientation mLayoutOrientation { nuiHorizontal };
+  nuiOrientation mLayoutOrientation { nuiVertical };
   //@}
 
   /** @name Debug Tags */

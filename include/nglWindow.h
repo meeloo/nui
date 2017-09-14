@@ -812,7 +812,7 @@ private:
   bool               mAutoRotate;
   bool               mComposingText;
   nglString          mComposedText;
-  nuiOrientation     mLayoutOrientation { nuiHorizontal };
+  nuiOrientation     mLayoutOrientation { nuiVertical };
   void Register();
   void Unregister();
   static std::vector<nglWindow*> mpWindows;

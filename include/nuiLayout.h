@@ -134,8 +134,10 @@ public:
 
 protected:
   virtual ~nuiLayout();
+  nuiEventSink<nuiLayout> mLayoutSink;
 
 private:
+  void UpdateChildConstraints(const nuiEvent& rEvent);
   void ComputeConstraint(const nuiLayoutConstraint& rC, float& ActualStart, float& ActualStop, float Start, float Stop, float IdealSize, int32 AnchorIndex);
   float ComputeAnchorPosition(const nglString& rName, int32 AnchorIndex, float Start, float Stop) const;
   std::map<nuiWidget*, std::pair<nuiLayoutConstraint, nuiLayoutConstraint> > mConstraints;

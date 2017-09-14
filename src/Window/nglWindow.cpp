@@ -264,7 +264,6 @@ bool nglWindow::OnMouseMove (nglMouseInfo& rInfo)
 
 void nglWindow::OnOrientation(nuiOrientation Orientation)
 {
-  mLayoutOrientation = Orientation;
 }
 
 bool nglWindow::OnRotation(uint Angle)
@@ -452,6 +451,7 @@ bool nglWindow::CallOnMouseMove (nglMouseInfo& rInfo)
 void nglWindow::CallOnOrientation(nuiOrientation Orientation)
 {
 //  printf("CallOnOrientation: %s!!!\n", Orientation == nuiHorizontal ? "Horizontal":"Vertical");
+  mLayoutOrientation = Orientation;
   OnOrientation(Orientation);
 }
 
