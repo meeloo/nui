@@ -81,15 +81,19 @@ void nuiRenderThread::OnStart()
 {
   nuiTask* pTask = nullptr;
 
-  while (mContinue && (pTask = mQueue.Get(1000)))
+  while (mContinue)
   {
-#if (defined _UIKIT_) || (defined _COCOA_)
-    @autoreleasepool
-#endif
+    pTask = mQueue.Get(10);
+    if (pTask)
     {
-      pTask->Run();
-      pTask->Release();
-//    NGL_OUT("Unqueued task %p, %d left (%d contents painter requests)\n", pTask, mQueue.GetSize(), SetLayerContentsPainterCounter);
+#if (defined _UIKIT_) || (defined _COCOA_)
+      @autoreleasepool
+#endif
+      {
+        pTask->Run();
+        pTask->Release();
+  //    NGL_OUT("Unqueued task %p, %d left (%d contents painter requests)\n", pTask, mQueue.GetSize(), SetLayerContentsPainterCounter);
+      }
     }
   }
 }
