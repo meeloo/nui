@@ -883,23 +883,23 @@ private:
 	friend OSErr nglDragReceiveHandler(WindowRef theWindow, void * handlerRefCon, DragRef theDrag);
 	friend OSErr nglDragTrackingHandler (DragTrackingMessage message, WindowRef theWindow, void * handlerRefCon, DragRef theDrag);
 
-  bool           mInited;
+  bool           mInited = false;
   nglString      mTitle;
-  nglContext*    mpContext;
-  nglVideoMode*  mpLastVMode;
-  nglVideoMode*  mpVMode;
-  WindowRef      mWindow;
-  uint32         mModifiers; // Dead Keys (Modifiers Keys)
-  bool           mInvalidatePosted;
-  bool           mRedrawing;
-  bool           mIsFakeChildWindow;
+  nglContext*    mpContext = nullptr;
+  nglVideoMode*  mpLastVMode = nullptr;
+  nglVideoMode*  mpVMode = nullptr;
+  WindowRef      mWindow = nullptr;
+  uint32         mModifiers = 0; // Dead Keys (Modifiers Keys)
+  bool           mInvalidatePosted = false;
+  bool           mRedrawing= false;
+  bool           mIsFakeChildWindow = false;
   int32          mXOffset, mYOffset, mWindowWidth, mWindowHeight; //< those values are only valid in the case of a fake child window
-  nglMouseInfo::Flags mLastButtonDown;
+  nglMouseInfo::Flags mLastButtonDown = 0;
   
 
-  EventLoopTimerRef mTimer;
-  EventHandlerRef   mEventHandlerRef;
-  EventHandlerRef   mKeyboardEventHandlerRef;
+  EventLoopTimerRef mTimer = nullptr;
+  EventHandlerRef   mEventHandlerRef = nullptr;
+  EventHandlerRef   mKeyboardEventHandlerRef = nullptr;
   friend pascal void nglWindowTimerAction(EventLoopTimerRef theTimer, void* userData);
   void TimerAction();  
   void InitDragAndDrop();
@@ -920,28 +920,28 @@ private:
 public:
   inline bool IsInited() const { return mInited; }
 private:
-  bool mInited;
+  bool mInited = false;
   void InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo,
                     const nglContext* pShared);
 
-  void* mpUIWindow;
-  void* mpUIViewCtrl;
-  void* mpUIView;
-  void* mpCALayer;
-  void* mpEAGLContext;
+  void* mpUIWindow = nullptr;
+  void* mpUIViewCtrl = nullptr;
+  void* mpUIView = nullptr;
+  void* mpCALayer = nullptr;
+  void* mpEAGLContext = nullptr;
 
 
-  GLuint mFramebuffer;
-  GLuint mRenderbuffer;
-  GLint mWidth;
-  GLint mHeight;
+  GLuint mFramebuffer = 0;
+  GLuint mRenderbuffer = 0;
+  GLint mWidth = 0;
+  GLint mHeight = 0;
 
   nglTime mLastTick;
-  nglTimer* mpAnimationTimer;
+  nglTimer* mpAnimationTimer = nullptr;
 
-  StateChange mState;
-  bool mDragging=false;
-  nglDragAndDrop* mpDragged=nullptr;;
+  StateChange mState = eHide;
+  bool mDragging = false;
+  nglDragAndDrop* mpDragged = nullptr;
 public:
   bool IsDragging() { return mDragging; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
@@ -958,29 +958,29 @@ public:
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
   void* mpNSGLContext = nullptr;
   void* mpNSPixelFormat = nullptr;
-  bool mIsReady;
+  bool mIsReady = false;
 private:
   void InternalInit(const nglContextInfo& rContext,
                     const nglWindowInfo& rInfo,
                     const nglContext* pShared);
 
 
-  uint32 mWidth, mHeight;
+  uint32 mWidth = 0, mHeight = 0;
   void* mpNSWindow = nullptr;
   void* mpNSWindowCtrl = nullptr;
   void* mpNSView = nullptr;
 
-  StateChange mState;
+  StateChange mState = eHide;
   nglDragAndDrop* mpDragged = nullptr;
   nglTimer* mpAnimationTimer = nullptr;
   nglTime mLastTick;
 
-  CFRunLoopTimerRef mpCFRunLoopTimer;
+  CFRunLoopTimerRef mpCFRunLoopTimer = nullptr;
   void AcquireTimer();
   void ReleaseTimer();
   friend void OnCFRunLoopTicked(CFRunLoopTimerRef pTimer, void* pUserData);
 
-  CVDisplayLinkRef mDisplayLink;
+  CVDisplayLinkRef mDisplayLink = nullptr;
   void AcquireDisplayLink();
   void ReleaseDisplayLink();
   friend CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* pNGLWindow);
@@ -997,15 +997,15 @@ protected:
 #endif
   static ATOM mAtom;
 
-  HWND          mHWnd;
-  HWND          mGLHWnd;
+  HWND          mHWnd = nullptr;
+  HWND          mGLHWnd = nullptr;
   static bool   mClassDefined;
   nglVideoMode  mSavedVideoMode;
-  StateInfo     mState;
-  bool          mFullScreen;
-  int32         mOldMouseX;
-  int32         mOldMouseY;
-  nglMouseInfo::Flags mMouseButtonStatus;
+  StateInfo     mState = eHide;
+  bool          mFullScreen = false;
+  int32         mOldMouseX = 0;
+  int32         mOldMouseY = 0;
+  nglMouseInfo::Flags mMouseButtonStatus = 0;
 
   bool InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared);
   void SetMouseButtonStatus(nglMouseInfo::Flags button);
@@ -1032,14 +1032,14 @@ protected:
   bool  mOnDragging;
 //   UINT  mDragMessageId;
   class nglPBuffer* mpPBuffer = nullptr;
-  bool mPBufferDisabled;
+  bool mPBufferDisabled = false;
 #endif//_WIN32_
 
 #ifdef _ANDROID_
   friend class nglKernel;
   friend class nglApplication;
-  int32 mWidth, mHeight;
-  int32 mStatusBarSize;
+  int32 mWidth = 0, mHeight = 0;
+  int32 mStatusBarSize = 0;
   bool InternalInit(const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared);
   bool OnSysInit(struct android_app* app);
   void OnTermDisplay();
@@ -1050,21 +1050,21 @@ protected:
   void OnContentRectChanged(ANativeActivity* activity, const ARect* rect);
 #endif
 
-  GLuint mFBO_BackBuffer;
-  GLuint mFBO_BackBufferTexture;
-  GLuint mFBO_BackBufferStencil;
-  GLuint mFBO_BackBufferDepth;
-  GLint mBackBufferTexture;
-  int32 mBackTextureWidth;
-  int32 mBackTextureHeight;
-  bool mSkipBackBufferCopy;
+  GLuint mFBO_BackBuffer = 0;
+  GLuint mFBO_BackBufferTexture = 0;
+  GLuint mFBO_BackBufferStencil = 0;
+  GLuint mFBO_BackBufferDepth = 0;
+  GLint mBackBufferTexture = 0;
+  int32 mBackTextureWidth = 0;
+  int32 mBackTextureHeight = 0;
+  bool mSkipBackBufferCopy = 0;
   
-  nuiMainMenu* mpMainMenu;
+  nuiMainMenu* mpMainMenu = nullptr;
   
-  double mLastPaint;
-  double mFPSDelay;
-  uint32 mFPSCount;
-  float mFPS;
+  double mLastPaint = 0;
+  double mFPSDelay = 0;
+  uint32 mFPSCount = 0;
+  float mFPS = 0;
   mutable nglThread::ID mCurrentThread = 0;
 };
 
