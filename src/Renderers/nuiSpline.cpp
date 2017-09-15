@@ -478,12 +478,12 @@ nuiSplinePoint nuiSpline::Evaluate(float Value) const
       nuiVector T2 = pN2->GetIncomingTangent();
       Value -= ToZero(Value);
       float s = Value;
-      float s2 = s*s;
-      float s3 = s2*s;
-      float a  = -2*s3 + 3*s2;
+      float s2 = s * s;
+      float s3 = s2 * s;
+      float a  = -2 * s3 + 3 * s2;
       float h1 = 1.0f - a; // calculate basis function 1
       float h2 = a;     // calculate basis function 2
-      float h3 =    s3 - 2*s2 + s; // calculate basis function 3
+      float h3 =    s3 - 2 * s2 + s; // calculate basis function 3
       float h4 =    s3 -  s2;      // calculate basis function 4
       //result = start;
       P1 *= h1;
@@ -517,12 +517,12 @@ nuiSplinePoint nuiSpline::Evaluate(float Value) const
       nuiVector T2 = pN2->GetIncomingTangent();
       T2 += P2;
       Value -= ToZero(Value);
-      float b1,b2,b3,b4;
+      float b1, b2, b3, b4;
       float oneminusval = 1 - Value;
 
-      b2 = Value*Value;
-      b1 = b2*Value;
-      b2 *= 3*(oneminusval);
+      b2 = Value * Value;
+      b1 = b2 * Value;
+      b2 *= 3 * (oneminusval);
       b3 = oneminusval * oneminusval;
       b4 = b3 * oneminusval;
       b3 *= 3 * Value;
