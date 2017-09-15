@@ -39,10 +39,11 @@
 /*
  ** nglUIViewController
  */
-@interface nglUIViewController : UIViewController
+@interface nglUIViewController : UIViewController<UIDropInteractionDelegate>
 {
 @private
   nglWindow* mpNGLWindow;
+  std::unique_ptr<nglDragAndDrop> mpDropObject;
 }
 - (id)  initWithNGLWindow: (nglWindow*) pNGLWindow;
 

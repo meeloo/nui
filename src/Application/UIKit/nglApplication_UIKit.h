@@ -37,7 +37,8 @@
 
 // Handling Local Notifications
 - (void) application: (UIApplication*) pUIApp didReceiveLocalNotification:(UILocalNotification *)notification;
-
+- (BOOL) application: (UIApplication*) pUIApp continueUserActivity:(NSUserActivity *)userActivity
+  restorationHandler:(void (^)(NSArray *_Nullable))restorationHandler;
 
 @end//nglUIApplicationDelegate
 
