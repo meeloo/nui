@@ -215,8 +215,12 @@ const nglChar* gpWindowErrorTable[] =
 -(void) viewDidLoad
 {
   [super viewDidLoad];
-  UIDropInteraction* dropInteraction = [[UIDropInteraction alloc] initWithDelegate:self];
-  [self.view addInteraction:dropInteraction];
+  
+  if (@available(iOS 11, *))
+  {
+    UIDropInteraction* dropInteraction = [[UIDropInteraction alloc] initWithDelegate:self];
+    [self.view addInteraction:dropInteraction];
+  }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
