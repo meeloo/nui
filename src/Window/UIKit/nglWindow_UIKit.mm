@@ -155,7 +155,9 @@ const nglChar* gpWindowErrorTable[] =
 //                                    kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
 //                                    nil];
 
-    self.contentScaleFactor = [[UIScreen mainScreen] scale];
+    double scale = [[UIScreen mainScreen] scale];
+    self.contentScaleFactor = scale;
+    _metalLayer.contentsScale = scale;
     self.multipleTouchEnabled = YES;
 
   }
@@ -1014,11 +1016,13 @@ void nglWindow::UpdateMetalLayer()
   UIWindow* window = (__bridge UIWindow*)GetOSInfo()->mpUIWindow;
   nglUIView_Metal* metalView = (__bridge nglUIView_Metal*)mpUIView;
   CAMetalLayer* metalLayer = (CAMetalLayer*)metalView.layer;
-  metalLayer.contentsScale =  window.contentScaleFactor;
-  metalLayer.opaque = YES;
-  metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+  double scale = [[UIScreen mainScreen] scale];
   metalLayer.device = (__bridge id<MTLDevice>)GetMetalDevice();
+  metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+  metalLayer.contentsScale = scale;
+  metalLayer.opaque = YES;
   metalLayer.framebufferOnly = YES;
+  metalLayer.drawableSize = CGSizeMake(metalLayer.frame.size.width * scale, metalLayer.frame.size.height * scale);
 
   GetLock().Unlock();
 }
@@ -1162,7 +1166,7 @@ void nglWindow::BeginSession()
       id<MTLTexture> texture = drawable.texture;
       NGL_ASSERT(texture.width == layer.drawableSize.width);
       NGL_ASSERT(texture.height == layer.drawableSize.height);
-      //      NGL_OUT("Next drawable size is %d x %d\n", (int)texture.width, (int)texture.height);
+//      NGL_OUT("Next drawable size is %d x %d (%d x %d [%f])\n", (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
       mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
       
       MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
