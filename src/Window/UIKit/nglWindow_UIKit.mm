@@ -120,7 +120,6 @@ const nglChar* gpWindowErrorTable[] =
   mpNGLWindow->SetSize((uint)frame.size.width, (uint)frame.size.height);
   [super layoutSubviews];
 }
-
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,6 +182,7 @@ const nglChar* gpWindowErrorTable[] =
 - (id) initWithNGLWindow: (nglWindow*) pNGLWindow
 {
   self = [super initWithNibName:nil bundle:nil];
+  mpDropObject = nil;
   if (self)
   {
     mpNGLWindow = pNGLWindow;
@@ -208,8 +208,14 @@ const nglChar* gpWindowErrorTable[] =
   {
     pView = [[[nglUIView_Metal alloc] initWithNGLWindow:mpNGLWindow] autorelease];
   }
-
+  
   self.view = pView;
+}
+-(void) viewDidLoad
+{
+  [super viewDidLoad];
+  UIDropInteraction* dropInteraction = [[UIDropInteraction alloc] initWithDelegate:self];
+  [self.view addInteraction:dropInteraction];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -227,6 +233,125 @@ const nglChar* gpWindowErrorTable[] =
   NSInteger mask = UIInterfaceOrientationMaskAll;
   return (NSUInteger)mask;
 }
+
+// We assume we can handle the drag'n'drop if at least one item is available. No file data is available at this point
+- (BOOL)dropInteraction:(UIDropInteraction *)interaction canHandleSession:(id<UIDropSession>)session
+{
+  return session.items.count > 0;
+}
+
+// Started dropping. Since we cannot access file data now, we add empty nglDataFilesObject
+- (void)dropInteraction:(UIDropInteraction *)interaction sessionDidEnter:(id<UIDropSession>)session
+{
+  mpDropObject.reset(new nglDragAndDrop(eDropEffectCopy, nullptr, 0, 0));
+  auto file_objs = new nglDataFilesObject("ngl/Files");
+  mpDropObject->AddType(file_objs);
+  mpNGLWindow->OnDragEnter();
+}
+
+// Update, for hit testing
+- (UIDropProposal *)dropInteraction:(UIDropInteraction *)interaction sessionDidUpdate:(id<UIDropSession>)session
+{
+  CGPoint p = [session locationInView:self.view];
+  nglDropEffect effect = mpNGLWindow->OnCanDrop(mpDropObject.get(), p.x, p.y, nglMouseInfo::ButtonLeft);
+
+  UIDropOperation op;
+  switch (effect)
+  {
+    case eDropEffectCopy: op = UIDropOperationCopy; break;
+    case eDropEffectMove: op = UIDropOperationMove; break;
+    default: op = UIDropOperationCancel; break;
+  }
+  
+  return [[UIDropProposal alloc] initWithDropOperation:op];
+}
+
+// Convenience function to generate a temporary directory with suggested file name
+std::pair<nglPath, bool> GetTemporaryDropFile(nglPath FileName) noexcept
+{
+  auto tmp = std::unique_ptr<char[]>{ new char[PATH_MAX] };
+  snprintf(tmp.get(), PATH_MAX - 1, "%s/XXXXXXXXX", nglPath { ePathTemp }.GetChars());
+  auto tmp_dir = mkdtemp(tmp.get());
+  if (!tmp_dir)
+  {
+    return { {}, false };
+  }
+  nglPath ret { tmp_dir };
+  ret += FileName;
+  return { ret, true };
+}
+
+- (void)dropInteraction:(UIDropInteraction *)interaction performDrop:(id<UIDropSession>)session
+{
+  if (!mpDropObject)
+  {
+    NGL_ASSERT(mpDropObject);
+    return;
+  }
+  
+  if (!session.items.count)
+  {
+    NGL_ASSERT(session.items.count);
+    return;
+  }
+  
+  CGPoint p = [session locationInView:self.view];
+  __block auto file_objs = new nglDataFilesObject("ngl/Files");
+  __block auto window = mpNGLWindow;
+  __block auto drop_object = mpDropObject.get();
+  __block float x = static_cast<float>(p.x);
+  __block float y = static_cast<float>(p.y);
+  mpDropObject->AddType(file_objs);
+  for (UIDragItem* item in session.items)
+  {
+    __block NSItemProvider* provider = item.itemProvider;
+    __block NSString* UTI = provider.registeredTypeIdentifiers.lastObject;
+    
+    //GetTemporaryDropFile
+    [provider loadFileRepresentationForTypeIdentifier:UTI
+                                    completionHandler:^(NSURL* _Nullable url, NSError* _Nullable error) {
+                                      auto r = GetTemporaryDropFile([provider.suggestedName UTF8String]);
+                                      if (r.second)
+                                      {
+                                        __block nglPath dst_file { r.first };
+                                        nglPath src_file { url.fileSystemRepresentation };
+                                        if (src_file.Copy(dst_file))
+                                        {
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                            file_objs->AddFile(dst_file.GetPathName());
+                                            window->OnDropped(drop_object, x, y, nglMouseInfo::ButtonLeft);
+                                          });
+                                        }
+                                      }
+                                    }];
+  }
+}
+
+// Drop session ended
+- (void)dropInteraction:(UIDropInteraction *)interaction sessionDidEnd:(id<UIDropSession>)session
+{
+  mpNGLWindow->OnDragLeave();
+}
+
+//- (void)dropInteraction:(UIDropInteraction *)interaction sessionDidExit:(id<UIDropSession>)session
+//{
+//}
+
+//- (void)dropInteraction:(UIDropInteraction *)interaction concludeDrop:(id<UIDropSession>)session
+//{
+//}
+
+//- (nullable UITargetedDragPreview *)dropInteraction:(UIDropInteraction *)interaction previewForDroppingItem:(UIDragItem *)item withDefault:(UITargetedDragPreview *)defaultPreview
+//{
+//  NSLog(@"dropInteraction:previewForDroppingItem:withDefault");
+//  return nil;
+//}
+//
+//- (void)dropInteraction:(UIDropInteraction *)interaction item:(UIDragItem *)item willAnimateDropWithAnimator:(id<UIDragAnimating>)animator
+//{
+//  NSLog(@"dropInteraction:item:willAnimateDropWithAnimator:");
+//}
+
 @end
 
 
