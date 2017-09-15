@@ -557,7 +557,6 @@ nglWindow::nglWindow (uint Width, uint Height, bool IsFullScreen)
   mInited = false;
   mTitle = "";
   
-  nglContextInfo context; // Get default context
   nglWindowInfo info(Width, Height, IsFullScreen);
   
   mEventHandlerRef = NULL;
@@ -569,7 +568,7 @@ nglWindow::nglWindow (uint Width, uint Height, bool IsFullScreen)
 	
   mComposingText = false;
   
-  InternalInit (context, info, NULL);
+  InternalInit (mContextInfo, info, NULL);
 }
 
 nglWindow::nglWindow (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)

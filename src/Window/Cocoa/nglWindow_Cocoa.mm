@@ -1272,9 +1272,8 @@ nglWindow::OSInfo::OSInfo()
 nglWindow::nglWindow (uint Width, uint Height, bool IsFullScreen)
 {
   Register();
-  nglContextInfo context; // Get default context
   nglWindowInfo info(Width, Height, IsFullScreen);
-  InternalInit (context, info, NULL); 
+  InternalInit (mContextInfo, info, NULL); 
 }
 
 nglWindow::nglWindow (const nglContextInfo& rContext, const nglWindowInfo& rInfo, const nglContext* pShared)

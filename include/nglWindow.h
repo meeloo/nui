@@ -939,7 +939,6 @@ private:
   nglTime mLastTick;
   nglTimer* mpAnimationTimer;
 
-  nglContextInfo mContextInfo;
   StateChange mState;
   bool mDragging=false;
   nglDragAndDrop* mpDragged=nullptr;;
@@ -971,7 +970,6 @@ private:
   void* mpNSWindowCtrl = nullptr;
   void* mpNSView = nullptr;
 
-  nglContextInfo mContextInfo;
   StateChange mState;
   nglDragAndDrop* mpDragged = nullptr;
   nglTimer* mpAnimationTimer = nullptr;

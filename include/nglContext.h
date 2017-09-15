@@ -288,6 +288,7 @@ private:
 #endif // _WIN32_
 
 protected:
+  nglContextInfo mContextInfo;
 
 #ifdef _X11_
   Display*     mpDisplay;
@@ -314,13 +315,11 @@ protected:
   OSStatus aglInitEntryPoints (void);
   void aglDellocEntryPoints (void);
   void* aglGetProcAddress (const char * pszProc);
-  nglContextInfo mContextInfo;
 #endif
 
 #ifdef _UIKIT_
   void Build(const nglContextInfo& rInfo);
 
-  nglContextInfo mContextInfo;
 
   bool mFullscreen;
 
@@ -328,7 +327,6 @@ protected:
 #endif
 
 #ifdef _COCOA_
-  nglContextInfo mContextInfo;
   void Build(const nglContextInfo& rInfo);
 #endif
   
