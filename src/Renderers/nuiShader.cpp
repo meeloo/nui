@@ -714,6 +714,7 @@ void nuiShaderProgram::Init()
 
   for (int i = 0; ShaderParamTypeDesc[i].mEnum != GL_ZERO; i++)
   {
+    NGL_ASSERT(ShaderParamTypeDesc[i].mEnum != GL_ZERO);
     gParamTypeMap[ShaderParamTypeDesc[i].mEnum] = ShaderParamTypeDesc[i];
   }
 }
@@ -963,7 +964,7 @@ static GLenum GLTypeFromMetalType(MTLDataType type)
     case MTLDataTypeFloat4: return GL_FLOAT_VEC4;
       
     case MTLDataTypeFloat2x2: return GL_FLOAT_MAT2;
-#ifdef _COCOA_
+
     case MTLDataTypeFloat2x3: return GL_FLOAT_MAT2x3;
     case MTLDataTypeFloat2x4: return GL_FLOAT_MAT2x4;
       
@@ -974,10 +975,9 @@ static GLenum GLTypeFromMetalType(MTLDataType type)
     case MTLDataTypeFloat4x2: return GL_FLOAT_MAT4x2;
     case MTLDataTypeFloat4x3: return GL_FLOAT_MAT4x3;
     case MTLDataTypeFloat4x4: return GL_FLOAT_MAT4;
-      
+
     case MTLDataTypeHalf: return GL_HALF_FLOAT;
-#endif
-      
+    
     case MTLDataTypeHalf2: return 0;
     case MTLDataTypeHalf3: return 0;
     case MTLDataTypeHalf4: return 0;
@@ -1068,11 +1068,13 @@ void nuiShaderProgram::ParseStructMember(int depth, const nglString& parentName,
   mUniformIndexes[location] = location;
   int num = 1;
   GLenum type = GLTypeFromMetalType(member.dataType);
+  NGL_ASSERT(type != 0);
   
   if (member.dataType == MTLDataTypeStruct)
   {
     NGL_ASSERT(member.arrayType != nil);
     type = GLTypeFromMetalType(member.arrayType.elementType);
+    NGL_ASSERT(type != 0);
     num = member.arrayType.arrayLength;
   }
   
