@@ -13,6 +13,7 @@
 
 #define NUI_SHADER_INTROSPECT_LOGS 1
 
+std::unordered_map<nuiShaderKind, nglString> nuiShaderProgram::mDefaultPrefixes;
 
 static const char* types[] = {
   "Buffer",
@@ -663,15 +664,19 @@ const nglString& nuiShader::GetSource() const
 
 
 ////////////////////// nuiShader Program:
-#ifdef _OPENGL_ES_
-nglString nuiShaderProgram::mDefaultPrefix("precision mediump float;\n");
-#else
-nglString nuiShaderProgram::mDefaultPrefix;
-#endif
 
 nuiShaderProgram::nuiShaderProgram(nglContext* pContext, const nglString& rName)
-: mName(rName), mProgram(0), mPrefix(mDefaultPrefix), mpContext(pContext)
+: mName(rName), mProgram(0), mpContext(pContext)
 {
+  if (mDefaultPrefixes.empty())
+  {
+#ifdef _OPENGL_ES_
+    mDefaultPrefixes[eVertexShader] = "precision mediump float;\n";
+    mDefaultPrefixes[eFragmentShader] = "precision mediump float;\n";
+#endif
+  }
+  mPrefixes = mDefaultPrefixes;
+  
   NGL_ASSERT(mpContext != nullptr);
   NGL_ASSERT(gpPrograms.find(rName) == gpPrograms.end());
   gpPrograms[rName] = this;
@@ -751,7 +756,7 @@ void nuiShaderProgram::AddShaderFromPath(nuiShaderKind shaderType, const nglPath
 
 void nuiShaderProgram::AddShader(nuiShaderKind shaderType, nglIStream& rStream)
 {
-  nuiShader* pShader = new nuiShader(shaderType, rStream, mPrefix);
+  nuiShader* pShader = new nuiShader(shaderType, rStream, mPrefixes[shaderType]);
   if (mShaders[shaderType] != NULL)
     mShaders[shaderType]->Release();
   mShaders[shaderType] = pShader;
@@ -759,18 +764,18 @@ void nuiShaderProgram::AddShader(nuiShaderKind shaderType, nglIStream& rStream)
 
 void nuiShaderProgram::AddShader(nuiShaderKind shaderType, const nglString& rSrc)
 {
-  nuiShader* pShader = new nuiShader(shaderType, rSrc, mPrefix);
+  nuiShader* pShader = new nuiShader(shaderType, rSrc, mPrefixes[shaderType]);
   mShaders[shaderType] = pShader;
 }
 
-void nuiShaderProgram::SetPrefix(const nglString& rPrefix)
+void nuiShaderProgram::SetPrefix(nuiShaderKind kind, const nglString& rPrefix)
 {
-  mPrefix = rPrefix;
+  mPrefixes[kind] = rPrefix;
 }
 
-void nuiShaderProgram::SetDefaultPrefix(const nglString& rPrefix)
+void nuiShaderProgram::SetDefaultPrefix(nuiShaderKind kind, const nglString& rPrefix)
 {
-  mDefaultPrefix = rPrefix;
+  mDefaultPrefixes[kind] = rPrefix;
 }
 
 void nuiShaderProgram::LoadDefaultShaders()

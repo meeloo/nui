@@ -125,8 +125,8 @@ public:
 
   nuiShaderProgram(nglContext* pContext, const nglString& rName);
 
-  void SetPrefix(const nglString& rPrefix);
-  static void SetDefaultPrefix(const nglString& rDefaultPrefix);
+  void SetPrefix(nuiShaderKind kind, const nglString& rPrefix);
+  static void SetDefaultPrefix(nuiShaderKind kind, const nglString& rDefaultPrefix);
   void AddShaderFromPath(nuiShaderKind shaderType, const nglPath& rPath);
   void AddShader(nuiShaderKind shaderType, nglIStream& rStream);
   void AddShader(nuiShaderKind shaderType, const nglString& rSrc);
@@ -231,8 +231,8 @@ private:
   GLint mVA_Color;
   GLint mVA_Normal;
 
-  nglString mPrefix;
-  static nglString mDefaultPrefix;
+  std::unordered_map<nuiShaderKind, nglString> mPrefixes;
+  static std::unordered_map<nuiShaderKind, nglString> mDefaultPrefixes;
 
   GLint mProjectionMatrix;
   GLint mModelViewMatrix;

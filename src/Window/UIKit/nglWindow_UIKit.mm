@@ -855,6 +855,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   }
   else
   {
+    mMetalDevice = (void*)CFBridgingRetain(MTLCreateSystemDefaultDevice());
     UpdateMetalLayer();
   }
   Build(rContext);
@@ -1141,10 +1142,46 @@ void nglWindow::BeginSession()
 #ifdef _DEBUG_WINDOW_
   NGL_LOG("window", NGL_LOG_INFO, "BeginSession\n");
 #endif
-  NGL_ASSERT(mpEAGLContext);
-  [EAGLContext setCurrentContext: (__bridge EAGLContext*)mpEAGLContext];
-  NGL_ASSERT(mFramebuffer);
-  glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+  if (mpEAGLContext)
+  {
+    [EAGLContext setCurrentContext: (__bridge EAGLContext*)mpEAGLContext];
+    NGL_ASSERT(mFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+  }
+  else
+  {
+    if (!mMetalDestinationTexture)
+    {
+      CAMetalLayer* layer = (__bridge CAMetalLayer*)GetMetalLayer();
+      id<CAMetalDrawable> drawable = [layer nextDrawable];
+      mMetalDrawable = (void*)CFBridgingRetain(drawable);
+      id<MTLTexture> texture = drawable.texture;
+      NGL_ASSERT(texture.width == layer.drawableSize.width);
+      NGL_ASSERT(texture.height == layer.drawableSize.height);
+      //      NGL_OUT("Next drawable size is %d x %d\n", (int)texture.width, (int)texture.height);
+      mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
+      
+      MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
+      passDescriptor.colorAttachments[0].texture = texture;
+      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+      passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
+      passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
+      
+      id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
+      
+      static int frame = 0;
+      id<MTLCommandQueue> commandQueue = [device newCommandQueue];
+      commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", frame];
+      id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
+      commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", frame];
+      mMetalCommandBuffer = (void*)CFBridgingRetain(commandBuffer);
+      id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+      commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", frame];
+      SetMetalCommandEncoder((__bridge void*)commandEncoder);
+      
+      frame++;
+    }
+  }
 }
 
 void nglWindow::EndSession()
@@ -1155,29 +1192,55 @@ void nglWindow::EndSession()
   NGL_LOG("window", NGL_LOG_INFO, "EndSession\n");
 #endif
 	
-  NGL_ASSERT(mpEAGLContext);
-  EAGLContext* _context = (__bridge EAGLContext*)mpEAGLContext;
-  NGL_ASSERT(_context == [EAGLContext currentContext]);
+  if (mpEAGLContext)
+  {
+    EAGLContext* _context = (__bridge EAGLContext*)mpEAGLContext;
+    NGL_ASSERT(_context == [EAGLContext currentContext]);
 
-  NGL_ASSERT(mRenderbuffer);
-  glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    NGL_ASSERT(mRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
 
-  BOOL success = [_context presentRenderbuffer:GL_RENDERBUFFER];
-  NGL_ASSERT(success == YES);
+    BOOL success = [_context presentRenderbuffer:GL_RENDERBUFFER];
+    NGL_ASSERT(success == YES);
 
-  glBindRenderbuffer(GL_RENDERBUFFER, 0);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-  glFlush();
+    glFlush();
 //  [EAGLContext setCurrentContext:nil];
+  }
+  else
+  {
+    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetMetalCommandEncoder();
+    id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)GetMetalCommandBuffer();
+    id<CAMetalDrawable> drawable = (__bridge id<CAMetalDrawable>)GetMetalDrawable();
+    
+    [commandEncoder endEncoding];
+    [commandBuffer presentDrawable:drawable];
+    [commandBuffer commit];
+    
+    CFBridgingRelease(mMetalDrawable);
+    CFBridgingRelease(mMetalDestinationTexture);
+    
+    CFBridgingRelease(mMetalCommandBuffer);
+    SetMetalCommandEncoder(nullptr);
+    
+    mMetalDrawable = nullptr;
+    mMetalDestinationTexture = nullptr;
+    
+    mMetalCommandBuffer = nullptr;
+  }
 
 #endif
 }
 
 bool nglWindow::MakeCurrent() const
 {
-  NGL_ASSERT(mpEAGLContext);
-  return [EAGLContext setCurrentContext: (__bridge EAGLContext*)mpEAGLContext] == YES;
+  if (mpEAGLContext)
+  {
+    return [EAGLContext setCurrentContext: (__bridge EAGLContext*)mpEAGLContext] == YES;
+  }
+  return true;
 }
 
 void* nglWindow::GetMetalLayer() const

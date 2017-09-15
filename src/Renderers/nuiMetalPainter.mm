@@ -1301,10 +1301,13 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       if (pProxy)
         pTexture = pProxy;
 
-      auto it = mTextures.find(pTexture);
-      NGL_ASSERT(it != mTextures.end());
-      texture = (__bridge id<MTLTexture>)it->second.mTexture;
-      sampler = (__bridge id<MTLSamplerState>)it->second.mSampler;
+      {
+        nglCriticalSectionGuard tg(mTexturesCS);
+        auto it = mTextures.find(pTexture);
+        NGL_ASSERT(it != mTextures.end());
+        texture = (__bridge id<MTLTexture>)it->second.mTexture;
+        sampler = (__bridge id<MTLSamplerState>)it->second.mSampler;
+      }
     }
 //    NGL_OUT("Setting texture[%d] = %p / %p (%p%s)\n", i, texture, sampler, pTexture, (pProxy?" [Proxy]":""));
     NGL_ASSERT((pTexture != nullptr && texture != nil && sampler != nil) || (pTexture == nullptr && texture == nil && sampler == nil));
