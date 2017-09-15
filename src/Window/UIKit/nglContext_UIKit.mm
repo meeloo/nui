@@ -211,7 +211,7 @@ void nglContext::SetMetalCommandEncoder(void* encoder)
   if (mMetalCommandEncoder)
     CFBridgingRelease(mMetalCommandEncoder);
   if (encoder)
-    mMetalCommandEncoder = (void*)CFBridgingRetain(encoder);
+    mMetalCommandEncoder = (void *) CFBridgingRetain((__bridge id) encoder);
   else
     mMetalCommandEncoder = nullptr;
 }

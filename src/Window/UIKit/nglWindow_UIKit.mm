@@ -161,10 +161,10 @@ const nglChar* gpWindowErrorTable[] =
   }
   return self;
 }
-- (void) dealloc
-{
-  [super dealloc];
-}
+//- (void) dealloc
+//{
+//  [super dealloc];
+//}
 
 - (void) layoutSubviews
 {
@@ -664,7 +664,7 @@ std::pair<nglPath, bool> GetTemporaryDropFile(nglPath FileName) noexcept
 	}
 	else
   {
-    nglString str((CFStringRef)string);
+    nglString str { [string UTF8String] };
     mpNGLWindow->CallOnTextInput(str);
 	}
 
@@ -819,20 +819,20 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   mContextInfo = rContext;
   
   nglUIWindow* _window = [[nglUIWindow alloc] initWithNGLWindow: this];
-  mpUIWindow = _window;
-  mOSInfo.mpUIWindow = _window;
+  mpUIWindow = (__bridge void *) _window;
+  mOSInfo.mpUIWindow = (__bridge void *) _window;
   [_window setMultipleTouchEnabled: YES];
   [_window makeKeyAndVisible];
   
   nglUIViewController* _viewctrl = [[nglUIViewController alloc] initWithNGLWindow: this];
-  mpUIViewCtrl = _viewctrl;
+  mpUIViewCtrl = (__bridge void *) _viewctrl;
 
   [_window setRootViewController: _viewctrl];
 
   NGL_ASSERT(_viewctrl.view);
   UIView* _view = (UIView*)_viewctrl.view;
-  mpUIView = _view;
-  mpCALayer = _view.layer;
+  mpUIView = (__bridge void *) _view;
+  mpCALayer = (__bridge void *)_view.layer;
 
   NGL_LOG("window", NGL_LOG_INFO, "trying to create GLES context");
   rContext.Dump(NGL_LOG_INFO);
@@ -848,7 +848,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
   if (rContext.TargetAPI != eTargetAPI_Metal)
   {
-    mpEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    mpEAGLContext = (__bridge __strong void *) [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     UpdateGLLayer();
     bool currentOk = MakeCurrent();
     NGL_ASSERT(currentOk);
@@ -859,7 +859,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   }
   Build(rContext);
 
-	CGRect r = [(nglUIWindow*)mpUIWindow frame];
+	CGRect r = [(__bridge nglUIWindow*)mpUIWindow frame];
 	NSLog(@"currentFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
 	r = [UIScreen mainScreen].applicationFrame;
 	NSLog(@"applicationFrame: %f, %f - %f, %f\n", r.origin.x, r.origin.y, r.size.width, r.size.height);
@@ -913,16 +913,16 @@ nglWindow::~nglWindow()
 
   if (mpEAGLContext)
   {
-    if (mpEAGLContext == [EAGLContext currentContext])
+    if (mpEAGLContext == (__bridge void *) [EAGLContext currentContext])
       [EAGLContext setCurrentContext:nil];
     
-    [(EAGLContext*)mpEAGLContext release];
+    //[(EAGLContext*)mpEAGLContext release];
     mpEAGLContext = nullptr;
   }
 
   if (mpUIWindow)
   {
-    nglUIWindow* win = (nglUIWindow*)mpUIWindow;
+    nglUIWindow* win = (__bridge nglUIWindow *) mpUIWindow;
     [win stopDisplayLink];
 
     UIWindow* oldwin = [[UIApplication sharedApplication].windows objectAtIndex:0];
@@ -930,7 +930,7 @@ nglWindow::~nglWindow()
     {
       [oldwin makeKeyWindow];
     }
-    [win release];
+    //[win release];
   }
   Unregister();
 }
@@ -956,7 +956,7 @@ void nglWindow::UpdateGLLayer()
   GetLock().Lock();
 
   NGL_ASSERT(mpEAGLContext);
-  [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext];
+  [EAGLContext setCurrentContext: (__bridge EAGLContext *) mpEAGLContext];
 
   if (mFramebuffer)
   {
@@ -972,8 +972,8 @@ void nglWindow::UpdateGLLayer()
 
   NGL_ASSERT(mpEAGLContext);
   NGL_ASSERT(mpCALayer);
-  EAGLContext* _context = (EAGLContext*)mpEAGLContext;
-  CAEAGLLayer* _layer = (CAEAGLLayer*)mpCALayer;
+  EAGLContext* _context = (__bridge EAGLContext *) mpEAGLContext;
+  CAEAGLLayer* _layer = (__bridge CAEAGLLayer *) mpCALayer;
 
 // Create default framebuffer object.
   glGenFramebuffers(1, &mFramebuffer);
@@ -1004,13 +1004,13 @@ void nglWindow::UpdateMetalLayer()
   GetLock().Lock();
   
   NGL_ASSERT(!mpEAGLContext);
-  UIWindow* window = (UIWindow*)GetOSInfo()->mpUIWindow;
-  nglUIView_Metal* metalView = (nglUIView_Metal*)mpUIView;
+  UIWindow* window = (__bridge UIWindow*)GetOSInfo()->mpUIWindow;
+  nglUIView_Metal* metalView = (__bridge nglUIView_Metal*)mpUIView;
   CAMetalLayer* metalLayer = (CAMetalLayer*)metalView.layer;
   metalLayer.contentsScale =  window.contentScaleFactor;
   metalLayer.opaque = YES;
   metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-  metalLayer.device = (id<MTLDevice>)GetMetalDevice();
+  metalLayer.device = (__bridge id<MTLDevice>)GetMetalDevice();
   metalLayer.framebufferOnly = YES;
 
   GetLock().Unlock();
@@ -1140,7 +1140,7 @@ void nglWindow::BeginSession()
   NGL_LOG("window", NGL_LOG_INFO, "BeginSession\n");
 #endif
   NGL_ASSERT(mpEAGLContext);
-  [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext];
+  [EAGLContext setCurrentContext: (__bridge EAGLContext*)mpEAGLContext];
   NGL_ASSERT(mFramebuffer);
   glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 }
@@ -1154,7 +1154,7 @@ void nglWindow::EndSession()
 #endif
 	
   NGL_ASSERT(mpEAGLContext);
-  EAGLContext* _context = (EAGLContext*)mpEAGLContext;
+  EAGLContext* _context = (__bridge EAGLContext*)mpEAGLContext;
   NGL_ASSERT(_context == [EAGLContext currentContext]);
 
   NGL_ASSERT(mRenderbuffer);
@@ -1175,12 +1175,12 @@ void nglWindow::EndSession()
 bool nglWindow::MakeCurrent() const
 {
   NGL_ASSERT(mpEAGLContext);
-  return [EAGLContext setCurrentContext: (EAGLContext*)mpEAGLContext] == YES;
+  return [EAGLContext setCurrentContext: (__bridge EAGLContext*)mpEAGLContext] == YES;
 }
 
 void* nglWindow::GetMetalLayer() const
 {
-  return (void*)((nglUIView_Metal*)mpUIView).metalLayer;
+  return (__bridge void*)((__bridge nglUIView_Metal*)mpUIView).metalLayer;
 }
 
 void nglWindow::Invalidate()
@@ -1231,12 +1231,12 @@ void nglWindow::ExitModalState()
 
 void nglWindow::StartTextInput(int32 X, int32 Y, int32 W, int32 H)
 {
-  [(nglUIWindow*)mpUIWindow showKeyboard];
+  [(__bridge nglUIWindow*)mpUIWindow showKeyboard];
 }
 
 void nglWindow::EndTextInput()
 {
-  [(nglUIWindow*)mpUIWindow hideKeyboard];
+  [(__bridge nglUIWindow*)mpUIWindow hideKeyboard];
 }
 
 bool nglWindow::IsEnteringText() const

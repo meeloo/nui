@@ -91,11 +91,10 @@ void objCCallOnInit(void* pUIApplication)
 
   uint32 i = 0;
   NSArray* array = [[UIApplication sharedApplication] windows];
-  for (uint32 i = 0; i < [array count]; i++)
+  for (UIWindow* window in array)
   {
-    id next = [array objectAtIndex:i];
-    if ([next respondsToSelector:@selector(Paint)])
-      [next Paint];
+//    if ([window respondsToSelector:@selector(Paint)])
+//      [window Paint];
   }
   
   nuiAnimation::GetTimer()->OnTick(0);

@@ -53,7 +53,7 @@ void audioRouteChangeListenerCallback (void                   *inUserData,      
   CFNumberGetValue(routeChangeReasonRef, kCFNumberSInt32Type, &routeChangeReason);
 
   CFStringRef oldRouteRef = (CFStringRef)CFDictionaryGetValue(routeChangeDictionary, CFSTR (kAudioSession_AudioRouteChangeKey_OldRoute));
-  NSString *oldRouteString = (NSString *)oldRouteRef;
+  NSString *oldRouteString = (__bridge NSString *)oldRouteRef;
 
   UInt32 value = 0;
 
