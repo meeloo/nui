@@ -848,7 +848,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
   if (rContext.TargetAPI != eTargetAPI_Metal)
   {
-    mpEAGLContext = (__bridge __strong void *) [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    mpEAGLContext = (void *) CFBridgingRetain([[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]);
     UpdateGLLayer();
     bool currentOk = MakeCurrent();
     NGL_ASSERT(currentOk);
@@ -914,9 +914,11 @@ nglWindow::~nglWindow()
   if (mpEAGLContext)
   {
     if (mpEAGLContext == (__bridge void *) [EAGLContext currentContext])
+    {
       [EAGLContext setCurrentContext:nil];
+    }
     
-    //[(EAGLContext*)mpEAGLContext release];
+    CFBridgingRelease(mpEAGLContext);
     mpEAGLContext = nullptr;
   }
 
