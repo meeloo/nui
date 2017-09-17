@@ -283,6 +283,8 @@ void nuiMainWindow::Paint()
   //nuiStopWatch watch("nuiMainWindow::Paint");
   //  do
   //  {
+  if (GetLayoutOrientation() != mpNGLWindow->GetLayoutOrientation())
+    DispatchLayoutOrientation(mpNGLWindow->GetLayoutOrientation());
   GetIdealRect();
   nuiRect rect(0, 0, mpNGLWindow->GetWidth(), mpNGLWindow->GetHeight());
 //  NGL_OUT("SetLayout from top: %f x %f (%s)\n", (float)(mpNGLWindow->GetWidth() * GetScale()), (float)(mpNGLWindow->GetHeight() * GetScale()), rect.GetValue().GetChars());
@@ -1329,6 +1331,11 @@ bool nuiMainWindow::NGLWindow::OnMouseWheel(nglMouseInfo& rInfo)
 bool nuiMainWindow::NGLWindow::OnMouseCanceled (nglMouseInfo& rInfo)
 {
   return mpMainWindow->OnMouseCanceled(rInfo);
+}
+
+void nuiMainWindow::NGLWindow::OnOrientation(nuiOrientation Orientation)
+{
+  mpMainWindow->DispatchLayoutOrientation(Orientation);
 }
 
 bool nuiMainWindow::NGLWindow::OnRotation(uint Angle)

@@ -291,7 +291,6 @@ public:
   virtual void OnChildHotRectChanged(nuiWidget* pChild, const nuiRect& rChildHotRect);
   virtual void SetVisible(bool Visible); ///< Show or hide the widget
                                          //@}
-
   /** @name Private event management system (do not override unless you know what you're doing!!!) */
   //@{
   virtual bool CallPreMouseClicked(const nglMouseInfo& rInfo);
@@ -401,7 +400,7 @@ public:
   void StopTransition(); ///<  Signals to this widget that its state transition is done and that must obei to the layout changes from its parent again.
   bool IsInTransition() const;
   bool IsInSetRect() const; ///< Returns true if this widget or one of its parents' SetRect method is currently being called.
-  
+
   virtual const nuiRect& GetIdealRect(); ///< Return the ideal area used by this Object. If the layout of this object has changed CalIdealRect will be called and mIdealRect will contain the ideal rectangle. If the user specified a user size then mIdealRect will be overwritten with mUserRect. 
   virtual const nuiRect& GetRect() const; ///< Return the current area used by this Object.
   virtual nuiRect GetBorderedRect() const; ///< Return the current area used by this Object including its border
@@ -644,6 +643,9 @@ public:
   nuiSimpleEventSource <nuiMoved> UserRectChanged; ///< Send an event when the user preferred rectangle changes.
   nuiSimpleEventSource <nuiMoved> HotRectChanged; ///< Send an event when the hot spot of the widget is moved.
 
+  nuiSimpleEventSource <nuiWidgetSelected    > HorizontallyOriented; ///< Send an event when the object is oriented horizontally
+  nuiSimpleEventSource <nuiWidgetSelected    > VerticallyOriented; ///< Send an event when the object is oriented vertically
+
   nuiSimpleEventSource <nuiFocus> FocusChanged; ///< Send an event when the focus has changed (gain or lost).
 
   nuiMouseClicked PreClicked; ///< Send an event when the widget is clicked. This event is fired before the MouseClicked method is called on the widget.
@@ -771,6 +773,13 @@ public:
 
   virtual bool SetLayoutConstraint(const LayoutConstraint& rConstraint); ///< Change the layout constraint imposed by this widget's parent. Return false if the constraint haven't changed, true otherwise.
   const LayoutConstraint& GetLayoutConstraint() const; ///< Retrieve the layout constraint imposed by this widget's parent.
+  
+  
+  virtual bool DispatchLayoutOrientation(nuiOrientation Orientation);
+
+  void SetLayoutOrientation(nuiOrientation Orientation);
+  nuiOrientation GetLayoutOrientation() { return mLayoutOrientation; }
+  nuiOrientation mLayoutOrientation { nuiVertical };
   //@}
 
   /** @name Debug Tags */

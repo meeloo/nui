@@ -262,6 +262,10 @@ bool nglWindow::OnMouseMove (nglMouseInfo& rInfo)
 	return false;
 }
 
+void nglWindow::OnOrientation(nuiOrientation Orientation)
+{
+}
+
 bool nglWindow::OnRotation(uint Angle)
 {
   return true;
@@ -441,6 +445,13 @@ bool nglWindow::CallOnMouseMove (nglMouseInfo& rInfo)
   //nuiStopWatch watch("nglWindow::CallOnMouseMove");
   NGL_DEBUG( NGL_LOG("window", NGL_LOG_DEBUG, "Motion: %d,%d", rInfo.X, rInfo.Y); )
   return OnMouseMove (rInfo);
+}
+
+void nglWindow::CallOnOrientation(nuiOrientation Orientation)
+{
+//  printf("CallOnOrientation: %s!!!\n", Orientation == nuiHorizontal ? "Horizontal":"Vertical");
+  mLayoutOrientation = Orientation;
+  OnOrientation(Orientation);
 }
 
 bool nglWindow::CallOnRotation(uint Angle)

@@ -475,6 +475,11 @@ void nuiWidget::InitAttributes()
                 nuiMakeDelegate(this, &nuiWidget::GetAutoUpdateLayout),
                 nuiMakeDelegate(this, &nuiWidget::SetAutoUpdateLayout)));
 
+  AddAttribute(new nuiAttribute<nuiOrientation>
+               (nglString("LayoutOrientation"), nuiUnitOrientation,
+                nuiMakeDelegate(this, &nuiWidget::GetLayoutOrientation),
+                nuiMakeDelegate(this, &nuiWidget::SetLayoutOrientation)));
+
   AddAttribute(new nuiAttribute<bool>
                (nglString("AutoAcceptMouseCancel"), nuiUnitOnOff,
                 nuiMakeDelegate(this, &nuiWidget::GetAutoAcceptMouseCancel),
@@ -595,7 +600,10 @@ void nuiWidget::Init()
   NUI_ADD_EVENT(PreUnclicked);
   NUI_ADD_EVENT(PreMouseMoved);
   NUI_ADD_EVENT(PreMouseWheelMoved);
-  
+
+  NUI_ADD_EVENT(HorizontallyOriented);
+  NUI_ADD_EVENT(VerticallyOriented);
+
   SetLayerPolicy(nuiDrawPolicyDrawSelf);
   //SetLayerPolicy(nuiDrawPolicyDrawTree);
   //SetLayerPolicy(nuiDrawPolicyDrawNone);
@@ -5121,6 +5129,11 @@ void nuiWidget::CallConnectTopLevel(nuiTopLevel* pTopLevel)
   
   delete pIt;
   
+  if (mpParent)
+  {
+    SetLayoutOrientation(mpParent->GetLayoutOrientation());
+  }
+
   InvalidateRect(GetVisibleRect());
 }
 
@@ -5628,6 +5641,29 @@ void nuiWidget::SetSelected(bool set)
   ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
   InvalidateChildren(true);
   Invalidate();
+  DebugRefreshInfo();
+}
+
+void nuiWidget::SetLayoutOrientation(nuiOrientation Orientation)
+{
+  CheckValid();
+  if (mLayoutOrientation == Orientation)
+    return;
+  
+  mLayoutOrientation = Orientation;
+  
+  if (mLayoutOrientation == nuiHorizontal)
+  {
+    HorizontallyOriented();
+  }
+  else
+  {
+    VerticallyOriented();
+  }
+  
+  StateChanged();
+  ApplyCSSForStateChange(NUI_WIDGET_MATCHTAG_STATE);
+  InvalidateLayout();
   DebugRefreshInfo();
 }
 
@@ -6312,6 +6348,25 @@ bool nuiWidget::CallPreMouseWheelMoved(const nglMouseInfo& rInfo)
   return false;
 }
 
+bool nuiWidget::DispatchLayoutOrientation(nuiOrientation Orientation)
+{
+  CheckValid();
+  nuiAutoRef;
+  
+  IteratorPtr pIt;
+  for (pIt = GetLastChild(false); pIt && pIt->IsValid(); GetPreviousChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    if (pItem)
+    {
+      pItem->DispatchLayoutOrientation(Orientation);
+    }
+  }
+  delete pIt;
+  
+  SetLayoutOrientation(Orientation);
+  return false;
+}
 
 void nuiWidget::GetHoverList(nuiSize X, nuiSize Y, std::set<nuiWidget*>& rHoverSet, std::list<nuiWidget*>& rHoverList) const
 {
