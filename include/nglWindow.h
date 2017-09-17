@@ -97,6 +97,7 @@ public:
   int32   Y;        ///< Vertical coordinate
   float DeltaX;     ///< Mouse Wheel displacement in X
   float DeltaY;     ///< Mouse Wheel displacement in Y
+  float Force;      ///< Touch pressure between 0 and 1
 
   Flags Buttons;  ///< Buttons state
   nglTouchId    TouchId; ///< used to retrieve which finger acting

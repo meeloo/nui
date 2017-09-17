@@ -366,6 +366,7 @@ const nglChar* gpWindowErrorTable[] =
     info.Buttons = nglMouseInfo::ButtonLeft;
     info.X = x;
     info.Y = y;
+    info.Force = [pTouch force] / [pTouch maximumPossibleForce];
 
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
@@ -374,7 +375,7 @@ const nglChar* gpWindowErrorTable[] =
       info.Buttons |= nglMouseInfo::ButtonDoubleClick;
 
     //NGL_TOUCHES_OUT("[%p][%d] Begin X:%d Y:%d\n", pTouch, info.TouchId, x, y);
-
+    NGL_TOUCHES_OUT("[%p][%d] BEGIN X:%d Y:%d Force:%f/%f\n", pTouch, info.TouchId, x, y, [pTouch force], [pTouch maximumPossibleForce]);
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
     //          info.Buttons |= nglMouseInfo::ButtonDoubleClick;
@@ -470,11 +471,11 @@ const nglChar* gpWindowErrorTable[] =
     info.Buttons = nglMouseInfo::ButtonLeft;
     info.X = x;
     info.Y = y;
-
+    info.Force = [pTouch force] / [pTouch maximumPossibleForce];
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
 
-    //NGL_TOUCHES_OUT("[%p][%d] Moved X:%d Y:%d\n", pTouch, info.TouchId, x, y);
+//    NGL_TOUCHES_OUT("[%p][%d] MOVED X:%d Y:%d Force:%f/%f\n", pTouch, info.TouchId, x, y, [pTouch force], [pTouch maximumPossibleForce]);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
