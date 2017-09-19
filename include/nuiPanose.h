@@ -223,7 +223,8 @@ public:
   void                    SetXHeight        (nuiFontXHeight          set);
   
   nglString Dump() const;
-  
+  void Validate();
+
 private:
   nuiFontFamily           mFamily;            // 0
   nuiFontSerif            mSerif;             // 1

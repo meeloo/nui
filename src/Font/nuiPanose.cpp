@@ -19,6 +19,7 @@ nuiPanose::nuiPanose()
   mLetterForm = eLetterForm_Any;
   mMidLine = eMidLine_Any;
   mXHeight = eXHeight_Any;
+  Validate();
 }
 
 nuiPanose::nuiPanose(const nuiFontPanoseBytes& rPanoseBytes)
@@ -43,6 +44,7 @@ nuiPanose::nuiPanose(const nuiPanose& rPanose)
   mLetterForm = rPanose.mLetterForm;
   mMidLine = rPanose.mMidLine;
   mXHeight = rPanose.mXHeight;
+  Validate();
 }
 
 void nuiPanose::GetBytes(nuiFontPanoseBytes& rBytes) const
@@ -71,6 +73,7 @@ void nuiPanose::SetBytes(const nuiFontPanoseBytes& rBytes)
   mLetterForm = (nuiFontLetterForm) rBytes.mLetterForm;
   mMidLine = (nuiFontMidLine) rBytes.mMidLine;
   mXHeight = (nuiFontXHeight) rBytes.mXHeight;
+  Validate();
 }
 
 void nuiPanose::SetBytes(uint8 pPanoseBytes[10])
@@ -85,8 +88,22 @@ void nuiPanose::SetBytes(uint8 pPanoseBytes[10])
   mLetterForm = (nuiFontLetterForm) pPanoseBytes[7];
   mMidLine = (nuiFontMidLine) pPanoseBytes[8];
   mXHeight = (nuiFontXHeight) pPanoseBytes[9];
+  Validate();
 }
 
+void nuiPanose::Validate()
+{
+  mFamily = nuiClamp(mFamily, eFamily_Any, eFamily_Pictorial);
+  mSerif = nuiClamp(mSerif, eSerif_Any, eSerif_Rounded);
+  mWeight = nuiClamp(mWeight, eWeight_Any, eWeight_Nord);
+  mProportion = nuiClamp(mProportion, eProportion_Any, eProportion_Monospaced);
+  mContrast = nuiClamp(mContrast, eContrast_Any, eContrast_VeryHigh);
+  mStrokeVariation = nuiClamp(mStrokeVariation, eStrokeVariation_Any, eStrokeVariation_InstantVert);
+  mArmStyle = nuiClamp(mArmStyle, eArmStyle_Any, eArmStyle_BentDoubleSerif);
+  mLetterForm = nuiClamp(mLetterForm, eLetterForm_Any, eLetterForm_ObliqueSquare);
+  mMidLine = nuiClamp(mMidLine, eMidLine_Any, eMidLine_LowSerifed);
+  mXHeight = nuiClamp(mXHeight, eXHeight_Any, eXHeight_DuckingLarge);
+}
 
 uint32 nuiPanose::GetDistance(const nuiPanose& rPanose) const
 {

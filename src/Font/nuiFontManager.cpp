@@ -1001,8 +1001,9 @@ void nuiFontManager::RequestFont(nuiFontRequest& rRequest, std::list<nuiFontRequ
         score += _s;
       }
     }
-    
-    SetScore(score, sscore, rRequest.mPanose.mScore * rRequest.mPanose.mElement.GetNormalizedDistance(pFontDesc->GetPanoseBytes()), rRequest.mPanose.mStrict, true);
+
+    nuiPanose panose(pFontDesc->GetPanoseBytes());
+    SetScore(score, sscore, rRequest.mPanose.mScore * rRequest.mPanose.mElement.GetNormalizedDistance(panose), rRequest.mPanose.mStrict, true);
     
     if (!pFontDesc->GetScalable())
     {
