@@ -408,31 +408,43 @@ uint32 nuiPanose::CompareProportion(nuiFontProportion set) const
 
 uint32 nuiPanose::CompareContrast(nuiFontContrast set) const
 {
+  NGL_ASSERT(mContrast < 10);
+  NGL_ASSERT(set < 10);
   return ContrastMetric[mContrast][set];
 }
 
 uint32 nuiPanose::CompareStrokeVariation(nuiFontStrokeVariation set) const
 {
+  NGL_ASSERT(mStrokeVariation < 9);
+  NGL_ASSERT(set < 9);
   return StrokeVariationMetric[mStrokeVariation][set];
 }
 
 uint32 nuiPanose::CompareArmStyle(nuiFontArmStyle set) const
 {
+  NGL_ASSERT(mArmStyle < 12);
+  NGL_ASSERT(set < 12);
   return ArmStyleMetric[mArmStyle][set];
 }
 
 uint32 nuiPanose::CompareLetterForm(nuiFontLetterForm set) const
 {
+  NGL_ASSERT(mLetterForm < 16);
+  NGL_ASSERT(set < 16);
   return LetterFormMetric[mLetterForm][set];
 }
 
 uint32 nuiPanose::CompareMidLine(nuiFontMidLine set) const
 {
+  NGL_ASSERT(mMidLine < 14);
+  NGL_ASSERT(set < 14);
   return MidLineMetric[mMidLine][set];
 }
 
 uint32 nuiPanose::CompareXHeight(nuiFontXHeight set) const
 {
+  NGL_ASSERT(mXHeight < 8);
+  NGL_ASSERT(set < 8);
   return XHeightMetric[mXHeight][set];
 }
 
