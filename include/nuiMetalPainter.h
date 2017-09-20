@@ -77,7 +77,7 @@ protected:
     void* mTexture = nullptr;
     void* mSampler = nullptr;
   };
-
+  
   virtual void ResetMetalState();
   void SetSurface(nuiSurface* pSurface);
   void CreateSurface(nuiSurface* pSurface);
@@ -94,10 +94,10 @@ protected:
   nglContext* mpContext;
   nuiRenderState mFinalState;
 
-  static std::map<nuiTexture*, TextureInfo> mTextures;
-  static std::vector<nuiRenderArray*> mFrameArrays;
+  static std::unordered_map<nuiTexture*, TextureInfo> mTextures;
   static nglCriticalSection mTexturesCS;
-  static nglCriticalSection mFrameArraysCS;
+  
+  static std::unordered_map<nuiRenderArray*, std::vector<void*> > mRenderArrays;
   static nglCriticalSection mRenderArraysCS;
 
   nglCriticalSection mRenderingCS;
@@ -130,14 +130,14 @@ protected:
   nuiShaderProgram* mpShader = nullptr;
   nuiShaderState* mpShaderState = nullptr;
   
-  nuiShaderProgram* mpShader_TextureVertexColor;
-  nuiShaderProgram* mpShader_TextureAlphaVertexColor;
-  nuiShaderProgram* mpShader_TextureDifuseColor;
-  nuiShaderProgram* mpShader_TextureAlphaDifuseColor;
-  nuiShaderProgram* mpShader_DifuseColor;
-  nuiShaderProgram* mpShader_VertexColor;
-  nuiShaderProgram* mpShader_ClearColor;
-  void* mpClearColor_pipelineDescriptor;
+  nuiShaderProgram* mpShader_TextureVertexColor = nullptr;
+  nuiShaderProgram* mpShader_TextureAlphaVertexColor = nullptr;
+  nuiShaderProgram* mpShader_TextureDifuseColor = nullptr;
+  nuiShaderProgram* mpShader_TextureAlphaDifuseColor = nullptr;
+  nuiShaderProgram* mpShader_DifuseColor = nullptr;
+  nuiShaderProgram* mpShader_VertexColor = nullptr;
+  nuiShaderProgram* mpShader_ClearColor = nullptr;
+  void* mpClearColor_pipelineDescriptor = nullptr;
   
   nuiMatrix mSurfaceMatrix;
   

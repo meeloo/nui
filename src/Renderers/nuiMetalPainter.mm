@@ -511,6 +511,10 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     mpShader_ClearColor->AddShader(eMetalShader, ClearColor_VTX);
     mpShader_ClearColor->Link();
 
+  }
+
+  {
+    // Create the local clear color pipelineDesc once and for all for this painter
     nuiRenderState state(*mpState);
     state.mBlending = false;
     MTLRenderPipelineDescriptor* pipelineDesc = (__bridge MTLRenderPipelineDescriptor*) mpShader_ClearColor->NewMetalPipelineDescriptor(state);
@@ -529,11 +533,6 @@ nuiMetalPainter::~nuiMetalPainter()
   gpPainters.erase(this);
 
   mActiveContexts--;
-
-  nglCriticalSectionGuard fag(mFrameArraysCS);
-  for (auto pArray : mFrameArrays)
-    pArray->Release();
-  mFrameArrays.clear();
 
   mpShader_TextureVertexColor->Release();
   mpShader_TextureDifuseColor->Release();
@@ -619,10 +618,6 @@ void nuiMetalPainter::SetViewport()
 void nuiMetalPainter::StartRendering()
 {
   nuiPainter::StartRendering();
-  nglCriticalSectionGuard fag(mFrameArraysCS);
-  for (auto pArray : mFrameArrays)
-    pArray->Release();
-  mFrameArrays.clear();
   
   ResetMetalState();
 }
@@ -1125,11 +1120,6 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   
   ApplyState(*mpState);
   pArray->Acquire();
-  {
-    nglCriticalSectionGuard fag(mFrameArraysCS);
-    mFrameArrays.push_back(pArray);
-  }
-  
   
   if (mFinalState.mpTexture[0] && pArray->IsArrayEnabled(nuiRenderArray::eTexCoord))
   {
@@ -1256,25 +1246,51 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   
   // Create the metal pipeline descriptor:
   MTLRenderPipelineDescriptor* pipelineDesc = (__bridge MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
-  
+
+  // Uniforms
   {
-    // Uniforms
-    {
-      const void* stateData = mpShaderState->GetStateData();
-      size_t stateDataSize = mpShaderState->GetStateDataSize();
-      [encoder setVertexBytes:stateData length:stateDataSize atIndex:0];
-      [encoder setFragmentBytes:stateData length:stateDataSize atIndex:0];
-    }
+    const void* stateData = mpShaderState->GetStateData();
+    size_t stateDataSize = mpShaderState->GetStateDataSize();
+    [encoder setVertexBytes:stateData length:stateDataSize atIndex:0];
+    [encoder setFragmentBytes:stateData length:stateDataSize atIndex:0];
+  }
+
+  std::vector<void*> vertexArray; //  The MTLBuffer caches for the vertices and indices of this nuiRenderArray
+  {
     
     // Vertex Data:
     {
-      size_t vertexcount = pArray->GetSize();
-      size_t vertexsize = sizeof(nuiRenderArray::Vertex);
-      
-      id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModeShared];
-      [encoder setVertexBuffer:vertices offset:0 atIndex:1];
+      nglCriticalSectionGuard g(mRenderArraysCS);
+      auto arrayInfoIt = mRenderArrays.find(pArray);
+      if (arrayInfoIt != mRenderArrays.end())
+      {
+        vertexArray = arrayInfoIt->second;
+      }
+      else
+      {
+        size_t vertexcount = pArray->GetSize();
+        size_t vertexsize = sizeof(nuiRenderArray::Vertex);
+        id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModeShared];
+        vertexArray.push_back((void*)CFBridgingRetain(vertices));
+        
+        for (size_t i = 0; i < pArray->GetIndexArrayCount(); i++)
+        {
+          auto& array(pArray->GetIndexArray(i));
+#if (defined _UIKIT_)
+          id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:0];
+#else
+          id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
+#endif
+          vertexArray.push_back((void*)CFBridgingRetain(indexes));
+        }
+        mRenderArrays[pArray] = vertexArray;
+      }
+
     }
-    
+
+    id<MTLBuffer> vertices = (__bridge id<MTLBuffer>)vertexArray[0];
+    [encoder setVertexBuffer:vertices offset:0 atIndex:1];
+
     // Create the pipeline state from all the gathered informations:
     NSError* err = nil;
     id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
@@ -1325,24 +1341,17 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     {
       MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
       [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
-//      glDrawArrays(mode, 0, s);
     }
     else
     {
       for (uint32 i = 0; i < arraycount; i++)
       {
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
-//#if (defined _UIKIT_) || (defined _ANDROID_)
-//        glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
-//#else
-//        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
-//#endif
         MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
+        id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
 #if (defined _UIKIT_)
-        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:0];
         MTLIndexType indexType = MTLIndexTypeUInt16;
 #else
-        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
         MTLIndexType indexType = MTLIndexTypeUInt32;
 #endif
         [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
@@ -1353,7 +1362,6 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 //    glBlendFunc(mSrcAlpha, mDstAlpha);
     if (!arraycount)
     {
-//      glDrawArrays(mode, 0, s);
       MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
       [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
     }
@@ -1362,17 +1370,11 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       for (uint32 i = 0; i < arraycount; i++)
       {
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
-//#if (defined _UIKIT_) || (defined _ANDROID_)
-//        glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
-//#else
-//        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
-//#endif
         MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
+        id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
 #if (defined _UIKIT_)
-        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:0];
         MTLIndexType indexType = MTLIndexTypeUInt16;
 #else
-        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
         MTLIndexType indexType = MTLIndexTypeUInt32;
 #endif
         [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
@@ -1402,11 +1404,10 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 //        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
 //#endif
         MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
+        id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
 #if (defined _UIKIT_)
-        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:0];
         MTLIndexType indexType = MTLIndexTypeUInt16;
 #else
-        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
         MTLIndexType indexType = MTLIndexTypeUInt32;
 #endif
         [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
@@ -1498,7 +1499,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
   float Height = pTexture->GetUnscaledHeight();
 
   nglCriticalSectionGuard tg(mTexturesCS);
-  std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
+  auto it = mTextures.find(pTexture);
   if (it == mTextures.end())
     it = mTextures.insert(mTextures.begin(), std::pair<nuiTexture*, TextureInfo>(pTexture, TextureInfo()));
   NGL_ASSERT(it != mTextures.end());
@@ -1611,7 +1612,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         {
           MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlPixelFormat
                                                                                                 width:(uint32)ToNearest(Width) height:(uint32)ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
-          descriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
+          descriptor.usage = pSurface?MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead:MTLTextureUsageShaderRead;
           texture = [device newTextureWithDescriptor:descriptor];
           CFStringRef str = pTexture->GetSource().ToCFString();
           texture.label = (__bridge NSString*)str;
@@ -1674,7 +1675,7 @@ void nuiMetalPainter::FinalizeTextures()
 void nuiMetalPainter::_DestroyTexture(nuiTexture* pTexture)
 {
   nglCriticalSectionGuard tg(mTexturesCS);
-  std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
+  auto it = mTextures.find(pTexture);
   if (it == mTextures.end())
     return;
   NGL_ASSERT(it != mTextures.end());
@@ -1763,7 +1764,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
       mFinalState.mpTexture[0] = nullptr;
       
       nglCriticalSectionGuard tg(mTexturesCS);
-      std::map<nuiTexture*, TextureInfo>::iterator it = mTextures.find(pTexture);
+      auto it = mTextures.find(pTexture);
       if (it == mTextures.end())
         it = mTextures.insert(mTextures.begin(), std::pair<nuiTexture*, TextureInfo>(pTexture, TextureInfo()));
       NGL_ASSERT(it != mTextures.end());
@@ -1970,7 +1971,14 @@ void nuiMetalPainter::PopProjectionMatrix()
 
 void nuiMetalPainter::DestroyRenderArray(nuiRenderArray* pArray)
 {
-  nglCriticalSectionGuard g(mRenderingCS);
+  nglCriticalSectionGuard g(mRenderArraysCS);
+  auto it = mRenderArrays.find(pArray);
+  if (it != mRenderArrays.end())
+  {
+    for (size_t i = 0; i < it->second.size(); i++)
+      CFBridgingRelease(it->second[i]);
+    mRenderArrays.erase(it);
+  }
 }
 
 void nuiMetalPainter::FinalizeRenderArrays()
@@ -1984,10 +1992,10 @@ nglImage* nuiMetalPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture)
 }
 
 
-std::map<nuiTexture*, nuiMetalPainter::TextureInfo> nuiMetalPainter::mTextures;
-std::vector<nuiRenderArray*> nuiMetalPainter::mFrameArrays;
+std::unordered_map<nuiTexture*, nuiMetalPainter::TextureInfo> nuiMetalPainter::mTextures;
 nglCriticalSection nuiMetalPainter::mTexturesCS("mTexturesCS");
-nglCriticalSection nuiMetalPainter::mFrameArraysCS("mFrameArraysCS");
+
+std::unordered_map<nuiRenderArray*, std::vector<void*> > nuiMetalPainter::mRenderArrays;
 nglCriticalSection nuiMetalPainter::mRenderArraysCS("mRenderArraysCS");
 
 
