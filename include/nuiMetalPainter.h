@@ -137,7 +137,7 @@ protected:
   nuiShaderProgram* mpShader_DifuseColor = nullptr;
   nuiShaderProgram* mpShader_VertexColor = nullptr;
   nuiShaderProgram* mpShader_ClearColor = nullptr;
-  void* mpClearColor_pipelineDescriptor = nullptr;
+  void* mpClearColor_pipelineState = nullptr;
   
   nuiMatrix mSurfaceMatrix;
   

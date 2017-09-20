@@ -492,7 +492,7 @@ private:
   nuiLineJoin mLineJoin = nuiLineJoinRound;
   nuiLineCap mLineCap = nuiLineCapSquare;
   
-  const Settings mSettings[8] = {
+  const Settings mSettings[9] = {
     {
       "Ugly Default",
       5, //    float mStrokeWidth;
@@ -576,6 +576,19 @@ private:
       nuiLineJoinRound, //    nuiLineJoin mLineJoin;
       nuiLineCapSquare //    nuiLineCap mLineCap;
     },
+    
+    {
+      "Spirograph",
+      0.188359, //    float mStrokeWidth;
+      1.000000, //    float mScale;
+      3.000000, //    float mAngleInc;
+      10.065812, //    float mLengthInc;
+      0.998000, //    float mLengthMul;
+      0.493750, //    float mFeather;
+      nuiLineJoinMiter, //    nuiLineJoin mLineJoin;
+      nuiLineCapSquare //    nuiLineCap mLineCap;
+    },
+
 
 
     { 0 }

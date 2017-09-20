@@ -524,7 +524,14 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     vertexDescriptor.layouts[0].stepFunction = MTLVertexStepFunctionConstant;
     
     pipelineDesc.vertexDescriptor = vertexDescriptor;
-    mpClearColor_pipelineDescriptor = (void*)CFBridgingRetain(pipelineDesc);
+    NSError* err = nil;
+    id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
+    if (err)
+    {
+      NGL_ASSERT(0);
+      NGL_OUT("Error creating MTLRenderPipelineState: %s\n", err.localizedDescription.UTF8String);
+    }
+    mpClearColor_pipelineState = (void*)CFBridgingRetain(pipelineState);
   }
 }
 
@@ -926,25 +933,13 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   mFinalState.mClearColor = mpState->mClearColor;
   
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
-  nuiRenderState state(*mpState);
-  state.mBlending = false;
-  MTLRenderPipelineDescriptor* pipelineDesc = (__bridge MTLRenderPipelineDescriptor*)mpClearColor_pipelineDescriptor;
-
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
   id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
-  NSError* err = nil;
-  id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
-  if (err)
-  {
-    NGL_ASSERT(0);
-    NGL_OUT("Error creating MTLRenderPipelineState: %s\n", err.localizedDescription.UTF8String);
-  }
-  
+  MTLRenderPipelineState* pipelineState = (__bridge MTLRenderPipelineState*)mpClearColor_pipelineState;
   [encoder setRenderPipelineState:pipelineState];
   [encoder setFragmentBytes:c length:4*4 atIndex:0];
   [encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:4];
   
-//  glClearColor(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
 //#ifdef _OPENGL_ES_
 //    glClearDepthf(mFinalState.mClearDepth);
 //#else
