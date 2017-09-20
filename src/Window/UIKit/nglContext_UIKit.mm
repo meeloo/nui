@@ -164,7 +164,7 @@ void* nglContext::GetMetalCommandEncoder()
 {
   if (mMetalCommandEncoder)
     return mMetalCommandEncoder;
-
+  
   // If we don't have one yet let's create it
   id<MTLTexture> texture = (__bridge id<MTLTexture>)GetMetalDestinationTexture();
   
@@ -176,7 +176,7 @@ void* nglContext::GetMetalCommandEncoder()
   id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)GetMetalCommandBuffer();
   id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
   commandEncoder.label = [NSString stringWithUTF8String:"main encoder"];
-  SetMetalCommandEncoder((__bridge void*)commandEncoder);
+  const_cast<nglContext*>(this)->SetMetalCommandEncoder((__bridge void*)commandEncoder);
   return mMetalCommandEncoder;
 }
 
