@@ -175,6 +175,21 @@ void* nglContext::GetMetalDrawable() const
 
 void* nglContext::GetMetalCommandEncoder() const
 {
+  if (mMetalCommandEncoder)
+    return mMetalCommandEncoder;
+  
+  // If we don't have one yet let's create it
+  id<MTLTexture> texture = (__bridge id<MTLTexture>)GetMetalDestinationTexture();
+  
+  MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
+  passDescriptor.colorAttachments[0].texture = texture;
+  passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
+  passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
+  
+  id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)GetMetalCommandBuffer();
+  id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+  commandEncoder.label = [NSString stringWithUTF8String:"main encoder"];
+  const_cast<nglContext*>(this)->SetMetalCommandEncoder((__bridge void*)commandEncoder);
   return mMetalCommandEncoder;
 }
 

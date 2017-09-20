@@ -525,6 +525,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     
     pipelineDesc.vertexDescriptor = vertexDescriptor;
     NSError* err = nil;
+    id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
     id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
     if (err)
     {
@@ -934,8 +935,7 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
-  id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
-  MTLRenderPipelineState* pipelineState = (__bridge MTLRenderPipelineState*)mpClearColor_pipelineState;
+  id<MTLRenderPipelineState> pipelineState = (__bridge id<MTLRenderPipelineState>)mpClearColor_pipelineState;
   [encoder setRenderPipelineState:pipelineState];
   [encoder setFragmentBytes:c length:4*4 atIndex:0];
   [encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:4];
@@ -1872,20 +1872,10 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
   {
     /// !pSurface
 //    glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, mDefaultFramebuffer);
-    id<MTLTexture> texture = (__bridge id<MTLTexture>)mpContext->GetMetalDestinationTexture();
-    
-    MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
-    passDescriptor.colorAttachments[0].texture = texture;
-    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
-    passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-    
     id<MTLRenderCommandEncoder> oldCommandEncoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
     [oldCommandEncoder endEncoding];
     
-    id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
-    id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
-    commandEncoder.label = [NSString stringWithUTF8String:"main encoder"];
-    mpContext->SetMetalCommandEncoder((__bridge void*)commandEncoder);
+    mpContext->SetMetalCommandEncoder(nullptr);
   }
 }
 
