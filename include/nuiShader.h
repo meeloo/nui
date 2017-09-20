@@ -150,10 +150,14 @@ public:
   size_t GetUniformDescIndex(GLint location) const;
 
   GLint GetProgram() const; // GL Program
+  
+#ifdef _METAL_
   void* GetMetalLibrary() const; // id<MTLLibrary>
   void* GetMetalFunction(const nglString& rFunctionName) const; // id<MTLFunction>
   void* NewMetalPipelineDescriptor(const nuiRenderState& rRenderState) const; // MTLRenderPipelineState*
-
+  void* NewMetalPipelineState(const nuiRenderState& rRenderState) const; // id<MTLRenderPipelineState>
+#endif
+  
   static void ClearAll();
   
   GLint GetProjectionMatrixLocation() const;
@@ -255,8 +259,8 @@ private:
   void ParseStructMember(int depth, const nglString& parentName, void* _member);
   void ParseArgument(const char* domain, void* _argument);
   GLint GetMetalUniformLocation(const char* uniform) const;
-  mutable std::unordered_map<uint64, void*> mMetalPipelines;
-
+  mutable std::unordered_map<uint64, void*> mMetalPipelineDescs;
+  mutable std::unordered_map<void*, void*> mMetalPipelineStates;
 #endif
 };
 

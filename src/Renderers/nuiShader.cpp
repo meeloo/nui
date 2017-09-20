@@ -738,7 +738,10 @@ nuiShaderProgram::~nuiShaderProgram()
     gpPrograms.erase(it);
   }
   
-  for (auto it : mMetalPipelines)
+  for (auto it : mMetalPipelineDescs)
+    CFBridgingRelease(it.second);
+  
+  for (auto it : mMetalPipelineStates)
     CFBridgingRelease(it.second);
 }
 
@@ -885,8 +888,8 @@ uint64 nuiGetHashFromRenderState(const nuiRenderState& rState)
 void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRenderState) const // MTLRenderPipelineDescriptor*
 {
   uint64 hash = nuiGetHashFromRenderState(rRenderState);
-  auto it = mMetalPipelines.find(hash);
-  if (it != mMetalPipelines.end())
+  auto it = mMetalPipelineDescs.find(hash);
+  if (it != mMetalPipelineDescs.end())
   {
     MTLRenderPipelineDescriptor *descriptor = (__bridge MTLRenderPipelineDescriptor*)it->second;
     CFBridgingRetain(descriptor);
@@ -943,10 +946,24 @@ void* nuiShaderProgram::NewMetalPipelineDescriptor(const nuiRenderState& rRender
   descriptor.vertexDescriptor = vertexDescriptor;
   
   void* pipeline = (void*)CFBridgingRetain(descriptor);
-  mMetalPipelines[hash] = pipeline;
+  mMetalPipelineDescs[hash] = pipeline;
   CFBridgingRetain(descriptor);
+  
+  // Create the pipeline state
+  id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
+  NSError* err = nil;
+  id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:descriptor error:&err];
+  mMetalPipelineStates[pipeline] = (void*)CFBridgingRetain(pipelineState);
   return pipeline;
-//  return (__bridge void*)descriptor;
+}
+
+void* nuiShaderProgram::NewMetalPipelineState(const nuiRenderState& rRenderState) const // id<MTLRenderPipelineState>
+{
+  void* pipelineDesc = NewMetalPipelineDescriptor(rRenderState);
+  NGL_ASSERT(pipelineDesc != nullptr);
+  NGL_ASSERT(mMetalPipelineStates.find(pipelineDesc) != mMetalPipelineStates.end());
+  void* pipelineState = mMetalPipelineStates[pipelineDesc];
+  return pipelineState;
 }
 
 static GLenum GLTypeFromMetalType(MTLDataType type)

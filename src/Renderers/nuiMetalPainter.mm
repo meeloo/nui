@@ -1244,9 +1244,6 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
   
-  // Create the metal pipeline descriptor:
-  MTLRenderPipelineDescriptor* pipelineDesc = (__bridge MTLRenderPipelineDescriptor*)mFinalState.mpShader->NewMetalPipelineDescriptor(mFinalState);
-
   // Uniforms
   {
     const void* stateData = mpShaderState->GetStateData();
@@ -1292,13 +1289,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     [encoder setVertexBuffer:vertices offset:0 atIndex:1];
 
     // Create the pipeline state from all the gathered informations:
-    NSError* err = nil;
-    id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
-    if (err)
-    {
-      NGL_ASSERT(0);
-      NGL_OUT("Error creating MTLRenderPipelineState: %s\n", err.localizedDescription.UTF8String);
-    }
+    id<MTLRenderPipelineState> pipelineState = (__bridge id<MTLRenderPipelineState>)mFinalState.mpShader->NewMetalPipelineState(mFinalState);
     
     [encoder setRenderPipelineState:pipelineState];
   }
