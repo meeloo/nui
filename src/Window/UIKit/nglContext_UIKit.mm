@@ -160,7 +160,7 @@ void* nglContext::GetMetalDrawable() const
   return mMetalDrawable;
 }
 
-void* nglContext::GetMetalCommandEncoder() const
+void* nglContext::GetMetalCommandEncoder()
 {
   if (mMetalCommandEncoder)
     return mMetalCommandEncoder;

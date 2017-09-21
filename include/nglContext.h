@@ -231,7 +231,7 @@ if (HasExtension("GL_ARB_texture_compression"))
   virtual void* GetMetalLayer() const = 0;
   void* GetMetalDestinationTexture() const;
   void* GetMetalDrawable() const;
-  void* GetMetalCommandEncoder() const;
+  void* GetMetalCommandEncoder();
   void* GetMetalCommandBuffer() const;
   void SetMetalCommandEncoder(void* encoder); /// Setting a new command encoder will automatically send endEncoding to the current one before replacing it.
 
