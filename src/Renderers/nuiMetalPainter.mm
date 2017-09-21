@@ -965,6 +965,8 @@ MTLPrimitiveType nuiMTLPrimitiveTypeFromGL(GLenum type)
       return MTLPrimitiveTypePoint;
     case GL_LINES:
       return MTLPrimitiveTypeLine;
+    case GL_LINE_STRIP:
+      return MTLPrimitiveTypeLineStrip;
     case GL_TRIANGLES:
       return MTLPrimitiveTypeTriangle;
     case GL_TRIANGLE_FAN:
