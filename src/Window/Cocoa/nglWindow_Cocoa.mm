@@ -1767,26 +1767,32 @@ void nglWindow::BeginSession()
   {
     if (!mMetalDestinationTexture)
     {
+      id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
+      
+      static int frame = 0;
+      id<MTLCommandQueue> commandQueue = (__bridge id<MTLCommandQueue>)mMetalCommandQueue;
+      if (!commandQueue)
+      {
+        commandQueue = [device newCommandQueue];
+        mMetalCommandQueue = (void*)CFBridgingRetain(commandQueue);
+      }
+      commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", frame];
+      
       CAMetalLayer* layer = (__bridge CAMetalLayer*)GetMetalLayer();
       id<CAMetalDrawable> drawable = [layer nextDrawable];
       mMetalDrawable = (void*)CFBridgingRetain(drawable);
       id<MTLTexture> texture = drawable.texture;
       NGL_ASSERT(texture.width == layer.drawableSize.width);
       NGL_ASSERT(texture.height == layer.drawableSize.height);
-//      NGL_OUT("Next drawable size is %d x %d\n", (int)texture.width, (int)texture.height);
+      //      NGL_OUT("Next drawable size is %d x %d (%d x %d [%f])\n", (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
       mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
-
+      
       MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
       passDescriptor.colorAttachments[0].texture = texture;
       passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
       passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
       
-      id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
-      
-      static int frame = 0;
-      id<MTLCommandQueue> commandQueue = [device newCommandQueue];
-      commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", frame];
       id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
       commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", frame];
       mMetalCommandBuffer = (void*)CFBridgingRetain(commandBuffer);
