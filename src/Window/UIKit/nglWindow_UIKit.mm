@@ -292,7 +292,7 @@ std::pair<nglPath, bool> GetTemporaryDropFile(nglPath FileName) noexcept
     return { {}, false };
   }
   nglPath ret { tmp_dir };
-  ret += FileName;
+  ret += FileName.GetNodeName();
   return { ret, true };
 }
 
@@ -325,11 +325,16 @@ std::pair<nglPath, bool> GetTemporaryDropFile(nglPath FileName) noexcept
     //GetTemporaryDropFile
     [provider loadFileRepresentationForTypeIdentifier:UTI
                                     completionHandler:^(NSURL* _Nullable url, NSError* _Nullable error) {
-                                      auto r = GetTemporaryDropFile([provider.suggestedName UTF8String]);
-                                      if (r.second)
+                                      if (!url || error != nil)
                                       {
-                                        __block nglPath dst_file { r.first };
-                                        nglPath src_file { url.fileSystemRepresentation };
+                                        return;
+                                      }
+                                      
+                                      nglPath src_file { url.fileSystemRepresentation };
+                                      auto [path, success] = GetTemporaryDropFile(src_file);
+                                      if (success)
+                                      {
+                                        __block nglPath dst_file { path };
                                         if (src_file.Copy(dst_file))
                                         {
                                           dispatch_async(dispatch_get_main_queue(), ^{
