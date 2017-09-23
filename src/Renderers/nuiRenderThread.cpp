@@ -15,14 +15,14 @@
 #endif
 
 
-#define NUI_ENABLE_THREADED_RENDERING 1
+#define NUI_ENABLE_THREADED_RENDERING 0
 
 #if _DEBUG
-#define NUI_LOG_RENDERING 0
+#define NUI_LOG_RENDERING 1
 #define NUI_LOG_DRAWWIDGET 0
-#define NUI_LOG_DRAWLAYER 0
+#define NUI_LOG_DRAWLAYER 1
 #define NUI_LOG_DRAWWIDGETCONTENTS 0
-#define NUI_LOG_DRAWLAYERCONTENTS 0
+#define NUI_LOG_DRAWLAYERCONTENTS 1
 
 #define NUI_LOG_INVALLAYERRECT 0
 #define NUI_LOG_INVALLAYERCONTENTS 0
@@ -432,7 +432,7 @@ NGL_OUT("#######################################################################
   mpDrawContext->EnableClipping(false);
   mpDrawContext->Set2DProjectionMatrix(mRect.Size());
   mpContext->StopMarkerGroup();
-
+  mpPainter->SetSurface(nullptr);
   mpContext->StartMarkerGroup("Draw widget tree");
 
 //  {

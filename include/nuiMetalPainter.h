@@ -158,6 +158,9 @@ protected:
   virtual int32 GetCurrentWidth() const;
   virtual int32 GetCurrentHeight() const;
 
+  mutable void* mRenderCommandEncoder = nullptr;
+  void* GetRenderCommandEncoder(bool CreateIfNeeded) const;
+  void SetRenderCommandEncoder(void* encoder);
 };
 
 #endif //   #ifndef __NUI_NO_GL__

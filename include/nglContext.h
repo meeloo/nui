@@ -231,7 +231,7 @@ if (HasExtension("GL_ARB_texture_compression"))
   virtual void* GetMetalLayer() const = 0;
   void* GetMetalDestinationTexture() const;
   void* GetMetalDrawable() const;
-  void* GetMetalCommandEncoder();
+  void* GetMetalCommandEncoder(bool CreateIfNeeded);
   void* GetMetalCommandBuffer() const;
   void SetMetalCommandEncoder(void* encoder); /// Setting a new command encoder will automatically send endEncoding to the current one before replacing it.
 
@@ -337,6 +337,7 @@ protected:
   void* mMetalDestinationTexture = nil; // id <MTLTexture>
   void* mMetalCommandEncoder = nil;
   void* mMetalCommandBuffer = nil;
+  virtual void CreateMetalPass() = 0;
 #endif
 
 #ifdef _ANDROID_

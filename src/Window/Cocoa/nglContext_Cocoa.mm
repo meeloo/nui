@@ -165,6 +165,7 @@ void* nglContext::GetMetalCommandQueue() const // id <MTLCommandQueue>
 
 void* nglContext::GetMetalDestinationTexture() const
 {
+  const_cast<nglContext*>(this)->CreateMetalPass();
   return mMetalDestinationTexture;
 }
 
@@ -173,23 +174,14 @@ void* nglContext::GetMetalDrawable() const
   return mMetalDrawable;
 }
 
-void* nglContext::GetMetalCommandEncoder()
+void* nglContext::GetMetalCommandEncoder(bool CreateIfNeeded)
 {
   if (mMetalCommandEncoder)
     return mMetalCommandEncoder;
+
+  if (CreateIfNeeded)
+    CreateMetalPass();
   
-  // If we don't have one yet let's create it
-  id<MTLTexture> texture = (__bridge id<MTLTexture>)GetMetalDestinationTexture();
-  
-  MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
-  passDescriptor.colorAttachments[0].texture = texture;
-  passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
-  passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-  
-  id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)GetMetalCommandBuffer();
-  id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
-  commandEncoder.label = [NSString stringWithUTF8String:"main encoder"];
-  const_cast<nglContext*>(this)->SetMetalCommandEncoder((__bridge void*)commandEncoder);
   return mMetalCommandEncoder;
 }
 

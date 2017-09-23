@@ -526,7 +526,9 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
     pipelineDesc.vertexDescriptor = vertexDescriptor;
     NSError* err = nil;
     id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
+    NGL_ASSERT(device != nil);
     id<MTLRenderPipelineState> pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDesc error:&err];
+    NGL_ASSERT(pipelineState != nil);
     if (err)
     {
       NGL_ASSERT(0);
@@ -594,7 +596,10 @@ void nuiMetalPainter::SetViewport()
 //  NGL_ASSERT(x >= 0);
 //  NGL_ASSERT(y >= 0);
 //  Set Metal ViewPort to (x, y, w, h);
-  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(true);
+  if (!encoder)
+    encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(true);
+  NGL_ASSERT(encoder != nil);
   MTLViewport viewport = { (double)x, (double)y, (double)w, (double)h, (double)-1, (double)1 };
   [encoder setViewport:viewport];
   
@@ -658,7 +663,7 @@ void nuiMetalPainter::ResetMetalState()
   
   //  mTextureTranslate = nglVector2f(0.0f, 0.0f);
   //  mTextureScale = nglVector2f(1, 1);
-  
+  mScissorIsFlat = false;
   mFinalState = nuiRenderState();
   mpState = &mDefaultState;
 }
@@ -674,7 +679,8 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
   //TEST_FBO_CREATION();
   NUI_RETURN_IF_RENDERING_DISABLED;
   
-  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(true);
+  NGL_ASSERT(encoder != nil);
 
   // blending
   if (mFinalState.mBlending != rState.mBlending)
@@ -785,7 +791,8 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
 
 void nuiMetalPainter::ApplyScissor(const nuiRenderState& rState)
 {
-  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(true);
+  NGL_ASSERT(encoder != nil);
 
   float scale = mpContext->GetScale();
   int32 width = GetCurrentWidth();
@@ -908,9 +915,6 @@ void nuiMetalPainter::ApplyTexture(const nuiRenderState& rState, int slot)
       UploadTexture(mFinalState.mpTexture[slot], slot);
     }
 
-//    id<MTLCommandEncoder> commandEncoder = (id<MTLCommandEncoder>) mpContext->GetMetalCommandEncoder();
-//    [commandEncoder setFragmentTexture:(id<MTLTexture>)it->second.mTexture atIndex:slot];
-    
     //NGL_OUT("Change texture type from 0x%x to 0x%x\n", outtarget, intarget);
   }
   else
@@ -934,7 +938,8 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   mFinalState.mClearColor = mpState->mClearColor;
   
   float c[4] = { mFinalState.mClearColor.Red(), mFinalState.mClearColor.Green(), mFinalState.mClearColor.Blue(), mFinalState.mClearColor.Alpha() };
-  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(true);
+  NGL_ASSERT(encoder != nil);
   id<MTLRenderPipelineState> pipelineState = (__bridge id<MTLRenderPipelineState>)mpClearColor_pipelineState;
   [encoder setRenderPipelineState:pipelineState];
   [encoder setFragmentBytes:c length:4*4 atIndex:0];
@@ -1239,8 +1244,9 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   
   // Metal Specific part:
   id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
-  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
-  
+  NGL_ASSERT(device != nil);
+  id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(true);
+  NGL_ASSERT(encoder != nil);
   // Uniforms
   {
     const void* stateData = mpShaderState->GetStateData();
@@ -1265,6 +1271,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         size_t vertexcount = pArray->GetSize();
         size_t vertexsize = sizeof(nuiRenderArray::Vertex);
         id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModeShared];
+        NGL_ASSERT(vertices != nil);
         vertexArray.push_back((void*)CFBridgingRetain(vertices));
         
         for (size_t i = 0; i < pArray->GetIndexArrayCount(); i++)
@@ -1275,6 +1282,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 #else
           id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
 #endif
+          NGL_ASSERT(indexes != nil);
           vertexArray.push_back((void*)CFBridgingRetain(indexes));
         }
         mRenderArrays[pArray] = vertexArray;
@@ -1283,11 +1291,13 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     }
 
     id<MTLBuffer> vertices = (__bridge id<MTLBuffer>)vertexArray[0];
+    NGL_ASSERT(vertices != nil);
     [encoder setVertexBuffer:vertices offset:0 atIndex:1];
 
     // Create the pipeline state from all the gathered informations:
     id<MTLRenderPipelineState> pipelineState = (__bridge id<MTLRenderPipelineState>)mFinalState.mpShader->NewMetalPipelineState(mFinalState);
-    
+    NGL_ASSERT(pipelineState != nil);
+
     [encoder setRenderPipelineState:pipelineState];
   }
   
@@ -1337,6 +1347,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
         MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
         id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
+        NGL_ASSERT(indexes != nil);
 #if (defined _UIKIT_)
         MTLIndexType indexType = MTLIndexTypeUInt16;
 #else
@@ -1360,6 +1371,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
         MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
         id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
+        NGL_ASSERT(indexes != nil);
 #if (defined _UIKIT_)
         MTLIndexType indexType = MTLIndexTypeUInt16;
 #else
@@ -1393,6 +1405,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 //#endif
         MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
         id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
+        NGL_ASSERT(indexes != nil);
 #if (defined _UIKIT_)
         MTLIndexType indexType = MTLIndexTypeUInt16;
 #else
@@ -1478,6 +1491,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 #endif
 
   id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
+  NGL_ASSERT(device != nil);
   nuiTexture* pProxy = pTexture->GetProxyTexture();
   if (pProxy)
     pTexture = pProxy;
@@ -1505,6 +1519,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
     samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
     
     id<MTLSamplerState> samplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
+    NGL_ASSERT(samplerState != nil);
     info.mSampler = (void*)CFBridgingRetain(samplerState);
   }
 
@@ -1625,6 +1640,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
 
         id<MTLSamplerState> samplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
+        NGL_ASSERT(samplerState != nil);
         info.mSampler = (void*)CFBridgingRetain(samplerState);
       }
 
@@ -1763,7 +1779,6 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
       UploadTexture(pTexture, 0);
       
       //    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, tinfo.mTexture);
-      
     }
     
     auto tit = mTextures.find(pTexture);
@@ -1773,7 +1788,6 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     //  We definetly need a color attachement, either a texture, or a renderbuffer
     if (pTexture && pSurface->GetRenderToTexture())
     {
-      //    glFramebufferTexture2DNUI(GL_FRAMEBUFFER_NUI, GL_COLOR_ATTACHMENT0_NUI, GL_TEXTURE_2D, info.mTexture, 0);
       passDescriptor.colorAttachments[0].texture = (__bridge id<MTLTexture>)tit->second.mTexture;
       passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
@@ -1784,100 +1798,44 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     }
     else
     {
-      //    glGenRenderbuffersNUI(1, (GLuint*)&info.mRenderbuffer);
-      
-      //    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mRenderbuffer);
-      
       GLint pixelformat = pSurface->GetPixelFormat();
       GLint internalPixelformat = pSurface->GetPixelFormat();
       internalPixelformat = GL_RGBA;
       
-      //    glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-      //                                 GL_COLOR_ATTACHMENT0_NUI,
-      //                                 GL_RENDERBUFFER_NUI,
-      //                                 info.mRenderbuffer);
       //NGL_OUT("surface render buffer -> %d\n", info.mRenderbuffer);
     }
     
     
-    ///< Do we need a depth buffer
     if (pSurface->GetDepth())
     {
-      //    glGenRenderbuffersNUI(1, (GLuint*)&info.mDepthbuffer);
-      //    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mDepthbuffer);
-      
-      //    passDescriptor.depthAttachments[0].texture = (id<MTLTexture>)it->second.mTexture;
-      //    passDescriptor.depthAttachment[0].clearDepth = 1.0;
-      
-      if (pSurface->GetStencil())
-      {
-        //      glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI,
-        //                               GL_DEPTH24_STENCIL8_OES,
-        //                               width, height);
-      }
-      else
-      {
-//        int32 depth = pSurface->GetDepth();
-        //      if (depth <= 16)
-        //        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT16, width, height);
-        //      else if (depth <= 24)
-        //        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT24, width, height);
-        //      else
-        //        glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI, GL_DEPTH_COMPONENT32, width, height);
-      }
-      
-      //    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
-      
-      //    glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-      //                                 GL_DEPTH_ATTACHMENT_NUI,
-      //                                 GL_RENDERBUFFER_NUI,
-      //                                 info.mDepthbuffer);
-      
-      if (pSurface->GetStencil())
-      {
-        //      glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-        //                                   GL_STENCIL_ATTACHMENT_NUI,
-        //                                   GL_RENDERBUFFER_NUI,
-        //                                   info.mDepthbuffer);
-      }
+      NGL_ASSERT(0);
     }
     
-    ///< Do we need a stencil buffer
     if (pSurface->GetStencil())
     {
-      //    glGenRenderbuffersNUI(1, (GLuint*)&info.mStencilbuffer);
-      //    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, info.mStencilbuffer);
-      
-      //    glRenderbufferStorageNUI(GL_RENDERBUFFER_NUI,
-      //                             GL_STENCIL_INDEX,
-      //                             width, height);
-      //    glBindRenderbufferNUI(GL_RENDERBUFFER_NUI, 0);
-      //    glFramebufferRenderbufferNUI(GL_FRAMEBUFFER_NUI,
-      //                                 GL_STENCIL_ATTACHMENT_NUI,
-      //                                 GL_RENDERBUFFER_NUI,
-      //                                 info.mStencilbuffer);
+      NGL_ASSERT(0);
     }
     
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
-    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
-    [commandEncoder endEncoding];
+    NGL_ASSERT(commandBuffer != nil);
+    
+    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(false);
+    if (commandEncoder)
+      [commandEncoder endEncoding];
+
     commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+    NGL_ASSERT(commandEncoder != nil);
     commandEncoder.label = [NSString stringWithUTF8String:pSurface->GetObjectName().GetChars()];
-    mpContext->SetMetalCommandEncoder((__bridge void*)commandEncoder);
-    
-    
-    //  glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, DefaultFrameBuffer);
-    //NGL_OUT("glBindFramebufferNUI -> %d\n", DefaultFrameBuffer);
-    
+    SetRenderCommandEncoder((__bridge void*)commandEncoder);
   }
   else
   {
     /// !pSurface
-//    glBindFramebufferNUI(GL_FRAMEBUFFER_NUI, mDefaultFramebuffer);
-    id<MTLRenderCommandEncoder> oldCommandEncoder = (__bridge id<MTLRenderCommandEncoder>)mpContext->GetMetalCommandEncoder();
-    [oldCommandEncoder endEncoding];
+    id<MTLRenderCommandEncoder> oldCommandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(false);
+    if (oldCommandEncoder != nil)
+      [oldCommandEncoder endEncoding];
     
-    mpContext->SetMetalCommandEncoder(nullptr);
+    SetRenderCommandEncoder(nullptr);
   }
 }
 
@@ -1990,5 +1948,24 @@ int32 nuiMetalPainter::GetCurrentHeight() const
     return mpSurface->GetHeight();
   return mpContext->GetHeight();
 }
+
+void* nuiMetalPainter::GetRenderCommandEncoder(bool CreateIfNeeded) const
+{
+  if (mRenderCommandEncoder)
+    return mRenderCommandEncoder;
+  return mpContext->GetMetalCommandEncoder(CreateIfNeeded);
+}
+
+void nuiMetalPainter::SetRenderCommandEncoder(void* encoder)
+{
+  if (mRenderCommandEncoder)
+    CFBridgingRelease(mRenderCommandEncoder);
+  if (encoder)
+    mRenderCommandEncoder = (void*)CFBridgingRetain((__bridge id<MTLCommandEncoder>)encoder);
+  else
+    mRenderCommandEncoder = nullptr;
+  mpContext->SetMetalCommandEncoder(mRenderCommandEncoder);
+}
+
 
 #endif //   #ifndef __NUI_NO_GL__

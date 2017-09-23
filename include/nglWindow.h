@@ -966,6 +966,7 @@ public:
   void UpdateLayer();
   void UpdateGLLayer();
   void UpdateMetalLayer();
+  void CreateMetalPass();
 #endif
 
 #ifdef _COCOA_
@@ -1001,6 +1002,7 @@ private:
   void ReleaseDisplayLink();
   friend CVReturn CVDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* pNGLWindow);
   
+  void CreateMetalPass();
 public:
   bool IsDragging() { return mpDragged != nullptr; }
 

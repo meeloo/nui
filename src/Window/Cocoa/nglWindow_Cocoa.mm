@@ -1750,6 +1750,7 @@ void nglWindow::ReleaseDisplayLink()
 
 
 #pragma mark GL Context handling
+static int frame = 0;
 
 void nglWindow::BeginSession()
 {
@@ -1765,43 +1766,53 @@ void nglWindow::BeginSession()
   }
   else
   {
-    if (!mMetalDestinationTexture)
+    id<MTLCommandQueue> commandQueue = (__bridge id<MTLCommandQueue>)mMetalCommandQueue;
+    if (!commandQueue)
     {
       id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
-      
-      static int frame = 0;
-      id<MTLCommandQueue> commandQueue = (__bridge id<MTLCommandQueue>)mMetalCommandQueue;
-      if (!commandQueue)
-      {
-        commandQueue = [device newCommandQueue];
-        mMetalCommandQueue = (void*)CFBridgingRetain(commandQueue);
-      }
-      commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", frame];
-      
-      CAMetalLayer* layer = (__bridge CAMetalLayer*)GetMetalLayer();
-      id<CAMetalDrawable> drawable = [layer nextDrawable];
-      mMetalDrawable = (void*)CFBridgingRetain(drawable);
-      id<MTLTexture> texture = drawable.texture;
-      NGL_ASSERT(texture.width == layer.drawableSize.width);
-      NGL_ASSERT(texture.height == layer.drawableSize.height);
-      //      NGL_OUT("Next drawable size is %d x %d (%d x %d [%f])\n", (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
-      mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
-      
-      MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
-      passDescriptor.colorAttachments[0].texture = texture;
-      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
-      passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-      passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
-      
-      id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
-      commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", frame];
-      mMetalCommandBuffer = (void*)CFBridgingRetain(commandBuffer);
-      id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
-      commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", frame];
-      SetMetalCommandEncoder((__bridge void*)commandEncoder);
-      
-      frame++;
+      commandQueue = [device newCommandQueue];
+      mMetalCommandQueue = (void*)CFBridgingRetain(commandQueue);
     }
+    NGL_ASSERT(commandQueue);
+    commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", frame];
+    
+    id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
+    NGL_ASSERT(commandBuffer);
+    commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", frame];
+    mMetalCommandBuffer = (void*)CFBridgingRetain(commandBuffer);
+
+    frame++;
+  }
+}
+
+void nglWindow::CreateMetalPass()
+{
+  if (!mMetalCommandEncoder)
+  {
+    id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
+    CAMetalLayer* layer = (__bridge CAMetalLayer*)GetMetalLayer();
+    id<CAMetalDrawable> drawable = [layer nextDrawable];
+    NGL_ASSERT(drawable != nil);
+    mMetalDrawable = (void*)CFBridgingRetain(drawable);
+    id<MTLTexture> texture = drawable.texture;
+    NGL_ASSERT(texture.width == layer.drawableSize.width);
+    NGL_ASSERT(texture.height == layer.drawableSize.height);
+    //      NGL_OUT("Next drawable size is %d x %d (%d x %d [%f])\n", (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
+    mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
+    
+    MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
+    passDescriptor.colorAttachments[0].texture = texture;
+    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+    passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
+    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
+    
+    id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mMetalCommandBuffer;
+    NGL_ASSERT(commandBuffer);
+    id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+    NGL_ASSERT(commandEncoder);
+    commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", frame];
+    SetMetalCommandEncoder((__bridge void*)commandEncoder);
+    NGL_OUT("nglWindow::CreateMetalPass() encoder = %p  texture = %p  buffer = %p\n", commandEncoder, texture, commandBuffer);
   }
 }
 
@@ -1823,12 +1834,16 @@ void nglWindow::EndSession()
   }
   else
   {
-    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetMetalCommandEncoder();
+    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetMetalCommandEncoder(false);
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)GetMetalCommandBuffer();
     id<CAMetalDrawable> drawable = (__bridge id<CAMetalDrawable>)GetMetalDrawable();
 
-    [commandEncoder endEncoding];
-    [commandBuffer presentDrawable:drawable];
+    if (commandEncoder)
+      [commandEncoder endEncoding];
+
+    if (drawable)
+      [commandBuffer presentDrawable:drawable];
+    
     [commandBuffer commit];
 
     CFBridgingRelease(mMetalDrawable);
