@@ -597,8 +597,6 @@ void nuiMetalPainter::SetViewport()
 //  NGL_ASSERT(y >= 0);
 //  Set Metal ViewPort to (x, y, w, h);
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(true);
-  if (!encoder)
-    encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(true);
   NGL_ASSERT(encoder != nil);
   MTLViewport viewport = { (double)x, (double)y, (double)w, (double)h, (double)-1, (double)1 };
   [encoder setViewport:viewport];
@@ -1819,23 +1817,16 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
     NGL_ASSERT(commandBuffer != nil);
     
-    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(false);
-    if (commandEncoder)
-      [commandEncoder endEncoding];
-
-    commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
+    mpContext->SetCurrentMetalCommandEncoder(nullptr);
+    id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
     NGL_ASSERT(commandEncoder != nil);
     commandEncoder.label = [NSString stringWithUTF8String:pSurface->GetObjectName().GetChars()];
-    SetRenderCommandEncoder((__bridge void*)commandEncoder);
+    mpContext->SetCurrentMetalCommandEncoder((__bridge void*)commandEncoder);
   }
   else
   {
     /// !pSurface
-    id<MTLRenderCommandEncoder> oldCommandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder(false);
-    if (oldCommandEncoder != nil)
-      [oldCommandEncoder endEncoding];
-    
-    SetRenderCommandEncoder(nullptr);
+    mpContext->SetCurrentMetalCommandEncoder(nullptr);
   }
 }
 
@@ -1951,20 +1942,18 @@ int32 nuiMetalPainter::GetCurrentHeight() const
 
 void* nuiMetalPainter::GetRenderCommandEncoder(bool CreateIfNeeded) const
 {
-  if (mRenderCommandEncoder)
-    return mRenderCommandEncoder;
-  return mpContext->GetMetalCommandEncoder(CreateIfNeeded);
+  void* encoder = mpContext->GetCurrentMetalCommandEncoder();
+  if (!encoder)
+  {
+    encoder = mpContext->GetDrawableMetalCommandEncoder(CreateIfNeeded);
+  }
+
+  return encoder;
 }
 
 void nuiMetalPainter::SetRenderCommandEncoder(void* encoder)
 {
-  if (mRenderCommandEncoder)
-    CFBridgingRelease(mRenderCommandEncoder);
-  if (encoder)
-    mRenderCommandEncoder = (void*)CFBridgingRetain((__bridge id<MTLCommandEncoder>)encoder);
-  else
-    mRenderCommandEncoder = nullptr;
-  mpContext->SetMetalCommandEncoder(mRenderCommandEncoder);
+  mpContext->SetCurrentMetalCommandEncoder(encoder);
 }
 
 

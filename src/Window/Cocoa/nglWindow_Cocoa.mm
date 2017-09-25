@@ -1785,21 +1785,26 @@ void nglWindow::BeginSession()
   }
 }
 
-void nglWindow::CreateMetalPass()
+void* nglWindow::CreateMetalPass()
 {
-  if (!mMetalCommandEncoder)
+  id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
+  id<MTLTexture> texture = (__bridge id<MTLTexture>)mMetalDestinationTexture;
+  
+  if (!mMetalDrawable)
   {
-    id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
     CAMetalLayer* layer = (__bridge CAMetalLayer*)GetMetalLayer();
     id<CAMetalDrawable> drawable = [layer nextDrawable];
     NGL_ASSERT(drawable != nil);
     mMetalDrawable = (void*)CFBridgingRetain(drawable);
-    id<MTLTexture> texture = drawable.texture;
+    texture = drawable.texture;
     NGL_ASSERT(texture.width == layer.drawableSize.width);
     NGL_ASSERT(texture.height == layer.drawableSize.height);
     //      NGL_OUT("Next drawable size is %d x %d (%d x %d [%f])\n", (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
     mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
-    
+  }
+
+  if (!mDrawableMetalCommandEncoder)
+  {
     MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     passDescriptor.colorAttachments[0].texture = texture;
     passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
@@ -1811,9 +1816,10 @@ void nglWindow::CreateMetalPass()
     id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
     NGL_ASSERT(commandEncoder);
     commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", frame];
-    SetMetalCommandEncoder((__bridge void*)commandEncoder);
-    NGL_OUT("nglWindow::CreateMetalPass() encoder = %p  texture = %p  buffer = %p\n", commandEncoder, texture, commandBuffer);
+    mDrawableMetalCommandEncoder = (void*)CFBridgingRetain(commandEncoder);
+    NGL_ASSERT(mCurrentMetalCommandEncoder == nil);
   }
+  return mDrawableMetalCommandEncoder;
 }
 
 void nglWindow::EndSession()
@@ -1834,28 +1840,33 @@ void nglWindow::EndSession()
   }
   else
   {
-    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)GetMetalCommandEncoder(false);
+    SetCurrentMetalCommandEncoder(nullptr);
+    
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)GetMetalCommandBuffer();
     id<CAMetalDrawable> drawable = (__bridge id<CAMetalDrawable>)GetMetalDrawable();
-
-    if (commandEncoder)
-      [commandEncoder endEncoding];
 
     if (drawable)
       [commandBuffer presentDrawable:drawable];
     
     [commandBuffer commit];
 
-    CFBridgingRelease(mMetalDrawable);
-    CFBridgingRelease(mMetalDestinationTexture);
+    if (mMetalDrawable)
+    {
+      CFBridgingRelease(mMetalDrawable);
+      mMetalDrawable = nullptr;
+    }
     
-    CFBridgingRelease(mMetalCommandBuffer);
-    SetMetalCommandEncoder(nullptr);
+    if (mMetalDestinationTexture)
+    {
+      CFBridgingRelease(mMetalDestinationTexture);
+      mMetalDestinationTexture = nullptr;
+    }
     
-    mMetalDrawable = nullptr;
-    mMetalDestinationTexture = nullptr;
-    
-    mMetalCommandBuffer = nullptr;
+    if (mMetalCommandBuffer)
+    {
+      CFBridgingRelease(mMetalCommandBuffer);
+      mMetalCommandBuffer = nullptr;
+    }
   }
   
 #endif

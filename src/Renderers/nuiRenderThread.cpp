@@ -18,11 +18,11 @@
 #define NUI_ENABLE_THREADED_RENDERING 0
 
 #if _DEBUG
-#define NUI_LOG_RENDERING 1
+#define NUI_LOG_RENDERING 0
 #define NUI_LOG_DRAWWIDGET 0
-#define NUI_LOG_DRAWLAYER 1
+#define NUI_LOG_DRAWLAYER 0
 #define NUI_LOG_DRAWWIDGETCONTENTS 0
-#define NUI_LOG_DRAWLAYERCONTENTS 1
+#define NUI_LOG_DRAWLAYERCONTENTS 0
 
 #define NUI_LOG_INVALLAYERRECT 0
 #define NUI_LOG_INVALLAYERCONTENTS 0
@@ -197,10 +197,6 @@ void nuiRenderThread::SetLayerTree(nuiLayer* pLayerRoot)
 
 void nuiRenderThread::InvalidateLayerRect(nuiLayer *pLayer, nuiRect rect)
 {
-  if (rect.GetWidth() == 1024)
-  {
-    NGL_OUT("InvalidateLayerRect %p %s [%s]\n", pLayer, rect.GetValue().GetChars(), pLayer?pLayer->GetObjectName().GetChars():"ROOT");
-  }
 #if NUI_LOG_INVALLAYERRECT
   NGL_OUT("InvalidateLayerRect %p %s [%s]\n", pLayer, rect.GetValue().GetChars(), pLayer?pLayer->GetObjectName().GetChars():"ROOT");
 #endif

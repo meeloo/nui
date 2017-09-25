@@ -174,15 +174,25 @@ void* nglContext::GetMetalDrawable() const
   return mMetalDrawable;
 }
 
-void* nglContext::GetMetalCommandEncoder(bool CreateIfNeeded)
+void* nglContext::GetDrawableMetalCommandEncoder(bool CreateIfNeeded)
 {
-  if (mMetalCommandEncoder)
-    return mMetalCommandEncoder;
-
-  if (CreateIfNeeded)
-    CreateMetalPass();
+  if (mDrawableMetalCommandEncoder)
+    return mDrawableMetalCommandEncoder;
   
-  return mMetalCommandEncoder;
+  if (CreateIfNeeded)
+  {
+    void* encoder = CreateMetalPass();
+    NGL_ASSERT(encoder != nil);
+    SetCurrentMetalCommandEncoder(encoder);
+    mDrawableMetalCommandEncoder = encoder;
+  }
+  
+  return mDrawableMetalCommandEncoder;
+}
+
+void* nglContext::GetCurrentMetalCommandEncoder()
+{
+  return mCurrentMetalCommandEncoder;
 }
 
 void* nglContext::GetMetalCommandBuffer() const
@@ -194,7 +204,7 @@ void nglContext::AddMarker(const char* title)
 {
   if (mMetalDevice)
   {
-    [(__bridge id<MTLCommandEncoder>)mMetalCommandEncoder insertDebugSignpost:[NSString stringWithCString:title]];
+    [(__bridge id<MTLCommandEncoder>)mCurrentMetalCommandEncoder insertDebugSignpost:[NSString stringWithCString:title]];
   }
   else
   {
@@ -206,7 +216,7 @@ void nglContext::StartMarkerGroup(const char* title)
 {
   if (mMetalDevice)
   {
-    [(__bridge id<MTLCommandEncoder>)mMetalCommandEncoder pushDebugGroup:[NSString stringWithCString:title]];
+    [(__bridge id<MTLCommandEncoder>)mCurrentMetalCommandEncoder pushDebugGroup:[NSString stringWithCString:title]];
   }
   else
   {
@@ -218,7 +228,7 @@ void nglContext::StopMarkerGroup()
 {
   if (mMetalDevice)
   {
-    [(__bridge id<MTLCommandEncoder>)mMetalCommandEncoder popDebugGroup];
+    [(__bridge id<MTLCommandEncoder>)mCurrentMetalCommandEncoder popDebugGroup];
   }
   else
   {
@@ -226,12 +236,19 @@ void nglContext::StopMarkerGroup()
   }
 }
 
-void nglContext::SetMetalCommandEncoder(void* encoder)
+void nglContext::SetCurrentMetalCommandEncoder(void* encoder)
 {
-  if (mMetalCommandEncoder)
-    CFBridgingRelease(mMetalCommandEncoder);
+  mDrawableMetalCommandEncoder = nil; // In any case the drawable encoder will be reset if it already existed
+  if (mCurrentMetalCommandEncoder)
+  {
+    id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)mCurrentMetalCommandEncoder;
+    [commandEncoder endEncoding];
+
+    CFBridgingRelease(mCurrentMetalCommandEncoder);
+  }
+
+  mCurrentMetalCommandEncoder = nil;
+
   if (encoder)
-    mMetalCommandEncoder = (void*)CFBridgingRetain((__bridge id<MTLCommandEncoder>)encoder);
-  else
-    mMetalCommandEncoder = nullptr;
+    mCurrentMetalCommandEncoder = (void*)CFBridgingRetain((__bridge id<MTLCommandEncoder>)encoder);
 }

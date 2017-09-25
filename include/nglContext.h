@@ -231,9 +231,10 @@ if (HasExtension("GL_ARB_texture_compression"))
   virtual void* GetMetalLayer() const = 0;
   void* GetMetalDestinationTexture() const;
   void* GetMetalDrawable() const;
-  void* GetMetalCommandEncoder(bool CreateIfNeeded);
+  void* GetDrawableMetalCommandEncoder(bool CreateIfNeeded);
+  void* GetCurrentMetalCommandEncoder();
+  void SetCurrentMetalCommandEncoder(void* encoder);
   void* GetMetalCommandBuffer() const;
-  void SetMetalCommandEncoder(void* encoder); /// Setting a new command encoder will automatically send endEncoding to the current one before replacing it.
 
 #endif
 
@@ -331,13 +332,14 @@ protected:
 #endif
   
 #if (defined _UIKIT_) || (defined _COCOA_)
-  void* mMetalDevice = nil; // id <MTLDevice>
-  void* mMetalCommandQueue = nil; // id <MTLCommandQueue>
-  void* mMetalDrawable = nil;
-  void* mMetalDestinationTexture = nil; // id <MTLTexture>
-  void* mMetalCommandEncoder = nil;
-  void* mMetalCommandBuffer = nil;
-  virtual void CreateMetalPass() = 0;
+  void* mMetalDevice = nil; ///< id<MTLDevice>
+  void* mMetalCommandQueue = nil; ///< id<MTLCommandQueue>
+  void* mMetalDrawable = nil; ///< id<MTLDrawable>
+  void* mMetalCommandBuffer = nil; ///< id<MTLCommandBuffer>
+  void* mMetalDestinationTexture = nil; ///< id<MTLTexture>
+  void* mCurrentMetalCommandEncoder = nil;
+  void* mDrawableMetalCommandEncoder = nil;
+  virtual void* CreateMetalPass() = 0; ///< id<MTLCommandEncoder>
 #endif
 
 #ifdef _ANDROID_
