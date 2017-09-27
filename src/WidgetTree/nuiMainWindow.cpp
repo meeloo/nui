@@ -102,7 +102,7 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   nuiRenderThread* pRenderThread = GetRenderThread();
   
 //  SetLayerPolicy(nuiDrawPolicyDrawNone);
-  SetLayerPolicy(nuiDrawPolicyDrawTree);
+//  SetLayerPolicy(nuiDrawPolicyDrawTree);
 
   if (NUI_MAINWINDOW_USE_LAYERS)
   {
@@ -166,7 +166,7 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   GetRenderThread();
 
 //  SetLayerPolicy(nuiDrawPolicyDrawNone);
-  SetLayerPolicy(nuiDrawPolicyDrawTree);
+  //SetLayerPolicy(nuiDrawPolicyDrawTree);
 
   if (NUI_MAINWINDOW_USE_LAYERS)
   {
@@ -969,7 +969,7 @@ bool nuiMainWindow::ShowWidgetInspector()
 
     mpInspectorWindow = new nuiMainWindow(nuiContextInfo(nuiContextInfo::StandardContext2D), Info, GetNGLContext(), ResPath);
     mpInspectorWindow->SetForceNoDrawToLayer(true);
-    SetLayerPolicy(nuiDrawPolicyDrawTree);
+    //SetLayerPolicy(nuiDrawPolicyDrawTree);
     mpInspectorWindow->Acquire();
     mpInspectorWindow->SetQuitOnClose(false);
     mpInspectorWindow->AddChild(new nuiIntrospector(this));

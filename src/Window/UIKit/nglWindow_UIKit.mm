@@ -38,7 +38,8 @@ const nglChar* gpWindowErrorTable[] =
 #endif
 
 #if defined(_MULTI_TOUCHES_) && defined(_DEBUG_)
-# define NGL_TOUCHES_OUT NGL_OUT
+# define NGL_TOUCHES_OUT
+// NGL_OUT
 #else//!_MULTI_TOUCHES_
 # define NGL_TOUCHES_OUT
 #endif//!_MULTI_TOUCHES_
