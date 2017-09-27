@@ -216,7 +216,7 @@ void nglContext::StartMarkerGroup(const char* title)
 {
   if (mMetalDevice)
   {
-    [(__bridge id<MTLCommandEncoder>)mCurrentMetalCommandEncoder pushDebugGroup:[NSString stringWithCString:title]];
+    [(__bridge id<MTLCommandBuffer>)mMetalCommandBuffer pushDebugGroup:[NSString stringWithCString:title]];
   }
   else
   {
@@ -228,7 +228,7 @@ void nglContext::StopMarkerGroup()
 {
   if (mMetalDevice)
   {
-    [(__bridge id<MTLCommandEncoder>)mCurrentMetalCommandEncoder popDebugGroup];
+    [(__bridge id<MTLCommandBuffer>)mMetalCommandBuffer popDebugGroup];
   }
   else
   {

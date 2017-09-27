@@ -780,8 +780,6 @@ void nuiMetalPainter::ApplyState(const nuiRenderState& rState)
 //    glColorMask(m, m, m, m);
   }
 
-  ApplyScissor(rState);
-  
   mFinalState.mClearColor = rState.mClearColor;
   mFinalState.mStrokeColor = rState.mStrokeColor;
   mFinalState.mFillColor = rState.mFillColor;
@@ -942,7 +940,7 @@ void nuiMetalPainter::Clear(bool color, bool depth, bool stencil)
   [encoder setRenderPipelineState:pipelineState];
   [encoder setFragmentBytes:c length:4*4 atIndex:0];
   [encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:4];
-  
+
 //#ifdef _OPENGL_ES_
 //    glClearDepthf(mFinalState.mClearDepth);
 //#else
@@ -989,7 +987,15 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   mRenderOperations++;
   mBatches++;
   
-  if (!mEnableDrawArray || mScissorIsFlat)
+  if (!mEnableDrawArray)
+  {
+    pArray->Release();
+    return;
+  }
+  
+  ApplyScissor(*mpState);
+
+  if (mScissorIsFlat)
   {
     pArray->Release();
     return;
@@ -1337,6 +1343,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     {
       MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
       [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
+      mDrawOperationsOnCurrentSurface++;
     }
     else
     {
@@ -1352,6 +1359,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         MTLIndexType indexType = MTLIndexTypeUInt32;
 #endif
         [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
+        mDrawOperationsOnCurrentSurface++;
       }
     }
 
@@ -1361,6 +1369,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     {
       MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
       [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
+      mDrawOperationsOnCurrentSurface++;
     }
     else
     {
@@ -1376,6 +1385,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         MTLIndexType indexType = MTLIndexTypeUInt32;
 #endif
         [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
+        mDrawOperationsOnCurrentSurface++;
       }
     }
 //    glBlendFunc(mSrcColor, mDstColor);
@@ -1390,6 +1400,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
 //      glDrawArrays(mode, 0, s);
       MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
       [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
+      mDrawOperationsOnCurrentSurface++;
     }
     else
     {
@@ -1410,6 +1421,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         MTLIndexType indexType = MTLIndexTypeUInt32;
 #endif
         [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
+        mDrawOperationsOnCurrentSurface++;
       }
     }
   }
@@ -1715,6 +1727,10 @@ void nuiMetalPainter::_DestroySurface(nuiSurface* pSurface)
 
 void nuiMetalPainter::CreateSurface(nuiSurface* pSurface)
 {
+  NGL_ASSERT(pSurface);
+  nuiTexture* pTexture = pSurface->GetTexture();
+  NGL_ASSERT(pTexture);
+  UploadTexture(pTexture, 0);
 }
 
 void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
@@ -1726,6 +1742,12 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
   {
     pSurface->Acquire();
   }
+  
+  // Print stats:
+//  if (mpSurface && !pSurface)
+//  {
+//    NGL_OUT("DrawOperations On Surface %s = %d\n", mpSurface->GetObjectName().GetChars(), (int)mDrawOperationsOnCurrentSurface);
+//  }
   
   if (mpSurface)
   {
@@ -1822,6 +1844,9 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     NGL_ASSERT(commandEncoder != nil);
     commandEncoder.label = [NSString stringWithUTF8String:pSurface->GetObjectName().GetChars()];
     mpContext->SetCurrentMetalCommandEncoder((__bridge void*)commandEncoder);
+
+    // Reset stats:
+    mDrawOperationsOnCurrentSurface = 0;
   }
   else
   {

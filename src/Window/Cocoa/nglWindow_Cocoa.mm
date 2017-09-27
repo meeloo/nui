@@ -1793,7 +1793,9 @@ void* nglWindow::CreateMetalPass()
   if (!mMetalDrawable)
   {
     CAMetalLayer* layer = (__bridge CAMetalLayer*)GetMetalLayer();
-    id<CAMetalDrawable> drawable = [layer nextDrawable];
+    id<CAMetalDrawable> drawable = nil;
+    while (!drawable)
+      drawable = [layer nextDrawable];
     NGL_ASSERT(drawable != nil);
     mMetalDrawable = (void*)CFBridgingRetain(drawable);
     texture = drawable.texture;

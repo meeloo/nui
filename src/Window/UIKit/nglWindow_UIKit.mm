@@ -12,6 +12,7 @@
 #include <Metal/Metal.h>
 
 #define NGL_WINDOW_FPS 60.0f
+#define NUI_START_METAL_CAPTURE 0
 
 #define USE_MULTISAMPLE 0
 
@@ -1178,6 +1179,9 @@ void nglWindow::BeginSession()
     if (!commandQueue)
     {
       id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
+#if NUI_START_METAL_CAPTURE
+      [MTLCaptureManager.sharedCaptureManager startCaptureWithDevice:device];
+#endif
       commandQueue = [device newCommandQueue];
       mMetalCommandQueue = (void*)CFBridgingRetain(commandQueue);
     }
@@ -1282,6 +1286,9 @@ void nglWindow::EndSession()
       CFBridgingRelease(mMetalCommandBuffer);
       mMetalCommandBuffer = nullptr;
     }
+#if NUI_START_METAL_CAPTURE
+    [MTLCaptureManager.sharedCaptureManager stopCapture];
+#endif
   }
 
 #endif

@@ -160,6 +160,8 @@ protected:
 
   void* GetRenderCommandEncoder(bool CreateIfNeeded) const;
   void SetRenderCommandEncoder(void* encoder);
+  
+  int64 mDrawOperationsOnCurrentSurface = 0;
 };
 
 #endif //   #ifndef __NUI_NO_GL__
