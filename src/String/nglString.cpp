@@ -1183,14 +1183,14 @@ bool nglString::Wipe()
 
 bool nglString::Delete(int32 Index)
 {
-  assert(!Index  || (Index < (int32)mString.size()));
+  assert(!Index  || (Index <= (int32)mString.size()));
   mString.erase(Index, mString.size() - Index);
   return true;
 }
 
 bool nglString::Delete(int32 Index, int32 Length)
 {
-  assert(!Index  || (Index < (int32)mString.size()));
+  assert(!Index  || (Index <= (int32)mString.size()));
   assert(Index+Length <= (int32)mString.size());
   mString.erase(Index, Length);
   return true;

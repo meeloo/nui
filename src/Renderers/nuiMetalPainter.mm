@@ -28,16 +28,11 @@ static const char* TextureVertexColor_VTX =
 SHADER_STRING
 (
 using namespace metal;
-
                
 struct Transforms
 {
-  float4x4 SurfaceMatrix;
   float4x4 ModelViewMatrix;
-  float4x4 ProjectionMatrix;
   float4 Offset;
-  float2 TextureTranslate;
-  float2 TextureScale;
 };
 
  struct InputVertex
@@ -57,14 +52,13 @@ struct Vertex
                
 vertex Vertex vertex_main(
                           InputVertex vertex_in [[ stage_in ]],
-                          constant Transforms &transforms [[buffer(0)]],
-                          uint vid [[vertex_id]])
+                          constant Transforms &transforms [[buffer(0)]])
 {
   Vertex vert;
 
-  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.TexCoord = vertex_in.mTexCoord;
   vert.Color = vertex_in.mColor;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
+  vert.Position = (transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
 
   return vert;
 }
@@ -76,7 +70,6 @@ fragment float4 fragment_main(
                               sampler textureSampler [[sampler(0)]]
                               )
 {
-//  return float4(1,0,0,1);
   return vert.Color * texture.sample(textureSampler, vert.TexCoord);
 }
 );
@@ -90,12 +83,8 @@ SHADER_STRING
  
  struct Transforms
 {
-  float4x4 SurfaceMatrix;
   float4x4 ModelViewMatrix;
-  float4x4 ProjectionMatrix;
   float4 Offset;
-  float2 TextureTranslate;
-  float2 TextureScale;
 };
  
  struct InputVertex
@@ -120,9 +109,9 @@ SHADER_STRING
 {
   Vertex vert;
   
-  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
+  vert.TexCoord = vertex_in.mTexCoord;
   vert.Color = vertex_in.mColor;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
+  vert.Position = (transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -148,12 +137,8 @@ using namespace metal;
  
 struct Transforms
 {
-  float4x4 SurfaceMatrix;
   float4x4 ModelViewMatrix;
-  float4x4 ProjectionMatrix;
   float4 Offset;
-  float2 TextureTranslate;
-  float2 TextureScale;
   float4 DifuseColor;
 };
  
@@ -173,13 +158,12 @@ struct Transforms
  
 vertex Vertex vertex_main(
                           InputVertex vertex_in [[ stage_in ]],
-                          constant Transforms &transforms [[buffer(0)]],
-                          uint vid [[vertex_id]])
+                          constant Transforms &transforms [[buffer(0)]])
 {
   Vertex vert;
   
-  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
+  vert.TexCoord = vertex_in.mTexCoord;
+  vert.Position = (transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -205,12 +189,8 @@ using namespace metal;
  
 struct Transforms
 {
-  float4x4 SurfaceMatrix;
   float4x4 ModelViewMatrix;
-  float4x4 ProjectionMatrix;
   float4 Offset;
-  float2 TextureTranslate;
-  float2 TextureScale;
   float4 DifuseColor;
 };
  
@@ -230,13 +210,12 @@ struct Vertex
  
 vertex Vertex vertex_main(
                           InputVertex vertex_in [[ stage_in ]],
-                          constant Transforms &transforms [[buffer(0)]],
-                          uint vid [[vertex_id]])
+                          constant Transforms &transforms [[buffer(0)]])
 {
   Vertex vert;
   
-  vert.TexCoord = vertex_in.mTexCoord * transforms.TextureScale + transforms.TextureTranslate;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
+  vert.TexCoord = vertex_in.mTexCoord;
+  vert.Position = (transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -264,9 +243,7 @@ using namespace metal;
 
 struct Transforms
 {
-  float4x4 SurfaceMatrix;
   float4x4 ModelViewMatrix;
-  float4x4 ProjectionMatrix;
   float4 Offset;
 };
                
@@ -286,14 +263,13 @@ struct Vertex
                
 vertex Vertex vertex_main(
                           InputVertex vertex_in [[ stage_in ]],
-                          constant Transforms &transforms [[buffer(0)]],
-                          uint vid [[vertex_id]]
+                          constant Transforms &transforms [[buffer(0)]]
                           )
 {
   Vertex vert;
   
   vert.Color = vertex_in.mColor;
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
+  vert.Position = (transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -314,9 +290,7 @@ SHADER_STRING
  
  struct Transforms
 {
-  float4x4 SurfaceMatrix;
   float4x4 ModelViewMatrix;
-  float4x4 ProjectionMatrix;
   float4 Offset;
   float4 DifuseColor;
 };
@@ -336,13 +310,11 @@ SHADER_STRING
  
  vertex Vertex vertex_main(
                            InputVertex vertex_in [[ stage_in ]],
-                           constant Transforms &transforms [[buffer(0)]],
-                           uint vid [[vertex_id]]
-                           )
+                           constant Transforms &transforms [[buffer(0)]])
 {
   Vertex vert;
   
-  vert.Position = (transforms.SurfaceMatrix * transforms.ProjectionMatrix * transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
+  vert.Position = (transforms.ModelViewMatrix * (vertex_in.mPosition  + transforms.Offset));
   
   return vert;
 }
@@ -426,6 +398,15 @@ static T MakePOT(T v)
 
 uint32 nuiMetalPainter::mActiveContexts = 0;
 
+nglString MakeLines(const nglString& rString)
+{
+  nglString t(rString);
+  t.Replace(";", ";\n");
+  t.Replace("{", "{\n");
+  t.Replace("}", "}\n");
+  return t;
+}
+
 nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
 : nuiPainter(pContext), mRenderingCS("mRenderingCS")
 {
@@ -449,58 +430,49 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_TextureVertexColor)
   {
     mpShader_TextureVertexColor = new nuiShaderProgram(mpContext, "TextureVertexColor");
-    mpShader_TextureVertexColor->AddShader(eMetalShader, TextureVertexColor_VTX);
+    mpShader_TextureVertexColor->AddShader(eMetalShader, MakeLines(TextureVertexColor_VTX));
     mpShader_TextureVertexColor->Link();
-//    mpShader_TextureVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-//    mpShader_TextureVertexColor->GetCurrentState()->Set("texture", 0);
   }
 
   mpShader_TextureAlphaVertexColor = nuiShaderProgram::GetProgram(mpContext, "TextureAlphaVertexColor");
   if (!mpShader_TextureAlphaVertexColor)
   {
     mpShader_TextureAlphaVertexColor = new nuiShaderProgram(mpContext, "TextureAlphaVertexColor");
-    mpShader_TextureAlphaVertexColor->AddShader(eMetalShader, TextureAlphaVertexColor_VTX);
+    mpShader_TextureAlphaVertexColor->AddShader(eMetalShader, MakeLines(TextureAlphaVertexColor_VTX));
     mpShader_TextureAlphaVertexColor->Link();
-//    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-//    mpShader_TextureAlphaVertexColor->GetCurrentState()->Set("texture", 0);
   }
 
   mpShader_TextureDifuseColor = nuiShaderProgram::GetProgram(mpContext, "TextureDiffuseColor");
   if (!mpShader_TextureDifuseColor)
   {
     mpShader_TextureDifuseColor = new nuiShaderProgram(mpContext, "TextureDiffuseColor");
-    mpShader_TextureDifuseColor->AddShader(eMetalShader, TextureDifuseColor_VTX);
+    mpShader_TextureDifuseColor->AddShader(eMetalShader, MakeLines(TextureDifuseColor_VTX));
     mpShader_TextureDifuseColor->Link();
 //    mpShader_TextureDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-//    mpShader_TextureDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-//    mpShader_TextureDifuseColor->GetCurrentState()->Set("texture", 0);
   }
 
   mpShader_TextureAlphaDifuseColor = nuiShaderProgram::GetProgram(mpContext, "TextureAlphaDifuseColor");
   if (!mpShader_TextureAlphaDifuseColor)
   {
     mpShader_TextureAlphaDifuseColor = new nuiShaderProgram(mpContext, "TextureAlphaDifuseColor");
-    mpShader_TextureAlphaDifuseColor->AddShader(eMetalShader, TextureAlphaDifuseColor_VTX);
+    mpShader_TextureAlphaDifuseColor->AddShader(eMetalShader, MakeLines(TextureAlphaDifuseColor_VTX));
     mpShader_TextureAlphaDifuseColor->Link();
 //    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("DifuseColor", nuiColor(255, 255, 255, 255));
-//    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
-//    mpShader_TextureAlphaDifuseColor->GetCurrentState()->Set("texture", 0);
   }
 
   mpShader_VertexColor = nuiShaderProgram::GetProgram(mpContext, "VertexColor");
   if (!mpShader_VertexColor)
   {
     mpShader_VertexColor = new nuiShaderProgram(mpContext, "VertexColor");
-    mpShader_VertexColor->AddShader(eMetalShader, VertexColor_VTX);
+    mpShader_VertexColor->AddShader(eMetalShader, MakeLines(VertexColor_VTX));
     mpShader_VertexColor->Link();
-//    mpShader_VertexColor->GetCurrentState()->Set("Offset", 0.0f, 0.0f);
   }
 
   mpShader_DifuseColor = nuiShaderProgram::GetProgram(mpContext, "DifuseColor");
   if (!mpShader_DifuseColor)
   {
     mpShader_DifuseColor = new nuiShaderProgram(mpContext, "DifuseColor");
-    mpShader_DifuseColor->AddShader(eMetalShader, DifuseColor_VTX);
+    mpShader_DifuseColor->AddShader(eMetalShader, MakeLines(DifuseColor_VTX));
     mpShader_DifuseColor->Link();
   }
   
@@ -508,7 +480,7 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
   if (!mpShader_ClearColor)
   {
     mpShader_ClearColor = new nuiShaderProgram(mpContext, "ClearColor");
-    mpShader_ClearColor->AddShader(eMetalShader, ClearColor_VTX);
+    mpShader_ClearColor->AddShader(eMetalShader, MakeLines(ClearColor_VTX));
     mpShader_ClearColor->Link();
 
   }
@@ -603,23 +575,6 @@ void nuiMetalPainter::SetViewport()
   
 //  NGL_DEBUG(NGL_OUT("nuiMetalPainter::SetViewPort Actual(%d, %d, %d, %d)\n", x, y, w, h);)
 
-  if (mpSurface)
-  {
-//    mSurfaceMatrix.SetIdentity();
-    mSurfaceMatrix.SetScaling(1.0f, 1.0f, 1.0f);
-  }
-  else
-  {
-    mSurfaceMatrix.SetIdentity();
-//    mSurfaceMatrix.SetScaling(1.0f, 1.0f, 1.0f);
-  }
-  
-//  float angle = GetAngle();
-  //  if (angle != 0.0f)
-  //  {
-  //    mSurfaceMatrix.Rotate(angle, 0 ,0, 1);
-  //  }
-
   mViewportChanged = false;
 }
 
@@ -659,8 +614,6 @@ void nuiMetalPainter::ResetMetalState()
   mA = -1;
   mTexEnvMode = 0;
   
-  //  mTextureTranslate = nglVector2f(0.0f, 0.0f);
-  //  mTextureScale = nglVector2f(1, 1);
   mScissorIsFlat = false;
   mFinalState = nuiRenderState();
   mpState = &mDefaultState;
@@ -1127,21 +1080,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   ApplyState(*mpState);
   pArray->Acquire();
   
-  if (mFinalState.mpTexture[0] && pArray->IsArrayEnabled(nuiRenderArray::eTexCoord))
-  {
-    if (mTextureScale[1] < 0)
-    {
-      NGL_ASSERT(mFinalState.mpTexture[0]->GetSurface() != NULL);
-      //      printf("REVERSED SURFACE TEXTURE");
-    }
-    mFinalState.mpShaderState->SetTextureTranslate(mTextureTranslate);
-    mTextureScale = nglVector2f(1,1);
-    mFinalState.mpShaderState->SetTextureScale(mTextureScale);
-  }
-  
-  mFinalState.mpShaderState->SetSurfaceMatrix(mSurfaceMatrix);
-  mFinalState.mpShaderState->SetProjectionMatrix(GetProjectionMatrix());
-  mFinalState.mpShaderState->SetModelViewMatrix(GetMatrix());
+  mFinalState.mpShaderState->SetModelViewMatrix(GetProjectionMatrix() * GetMatrix());
   
   uint32 s = pArray->GetSize();
 
@@ -1625,7 +1564,9 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         {
           MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlPixelFormat
                                                                                                 width:(uint32)ToNearest(Width) height:(uint32)ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
-          descriptor.usage = pSurface?MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead:MTLTextureUsageShaderRead;
+          descriptor.usage = pSurface ? (MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead) : MTLTextureUsageShaderRead;
+          descriptor.resourceOptions = MTLResourceStorageModePrivate;
+          descriptor.storageMode = MTLStorageModePrivate;
           texture = [device newTextureWithDescriptor:descriptor];
           CFStringRef str = pTexture->GetSource().ToCFString();
           texture.label = (__bridge NSString*)str;
@@ -1668,8 +1609,6 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
     }
   }
 
-  mTextureTranslate = nglVector2f(0.0f, 0.0f);
-//  mTextureScale = nglVector2f(rx, ry);
   NGL_ASSERT((info.mTexture != nil && info.mSampler != nil));
 }
 

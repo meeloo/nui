@@ -124,9 +124,6 @@ protected:
   bool mUseShaders;
 
   // Only used for shaders:
-  nglVector2f mTextureTranslate;
-  nglVector2f mTextureScale;
-
   nuiShaderProgram* mpShader = nullptr;
   nuiShaderState* mpShaderState = nullptr;
   
@@ -138,9 +135,7 @@ protected:
   nuiShaderProgram* mpShader_VertexColor = nullptr;
   nuiShaderProgram* mpShader_ClearColor = nullptr;
   void* mpClearColor_pipelineState = nullptr;
-  
-  nuiMatrix mSurfaceMatrix;
-  
+    
   void FinalizeSurfaces();
   void FinalizeTextures();
   void FinalizeRenderArrays();

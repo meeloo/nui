@@ -406,10 +406,10 @@ NGL_OUT("#######################################################################
   if (mUseSignPosts)
     kdebug_signpost_start(4, (uintptr_t)this, 0, 0, 0);
 
-  mpDrawContext->SetClearColor(nuiColor(255,255,255));
+  //mpDrawContext->SetClearColor(nuiColor(255,255,255));
   //  if (mClearBackground)
   {
-    mpDrawContext->Clear();
+  //  mpDrawContext->Clear();
   }
   //  else
   //  {
