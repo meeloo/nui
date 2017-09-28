@@ -71,12 +71,21 @@ void objCCallOnMemoryWarning();
 
   if (notification)
   {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
-                                                        message:notification[@"aps"][@"alert"]
+    if (notification[@"aps"] != nil && notification[@"aps"][@"alert"] != nil)
+    {
+      NSDictionary* alert_dict = notification[@"aps"][@"alert"];
+      NSString* title = alert_dict[@"title"]; NGL_ASSERT(title);
+      NSString* body = alert_dict[@"body"]; NGL_ASSERT(body);
+      if (title && body)
+      {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                        message:body
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
-    [alertView show];
+        [alertView show];
+      }
+    }
   }
 
   return YES;
@@ -212,13 +221,21 @@ void objCCallOnMemoryWarning();
   
   if (pUIApp.applicationState == UIApplicationStateActive)
   {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
-                                                        message:userInfo[@"aps"][@"alert"]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-
-    [alertView show];
+    if (userInfo[@"aps"] != nil && userInfo[@"aps"][@"alert"] != nil)
+    {
+      NSDictionary* alert_dict = userInfo[@"aps"][@"alert"];
+      NSString* title = alert_dict[@"title"]; NGL_ASSERT(title);
+      NSString* body = alert_dict[@"body"]; NGL_ASSERT(body);
+      if (title && body)
+      {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                            message:body
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+      }
+    }
   }
   else if (pUIApp.applicationState == UIApplicationStateBackground || pUIApp.applicationState == UIApplicationStateInactive)
   {
