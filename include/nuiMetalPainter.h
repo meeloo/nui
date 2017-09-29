@@ -144,6 +144,8 @@ protected:
   void _DestroyRenderArray(nuiRenderArray* pArray);
   std::vector<nuiSurface*> mDestroyedSurfaces;
   std::vector<nuiTexture*> mDestroyedTextures;
+  void* mActiveTextures[8];
+  void* mActiveSamplers[8];
 
   bool mViewportChanged = true;
   

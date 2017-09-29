@@ -1213,7 +1213,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       {
         size_t vertexcount = pArray->GetSize();
         size_t vertexsize = sizeof(nuiRenderArray::Vertex);
-        id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModeShared];
+        id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModePrivate];
         NGL_ASSERT(vertices != nil);
         vertexArray.push_back((void*)CFBridgingRetain(vertices));
         
@@ -1221,9 +1221,9 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         {
           auto& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_)
-          id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:0];
+          id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:MTLResourceStorageModePrivate];
 #else
-          id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:0];
+          id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:MTLResourceStorageModePrivate];
 #endif
           NGL_ASSERT(indexes != nil);
           vertexArray.push_back((void*)CFBridgingRetain(indexes));
@@ -1268,8 +1268,16 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     }
 //    NGL_OUT("Setting texture[%d] = %p / %p (%p%s)\n", i, texture, sampler, pTexture, (pProxy?" [Proxy]":""));
     NGL_ASSERT((pTexture != nullptr && texture != nil && sampler != nil) || (pTexture == nullptr && texture == nil && sampler == nil));
-    [encoder setFragmentTexture:texture atIndex:i];
-    [encoder setFragmentSamplerState:sampler atIndex:i];
+    if (mActiveTextures[i] != (__bridge void*)texture)
+    {
+      [encoder setFragmentTexture:texture atIndex:i];
+      mActiveTextures[i] = (__bridge void*)texture;
+    }
+    if (mActiveSamplers[i] != (__bridge void*)sampler)
+    {
+      [encoder setFragmentSamplerState:sampler atIndex:i];
+      mActiveSamplers[i] = (__bridge void*)sampler;
+    }
   }
   
   
