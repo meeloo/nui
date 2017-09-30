@@ -242,11 +242,88 @@ bool nuiLayer::UpdateSurface(nuiRenderThread* pRenderThread)
   return mSurfaceChanged;
 }
 
+void nuiLayer::UpdateContentsPainter(nuiDrawContext* pContext, nuiMetaPainter* pContentsPainter)
+{
+  nuiPainter* oldpainter = pContext->GetPainter();
+  
+  pContext->SetPainter(pContentsPainter);
+  
+  nglString name;
+  name.CFormat("layer contents %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
+  pContentsPainter->SetName(name);
+  
+  int64 priority = std::numeric_limits<int64>::max();
+  
+  if (mpSurface)
+  {
+    pContentsPainter->PushProjectionMatrix();
+    pContentsPainter->SetSurface(mpSurface);
+    nuiMatrix m;
+    nuiRect r(mpSurface->GetWidth(), mpSurface->GetHeight());
+    m.Translate(-1.0f, 1.0f, 0.0f);
+    m.Scale(2.0f/r.GetWidth(), -2.0f/r.GetHeight(), 1.0f);
+    pContentsPainter->LoadProjectionMatrix(r, m);
+  }
+  
+  float offsetX = mOffsetX;
+  float offsetY = mOffsetY;
+  
+  if (offsetX != 0 || offsetY != 0)
+  {
+    pContext->Translate(-offsetX, -offsetY);
+  }
+  
+  if (mpWidgetContents)
+  {
+    if (mpWidgetContents->GetDebug())
+    {
+      pContentsPainter->AddBreakPoint();
+    }
+    pContext->SetClearColor(mClearColor);
+    pContext->Clear();
+    pContentsPainter->DrawWidget(pContext, mpWidgetContents);
+    //      pContext->SetStrokeColor(nuiColor(0, 0, 255, 128));
+    //      pContext->EnableTexturing(false);
+    //      pContext->DrawRect(nuiRect(GetWidth(), GetHeight()), eStrokeShape);
+    //      pContext->EnableTexturing(true);
+    nuiWidget *pWidget = mpWidgetContents;
+    while (pWidget)
+    {
+      pWidget = pWidget->GetParent();
+      priority--;
+    }
+  }
+  else if (mDrawContentsDelegate)
+  {
+    pContext->SetClearColor(mClearColor);
+    pContext->Clear();
+    
+    mDrawContentsDelegate(this, pContext);
+  }
+  
+  pContentsPainter->SetPriority(priority);
+  
+  
+  // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
+  
+  if (mpSurface)
+  {
+    pContentsPainter->PopProjectionMatrix();
+    pContentsPainter->SetSurface(nullptr);
+  }
+  
+  if (offsetX != 0 || offsetY != 0)
+  {
+    pContext->Translate(offsetX, offsetY);
+  }
+  pContext->SetPainter(oldpainter);
+}
+
 void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering)
 {
 //  NGL_OUT("nuiLayer::UpdateContents %p\n", this);
   bool oldDraw = mDraw;
-  mDraw = !ShouldSkipRendering;
+  mDraw = !ShouldSkipRendering && mUseSurface;
 
 //  mDraw = true;
   
@@ -256,85 +333,46 @@ void nuiLayer::UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pC
     mSurfaceChanged = false;
 
     nuiRef<nuiMetaPainter> pContentsPainter = nuiNewRef<nuiMetaPainter>();
-    nuiPainter* oldpainter = pContext->GetPainter();
-    
-    pContext->SetPainter(pContentsPainter);
-    
-    nglString name;
-    name.CFormat("layer contents %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
-    pContentsPainter->SetName(name);
-
-//    pContentsPainter->SetSize(ToNearest(mWidth), ToNearest(mHeight));
-    int64 priority = std::numeric_limits<int64>::max();
-
-    if (mpSurface)
+    if (mUseSurface)
+      UpdateContentsPainter(pContext, pContentsPainter);
+    else
     {
-      pContentsPainter->PushProjectionMatrix();
-      pContentsPainter->SetSurface(mpSurface);
-      nuiMatrix m;
-      nuiRect r(mpSurface->GetWidth(), mpSurface->GetHeight());
-      m.Translate(-1.0f, 1.0f, 0.0f);
-      m.Scale(2.0f/r.GetWidth(), -2.0f/r.GetHeight(), 1.0f);
-      pContentsPainter->LoadProjectionMatrix(r, m);
-    }
-
-    float offsetX = mOffsetX;
-    float offsetY = mOffsetY;
-//    float offsetX = -2;
-//    float offsetY = -2;
-//    float offsetX = mOffsetX + (mpWidgetContents ? -mpWidgetContents->GetRect().Left() : 0);
-//    float offsetY = mOffsetY + (mpWidgetContents ? -mpWidgetContents->GetRect().Top() : 0);
-
-    if (offsetX != 0 || offsetY != 0)
-    {
-      pContext->Translate(-offsetX, -offsetY);
-    }
-
-//    pContext->Clip(nuiRect(-4, -4, 80 + mpSurface->GetWidth(), 80 + mpSurface->GetHeight()));
-    if (mpWidgetContents)
-    {
-      if (mpWidgetContents->GetDebug())
-      {
-        pContentsPainter->AddBreakPoint();
-      }
-      pContext->SetClearColor(mClearColor);
-      pContext->Clear();
-      pContentsPainter->DrawWidget(pContext, mpWidgetContents);
-//      pContext->SetStrokeColor(nuiColor(0, 0, 255, 128));
-//      pContext->EnableTexturing(false);
-//      pContext->DrawRect(nuiRect(GetWidth(), GetHeight()), eStrokeShape);
-//      pContext->EnableTexturing(true);
-      nuiWidget *pWidget = mpWidgetContents;
-      while (pWidget)
-      {
-        pWidget = pWidget->GetParent();
-        priority--;
-      }
-    }
-    else if (mDrawContentsDelegate)
-    {
-      pContext->SetClearColor(mClearColor);
-      pContext->Clear();
+      nuiPainter* oldpainter = pContext->GetPainter();
+      pContext->SetPainter(pContentsPainter);
       
-      mDrawContentsDelegate(this, pContext);
+      nglString name;
+      name.CFormat("layer contents %f x %f %s", GetWidth(), GetHeight(), GetObjectName().GetChars());
+      pContentsPainter->SetName(name);
+      
+      float offsetX = mOffsetX;
+      float offsetY = mOffsetY;
+      
+      if (offsetX != 0 || offsetY != 0)
+      {
+        pContext->Translate(-offsetX, -offsetY);
+      }
+      
+      if (mpWidgetContents)
+      {
+        nuiMetaPainter* pCache = mpWidgetContents->GetRenderCache();
+        pCache->ReDraw(pContext, nullptr, nullptr);
+      }
+      else if (mDrawContentsDelegate)
+      {
+        pContext->SetClearColor(mClearColor);
+        pContext->Clear();
+        
+        mDrawContentsDelegate(this, pContext);
+      }
+      
+      // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
+      
+      if (offsetX != 0 || offsetY != 0)
+      {
+        pContext->Translate(offsetX, offsetY);
+      }
+      pContext->SetPainter(oldpainter);
     }
-
-    pContentsPainter->SetPriority(priority);
-
-
-    // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
-
-    if (mpSurface)
-    {
-      pContentsPainter->PopProjectionMatrix();
-      pContentsPainter->SetSurface(nullptr);
-    }
-
-    if (offsetX != 0 || offsetY != 0)
-    {
-      pContext->Translate(offsetX, offsetY);
-    }
-    pContext->SetPainter(oldpainter);
 
     pRenderThread->SetLayerContentsPainter(this, pContentsPainter);
   }
@@ -385,33 +423,75 @@ void nuiLayer::UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pConte
     pContext->PopState();
   }
 
-  if (mDraw)
+  if (mDraw || !mUseSurface)
   {
 
     nuiTexture* pTex = nullptr;
     if (mpTextureContents)
     {
       pTex = mpTextureContents;
+      NGL_ASSERT(pTex);
+      NGL_ASSERT(pTex->GetWidth() > 0);
+      NGL_ASSERT(pTex->GetHeight() > 0);
     }
-    else
+    else if (mUseSurface)
     {
       NGL_ASSERT(mpSurface != nullptr);
       pTex = mpSurface->GetTexture();
+      NGL_ASSERT(pTex);
+      NGL_ASSERT(pTex->GetWidth() > 0);
+      NGL_ASSERT(pTex->GetHeight() > 0);
     }
-    NGL_ASSERT(pTex);
-    NGL_ASSERT(pTex->GetWidth() > 0);
-    NGL_ASSERT(pTex->GetHeight() > 0);
     
-    nuiRect src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
-    dst = src;
-    dst.Move(mOffsetX, mOffsetY);
-
-    pContext->SetTexture(pTex);
-    pContext->SetFillColor(nuiColor(1.0f, 1.0f, 1.0f, 1.0f));
-    pContext->SetBlendFunc(mBlendFunc);
-    pContext->EnableBlending(mBlendFunc != nuiBlendSource);
+    nuiRect src;
+    if (pTex)
+    {
+      src = nuiRect(0, 0, pTex->GetWidth(), pTex->GetHeight());
+      dst = src;
+      dst.Move(mOffsetX, mOffsetY);
+    }
     
-    pContext->DrawImage(dst, src);
+    if (mUseSurface)
+    {
+      pContext->SetTexture(pTex);
+      pContext->SetFillColor(nuiColor(1.0f, 1.0f, 1.0f, 1.0f));
+      pContext->SetBlendFunc(mBlendFunc);
+      pContext->EnableBlending(mBlendFunc != nuiBlendSource);
+      
+      pContext->DrawImage(dst, src);
+    }
+    else
+    {
+      pContext->Translate(mOffsetX, mOffsetY);
+      
+      float offsetX = mOffsetX;
+      float offsetY = mOffsetY;
+      
+      if (offsetX != 0 || offsetY != 0)
+      {
+        pContext->Translate(-offsetX, -offsetY);
+      }
+      
+      if (mpWidgetContents)
+      {
+        nuiMetaPainter* pCache = mpWidgetContents->GetRenderCache();
+        pCache->ReDraw(pContext, nullptr, nullptr);
+      }
+      else if (mDrawContentsDelegate)
+      {
+        pContext->SetClearColor(mClearColor);
+        pContext->Clear();
+        
+        mDrawContentsDelegate(this, pContext);
+      }
+      
+      // Don't do anything special with Texture contents, it's directly used as a texture in the Draw method
+      
+      if (offsetX != 0 || offsetY != 0)
+      {
+        pContext->Translate(offsetX, offsetY);
+      }
+    }
 
 //    pContext->SetBlendFunc(nuiBlendTransp);
 //    pContext->SetStrokeColor(nuiColor(255, 0, 0, 128));

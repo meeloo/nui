@@ -6412,6 +6412,11 @@ nuiWidget* nuiWidget::GetParentLayerWidget() const
   return nullptr;
 }
 
+void nuiWidget::UpdateBackingLayer()
+{
+  mpBackingLayer->SetContents(this);
+}
+
 void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
 {
   if (IsVisible() && policy != nuiDrawPolicyDrawNone && !GetAncestorWillDrawTree())
@@ -6426,8 +6431,9 @@ void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
       {
         NGL_OUT("Create widget layer %s\n", name.GetChars());
       }
+      
       mpBackingLayer->SetBlendFunc(mLayerBlendFunc);
-      mpBackingLayer->SetContents(this);
+      UpdateBackingLayer();
     }
   }
   else

@@ -1782,7 +1782,14 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     {
       NGL_ASSERT(0);
     }
+
+    for (int i = 0; i < 8; i++)
+    {
+      mActiveTextures[i] = nullptr;
+      mActiveSamplers[i] = nullptr;
+    }
     
+
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
     NGL_ASSERT(commandBuffer != nil);
     

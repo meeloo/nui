@@ -212,6 +212,12 @@ void nuiImage::ForceReload()
   Invalidate();
 }
 
+void nuiImage::UpdateBackingLayer()
+{
+  mpBackingLayer->SetUseSurface(false);
+  mpBackingLayer->SetContents(this);
+}
+
 bool nuiImage::Draw(nuiDrawContext* pContext)
 {
 //  int x=0,y=0;

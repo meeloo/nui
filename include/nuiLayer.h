@@ -25,12 +25,14 @@ public:
 
   void UpdateDraw(nuiRenderThread* pRenderThread, nuiDrawContext* pContext);
   void UpdateContents(nuiRenderThread* pRenderThread, nuiDrawContext* pContext, bool ShouldSkipRendering);
+  void UpdateContentsPainter(nuiDrawContext* pContext, nuiMetaPainter* pContentsPainter);
   nuiMetaPainter* GetDrawPainter() const;
 
   NUI_GETSETDO(float, Width, Change());
   NUI_GETSETDO(float, Height, Change());
   NUI_GETSETDO(nuiColor, ClearColor, Change());
   NUI_GETSETDO(nuiBlendFunc, BlendFunc, Change());
+  NUI_GETSETDO(bool, UseSurface, Change());
 
   virtual void SetObjectName(const nglString &rName);
 
@@ -59,6 +61,7 @@ private:
   bool mSurfaceChanged = false;
   
   bool mDraw = true;
+  bool mUseSurface = true;
 
   void Change() { mChanged = true; }
   bool mChanged = true;
@@ -66,6 +69,7 @@ private:
   nuiTexture* mpTextureContents = nullptr;
   nuiWidget* mpWidgetContents = nullptr;
   DrawContentsDelegate mDrawContentsDelegate;
+  nuiMetaPainter* mpMetaPainterContents;
 
   nuiRef<nuiMetaPainter> mpDrawPainter; ///< This containts the rendering instructions to display the contents of this layer
   

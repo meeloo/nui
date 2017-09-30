@@ -842,6 +842,7 @@ public:
 
   /** @name Layers */
   //@{
+  virtual void UpdateBackingLayer();
   void SetLayerPolicy(nuiDrawPolicy policy);
   nuiDrawPolicy GetLayerPolicy() const;
   bool GetDrawToLayer() const;

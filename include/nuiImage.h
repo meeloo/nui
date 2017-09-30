@@ -54,6 +54,7 @@ public:
   
 protected:
   virtual ~nuiImage();
+  void UpdateBackingLayer();
 
   nuiTexture* mpTexture;
   nuiRect mTextureRect;
