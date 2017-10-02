@@ -2212,11 +2212,12 @@ nuiSize nuiTopLevel::GetStatusBarSize() const
 void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect)
 {
   nuiWidget::BroadcastInvalidateRect(pSender, rRect);
+  nuiRenderThread* pRenderThread = GetRenderThread();
+  if (pRenderThread)
+  {
+    pRenderThread->InvalidateLayerRect(nullptr, rRect);
+  }
   return;
-
-
-
-
 
 //  nglString senderclass = pSender->GetObjectClass();
 //  if (senderclass == "nuiMainWindow"

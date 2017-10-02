@@ -1093,7 +1093,8 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   // Shader selection:
   mpShader = mpState->mpShader;
   mpShaderState = mpState->mpShaderState;
-  
+  bool acquiredShaderState = false;
+
   if (mpShader == NULL)
   {
     nuiShaderProgram* pShader = NULL;
@@ -1133,6 +1134,7 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
     pShader->Acquire();
     mpShader = pShader;
     mpShaderState = pShader->NewState();
+    acquiredShaderState = true;
   }
   
   NGL_ASSERT(mpShader != NULL);
@@ -1173,12 +1175,22 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
 
   if (!s)
   {
+    if (acquiredShaderState)
+    {
+      mpShaderState->Release();
+      mpShaderState = nullptr;
+    }
     pArray->Release();
     return;
   }
   
   if (mpClippingStack.top().GetWidth() <= 0 || mpClippingStack.top().GetHeight() <= 0)
   {
+    if (acquiredShaderState)
+    {
+      mpShaderState->Release();
+      mpShaderState = nullptr;
+    }
     pArray->Release();
     return;
   }
@@ -1388,6 +1400,11 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   //  ResetVertexPointers(*pArray);
   pArray->Release();
   nuiCheckForGLErrors();
+  if (acquiredShaderState)
+  {
+    mpShaderState->Release();
+    mpShaderState = nullptr;
+  }
 }
 
 
