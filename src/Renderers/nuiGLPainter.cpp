@@ -3070,4 +3070,9 @@ int32 nuiGLPainter::GetCurrentHeight() const
   return mpContext->GetHeight();
 }
 
+void nuiGLPainter::CacheRenderArray(nuiRenderArray* pArray)
+{
+  
+}
+
 #endif //   #ifndef __NUI_NO_GL__

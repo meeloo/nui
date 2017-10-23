@@ -1237,3 +1237,7 @@ int32 nuiMetaPainter::GetCurrentHeight() const
   return 0;
 }
 
+void nuiMetaPainter::CacheRenderArray(nuiRenderArray* pArray)
+{
+}
+

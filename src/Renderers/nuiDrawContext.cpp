@@ -637,15 +637,17 @@ void nuiDrawContext::DrawImageQuad(float x0, float y0, float x1, float y1, float
   mCurrentState.mpTexture[0]->ImageToTextureCoord(tx3, ty3);
 
   nuiRenderArray* pArray = new nuiRenderArray(GL_TRIANGLE_STRIP);
+  bool UseFillColor = !(mCurrentState.mFillColor == nuiColor(255, 255, 255, 255));
   pArray->Reserve(4);
   pArray->EnableArray(nuiRenderArray::eVertex, true);
-  pArray->EnableArray(nuiRenderArray::eTexCoord, true);
+  pArray->EnableArray(nuiRenderArray::eTexCoord, UseFillColor);
   pArray->EnableArray(nuiRenderArray::eColor, true);
 
   // 1
   pArray->SetTexCoords(tx0,ty0); 
   pArray->SetVertex(x0, y0);
-  pArray->SetColor(mCurrentState.mFillColor);
+  if (UseFillColor)
+    pArray->SetColor(mCurrentState.mFillColor);
   pArray->PushVertex();
 
   pArray->SetTexCoords(tx3,ty3); 

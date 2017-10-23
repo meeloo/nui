@@ -877,7 +877,10 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   }
   else
   {
-    mMetalDevice = (void*)CFBridgingRetain(MTLCreateSystemDefaultDevice());
+    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+    nglString name(device.name.UTF8String);
+    NGL_OUT("Metal device: %s\n", name.GetChars());
+    mMetalDevice = (void*)CFBridgingRetain(device);
     UpdateMetalLayer();
   }
   Build(rContext);
@@ -1218,9 +1221,9 @@ void* nglWindow::CreateMetalPass()
   {
     MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     passDescriptor.colorAttachments[0].texture = texture;
-    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionDontCare;
     passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
+    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 1.0, 1.0);
     
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mMetalCommandBuffer;
     NGL_ASSERT(commandBuffer);

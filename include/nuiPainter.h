@@ -128,6 +128,7 @@ public:
   virtual void SetSurface(nuiSurface* pSurface);
   virtual void CreateSurface(nuiSurface* pSurface);
   virtual nuiSurface* GetSurface() const;
+  virtual void CacheRenderArray(nuiRenderArray* pArray) = 0;
 
   static void BroadcastDestroyTexture(nuiTexture* pTexture);
   static void BroadcastDestroySurface(nuiSurface* pSurface);

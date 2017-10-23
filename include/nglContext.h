@@ -46,7 +46,8 @@ enum nglTargetAPI
 #else
   eTargetAPI_Direct3D = eTargetAPI_None, // If Direct3D is asked for a platform where it doesn't exists don't even create an opengl context
 #endif
-  eTargetAPI_OpenGL = eTargetAPI_OpenGL2
+  eTargetAPI_OpenGL = eTargetAPI_OpenGL2,
+  eTargetAPI_Best
 };
 
 class nglContextInfo

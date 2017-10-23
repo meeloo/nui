@@ -306,6 +306,15 @@ NGL_OUT("#######################################################################
   mpPainter->ResetStats();
   mpContext->BeginSession();
   mpPainter->BeginSession();
+
+  // Cache the render arrays
+  {
+    for (auto array : mNewRenderArrays)
+    {
+      mpPainter->CacheRenderArray(array);
+    }
+    mNewRenderArrays.clear();
+  }
   
   mpDrawContext->SetPainter(mpPainter);
   mpDrawContext->StartRendering();
@@ -428,41 +437,87 @@ NGL_OUT("#######################################################################
   mpDrawContext->EnableClipping(false);
   mpDrawContext->Set2DProjectionMatrix(mRect.Size());
   mpContext->StopMarkerGroup();
-  mpPainter->SetSurface(nullptr);
-  mpContext->StartMarkerGroup("Draw widget tree");
 
-//  {
-//    size_t count = 0;
-//    auto itt = mPartialRects.find(nullptr);
-//    if (itt != mPartialRects.end())
-//      count = itt->second.size();
-//
-//    mpDrawContext->ResetState();
-//
-//    if (count == 0)
-//    {
-//      mpDrawContext->ResetClipRect();
-//      mpDrawContext->EnableClipping(false);
+  if (mpOffscreen && (mpOffscreen->GetWidth() != ToNearest(mRect.GetWidth()) || mpOffscreen->GetHeight() != ToNearest(mRect.GetHeight())))
+  {
+    mpOffscreen->Release();
+    mpOffscreen = nullptr;
+  }
+  
+  if (!mpOffscreen)
+  {
+    mpOffscreen = nuiSurface::CreateSurface("Offscreen", mRect.GetWidth(), mRect.GetHeight());
+  }
+  
+  mpDrawContext->SetSurface(mpOffscreen);
+
+  {
+    size_t count = 0;
+    auto itt = mPartialRects.find(nullptr);
+    if (itt != mPartialRects.end())
+      count = itt->second.size();
+
+    mpDrawContext->ResetState();
+
+    
+    if (count == 0)
+    {
+      mpContext->StartMarkerGroup("Draw widget tree [Full Frame]");
+      mpDrawContext->ResetClipRect();
+      mpDrawContext->EnableClipping(false);
 
       DrawWidget(mpDrawContext, mpRoot);
-//    }
-//    else
-//    {
-//
-//      for (size_t i = 0; i < count; i++)
-//      {
-//        mpDrawContext->ResetState();
-//        nuiRect cliprect(itt->second[i]); // Partial rect...
-//        mpDrawContext->ResetClipRect();
-//        mpDrawContext->Clip(cliprect);
-//        mpDrawContext->EnableClipping(true);
-//        DrawWidget(mpDrawContext, mpRoot);
-//      }
-//    }
-//  }
+      mpContext->StopMarkerGroup();
+    }
+    else
+    {
+      mpContext->StartMarkerGroup("Draw widget tree [Partial Frame]");
+      for (size_t i = 0; i < count; i++)
+      {
+        mpContext->StartMarkerGroup(nglString().CFormat("[Partial Frame #%d]", i).GetChars());
+        mpDrawContext->ResetState();
+        nuiRect cliprect(itt->second[i]); // Partial rect...
+        mpDrawContext->ResetClipRect();
+        mpDrawContext->Clip(cliprect);
+        mpDrawContext->EnableClipping(true);
+        DrawWidget(mpDrawContext, mpRoot);
+      }
+      mpContext->StopMarkerGroup();
+    }
 
+    // Draw debug redrawn rects
+    if (0)
+    {
+      mpDrawContext->ResetState();
+      mpDrawContext->ResetClipRect();
+      mpDrawContext->EnableClipping(false);
+      mpDrawContext->SetStrokeColor(nuiColor(255, 0, 0, 128));
+      mpDrawContext->SetFillColor(nuiColor(255, 0, 0, 32));
+      mpDrawContext->SetBlendFunc(nuiBlendTransp);
+      mpDrawContext->EnableBlending(true);
+      
+      for (size_t i = 0; i < count; i++)
+      {
+        nuiRect cliprect(itt->second[i]); // Partial rect...
+        mpDrawContext->DrawRect(cliprect, eStrokeShape);
+      }
+    }
+  }
 
+  mpContext->StartMarkerGroup("Resolve Frame");
+  mpDrawContext->ResetState();
+  //  NGL_OUT("Reset clip rect 1\n");
+  mpDrawContext->ResetClipRect();
+  mpDrawContext->EnableClipping(false);
+  mpDrawContext->Set2DProjectionMatrix(mRect.Size());
+  mpDrawContext->SetSurface(nullptr);
+  mpDrawContext->SetTexture(mpOffscreen->GetTexture());
+  mpDrawContext->EnableBlending(false);
+  mpDrawContext->SetFillColor(nuiColor(255, 255, 255, 255));
+  mpDrawContext->DrawImage(mRect, mRect);
+  mpDrawContext->SetTexture(nullptr);
   mpContext->StopMarkerGroup();
+
   if (mUseSignPosts)
   {
     kdebug_signpost_end(4, (uintptr_t)this, 0, 0, 0);
@@ -503,6 +558,18 @@ void nuiRenderThread::_Exit()
   mContinue = false;
 }
 
+void nuiRenderThread::PreCacheRenderArrays(nuiMetaPainter* pPainter)
+{
+  if (pPainter)
+  {
+    auto arrays(pPainter->GetRenderArrays());
+    for (auto array : arrays)
+    {
+      mNewRenderArrays.insert(array);
+    }
+  }
+}
+
 void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
 //  NGL_OUT("_SetWidgetDrawPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), (void*)pPainter);
@@ -530,6 +597,8 @@ void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPa
   {
     mWidgetDrawPainters[pWidget] = pPainter;
   }
+
+  PreCacheRenderArrays(pPainter);
 }
 
 void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
@@ -559,6 +628,8 @@ void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMe
   {
     mWidgetContentsPainters[pWidget] = pPainter;
   }
+
+  PreCacheRenderArrays(pPainter);
 }
 
 void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
@@ -588,6 +659,8 @@ void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPaint
   {
     mLayerDrawPainters[pLayer] = pPainter;
   }
+
+  PreCacheRenderArrays(pPainter);
 }
 
 void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaPainter> pPainter)
@@ -640,6 +713,8 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaP
   {
 //    NGL_OUT("\t%p -> %p [%d]\n", it.first, it.second, it.second->GetRefCount());
   }
+
+  PreCacheRenderArrays(pPainter);
 }
 
 void nuiRenderThread::_InvalidateLayerContents(nuiLayer* pLayer)
@@ -968,4 +1043,5 @@ void nuiRenderThread::DumpStats()
 //    NGL_OUT("%d: %p %f %d %s\n", i, stat.first, stat.second.mTime, stat.second.mCount, stat.second.mName.GetChars());
   }
 }
+
 

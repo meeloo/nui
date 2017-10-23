@@ -32,7 +32,7 @@ nuiButton::nuiButton()
   mDelayedActivation = 0;
   mpAutoRepeatTimer = NULL;
   mActivationOffset = DEFAULT_ACTIVATION_OFFSET;
-  SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerPolicy(nuiDrawPolicyDrawSelf);
   SetLayerBlendFunc(nuiBlendTransp);
 
   EnableInteractiveDecoration(true);
@@ -66,7 +66,7 @@ nuiButton::nuiButton(const nglString& rText)
   nuiLabel* pLabel = new nuiLabel(rText);
   AddChild(pLabel);
   pLabel->SetPosition(nuiCenter);
-  SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerPolicy(nuiDrawPolicyDrawSelf);
   SetLayerBlendFunc(nuiBlendTransp);
   SetRedrawOnHover(false);
   EnableInteractiveDecoration(true);
@@ -103,7 +103,7 @@ nuiButton::nuiButton(const nglImage& rImage)
   nuiImage* pImage = new nuiImage(rImage);
   AddChild(pImage);
   pImage->SetPosition(nuiCenter);
-  SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerPolicy(nuiDrawPolicyDrawSelf);
   SetLayerBlendFunc(nuiBlendTransp);
 
   SetBorders(mDefaultBorders);
@@ -136,7 +136,7 @@ nuiButton::nuiButton(nuiDecoration* pDeco, bool AlreadyAcquired)
   EnableInteractiveDecoration(true);
   
   SetDecoration(pDeco, eDecorationOverdraw, AlreadyAcquired);
-  SetLayerPolicy(nuiDrawPolicyDrawTree);
+  SetLayerPolicy(nuiDrawPolicyDrawSelf);
   SetLayerBlendFunc(nuiBlendTransp);
 
   SetBorders(mDefaultBorders);

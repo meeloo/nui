@@ -45,7 +45,8 @@ enum nuiRenderer
   eSoftware = eTargetAPI_None,
   eOpenGL2 = eTargetAPI_OpenGL2,
   eDirect3D = eTargetAPI_Direct3D,
-  eMetal = eTargetAPI_Metal
+  eMetal = eTargetAPI_Metal,
+  eBest = eTargetAPI_Best
 };
 
 #ifdef DrawText

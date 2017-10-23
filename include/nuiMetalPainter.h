@@ -65,6 +65,7 @@ public:
 
   virtual void DestroySurface(nuiSurface* pSurface);
 
+  virtual void CacheRenderArray(nuiRenderArray* pArray);
   virtual void DestroyRenderArray(nuiRenderArray* pArray);
 
   virtual nglImage* CreateImageFromGPUTexture(const nuiTexture* pTexture) const;
@@ -104,6 +105,8 @@ protected:
 
   int64 dummy = 0;
   bool mScissorIsFlat = false;
+  uint64 mScissorRect[4];
+  
   bool mTwoPassBlend;
   GLenum mSrcColor;
   GLenum mDstColor;
@@ -148,6 +151,7 @@ protected:
   void* mActiveSamplers[8];
 
   bool mViewportChanged = true;
+  double mViewport[6];
   
   void* mDrawable = nullptr;
   void* mBackBuffer = nullptr;
@@ -155,10 +159,11 @@ protected:
   virtual int32 GetCurrentWidth() const;
   virtual int32 GetCurrentHeight() const;
 
-  void* GetRenderCommandEncoder(bool CreateIfNeeded) const;
-  void SetRenderCommandEncoder(void* encoder);
+  void* GetRenderCommandEncoder() const;
+  void* GetBlitCommandEncoder() const;
   
   int64 mDrawOperationsOnCurrentSurface = 0;
+  mutable void* mpBlitEncoder = nullptr;
 };
 
 #endif //   #ifndef __NUI_NO_GL__

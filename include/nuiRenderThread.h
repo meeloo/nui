@@ -80,6 +80,7 @@ private:
   std::unordered_map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetDrawPainters;
   std::unordered_map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerContentsPainters;
   std::unordered_map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerDrawPainters;
+  std::set<nuiRenderArray*> mNewRenderArrays;
   std::set<nuiLayer*> mDirtyLayers;
   nglContext* mpContext = nullptr;
   nuiDrawContext* mpDrawContext = nullptr;
@@ -111,6 +112,7 @@ private:
   nglAtomic mRenderingTicks=0;
   int mWidgetIndentation = 0;
 
+  nuiSurface* mpOffscreen = nullptr;
 
   static nglCriticalSection ThreadsCS;
   static std::set<nuiRenderThread*> mThreads;
@@ -119,4 +121,5 @@ private:
   std::map<nuiLayer*, nuiRenderingStat> mLayerStats;
   void DumpStats();
   bool mUseSignPosts = false;
+  void PreCacheRenderArrays(nuiMetaPainter* pPainter);
 };

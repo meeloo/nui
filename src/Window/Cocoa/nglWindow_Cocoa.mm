@@ -1378,7 +1378,24 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   SetTitle(rInfo.Title);
 
   id<NSWindowDelegate> _view = nil;
-  switch (rContext.TargetAPI)
+  nglTargetAPI targetAPI = rContext.TargetAPI;
+  if (targetAPI == eTargetAPI_Best)
+  {
+    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+    nglString name(device.name.UTF8String);
+    NGL_OUT("Metal device: %s\n", name.GetChars());
+    if (device)
+    {
+      mMetalDevice = (void*)CFBridgingRetain(device);
+      targetAPI = eTargetAPI_Metal;
+    }
+    else
+    {
+      targetAPI = eTargetAPI_OpenGL2;
+    }
+  }
+  
+  switch (targetAPI)
   {
     case eTargetAPI_OpenGL2:
     {
@@ -1387,7 +1404,6 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
 
     case eTargetAPI_Metal:
     {
-      mMetalDevice = (void*)CFBridgingRetain(MTLCreateSystemDefaultDevice());
       _view = [[nglNSView_Metal alloc] initWithNGLWindow:this];
     } break;
   }
@@ -1399,7 +1415,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   if ([_view respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)])
     [(NSView*)_view setWantsBestResolutionOpenGLSurface: YES];
 
-  if (rContext.TargetAPI == eTargetAPI_OpenGL2)
+  if (targetAPI == eTargetAPI_OpenGL2)
   {
     NSOpenGLPixelFormatAttribute attribs[] =
     {
@@ -1430,7 +1446,7 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   //[pNSWindow makeKeyAndVisible];
   
   
-  if (rContext.TargetAPI != eTargetAPI_OpenGL2 && rContext.TargetAPI != eTargetAPI_Metal)
+  if (targetAPI != eTargetAPI_OpenGL2 && targetAPI != eTargetAPI_Metal)
   {
     NGL_LOG("window", NGL_LOG_INFO, "bad renderer");
     NGL_ASSERT(0);
@@ -1809,9 +1825,14 @@ void* nglWindow::CreateMetalPass()
   {
     MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     passDescriptor.colorAttachments[0].texture = texture;
-    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionDontCare;
     passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0);
+    if (@available(macOS 10_13, *)) {
+      passDescriptor.colorAttachments[0].storeActionOptions = MTLStoreActionOptionCustomSamplePositions;
+    } else {
+      // Fallback on earlier versions
+    }
+    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 1.0, 1.0);
     
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mMetalCommandBuffer;
     NGL_ASSERT(commandBuffer);

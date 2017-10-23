@@ -100,9 +100,16 @@ public:
     return Count;
   }
 
+  const std::vector<nuiRenderArray*>& GetRenderArrays() const {
+    return mRenderArrays;
+  }
+  
   void SetPriority(int64 priority);
   int64 GetPriority() const;
 
+  virtual void CacheRenderArray(nuiRenderArray* pArray);
+
+  
 #ifdef _DEBUG_
   void DBGSetReferenceObject(const nuiObject* pRef);
 #endif
