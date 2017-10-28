@@ -640,8 +640,8 @@ void nuiDrawContext::DrawImageQuad(float x0, float y0, float x1, float y1, float
   bool UseFillColor = !(mCurrentState.mFillColor == nuiColor(255, 255, 255, 255));
   pArray->Reserve(4);
   pArray->EnableArray(nuiRenderArray::eVertex, true);
-  pArray->EnableArray(nuiRenderArray::eTexCoord, UseFillColor);
-  pArray->EnableArray(nuiRenderArray::eColor, true);
+  pArray->EnableArray(nuiRenderArray::eTexCoord, true);
+  pArray->EnableArray(nuiRenderArray::eColor, UseFillColor);
 
   // 1
   pArray->SetTexCoords(tx0,ty0); 

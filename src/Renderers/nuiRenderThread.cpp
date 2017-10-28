@@ -481,6 +481,7 @@ NGL_OUT("#######################################################################
         mpDrawContext->Clip(cliprect);
         mpDrawContext->EnableClipping(true);
         DrawWidget(mpDrawContext, mpRoot);
+        mpContext->StopMarkerGroup();
       }
       mpContext->StopMarkerGroup();
     }

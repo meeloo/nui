@@ -1825,14 +1825,14 @@ void* nglWindow::CreateMetalPass()
   {
     MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     passDescriptor.colorAttachments[0].texture = texture;
-    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionDontCare;
-    passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-    if (@available(macOS 10_13, *)) {
-      passDescriptor.colorAttachments[0].storeActionOptions = MTLStoreActionOptionCustomSamplePositions;
-    } else {
-      // Fallback on earlier versions
-    }
-    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 1.0, 1.0);
+//    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionDontCare;
+//    passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
+//    if (@available(macOS 10_13, *)) {
+//      passDescriptor.colorAttachments[0].storeActionOptions = MTLStoreActionOptionNone;
+//    } else {
+//      // Fallback on earlier versions
+//    }
+//    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 1.0, 1.0);
     
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mMetalCommandBuffer;
     NGL_ASSERT(commandBuffer);
