@@ -240,7 +240,10 @@ and in NGL user application code.
     #import <QuartzCore/CAMetalLayer.h>
   #endif
 
-  #define _METAL_
+// Metal is only available on iOS devices, not the simulator.
+#if TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
+# define _METAL_
+#endif // TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
 
   #include <stdlib.h>
   #include <stddef.h>

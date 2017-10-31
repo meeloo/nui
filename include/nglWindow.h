@@ -965,9 +965,12 @@ public:
   void DisplayTicked();
   void UpdateLayer();
   void UpdateGLLayer();
+  
+# ifdef _METAL_
   void UpdateMetalLayer();
   virtual void* CreateMetalPass();
-#endif
+# endif // _METAL_
+#endif // _UIKIT_
 
 #ifdef _COCOA_
 public:
@@ -1009,8 +1012,10 @@ public:
 #endif
   
 #if (defined _COCOA_) || (defined _UIKIT_)
+# ifdef _METAL_
   virtual void* GetMetalLayer() const; // CAMetalLayer
-#endif
+# endif // _METAL_
+#endif // (defined _COCOA_) || (defined _UIKIT_)
   
 #ifdef _WIN32_
 private:

@@ -8,6 +8,8 @@
 #ifndef __nuiMetalPainter_h__
 #define __nuiMetalPainter_h__
 
+#ifdef _METAL_
+
 //#include "nui.h"
 #include "nuiDrawContext.h"
 
@@ -167,6 +169,8 @@ protected:
 };
 
 #endif //   #ifndef __NUI_NO_GL__
+
+#endif // _METAL_
 
 #endif //__nuiMetalPainter_h__
 

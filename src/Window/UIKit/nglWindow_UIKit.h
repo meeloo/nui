@@ -8,7 +8,6 @@
 #import <OpenGLES/ES3/gl.h>
 #import <OpenGLES/ES3/glext.h>
 
-
 /*
  ** nglUIView_GL
  */
@@ -26,6 +25,7 @@
  ** nglUIView_Metal
  */
 
+#ifdef _METAL_
 @interface nglUIView_Metal : UIView
 {
 @private
@@ -34,7 +34,7 @@
 - (id)  initWithNGLWindow: (nglWindow*) pNGLWindow;
 
 @end
-
+#endif // NUI_HAS_METAL_IOS
 
 /*
  ** nglUIViewController

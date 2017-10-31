@@ -227,6 +227,8 @@ if (HasExtension("GL_ARB_texture_compression"))
 
 
 #if (defined _UIKIT_) || (defined _COCOA_)
+  
+# ifdef _METAL_
   void* GetMetalDevice() const; // id <MTLDevice>
   void* GetMetalCommandQueue() const; // id <MTLCommandQueue>
   virtual void* GetMetalLayer() const = 0;
@@ -236,8 +238,8 @@ if (HasExtension("GL_ARB_texture_compression"))
   void* GetCurrentMetalCommandEncoder();
   void SetCurrentMetalCommandEncoder(void* encoder);
   void* GetMetalCommandBuffer() const;
-
-#endif
+# endif // _METAL_
+#endif // (defined _UIKIT_) || (defined _COCOA_)
 
   void AddMarker(const char* title);
   void StartMarkerGroup(const char* title);
@@ -340,8 +342,10 @@ protected:
   void* mMetalDestinationTexture = nil; ///< id<MTLTexture>
   void* mCurrentMetalCommandEncoder = nil;
   void* mDrawableMetalCommandEncoder = nil;
+# ifdef _METAL_
   virtual void* CreateMetalPass() = 0; ///< id<MTLCommandEncoder>
-#endif
+# endif // _METAL_
+#endif // (defined _UIKIT_) || (defined _COCOA_)
 
 #ifdef _ANDROID_
 protected:

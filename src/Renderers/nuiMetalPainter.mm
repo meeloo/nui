@@ -5,12 +5,15 @@
  licence: see nui3/LICENCE.TXT
  */
 
-
 #include "nui.h"
+
+#ifdef _METAL_
+
 #import <Metal/Metal.h>
 #ifdef _COCOA_
 #import <QuartzCore/CAMetalLayer.h>
 #endif
+
 
 #ifndef __NUI_NO_GL__
 
@@ -2006,3 +2009,5 @@ void nuiMetalPainter::CacheRenderArray(nuiRenderArray* pArray)
 
 
 #endif //   #ifndef __NUI_NO_GL__
+
+#endif // _METAL_

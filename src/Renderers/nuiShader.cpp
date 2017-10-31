@@ -8,8 +8,11 @@
 //
 
 #include "nui.h"
-#import <Metal/Metal.h>
-#import <QuartzCore/CAMetalLayer.h>
+
+#ifdef _METAL_
+# import <Metal/Metal.h>
+# import <QuartzCore/CAMetalLayer.h>
+#endif // _METAL_
 
 #define NUI_SHADER_INTROSPECT_LOGS 1
 
@@ -738,11 +741,13 @@ nuiShaderProgram::~nuiShaderProgram()
     gpPrograms.erase(it);
   }
   
+#ifdef _METAL_
   for (auto it : mMetalPipelineDescs)
     CFBridgingRelease(it.second);
   
   for (auto it : mMetalPipelineStates)
     CFBridgingRelease(it.second);
+#endif // _METAL_
 }
 
 void nuiShaderProgram::AddShaderFromPath(nuiShaderKind shaderType, const nglPath& rPath)
@@ -800,8 +805,10 @@ GLint nuiShaderProgram::GetUniformLocation(const char *name)
 
 GLint nuiShaderProgram::GetUniformLocation(const nglString& name)
 {
+#ifdef _METAL_
   if (mpMetalLibrary)
     return GetMetalUniformLocation(name.GetChars());
+#endif
 	return glGetUniformLocation(mProgram, name.GetChars());
 }
 
@@ -839,6 +846,7 @@ GLint nuiShaderProgram::GetVertexAttribLocation(const nglString& name)
   return glGetAttribLocation(mProgram, name.GetChars());
 }
 
+#ifdef _METAL_
 void* nuiShaderProgram::GetMetalLibrary() const
 {
   return mpMetalLibrary;
@@ -1053,7 +1061,6 @@ static GLenum GLTypeFromMetalType(MTLDataType type)
   return 0;
 }
 
-#if defined _METAL_
 GLint nuiShaderProgram::GetMetalUniformLocation(const char* uniform) const
 {
   nglString name("transforms.");
@@ -1158,7 +1165,7 @@ void nuiShaderProgram::ParseArgument(const char* domain, void* _argument)
   }
 
 }
-#endif
+#endif // _METAL_
 
 bool nuiShaderProgram::Link()
 {

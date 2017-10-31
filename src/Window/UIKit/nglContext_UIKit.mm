@@ -140,6 +140,7 @@ nglContext::~nglContext()
 {
 }
 
+#ifdef _METAL_
 void* nglContext::GetMetalDevice() const // id <MTLDevice>
 {
   return mMetalDevice;
@@ -185,6 +186,7 @@ void* nglContext::GetMetalCommandBuffer() const
 {
   return mMetalCommandBuffer;
 }
+#endif // _METAL_
 
 void nglContext::AddMarker(const char* title)
 {
@@ -222,6 +224,7 @@ void nglContext::StopMarkerGroup()
   }
 }
 
+#ifdef _METAL_
 void nglContext::SetCurrentMetalCommandEncoder(void* encoder)
 {
   mDrawableMetalCommandEncoder = nil; // In any case the drawable encoder will be reset if it already existed
@@ -238,6 +241,7 @@ void nglContext::SetCurrentMetalCommandEncoder(void* encoder)
   if (encoder)
     mCurrentMetalCommandEncoder = (void*)CFBridgingRetain((__bridge id<MTLCommandEncoder>)encoder);
 }
+#endif // _METAL_
 
 bool nglContext::GetContextInfo(nglContextInfo& rInfo) const
 {

@@ -1094,7 +1094,7 @@ void nuiWidget::Invalidate()
 //  }
 
   CheckValid();
-
+  
   NGL_ASSERT(nglThread::GetCurThreadID() == App->GetMainThreadID());
   if (GetDebug())
   {

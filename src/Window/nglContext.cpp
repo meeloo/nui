@@ -243,11 +243,13 @@ void nglContext::InitPainter()
       nuiCheckForGLErrors();
       NGL_OUT("nuiGLPainter created\n");
       break;
+# ifdef _METAL_
     case eMetal:
       mpPainter = new nuiMetalPainter(this);
       NGL_OUT("nuiMetalPainter created\n");
       break;
-#endif
+# endif // _METAL_
+#endif // !__NUI_NO_GL__
 #ifndef __NUI_NO_D3D__
     case eDirect3D:
       mpPainter = new nuiD3DPainter(this);

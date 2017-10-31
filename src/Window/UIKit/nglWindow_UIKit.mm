@@ -126,6 +126,7 @@ const nglChar* gpWindowErrorTable[] =
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark nglUIView_Metal
 
+#ifdef _METAL_
 @implementation nglUIView_Metal
 {
   CAMetalLayer* _metalLayer;
@@ -180,7 +181,7 @@ const nglChar* gpWindowErrorTable[] =
 }
 
 @end
-
+#endif // _METAL_
 
 ////////////////////////////////////////////////////////////////////////////////
 // nglUIViewController /////////////////////////////////////////////////////////
@@ -209,10 +210,12 @@ const nglChar* gpWindowErrorTable[] =
   {
     pView = [[nglUIView_GL alloc] initWithNGLWindow:mpNGLWindow];
   }
+#ifdef _METAL_
   else if (Info.TargetAPI == eTargetAPI_Metal)
   {
     pView = [[nglUIView_Metal alloc] initWithNGLWindow:mpNGLWindow];
   }
+#endif // _METAL_
   
   self.view = pView;
 }
@@ -877,11 +880,13 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
   }
   else
   {
+#ifdef _METAL_
     id<MTLDevice> device = MTLCreateSystemDefaultDevice();
     nglString name(device.name.UTF8String);
     NGL_OUT("Metal device: %s\n", name.GetChars());
     mMetalDevice = (void*)CFBridgingRetain(device);
     UpdateMetalLayer();
+#endif // _METAL_
   }
   Build(rContext);
 
@@ -969,10 +974,12 @@ void nglWindow::UpdateLayer()
   {
     UpdateGLLayer();
   }
+#ifdef _METAL_
   else if (GetMetalDevice())
   {
     UpdateMetalLayer();
   }
+#endif // _METAL_
   else
   {
     NGL_ASSERT(0); // Whoops?
@@ -1027,6 +1034,7 @@ void nglWindow::UpdateGLLayer()
   GetLock().Unlock();
 }
 
+#ifdef _METAL_
 void nglWindow::UpdateMetalLayer()
 {
   GetLock().Lock();
@@ -1045,6 +1053,7 @@ void nglWindow::UpdateMetalLayer()
 
   GetLock().Unlock();
 }
+#endif // _METAL_
 
 void nglWindow::DisplayTicked()
 {
@@ -1177,15 +1186,16 @@ void nglWindow::BeginSession()
     NGL_ASSERT(mFramebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
   }
+#ifdef _METAL_
   else
   {
     id<MTLCommandQueue> commandQueue = (__bridge id<MTLCommandQueue>)mMetalCommandQueue;
     if (!commandQueue)
     {
       id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
-#if NUI_START_METAL_CAPTURE
+# if NUI_START_METAL_CAPTURE
       [MTLCaptureManager.sharedCaptureManager startCaptureWithDevice:device];
-#endif
+# endif
       commandQueue = [device newCommandQueue];
       mMetalCommandQueue = (void*)CFBridgingRetain(commandQueue);
     }
@@ -1197,8 +1207,10 @@ void nglWindow::BeginSession()
     
     frame++;
   }
+#endif // _METAL_
 }
 
+#ifdef _METAL_
 void* nglWindow::CreateMetalPass()
 {
   id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
@@ -1235,6 +1247,7 @@ void* nglWindow::CreateMetalPass()
   }
   return mDrawableMetalCommandEncoder;
 }
+#endif // _METAL_
 
 void nglWindow::EndSession()
 {
@@ -1263,6 +1276,7 @@ void nglWindow::EndSession()
   }
   else
   {
+# ifdef _METAL_
     SetCurrentMetalCommandEncoder(nullptr);
     
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)GetMetalCommandBuffer();
@@ -1290,12 +1304,13 @@ void nglWindow::EndSession()
       CFBridgingRelease(mMetalCommandBuffer);
       mMetalCommandBuffer = nullptr;
     }
-#if NUI_START_METAL_CAPTURE
+#   if NUI_START_METAL_CAPTURE
     [MTLCaptureManager.sharedCaptureManager stopCapture];
-#endif
+#   endif // NUI_START_METAL_CAPTURE
+# endif // _METAL_
   }
-
-#endif
+  
+#endif // !__NOGLCONTEXT__
 }
 
 bool nglWindow::MakeCurrent() const
@@ -1307,10 +1322,12 @@ bool nglWindow::MakeCurrent() const
   return true;
 }
 
+#ifdef _METAL_
 void* nglWindow::GetMetalLayer() const
 {
   return (__bridge void*)((__bridge nglUIView_Metal*)mpUIView).metalLayer;
 }
+#endif // _METAL_
 
 void nglWindow::Invalidate()
 {
