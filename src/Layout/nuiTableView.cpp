@@ -33,6 +33,7 @@ nuiTableView::nuiTableView(nuiCellSource* pSource, bool OwnSource)
 
   mpSource->SetTableView(this);
   mTableViewSink.Connect(pSource->DataChanged, &nuiTableView::OnSourceDataChanged);
+  mTableViewSink.Connect(pSource->DataReset, &nuiTableView::OnSourceDataReset);
 
   if (SetObjectClass("nuiTableView"))
     InitAttributes();
@@ -43,6 +44,17 @@ void nuiTableView::OnSourceDataChanged(const nuiEvent& rEvent)
   if (mpSource)
   {
     mNeedUpdateCells = true;
+    mSelection.resize(mpSource->GetNumberOfCells());
+    InvalidateLayout();
+  }
+}
+
+void nuiTableView::OnSourceDataReset(const nuiEvent& rEvent)
+{
+  if (mpSource)
+  {
+    mNeedUpdateCells = true;
+    mNeedResetCells = true;
     mSelection.resize(mpSource->GetNumberOfCells());
     InvalidateLayout();
   }
@@ -60,6 +72,7 @@ void nuiTableView::SetSource(nuiCellSource* pSource, bool OwnSource)
   if (mpSource)
   {
     mTableViewSink.Disconnect(pSource->DataChanged, &nuiTableView::OnSourceDataChanged);
+    mTableViewSink.Disconnect(pSource->DataReset, &nuiTableView::OnSourceDataReset);
     if (mOwnSource)
       delete mpSource;
   }
@@ -70,6 +83,7 @@ void nuiTableView::SetSource(nuiCellSource* pSource, bool OwnSource)
     mpSource->SetTableView(this);
     mSelection.resize(pSource->GetNumberOfCells(), false);
     mTableViewSink.Connect(pSource->DataChanged, &nuiTableView::OnSourceDataChanged);
+    mTableViewSink.Connect(pSource->DataReset, &nuiTableView::OnSourceDataReset);
   }
 
   InvalidateLayout();
@@ -230,6 +244,17 @@ bool nuiTableView::SetChildrenRect(nuiSize x, nuiSize y, nuiSize xx, nuiSize yy,
 void nuiTableView::CreateCells(nuiSize Height)
 {
   NGL_ASSERT(mpSource);
+  if (mNeedResetCells)
+  {
+    while (!mVisibleCells.empty())
+    {
+      nuiWidget* pWidget = mVisibleCells.front();
+      DelChild(pWidget);
+      mVisibleCells.pop_front();
+    }
+    mNeedResetCells = false;
+  }
+
   int32 currentVisibleCells = mVisibleCells.size();
   int32 visibleCells = MIN(mpSource->GetNumberOfCells(), ::ToAbove(Height / GetCellHeight()) + 1);
 

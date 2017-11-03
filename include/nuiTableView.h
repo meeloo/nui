@@ -31,7 +31,8 @@ public:
   virtual void SetNeedsRefresh(bool refresh) { mNeedsRefresh = refresh; }
   
   CellSourceEvent DataChanged;
-  
+  CellSourceEvent DataReset;
+
   void SetTableView(nuiTableView* pView) { mpTableView = pView; }
 protected:
   nuiTableView* mpTableView = nullptr;
@@ -80,6 +81,7 @@ public:
   void OnDragStop(bool canceled);
 
   void OnSourceDataChanged(const nuiEvent& rEvent);
+  void OnSourceDataReset(const nuiEvent& rEvent);
 
   int32 GetCellIndex(nuiWidget* pCell) const noexcept;
 
@@ -102,6 +104,7 @@ private:
   int32 mLastVisibleCell = 0;
   nuiSize mCellHeight = 48;
   bool mNeedUpdateCells = true;
+  bool mNeedResetCells = false;
   void CreateCells(nuiSize Height);
 
   int32 mHotCell = -1;

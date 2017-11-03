@@ -375,7 +375,7 @@ const nglChar* gpWindowErrorTable[] =
       info.Buttons |= nglMouseInfo::ButtonDoubleClick;
 
     //NGL_TOUCHES_OUT("[%p][%d] Begin X:%d Y:%d\n", pTouch, info.TouchId, x, y);
-    NGL_TOUCHES_OUT("[%p][%d] BEGIN X:%d Y:%d Force:%f/%f\n", pTouch, info.TouchId, x, y, [pTouch force], [pTouch maximumPossibleForce]);
+//    NGL_TOUCHES_OUT("[%p][%d] BEGIN X:%d Y:%d Force:%f/%f\n", pTouch, info.TouchId, x, y, [pTouch force], [pTouch maximumPossibleForce]);
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
     //          info.Buttons |= nglMouseInfo::ButtonDoubleClick;
