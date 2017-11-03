@@ -336,6 +336,8 @@ bool nuiTableView::MouseClicked(const nglMouseInfo& rInfo)
   {
     int32 i = GetCellIndex(rInfo);
     mClickedIndex = i;
+    mDoubleClicked = rInfo.Buttons & nglMouseInfo::ButtonDoubleClick;
+
     if (IsSelectionEnabled())
     {
       if (i >= 0 && mSelection.size() > i)
