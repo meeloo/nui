@@ -305,47 +305,47 @@ void objCCallOnMemoryWarning();
 {
 }
 
-static void OpenURL(NSURL* url, NSDictionary<NSString *, id>* options) noexcept
-{
-  App->SetOpenURL((__bridge void*)url);
-  App->SetOpenURLOptions((__bridge void*)options);
-  
-  if (url)
-  {
-    if ([url isFileURL])
-    {
-      nglPath p { [url.path UTF8String] };
-      std::list<nglPath> paths { p };
-      ((nglApplication *) App)->OpenDocuments(paths);
-    }
-    else
-    {
-      ((nglApplication *) App)->OpenURL([url.absoluteString UTF8String]);
-    }
-  }
-}
-
 - (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
             options:(NSDictionary<NSString *, id> *)options
 {
-  OpenURL(url, options);
-  /*
-  if (@available(iOS 10, *))
+  if (!url)
   {
-    [app openURL:url options:options completionHandler:^(BOOL success)
-     {
-       //if (success)
-       {
-         OpenURL(url, options);
-       }
-     }];
+    NGL_ASSERT(url);
+    return NO;
+  }
+  
+  App->SetOpenURL((__bridge void*)url);
+  App->SetOpenURLOptions((__bridge void*)options);
+  
+  // URL points to a file
+  if ([url isFileURL])
+  {
+    nglPath p { [url.path UTF8String] };
+    std::list<nglPath> container;
+    
+    // Some files require secure access (ie: app-groups, file providers, shared sandbox access...)
+    if ([url startAccessingSecurityScopedResource])
+    {
+      nglPath copied { ePathTemp };
+      copied += nglPath { p.GetNodeName() };
+      if (p.Copy(copied))
+      {
+        container.push_back(copied);
+      }
+      [url stopAccessingSecurityScopedResource];
+    }
+    else
+    {
+      container.push_back(p);
+    }
+    
+    ((nglApplication *) App)->OpenDocuments(container);
   }
   else
   {
-    OpenURL(url, options);
+    ((nglApplication *) App)->OpenURL([url.absoluteString UTF8String]);
   }
-  */
   return YES;
 }
 
