@@ -47,7 +47,7 @@
 }
 - (id)  initWithNGLWindow: (nglWindow*) pNGLWindow;
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator NS_AVAILABLE_IOS(8_0);
-
+- (UIRectEdge)  preferredScreenEdgesDeferringSystemGestures;
 @end
 
 

@@ -305,9 +305,7 @@ void objCCallOnMemoryWarning();
 {
 }
 
-- (BOOL)application:(UIApplication *)app
-            openURL:(NSURL *)url
-            options:(NSDictionary<NSString *, id> *)options
+static void OpenURL(NSURL* url, NSDictionary<NSString *, id>* options) noexcept
 {
   App->SetOpenURL((__bridge void*)url);
   App->SetOpenURLOptions((__bridge void*)options);
@@ -325,6 +323,29 @@ void objCCallOnMemoryWarning();
       ((nglApplication *) App)->OpenURL([url.absoluteString UTF8String]);
     }
   }
+}
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<NSString *, id> *)options
+{
+  OpenURL(url, options);
+  /*
+  if (@available(iOS 10, *))
+  {
+    [app openURL:url options:options completionHandler:^(BOOL success)
+     {
+       //if (success)
+       {
+         OpenURL(url, options);
+       }
+     }];
+  }
+  else
+  {
+    OpenURL(url, options);
+  }
+  */
   return YES;
 }
 
@@ -383,7 +404,7 @@ void nglApplication::Quit (int Code)
 
 
 /*
- * Internals
+ * Internalseck
  */
 
 /* Startup
