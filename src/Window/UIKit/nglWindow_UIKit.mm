@@ -239,7 +239,7 @@ const nglChar* gpWindowErrorTable[] =
 
 - (UIRectEdge) preferredScreenEdgesDeferringSystemGestures
 {
-  return UIRectEdgeBottom;
+  return UIRectEdgeLeft | UIRectEdgeRight | UIRectEdgeBottom;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
