@@ -141,16 +141,19 @@ public:
   bool MouseUnclicked(const nglMouseInfo& rInfo);
   bool MouseMoved(const nglMouseInfo& rInfo);
 
+  bool IsDoubleClicked() { return mDoubleClicked; }
+
 protected:
   nuiWidget* GetCell(const nglMouseInfo& rInfo);
   int32 GetCellIndex(const nglMouseInfo& rInfo);
   int32 mClickedIndex = -1;
+  bool mDoubleClicked = false;
   nuiSize mSeparatorOffset = 8;
   nuiSize mSeparatorWidth = 1;
   int32 GetClickedCell() { return mClickedIndex; }
-
-//  bool CallPreMouseMoved(const nglMouseInfo& rInfo);
 };
 
 
 #endif
+
+
