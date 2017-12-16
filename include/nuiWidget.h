@@ -287,6 +287,9 @@ public:
   virtual void SetAlpha(float Alpha);
   virtual void SetEnabled(bool set);
   virtual void SetSelected(bool set);
+  virtual bool IsOpaque() const;
+  virtual void SetOpaque(bool set);
+  bool GetCombinedIsOpaque() const;
 
   virtual void OnChildHotRectChanged(nuiWidget* pChild, const nuiRect& rChildHotRect);
   virtual void SetVisible(bool Visible); ///< Show or hide the widget
@@ -898,6 +901,8 @@ public:
   void EnableAutoLayout(bool set);
   nuiWidget::LayoutAttributes& GetLayoutAttributes();
 
+  void GetWidgetsCoveringGlobalRect(std::vector<std::pair<nuiWidget*, nuiRect> >& widgets, const nuiRect& rRect) const; ///< Fill widgets with the widgets that cover the given global rect and the intersection in between their rect and the tested rect
+  void GetOpaqueWidgetRootsCoveringGlobalRect(std::vector<nuiWidget*>& widgets, const nuiRect& rRect) const; ///< Fill widgets with the widgets that need to be drawn to completely cover the given rect, eliminating non needed non opaque ones
 protected:
   virtual ~nuiWidget();
 
@@ -961,6 +966,7 @@ protected:
   bool mAnimateLayout : 1;
   bool mRedrawOnHover : 1;
   bool mMixAlpha : 1;
+  bool mIsOpaque : 1;
   bool mInheritAlpha : 1;
   bool mVisible : 1;
   bool mDrawingInCache : 1;
