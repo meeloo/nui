@@ -780,7 +780,7 @@ public:
   
   virtual bool DispatchLayoutOrientation(nuiOrientation Orientation);
 
-  void SetLayoutOrientation(nuiOrientation Orientation);
+  virtual void SetLayoutOrientation(nuiOrientation Orientation);
   nuiOrientation GetLayoutOrientation() { return mLayoutOrientation; }
   nuiOrientation mLayoutOrientation { nuiVertical };
   //@}
