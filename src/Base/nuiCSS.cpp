@@ -654,9 +654,16 @@ public:
       return false;
     
     nglString value;
-    if (!GetValue(value, true/*AllowBlank*/))
-      return false;
-    
+    if (mChar == _T('"'))
+    {
+      if (!GetQuoted(value))
+        return false;
+    }
+    else
+    {
+      if (!GetValue(value, true/*AllowBlank*/))
+        return false;
+    }
     if (!SkipBlank())
       return false;
     if (mChar != _T(';'))

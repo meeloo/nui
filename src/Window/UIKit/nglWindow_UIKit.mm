@@ -1061,6 +1061,8 @@ void nglWindow::DisplayTicked()
   {
     mInited = true;
     CallOnCreation();
+    CGRect r = [(nglUIWindow*)mpUIWindow frame];
+    CallOnOrientation(r.size.width > r.size.height ? nuiHorizontal : nuiVertical);
   }
   
   nglTime now;

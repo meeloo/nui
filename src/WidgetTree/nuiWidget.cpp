@@ -5652,6 +5652,8 @@ void nuiWidget::SetLayoutOrientation(nuiOrientation Orientation)
   
   mLayoutOrientation = Orientation;
   
+  DispatchLayoutOrientation(Orientation); ///< TEST
+
   if (mLayoutOrientation == nuiHorizontal)
   {
     HorizontallyOriented();
