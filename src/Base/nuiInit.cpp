@@ -8,7 +8,7 @@
 #include "nui.h"
 
 #ifndef _MINUI3_
-#define NUI_FONTDB_PATH "nuiFonts.db5"
+#define NUI_FONTDB_PATH ".nuiFonts.db5"
 #endif
 
 #if (defined _UIKIT_)

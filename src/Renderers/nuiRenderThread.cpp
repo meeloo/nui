@@ -571,6 +571,19 @@ void nuiRenderThread::PreCacheRenderArrays(nuiMetaPainter* pPainter)
   }
 }
 
+void nuiRenderThread::RemovePreCachedRenderArrays(nuiMetaPainter* pPainter)
+{
+  if (pPainter)
+  {
+    auto arrays(pPainter->GetRenderArrays());
+    for (auto array : arrays)
+    {
+      mNewRenderArrays.erase(array);
+    }
+  }
+}
+
+
 void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPainter> pPainter)
 {
 //  NGL_OUT("_SetWidgetDrawPainter %p %s %s (%p)\n", pWidget, pWidget->GetObjectClass().GetChars(), pWidget->GetObjectName().GetChars(), (void*)pPainter);
@@ -581,6 +594,8 @@ void nuiRenderThread::_SetWidgetDrawPainter(nuiWidget* pWidget, nuiRef<nuiMetaPa
 
     nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
+
+    RemovePreCachedRenderArrays(it->second);
 
     if (pPainter)
     {
@@ -612,7 +627,8 @@ void nuiRenderThread::_SetWidgetContentsPainter(nuiWidget* pWidget, nuiRef<nuiMe
     nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
     
-
+    RemovePreCachedRenderArrays(it->second);
+    
     if (pPainter)
     {
       it->second = pPainter;
@@ -645,6 +661,8 @@ void nuiRenderThread::_SetLayerDrawPainter(nuiLayer* pLayer, nuiRef<nuiMetaPaint
     
 //    NGL_OUT("                   %p replaces %p\n", pPainter, pOld);
 
+    RemovePreCachedRenderArrays(it->second);
+
     if (pPainter)
     {
       it->second = pPainter;
@@ -672,6 +690,7 @@ void nuiRenderThread::_SetLayerContentsPainter(nuiLayer* pLayer, nuiRef<nuiMetaP
   {
     mpContext->GetLock().Lock();
 
+    RemovePreCachedRenderArrays(it->second);
     nuiRef<nuiMetaPainter> pOld = it->second;
     NGL_ASSERT(pOld);
 //    NGL_OUT("                   %p replaces %p\n", (void*)pPainter, (void*)pOld);

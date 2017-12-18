@@ -309,21 +309,42 @@ void objCCallOnMemoryWarning();
             openURL:(NSURL *)url
             options:(NSDictionary<NSString *, id> *)options
 {
+  if (!url)
+  {
+    NGL_ASSERT(url);
+    return NO;
+  }
+  
   App->SetOpenURL((__bridge void*)url);
   App->SetOpenURLOptions((__bridge void*)options);
   
-  if (url)
+  // URL points to a file
+  if ([url isFileURL])
   {
-    if ([url isFileURL])
+    nglPath p { [url.path UTF8String] };
+    std::list<nglPath> container;
+    
+    // Some files require secure access (ie: app-groups, file providers, shared sandbox access...)
+    if ([url startAccessingSecurityScopedResource])
     {
-      nglPath p { [url.path UTF8String] };
-      std::list<nglPath> paths { p };
-      ((nglApplication *) App)->OpenDocuments(paths);
+      nglPath copied { ePathTemp };
+      copied += nglPath { p.GetNodeName() };
+      if (p.Copy(copied))
+      {
+        container.push_back(copied);
+      }
+      [url stopAccessingSecurityScopedResource];
     }
     else
     {
-      ((nglApplication *) App)->OpenURL([url.absoluteString UTF8String]);
+      container.push_back(p);
     }
+    
+    ((nglApplication *) App)->OpenDocuments(container);
+  }
+  else
+  {
+    ((nglApplication *) App)->OpenURL([url.absoluteString UTF8String]);
   }
   return YES;
 }
@@ -383,7 +404,7 @@ void nglApplication::Quit (int Code)
 
 
 /*
- * Internals
+ * Internalseck
  */
 
 /* Startup

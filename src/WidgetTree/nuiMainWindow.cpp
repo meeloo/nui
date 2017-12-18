@@ -73,6 +73,7 @@ nuiMainWindow::nuiMainWindow(uint Width, uint Height, bool Fullscreen, const ngl
   mMaxFPS = 0.0f;
   mFPSCount = 0;
   mFPS = 0;
+  SetOpaque(true);
 
   uint w,h;
   mpNGLWindow->GetSize(w,h);
@@ -137,6 +138,8 @@ nuiMainWindow::nuiMainWindow(const nglContextInfo& rContextInfo, const nglWindow
   mMaxFPS = 0.0f;
   mFPSCount = 0;
   mFPS = 0;
+  SetOpaque(true);
+
   mLastPaint = nglTime();
   uint w,h;
   mpNGLWindow->GetSize(w,h);

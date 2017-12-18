@@ -1359,8 +1359,12 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
       rect.origin.y = (rect.origin.y - rect.size.height) / 2;
       break;
     case nglWindowInfo::ePosMouse:
+      rect.origin.x = (rect.origin.x - rect.size.width) / 2;
+      rect.origin.y = (rect.origin.y - rect.size.height) / 2;
       break;
     case nglWindowInfo::ePosAuto:
+      rect.origin.x = (rect.origin.x - rect.size.width) / 2;
+      rect.origin.y = (rect.origin.y - rect.size.height) / 2;
       break;
   }
   
@@ -1453,8 +1457,8 @@ void nglWindow::InternalInit (const nglContextInfo& rContext, const nglWindowInf
     return;
   }
 
-  mWidth = rect.size.width;
-  mHeight = rect.size.height;
+  mWidth = _window.contentLayoutRect.size.width;
+  mHeight = _window.contentLayoutRect.size.height;
 	
   Build(rContext);
 

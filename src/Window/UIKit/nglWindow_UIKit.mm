@@ -237,6 +237,10 @@ const nglChar* gpWindowErrorTable[] =
   mpNGLWindow->CallOnOrientation(size.width > size.height ? nuiHorizontal : nuiVertical);
 }
 
+- (UIRectEdge) preferredScreenEdgesDeferringSystemGestures
+{
+  return UIRectEdgeLeft | UIRectEdgeRight | UIRectEdgeBottom;
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

@@ -454,6 +454,15 @@ void nuiWidget::InitAttributes()
    );
   AddAttribute(pAlphaAttrib);
   
+  AddAttribute(new nuiAttribute<bool>
+               (nglString("Opaque"), nuiUnitBoolean,
+                nuiMakeDelegate(this, &nuiWidget::IsOpaque),
+                nuiMakeDelegate(this, &nuiWidget::SetOpaque)));
+  
+  AddAttribute(new nuiAttribute<bool>
+               (nglString("CombinedOpaque"), nuiUnitBoolean,
+                nuiMakeDelegate(this, &nuiWidget::GetCombinedIsOpaque)));
+  
   AddAttribute(new nuiAttribute<int32>
                (nglString("Debug"), nuiUnitNone,
                 nuiMakeDelegate(this, &nuiWidget::_GetDebug),
@@ -534,6 +543,7 @@ void nuiWidget::Init()
   mAnimateLayout = false;
   mObjCursor = eCursorDoNotSet;
   mAlpha = 1.0f;
+  mIsOpaque = false;
   mHasFocus = false;
   mNeedSelfLayout = true;
   mNeedLayout = true;
@@ -5578,6 +5588,27 @@ void nuiWidget::SetAlpha(float Alpha)
   DebugRefreshInfo();
 }
 
+bool nuiWidget::GetCombinedIsOpaque() const
+{
+  if (mMixAlpha)
+    return mIsOpaque && (GetMixedAlpha() == 1.0f);
+  return mIsOpaque && (GetAlpha() == 1.0f);
+}
+
+
+bool nuiWidget::IsOpaque() const
+{
+  return mIsOpaque;
+}
+
+void nuiWidget::SetOpaque(bool set)
+{
+  if (mIsOpaque == set)
+    return;
+  mIsOpaque = set;
+  Invalidate();
+}
+
 void nuiWidget::SetEnabled(bool set)
 {
   CheckValid();
@@ -6434,7 +6465,10 @@ void nuiWidget::InternalSetLayerPolicy(nuiDrawPolicy policy)
         NGL_OUT("Create widget layer %s\n", name.GetChars());
       }
       
-      mpBackingLayer->SetBlendFunc(mLayerBlendFunc);
+      if (GetCombinedIsOpaque())
+        mpBackingLayer->SetBlendFunc(nuiBlendSource);
+      else
+        mpBackingLayer->SetBlendFunc(mLayerBlendFunc);
       UpdateBackingLayer();
     }
   }
@@ -6875,3 +6909,45 @@ void nuiLayoutable::CallBuilt()
   Built();
 }
 
+void nuiWidget::GetWidgetsCoveringGlobalRect(std::vector<std::pair<nuiWidget*, nuiRect> >& widgets, const nuiRect& rRect) const
+{
+  if (!IsVisible(false))
+    return;
+  nuiRect rect(mRect.Size());
+  LocalToGlobal(rect);
+  nuiRect intersection;
+  bool res = intersection.Intersect(rRect, rect);
+  if (!res) // No intersection
+    return;
+
+  widgets.push_back(std::make_pair(const_cast<nuiWidget*>(this), intersection));
+  ConstIteratorPtr pIt;
+  for (pIt = GetFirstChild(); pIt && pIt->IsValid(); GetNextChild(pIt))
+  {
+    nuiWidgetPtr pItem = pIt->GetWidget();
+    pItem->GetWidgetsCoveringGlobalRect(widgets, rRect);
+  }
+  delete pIt;
+}
+
+void nuiWidget::GetOpaqueWidgetRootsCoveringGlobalRect(std::vector<nuiWidget*>& widgets, const nuiRect& rRect) const
+{
+  std::vector<std::pair<nuiWidget *, nuiRect> > visibleWidgets;
+  GetWidgetsCoveringGlobalRect(visibleWidgets, rRect);
+  nuiSize surface = rRect.GetSurface();
+  
+  for (auto it = visibleWidgets.rbegin(); it != visibleWidgets.rend(); ++it)
+  {
+    nuiWidget* pWidget = it->first;
+    widgets.push_back(pWidget);
+
+    if (pWidget->GetCombinedIsOpaque())
+    {
+      nuiRect r = it->second;
+      if (r.GetSurface() == surface)
+      {
+        return;
+      }
+    }
+  }
+}

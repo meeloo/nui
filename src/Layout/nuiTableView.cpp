@@ -140,6 +140,8 @@ bool nuiTableView::SetRect(const nuiRect& rRect)
 //    GetRange(nuiVertical)->SetValue(rect.Top());
     mHotCell = -1;
   }
+  
+  CellsUpdated();
 
   return true;
 }

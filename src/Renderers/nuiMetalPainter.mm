@@ -409,7 +409,6 @@ nuiMetalPainter::nuiMetalPainter(nglContext* pContext)
 {
   gpPainters.insert(this);
 
-  mTwoPassBlend = false;
   mClientVertex = false;
   mClientColor = false;
   mClientTexCoord = false;
@@ -1272,101 +1271,32 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   }
   
   
-  if (mpSurface && mTwoPassBlend && mFinalState.mBlending)
+  uint32 arraycount = pArray->GetIndexArrayCount();
+  
+  if (!arraycount)
   {
-//    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
-    uint32 arraycount = pArray->GetIndexArrayCount();
-    
-    if (!arraycount)
-    {
-      MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
-      [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
-      mDrawOperationsOnCurrentSurface++;
-    }
-    else
-    {
-      for (uint32 i = 0; i < arraycount; i++)
-      {
-        nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
-        MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
-        id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
-        NGL_ASSERT(indexes != nil);
-#if (defined _UIKIT_)
-        MTLIndexType indexType = MTLIndexTypeUInt16;
-#else
-        MTLIndexType indexType = MTLIndexTypeUInt32;
-#endif
-        [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
-        mDrawOperationsOnCurrentSurface++;
-      }
-    }
-
-//    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
-//    glBlendFunc(mSrcAlpha, mDstAlpha);
-    if (!arraycount)
-    {
-      MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
-      [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
-      mDrawOperationsOnCurrentSurface++;
-    }
-    else
-    {
-      for (uint32 i = 0; i < arraycount; i++)
-      {
-        nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
-        MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
-        id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
-        NGL_ASSERT(indexes != nil);
-#if (defined _UIKIT_)
-        MTLIndexType indexType = MTLIndexTypeUInt16;
-#else
-        MTLIndexType indexType = MTLIndexTypeUInt32;
-#endif
-        [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
-        mDrawOperationsOnCurrentSurface++;
-      }
-    }
-//    glBlendFunc(mSrcColor, mDstColor);
-//    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
+    [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
+    mDrawOperationsOnCurrentSurface++;
   }
   else
   {
-    uint32 arraycount = pArray->GetIndexArrayCount();
-    
-    if (!arraycount)
+    for (uint32 i = 0; i < arraycount; i++)
     {
-//      glDrawArrays(mode, 0, s);
-      MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(mode);
-      [encoder drawPrimitives:primitiveType vertexStart:0 vertexCount:s];
+      nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
+      MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
+      id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
+      NGL_ASSERT(indexes != nil);
+#if (defined _UIKIT_)
+      MTLIndexType indexType = MTLIndexTypeUInt16;
+#else
+      MTLIndexType indexType = MTLIndexTypeUInt32;
+#endif
+      [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
       mDrawOperationsOnCurrentSurface++;
     }
-    else
-    {
-      for (uint32 i = 0; i < arraycount; i++)
-      {
-        nuiRenderArray::IndexArray& array(pArray->GetIndexArray(i));
-//#if (defined _UIKIT_) || (defined _ANDROID_)
-//        glDrawElements(array.mMode, (GLsizei)array.mIndices.size(), GL_UNSIGNED_SHORT, &(array.mIndices[0]));
-//#else
-//        glDrawElements(array.mMode, array.mIndices.size(), GL_UNSIGNED_INT, &(array.mIndices[0]));
-//#endif
-        MTLPrimitiveType primitiveType = nuiMTLPrimitiveTypeFromGL(array.mMode);
-        id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)vertexArray[1 + i];
-        NGL_ASSERT(indexes != nil);
-#if (defined _UIKIT_)
-        MTLIndexType indexType = MTLIndexTypeUInt16;
-#else
-        MTLIndexType indexType = MTLIndexTypeUInt32;
-#endif
-        [encoder drawIndexedPrimitives:primitiveType indexCount:array.mIndices.size() indexType:indexType indexBuffer:indexes indexBufferOffset:0];
-        mDrawOperationsOnCurrentSurface++;
-      }
-    }
   }
-  
-//  glBindVertexArray(0);
-  
-  //  ResetVertexPointers(*pArray);
+
   pArray->Release();
   mpShaderState->Release();
   mpShaderState = nullptr;

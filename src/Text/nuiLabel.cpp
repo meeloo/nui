@@ -84,6 +84,8 @@ void nuiLabel::InitDefaultValues()
   mVMargin = NUI_LABEL_VMARGIN;
   mHMargin = NUI_LABEL_HMARGIN;
   mWrapping = false;
+  
+  SetOpaque(false);
 }
 
 

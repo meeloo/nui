@@ -9,6 +9,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <unordered_set>
 
 class nuiMetaPainter;
 class nuiLayer;
@@ -80,7 +81,7 @@ private:
   std::unordered_map<nuiWidget*, nuiRef<nuiMetaPainter>> mWidgetDrawPainters;
   std::unordered_map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerContentsPainters;
   std::unordered_map<nuiLayer*, nuiRef<nuiMetaPainter>> mLayerDrawPainters;
-  std::set<nuiRenderArray*> mNewRenderArrays;
+  std::unordered_set<nuiRenderArray*> mNewRenderArrays;
   std::set<nuiLayer*> mDirtyLayers;
   nglContext* mpContext = nullptr;
   nuiDrawContext* mpDrawContext = nullptr;
@@ -122,4 +123,5 @@ private:
   void DumpStats();
   bool mUseSignPosts = false;
   void PreCacheRenderArrays(nuiMetaPainter* pPainter);
+  void RemovePreCachedRenderArrays(nuiMetaPainter* pPainter);
 };

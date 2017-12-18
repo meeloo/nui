@@ -58,6 +58,7 @@ public:
   bool SetRect(const nuiRect& rRect);
   bool Draw(nuiDrawContext* pContext);
   
+  nuiSimpleEventSource<0> CellsUpdated;
   
   nuiWidget* GetCell(int32 Index);
 
@@ -86,6 +87,7 @@ public:
   int32 GetCellIndex(nuiWidget* pCell) const noexcept;
 
   void SetHotCell(int32 Index) { mHotCell = Index; InvalidateLayout(); }
+  inline int32 GetHotCell() { return mHotCell; }
 
 protected:
   void InitAttributes();

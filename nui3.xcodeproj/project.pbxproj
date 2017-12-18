@@ -3502,10 +3502,8 @@
 		E5ED550B13FDE943004EFA83 /* nuiMidi.h in Headers */ = {isa = PBXBuildFile; fileRef = E5ED550413FDE943004EFA83 /* nuiMidi.h */; };
 		E5ED550F13FDEC0C004EFA83 /* nuiMidi_CoreMidi.mm in Sources */ = {isa = PBXBuildFile; fileRef = E5ED550D13FDEC0C004EFA83 /* nuiMidi_CoreMidi.mm */; };
 		E5ED551213FDEC0C004EFA83 /* nuiMidi_CoreMidi.mm in Sources */ = {isa = PBXBuildFile; fileRef = E5ED550D13FDEC0C004EFA83 /* nuiMidi_CoreMidi.mm */; };
-		E5ED551413FDEC0C004EFA83 /* nuiMidi_CoreMidi.mm in Sources */ = {isa = PBXBuildFile; fileRef = E5ED550D13FDEC0C004EFA83 /* nuiMidi_CoreMidi.mm */; };
 		E5ED551713FDED23004EFA83 /* nuiMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5ED551513FDED23004EFA83 /* nuiMidi.cpp */; };
 		E5ED551A13FDED23004EFA83 /* nuiMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5ED551513FDED23004EFA83 /* nuiMidi.cpp */; };
-		E5ED551C13FDED23004EFA83 /* nuiMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5ED551513FDED23004EFA83 /* nuiMidi.cpp */; };
 		E5F0C24E13A0ACC900EC0FB0 /* nuiTextStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = E5F0C24C13A0ACC900EC0FB0 /* nuiTextStyle.h */; };
 		E5F0C25113A0ACC900EC0FB0 /* nuiTextStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = E5F0C24C13A0ACC900EC0FB0 /* nuiTextStyle.h */; };
 		E5F0C25313A0ACC900EC0FB0 /* nuiTextStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = E5F0C24C13A0ACC900EC0FB0 /* nuiTextStyle.h */; };
@@ -12155,8 +12153,6 @@
 				E596F93013C2898400C109F9 /* nglStringConv_CoreFoundation.cpp in Sources */,
 				E533393013C373B60080C465 /* AtlasTexture.cpp in Sources */,
 				E5DE7A2313C3EAB80018CD6C /* ImageDraggedFile.cpp in Sources */,
-				E5ED551413FDEC0C004EFA83 /* nuiMidi_CoreMidi.mm in Sources */,
-				E5ED551C13FDED23004EFA83 /* nuiMidi.cpp in Sources */,
 				E53B3E841407CA7E005AD549 /* nuiArchive.cpp in Sources */,
 				E531A99C1440A1EE00ED88C9 /* nuiLayout.cpp in Sources */,
 				E5C3FA4114BDC60F00F4FB96 /* nuiHTTPServer.cpp in Sources */,
@@ -12769,7 +12765,35 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = ". include deps/ deps/expat/lib deps/glu deps/libpng deps/tidy deps/gameswf deps/ucdata deps/ungif deps/libjpeg src/Application/UIKit src/Application/Carbon src/Text/HTML src/Stream/Zip deps/freetype2/include deps/tracemonkey deps/tracemonkey/vprof deps/tracemonkey/nanojit deps/harfbuzz deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include deps/kiwi deps/capnproto/c++/src src";
+				USER_HEADER_SEARCH_PATHS = (
+					.,
+					include,
+					deps/,
+					deps/expat/lib,
+					deps/glu,
+					deps/libpng,
+					deps/tidy,
+					deps/gameswf,
+					deps/ucdata,
+					deps/ungif,
+					deps/libjpeg,
+					src/Application/UIKit,
+					src/Application/Carbon,
+					src/Text/HTML,
+					src/Stream/Zip,
+					deps/freetype2/include,
+					deps/tracemonkey,
+					deps/tracemonkey/vprof,
+					deps/tracemonkey/nanojit,
+					deps/harfbuzz,
+					deps/libcss/src,
+					deps/libcss/src/libwapcaplet,
+					deps/libcss/src/libparserutils,
+					deps/libcss/include,
+					deps/kiwi,
+					"deps/capnproto/c++/src",
+					src,
+				);
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
@@ -12883,7 +12907,35 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = ". include deps/ deps/expat/lib deps/glu deps/libpng deps/tidy deps/gameswf deps/ucdata deps/ungif deps/libjpeg src/Application/UIKit src/Application/Carbon src/Text/HTML src/Stream/Zip deps/freetype2/include deps/tracemonkey deps/tracemonkey/vprof deps/tracemonkey/nanojit deps/harfbuzz deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include deps/kiwi deps/capnproto/c++/src src";
+				USER_HEADER_SEARCH_PATHS = (
+					.,
+					include,
+					deps/,
+					deps/expat/lib,
+					deps/glu,
+					deps/libpng,
+					deps/tidy,
+					deps/gameswf,
+					deps/ucdata,
+					deps/ungif,
+					deps/libjpeg,
+					src/Application/UIKit,
+					src/Application/Carbon,
+					src/Text/HTML,
+					src/Stream/Zip,
+					deps/freetype2/include,
+					deps/tracemonkey,
+					deps/tracemonkey/vprof,
+					deps/tracemonkey/nanojit,
+					deps/harfbuzz,
+					deps/libcss/src,
+					deps/libcss/src/libwapcaplet,
+					deps/libcss/src/libparserutils,
+					deps/libcss/include,
+					deps/kiwi,
+					"deps/capnproto/c++/src",
+					src,
+				);
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
