@@ -1373,8 +1373,9 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
   {
     info.mReload = false;
     info.mTexture = _id;
-    MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new]; samplerDescriptor.minFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
-    samplerDescriptor.magFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
+    MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new];
+    samplerDescriptor.minFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
+    samplerDescriptor.magFilter = nuiGLToMetaltextureFilter(pTexture->GetMagFilter());
     samplerDescriptor.sAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapS());
     samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
     
@@ -1497,7 +1498,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         info.mTexture = (void*)CFBridgingRetain(texture);
         MTLSamplerDescriptor *samplerDescriptor = [MTLSamplerDescriptor new];
         samplerDescriptor.minFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
-        samplerDescriptor.magFilter = nuiGLToMetaltextureFilter(pTexture->GetMinFilter());
+        samplerDescriptor.magFilter = nuiGLToMetaltextureFilter(pTexture->GetMagFilter());
         samplerDescriptor.sAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapS());
         samplerDescriptor.tAddressMode = nuiGLToMetaltextureAddressMode(pTexture->GetWrapT());
 
