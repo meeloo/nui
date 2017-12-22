@@ -1212,35 +1212,12 @@ void nuiGLPainter::DrawArray(nuiRenderArray* pArray)
   if (NeedTranslateHack)
   {
     const float ratio = mpContext->GetScaleInv() / 2.f;
-#ifdef _UIKIT_
     hackX = ratio;
     hackY = ratio;
-#else
-    //    if (mAngle == 0)
-    {
-      hackX = ratio;
-      hackY = ratio;
-    }
-    //    else if (mAngle == 90)
-    //    {
-    //      hackX = 0;
-    //      hackY = ratio;
-    //    }
-    //    else if (mAngle == 180)
-    //    {
-    //      hackX = 0;
-    //      hackY = 0;
-    //    }
-    //    else/*mAngle == 270*/
-    //    {
-    //      hackX = ratio;
-    //      hackY = 0;
-    //    }
-#endif
   }
   
   if (mpSurface)
-    mFinalState.mpShaderState->SetOffset(-hackX, -hackY);
+    mFinalState.mpShaderState->SetOffset(hackX, -hackY);
   else
     mFinalState.mpShaderState->SetOffset(hackX, hackY);
   

@@ -35,6 +35,7 @@ using namespace metal;
 struct Transforms
 {
   float4x4 ModelViewMatrix;
+  float4 Offset;
 };
 
  struct InputVertex
@@ -60,7 +61,7 @@ vertex Vertex vertex_main(
 
   vert.TexCoord = vertex_in.mTexCoord;
   vert.Color = vertex_in.mColor;
-  vert.Position = transforms.ModelViewMatrix * vertex_in.mPosition;
+  vert.Position = transforms.ModelViewMatrix * (vertex_in.mPosition + transforms.Offset);
 
   return vert;
 }
@@ -86,6 +87,7 @@ SHADER_STRING
  struct Transforms
 {
   float4x4 ModelViewMatrix;
+  float4 Offset;
 };
  
  struct InputVertex
@@ -112,8 +114,8 @@ SHADER_STRING
   
   vert.TexCoord = vertex_in.mTexCoord;
   vert.Color = vertex_in.mColor;
-  vert.Position = transforms.ModelViewMatrix * vertex_in.mPosition;
-  
+  vert.Position = transforms.ModelViewMatrix * (vertex_in.mPosition + transforms.Offset);
+
   return vert;
 }
  
@@ -139,6 +141,7 @@ using namespace metal;
 struct Transforms
 {
   float4x4 ModelViewMatrix;
+  float4 Offset;
   float4 DifuseColor;
 };
  
@@ -163,7 +166,7 @@ vertex Vertex vertex_main(
   Vertex vert;
   
   vert.TexCoord = vertex_in.mTexCoord;
-  vert.Position = transforms.ModelViewMatrix * vertex_in.mPosition;
+  vert.Position = transforms.ModelViewMatrix * (vertex_in.mPosition + transforms.Offset);
 
   return vert;
 }
@@ -190,6 +193,7 @@ using namespace metal;
 struct Transforms
 {
   float4x4 ModelViewMatrix;
+  float4 Offset;
   float4 DifuseColor;
 };
  
@@ -214,7 +218,7 @@ vertex Vertex vertex_main(
   Vertex vert;
   
   vert.TexCoord = vertex_in.mTexCoord;
-  vert.Position = transforms.ModelViewMatrix * vertex_in.mPosition;
+  vert.Position = transforms.ModelViewMatrix * (vertex_in.mPosition + transforms.Offset);
 
   return vert;
 }
@@ -243,6 +247,7 @@ using namespace metal;
 struct Transforms
 {
   float4x4 ModelViewMatrix;
+  float4 Offset;
 };
                
  struct InputVertex
@@ -267,7 +272,7 @@ vertex Vertex vertex_main(
   Vertex vert;
   
   vert.Color = vertex_in.mColor;
-  vert.Position = transforms.ModelViewMatrix * vertex_in.mPosition;
+  vert.Position = transforms.ModelViewMatrix * (vertex_in.mPosition + transforms.Offset);
 
   return vert;
 }
@@ -289,6 +294,7 @@ SHADER_STRING
  struct Transforms
 {
   float4x4 ModelViewMatrix;
+  float4 Offset;
   float4 DifuseColor;
 };
  
@@ -311,7 +317,7 @@ SHADER_STRING
 {
   Vertex vert;
   
-  vert.Position = transforms.ModelViewMatrix * vertex_in.mPosition;
+  vert.Position = transforms.ModelViewMatrix * (vertex_in.mPosition + transforms.Offset);
 
   return vert;
 }
@@ -1114,38 +1120,14 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   if (NeedTranslateHack)
   {
     const float ratio = mpContext->GetScaleInv() / 2.f;
-#ifdef _UIKIT_
     hackX = ratio;
     hackY = ratio;
-#else
-    //    if (mAngle == 0)
-    {
-      hackX = ratio;
-      hackY = ratio;
-    }
-    //    else if (mAngle == 90)
-    //    {
-    //      hackX = 0;
-    //      hackY = ratio;
-    //    }
-    //    else if (mAngle == 180)
-    //    {
-    //      hackX = 0;
-    //      hackY = 0;
-    //    }
-    //    else/*mAngle == 270*/
-    //    {
-    //      hackX = ratio;
-    //      hackY = 0;
-    //    }
-#endif
   }
   
-//  if (mpSurface)
-//    mFinalState.mpShaderState->SetOffset(-hackX, -hackY);
-//  else
-//    mFinalState.mpShaderState->SetOffset(hackX, hackY);
-  
+  if (mpSurface)
+    mFinalState.mpShaderState->SetOffset(hackX, -hackY);
+  else
+    mFinalState.mpShaderState->SetOffset(hackX, hackY);
   
   if (!pArray->IsArrayEnabled(nuiRenderArray::eColor))
   {
