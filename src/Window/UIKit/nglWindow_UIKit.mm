@@ -527,7 +527,12 @@ std::pair<nglPath, bool> GetTemporaryDropFile(nglPath FileName) noexcept
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
     //          info.Buttons |= nglMouseInfo::ButtonDoubleClick;
 
-    mpNGLWindow->CallOnMouseClick(info);
+    mpNGLWindow->mCurrentTouchID = info.TouchId;
+
+//    if (!mpNGLWindow->IsDragging())
+    {
+      mpNGLWindow->CallOnMouseClick(info);
+    }
   }
 }
 
@@ -558,7 +563,9 @@ std::pair<nglPath, bool> GetTemporaryDropFile(nglPath FileName) noexcept
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
     //          info.Buttons |= nglMouseInfo::ButtonDoubleClick;
 
-    if (mpNGLWindow->IsDragging())
+    mpNGLWindow->mCurrentTouchID = info.TouchId;
+
+    if (mpNGLWindow->IsDragging() && mpNGLWindow->mDraggedTouchID == info.TouchId)
     {
       mpNGLWindow->OnDropped(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
       mpNGLWindow->OnDragStop(false);
@@ -622,13 +629,14 @@ std::pair<nglPath, bool> GetTemporaryDropFile(nglPath FileName) noexcept
     info.SwipeInfo = nglMouseInfo::eNoSwipe;
     info.TouchId = (int64)pTouch;
 
+    mpNGLWindow->mCurrentTouchID = info.TouchId;
 //    NGL_TOUCHES_OUT("[%p][%d] MOVED X:%d Y:%d Force:%f/%f\n", pTouch, info.TouchId, x, y, [pTouch force], [pTouch maximumPossibleForce]);
 
     ///< if tapcount > 1, unclicked from a double click
     //        if (touchTapCount > 1)// && ([pTouch timestamp] - sOldTimestamp < DOUBLE_TAP_DELAY))
     //          info.Buttons |= nglMouseInfo::ButtonDoubleClick;
     
-    if (mpNGLWindow->IsDragging())
+    if (mpNGLWindow->IsDragging() && mpNGLWindow->mDraggedTouchID == info.TouchId)
     {
       mpNGLWindow->OnCanDrop(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
     }
@@ -1402,6 +1410,7 @@ bool nglWindow::Drag(nglDragAndDrop* pDragObject)
 {
   mDragging = true;
   mpDragged = pDragObject;
+  mDraggedTouchID = mCurrentTouchID;
   return false;
 }
 

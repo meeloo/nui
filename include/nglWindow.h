@@ -961,6 +961,8 @@ private:
 public:
   bool IsDragging() { return mDragging; }
   nglDragAndDrop* GetDraggedObject() { return mpDragged; }
+  nglTouchId mDraggedTouchID;
+  nglTouchId mCurrentTouchID;
 
   void DisplayTicked();
   void UpdateLayer();
