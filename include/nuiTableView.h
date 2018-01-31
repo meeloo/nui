@@ -95,6 +95,7 @@ protected:
   void OnHotRectChanged(const nuiEvent& rEvent);
 
   nuiEventSink<nuiTableView> mTableViewSink;
+  bool mIsDragging = false;
 
 private:
   nuiCellSource* mpSource = nullptr;
@@ -115,7 +116,6 @@ private:
   nuiColor mSeparatorColor = nuiColor(0,0,0,192);
   
   StartDragDelegate mStartDragDelegate;
-
 
   
 ///< Selection

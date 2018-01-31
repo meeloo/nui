@@ -368,7 +368,7 @@ bool nuiTableView::MouseMoved(const nglMouseInfo& rInfo)
     if (!mLeftClick)
       return false;
     
-    if (!mSelection.empty() && mClickedIndex >= 0)
+    if (!mSelection.empty() && mClickedIndex >= 0 && !mIsDragging)
     {
       float x = mTouch.X - rInfo.X;
       float y = mTouch.Y - rInfo.Y;
@@ -390,7 +390,7 @@ bool nuiTableView::MouseMoved(const nglMouseInfo& rInfo)
         {
           nglDragAndDrop* pObject = mStartDragDelegate(mpSource, mClickedIndex);
           if (pObject) {
-//            mIsDragging = true;
+            mIsDragging = true;
 //            mClicked = false;
 //            mDoubleClicked = false;
             Drag(pObject);
@@ -413,7 +413,7 @@ bool nuiTableView::MouseMoved(const nglMouseInfo& rInfo)
 
 void nuiTableView::OnDragStop(bool canceled)
 {
-  
+  mIsDragging = false;
 }
 
 
