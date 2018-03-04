@@ -26,9 +26,14 @@ void objCCallOnMemoryWarning();
 */
 @implementation nglUIApplicationDelegate
 
-- (UIWindow*) window
+//- (UIWindow*) window
+//{
+//  return [[UIApplication sharedApplication] keyWindow];
+//}
+
+- (UIInterfaceOrientationMask) supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window
 {
-  return [[UIApplication sharedApplication] keyWindow];
+  return UIInterfaceOrientationMaskAll;
 }
 
 - (void) applicationDidFinishLaunching:       (UIApplication*) pUIApplication

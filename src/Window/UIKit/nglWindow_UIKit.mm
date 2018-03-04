@@ -254,8 +254,7 @@ const nglChar* gpWindowErrorTable[] =
 
 -(NSUInteger)supportedInterfaceOrientations
 {
-  NSInteger mask = UIInterfaceOrientationMaskAll;
-  return (NSUInteger)mask;
+  return UIInterfaceOrientationMaskAll;
 }
 
 // We assume we can handle the drag'n'drop if at least one item is available. No file data is available at this point
