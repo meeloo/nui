@@ -535,6 +535,11 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 
 @implementation nglNSWindow
 
+- (BOOL)canBecomeKeyWindow
+{
+  return YES;
+}
+
 - (id) initWithFrame: (NSRect) rect andNGLWindow: (nglWindow*) pNGLWindow
 {
   BOOL deffering = YES;
@@ -612,6 +617,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   info.X = p.x;
   info.Y = [self contentRectForFrameRect:[self frame]].size.height - p.y;
   mpLastMouseMoved = theEvent;
+  
   if (mpNGLWindow->IsDragging())
   {
     mpNGLWindow->OnCanDrop(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
@@ -630,6 +636,7 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   NSPoint p = [self mouseLocationOutsideOfEventStream];
   info.X = p.x;
   info.Y = [self contentRectForFrameRect:[self frame]].size.height - p.y;
+
   if (mpNGLWindow->IsDragging())
   {
     mpNGLWindow->OnCanDrop(mpNGLWindow->GetDraggedObject(), info.X, info.Y, info.Buttons);
@@ -1216,6 +1223,9 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
 
   delete mpDropObject;
   mpDropObject = NULL;
+  
+  mpNGLWindow->OnDragStop(false);
+  
   return YES;
 }
 
@@ -2067,9 +2077,11 @@ void nglWindow::OnDragRequestData(nglDragAndDrop* pDragObject, const nglString& 
 
 void nglWindow::OnDragStop(bool canceled)
 {
-  NGL_ASSERT(mpDragged);
-  delete mpDragged;
-  mpDragged = nullptr;
+  if (mpDragged)
+  {
+    delete mpDragged;
+    mpDragged = nullptr;
+  }
 }
 
 void nglWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo::Flags Button)
