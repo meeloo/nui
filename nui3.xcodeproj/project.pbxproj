@@ -12765,35 +12765,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = (
-					.,
-					include,
-					deps/,
-					deps/expat/lib,
-					deps/glu,
-					deps/libpng,
-					deps/tidy,
-					deps/gameswf,
-					deps/ucdata,
-					deps/ungif,
-					deps/libjpeg,
-					src/Application/UIKit,
-					src/Application/Carbon,
-					src/Text/HTML,
-					src/Stream/Zip,
-					deps/freetype2/include,
-					deps/tracemonkey,
-					deps/tracemonkey/vprof,
-					deps/tracemonkey/nanojit,
-					deps/harfbuzz,
-					deps/libcss/src,
-					deps/libcss/src/libwapcaplet,
-					deps/libcss/src/libparserutils,
-					deps/libcss/include,
-					deps/kiwi,
-					"deps/capnproto/c++/src",
-					src,
-				);
+				USER_HEADER_SEARCH_PATHS = ". include deps/ deps/expat/lib deps/glu deps/libpng deps/tidy deps/gameswf deps/ucdata deps/ungif deps/libjpeg src/Application/UIKit src/Application/Carbon src/Text/HTML src/Stream/Zip deps/freetype2/include deps/tracemonkey deps/tracemonkey/vprof deps/tracemonkey/nanojit deps/harfbuzz deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include deps/kiwi deps/capnproto/c++/src src";
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
@@ -12907,35 +12879,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = (
-					.,
-					include,
-					deps/,
-					deps/expat/lib,
-					deps/glu,
-					deps/libpng,
-					deps/tidy,
-					deps/gameswf,
-					deps/ucdata,
-					deps/ungif,
-					deps/libjpeg,
-					src/Application/UIKit,
-					src/Application/Carbon,
-					src/Text/HTML,
-					src/Stream/Zip,
-					deps/freetype2/include,
-					deps/tracemonkey,
-					deps/tracemonkey/vprof,
-					deps/tracemonkey/nanojit,
-					deps/harfbuzz,
-					deps/libcss/src,
-					deps/libcss/src/libwapcaplet,
-					deps/libcss/src/libparserutils,
-					deps/libcss/include,
-					deps/kiwi,
-					"deps/capnproto/c++/src",
-					src,
-				);
+				USER_HEADER_SEARCH_PATHS = ". include deps/ deps/expat/lib deps/glu deps/libpng deps/tidy deps/gameswf deps/ucdata deps/ungif deps/libjpeg src/Application/UIKit src/Application/Carbon src/Text/HTML src/Stream/Zip deps/freetype2/include deps/tracemonkey deps/tracemonkey/vprof deps/tracemonkey/nanojit deps/harfbuzz deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include deps/kiwi deps/capnproto/c++/src src";
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
