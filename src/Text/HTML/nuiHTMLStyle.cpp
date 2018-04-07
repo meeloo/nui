@@ -59,7 +59,7 @@ void nuiHTMLStyle::Init()
   }
 }
 
-#define COPY(X) X = rStyle.X;
+#define COPY(X) X.SetValue(rStyle.X.GetValue());
 
 void nuiHTMLStyle::CopyFrom(const nuiHTMLStyle& rStyle)
 {

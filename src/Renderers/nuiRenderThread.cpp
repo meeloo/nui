@@ -51,7 +51,7 @@ std::set<nuiRenderThread*> nuiRenderThread::mThreads;
 nglCriticalSection nuiRenderThread::ThreadsCS(nglString(__FILE__).Add(":").Add(__LINE__).GetChars());
 
 nuiRenderThread::nuiRenderThread(nglContext* pContext, nuiDrawContext* pDrawContext, nuiPainter* pDestinationPainter, const RenderingDoneDelegate& rRenderingDone)
-: mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone), mRenderingLock("nuiRenderThread::RenderingLock"), StatsCS("nuiRenderThread::StatCS")
+: mRenderingTicks(0), mpContext(pContext), mpDrawContext(pDrawContext), mpPainter(pDestinationPainter), mRenderingDone(rRenderingDone), mRenderingLock("nuiRenderThread::RenderingLock"), StatsCS("nuiRenderThread::StatCS")
 {
   nglCriticalSectionGuard g(ThreadsCS);
   mThreads.insert(this);

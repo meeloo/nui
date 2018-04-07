@@ -48,7 +48,7 @@ const nglString& nglLightLock::GetLabel() const
 void nglLightLock::_Lock(nglThread::ID threadID)
 {
   // we use the current threadID to set the atomic : this we can have usefull information if a dead-lock happens.
-  while (!ngl_atomic_compare_and_swap(mAtomic, 0, (nglAtomic)threadID))
+  while (!ngl_atomic_compare_and_swap(mAtomic, 0, (uint64)threadID))
   {
     nglThread::MsSleep(1);
   }
@@ -65,7 +65,7 @@ void nglLightLock::_Unlock()
 bool nglLightLock::_TryLock(nglThread::ID threadID)
 {
   // we use the current threadID to set the atomic : this we can have usefull information if a dead-lock happens.
-  return ngl_atomic_compare_and_swap(mAtomic, 0, (nglAtomic)threadID);
+  return ngl_atomic_compare_and_swap(mAtomic, 0, (uint64)threadID);
 }
 
 

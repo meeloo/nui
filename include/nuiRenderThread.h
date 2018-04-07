@@ -110,7 +110,7 @@ private:
 
   void RenderingDone(bool result);
 
-  nglAtomic mRenderingTicks=0;
+  nglAtomic mRenderingTicks;
   int mWidgetIndentation = 0;
 
   nuiSurface* mpOffscreen = nullptr;

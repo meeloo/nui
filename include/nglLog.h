@@ -157,6 +157,12 @@ private:
     nglAtomic Count;
 
     Domain(const nglChar* pName, int LogLevel) : Name(pName), Level(LogLevel), Count(0) {}
+    Domain(const Domain& domain)
+    {
+      Name = domain.Name;
+      ngl_atomic_set(Level, domain.Level);
+      ngl_atomic_set(Count, domain.Count);
+    }
   };
   typedef std::list<nglOStream*> OutputList;
   typedef std::vector<Domain>    DomainList;

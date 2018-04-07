@@ -13,13 +13,15 @@ class nuiRefCount
 public:
   nuiRefCount()
   {
+    mRefCount = 1;
+
 //    static int64 refCreated = 1;
 //    printf("REF CREATED\t[%lld]\n", refCreated++);
   }
 
-  inline nglAtomic Acquire() const
+  inline uint64 Acquire() const
   {
-    nglAtomic val = ngl_atomic_inc(mRefCount);
+    uint64 val = ngl_atomic_inc(mRefCount);
     if (mTrace)
     {
       NGL_OUT("Acquire object %p (%d)\n", this, val);
@@ -28,7 +30,7 @@ public:
     return val;
   }
 
-  inline nglAtomic Release() const
+  inline uint64 Release() const
   {
     uint64 val = ngl_atomic_read(mRefCount);
     if (val < 1)
@@ -42,14 +44,14 @@ public:
     bool trace = mTrace;
     if (trace)
     {
-      NGL_OUT("Release object %p (%d)\n", this, mRefCount);
+      NGL_OUT("Release object %p (%d)\n", this, ngl_atomic_read(mRefCount));
     }
 
     if (mRefCount == 1)
     {
       if (trace)
       {
-        NGL_OUT("Delete object %p %d\n", this, mRefCount);
+        NGL_OUT("Delete object %p %d\n", this, ngl_atomic_read(mRefCount));
       }
 
       const_cast<nuiRefCount*>(this)->OnFinalize();
@@ -58,7 +60,7 @@ public:
       if (trace)
       {
         DumpInfos();
-        NGL_OUT("delete ref counted object: %p %s / %d / %d\n", this, typeid(this).name(), typeid(this).hash_code(), mRefCount);
+        NGL_OUT("delete ref counted object: %p %s / %d / %d\n", this, typeid(this).name(), typeid(this).hash_code(), ngl_atomic_read(mRefCount));
       }
 
       delete this;
@@ -80,7 +82,7 @@ public:
     return mTrace;
   }
   
-  nglAtomic GetRefCount() const
+  uint64 GetRefCount() const
   {
     return ngl_atomic_read(mRefCount);
   }
@@ -152,7 +154,7 @@ protected:
   }
   
 private:
-  mutable nglAtomic mRefCount = 1;
+  mutable nglAtomic mRefCount;
   bool mPermanent = false;
   bool mAutoReleased = false;
 

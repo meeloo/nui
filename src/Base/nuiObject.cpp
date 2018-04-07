@@ -163,6 +163,7 @@ nuiObject::~nuiObject()
   while (c >= 0)
   {
     // clean attributes
+    nglCriticalSectionGuard g(gInheritanceMapLock);
     std::map<nglString,nuiAttributeBase*>::const_iterator it = mClassAttributes[c].begin();
     std::map<nglString,nuiAttributeBase*>::const_iterator end = mClassAttributes[c].end();
 
@@ -174,7 +175,6 @@ nuiObject::~nuiObject()
     }
 
     {
-      nglCriticalSectionGuard g(gInheritanceMapLock);
       c = mInheritanceMap[c];
     }
   }
@@ -404,7 +404,7 @@ nuiTokenBase* nuiObject::GetToken() const
 
 //** nuiAttributes system *******************************************
 
-nglAtomic nuiObject::mUniqueAttributeOrder = 0;
+nglAtomic nuiObject::mUniqueAttributeOrder(0);
 
 
 void nuiObject::GetAttributes(std::map<nglString, nuiAttribBase>& rAttributeMap) const
@@ -429,6 +429,7 @@ void nuiObject::GetAttributes(std::map<nglString, nuiAttribBase>& rAttributeMap)
   while (c >= 0)
   {
     //printf("\t\tattr for class %s\n", GetClassNameFromIndex(c).GetChars());
+    nglCriticalSectionGuard g(gInheritanceMapLock);
     std::map<nglString,nuiAttributeBase*>::const_iterator it = mClassAttributes[c].begin();
     std::map<nglString,nuiAttributeBase*>::const_iterator end = mClassAttributes[c].end();
 
@@ -439,7 +440,6 @@ void nuiObject::GetAttributes(std::map<nglString, nuiAttribBase>& rAttributeMap)
     }
 
     {
-      nglCriticalSectionGuard g(gInheritanceMapLock);
       c = mInheritanceMap[c];
     }
   }
@@ -451,6 +451,7 @@ void nuiObject::GetAttributesOfClass(uint32 ClassIndex, std::map<nglString, nuiA
 
   // Add classes attributes:
   int32 c = ClassIndex;
+  nglCriticalSectionGuard g(gInheritanceMapLock);
   while (c >= 0)
   {
     //printf("\t\tattr for class %s\n", GetClassNameFromIndex(c).GetChars());
@@ -463,10 +464,7 @@ void nuiObject::GetAttributesOfClass(uint32 ClassIndex, std::map<nglString, nuiA
       ++it;
     }
 
-    {
-      nglCriticalSectionGuard g(gInheritanceMapLock);
       c = mInheritanceMap[c];
-    }
   }
 }
 
@@ -484,6 +482,7 @@ void nuiObject::GetSortedAttributes(std::list<nuiAttribBase>& rListToFill) const
   int32 c = mClassNameIndex;
   while (c >= 0)
   {
+    nglCriticalSectionGuard g(gInheritanceMapLock);
     std::map<nglString,nuiAttributeBase*>::const_iterator it = mClassAttributes[c].begin();
     std::map<nglString,nuiAttributeBase*>::const_iterator end = mClassAttributes[c].end();
     while (it != end)
@@ -494,10 +493,7 @@ void nuiObject::GetSortedAttributes(std::list<nuiAttribBase>& rListToFill) const
       ++it;
     }
 
-    {
-      nglCriticalSectionGuard g(gInheritanceMapLock);
       c = mInheritanceMap[c];
-    }
   }
 
   // Add instance attributes
@@ -549,16 +545,14 @@ nuiAttribBase nuiObject::GetAttribute(const nglString& rName) const
   int32 c = mClassNameIndex;
   while (c >= 0)
   {
+    nglCriticalSectionGuard g(gInheritanceMapLock);
     std::map<nglString,nuiAttributeBase*>::const_iterator it = mClassAttributes[c].find(name);
     std::map<nglString,nuiAttributeBase*>::const_iterator end = mClassAttributes[c].end();
 
     if (it != end)
       return nuiAttribBase(const_cast<nuiObject*>(this), it->second);
 
-    {
-      nglCriticalSectionGuard g(gInheritanceMapLock);
-      c = mInheritanceMap[c];
-    }
+    c = mInheritanceMap[c];
   }
 
   return nuiAttribBase();
@@ -578,9 +572,12 @@ void nuiObject::AddAttribute(const nglString& rName, nuiAttributeBase* pAttribut
   ngl_atomic_inc(mUniqueAttributeOrder);
   pAttribute->SetOrder(mUniqueAttributeOrder);
 
-  NGL_ASSERT(mClassNameIndex < mClassAttributes.size());
-  delete mClassAttributes[mClassNameIndex][rName];
-  mClassAttributes[mClassNameIndex][rName] = pAttribute;
+  {
+    nglCriticalSectionGuard g(gInheritanceMapLock);
+    NGL_ASSERT(mClassNameIndex < mClassAttributes.size());
+    delete mClassAttributes[mClassNameIndex][rName];
+    mClassAttributes[mClassNameIndex][rName] = pAttribute;
+  }
 }
 
 void nuiObject::AddAttribute(nuiAttributeBase* pAttribute)
@@ -597,8 +594,11 @@ void nuiObject::AddAttribute(nuiAttributeBase* pAttribute)
   ngl_atomic_inc(mUniqueAttributeOrder);
   pAttribute->SetOrder(mUniqueAttributeOrder);
 
-  delete mClassAttributes[mClassNameIndex][pAttribute->GetName()];
-  mClassAttributes[mClassNameIndex][pAttribute->GetName()] = pAttribute;
+  {
+    nglCriticalSectionGuard g(gInheritanceMapLock);
+    delete mClassAttributes[mClassNameIndex][pAttribute->GetName()];
+    mClassAttributes[mClassNameIndex][pAttribute->GetName()] = pAttribute;
+  }
 }
 
 void nuiObject::AddInstanceAttribute(const nglString& rName, nuiAttributeBase* pAttribute)
@@ -636,6 +636,7 @@ int32 nuiObject::GetObjectClassNameIndex() const
 
 int32 nuiObject::GetClassNameIndex(const nglString& rName)
 {
+  nglCriticalSectionGuard g(gInheritanceMapLock);
   std::map<nglString, int32>::iterator it = mObjectClassNamesMap.find(rName);
   if (it == mObjectClassNamesMap.end())
   {
@@ -643,10 +644,7 @@ int32 nuiObject::GetClassNameIndex(const nglString& rName)
     mObjectClassNamesMap[rName] = index;
     mObjectClassNames.push_back(rName);
     mClassAttributes.resize(index + 1);
-    {
-      nglCriticalSectionGuard g(gInheritanceMapLock);
-      mInheritanceMap.push_back(-2); // -1 = not parent, -2 = not initialized
-    }
+    mInheritanceMap.push_back(-2); // -1 = not parent, -2 = not initialized
     NGL_DEBUG( NGL_LOG("nuiObject", NGL_LOG_INFO, "New class: %s [%d]\n", rName.GetChars(), index); )
 
     return index;
@@ -656,6 +654,7 @@ int32 nuiObject::GetClassNameIndex(const nglString& rName)
 
 const nglString& nuiObject::GetClassNameFromIndex(int32 index)
 {
+  nglCriticalSectionGuard g(gInheritanceMapLock);
   return mObjectClassNames[index];
 }
 

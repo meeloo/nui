@@ -114,7 +114,7 @@ int nglLog::GetLevel (const nglChar* pDomain)
 
   Domain* slot = LookupDomain(pDomain);
 
-  return slot ? slot->Level : 0;
+  return slot ? ngl_atomic_read(slot->Level) : 0;
 }
 
 void nglLog::SetLevel (const nglChar* pDomain, int Level)
@@ -290,7 +290,7 @@ void nglLog::Dump (int Level) const
   for (; dom != end; dom++)
   {
     format.Format("#   %s %%d\n", mDomainFormat.GetChars());
-    text.Format(format.GetChars(), (*dom).Name.GetChars(), (*dom).Count);
+    text.Format(format.GetChars(), (*dom).Name.GetChars(), ngl_atomic_read((*dom).Count));
     Output(text);
   }
   mLock.UnlockRead();
