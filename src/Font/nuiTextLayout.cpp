@@ -47,6 +47,12 @@ nuiTextLayout::~nuiTextLayout()
 
 bool nuiTextLayout::Layout(const nglString& rString)
 {
+  NGL_ASSERT(mCharsets.empty());
+  NGL_ASSERT(mUnicode.empty());
+  NGL_ASSERT(mpParagraphs.empty());
+  NGL_ASSERT(mOffsetInString.empty());
+  NGL_ASSERT(mOffsetInUnicode.empty());
+  
   // Transform the string in a vector of nglUChar, also keep the offsets from the original chars to the nglUChar and vice versa
   size_t len = rString.GetLength();
   size_t i = 0;

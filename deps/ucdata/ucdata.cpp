@@ -245,9 +245,9 @@ _ucprop_load_static()
   
   for (uint32_t n = 0; n < _ucprop_size; n++)
   {
-    int32_t l, r, m;
-    int32_t v1 = 1 << n;
-    int32_t v2 = -v1;
+    int64_t l, r, m;
+    int64_t v1 = 1L << n;
+    int64_t v2 = -v1;
     
     /*
      * There is an extra node on the end of the offsets to allow this routine

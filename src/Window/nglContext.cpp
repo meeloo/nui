@@ -204,7 +204,8 @@ void nglContext::Dump(uint Level) const
 {
   nglContextInfo info;
 
-  if (!GetContextInfo(info)) return;
+  if (!GetContextInfo(info) || this->GetMetalDevice())
+    return;
   info.Dump(Level);
   nglString version((const char*)glGetString(GL_VERSION));
   nglString renderer((const char*)glGetString(GL_RENDERER));

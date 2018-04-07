@@ -631,6 +631,57 @@ private:
 };
 
 
+////////////////////////////////////////////////////////////////////////////////
+class nuiRendererTest : public nuiWidget
+{
+public:
+  
+  nuiRendererTest(nglContext* pContext) : mSink(this)
+  {
+    if (SetObjectClass("nuiRendererTest"))
+    {
+    }
+  }
+  
+  nuiEventSink<nuiRendererTest> mSink;
+  
+  nuiRect CalcIdealSize()
+  {
+    return nuiRect(200, 200);
+  }
+  
+  bool Draw(nuiDrawContext* pContext)
+  {
+    float left = 0;
+    float top = 0;
+    float right = mRect.GetWidth();
+    float bottom = mRect.GetHeight();
+    float midw = (left + right) / 2;
+    float midh = (top + bottom) / 2;
+
+    pContext->EnableBlending(true);
+    pContext->SetBlendFunc(nuiBlendTransp);
+
+    pContext->SetStrokeColor(nuiColor(0, 0, 255, 128));
+    pContext->DrawLine(left, top, right, top);
+    pContext->DrawLine(left, bottom, right, bottom);
+
+    pContext->SetStrokeColor(nuiColor(255, 0, 0, 128));
+    pContext->DrawLine(left, top, left, bottom);
+    pContext->DrawLine(right, top, right, bottom);
+
+    pContext->SetStrokeColor(nuiColor(0, 255, 0, 128));
+    pContext->DrawLine(midw, top, midw, bottom);
+    pContext->DrawLine(left, midh, right, midh);
+
+    DrawChildren(pContext);
+    return true;
+  }
+  
+private:
+};
+
+
 /*
  * MainWindow
  */
@@ -706,7 +757,7 @@ void MainWindow::OnCreation()
   });
 
 
-  int test = 6;
+  int test = 7;
   switch (test)
   {
     case 0:
@@ -928,6 +979,10 @@ void MainWindow::OnCreation()
     case 6:
     {
       AddChild(new nuiStrokeTest(GetNGLContext()));
+    } break;
+    case 7:
+    {
+      AddChild(new nuiRendererTest(GetNGLContext()));
     }
   }
 }
