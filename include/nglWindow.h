@@ -981,6 +981,7 @@ public:
   void* mpNSGLContext = nullptr;
   void* mpNSPixelFormat = nullptr;
   bool mIsReady = false;
+  inline void* GetNSView() { return mpNSView; }
 private:
   void InternalInit(const nglContextInfo& rContext,
                     const nglWindowInfo& rInfo,

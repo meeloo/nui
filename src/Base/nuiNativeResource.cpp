@@ -25,6 +25,8 @@ extern "C"
 #include <mach-o/ldsyms.h>
 }
 
+#include <dlfcn.h>
+#include <Foundation/Foundation.h>
 
 static CFBundleRef _CFXBundleCreateFromImageName(CFAllocatorRef allocator, const char* image_name);
 static CFBundleRef _CFXBundleCreateFromImageName(CFAllocatorRef allocator, const char* image_name)
@@ -54,32 +56,38 @@ static CFBundleRef _CFXBundleCreateFromImageName(CFAllocatorRef allocator, const
   return result;
 }
 
-#include <dlfcn.h>
 nglPath nuiGetNativeResourcePath()
 {
-  CFBundleRef bundle = NULL;
+  static bool path_resolved { false };
+  static nglPath rsrc_path;
+  
+  if (path_resolved)
+  {
+    return rsrc_path;
+  }
 
+  NSBundle* bundle { nil };
+  
 #ifndef _UIKIT_
   Dl_info inf;
-  dladdr((void*)nuiGetNativeResourcePath, &inf);
+  dladdr(reinterpret_cast<void *>(nuiGetNativeResourcePath), &inf);
 
   const char* imagename = inf.dli_fname;
-  /* get the bundle of a header */
   if (imagename)
-    bundle = _CFXBundleCreateFromImageName (NULL, imagename);
+  {
+    auto img_path = nglPath { imagename }.GetParent();
+    bundle = [NSBundle bundleWithPath:[NSString stringWithUTF8String:img_path.GetChars()]];
+  }
 #endif
-
+  
   if (!bundle)
-    bundle = CFBundleGetMainBundle();
-
-  CFURLRef resURLref = CFBundleCopyResourcesDirectoryURL(bundle);
-//  CFRelease(bundle);
-  char buffer[2048];
-  Boolean res = CFURLGetFileSystemRepresentation(resURLref, true, (UInt8*)buffer, 2048);
-  CFRelease(resURLref);
-  NGL_ASSERT(res);
-
-  return nglPath(nglString(buffer));
+  {
+    bundle = [NSBundle mainBundle];
+  }
+  
+  rsrc_path = [[bundle resourcePath] UTF8String];
+  path_resolved = true;
+  return rsrc_path;
 }
 #endif // _CARBON_
 
