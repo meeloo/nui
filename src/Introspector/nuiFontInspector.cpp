@@ -33,7 +33,12 @@ nuiFontInspector::~nuiFontInspector()
 
 void nuiFontInspector::OnFontsChanged(const nuiEvent& rEvent)
 {
-  UpdateFonts();
+  Acquire();
+  App->GetMainQueue().Post(new nuiTask0<void>([this]()
+  {
+    UpdateFonts();
+    Release();
+  }));
 }
 
 void nuiFontInspector::UpdateFonts()
