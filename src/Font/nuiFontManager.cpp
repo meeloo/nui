@@ -397,7 +397,7 @@ void nuiFontRequest::SetBold(bool Bold, float Score, bool Strict)
 
 void nuiFontRequest::MustHaveGlyphs(const std::set<nglUChar>& rGlyphs, float Score, bool Strict)
 {
-  mMustHaveGlyphs.mElement = rGlyphs;
+  mMustHaveGlyphs.mElement.insert(rGlyphs.begin(), rGlyphs.end());
   mMustHaveGlyphs.mScore = Score;
   mMustHaveGlyphs.mStrict = Strict;  
 }

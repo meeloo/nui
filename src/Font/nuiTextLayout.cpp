@@ -114,22 +114,20 @@ bool nuiTextLayout::Layout(const nglString& rString)
   {
     nuiFontBase* pFontBase = item.first;
     auto it = item.second.begin();
-    auto end = item.second.end();
-    while (it != end)
+    while (it != item.second.end())
     {
       //printf("%d %s -> ", c, nuiGetUnicodeScriptName(it->first).GetChars());
       const std::set<nglUChar>& charset(it->second);
       nuiFontBase* pFont = NULL;
       // First try the requested font
       {
-        std::set<nglUChar>::const_iterator it = charset.begin();
-        std::set<nglUChar>::const_iterator end = charset.end();
+        std::set<nglUChar>::const_iterator it2 = charset.begin();
         
-        while (it != end && mStyle.GetFont()->GetGlyphIndex(*it) > 0)
-          ++it;
+        while (it2 != charset.end() && mStyle.GetFont()->GetGlyphIndex(*it2) > 0)
+          ++it2;
         
         // If all the glyphs are available in the font we're done...
-        if (it == end)
+        if (it2 == charset.end())
           pFont = pFontBase;
         else
         {
@@ -146,7 +144,10 @@ bool nuiTextLayout::Layout(const nglString& rString)
         request->Release();
       }
       
-      FontSet[std::make_pair(pFontBase, it->first)] = pFont;
+      NGL_ASSERT(it != item.second.end());
+      auto script = it->first;
+      auto pair = std::make_pair(pFontBase, script);
+      FontSet[pair] = pFont;
       
       //printf("%s\n", pFont->GetFamilyName().GetChars());
       
