@@ -76,6 +76,8 @@ nglPath nuiGetNativeResourcePath()
   if (imagename)
   {
     auto img_path = nglPath { imagename }.GetParent();
+    if (img_path.GetNodeName() == "MacOS")
+      img_path = img_path.GetParent();
     bundle = [NSBundle bundleWithPath:[NSString stringWithUTF8String:img_path.GetChars()]];
   }
 #endif

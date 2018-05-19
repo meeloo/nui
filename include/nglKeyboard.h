@@ -174,7 +174,7 @@ __NGL_KEY_DECL (NK_MOD,  NK_META); ///< This combo is only available when used w
 
 
 // Only PC-102/105 support for now
-#define NGL_KEY_MAX 105
+#define NGL_KEY_MAX 255
 
 #endif // _DOXYGEN_
 

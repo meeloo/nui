@@ -179,15 +179,15 @@ protected:
   void InternalStop();
   void InternalPause();
 
-  bool mFirstFrameSincePlay;
-  double mCurrentTime;
-  double mCurrentPosition;
-  double mDuration;
-  int32 mCount;
+  bool mFirstFrameSincePlay = true;
+  double mCurrentTime = 0;
+  double mCurrentPosition = 0;
+  double mDuration = 0;
+  int32 mCount = 0;
 
-  double mDirection; ///< Either 1 or -1. This sets the current direction of play back.
-  nuiAnimLoop mLoopMode;
-  nuiEasing* mpEasing;
+  double mDirection = 1; ///< Either 1 or -1. This sets the current direction of play back.
+  nuiAnimLoop mLoopMode = eAnimLoopForward;
+  nuiEasing* mpEasing = nullptr;
 
   static nuiTimer* mpTimer;
   static int32 mAnimCounter;
@@ -196,11 +196,11 @@ protected:
   static void StartTasks(const nuiEvent& rEvent);
   
   nglTime mLastTime;
-  bool mUpdatingTime;
+  bool mUpdatingTime = false;
 
-  bool mEnableCallbacks;
+  bool mEnableCallbacks = false;
   
-  bool mDeleteOnStop;
+  bool mDeleteOnStop = false;
 
   void EnableCallbacks(bool enable);
 

@@ -2891,6 +2891,7 @@ nglString::nglString(CFStringRef string)
     return;
   }
 
+  mIsNull = false;
   CFIndex length = CFStringGetLength(string);
   {
     const char* str = CFStringGetCStringPtr(string, kCFStringEncodingUTF8);
