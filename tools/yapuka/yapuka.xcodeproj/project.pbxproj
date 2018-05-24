@@ -296,6 +296,7 @@
 		61A9DE3F0B833C9200BC506C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Latest;
 				TargetAttributes = {
 					61A9DFBE0B833E9600BC506C = {
 						ProvisioningStyle = Manual;

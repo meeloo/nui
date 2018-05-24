@@ -63,6 +63,24 @@ void nuiMetaPainter::DestroyTexture(nuiTexture* pTexture)
 {
 }
 
+void nuiMetaPainter::AlignPos(int32 size) const
+{
+  size_t remainder = mOperationPos % (size_t)size;
+  if (remainder == 0)
+    return;
+  mOperationPos += (size_t)size - remainder;
+}
+      
+void nuiMetaPainter::AlignStorage(int32 size)
+{
+  size_t pos = mOperations.size();
+  size_t remainder = pos % (size_t)size;
+  if (remainder == 0)
+      return;
+  mOperations.resize(pos + (size_t)size - remainder);
+}
+
+
 void nuiMetaPainter::StoreOpCode(OpCode code)
 {
   StoreInt((int32)code);
@@ -74,6 +92,7 @@ void nuiMetaPainter::StoreInt(int32 Val)
   if (mDummyMode)
     return;
   
+  AlignStorage(sizeof(Val));
   size_t pos = mOperations.size();
   mOperations.resize(pos + sizeof(Val));
   *(int32*)&(mOperations[pos]) = Val;
@@ -84,6 +103,7 @@ void nuiMetaPainter::StoreFloat(float Val)
   if (mDummyMode)
     return;
   
+  AlignStorage(sizeof(Val));
   size_t pos = mOperations.size();
   mOperations.resize(pos + sizeof(Val));
   *(float*)&(mOperations[pos]) = Val;
@@ -94,6 +114,7 @@ void nuiMetaPainter::StoreFloat(double Val)
   if (mDummyMode)
     return;
   
+  AlignStorage(sizeof(Val));
   size_t pos = mOperations.size();
   mOperations.resize(pos + sizeof(Val));
   *(double*)&(mOperations[pos]) = Val;
@@ -104,8 +125,9 @@ void nuiMetaPainter::StorePointer(void* pVal)
   if (mDummyMode)
     return;
   
+  AlignStorage(sizeof(pVal));
   size_t pos = mOperations.size();
-  mOperations.resize(pos + sizeof(void*));
+  mOperations.resize(pos + sizeof(pVal));
   *(void**)&(mOperations[pos]) = pVal;
 }
 
@@ -114,6 +136,7 @@ void nuiMetaPainter::StoreBuffer(const void* pBuffer, uint ElementSize, uint Ele
   if (mDummyMode)
     return;
 
+  AlignStorage(ElementSize);
   size_t size = ElementSize * ElementCount;
   size_t pos = mOperations.size();
   mOperations.resize(pos + size);
@@ -128,6 +151,7 @@ nuiMetaPainter::OpCode nuiMetaPainter::FetchOpCode() const
 int32 nuiMetaPainter::FetchInt() const
 {
   int32 tmp;
+  AlignPos(sizeof(tmp));
   NGL_ASSERT(mOperationPos + sizeof(tmp) <= mOperations.size());
   tmp = *(int32*)&mOperations[mOperationPos];
   mOperationPos += sizeof(tmp);
@@ -136,6 +160,7 @@ int32 nuiMetaPainter::FetchInt() const
 
 void nuiMetaPainter::FetchFloat(double& rDouble) const
 {
+  AlignPos(sizeof(rDouble));
   NGL_ASSERT(mOperationPos + sizeof(rDouble) <= mOperations.size());
   rDouble = *(double*)&mOperations[mOperationPos];
   mOperationPos += sizeof(rDouble);
@@ -143,6 +168,7 @@ void nuiMetaPainter::FetchFloat(double& rDouble) const
 
 void nuiMetaPainter::FetchFloat(float& rFloat) const
 {
+  AlignPos(sizeof(rFloat));
   NGL_ASSERT(mOperationPos + sizeof(rFloat) <= mOperations.size());
   rFloat = *(float*)&mOperations[mOperationPos];
   mOperationPos += sizeof(rFloat);
@@ -151,6 +177,7 @@ void nuiMetaPainter::FetchFloat(float& rFloat) const
 void* nuiMetaPainter::FetchPointer() const
 {
   void* tmp;
+  AlignPos(sizeof(tmp));
   NGL_ASSERT(mOperationPos + sizeof(tmp) <= mOperations.size());
   tmp = *(void**)&mOperations[mOperationPos];
   mOperationPos += sizeof(tmp);
@@ -159,6 +186,7 @@ void* nuiMetaPainter::FetchPointer() const
 
 void nuiMetaPainter::FetchBuffer(void* pBuffer, uint ElementSize, uint ElementCount) const
 {
+  AlignPos(ElementSize);
   uint size = ElementSize * ElementCount;
   NGL_ASSERT(mOperationPos + size <= mOperations.size());
   memcpy(pBuffer, &mOperations[mOperationPos], size);

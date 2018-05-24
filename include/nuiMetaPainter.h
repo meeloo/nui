@@ -203,6 +203,9 @@ protected:
   
   virtual int32 GetCurrentWidth() const;
   virtual int32 GetCurrentHeight() const;
+    
+    void AlignPos(int32 size) const;
+    void AlignStorage(int32 size);
 };
 
 #endif // __nuiMetaPainter_h__

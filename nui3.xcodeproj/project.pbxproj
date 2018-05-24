@@ -10866,6 +10866,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
 				CLASSPREFIX = nui;
+				DefaultBuildSystemTypeForWorkspace = Latest;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = libNUI;
 				TargetAttributes = {

@@ -111,13 +111,19 @@ void nuiScrollBar::SetThumbRect(const nuiRect& rRect)
     float tempLength = rRange.GetPageSize() / length;
     if (mOrientation == nuiHorizontal)
     {
-      float offset = (2*mThumbSideSize + mThumbMiddleSize) / rRect.GetWidth();
+      float width = rRect.GetWidth();
+      if (width == 0)
+        width = 1;
+      float offset = (2*mThumbSideSize + mThumbMiddleSize) / width;
       thumbLength = offset + (1 - offset) * tempLength;
       thumbPosition = (1 - offset) * ((rRange.GetValue() - rRange.GetMinimum()) / length);
     }
     if (mOrientation == nuiVertical)
     {
-      float offset = (2*mThumbSideSize + mThumbMiddleSize) / rRect.GetHeight();
+      float height = rRect.GetHeight();
+      if (height == 0)
+        height = 1;
+      float offset = (2*mThumbSideSize + mThumbMiddleSize) / height;
       thumbLength = offset + (1 - offset) * tempLength;
       thumbPosition = (1 - offset) * ((rRange.GetValue() - rRange.GetMinimum()) / length);
     }

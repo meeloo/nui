@@ -1240,16 +1240,8 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     }
 //    NGL_OUT("Setting texture[%d] = %p / %p (%p%s)\n", i, texture, sampler, pTexture, (pProxy?" [Proxy]":""));
     NGL_ASSERT((pTexture != nullptr && texture != nil && sampler != nil) || (pTexture == nullptr && texture == nil && sampler == nil));
-    if (mActiveTextures[i] != (__bridge void*)texture)
-    {
-      [encoder setFragmentTexture:texture atIndex:i];
-      mActiveTextures[i] = (__bridge void*)texture;
-    }
-    if (mActiveSamplers[i] != (__bridge void*)sampler)
-    {
-      [encoder setFragmentSamplerState:sampler atIndex:i];
-      mActiveSamplers[i] = (__bridge void*)sampler;
-    }
+    [encoder setFragmentTexture:texture atIndex:i];
+    [encoder setFragmentSamplerState:sampler atIndex:i];
   }
   
   
@@ -1686,13 +1678,6 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     {
       NGL_ASSERT(0);
     }
-
-    for (int i = 0; i < 8; i++)
-    {
-      mActiveTextures[i] = nullptr;
-      mActiveSamplers[i] = nullptr;
-    }
-    
 
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mpContext->GetMetalCommandBuffer();
     NGL_ASSERT(commandBuffer != nil);

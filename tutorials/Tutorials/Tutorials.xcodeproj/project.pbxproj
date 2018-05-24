@@ -2453,6 +2453,7 @@
 		E55E7797185BBC62005F01B1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Latest;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = libnui;
 				TargetAttributes = {
