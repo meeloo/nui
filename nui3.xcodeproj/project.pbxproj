@@ -1421,6 +1421,9 @@
 		C35AB03E1E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */; };
 		C35AB03F1E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */; };
 		C35AB0401E0E896500CE4C2C /* nuiMetaPainterInspector.h in Headers */ = {isa = PBXBuildFile; fileRef = C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */; };
+		C380914420BBED580086A7D7 /* nuiMidi_CoreMidi.mm in Sources */ = {isa = PBXBuildFile; fileRef = E5ED550D13FDEC0C004EFA83 /* nuiMidi_CoreMidi.mm */; };
+		C380915420BBEE740086A7D7 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C380915320BBEE740086A7D7 /* CoreMIDI.framework */; };
+		C380915520BBF1020086A7D7 /* nuiMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5ED551513FDED23004EFA83 /* nuiMidi.cpp */; };
 		C3885B8F1C791F0300E2C8B7 /* nuiProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */; };
 		C3885B901C791F0300E2C8B7 /* nuiProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */; };
 		C3885B911C791F0300E2C8B7 /* nuiProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */; };
@@ -4108,6 +4111,7 @@
 		C33A36E01F9AB85700661E31 /* nuiCRC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nuiCRC.h; sourceTree = "<group>"; };
 		C35AB0351E0E890200CE4C2C /* nuiMetaPainterInspector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiMetaPainterInspector.cpp; path = Introspector/nuiMetaPainterInspector.cpp; sourceTree = "<group>"; };
 		C35AB03D1E0E896500CE4C2C /* nuiMetaPainterInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiMetaPainterInspector.h; path = include/nuiMetaPainterInspector.h; sourceTree = SOURCE_ROOT; };
+		C380915320BBEE740086A7D7 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
 		C3885B8E1C791F0300E2C8B7 /* nuiProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiProtocol.h; path = include/nuiProtocol.h; sourceTree = SOURCE_ROOT; };
 		C389717C1C602474003F2232 /* nuiDebugServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDebugServer.cpp; path = Introspector/nuiDebugServer.cpp; sourceTree = "<group>"; };
 		C38971841C6024B6003F2232 /* nuiDebugServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDebugServer.h; path = include/nuiDebugServer.h; sourceTree = SOURCE_ROOT; };
@@ -5635,6 +5639,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C380915420BBEE740086A7D7 /* CoreMIDI.framework in Frameworks */,
 				E57D215F1318B45F007B3B7A /* libthirdparty_OSX.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5969,6 +5974,14 @@
 				BCFE08210E050ACB0073662D /* nuiDialogSelectFile.h */,
 			);
 			name = Dialogs;
+			sourceTree = "<group>";
+		};
+		C380915220BBEE730086A7D7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C380915320BBEE740086A7D7 /* CoreMIDI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		C3E9C14A1D1F8BC100DEBED4 /* kiwi */ = {
@@ -6676,6 +6689,7 @@
 				E58167440C3CECA700902DFE /* deps */,
 				E5816D200C3CECAB00902DFE /* src */,
 				E58167400C3CEC1300902DFE /* Products */,
+				C380915220BBEE730086A7D7 /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -11858,6 +11872,7 @@
 				E5D6422F1209AB9C009C26A9 /* nuiWidget.cpp in Sources */,
 				E5D642301209AB9C009C26A9 /* nuiTessellator.cpp in Sources */,
 				E5D642311209AB9C009C26A9 /* nuiCommand.cpp in Sources */,
+				C380914420BBED580086A7D7 /* nuiMidi_CoreMidi.mm in Sources */,
 				E5D642321209AB9C009C26A9 /* nuiMetaPainter.cpp in Sources */,
 				E5D642341209AB9C009C26A9 /* nuiColumnTreeView.cpp in Sources */,
 				E5D642351209AB9C009C26A9 /* nuiEvent.cpp in Sources */,
@@ -11940,6 +11955,7 @@
 				E5D642891209AB9C009C26A9 /* nglTimer.cpp in Sources */,
 				E5D6428C1209AB9C009C26A9 /* nuiEditText.cpp in Sources */,
 				E5D6428D1209AB9C009C26A9 /* nuiAnimation.cpp in Sources */,
+				C380915520BBF1020086A7D7 /* nuiMidi.cpp in Sources */,
 				E5D6428E1209AB9C009C26A9 /* nglOFile.cpp in Sources */,
 				E5D642911209AB9C009C26A9 /* nuiDrawContext.cpp in Sources */,
 				E5D642921209AB9C009C26A9 /* nglImageJPEGCodec.cpp in Sources */,
@@ -12676,6 +12692,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
@@ -12789,6 +12806,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;

@@ -14,7 +14,7 @@
 #endif
 
 #ifdef _UIKIT_
-#import <UIKit/UIkit.h>
+#import <UIKit/UIKit.h>
 #endif
 
 #ifdef _COCOA_

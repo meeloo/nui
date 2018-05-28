@@ -10,7 +10,9 @@
 #include "nuiMidi.h"
 #include "nglThread.h"
 #include "nuiSingleton.h"
-#import <CoreMidi/CoreMidi.h>
+#include <Foundation/Foundation.h>
+#include <CoreFoundation/CoreFoundation.h>
+#import <CoreMIDI/CoreMIDI.h>
 
 class nuiMidiInPort_CoreMidi : public nuiMidiInPort
 {
