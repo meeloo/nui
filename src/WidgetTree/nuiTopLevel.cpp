@@ -2203,11 +2203,10 @@ nglPath nuiTopLevel::GetResourcePath() const
   return mResPath;
 }
 
-nuiSize nuiTopLevel::GetStatusBarSize() const
+nuiRect nuiTopLevel::GetSafeContentRect() const
 {
-  return 0;
+  return GetRect();
 }
-
 
 void nuiTopLevel::BroadcastInvalidateRect(nuiWidgetPtr pSender, const nuiRect& rRect)
 {
@@ -2285,10 +2284,7 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
   nuiWidget::SetSelfRect(rRect);
 
   nuiRect rectfull(mRect.Size());
-  nuiRect rect(rectfull);
-  float barsize = GetStatusBarSize();
-  rect.SetHeight(rect.GetHeight() -  barsize);
-  rect.Move(0, barsize);
+  nuiRect rect(GetSafeContentRect());
 
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))

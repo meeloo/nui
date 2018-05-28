@@ -1442,12 +1442,22 @@ void nglWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo
 }
 
 
-int nglWindow::GetStatusBarSize() const
+nuiRect nglWindow::GetSafeContentRect() const
 {
-  if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1)
-  {
-    return MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width);
+  nglUIViewController* _viewctrl = (__bridge nglUIViewController*)mpUIViewCtrl;
+  double left = 0, top = 0, right = 0, bottom = 0, width = _viewctrl.view.frame.size.width, height = _viewctrl.view.frame.size.height;
+  
+  if (@available(iOS 11, *)) {
+    top = MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width) + _viewctrl.view.safeAreaInsets.top;
+    left = _viewctrl.view.safeAreaInsets.left;
+    right = _viewctrl.view.safeAreaInsets.right;
+    bottom = _viewctrl.view.safeAreaInsets.bottom;
+
   }
-  return 0;
+  else if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1)
+  {
+    top = MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width);
+  }
+  return nuiRect((float)left, (float)top, (float)(width - (left + right)), (float)(height - (top + bottom)));
 }
 

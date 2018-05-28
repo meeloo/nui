@@ -15,6 +15,7 @@
 
 #ifdef _UIKIT_
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
 #endif
 
 #ifdef _COCOA_
@@ -577,12 +578,37 @@ void nglKernel::DidRegisterForRemoteNotifications(const std::vector<uint8>& devi
 
 void nglKernel::RegisterForRemoteNotifications(int32 types)
 {
-#ifdef _UIKIT_
-  [[UIApplication sharedApplication] registerForRemoteNotificationTypes: types];
-#endif
+  if (@available(iOS 10, *)) {
+    UNAuthorizationOptions options = 0;
+    if (types & UIRemoteNotificationTypeBadge)
+      options |= UNAuthorizationOptionBadge;
 
-#ifdef _COCOA_
-  [[NSApplication sharedApplication] registerForRemoteNotificationTypes: types];
+    if (types & UNAuthorizationOptionSound)
+      options |= UIRemoteNotificationTypeSound;
+
+    if (types & UNAuthorizationOptionAlert)
+      options |= UIRemoteNotificationTypeAlert;
+
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:options completionHandler:^void (BOOL granted, NSError *error)
+     {
+     
+     }];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+  }
+  else{
+#ifdef _UIKIT_
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes: types];
 #endif
+  }
+
+
+  if (@available(macOS 8, *)) {
+  }
+  else{
+#ifdef _COCOA_
+    [[NSApplication sharedApplication] registerForRemoteNotificationTypes: types];
+#endif
+  }
 
 }

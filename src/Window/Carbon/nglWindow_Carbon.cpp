@@ -2145,9 +2145,9 @@ bool nglWindow::IsEnteringText() const
   return false;
 }
 
-int nglWindow::GetStatusBarSize() const
+nuiRect nuiWindow::GetSafeContentRect() const
 {
-  return 0;
+  return nuiRect(0, 0, GetWidth(), GetHeight());
 }
 
 

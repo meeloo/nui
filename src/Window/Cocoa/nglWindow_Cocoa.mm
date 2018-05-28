@@ -2088,9 +2088,9 @@ void nglWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo
 {
 }
 
-int nglWindow::GetStatusBarSize() const
+nuiRect nuiWindow::GetSafeContentRect() const
 {
-  return 0;
+  return nuiRect(0, 0, GetWidth(), GetHeight());
 }
 
 nglCocoaDragAndDrop::nglCocoaDragAndDrop(nglWindow* pWin)

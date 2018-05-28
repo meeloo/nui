@@ -257,9 +257,9 @@ void nuiMainWindow::LazyPaint()
 //  }
 }
 
-nuiSize nuiMainWindow::GetStatusBarSize() const
+nuiRect nuiMainWindow::GetSafeContentRect() const
 {
-  return mpNGLWindow->GetStatusBarSize();
+  return mpNGLWindow->GetSafeContentRect();
 }
 
 

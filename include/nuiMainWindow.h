@@ -90,7 +90,7 @@ public:
   uint GetError() const;               ///< Retrieve the current error code
   const nglChar* GetErrorStr() const;            ///< Retrieve the current error message
   const nglChar* GetErrorStr(uint Error) const;  ///< Retrieve error message by code
-  nuiSize GetStatusBarSize() const;
+  nuiRect GetSafeContentRect() const;
 
 
   virtual void OnDragEnter();

@@ -17,22 +17,6 @@ precompiled header central file and everything should be rolling. (lookup precom
 #ifndef __nui_all_h__
 #define __nui_all_h__
 
-//#define NUI_USE_FLOATS
-//#define NUI_USE_DOUBLES
-
-#if !defined NUI_USE_DOUBLES && !defined NUI_USE_FLOATS
-  #define NUI_USE_FLOATS
-#endif
-
-#ifdef NUI_USE_FLOATS
-typedef float nuiSize;
-typedef double nuiAltSize;
-#else
-typedef float nuiAltSize;
-typedef double nuiSize;
-#endif
-
-
 #include "nuiUnicode.h"
 #include "nuiToken.h"
 #include "nuiObject.h"
@@ -46,7 +30,6 @@ typedef double nuiSize;
 #include "nuiObject.h"
 #include "nuiInit.h"
 
-#include "nuiRect.h"
 #include "nuiColor.h"
 #include "nglMath.h"
 #include "nuiSingleton.h"

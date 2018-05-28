@@ -113,6 +113,23 @@ extern "C"
 //#include "mmgr.h"
 //#endif
 
+
+//#define NUI_USE_FLOATS
+//#define NUI_USE_DOUBLES
+
+#if !defined NUI_USE_DOUBLES && !defined NUI_USE_FLOATS
+#define NUI_USE_FLOATS
+#endif
+
+#ifdef NUI_USE_FLOATS
+typedef float nuiSize;
+typedef double nuiAltSize;
+#else
+typedef float nuiAltSize;
+typedef double nuiSize;
+#endif
+
+
 #include "nuiNonCopyable.h"
 #include "nglAtomic.h"
 #include "nglEndian.h"
@@ -159,6 +176,7 @@ extern "C"
 #include "nglQuaternion.h"
 #include "nuiRefCount.h"
 #include "nuiSignalsSlots.h"
+#include "nuiRect.h"
 
 #include "ngl3DSLoader.h"
 #include "nglBitmapTools.h"
