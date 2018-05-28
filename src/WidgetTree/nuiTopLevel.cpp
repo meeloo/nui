@@ -227,6 +227,10 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
   SetMouseCursor(eCursorArrow);
 
   mDirtyWidgets.insert(this);
+  
+  for (int i = 0; i < 5; i++)
+    mInsetDecorations[i] = nullptr; // [0] will always bbe nullptr
+
   Acquire();
 }
 
@@ -234,6 +238,15 @@ nuiTopLevel::~nuiTopLevel()
 {
   if (GetDrawToLayer())
     GetRenderThread()->SetLayerTree(nullptr);
+  
+  for (int i = 0; i < 5; i++)
+  {
+    if (mInsetDecorations[i])
+    {
+      mInsetDecorations[i]->Release();
+    }
+  }
+  
   CheckValid();
   Exit();
 }
@@ -2890,3 +2903,47 @@ float nuiTopLevel::GetScaleInv() const
 {
   return nuiGetInvScaleFactor();
 }
+
+void nuiTopLevel::SetInsetDecoration(nuiPosition position, const nglString& rName)
+{
+  SetInsetDecoration(position, nuiDecoration::Get(rName));
+}
+
+void nuiTopLevel::SetInsetDecoration(nuiPosition position, nuiDecoration* pDecoration, nuiDecorationMode Mode, bool AlreadyAcquired)
+{
+  NGL_ASSERT(position <= nuiBottom);
+  if (!AlreadyAcquired && pDecoration)
+    pDecoration->Acquire();
+  if (mInsetDecorations[position])
+    mInsetDecorations[position]->Release();
+  mInsetDecorations[position] = pDecoration;
+  mInsetDecorationsModes[position] = Mode;
+  Invalidate();
+}
+
+void nuiTopLevel::SetInsetDecorationMode(nuiPosition position, nuiDecorationMode Mode)
+{
+  NGL_ASSERT(position <= nuiBottom);
+  mInsetDecorationsModes[position] = Mode;
+}
+
+nuiDecoration* nuiTopLevel::GetInsetDecoration(nuiPosition position) const
+{
+  NGL_ASSERT(position <= nuiBottom);
+  return mInsetDecorations[position];
+}
+
+const nglString& nuiTopLevel::GetInsetDecorationName(nuiPosition position) const
+{
+  NGL_ASSERT(position <= nuiBottom);
+  if (mInsetDecorations[position])
+    return mInsetDecorations[position]->GetObjectName();
+  return nglString::Null;
+}
+
+nuiDecorationMode nuiTopLevel::GetInsetDecorationMode(nuiPosition position) const
+{
+  NGL_ASSERT(position <= nuiBottom);
+  return mInsetDecorationsModes[position];
+}
+

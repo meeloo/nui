@@ -177,6 +177,13 @@ public:
   virtual float GetScale() const;
   virtual float GetScaleInv() const;
 
+  void SetInsetDecoration(nuiPosition position, const nglString& rName);
+  void SetInsetDecoration(nuiPosition position, nuiDecoration* pDecoration, nuiDecorationMode Mode = eDecorationOverdraw, bool AlreadyAcquired=false);
+  void SetInsetDecorationMode(nuiPosition position, nuiDecorationMode Mode = eDecorationOverdraw);
+  nuiDecoration* GetInsetDecoration(nuiPosition position) const;
+  const nglString& GetInsetDecorationName(nuiPosition position) const;
+  nuiDecorationMode GetInsetDecorationMode(nuiPosition position) const;
+
 protected:
   virtual ~nuiTopLevel();
 
@@ -261,6 +268,9 @@ protected:
   std::unordered_map<nuiWidgetPtr, std::set<nuiWidgetPtr> > mTabBackwardRev;
   
   std::set< nuiRef<nuiWidget> > mDirtyWidgets;
+    
+  nuiDecoration* mInsetDecorations[5]; // [0] will always bbe nullptr
+  nuiDecorationMode mInsetDecorationsModes[5]; // [0] will always bbe nullptr
 };
 
 typedef nuiTopLevel* nuiTopLevelPtr;
