@@ -2088,7 +2088,7 @@ void nglWindow::OnDropped(nglDragAndDrop* pDragObject, int X,int Y, nglMouseInfo
 {
 }
 
-nuiRect nuiWindow::GetSafeContentRect() const
+nuiRect nglWindow::GetSafeContentRect() const
 {
   return nuiRect(0, 0, GetWidth(), GetHeight());
 }

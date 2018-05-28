@@ -578,6 +578,7 @@ void nglKernel::DidRegisterForRemoteNotifications(const std::vector<uint8>& devi
 
 void nglKernel::RegisterForRemoteNotifications(int32 types)
 {
+#ifdef _UIKIT_
   if (@available(iOS 10, *)) {
     UNAuthorizationOptions options = 0;
     if (types & UIRemoteNotificationTypeBadge)
@@ -597,18 +598,12 @@ void nglKernel::RegisterForRemoteNotifications(int32 types)
     [[UIApplication sharedApplication] registerForRemoteNotifications];
   }
   else{
-#ifdef _UIKIT_
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: types];
+  }
 #endif
-  }
 
 
-  if (@available(macOS 8, *)) {
-  }
-  else{
 #ifdef _COCOA_
     [[NSApplication sharedApplication] registerForRemoteNotificationTypes: types];
 #endif
-  }
-
 }
