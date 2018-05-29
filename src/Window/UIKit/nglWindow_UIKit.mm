@@ -1448,7 +1448,8 @@ nuiRect nglWindow::GetSafeContentRect() const
   double left = 0, top = 0, right = 0, bottom = 0, width = _viewctrl.view.frame.size.width, height = _viewctrl.view.frame.size.height;
   
   if (@available(iOS 11, *)) {
-    top = MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width) + _viewctrl.view.safeAreaInsets.top;
+    //top = MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width) + _viewctrl.view.safeAreaInsets.top;
+    top = _viewctrl.view.safeAreaInsets.top;
     left = _viewctrl.view.safeAreaInsets.left;
     right = _viewctrl.view.safeAreaInsets.right;
     bottom = _viewctrl.view.safeAreaInsets.bottom;

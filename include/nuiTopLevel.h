@@ -184,6 +184,15 @@ public:
   const nglString& GetInsetDecorationName(nuiPosition position) const;
   nuiDecorationMode GetInsetDecorationMode(nuiPosition position) const;
 
+    void SetLeftInsetDecoration(const nglString& rName);
+    void SetRightInsetDecoration(const nglString& rName);
+    void SetTopInsetDecoration(const nglString& rName);
+    void SetBottomInsetDecoration(const nglString& rName);
+    const nglString& GetLeftInsetDecoration() const;
+    const nglString& GetRightInsetDecoration() const;
+    const nglString& GetTopInsetDecoration() const;
+    const nglString& GetBottomInsetDecoration() const;
+
 protected:
   virtual ~nuiTopLevel();
 

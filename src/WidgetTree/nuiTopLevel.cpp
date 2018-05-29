@@ -192,7 +192,41 @@ nuiTopLevel::nuiTopLevel(const nglPath& rResPath)
     mpCSS(NULL)
 {
   mClearBackground = true;
-  SetObjectClass("nuiTopLevel");
+  if (SetObjectClass("nuiTopLevel"))
+  {
+    {
+      nuiAttribute<const nglString&>* pDecoAttrib = new nuiAttribute<const nglString&>
+      (nglString("LeftInsetDecoration"), nuiUnitNone,
+       nuiMakeDelegate(this, &nuiTopLevel::GetLeftInsetDecoration),
+       nuiAttribute<const nglString&>::SetterDelegate(this, &nuiTopLevel::SetLeftInsetDecoration));
+      pDecoAttrib->SetEditor(nuiAttribute<const nglString&>::NewEditorDelegate(&nuiDecoration::GetAttributeEditor));
+      AddAttribute(pDecoAttrib);
+    }
+    {
+      nuiAttribute<const nglString&>* pDecoAttrib = new nuiAttribute<const nglString&>
+      (nglString("RightInsetDecoration"), nuiUnitNone,
+       nuiMakeDelegate(this, &nuiTopLevel::GetRightInsetDecoration),
+       nuiAttribute<const nglString&>::SetterDelegate(this, &nuiTopLevel::SetRightInsetDecoration));
+      pDecoAttrib->SetEditor(nuiAttribute<const nglString&>::NewEditorDelegate(&nuiDecoration::GetAttributeEditor));
+      AddAttribute(pDecoAttrib);
+    }
+    {
+      nuiAttribute<const nglString&>* pDecoAttrib = new nuiAttribute<const nglString&>
+      (nglString("TopInsetDecoration"), nuiUnitNone,
+       nuiMakeDelegate(this, &nuiTopLevel::GetTopInsetDecoration),
+       nuiAttribute<const nglString&>::SetterDelegate(this, &nuiTopLevel::SetTopInsetDecoration));
+      pDecoAttrib->SetEditor(nuiAttribute<const nglString&>::NewEditorDelegate(&nuiDecoration::GetAttributeEditor));
+      AddAttribute(pDecoAttrib);
+    }
+    {
+      nuiAttribute<const nglString&>* pDecoAttrib = new nuiAttribute<const nglString&>
+      (nglString("BottomInsetDecoration"), nuiUnitNone,
+       nuiMakeDelegate(this, &nuiTopLevel::GetBottomInsetDecoration),
+       nuiAttribute<const nglString&>::SetterDelegate(this, &nuiTopLevel::SetBottomInsetDecoration));
+      pDecoAttrib->SetEditor(nuiAttribute<const nglString&>::NewEditorDelegate(&nuiDecoration::GetAttributeEditor));
+      AddAttribute(pDecoAttrib);
+    }
+  }
 
   mResPath = rResPath;
 
@@ -1978,6 +2012,26 @@ bool nuiTopLevel::Draw(class nuiDrawContext *pContext)
     pContext->DrawRect(GetRect().Size(), eFillShape);
   }
   
+  nuiDecoration* pLeft = mInsetDecorations[nuiLeft];
+  nuiDecoration* pRight = mInsetDecorations[nuiRight];
+  nuiDecoration* pTop = mInsetDecorations[nuiTop];
+  nuiDecoration* pBottom = mInsetDecorations[nuiBottom];
+  nuiRect full = GetRect();
+  nuiRect safe = GetSafeContentRect();
+  nuiRect left(0.0f, 0.0f, safe.Left(), full.Bottom());
+  nuiRect right(safe.Right(), 0.0f, full.Right() - safe.Right(), full.Bottom());
+  nuiRect top(0.0f, 0.0f, full.Right(), safe.Top());
+  nuiRect bottom(0.0f, safe.Bottom(), full.Right(), full.Bottom() - safe.Bottom());
+  
+  if (pLeft && left.GetSurface() > 0.0f)
+    pLeft->DrawBack(pContext, this, left);
+  if (pRight && right.GetSurface() > 0.0f)
+    pRight->DrawBack(pContext, this, right);
+  if (pTop && top.GetSurface() > 0.0f)
+    pTop->DrawBack(pContext, this, top);
+  if (pBottom && bottom.GetSurface() > 0.0f)
+    pBottom->DrawBack(pContext, this, bottom);
+
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))
   {
@@ -2040,6 +2094,11 @@ bool nuiTopLevel::Draw(class nuiDrawContext *pContext)
     pContext->DrawRect(r, eStrokeAndFillShape);
     pContext->ResetState();
   }
+
+  if (pLeft && left.GetSurface() > 0.0f) pLeft->DrawFront(pContext, this, left);
+  if (pRight && right.GetSurface() > 0.0f) pRight->DrawFront(pContext, this, right);
+  if (pTop && top.GetSurface() > 0.0f) pTop->DrawFront(pContext, this, top);
+  if (pBottom && bottom.GetSurface() > 0.0f) pBottom->DrawFront(pContext, this, bottom);
 
   return true;
 }
@@ -2945,5 +3004,45 @@ nuiDecorationMode nuiTopLevel::GetInsetDecorationMode(nuiPosition position) cons
 {
   NGL_ASSERT(position <= nuiBottom);
   return mInsetDecorationsModes[position];
+}
+
+void nuiTopLevel::SetLeftInsetDecoration(const nglString& rName)
+{
+  SetInsetDecoration(nuiLeft, rName);
+}
+
+void nuiTopLevel::SetRightInsetDecoration(const nglString& rName)
+{
+  SetInsetDecoration(nuiRight, rName);
+}
+
+void nuiTopLevel::SetTopInsetDecoration(const nglString& rName)
+{
+  SetInsetDecoration(nuiTop, rName);
+}
+
+void nuiTopLevel::SetBottomInsetDecoration(const nglString& rName)
+{
+  SetInsetDecoration(nuiBottom, rName);
+}
+
+const nglString& nuiTopLevel::GetLeftInsetDecoration() const
+{
+  return GetInsetDecorationName(nuiLeft);
+}
+
+const nglString& nuiTopLevel::GetRightInsetDecoration() const
+{
+  return GetInsetDecorationName(nuiRight);
+}
+
+const nglString& nuiTopLevel::GetTopInsetDecoration() const
+{
+  return GetInsetDecorationName(nuiTop);
+}
+
+const nglString& nuiTopLevel::GetBottomInsetDecoration() const
+{
+  return GetInsetDecorationName(nuiBottom);
 }
 
