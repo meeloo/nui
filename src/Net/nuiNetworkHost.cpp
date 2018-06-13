@@ -203,3 +203,29 @@ struct addrinfo* nuiNetworkHost::GetAddrInfo(const nglString& rService) const
   return infos;
 }
 
+nglString nuiNetworkHost::GetDescription() const
+{
+  nglString desc;
+  if (mNameSet)
+  {
+    desc = mName;
+  }
+  else if (mIPSet)
+  {
+    uint8* ip = (uint8*)&mIP;
+    desc.CFormat("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+  }
+  desc.Add(":").Add(mPort);
+  switch (mProtocol) {
+    case eAny:
+      break;
+    case eTCP:
+      desc.Add(" tcp");
+      break;
+    case eUDP:
+      desc.Add(" udp");
+      break;
+  }
+  return desc;
+}
+

@@ -11,7 +11,7 @@ class nuiAsyncIStream::Handler : public nglThread, public nuiCommand
 {
 public:
   Handler(nuiAsyncIStream* pStream, const nglString& rURL)
-  : mpASStream(pStream), mURL(rURL), nuiCommand("nuiAsynIStream::Handler", "nuiAsynIStream::Handler command. It should only be used by the kernel", false, false, false),
+  : nglThread(nglString().CFormat("nuiAsyncIStream %s", rURL.GetChars())), mpASStream(pStream), mURL(rURL), nuiCommand("nuiAsynIStream::Handler", "nuiAsynIStream::Handler command. It should only be used by the kernel", false, false, false),
     mCompletion(0), mpStream(NULL), mCancel(false)
   {
     mURL.DecodeUrl();

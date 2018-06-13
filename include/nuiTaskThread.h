@@ -12,7 +12,7 @@ class nuiTaskThread : public nglThread
 {
 public:
   nuiTaskThread(nuiTaskQueue* pQueue = NULL, Priority priority = Normal, size_t StackSize = 0)
-  : nglThread(priority, StackSize), mpQueue(pQueue), mOwnQueue(false), mDone(false)
+  : nglThread("nuiTaskThread", priority, StackSize), mpQueue(pQueue), mOwnQueue(false), mDone(false)
   {
     Init();
   }

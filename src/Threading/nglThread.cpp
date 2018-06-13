@@ -97,7 +97,7 @@ void nglThreadDelegate::OnStart()
 // nglThreadFunction
 ////////////////////////
 nglThreadFunction::nglThreadFunction(std::function<void()> rStartFunction, Priority priority, size_t StackSize)
-: nglThread(priority, StackSize), mStartFunction(rStartFunction)
+: nglThread("nglThreadFunction", priority, StackSize), mStartFunction(rStartFunction)
 {
 }
 

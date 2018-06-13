@@ -140,7 +140,7 @@ void nuiHTTPRequest_Thread::Cancel()
 }
 
 nuiHTTPRequest_Thread::nuiHTTPRequest_Thread(nuiHTTPRequest* pRequest, const nuiHTTPRequest::Delegate& rDelegate)
-: nuiCommand("nuiHTTPRequest_Thread", "HTTP Threaded Request Reply Command", false, false, false),
+: nglThread(nglString("nuiHTTPRequest_Thread ").Add(pRequest->GetURL())), nuiCommand("nuiHTTPRequest_Thread", "HTTP Threaded Request Reply Command", false, false, false),
   mpRequest(pRequest), mDelegate(rDelegate), mpResponse(NULL), mCancel(false)
 {
   Start();

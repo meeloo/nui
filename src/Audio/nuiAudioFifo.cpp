@@ -408,7 +408,7 @@ int32 nuiAudioTrack::GetNbChannels() const
 //
 //*****************************************************************************************
 nuiAudioFifo::nuiAudioFifo (int32 inbufSize, int32 outbufSize, double sampleRate, int32 nbChannels, const nglString& inDeviceName /* = nglString::Empty*/, const nglString& outDeviceName /*= nglString::Empty*/, const nglString& apiName /*= nglString::Empty*/)
-: nglThread(Highest), mpAudioDevice(NULL), mInputCS("nuiAudioFifo_mInputCS"), mOutputCS("nuiAudioFifo_mOutputCS"), mStopRequestCS("nuiAudioFifo_mStopRequestCS")
+: nglThread("nuiAudioFifo", Highest), mpAudioDevice(NULL), mInputCS("nuiAudioFifo_mInputCS"), mOutputCS("nuiAudioFifo_mOutputCS"), mStopRequestCS("nuiAudioFifo_mStopRequestCS")
 {    
   
 	mStarted		= false;

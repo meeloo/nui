@@ -400,7 +400,7 @@ void nuiHTTPHandler::OnReadClosed()
 
 //class nuiHTTPServerThread : public nglThread
 nuiHTTPServerThread::nuiHTTPServerThread(nuiHTTPHandler* pHandler, size_t StackSize)
-: nglThread(nglThread::Normal, StackSize), mpHandler(pHandler)
+: nglThread("nuiHTTPServer", nglThread::Normal, StackSize), mpHandler(pHandler)
 {
   SetAutoDelete(true);
 }

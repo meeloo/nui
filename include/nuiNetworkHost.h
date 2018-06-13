@@ -28,6 +28,7 @@ public:
   
   uint32 GetIP() const;
   const nglString& GetName() const;
+  nglString GetDescription() const;
   int GetPort() const;
   Protocol GetProtocol() const;
 
