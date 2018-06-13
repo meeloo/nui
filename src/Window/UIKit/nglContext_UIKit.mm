@@ -169,9 +169,8 @@ void* nglContext::GetDrawableMetalCommandEncoder(bool CreateIfNeeded)
   if (CreateIfNeeded)
   {
     void* encoder = CreateMetalPass();
-    NGL_ASSERT(encoder != nil);
     SetCurrentMetalCommandEncoder(encoder);
-    mDrawableMetalCommandEncoder = encoder;
+    CFBridgingRelease(encoder);
   }
   
   return mDrawableMetalCommandEncoder;
@@ -227,7 +226,11 @@ void nglContext::StopMarkerGroup()
 #ifdef _METAL_
 void nglContext::SetCurrentMetalCommandEncoder(void* encoder)
 {
-  mDrawableMetalCommandEncoder = nil; // In any case the drawable encoder will be reset if it already existed
+  if (mCurrentMetalCommandEncoder == encoder)
+    return;
+  
+  if (encoder != mDrawableMetalCommandEncoder)
+    mDrawableMetalCommandEncoder = nil; // In any case the drawable encoder will be reset if it already existed
   if (mCurrentMetalCommandEncoder)
   {
     id<MTLRenderCommandEncoder> commandEncoder = (__bridge id<MTLRenderCommandEncoder>)mCurrentMetalCommandEncoder;
