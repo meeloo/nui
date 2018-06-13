@@ -935,6 +935,8 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   mRenderOperations++;
   mBatches++;
   
+//  NGL_OUT("nuiMetalPainter::DrawArray %p (%d refs)\n", pArray, pArray->GetRefCount());
+  
   if (!mEnableDrawArray)
   {
     pArray->Release();
@@ -1073,7 +1075,6 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   NGL_ASSERT(mpShader != NULL);
   
   ApplyState(*mpState);
-  pArray->Acquire();
   
   mFinalState.mpShaderState->SetModelViewMatrix(GetProjectionMatrix() * GetMatrix());
   
@@ -1178,6 +1179,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
       auto arrayInfoIt = mRenderArrays.find(pArray);
       if (arrayInfoIt != mRenderArrays.end())
       {
+//        NGL_OUT("Cache Hit for Array %p\n", pArray);
         vertexArray = arrayInfoIt->second;
       }
       else
@@ -1185,7 +1187,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         size_t vertexcount = pArray->GetSize();
         size_t vertexsize = sizeof(nuiRenderArray::Vertex);
 //        id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModePrivate];
-        id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:vertexsize*vertexcount options:MTLResourceStorageModeShared];
+        id<MTLBuffer> vertices = (__bridge id<MTLBuffer>)NewBufferWithBytes(&pArray->GetVertex(0).mX, vertexsize*vertexcount, MTLResourceStorageModeShared);
         NGL_ASSERT(vertices != nil);
         vertexArray.push_back((void*)CFBridgingRetain(vertices));
         
@@ -1193,14 +1195,20 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
         {
           auto& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_)
-          id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*2 options:MTLResourceStorageModePrivate];
+          id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)NewBufferWithBytes(&(array.mIndices[0]), array.mIndices.size()*2, MTLResourceStorageModeShared);
 #else
-          id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:array.mIndices.size()*4 options:MTLResourceStorageModePrivate];
+          id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)NewBufferWithBytes(&(array.mIndices[0]), array.mIndices.size()*4, MTLResourceStorageModeShared);
 #endif
           NGL_ASSERT(indexes != nil);
           vertexArray.push_back((void*)CFBridgingRetain(indexes));
         }
         mRenderArrays[pArray] = vertexArray;
+
+//        NGL_OUT("[IN] Start caching render array %p\n", pArray);
+//        for (size_t i = 0; i < vertexArray.size(); i++)
+//        {
+//          NGL_OUT("\tbuffer[%d] %p\n", i, vertexArray[i]);
+//        }
       }
 
     }
@@ -1774,15 +1782,95 @@ void nuiMetalPainter::PopProjectionMatrix()
 
 void nuiMetalPainter::DestroyRenderArray(nuiRenderArray* pArray)
 {
+//  NGL_OUT("Destroy render array %p\n", pArray);
+
   nglCriticalSectionGuard g(mRenderArraysCS);
   auto it = mRenderArrays.find(pArray);
   if (it != mRenderArrays.end())
   {
     for (size_t i = 0; i < it->second.size(); i++)
-      CFBridgingRelease(it->second[i]);
+    {
+//      NGL_OUT("\tbuffer[%d] %p\n", i, it->second[i]);
+      ReleaseBuffer(it->second[i]);
+    }
     mRenderArrays.erase(it);
   }
 }
+
+std::map<uint64, std::list<void *> > nuiMetalPainter::mFreeBuffers;
+
+uint64 GetBufferKey(size_t length, int options)
+{
+  return ((options & 0xffff) << 32) | (length & 0xffff);
+}
+
+static int totalBufferCount = 0;
+static int aliveBufferCount = 0;
+static int freeBufferCount = 0;
+static int cacheHitBufferCount = 0;
+
+static void DumpBufferStats()
+{
+  static uint64 calls = 0;
+  
+  if (calls % 1000 == 0)
+  {
+    printf("Total %d - Used %d - Free %d - CacheHit %.2f\n", totalBufferCount, aliveBufferCount, freeBufferCount, (float)cacheHitBufferCount / (float)totalBufferCount);
+  }
+  calls++;
+}
+
+
+void * nuiMetalPainter::NewBufferWithBytes(void *bytes, size_t length, int options)
+{
+  nglCriticalSectionGuard g(mRenderArraysCS);
+  totalBufferCount++;
+  
+  id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
+  uint64 key = GetBufferKey(length, options);
+  auto list = mFreeBuffers.find(key);
+  id<MTLBuffer> buffer = nil;
+  if (list == mFreeBuffers.end() || list->second.empty())
+  {
+    // Create a new buffer
+    if (bytes)
+      buffer = [device newBufferWithBytes:bytes length:length options:(MTLResourceOptions)options];
+    else
+      buffer = [device newBufferWithLength:0 options:(MTLResourceOptions)options];
+    NGL_ASSERT(GetBufferKey(buffer.length, buffer.storageMode) == key);
+//    NGL_OUT("New Buffer %p (l:%i o:%x k:%llx)\n", buffer, buffer.length, (int)buffer.storageMode, key);
+  }
+  else
+  {
+    buffer = (__bridge id<MTLBuffer>)(list->second.front());
+    if (bytes)
+    {
+      memcpy(buffer.contents, bytes, length);
+//      [buffer didModifyRange:NSMakeRange(0, length)];
+    }
+    list->second.pop_front();
+    cacheHitBufferCount++;
+//    NGL_OUT("Buffer cache hit %p (l:%i o:%x k:%llx)\n", buffer, buffer.length, (int)buffer.storageMode, key);
+  }
+  aliveBufferCount++;
+  DumpBufferStats();
+  return (void*)CFBridgingRetain(buffer);
+}
+
+void nuiMetalPainter::ReleaseBuffer(void *buf)
+{
+  id<MTLBuffer> buffer = (__bridge id<MTLBuffer>)buf;
+  uint64 key = GetBufferKey(buffer.length, buffer.storageMode);
+//  NGL_OUT("Release Buffer %p (l:%i o:%x k:%llx)\n", buffer, buffer.length, (int)buffer.storageMode, key);
+  {
+    nglCriticalSectionGuard g(mRenderArraysCS);
+    mFreeBuffers[key].push_back(buf);
+    freeBufferCount++;
+    aliveBufferCount--;
+    DumpBufferStats();
+  }
+}
+
 
 void nuiMetalPainter::FinalizeRenderArrays()
 {
@@ -1798,7 +1886,7 @@ nglImage* nuiMetalPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture)
 std::unordered_map<nuiTexture*, nuiMetalPainter::TextureInfo> nuiMetalPainter::mTextures;
 nglCriticalSection nuiMetalPainter::mTexturesCS("mTexturesCS");
 
-std::unordered_map<nuiRenderArray*, std::vector<void*> > nuiMetalPainter::mRenderArrays;
+std::map<nuiRenderArray*, std::vector<void*> > nuiMetalPainter::mRenderArrays;
 nglCriticalSection nuiMetalPainter::mRenderArraysCS("mRenderArraysCS");
 
 
@@ -1871,38 +1959,36 @@ void nuiMetalPainter::CacheRenderArray(nuiRenderArray* pArray)
       if (!size)
         return;
       //        id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:size options:MTLResourceStorageModePrivate];
-      id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:size options:MTLResourceStorageModeShared];
+//      id<MTLBuffer> vertices = [device newBufferWithBytes:&pArray->GetVertex(0).mX length:size options:MTLResourceStorageModeShared];
+      id<MTLBuffer> vertices = (__bridge id<MTLBuffer>)NewBufferWithBytes(&pArray->GetVertex(0).mX,size, MTLResourceStorageModeShared);
       NGL_ASSERT(vertices != nil);
 
-      id<MTLBuffer> destination = [device newBufferWithLength:size options:MTLResourceStorageModePrivate];
-      [blitter copyFromBuffer:vertices sourceOffset:0 toBuffer:destination destinationOffset:0 size:size];
-      NGL_ASSERT(destination != nil);
-
-      vertexArray.push_back((void*)CFBridgingRetain(destination));
+      vertexArray.push_back((void*)CFBridgingRetain(vertices));
       
       for (size_t i = 0; i < pArray->GetIndexArrayCount(); i++)
       {
         auto& array(pArray->GetIndexArray(i));
 #if (defined _UIKIT_)
         size_t length = array.mIndices.size()*2;
-        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:length options:MTLResourceStorageModePrivate];
+        id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)NewBufferWithBytes(&(array.mIndices[0]), length, MTLResourceStorageModeShared);
 #else
         size_t length = array.mIndices.size()*4;
-        id<MTLBuffer> indexes = [device newBufferWithBytes:&(array.mIndices[0]) length:length options:MTLResourceStorageModePrivate];
+        id<MTLBuffer> indexes = (__bridge id<MTLBuffer>)NewBufferWithBytes(&(array.mIndices[0]), length, MTLResourceStorageModeShared);
 #endif
         NGL_ASSERT(indexes != nil);
-
-        id<MTLBuffer> destindexes = [device newBufferWithLength:length options:MTLResourceStorageModePrivate];
-        [blitter copyFromBuffer:vertices sourceOffset:0 toBuffer:destindexes destinationOffset:0 size:length];
-        NGL_ASSERT(destindexes != nil);
-
-        vertexArray.push_back((void*)CFBridgingRetain(destindexes));
+        void *idx = (void*)CFBridgingRetain(indexes);
+        vertexArray.push_back(idx);
       }
+
+//      NGL_OUT("[PRE] Start caching render array %p\n", pArray);
+//      for (size_t i = 0; i < vertexArray.size(); i++)
+//      {
+//        NGL_OUT("\tbuffer[%d] %p\n", i, vertexArray[i]);
+//      }
+
       mRenderArrays[pArray] = vertexArray;
     }
-    
   }
-  
 }
 
 

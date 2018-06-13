@@ -100,8 +100,13 @@ protected:
   static std::unordered_map<nuiTexture*, TextureInfo> mTextures;
   static nglCriticalSection mTexturesCS;
   
-  static std::unordered_map<nuiRenderArray*, std::vector<void*> > mRenderArrays;
+  static std::map<nuiRenderArray*, std::vector<void*> > mRenderArrays;
   static nglCriticalSection mRenderArraysCS;
+
+  static std::map<uint64, std::list<void *> > mFreeBuffers;
+  void *NewBufferWithBytes(void *bytes, size_t length, int options);
+  void *NewBufferWithLength(size_t length, int options);
+  static void ReleaseBuffer(void *buffer);
 
   nglCriticalSection mRenderingCS;
 

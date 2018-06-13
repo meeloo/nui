@@ -10,6 +10,7 @@
 /// class nuiRenderArray
 nuiRenderArray::nuiRenderArray(uint32 mode, bool Static, bool _3dmesh, bool _shape)
 {
+//  NGL_OUT("CTOR nuiRenderArray %p\n", this);
   mDebug = false;
 
   for (uint i = 0; i < 4; i++)
@@ -44,6 +45,7 @@ nuiRenderArray::nuiRenderArray(uint32 mode, bool Static, bool _3dmesh, bool _sha
 nuiRenderArray::nuiRenderArray(const nuiRenderArray& rArray)
 : mVertices(rArray.mVertices)
 {
+//  NGL_OUT("CTOR nuiRenderArray %p\n", this);
   mDebug = false;
 
   for (uint i = 0; i < 5; i++)
@@ -58,6 +60,7 @@ nuiRenderArray::nuiRenderArray(const nuiRenderArray& rArray)
 
 nuiRenderArray::~nuiRenderArray()
 {
+//  NGL_OUT("DTOR nuiRenderArray %p\n", this);
   for (uint32 i = 0; i < mIndexedArrays.size(); i++)
     delete mIndexedArrays[i];
 
