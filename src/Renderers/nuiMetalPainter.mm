@@ -1234,7 +1234,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     
     if (pTexture)
     {
-     pProxy = pTexture->GetProxyTexture();
+      pProxy = pTexture->GetProxyTexture();
       if (pProxy)
         pTexture = pProxy;
 
@@ -1248,8 +1248,11 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     }
 //    NGL_OUT("Setting texture[%d] = %p / %p (%p%s)\n", i, texture, sampler, pTexture, (pProxy?" [Proxy]":""));
     NGL_ASSERT((pTexture != nullptr && texture != nil && sampler != nil) || (pTexture == nullptr && texture == nil && sampler == nil));
-    [encoder setFragmentTexture:texture atIndex:i];
-    [encoder setFragmentSamplerState:sampler atIndex:i];
+    if (texture)
+    {
+      [encoder setFragmentTexture:texture atIndex:i];
+      [encoder setFragmentSamplerState:sampler atIndex:i];
+    }
   }
   
   
@@ -1801,7 +1804,9 @@ std::map<uint64, std::list<void *> > nuiMetalPainter::mFreeBuffers;
 
 uint64 GetBufferKey(size_t length, int options)
 {
-  return ((options & 0xffff) << 32) | (length & 0xffff);
+  uint64 key = (((uint64)options & 0xffff) << 32) | ((uint64)length & 0xffff);
+//  NGL_OUT("key %llx - %llx ->  %llx\n", length, options, key);
+  return key;
 }
 
 static int totalBufferCount = 0;
