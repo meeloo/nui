@@ -13,6 +13,11 @@ nuiImage::nuiImage (nuiTexture* pTexture, bool AlreadyAcquired)
   if (SetObjectClass("nuiImage"))
     InitAttributes();
 
+  if (pTexture)
+  {
+    NGL_ASSERT(pTexture->GetWidth() > 0);
+    NGL_ASSERT(pTexture->GetHeight() > 0);
+  }
   mpTexture = pTexture;
   if (!AlreadyAcquired && pTexture)
     pTexture->Acquire();
@@ -31,6 +36,12 @@ nuiImage::nuiImage (nglIStream* pInput, nglImageCodec* pCodec)
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(pInput, pCodec);
+  if (mpTexture)
+  {
+    NGL_ASSERT(mpTexture->GetWidth() > 0);
+    NGL_ASSERT(mpTexture->GetHeight() > 0);
+  }
+
   mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
@@ -44,6 +55,12 @@ nuiImage::nuiImage (const nglPath& rPath, nglImageCodec* pCodec)
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(rPath, pCodec);
+  if (mpTexture)
+  {
+    NGL_ASSERT(mpTexture->GetWidth() > 0);
+    NGL_ASSERT(mpTexture->GetHeight() > 0);
+  }
+
   mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
@@ -58,6 +75,12 @@ nuiImage::nuiImage (nglImageInfo& rInfo, bool Clone)
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(rInfo, Clone);
+  if (mpTexture)
+  {
+    NGL_ASSERT(mpTexture->GetWidth() > 0);
+    NGL_ASSERT(mpTexture->GetHeight() > 0);
+  }
+
   mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
@@ -71,6 +94,12 @@ nuiImage::nuiImage (const nglImage& rImage)
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(rImage);
+  if (mpTexture)
+  {
+    NGL_ASSERT(mpTexture->GetWidth() > 0);
+    NGL_ASSERT(mpTexture->GetHeight() > 0);
+  }
+
   mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
@@ -84,6 +113,12 @@ nuiImage::nuiImage (nglImage* pImage, bool OwnImage)
     InitAttributes();
 
   mpTexture = nuiTexture::GetTexture(pImage,OwnImage);
+  if (mpTexture)
+  {
+    NGL_ASSERT(mpTexture->GetWidth() > 0);
+    NGL_ASSERT(mpTexture->GetHeight() > 0);
+  }
+
   mUseAlpha = true;
   //SetFixedAspectRatio(true);
   mBlendFunc = nuiBlendTransp;
@@ -136,6 +171,9 @@ void nuiImage::SetTexture(nuiTexture* pTex)
 {
   if (mpTexture == pTex)
     return;
+
+  NGL_ASSERT(pTex->GetWidth() > 0);
+  NGL_ASSERT(pTex->GetHeight() > 0);
 
   if (pTex)
   {
