@@ -10,6 +10,7 @@
 #include "nuiAudioDevice_AudioUnit.h"
 #import <UIKit/UIKit.h>
 #import <Accelerate/Accelerate.h>
+#import <AVFoundation/AVAudioSession.h>
 
 #define kOutputBus	(0)
 #define kInputBus		(1)
@@ -82,6 +83,10 @@ void audioRouteChangeListenerCallback (void                   *inUserData,      
 //class nuiAudioDevice_AudioUnit : public nuiAudioDevice
 nuiAudioDevice_AudioUnit::nuiAudioDevice_AudioUnit()
 {  
+  // Initialize our session
+  NSError *error = nil;
+  BOOL activated = [[AVAudioSession sharedInstance] setActive:YES error:&error];
+
   mpIData = NULL;
   mAudioUnit = NULL;
   
@@ -644,9 +649,6 @@ nglString nuiAudioDevice_AudioUnit::GetChannelName(bool IsInput, int32 index) co
 nuiAudioDeviceAPI_AudioUnit::nuiAudioDeviceAPI_AudioUnit()
 {
   mName = "AudioUnit";
-	// Initialize our session
-	OSStatus err = AudioSessionInitialize(NULL, NULL, interruptionListener, NULL);
-  
 }
 
 nuiAudioDeviceAPI_AudioUnit::~nuiAudioDeviceAPI_AudioUnit()
