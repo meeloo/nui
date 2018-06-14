@@ -21,6 +21,7 @@
 		61FD87361A18211A001118DA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87351A18211A001118DA /* CoreGraphics.framework */; };
 		61FD87381A182151001118DA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FD87371A182151001118DA /* QuartzCore.framework */; };
 		C3B1FD731DDF606C009B11ED /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 612094A51A39B64F006CACE7 /* CoreVideo.framework */; };
+		C3D3A4CA20D16BFF00E79200 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3D3A4C520D16BFF00E79200 /* UserNotifications.framework */; };
 		C3D8FE6D1F072E4300ADE75D /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3D8FE681F072E4300ADE75D /* Metal.framework */; };
 		C3D8FE731F0734D700ADE75D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3D8FE721F0734D700ADE75D /* Quartz.framework */; };
 		C3E9C1391D1F553C00DEBED4 /* css in Resources */ = {isa = PBXBuildFile; fileRef = C3E9C1371D1F553C00DEBED4 /* css */; };
@@ -651,6 +652,7 @@
 		61FD87351A18211A001118DA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		61FD87371A182151001118DA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		C3B1FD711DDF5F9C009B11ED /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C3D3A4C520D16BFF00E79200 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/UserNotifications.framework; sourceTree = DEVELOPER_DIR; };
 		C3D8FE681F072E4300ADE75D /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		C3D8FE6E1F07342600ADE75D /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		C3D8FE701F07347700ADE75D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -958,6 +960,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3D3A4CA20D16BFF00E79200 /* UserNotifications.framework in Frameworks */,
 				E5EAABA21EBBC5230057531F /* Metal.framework in Frameworks */,
 				61FD87381A182151001118DA /* QuartzCore.framework in Frameworks */,
 				61FD87361A18211A001118DA /* CoreGraphics.framework in Frameworks */,
@@ -2011,6 +2014,7 @@
 		E55E77A1185BBC62005F01B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C3D3A4C520D16BFF00E79200 /* UserNotifications.framework */,
 				C3D8FE721F0734D700ADE75D /* Quartz.framework */,
 				C3D8FE701F07347700ADE75D /* QuartzCore.framework */,
 				C3D8FE6E1F07342600ADE75D /* MetalKit.framework */,
@@ -3422,7 +3426,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -3445,7 +3448,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/../Buttons/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
