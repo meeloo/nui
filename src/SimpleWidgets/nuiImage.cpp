@@ -172,8 +172,8 @@ void nuiImage::SetTexture(nuiTexture* pTex)
   if (mpTexture == pTex)
     return;
 
-  NGL_ASSERT(pTex->GetWidth() > 0);
-  NGL_ASSERT(pTex->GetHeight() > 0);
+  if (!pTex->IsValid())
+    pTex = nullptr;
 
   if (pTex)
   {

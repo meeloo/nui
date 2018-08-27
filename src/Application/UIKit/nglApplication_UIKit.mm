@@ -418,15 +418,12 @@ void nglApplication::Quit (int Code)
 int nglApplication::Main(int argc, const char** argv)
 {
   //  NSAutoreleasePool *pPool = [NSAutoreleasePool new];
-  @autoreleasepool
-  {
     //App->TimedPrint("nglApplication::Main Init");
 
     Init(argc, argv);
 
     //App->TimedPrint("nglApplication::Main UIApplication");
-    UIApplicationMain(argc, const_cast<char**>(argv), nil, @"nglUIApplicationDelegate");
-  }
+    UIApplicationMain(argc, const_cast<char**>(argv), @"UIApplication", @"nglUIApplicationDelegate");
 
   return 0;
 }

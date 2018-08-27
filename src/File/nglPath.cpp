@@ -12,11 +12,13 @@
 #if (defined _UIKIT_)
 #include "Cocoa/nglPath_Cocoa.h"
 #import <UIKit/UIKit.h>
+#include <sys/stat.h>
 #endif
 
 #if (defined _COCOA_)
 #include "Cocoa/nglPath_Cocoa.h"
 #import <Cocoa/Cocoa.h>
+#include <sys/stat.h>
 #endif
 
 using namespace std;
@@ -664,10 +666,13 @@ void nglPath::Split(std::vector<nglString>& rElements)
 bool nglIsFileVisible(const nglString& rPathName)
 {
 #if (defined _CARBON_ || defined _COCOA_ || defined _UIKIT_)
-  NSURL* url = [NSURL fileURLWithPath:[NSString stringWithUTF8String:rPathName.GetChars()]];
-  NSNumber* boolVal = nil;
-  [url getResourceValue:&boolVal forKey:NSURLIsHiddenKey error:nil];
-  return ![boolVal boolValue];
+  struct stat info;
+  std::string tmp(rPathName.GetStdString());
+  if (stat(tmp.c_str(), &info) == -1)
+  {
+    return true;
+  }
+  return !(info.st_flags & UF_HIDDEN);
 #else
 # pragma warning Need proper nglIsFileVisible implementation for this target
   return true;

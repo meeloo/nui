@@ -72,6 +72,9 @@ public:
 
   virtual nglImage* CreateImageFromGPUTexture(const nuiTexture* pTexture) const;
   
+  virtual float GetScale() const;
+  virtual float GetScaleInv() const;
+
 protected:
   class TextureInfo
   {

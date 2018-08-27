@@ -104,6 +104,9 @@ public:
   void GetSize(uint32& rX, uint32& rY) const;
   const nuiRenderState& GetState() const;
 
+  virtual float GetScale() const;
+  virtual float GetScaleInv() const;
+
   void SetDummyMode(bool set);
   bool GetDummyMode() const;
 

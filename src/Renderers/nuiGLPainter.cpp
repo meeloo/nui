@@ -3052,4 +3052,15 @@ void nuiGLPainter::CacheRenderArray(nuiRenderArray* pArray)
   
 }
 
+float nuiGLPainter::GetScaleInv() const
+{
+  return mpSurface? 1.0f/mpSurface->GetScale(): mpContext->GetScaleInv();
+}
+
+float nuiGLPainter::GetScale() const
+{
+  return mpSurface? mpSurface->GetScale(): mpContext->GetScale();
+}
+
+
 #endif //   #ifndef __NUI_NO_GL__

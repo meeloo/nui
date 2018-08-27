@@ -165,7 +165,6 @@ void* nglContext::GetMetalCommandQueue() const // id <MTLCommandQueue>
 
 void* nglContext::GetMetalDestinationTexture() const
 {
-  const_cast<nglContext*>(this)->CreateMetalPass();
   return mMetalDestinationTexture;
 }
 

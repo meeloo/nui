@@ -4107,6 +4107,7 @@
 		BCFE081B0E050AB90073662D /* nuiDialogSelectFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDialogSelectFile.cpp; path = src/Dialogs/nuiDialogSelectFile.cpp; sourceTree = SOURCE_ROOT; };
 		BCFE08200E050ACB0073662D /* nuiDialogSelectDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDialogSelectDirectory.h; path = include/nuiDialogSelectDirectory.h; sourceTree = SOURCE_ROOT; };
 		BCFE08210E050ACB0073662D /* nuiDialogSelectFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDialogSelectFile.h; path = include/nuiDialogSelectFile.h; sourceTree = SOURCE_ROOT; };
+		C3112D0720C1792F00346AC5 /* sanitizers_config */ = {isa = PBXFileReference; lastKnownFileType = text; path = sanitizers_config; sourceTree = "<group>"; };
 		C33A36DF1F9AB85700661E31 /* nuiCRC.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = nuiCRC.cpp; sourceTree = "<group>"; };
 		C33A36E01F9AB85700661E31 /* nuiCRC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nuiCRC.h; sourceTree = "<group>"; };
 		C35AB0351E0E890200CE4C2C /* nuiMetaPainterInspector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiMetaPainterInspector.cpp; path = Introspector/nuiMetaPainterInspector.cpp; sourceTree = "<group>"; };
@@ -6728,6 +6729,7 @@
 				E52CBD7B11750ADF0031DFA8 /* tracemonkey */,
 				E5D13BD21100AF3F000F46C4 /* ucdata */,
 				E51E549B0FF11FE000FDF3BE /* ungif */,
+				C3112D0720C1792F00346AC5 /* sanitizers_config */,
 			);
 			path = deps;
 			sourceTree = SOURCE_ROOT;
@@ -12791,6 +12793,7 @@
 		E58B44CF1836DFC8003F30B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -12976,6 +12979,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-fsanitize-blacklist=deps/sanitizers_config";
 				OTHER_LDFLAGS = "";
 				PRELINK_LIBS = "-liconv";
 				PRODUCT_NAME = thirdparty_OSX;
@@ -13065,6 +13069,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-fsanitize-blacklist=deps/sanitizers_config";
 				OTHER_LDFLAGS = "";
 				PRELINK_LIBS = "-liconv";
 				PRODUCT_NAME = thirdparty_OSX;

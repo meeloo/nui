@@ -378,3 +378,14 @@ nglImage* nuiPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) cons
 {
   return nullptr;
 }
+
+float nuiPainter::GetScaleInv() const
+{
+  return mpSurface? 1.0f/mpSurface->GetScale(): 1.0f;
+}
+
+float nuiPainter::GetScale() const
+{
+  return mpSurface? mpSurface->GetScale(): 1.0f;
+}
+

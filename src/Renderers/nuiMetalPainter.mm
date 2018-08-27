@@ -560,7 +560,8 @@ void nuiMetalPainter::SetViewport()
 //  h = nuiClamp(h, 0, Height - y);
 
   {
-    const float scale = mpContext->GetScale();
+    const float scale = GetScale();
+    
     x *= scale;
     y *= scale;
     w *= scale;
@@ -732,7 +733,7 @@ void nuiMetalPainter::ApplyScissor(const nuiRenderState& rState)
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder();
   NGL_ASSERT(encoder != nil);
 
-  float scale = mpContext->GetScale();
+  float scale = GetScale();
   int32 width = GetCurrentWidth();
   int32 height = GetCurrentHeight();
   int x,y,w,h;
@@ -1076,7 +1077,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   
   ApplyState(*mpState);
   
-  mFinalState.mpShaderState->SetModelViewMatrix(GetProjectionMatrix() * GetMatrix());
+  mpShaderState->SetModelViewMatrix(GetProjectionMatrix() * GetMatrix());
   
   uint32 s = pArray->GetSize();
 
@@ -1088,15 +1089,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   maxs = MAX(maxs, s);
   }
 
-  if (!s)
-  {
-    pArray->Release();
-    mpShaderState->Release();
-    mpShaderState = nullptr;
-    return;
-  }
-  
-  if (mpClippingStack.top().GetWidth() <= 0 || mpClippingStack.top().GetHeight() <= 0)
+  if (!s || (mpClippingStack.top().GetWidth() <= 0 || mpClippingStack.top().GetHeight() <= 0))
   {
     pArray->Release();
     mpShaderState->Release();
@@ -1120,15 +1113,15 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
   float hackY = 0;
   if (NeedTranslateHack)
   {
-    const float ratio = mpContext->GetScaleInv() / 2.f;
+    const float ratio = GetScaleInv() / 2.f;
     hackX = ratio;
     hackY = ratio;
   }
   
   if (mpSurface)
-    mFinalState.mpShaderState->SetOffset(hackX, -hackY);
+    mpShaderState->SetOffset(hackX, -hackY);
   else
-    mFinalState.mpShaderState->SetOffset(hackX, hackY);
+    mpShaderState->SetOffset(hackX, hackY);
   
   if (!pArray->IsArrayEnabled(nuiRenderArray::eColor))
   {
@@ -1154,7 +1147,7 @@ void nuiMetalPainter::DrawArray(nuiRenderArray* pArray)
     mB = c.Blue();
     mA = c.Alpha();
     
-    mFinalState.mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA));
+    mpShaderState->SetDifuseColor(nuiColor(mR, mG, mB, mA));
   }
   
   // Metal Specific part:
@@ -1611,13 +1604,6 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
   
   if (pSurface)
   {
-    GLint width = (GLint)pSurface->GetWidth();
-    GLint height = (GLint)pSurface->GetHeight();
-
-    float scale = mpContext->GetScale();
-    width *= scale;
-    height *= scale;
-    
     nuiTexture* pTexture = pSurface->GetTexture();
     
 #if defined DEBUG && defined _UIKIT_
@@ -1647,12 +1633,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
         it = mTextures.insert(mTextures.begin(), std::pair<nuiTexture*, TextureInfo>(pTexture, TextureInfo()));
       NGL_ASSERT(it != mTextures.end());
       
-      NGL_ASSERT(width > 0);
-      NGL_ASSERT(height > 0);
-      
       UploadTexture(pTexture, 0);
-      
-      //    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, tinfo.mTexture);
     }
     
     auto tit = mTextures.find(pTexture);
@@ -1666,9 +1647,6 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
       passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
       passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
-      
-      
-      //    NGL_OUT("init color surface texture %d x %d --> %d\n", width, height, info.mTexture);
     }
     else
     {
@@ -1897,6 +1875,9 @@ nglCriticalSection nuiMetalPainter::mRenderArraysCS("mRenderArraysCS");
 
 int32 nuiMetalPainter::GetCurrentWidth() const
 {
+  id<MTLTexture> texture = (__bridge id<MTLTexture>)mpContext->GetMetalDestinationTexture();
+  if (texture)
+    return texture.width * GetScaleInv();;
   if (mpSurface)
     return mpSurface->GetWidth();
   return mpContext->GetWidth();
@@ -1904,6 +1885,9 @@ int32 nuiMetalPainter::GetCurrentWidth() const
 
 int32 nuiMetalPainter::GetCurrentHeight() const
 {
+  id<MTLTexture> texture = (__bridge id<MTLTexture>)mpContext->GetMetalDestinationTexture();
+  if (texture)
+    return texture.height * GetScaleInv();
   if (mpSurface)
     return mpSurface->GetHeight();
   return mpContext->GetHeight();
@@ -1994,6 +1978,16 @@ void nuiMetalPainter::CacheRenderArray(nuiRenderArray* pArray)
       mRenderArrays[pArray] = vertexArray;
     }
   }
+}
+
+float nuiMetalPainter::GetScaleInv() const
+{
+  return mpSurface? 1.0f/mpSurface->GetScale(): mpContext->GetScaleInv();
+}
+
+float nuiMetalPainter::GetScale() const
+{
+  return mpSurface? mpSurface->GetScale(): mpContext->GetScale();
 }
 
 

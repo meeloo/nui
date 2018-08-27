@@ -35,7 +35,7 @@ nuiSurface* nuiSurface::GetSurface (const nglString& rName, bool Acquired)
   return pSurface;
 }
 
-nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat)
+nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat, float scale)
 {
   nglCriticalSectionGuard gcs(mSurfacesCS);
   nuiSurface* pSurface = NULL;
@@ -51,7 +51,7 @@ nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int3
     }
   }
 
-  pSurface = new nuiSurface(rName, Width, Height, PixelFormat);
+  pSurface = new nuiSurface(rName, Width, Height, PixelFormat, scale);
   mpSurfaces[rName] = pSurface;
 
 //  NGL_OUT("nuiSurface CreateSurface [0x%x] NAME: [%s] COUNT [%d]\n", pSurface, rName.GetChars(), mpSurfaces.size());
@@ -60,7 +60,7 @@ nuiSurface* nuiSurface::CreateSurface (const nglString& rName, int32 Width, int3
   return pSurface;
 }
 
-nuiSurface::nuiSurface(const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat)
+nuiSurface::nuiSurface(const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat, float scale)
   : nuiObject()
 {
   SetObjectClass("nuiSurface");
@@ -74,6 +74,7 @@ nuiSurface::nuiSurface(const nglString& rName, int32 Width, int32 Height, nglIma
   mPermanent = false;
   mWidth = Width;
   mHeight= Height;
+  mScale = scale;
   mPixelFormat = PixelFormat;
   mDepth = 0;
   mStencil = 0;
@@ -153,6 +154,12 @@ nuiTexture* nuiSurface::GetTexture() const
   return mpTexture;
 }
 
+float nuiSurface::GetScale() const
+{
+  if (mScale != 0)
+    return mScale;
+  return nuiGetScaleFactor();
+}
 
 void nuiSurface::SetPermanent(bool Permanent)
 {

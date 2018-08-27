@@ -376,12 +376,16 @@ extern class nglKernel* App;
   #define __NGL_APP_MAINDECL int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
   #define __NGL_APP_MAINCALL WinMain(hInstance, hPrevInstance, lpCmdLine, nShowCmd)
   #define __NGL_APP_RETURN return ret
+  #define __NGL_APP_AUTORELEASEPOOL_BEGIN
+  #define __NGL_APP_AUTORELEASEPOOL_END
 #endif // _WIN32_
 
 #if defined(_ANDROID_)
   #define __NGL_APP_MAINDECL void android_main(struct android_app* state)
   #define __NGL_APP_MAINCALL android_main(state); app_dummy()
   #define __NGL_APP_RETURN
+  #define __NGL_APP_AUTORELEASEPOOL_BEGIN
+  #define __NGL_APP_AUTORELEASEPOOL_END
 #endif // _COCOA_
 
 //#ifdef _CARBON_
@@ -395,6 +399,9 @@ extern class nglKernel* App;
   #define __NGL_APP_MAINDECL int main(int argc, const char** argv)
   #define __NGL_APP_MAINCALL Main(argc, argv)
   #define __NGL_APP_RETURN return ret
+  #define __NGL_APP_AUTORELEASEPOOL_BEGIN @autoreleasepool\
+{
+  #define __NGL_APP_AUTORELEASEPOOL_END }
 #endif // _UNIX_
 
 #if (defined _DEBUG_) && (defined _WIN32_)
@@ -406,6 +413,7 @@ extern class nglKernel* App;
 #define __NGL_APP_CREATE(UserAppClass, InstanceHook) \
   __NGL_APP_MAINDECL \
   { \
+    __NGL_APP_AUTORELEASEPOOL_BEGIN\
     int ret = 1; \
     if (!App) \
     { \
@@ -418,6 +426,7 @@ extern class nglKernel* App;
     } \
     /*NGL_CHECK_MEMORY*/\
     __NGL_APP_RETURN; \
+    __NGL_APP_AUTORELEASEPOOL_END\
   }
 #endif // !_DOXYGEN_
 

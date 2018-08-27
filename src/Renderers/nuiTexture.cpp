@@ -740,7 +740,7 @@ void nuiTexture::Init()
     mRealWidth = (nuiSize)mpSurface->GetWidth();
     mRealHeight = (nuiSize)mpSurface->GetHeight();
 
-    mScale = nuiGetScaleFactor();
+    mScale = mpSurface->GetScale();
     mRealWidth *= mScale;
     mRealHeight *= mScale;
     mPixelFormat = eImagePixelRGBA;

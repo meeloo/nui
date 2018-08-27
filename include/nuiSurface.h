@@ -14,7 +14,7 @@ class nuiSurface : public nuiObject
 {
 public:
   static nuiSurface* GetSurface (const nglString& rName, bool Acquired); ///< Get a surface from its ID
-  static nuiSurface* CreateSurface (const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat = eImagePixelRGBA); ///< Create a surface
+  static nuiSurface* CreateSurface (const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat = eImagePixelRGBA, float scale = 0); ///< Create a surface
 
   int32 GetWidth() const;
   int32 GetHeight() const;
@@ -34,8 +34,10 @@ public:
   void SetPermanent(bool Permanent = true);
   bool IsPermanent();
 
+  float GetScale() const;
+  
 protected:
-  nuiSurface(const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat = eImagePixelRGBA);
+  nuiSurface(const nglString& rName, int32 Width, int32 Height, nglImagePixelFormat PixelFormat = eImagePixelRGBA, float scale = 0);
   virtual ~nuiSurface();
 
 private:
@@ -43,6 +45,8 @@ private:
 
   int32 mWidth;
   int32 mHeight;
+  
+  float mScale;
   
   int32 mDepth;
   int32 mStencil;

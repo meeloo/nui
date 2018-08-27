@@ -101,7 +101,7 @@ void nglContext::CallOnRescale(float NewScale)
 {
   NGL_OUT("CallOnRescale %f\n", NewScale);
   mScale = NewScale;
-  mScaleInv = 1.0 / NewScale;
+  mScaleInv = 1.0f / NewScale;
   OnRescale(mScale);
 }
 
