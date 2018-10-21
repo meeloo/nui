@@ -1472,7 +1472,7 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
         {
           MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlPixelFormat
                                                                                                 width:(uint32)ToNearest(Width) height:(uint32)ToNearest(Height) mipmapped:pTexture->GetAutoMipMap()];
-          descriptor.usage = pSurface ? (MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead) : MTLTextureUsageShaderRead;
+          descriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite | (pSurface ? MTLTextureUsageRenderTarget : 0);
 //          descriptor.resourceOptions = MTLResourceStorageModePrivate;
 //          descriptor.storageMode = MTLStorageModePrivate;
           texture = [device newTextureWithDescriptor:descriptor];
@@ -1862,7 +1862,84 @@ void nuiMetalPainter::FinalizeRenderArrays()
 
 nglImage* nuiMetalPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture) const
 {
-  return nullptr;
+  if (!pTexture)
+    return nullptr;
+  
+  nglCriticalSectionGuard tg(mTexturesCS);
+  auto it = mTextures.find(const_cast<nuiTexture *>(pTexture));
+  if (it == mTextures.end())
+  {
+    nglImage *pT = pTexture->GetImage();
+    if (pT)
+      return new nglImage(*pT);
+    
+    nuiTexture *pProxy = pTexture->GetProxyTexture();
+    if (pProxy)
+    {
+      nglImage* pProxyImage = CreateImageFromGPUTexture(pProxy);
+      nuiRect r(pTexture->GetProxyRect());
+      nglImage* pImage = pProxyImage->Crop((uint32)r.Left(), (uint32)r.Top(), (uint32)r.GetWidth(), (uint32)r.GetHeight());
+      delete pProxyImage;
+      return pImage;
+      //      return pProxyImage;
+    }
+    else
+      return nullptr;
+  }
+  NGL_ASSERT(it != mTextures.end());
+  
+  id<MTLTexture> texture = (__bridge id<MTLTexture>)it->second.mTexture;
+  int format = 0;
+  switch (texture.pixelFormat)
+  {
+    case MTLPixelFormatA8Unorm:
+      format = 8;
+      break;
+    case MTLPixelFormatRGBA8Unorm:
+    case MTLPixelFormatBGRA8Unorm:
+      format = 32;
+      break;
+      
+    default:
+      NGL_ASSERT(0);
+  }
+
+  id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
+  id<MTLCommandQueue> commandQueue = [device newCommandQueue];
+  id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
+  id<MTLBlitCommandEncoder> blitEncoder = [commandBuffer blitCommandEncoder];
+  [blitEncoder synchronizeTexture:texture slice:0 level:0];
+  [blitEncoder endEncoding];
+  [commandBuffer commit];
+  [commandBuffer waitUntilCompleted];
+  
+  nglImageInfo info(texture.width, texture.height, 32);
+  info.AllocateBuffer();
+  MTLRegion region = MTLRegionMake2D(0, 0, info.mWidth, info.mHeight);
+  [texture getBytes:info.mpBuffer bytesPerRow:info.mBytesPerLine bytesPerImage:info.mBytesPerLine*info.mHeight fromRegion:region mipmapLevel:0 slice:0];
+  if (texture.pixelFormat == MTLPixelFormatBGRA8Unorm)
+  {
+    for (uint32 i = 0; i < info.mHeight; i++)
+    {
+      uint8* buffer = (uint8*)(info.mpBuffer + info.mBytesPerLine * i);
+      for (uint32 j = 0; j < info.mWidth; j++)
+      {
+        uint8 r, g, b, a;
+        b = buffer[0];
+        g = buffer[1];
+        r = buffer[2];
+        a = buffer[3];
+        buffer[0] = r;
+        buffer[1] = g;
+        buffer[2] = b;
+        buffer[3] = a;
+        buffer += 4;
+      }
+    }
+  }
+  
+  nglImage* pImage = new nglImage(info);
+  return pImage;
 }
 
 
