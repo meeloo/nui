@@ -1781,9 +1781,11 @@ void nglWindow::ReleaseDisplayLink()
 
 #pragma mark GL Context handling
 static nglAtomic frame;
+static std::once_flag frame_once;
 
 void nglWindow::BeginSession()
 {
+  std::call_once(frame_once, [](){ ngl_atomic_set(frame, 0); });
   nglThread::ID threadid = nglThread::GetCurThreadID();
   NGL_ASSERT(mCurrentThread == 0 || mCurrentThread == threadid);
   mCurrentThread = threadid;
@@ -1804,11 +1806,11 @@ void nglWindow::BeginSession()
       mMetalCommandQueue = (void*)CFBridgingRetain(commandQueue);
     }
     NGL_ASSERT(commandQueue);
-    commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", ngl_atomic_read(frame)];
+    commandQueue.label = [NSString stringWithFormat:@"nui queue frame %llu", ngl_atomic_read(frame)];
     
     id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
     NGL_ASSERT(commandBuffer);
-    commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", ngl_atomic_read(frame)];
+    commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %llu", ngl_atomic_read(frame)];
     mMetalCommandBuffer = (void*)CFBridgingRetain(commandBuffer);
 
     ngl_atomic_inc(frame);
@@ -1818,7 +1820,6 @@ void nglWindow::BeginSession()
 void* nglWindow::CreateMetalPass()
 {
   NGL_OUT("nglWindow::CreateMetalPass()\n");
-  id<MTLDevice> device = (__bridge id<MTLDevice>)GetMetalDevice();
   id<MTLTexture> texture = (__bridge id<MTLTexture>)mMetalDestinationTexture;
   
   if (!mMetalDrawable)
@@ -1855,7 +1856,7 @@ void* nglWindow::CreateMetalPass()
     NGL_ASSERT(commandBuffer);
     id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
     NGL_ASSERT(commandEncoder);
-    commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", ngl_atomic_read(frame)];
+    commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %llu", ngl_atomic_read(frame)];
     mDrawableMetalCommandEncoder = (void*)CFBridgingRetain(commandEncoder);
     NGL_ASSERT(mCurrentMetalCommandEncoder == nil);
   }
