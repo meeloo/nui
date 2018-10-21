@@ -1780,7 +1780,7 @@ void nglWindow::ReleaseDisplayLink()
 
 
 #pragma mark GL Context handling
-static int frame = 0;
+static nglAtomic frame;
 
 void nglWindow::BeginSession()
 {
@@ -1804,14 +1804,14 @@ void nglWindow::BeginSession()
       mMetalCommandQueue = (void*)CFBridgingRetain(commandQueue);
     }
     NGL_ASSERT(commandQueue);
-    commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", frame];
+    commandQueue.label = [NSString stringWithFormat:@"nui queue frame %d", ngl_atomic_read(frame)];
     
     id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
     NGL_ASSERT(commandBuffer);
-    commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", frame];
+    commandBuffer.label = [NSString stringWithFormat:@"nui buffer frame %d", ngl_atomic_read(frame)];
     mMetalCommandBuffer = (void*)CFBridgingRetain(commandBuffer);
 
-    frame++;
+    ngl_atomic_inc(frame);
   }
 }
 
@@ -1855,7 +1855,7 @@ void* nglWindow::CreateMetalPass()
     NGL_ASSERT(commandBuffer);
     id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:passDescriptor];
     NGL_ASSERT(commandEncoder);
-    commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", frame];
+    commandEncoder.label = [NSString stringWithFormat:@"nui encoder for frame %d", ngl_atomic_read(frame)];
     mDrawableMetalCommandEncoder = (void*)CFBridgingRetain(commandEncoder);
     NGL_ASSERT(mCurrentMetalCommandEncoder == nil);
   }
