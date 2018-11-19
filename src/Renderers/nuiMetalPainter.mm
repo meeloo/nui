@@ -1644,7 +1644,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     if (pTexture && pSurface->GetRenderToTexture())
     {
       passDescriptor.colorAttachments[0].texture = (__bridge id<MTLTexture>)tit->second.mTexture;
-      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
+      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear    ;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
       passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
     }
@@ -1656,7 +1656,8 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
       
       //NGL_OUT("surface render buffer -> %d\n", info.mRenderbuffer);
     }
-    
+    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 0.0);
+
     
     if (pSurface->GetDepth())
     {

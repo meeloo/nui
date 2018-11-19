@@ -757,7 +757,7 @@ void MainWindow::OnCreation()
   });
 
 
-  int test = 7;
+  int test = 0;
   switch (test)
   {
     case 0:

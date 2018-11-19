@@ -1238,7 +1238,7 @@ void* nglWindow::CreateMetalPass()
     texture = drawable.texture;
     NGL_ASSERT(texture.width == layer.drawableSize.width);
     NGL_ASSERT(texture.height == layer.drawableSize.height);
-    //      NGL_OUT("Next drawable size is %d x %d (%d x %d [%f])\n", (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
+    NGL_OUT("Next drawable size is %d x %d (%d x %d [%f])\n", (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
     mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
   }
   
@@ -1248,7 +1248,7 @@ void* nglWindow::CreateMetalPass()
     passDescriptor.colorAttachments[0].texture = texture;
     passDescriptor.colorAttachments[0].loadAction = MTLLoadActionDontCare;
     passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 1.0, 1.0);
+//    passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 1.0, 1.0);
     
     id<MTLCommandBuffer> commandBuffer = (__bridge id<MTLCommandBuffer>)mMetalCommandBuffer;
     NGL_ASSERT(commandBuffer);
