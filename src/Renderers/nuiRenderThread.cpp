@@ -110,7 +110,7 @@ void nuiRenderThread::RunTaskOnRenderThread(nuiTask* pTask, bool OnNextFrame)
 void nuiRenderThread::StartRendering(uint32 x, uint32 y)
 {
   ngl_atomic_inc(mRenderingTicks);
-  NGL_OUT("[nuiRenderThread] POST render %p\n", this);
+//  NGL_OUT("[nuiRenderThread] POST render %p\n", this);
   Post(nuiMakeTask(this, &nuiRenderThread::_StartRendering, x, y));
 }
 
@@ -266,7 +266,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
   
   nglGuard<nglLock> guard(mpContext->GetLock());
   
-  NGL_OUT("[nuiRenderThread] render %p\n", this);
+//  NGL_OUT("[nuiRenderThread] render %p\n", this);
 #if NUI_LOG_RENDERING
 NGL_OUT("#######################################################################################\n");
   NGL_OUT("Widget Contents %d / ContentsLayer %d / DrawLayer %d / DirtyLayers %d (total meta painters %d)\n", mWidgetContentsPainters.size(), mLayerContentsPainters.size(), mLayerDrawPainters.size(), mDirtyLayers.size(), (int32)nuiMetaPainter::GetNbInstances());

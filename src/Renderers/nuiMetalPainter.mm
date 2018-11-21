@@ -1905,6 +1905,7 @@ nglImage* nuiMetalPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture)
       NGL_ASSERT(0);
   }
 
+#ifdef _COCOA_
   id<MTLDevice> device = (__bridge id<MTLDevice>)mpContext->GetMetalDevice();
   id<MTLCommandQueue> commandQueue = [device newCommandQueue];
   id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
@@ -1913,7 +1914,8 @@ nglImage* nuiMetalPainter::CreateImageFromGPUTexture(const nuiTexture* pTexture)
   [blitEncoder endEncoding];
   [commandBuffer commit];
   [commandBuffer waitUntilCompleted];
-  
+#endif
+
   nglImageInfo info(texture.width, texture.height, 32);
   info.AllocateBuffer();
   MTLRegion region = MTLRegionMake2D(0, 0, info.mWidth, info.mHeight);
