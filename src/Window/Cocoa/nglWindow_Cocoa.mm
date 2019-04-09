@@ -238,6 +238,15 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   mpNGLWindow->CallOnPaint();
 }
 
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+  if (!mInitiated)
+  {
+    mInitiated = true;
+    mpNGLWindow->CallOnCreation();
+  }
+}
+
 -(void)windowWillClose:(NSNotification *)note
 {
   //[[NSApplication sharedApplication] terminate:self];
