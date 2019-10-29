@@ -112,10 +112,13 @@ bool nuiRadioButton::MouseClicked  (const nglMouseInfo& rInfo)
   {
     mClicked = true;
     mWasPressed = IsPressed();
-    if (mCanToggle)
+    if (mCanToggle) {
       SetPressed(!mWasPressed);
-    else
+    }
+    else {
+      mWasPressed = false;
       SetPressed(true);
+    }
     Invalidate();
 
     if (mDelayedActivation > 0)

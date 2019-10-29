@@ -90,7 +90,7 @@ public:
   uint GetError() const;               ///< Retrieve the current error code
   const nglChar* GetErrorStr() const;            ///< Retrieve the current error message
   const nglChar* GetErrorStr(uint Error) const;  ///< Retrieve error message by code
-  nuiRect GetSafeContentRect() const;
+  nuiRect GetSafeContentRect() const override;
 
 
   virtual void OnDragEnter();

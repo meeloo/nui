@@ -1005,7 +1005,7 @@ nuiWidgetPtr DeepSearchNextFocussableWidget(nuiWidgetPtr pWidget, bool TryThisNo
   nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pWidget); // Is this a container?
   if (pContainer)
   {
-    std::auto_ptr<nuiWidget::Iterator> pIt(pContainer->GetFirstChild(true));
+    std::unique_ptr<nuiWidget::Iterator> pIt(pContainer->GetFirstChild(true));
     while (pIt->IsValid())
     {
       nuiWidget* pItem = pIt->GetWidget();
@@ -1026,7 +1026,7 @@ nuiWidgetPtr GetNextFocussableSibling(nuiWidgetPtr pWidget)
   nuiWidget* pParent = pWidget->GetParent();
   if (pParent)
   {
-    std::auto_ptr<nuiWidget::Iterator> pIt(pParent->GetChildIterator(pWidget));
+    std::unique_ptr<nuiWidget::Iterator> pIt(pParent->GetChildIterator(pWidget));
     pParent->GetNextChild(pIt.get());
     
     while (pIt->IsValid())
@@ -1075,7 +1075,7 @@ nuiWidgetPtr DeepSearchPreviousFocussableWidget(nuiWidgetPtr pWidget, bool TryTh
   nuiWidget* pContainer = dynamic_cast<nuiWidget*>(pWidget); // Is this a container?
   if (pContainer)
   {
-    std::auto_ptr<nuiWidget::Iterator> pIt(pContainer->GetLastChild());
+    std::unique_ptr<nuiWidget::Iterator> pIt(pContainer->GetLastChild());
     while (pIt->IsValid())
     {
       nuiWidget* pItem = pIt->GetWidget();
@@ -1100,7 +1100,7 @@ nuiWidgetPtr GetPreviousFocussableWidget(nuiWidgetPtr pWidget)
   nuiWidget* pParent = pWidget->GetParent();
   if (pParent)
   {
-    std::auto_ptr<nuiWidget::Iterator> pIt(pParent->GetChildIterator(pWidget));
+    std::unique_ptr<nuiWidget::Iterator> pIt(pParent->GetChildIterator(pWidget));
     pParent->GetPreviousChild(pIt.get());
     while (pIt->IsValid())
     {
@@ -2357,6 +2357,7 @@ bool nuiTopLevel::SetRect(const nuiRect& rRect)
 
   nuiRect rectfull(mRect.Size());
   nuiRect rect(GetSafeContentRect());
+//  nuiRect rect(rectfull);
 
   IteratorPtr pIt;
   for (pIt = GetFirstChild(false); pIt && pIt->IsValid(); GetNextChild(pIt))

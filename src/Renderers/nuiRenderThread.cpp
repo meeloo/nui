@@ -258,7 +258,7 @@ void nuiRenderThread::_StartRendering(uint32 x, uint32 y)
     kdebug_signpost_start(0, (uintptr_t)this, 0, 0, 0);
   if (ngl_atomic_dec(mRenderingTicks) > 0)
   {
-    NGL_OUT("[nuiRenderThread] skipping frame\n");
+//    NGL_OUT("[nuiRenderThread] skipping frame\n");
     if (mUseSignPosts)
       kdebug_signpost_end(0, (uintptr_t)this, 0, 0, 0);
     return;

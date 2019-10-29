@@ -242,6 +242,8 @@ const nglChar* gpWindowErrorTable[] =
   return UIRectEdgeLeft | UIRectEdgeRight | UIRectEdgeBottom;
 }
 
+
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
   return YES;
@@ -469,6 +471,11 @@ std::pair<nglPath, bool> GetTemporaryDropFile(nglPath FileName) noexcept
             oldp.x, oldp.y,
             newp.x, newp.y
           );
+}
+
+- (UIEditingInteractionConfiguration) editingInteractionConfiguration
+{
+  return UIEditingInteractionConfigurationNone;
 }
 
 - (void) dumpTouches: (UIEvent*) pEvent
