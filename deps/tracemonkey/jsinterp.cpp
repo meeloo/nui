@@ -2898,7 +2898,8 @@ js_Interpret(JSContext *cx)
 # undef OPDEF
     };
 
-    register void * const *jumpTable = normalJumpTable;
+//    register void * const *jumpTable = normalJumpTable;
+    void * const *jumpTable = normalJumpTable;
 
     METER_OP_INIT(op);      /* to nullify first METER_OP_PAIR */
 

@@ -104,7 +104,8 @@ static const struct keyword keyword_defs[] = {
 static const struct keyword *
 FindKeyword(const jschar *s, size_t length)
 {
-    register size_t i;
+//    register size_t i;
+    size_t i;
     const struct keyword *kw;
     const char *chars;
 
