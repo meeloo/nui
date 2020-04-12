@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1260,13 +1260,10 @@
 		73F09AA812E9D09E00656E84 /* sweep.c in Sources */ = {isa = PBXBuildFile; fileRef = E524190711CB9CE90025CA71 /* sweep.c */; };
 		73F09AA912E9D09E00656E84 /* tess.c in Sources */ = {isa = PBXBuildFile; fileRef = E524190911CB9CE90025CA71 /* tess.c */; };
 		73F09AAA12E9D09E00656E84 /* tessmono.c in Sources */ = {isa = PBXBuildFile; fileRef = E524190B11CB9CE90025CA71 /* tessmono.c */; };
-		73F09ABA12E9D09E00656E84 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E58172BB0C3CED8800902DFE /* OpenGL.framework */; };
-		73F09ABB12E9D09E00656E84 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7F80CDAAAE100B1C729 /* AudioUnit.framework */; };
-		73F09ABC12E9D09E00656E84 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7F90CDAAAE100B1C729 /* CoreAudio.framework */; };
-		73F09ABD12E9D09E00656E84 /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7FA0CDAAAE100B1C729 /* CoreAudioKit.framework */; };
-		73F09ABE12E9D09E00656E84 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D435961004DC5300388BF5 /* ApplicationServices.framework */; };
-		73F09ABF12E9D09E00656E84 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 408D9C88109764A000AEE78A /* QTKit.framework */; };
-		73F09AC012E9D09E00656E84 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59DF6CC1196396000E46CF8 /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		73F09ABB12E9D09E00656E84 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7F80CDAAAE100B1C729 /* AudioUnit.framework */; platformFilter = ios; };
+		73F09ABC12E9D09E00656E84 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7F90CDAAAE100B1C729 /* CoreAudio.framework */; platformFilter = ios; };
+		73F09ABD12E9D09E00656E84 /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59CD7FA0CDAAAE100B1C729 /* CoreAudioKit.framework */; platformFilter = ios; };
+		73F09AC012E9D09E00656E84 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E59DF6CC1196396000E46CF8 /* AudioToolbox.framework */; platformFilter = ios; settings = {ATTRIBUTES = (Required, ); }; };
 		941A98CC0E8BF04700CAFC3A /* nuiScrollBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 941A98CA0E8BF04700CAFC3A /* nuiScrollBox.cpp */; };
 		941A98CF0E8BF05C00CAFC3A /* nuiScrollBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 941A98CD0E8BF05C00CAFC3A /* nuiScrollBox.h */; };
 		944C54140E00017400B691C5 /* nuiHotKeyEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 944C54120E00017400B691C5 /* nuiHotKeyEditor.cpp */; };
@@ -1434,7 +1431,8 @@
 		C38971851C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
 		C38971861C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
 		C38971871C6024B6003F2232 /* nuiDebugServer.h in Headers */ = {isa = PBXBuildFile; fileRef = C38971841C6024B6003F2232 /* nuiDebugServer.h */; };
-		C390C1CE24434CDF0014A862 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C390C1CD24434CDF0014A862 /* CoreServices.framework */; };
+		C390C1CE24434CDF0014A862 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C390C1CD24434CDF0014A862 /* CoreServices.framework */; platformFilter = ios; };
+		C390C1D0244366930014A862 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C390C1CF244366930014A862 /* OpenGLES.framework */; };
 		C3D8FE661F072E1C00ADE75D /* nuiMetalPainter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.mm */; };
 		C3D8FE671F072E1C00ADE75D /* nuiMetalPainter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.mm */; };
 		C3E9C15D1D1F8BC100DEBED4 /* AssocVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */; };
@@ -4117,6 +4115,7 @@
 		C389717C1C602474003F2232 /* nuiDebugServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nuiDebugServer.cpp; path = Introspector/nuiDebugServer.cpp; sourceTree = "<group>"; };
 		C38971841C6024B6003F2232 /* nuiDebugServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nuiDebugServer.h; path = include/nuiDebugServer.h; sourceTree = SOURCE_ROOT; };
 		C390C1CD24434CDF0014A862 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		C390C1CF244366930014A862 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.4.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		C3D8FE641F071E7700ADE75D /* nuiMetalPainter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nuiMetalPainter.h; path = include/nuiMetalPainter.h; sourceTree = SOURCE_ROOT; };
 		C3D8FE651F071E8F00ADE75D /* nuiMetalPainter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = nuiMetalPainter.mm; sourceTree = "<group>"; };
 		C3E9C14B1D1F8BC100DEBED4 /* AssocVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssocVector.h; sourceTree = "<group>"; };
@@ -5618,13 +5617,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C390C1D0244366930014A862 /* OpenGLES.framework in Frameworks */,
 				C390C1CE24434CDF0014A862 /* CoreServices.framework in Frameworks */,
-				73F09ABA12E9D09E00656E84 /* OpenGL.framework in Frameworks */,
 				73F09ABB12E9D09E00656E84 /* AudioUnit.framework in Frameworks */,
 				73F09ABC12E9D09E00656E84 /* CoreAudio.framework in Frameworks */,
 				73F09ABD12E9D09E00656E84 /* CoreAudioKit.framework in Frameworks */,
-				73F09ABE12E9D09E00656E84 /* ApplicationServices.framework in Frameworks */,
-				73F09ABF12E9D09E00656E84 /* QTKit.framework in Frameworks */,
 				73F09AC012E9D09E00656E84 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5981,6 +5978,7 @@
 		C380915220BBEE730086A7D7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C390C1CF244366930014A862 /* OpenGLES.framework */,
 				C390C1CD24434CDF0014A862 /* CoreServices.framework */,
 				C380915320BBEE740086A7D7 /* CoreMIDI.framework */,
 			);
@@ -12787,7 +12785,35 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = ". include deps/ deps/expat/lib deps/glu deps/libpng deps/tidy deps/gameswf deps/ucdata deps/ungif deps/libjpeg src/Application/UIKit src/Application/Carbon src/Text/HTML src/Stream/Zip deps/freetype2/include deps/tracemonkey deps/tracemonkey/vprof deps/tracemonkey/nanojit deps/harfbuzz deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include deps/kiwi deps/capnproto/c++/src src";
+				USER_HEADER_SEARCH_PATHS = (
+					.,
+					include,
+					deps/,
+					deps/expat/lib,
+					deps/glu,
+					deps/libpng,
+					deps/tidy,
+					deps/gameswf,
+					deps/ucdata,
+					deps/ungif,
+					deps/libjpeg,
+					src/Application/UIKit,
+					src/Application/Carbon,
+					src/Text/HTML,
+					src/Stream/Zip,
+					deps/freetype2/include,
+					deps/tracemonkey,
+					deps/tracemonkey/vprof,
+					deps/tracemonkey/nanojit,
+					deps/harfbuzz,
+					deps/libcss/src,
+					deps/libcss/src/libwapcaplet,
+					deps/libcss/src/libparserutils,
+					deps/libcss/include,
+					deps/kiwi,
+					"deps/capnproto/c++/src",
+					src,
+				);
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
@@ -12903,7 +12929,35 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = ". include deps/ deps/expat/lib deps/glu deps/libpng deps/tidy deps/gameswf deps/ucdata deps/ungif deps/libjpeg src/Application/UIKit src/Application/Carbon src/Text/HTML src/Stream/Zip deps/freetype2/include deps/tracemonkey deps/tracemonkey/vprof deps/tracemonkey/nanojit deps/harfbuzz deps/libcss/src deps/libcss/src/libwapcaplet deps/libcss/src/libparserutils deps/libcss/include deps/kiwi deps/capnproto/c++/src src";
+				USER_HEADER_SEARCH_PATHS = (
+					.,
+					include,
+					deps/,
+					deps/expat/lib,
+					deps/glu,
+					deps/libpng,
+					deps/tidy,
+					deps/gameswf,
+					deps/ucdata,
+					deps/ungif,
+					deps/libjpeg,
+					src/Application/UIKit,
+					src/Application/Carbon,
+					src/Text/HTML,
+					src/Stream/Zip,
+					deps/freetype2/include,
+					deps/tracemonkey,
+					deps/tracemonkey/vprof,
+					deps/tracemonkey/nanojit,
+					deps/harfbuzz,
+					deps/libcss/src,
+					deps/libcss/src/libwapcaplet,
+					deps/libcss/src/libparserutils,
+					deps/libcss/include,
+					deps/kiwi,
+					"deps/capnproto/c++/src",
+					src,
+				);
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
