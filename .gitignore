@@ -14,3 +14,7 @@ obj/*
 android/NativeTest/bin/*
 android/NativeTest/gen/*
 android/NativeTest/obj/*
+nui3.xcodeproj/project.xcworkspace/xcuserdata
+nui3.xcodeproj/xcuserdata
+tutorials/Tutorials.xcworkspace/xcuserdata
+tutorials/Tutorials/Tutorials.xcodeproj/xcuserdata
