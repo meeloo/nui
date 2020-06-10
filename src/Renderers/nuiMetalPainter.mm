@@ -573,7 +573,7 @@ void nuiMetalPainter::SetViewport()
 //  Set Metal ViewPort to (x, y, w, h);
   id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)GetRenderCommandEncoder();
   NGL_ASSERT(encoder != nil);
-  MTLViewport viewport = { (double)x, (double)y, (double)w, (double)h, (double)-1, (double)1 };
+  MTLViewport viewport = { (double)x, (double)y, (double)w, (double)h, (double)0, (double)1 };
   if (memcmp(&mViewport[0], &viewport, sizeof(viewport)) != 0)
   {
     NGL_ASSERT(sizeof(mViewport) == sizeof(viewport));
