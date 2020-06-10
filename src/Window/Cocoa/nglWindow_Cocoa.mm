@@ -430,8 +430,8 @@ NSString *kPrivateDragUTI = @"com.libnui.privatepasteboardtype";
   CAMetalLayer *layer = (CAMetalLayer *)self.layer;
   double scale = self.window.backingScaleFactor;
   layer.drawableSize = CGSizeMake(clientRect.size.width * scale, clientRect.size.height * scale);
-NGL_OUT("Window resized to %d x %d (content scale = %f)\n", (int)clientRect.size.width, (int)clientRect.size.height, (float)layer.contentsScale);
-NGL_OUT("Changed drawable size to %d x %d\n", (int)layer.drawableSize.width, (int)layer.drawableSize.height);
+NGL_OUT("[T:%p]Window resized to %d x %d (content scale = %f)\n", nglThread::GetCurThreadID(), (int)clientRect.size.width, (int)clientRect.size.height, (float)layer.contentsScale);
+NGL_OUT("[T:%p]Changed drawable size to %d x %d\n", nglThread::GetCurThreadID(), (int)layer.drawableSize.width, (int)layer.drawableSize.height);
   [win resize: clientRect.size];
 
 //  NSOpenGLContext* _context = (NSOpenGLContext*)mpNGLWindow->mpNSGLContext;
@@ -1828,7 +1828,7 @@ void nglWindow::BeginSession()
 
 void* nglWindow::CreateMetalPass()
 {
-  NGL_OUT("nglWindow::CreateMetalPass()\n");
+  NGL_OUT("[T:%p] nglWindow::CreateMetalPass()\n", nglThread::GetCurThreadID());
   id<MTLTexture> texture = (__bridge id<MTLTexture>)mMetalDestinationTexture;
   
   if (!mMetalDrawable)
@@ -1844,7 +1844,7 @@ void* nglWindow::CreateMetalPass()
     NGL_ASSERT(texture.height == layer.drawableSize.height);
     NGL_ASSERT(texture.width == GetWidth() * layer.contentsScale);
     NGL_ASSERT(texture.height == GetHeight() * layer.contentsScale);
-    NGL_OUT("Next drawable size is %d x %d (layer: %d x %d [%f] / window:%d x %d)\n", (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale, GetWidth(), GetHeight());
+    NGL_OUT("[T:%p] Next drawable size is %d x %d (layer: %d x %d [%f] / window:%d x %d)\n", nglThread::GetCurThreadID(), (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale, GetWidth(), GetHeight());
     mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
   }
 
