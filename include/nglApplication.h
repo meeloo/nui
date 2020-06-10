@@ -399,8 +399,7 @@ extern class nglKernel* App;
   #define __NGL_APP_MAINDECL int main(int argc, const char** argv)
   #define __NGL_APP_MAINCALL Main(argc, argv)
   #define __NGL_APP_RETURN return ret
-  #define __NGL_APP_AUTORELEASEPOOL_BEGIN @autoreleasepool\
-{
+  #define __NGL_APP_AUTORELEASEPOOL_BEGIN @autoreleasepool {
   #define __NGL_APP_AUTORELEASEPOOL_END }
 #endif // _UNIX_
 
