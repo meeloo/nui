@@ -26,6 +26,19 @@ bool nglThread::GetAutoDelete() const
   return mAutoDelete;
 }
 
+nglString nglThread::GetCurThreadName()
+{
+  nglThread* pThread = nglThread::GetCurThread();
+  if (pThread)
+  {
+    return pThread->GetName();
+  }
+  
+  nglString str;
+  str.CFormat("%p", GetCurThreadID());
+  return str;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // GetThreadFromGlobalList

@@ -1245,7 +1245,7 @@ void* nglWindow::CreateMetalPass()
     texture = drawable.texture;
     NGL_ASSERT(texture.width == layer.drawableSize.width);
     NGL_ASSERT(texture.height == layer.drawableSize.height);
-    NGL_OUT("[T:%p] Next drawable size is %d x %d (%d x %d [%f])\n", nglThread::GetCurThreadID(), (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
+    NGL_OUT("[T:%s] Next drawable size is %d x %d (%d x %d [%f])\n", nglThread::GetCurThreadName().GetChars(), (int)texture.width, (int)texture.height, (int)layer.frame.size.width, (int)layer.frame.size.height, (float)layer.contentsScale);
     mMetalDestinationTexture = (void*)CFBridgingRetain(texture);
   }
   

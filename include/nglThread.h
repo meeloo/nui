@@ -81,6 +81,7 @@ public:
   static void USleep(uint32 usecs); ///< Sleep (microseconds)
   static nglThread* GetCurThread(); ///< Return current thread
   static ID GetCurThreadID(); ///< Return current thread ID (system calls)
+  static nglString GetCurThreadName(); ///< Return the current thread's name
 
   size_t GetStackSize() const
   {
