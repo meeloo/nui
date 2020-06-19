@@ -1286,8 +1286,6 @@ void nuiMetalPainter::BeginSession()
   NUI_RETURN_IF_RENDERING_DISABLED;
   mpContext->MakeCurrent();
 
-  FinalizeSurfaces();
-  FinalizeTextures();
   FinalizeRenderArrays();
 
   {
@@ -1522,19 +1520,6 @@ void nuiMetalPainter::UploadTexture(nuiTexture* pTexture, int slot)
 
 void nuiMetalPainter::DestroyTexture(nuiTexture* pTexture)
 {
-  nglCriticalSectionGuard g(mRenderingCS);
-  mDestroyedTextures.push_back(pTexture);
-}
-
-void nuiMetalPainter::FinalizeTextures()
-{
-  for (auto texture: mDestroyedTextures)
-    _DestroyTexture(texture);
-  mDestroyedTextures.clear();
-}
-
-void nuiMetalPainter::_DestroyTexture(nuiTexture* pTexture)
-{
   nglCriticalSectionGuard tg(mTexturesCS);
   auto it = mTextures.find(pTexture);
   if (it == mTextures.end())
@@ -1544,9 +1529,6 @@ void nuiMetalPainter::_DestroyTexture(nuiTexture* pTexture)
   TextureInfo info(it->second);
   mTextures.erase(it);
 
-  //NGL_OUT("nuiMetalPainter::DestroyTexture 0x%x : '%s' / %d\n", pTexture, pTexture->GetSource().GetChars(), info.mTexture);
-
-  // TODO Actually Delete the Texture
   if (info.mTexture)
     CFRelease(info.mTexture);
   if (info.mSampler)
@@ -1556,19 +1538,6 @@ void nuiMetalPainter::_DestroyTexture(nuiTexture* pTexture)
 }
 
 void nuiMetalPainter::DestroySurface(nuiSurface* pSurface)
-{
-  nglCriticalSectionGuard g(mRenderingCS);
-  mDestroyedSurfaces.push_back(pSurface);
-}
-
-void nuiMetalPainter::FinalizeSurfaces()
-{
-  for (auto surface : mDestroyedSurfaces)
-    _DestroySurface(surface);
-  mDestroyedSurfaces.clear();
-}
-
-void nuiMetalPainter::_DestroySurface(nuiSurface* pSurface)
 {
 }
 
@@ -1639,10 +1608,11 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
     auto tit = mTextures.find(pTexture);
     
     MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
-    
     //  We definetly need a color attachement, either a texture, or a renderbuffer
     if (pTexture && pSurface->GetRenderToTexture())
     {
+      //NGL_OUT("[T:%s] Create SurfaceMetalCommandEncoder %d x %d\n", nglThread::GetCurThreadName().GetChars(), (int)((__bridge id<MTLTexture>)tit->second.mTexture).width, (int)((__bridge id<MTLTexture>)tit->second.mTexture).height);
+
       passDescriptor.colorAttachments[0].texture = (__bridge id<MTLTexture>)tit->second.mTexture;
       passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear    ;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
@@ -1957,10 +1927,20 @@ int32 nuiMetalPainter::GetCurrentWidth() const
 {
   id<MTLTexture> texture = (__bridge id<MTLTexture>)mpContext->GetMetalDestinationTexture();
   if (texture)
-    return texture.width * GetScaleInv();;
+  {
+    auto w = texture.width * GetScaleInv();
+    //NGL_OUT("nuiMetalPainter::GetCurrentWidth() texture = %f\n", w);
+    return w;
+  }
   if (mpSurface)
-    return mpSurface->GetWidth();
-  return mpContext->GetWidth();
+  {
+    auto w = mpSurface->GetWidth();
+    //NGL_OUT("nuiMetalPainter::GetCurrentWidth() surface = %d\n", w);
+    return w;
+  }
+  auto w = mpContext->GetWidth();
+  //NGL_OUT("nuiMetalPainter::GetCurrentWidth() context = %d\n", w);
+  return w;
 }
 
 int32 nuiMetalPainter::GetCurrentHeight() const
