@@ -241,7 +241,7 @@ and in NGL user application code.
   #endif
 
 // Metal is only available on iOS devices, not the simulator.
-#if TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
+#if TARGET_OS_IPHONE
 # define _METAL_
 #endif // TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
 
