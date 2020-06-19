@@ -1614,7 +1614,7 @@ void nuiMetalPainter::SetSurface(nuiSurface* pSurface)
       //NGL_OUT("[T:%s] Create SurfaceMetalCommandEncoder %d x %d\n", nglThread::GetCurThreadName().GetChars(), (int)((__bridge id<MTLTexture>)tit->second.mTexture).width, (int)((__bridge id<MTLTexture>)tit->second.mTexture).height);
 
       passDescriptor.colorAttachments[0].texture = (__bridge id<MTLTexture>)tit->second.mTexture;
-      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear    ;
+      passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
       passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
       passDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(mpState->mClearColor.Red(),mpState->mClearColor.Green(),mpState->mClearColor.Blue(),mpState->mClearColor.Alpha());
     }

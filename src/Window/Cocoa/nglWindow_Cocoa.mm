@@ -1852,7 +1852,7 @@ void* nglWindow::CreateMetalPass()
   {
     MTLRenderPassDescriptor *passDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     passDescriptor.colorAttachments[0].texture = texture;
-    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+    passDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad;
 //    passDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
 //    if (@available(macOS 10_13, *)) {
 //      passDescriptor.colorAttachments[0].storeActionOptions = MTLStoreActionOptionNone;
